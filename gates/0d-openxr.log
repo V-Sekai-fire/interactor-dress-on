@@ -1,0 +1,3 @@
+=== OpenXR smoke: stock Godot 4.7.2 --xr-mode on, ~2s ===
+Terminated                 timeout 60 "$GD" --path . --script control.gd --rendering-driver vulkan --xr-mode on --quit-after 120 2>&1 | grep -iE "openxr|steamvr|xr |runtime|headset|hmd|vulkan 1\.|error" | head -20
+=== exit=124 ===

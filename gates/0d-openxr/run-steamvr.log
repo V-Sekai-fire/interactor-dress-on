@@ -1,0 +1,76 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+OpenXR: Found OpenXR layer XR_APILAYER_VIRTUALDESKTOP_oculus_compatibility.
+OpenXR: Found OpenXR extension XR_KHR_vulkan_enable.
+OpenXR: Found OpenXR extension XR_KHR_vulkan_enable2.
+OpenXR: Found OpenXR extension XR_KHR_D3D11_enable.
+OpenXR: Found OpenXR extension XR_KHR_D3D12_enable.
+OpenXR: Found OpenXR extension XR_KHR_opengl_enable.
+OpenXR: Found OpenXR extension XR_KHR_win32_convert_performance_counter_time.
+OpenXR: Found OpenXR extension XR_EXT_win32_appcontainer_compatible.
+OpenXR: Found OpenXR extension XR_KHR_binding_modification.
+OpenXR: Found OpenXR extension XR_KHR_composition_layer_depth.
+OpenXR: Found OpenXR extension XR_KHR_locate_spaces.
+OpenXR: Found OpenXR extension XR_KHR_visibility_mask.
+OpenXR: Found OpenXR extension XR_EXT_active_action_set_priority.
+OpenXR: Found OpenXR extension XR_EXT_dpad_binding.
+OpenXR: Found OpenXR extension XR_EXT_eye_gaze_interaction.
+OpenXR: Found OpenXR extension XR_EXT_frame_composition_report.
+OpenXR: Found OpenXR extension XR_EXT_hand_interaction.
+OpenXR: Found OpenXR extension XR_EXT_hand_tracking.
+OpenXR: Found OpenXR extension XR_EXT_hand_tracking_data_source.
+OpenXR: Found OpenXR extension XR_EXT_hand_joints_motion_range.
+OpenXR: Found OpenXR extension XR_EXT_hp_mixed_reality_controller.
+OpenXR: Found OpenXR extension XR_EXT_local_floor.
+OpenXR: Found OpenXR extension XR_EXT_palm_pose.
+OpenXR: Found OpenXR extension XR_EXT_uuid.
+OpenXR: Found OpenXR extension XR_EXT_user_presence.
+OpenXR: Found OpenXR extension XR_EXT_view_configuration_views_change.
+OpenXR: Found OpenXR extension XR_EXT_render_model.
+OpenXR: Found OpenXR extension XR_EXT_interaction_render_model.
+OpenXR: Found OpenXR extension XR_EXT_interaction_profile_battery_state_display.
+OpenXR: Found OpenXR extension XR_FB_display_refresh_rate.
+OpenXR: Found OpenXR extension XR_HTC_vive_cosmos_controller_interaction.
+OpenXR: Found OpenXR extension XR_HTC_vive_focus3_controller_interaction.
+OpenXR: Found OpenXR extension XR_HTC_vive_wrist_tracker_interaction.
+OpenXR: Found OpenXR extension XR_MND_headless.
+OpenXR: Found OpenXR extension XR_VALVE_analog_threshold.
+OpenXR: Found OpenXR extension XR_META_performance_metrics.
+OpenXR: Found OpenXR extension XR_VALVE_timing_utils.
+OpenXR: Found OpenXR extension XR_META_recommended_layer_resolution.
+OpenXR: Found OpenXR extension XR_HTCX_vive_tracker_interaction.
+OpenXR: Found OpenXR extension XR_KHR_generic_controller.
+OpenXR: Found OpenXR extension XR_VALVE_frame_controller_interaction.
+OpenXR: Found OpenXR extension XR_EXT_debug_utils.
+Error [GENERAL | xrCreateInstance | OpenXR-Loader] : LoaderInstance::CreateInstance chained CreateInstance call failed
+Error [GENERAL | xrCreateInstance | OpenXR-Loader] : xrCreateInstance failed
+OpenXR: Falling back to OpenXR 1.0
+OpenXR: Created instance for OpenXR 1.0.54
+OpenXR: Enabled extension  XR_EXT_palm_pose
+OpenXR: Enabled extension  XR_EXT_local_floor
+OpenXR: Enabled extension  XR_KHR_composition_layer_depth
+OpenXR: Enabled extension  XR_HTC_vive_cosmos_controller_interaction
+OpenXR: Enabled extension  XR_HTC_vive_focus3_controller_interaction
+OpenXR: Enabled extension  XR_HTCX_vive_tracker_interaction
+OpenXR: Enabled extension  XR_FB_display_refresh_rate
+OpenXR: Enabled extension  XR_EXT_hp_mixed_reality_controller
+OpenXR: Enabled extension  XR_KHR_visibility_mask
+OpenXR: Enabled extension  XR_VALVE_frame_controller_interaction
+OpenXR: Enabled extension  XR_KHR_generic_controller
+OpenXR: Enabled extension  XR_KHR_vulkan_enable2
+OpenXR: Running on OpenXR runtime:  SteamVR/OpenXR   2.17.10
+OpenXR: Failed to get system for our form factor [ XR_ERROR_FORM_FACTOR_UNAVAILABLE ]
+WARNING: OpenXR was requested but failed to start.
+HMD was not detected or a required feature was not supported.
+
+Check logged errors in debugger for more details.
+
+When using Windows Mixed Reality, note that WMR only has DirectX support. Make sure SteamVR is your default OpenXR runtime.
+
+Godot will start in normal mode.
+
+   at: initialize_openxr_module (modules/openxr/register_types.cpp:262)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketLargeE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)
+=== exit=124 ===

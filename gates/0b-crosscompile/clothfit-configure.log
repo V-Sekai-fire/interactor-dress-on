@@ -1,0 +1,69 @@
+=== configure ===
+-- The C compiler identification is Clang 23.1.1
+-- The CXX compiler identification is Clang 23.1.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Using CPM cache folder: C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache
+-- Performing Test IS_SUPPORTED_-fdiagnostics-color-always
+-- Performing Test IS_SUPPORTED_-fdiagnostics-color-always - Success
+-- Performing Test IS_SUPPORTED_-fcolor-diagnostics
+-- Performing Test IS_SUPPORTED_-fcolor-diagnostics - Success
+-- Adding global flags: $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>;$<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
+-- Third-party: creating target 'openvdb::openvdb'
+-- Downloading CPM.cmake to C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache/cpm/CPM_0.39.0.cmake
+-- CPM: Adding package openvdb@0 (c96cb06971a89ad2638ed29972ab54f63a8e2fbc to C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache/openvdb/941f7bc41ce30ce4702011d4841defc0ee1f6de1)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(openvdb) is deprecated, call
+  FetchContent_MakeAvailable(openvdb) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(openvdb) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/openvdb.cmake:15 (CPMAddPackage)
+  CMakeLists.txt:209 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- CMake Build Type: Release
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+CMake Warning at C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache/openvdb/941f7bc41ce30ce4702011d4841defc0ee1f6de1/CMakeLists.txt:392 (message):
+  Unable to find Jemalloc, attempting to fall back to TBB malloc.
+
+        It is recommended to use Jemalloc for optimum performance.
+
+
+-- Configuring for OpenVDB Version 12.0.2
+-- Configuring for OpenVDB ABI Version 12
+-- ----------------------------------------------------
+-- ------------- Configuring OpenVDBCore --------------
+-- ----------------------------------------------------
+CMake Error at C:/Users/ernest.lee/AppData/Local/Temp/claude/C--cloth-dynamics-standalone/78c82968-f95a-4859-91e8-d4e9b918bb92/scratchpad/cpm-cache/openvdb/941f7bc41ce30ce4702011d4841defc0ee1f6de1/openvdb/openvdb/CMakeLists.txt:120 (find_package):
+  By not providing "FindBoost.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "Boost", but
+  CMake did not find one.
+
+  Could not find a package configuration file provided by "Boost" (requested
+  version 1.80) with any of the following names:
+
+    Boost.cps
+    boost.cps
+    BoostConfig.cmake
+    boost-config.cmake
+
+  Add the installation prefix of "Boost" to CMAKE_PREFIX_PATH or set
+  "Boost_DIR" to a directory containing one of the above files.  If "Boost"
+  provides a separate development package or SDK, be sure it has been
+  installed.
+
+
+-- Configuring incomplete, errors occurred!
+=== configure exit=1 ===

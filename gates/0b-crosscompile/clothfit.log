@@ -1,0 +1,741 @@
+=== configure (cache=/c/interactor-dress-on/.cpm-cache, THREADING=NONE, openvdb stubbed) ===
+-- The C compiler identification is Clang 23.1.1
+-- The CXX compiler identification is Clang 23.1.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Using CPM cache folder: C:/interactor-dress-on/.cpm-cache
+-- Performing Test IS_SUPPORTED_-fdiagnostics-color-always
+-- Performing Test IS_SUPPORTED_-fdiagnostics-color-always - Success
+-- Performing Test IS_SUPPORTED_-fcolor-diagnostics
+-- Performing Test IS_SUPPORTED_-fcolor-diagnostics - Success
+-- Adding global flags: $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>;$<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
+-- Third-party: creating target 'polysolve'
+-- Downloading CPM.cmake to C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake
+-- CPM: Adding package polysolve@0 (ee553dc6a330ef70bcc6ba2f05653fecd201c05f to C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(polysolve) is deprecated, call
+  FetchContent_MakeAvailable(polysolve) instead.  Policy CMP0169 can be set
+  to OLD to allow FetchContent_Populate(polysolve) to be called directly for
+  now, but the ability to call it with declared details will be removed
+  completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/polysolve.cmake:20 (CPMAddPackage)
+  CMakeLists.txt:213 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using CPM cache folder: C:/interactor-dress-on/.cpm-cache
+-- Adding global flags: $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>;$<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
+-- Third-party: creating target 'Eigen3::Eigen'
+-- CPM: polysolve: Adding package eigen@3.4.0 (3.4.0 to C:/interactor-dress-on/.cpm-cache/eigen/9cb760a6fcc3143cbb7856ce4548b1cf4b385f2e)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(eigen) is deprecated, call
+  FetchContent_MakeAvailable(eigen) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(eigen) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/eigen.cmake:27 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/CMakeLists.txt:204 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Third-party: creating target 'spdlog::spdlog'
+-- CPM: polysolve: Adding package spdlog@1.12.0 (v1.12.0 to C:/interactor-dress-on/.cpm-cache/spdlog/55fe777fa2701b358f2ec2c056af9306bbc72042)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(spdlog) is deprecated, call
+  FetchContent_MakeAvailable(spdlog) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(spdlog) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/spdlog.cmake:26 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/CMakeLists.txt:208 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Build spdlog: 1.12.0
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Build type: Release
+-- Generating install
+-- Patching spdlog bundled fmt ostream.h for libc++/<__std_stream>
+-- Third-party: creating target 'nlohmann_json::nlohmann_json'
+-- CPM: polysolve: Adding package nlohmann_json@ ( to C:/interactor-dress-on/.cpm-cache/nlohmann_json/3cc46c5b3b30780707857320f5d2655b293c4330)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(nlohmann_json) is deprecated, call
+  FetchContent_MakeAvailable(nlohmann_json) instead.  Policy CMP0169 can be
+  set to OLD to allow FetchContent_Populate(nlohmann_json) to be called
+  directly for now, but the ability to call it with declared details will be
+  removed completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/cmake/recipes/json.cmake:22 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/CMakeLists.txt:212 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Third-party: creating target 'jse::jse'
+-- CPM: polysolve: Adding package json-spec-engine@0 (49f1a30f8c2912814916ec3d6108a649b23cb243 to C:/interactor-dress-on/.cpm-cache/json-spec-engine/12d58b2ee49b30ef626202c753c7822cc3200a97)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(json-spec-engine) is deprecated, call
+  FetchContent_MakeAvailable(json-spec-engine) instead.  Policy CMP0169 can
+  be set to OLD to allow FetchContent_Populate(json-spec-engine) to be called
+  directly for now, but the ability to call it with declared details will be
+  removed completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/jse.cmake:11 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/CMakeLists.txt:216 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Performing Test IS_SUPPORTED_-Wall
+-- Performing Test IS_SUPPORTED_-Wall - Success
+-- Performing Test IS_SUPPORTED_-Wextra
+-- Performing Test IS_SUPPORTED_-Wextra - Success
+-- Performing Test IS_SUPPORTED_-pedantic
+-- Performing Test IS_SUPPORTED_-pedantic - Success
+-- Performing Test IS_SUPPORTED_-Wunused
+-- Performing Test IS_SUPPORTED_-Wunused - Success
+-- Performing Test IS_SUPPORTED_-Wno-long-long
+-- Performing Test IS_SUPPORTED_-Wno-long-long - Success
+-- Performing Test IS_SUPPORTED_-Wpointer-arith
+-- Performing Test IS_SUPPORTED_-Wpointer-arith - Success
+-- Performing Test IS_SUPPORTED_-Wformat-2
+-- Performing Test IS_SUPPORTED_-Wformat-2 - Success
+-- Performing Test IS_SUPPORTED_-Wuninitialized
+-- Performing Test IS_SUPPORTED_-Wuninitialized - Success
+-- Performing Test IS_SUPPORTED_-Wcast-qual
+-- Performing Test IS_SUPPORTED_-Wcast-qual - Success
+-- Performing Test IS_SUPPORTED_-Wmissing-noreturn
+-- Performing Test IS_SUPPORTED_-Wmissing-noreturn - Success
+-- Performing Test IS_SUPPORTED_-Wmissing-format-attribute
+-- Performing Test IS_SUPPORTED_-Wmissing-format-attribute - Success
+-- Performing Test IS_SUPPORTED_-Wredundant-decls
+-- Performing Test IS_SUPPORTED_-Wredundant-decls - Success
+-- Performing Test IS_SUPPORTED_-Werror-implicit
+-- Performing Test IS_SUPPORTED_-Werror-implicit - Success
+-- Performing Test IS_SUPPORTED_-Werror-nonnull
+-- Performing Test IS_SUPPORTED_-Werror-nonnull - Success
+-- Performing Test IS_SUPPORTED_-Werror-init-self
+-- Performing Test IS_SUPPORTED_-Werror-init-self - Success
+-- Performing Test IS_SUPPORTED_-Werror-main
+-- Performing Test IS_SUPPORTED_-Werror-main - Success
+-- Performing Test IS_SUPPORTED_-Werror-missing-braces
+-- Performing Test IS_SUPPORTED_-Werror-missing-braces - Success
+-- Performing Test IS_SUPPORTED_-Werror-sequence-point
+-- Performing Test IS_SUPPORTED_-Werror-sequence-point - Success
+-- Performing Test IS_SUPPORTED_-Werror-return-type
+-- Performing Test IS_SUPPORTED_-Werror-return-type - Success
+-- Performing Test IS_SUPPORTED_-Werror-trigraphs
+-- Performing Test IS_SUPPORTED_-Werror-trigraphs - Success
+-- Performing Test IS_SUPPORTED_-Werror-array-bounds
+-- Performing Test IS_SUPPORTED_-Werror-array-bounds - Success
+-- Performing Test IS_SUPPORTED_-Werror-write-strings
+-- Performing Test IS_SUPPORTED_-Werror-write-strings - Success
+-- Performing Test IS_SUPPORTED_-Werror-address
+-- Performing Test IS_SUPPORTED_-Werror-address - Success
+-- Performing Test IS_SUPPORTED_-Werror-int-to-pointer-cast
+-- Performing Test IS_SUPPORTED_-Werror-int-to-pointer-cast - Success
+-- Performing Test IS_SUPPORTED_-Werror-pointer-to-int-cast
+-- Performing Test IS_SUPPORTED_-Werror-pointer-to-int-cast - Success
+-- Performing Test IS_SUPPORTED_-Wno-unused-variable
+-- Performing Test IS_SUPPORTED_-Wno-unused-variable - Success
+-- Performing Test IS_SUPPORTED_-Wunused-but-set-variable
+-- Performing Test IS_SUPPORTED_-Wunused-but-set-variable - Success
+-- Performing Test IS_SUPPORTED_-Wno-unused-parameter
+-- Performing Test IS_SUPPORTED_-Wno-unused-parameter - Success
+-- Performing Test IS_SUPPORTED_-Wno-old-style-cast
+-- Performing Test IS_SUPPORTED_-Wno-old-style-cast - Success
+-- Performing Test IS_SUPPORTED_-Wshadow
+-- Performing Test IS_SUPPORTED_-Wshadow - Success
+-- Performing Test IS_SUPPORTED_-Wstrict-null-sentinel
+-- Performing Test IS_SUPPORTED_-Wstrict-null-sentinel - Failed
+-- Performing Test IS_SUPPORTED_-Woverloaded-virtual
+-- Performing Test IS_SUPPORTED_-Woverloaded-virtual - Success
+-- Performing Test IS_SUPPORTED_-Wsign-promo
+-- Performing Test IS_SUPPORTED_-Wsign-promo - Success
+-- Performing Test IS_SUPPORTED_-Wstack-protector
+-- Performing Test IS_SUPPORTED_-Wstack-protector - Success
+-- Performing Test IS_SUPPORTED_-Wstrict-aliasing
+-- Performing Test IS_SUPPORTED_-Wstrict-aliasing - Success
+-- Performing Test IS_SUPPORTED_-Wstrict-aliasing-2
+-- Performing Test IS_SUPPORTED_-Wstrict-aliasing-2 - Success
+-- Performing Test IS_SUPPORTED_-Wswitch-default
+-- Performing Test IS_SUPPORTED_-Wswitch-default - Success
+-- Performing Test IS_SUPPORTED_-Wswitch-enum
+-- Performing Test IS_SUPPORTED_-Wswitch-enum - Success
+-- Performing Test IS_SUPPORTED_-Wswitch-unreachable
+-- Performing Test IS_SUPPORTED_-Wswitch-unreachable - Failed
+-- Performing Test IS_SUPPORTED_-Wcast-align
+-- Performing Test IS_SUPPORTED_-Wcast-align - Success
+-- Performing Test IS_SUPPORTED_-Wdisabled-optimization
+-- Performing Test IS_SUPPORTED_-Wdisabled-optimization - Success
+-- Performing Test IS_SUPPORTED_-Winvalid-pch
+-- Performing Test IS_SUPPORTED_-Winvalid-pch - Success
+-- Performing Test IS_SUPPORTED_-Wpacked
+-- Performing Test IS_SUPPORTED_-Wpacked - Success
+-- Performing Test IS_SUPPORTED_-Wno-padded
+-- Performing Test IS_SUPPORTED_-Wno-padded - Success
+-- Performing Test IS_SUPPORTED_-Wstrict-overflow
+-- Performing Test IS_SUPPORTED_-Wstrict-overflow - Success
+-- Performing Test IS_SUPPORTED_-Wstrict-overflow-2
+-- Performing Test IS_SUPPORTED_-Wstrict-overflow-2 - Success
+-- Performing Test IS_SUPPORTED_-Wctor-dtor-privacy
+-- Performing Test IS_SUPPORTED_-Wctor-dtor-privacy - Success
+-- Performing Test IS_SUPPORTED_-Wlogical-op
+-- Performing Test IS_SUPPORTED_-Wlogical-op - Failed
+-- Performing Test IS_SUPPORTED_-Wnoexcept
+-- Performing Test IS_SUPPORTED_-Wnoexcept - Failed
+-- Performing Test IS_SUPPORTED_-Wnon-virtual-dtor
+-- Performing Test IS_SUPPORTED_-Wnon-virtual-dtor - Success
+-- Performing Test IS_SUPPORTED_-Wdelete-non-virtual-dtor
+-- Performing Test IS_SUPPORTED_-Wdelete-non-virtual-dtor - Success
+-- Performing Test IS_SUPPORTED_-Werror-non-virtual-dtor
+-- Performing Test IS_SUPPORTED_-Werror-non-virtual-dtor - Success
+-- Performing Test IS_SUPPORTED_-Werror-delete-non-virtual-dtor
+-- Performing Test IS_SUPPORTED_-Werror-delete-non-virtual-dtor - Success
+-- Performing Test IS_SUPPORTED_-Wno-sign-compare
+-- Performing Test IS_SUPPORTED_-Wno-sign-compare - Success
+-- Performing Test IS_SUPPORTED_-Wnull-dereference
+-- Performing Test IS_SUPPORTED_-Wnull-dereference - Success
+-- Performing Test IS_SUPPORTED_-fdelete-null-pointer-checks
+-- Performing Test IS_SUPPORTED_-fdelete-null-pointer-checks - Success
+-- Performing Test IS_SUPPORTED_-Wduplicated-cond
+-- Performing Test IS_SUPPORTED_-Wduplicated-cond - Failed
+-- Performing Test IS_SUPPORTED_-Wmisleading-indentation
+-- Performing Test IS_SUPPORTED_-Wmisleading-indentation - Success
+-- Performing Test IS_SUPPORTED_-fno-omit-frame-pointer
+-- Performing Test IS_SUPPORTED_-fno-omit-frame-pointer - Success
+-- Performing Test IS_SUPPORTED_-fno-optimize-sibling-calls
+-- Performing Test IS_SUPPORTED_-fno-optimize-sibling-calls - Success
+-- Performing Test IS_SUPPORTED_-Wno-missing-noreturn
+-- Performing Test IS_SUPPORTED_-Wno-missing-noreturn - Success
+-- Performing Test IS_SUPPORTED_-Wno-shadow
+-- Performing Test IS_SUPPORTED_-Wno-shadow - Success
+-- Performing Test IS_SUPPORTED_-Wno-switch-enum
+-- Performing Test IS_SUPPORTED_-Wno-switch-enum - Success
+-- Performing Test IS_SUPPORTED_-Wno-unused-command-line-argument
+-- Performing Test IS_SUPPORTED_-Wno-unused-command-line-argument - Success
+-- Performing Test IS_SUPPORTED_-Wno-unused-function
+-- Performing Test IS_SUPPORTED_-Wno-unused-function - Success
+-- Performing Test IS_SUPPORTED_-Wno-unused-private-field
+-- Performing Test IS_SUPPORTED_-Wno-unused-private-field - Success
+-- Performing Test IS_SUPPORTED_-Wno-unused-lambda-capture
+-- Performing Test IS_SUPPORTED_-Wno-unused-lambda-capture - Success
+-- Performing Test IS_SUPPORTED_-Wno-reorder-ctor
+-- Performing Test IS_SUPPORTED_-Wno-reorder-ctor - Success
+-- Performing Test IS_SUPPORTED_-Wno-missing-field-initializers
+-- Performing Test IS_SUPPORTED_-Wno-missing-field-initializers - Success
+-- Third-party: creating target 'LBGFSpp::LBGFSpp'
+-- CPM: polysolve: Adding package lbfgspp@0.2.0 (v0.2.0 to C:/interactor-dress-on/.cpm-cache/lbfgspp/4070b1abd12b2b0dc71ba965796709fd61addc96)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(lbfgspp) is deprecated, call
+  FetchContent_MakeAvailable(lbfgspp) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(lbfgspp) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/cmake/recipes/LBFGSpp.cmake:11 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/CMakeLists.txt:315 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Third-party: creating target 'finitediff::finitediff'
+-- CPM: polysolve: Adding package finite-diff@1.0.2 (v1.0.2 to C:/interactor-dress-on/.cpm-cache/finite-diff/1d94bd80238c9925fb3a3e08f890692c283943ce)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(finite-diff) is deprecated, call
+  FetchContent_MakeAvailable(finite-diff) instead.  Policy CMP0169 can be set
+  to OLD to allow FetchContent_Populate(finite-diff) to be called directly
+  for now, but the ability to call it with declared details will be removed
+  completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/cmake/recipes/finite-diff.cmake:11 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/polysolve/2ae6231927e5e71d16e0c4eeba6bb9f2dd363d08/CMakeLists.txt:319 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Performing Test IS_SUPPORTED_-Wswitch
+-- Performing Test IS_SUPPORTED_-Wswitch - Success
+-- PolyFEM: staged 14 JSON spec(s) into C:/interactor-dress-on/gates/0b-crosscompile/build-clothfit/json-specs
+-- Third-party: creating target 'igl::core'
+-- CPM: Adding package libigl@2.5.0 (v2.5.0 to C:/interactor-dress-on/.cpm-cache/libigl/10088ec153ccf16abc1973f9cc8c6aac84a42a40)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(libigl) is deprecated, call
+  FetchContent_MakeAvailable(libigl) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(libigl) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/libigl.cmake:56 (CPMAddPackage)
+  CMakeLists.txt:232 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Creating target: igl::core (igl_core)
+-- Creating target: igl::predicates (igl_predicates)
+-- Third-party: creating target 'predicates::predicates'
+CMake Warning (deprecated) at C:/interactor-dress-on/gates/0b-crosscompile/build-clothfit/_deps/predicates-src/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Performing Test COMPILER_HAS_HIDDEN_VISIBILITY
+-- Performing Test COMPILER_HAS_HIDDEN_VISIBILITY - Success
+-- Performing Test COMPILER_HAS_HIDDEN_INLINE_VISIBILITY
+-- Performing Test COMPILER_HAS_HIDDEN_INLINE_VISIBILITY - Success
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR - Success
+-- Creating target: igl_restricted::triangle (igl_restricted_triangle)
+-- Third-party: creating target 'triangle::triangle'
+CMake Warning (deprecated) at C:/interactor-dress-on/gates/0b-crosscompile/build-clothfit/_deps/triangle-src/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Third-party: creating target 'ipc::toolkit'
+-- CPM: Adding package ipc-toolkit@0 (993e7e0fadb7073e1331ffa88ae288758d704d2e to C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(ipc-toolkit) is deprecated, call
+  FetchContent_MakeAvailable(ipc-toolkit) instead.  Policy CMP0169 can be set
+  to OLD to allow FetchContent_Populate(ipc-toolkit) to be called directly
+  for now, but the ability to call it with declared details will be removed
+  completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/ipc_toolkit.cmake:11 (CPMAddPackage)
+  CMakeLists.txt:245 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using CPM cache folder: C:/interactor-dress-on/.cpm-cache
+-- Adding global flags: $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>;$<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
+-- Third-party: creating target 'TBB::tbb' (OneTBB)
+-- CPM: ipc-toolkit: Adding package oneTBB@2021.9.0 (v2021.9.0 to C:/interactor-dress-on/.cpm-cache/onetbb/820136c269eb2082624286116181ed3abf743ac8)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(oneTBB) is deprecated, call
+  FetchContent_MakeAvailable(oneTBB) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(oneTBB) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/onetbb.cmake:69 (CPMAddPackage)
+  cmake/recipes/onetbb.cmake:74 (onetbb_import_target)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:142 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (deprecated) at C:/interactor-dress-on/.cpm-cache/onetbb/820136c269eb2082624286116181ed3abf743ac8/CMakeLists.txt:15 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning at C:/interactor-dress-on/.cpm-cache/onetbb/820136c269eb2082624286116181ed3abf743ac8/CMakeLists.txt:116 (message):
+  You are building oneTBB as a static library.  This is highly discouraged
+  and such configuration is not supported.  Consider building a dynamic
+  library to avoid unforeseen issues.
+
+
+-- TBBBind build targets are disabled due to unsupported environment
+-- Third-party: creating target 'tight_inclusion::tight_inclusion'
+-- CPM: ipc-toolkit: Adding package Tight-Inclusion@1.0.5 (v1.0.5 to C:/interactor-dress-on/.cpm-cache/tight-inclusion/d3e64701b8a639fe4618c844bee41bda79e79fb1)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(Tight-Inclusion) is deprecated, call
+  FetchContent_MakeAvailable(Tight-Inclusion) instead.  Policy CMP0169 can be
+  set to OLD to allow FetchContent_Populate(Tight-Inclusion) to be called
+  directly for now, but the ability to call it with declared details will be
+  removed completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/cmake/recipes/tight_inclusion.cmake:10 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:146 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using CPM cache folder: C:/interactor-dress-on/.cpm-cache
+-- Adding global flags: $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>;$<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
+-- Performing Test IS_SUPPORTED_-Wno-maybe-uninitialized
+-- Performing Test IS_SUPPORTED_-Wno-maybe-uninitialized - Failed
+-- Performing Test IS_SUPPORTED_-Wno-unused-but-set-variable
+-- Performing Test IS_SUPPORTED_-Wno-unused-but-set-variable - Success
+-- Searching for AVX...
+-- Third-party: creating target 'scalable_ccd::scalable_ccd'
+-- CPM: ipc-toolkit: Adding package scalable-ccd@0 (60692d7cbc03390a3a198792a3ff2b869c5da05b to C:/interactor-dress-on/.cpm-cache/scalable-ccd/02e87ed5e48112899cf6e1459701716be5862680)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(scalable-ccd) is deprecated, call
+  FetchContent_MakeAvailable(scalable-ccd) instead.  Policy CMP0169 can be
+  set to OLD to allow FetchContent_Populate(scalable-ccd) to be called
+  directly for now, but the ability to call it with declared details will be
+  removed completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/cmake/recipes/scalable_ccd.cmake:12 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:150 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using CPM cache folder: C:/interactor-dress-on/.cpm-cache
+-- Adding global flags: $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>;$<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
+-- Performing Test IS_SUPPORTED_-Wpedantic
+-- Performing Test IS_SUPPORTED_-Wpedantic - Success
+-- Performing Test IS_SUPPORTED_-Werror-enum-conversion
+-- Performing Test IS_SUPPORTED_-Werror-enum-conversion - Success
+-- Performing Test IS_SUPPORTED_-Wfloat-conversion
+-- Performing Test IS_SUPPORTED_-Wfloat-conversion - Success
+-- Performing Test IS_SUPPORTED_-Warray-bounds
+-- Performing Test IS_SUPPORTED_-Warray-bounds - Success
+-- Performing Test IS_SUPPORTED_-Werror-inconsistent-missing-override
+-- Performing Test IS_SUPPORTED_-Werror-inconsistent-missing-override - Success
+-- Performing Test IS_SUPPORTED_-Werror-return-stack-address
+-- Performing Test IS_SUPPORTED_-Werror-return-stack-address - Success
+-- Performing Test IS_SUPPORTED_-Wunused-variable
+-- Performing Test IS_SUPPORTED_-Wunused-variable - Success
+-- Performing Test IS_SUPPORTED_-Wold-style-cast
+-- Performing Test IS_SUPPORTED_-Wold-style-cast - Success
+-- Performing Test IS_SUPPORTED_-Wmissing-include-dirs
+-- Performing Test IS_SUPPORTED_-Wmissing-include-dirs - Success
+-- Performing Test IS_SUPPORTED_-Wno-redundant-decls
+-- Performing Test IS_SUPPORTED_-Wno-redundant-decls - Success
+-- Third-party: creating target 'simple_bvh::simple_bvh'
+-- CPM: ipc-toolkit: Adding package SimpleBVH@0 (e1a931337a9e07e8bd2d2e8bbdfd7e54bc850df5 to C:/interactor-dress-on/.cpm-cache/simplebvh/72440d07837bfd3a5f6f0bf926a395a2c250630e)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(SimpleBVH) is deprecated, call
+  FetchContent_MakeAvailable(SimpleBVH) instead.  Policy CMP0169 can be set
+  to OLD to allow FetchContent_Populate(SimpleBVH) to be called directly for
+  now, but the ability to call it with declared details will be removed
+  completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/cmake/recipes/simple_bvh.cmake:11 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:161 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using CPM cache folder: C:/interactor-dress-on/.cpm-cache
+-- Performing Test IS_SUPPORTED_-Wno-pedantic
+-- Performing Test IS_SUPPORTED_-Wno-pedantic - Success
+-- Third-party: creating target 'tsl::robin_map'
+-- CPM: ipc-toolkit: Adding package robin-map@1.2.1 (v1.2.1 to C:/interactor-dress-on/.cpm-cache/robin-map/b78c0b87c4df5b0c7c10be5a60353902f4258936)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(robin-map) is deprecated, call
+  FetchContent_MakeAvailable(robin-map) instead.  Policy CMP0169 can be set
+  to OLD to allow FetchContent_Populate(robin-map) to be called directly for
+  now, but the ability to call it with declared details will be removed
+  completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/cmake/recipes/robin_map.cmake:10 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:176 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (deprecated) at C:/interactor-dress-on/.cpm-cache/robin-map/b78c0b87c4df5b0c7c10be5a60353902f4258936/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Third-party: creating target 'absl::flat_hash_map'
+-- CPM: ipc-toolkit: Adding package abseil-cpp@20230125.3 (20230125.3 to C:/interactor-dress-on/.cpm-cache/abseil-cpp/2067ccce999f831c913871bc83499c79f0dff4a5)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(abseil-cpp) is deprecated, call
+  FetchContent_MakeAvailable(abseil-cpp) instead.  Policy CMP0169 can be set
+  to OLD to allow FetchContent_Populate(abseil-cpp) to be called directly for
+  now, but the ability to call it with declared details will be removed
+  completely in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/cmake/recipes/abseil.cmake:14 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:182 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Performing Test ABSL_INTERNAL_AT_LEAST_CXX17
+-- Performing Test ABSL_INTERNAL_AT_LEAST_CXX17 - Success
+-- Third-party: creating target 'filib::filib'
+-- CPM: ipc-toolkit: Adding package filib@0 (1cd377a7c833a68dc47217829e333f4886c5c46d to C:/interactor-dress-on/.cpm-cache/filib/d7c57a3182f00d31e32fe16572e316159b40246d)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(filib) is deprecated, call
+  FetchContent_MakeAvailable(filib) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(filib) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/cmake/recipes/filib.cmake:10 (CPMAddPackage)
+  C:/interactor-dress-on/.cpm-cache/ipc-toolkit/4285d630095263eeda3720dfee60dd79530fd34c/CMakeLists.txt:188 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- SIMD support disabled
+-- PolyFEM: weftfit_retarget solve bridge
+-- Found Python3: C:/Users/ernest.lee/scoop/apps/python/current/python.exe (found version "3.14.7") found components: Interpreter
+-- Performing Test IS_SUPPORTED_-Wsuggest-override
+-- Performing Test IS_SUPPORTED_-Wsuggest-override - Success
+-- Third-party: creating target 'CLI11::CLI11'
+-- CPM: Adding package CLI11@2.3.2 (v2.3.2 to C:/interactor-dress-on/.cpm-cache/cli11/9e6fd3fcb946a91f4a10e874dc9d09753d96ed7f)
+CMake Warning (author) at C:/Users/ernest.lee/scoop/apps/cmake/current/share/cmake-4.4/Modules/FetchContent.cmake:1968 (message):
+  Calling FetchContent_Populate(CLI11) is deprecated, call
+  FetchContent_MakeAvailable(CLI11) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(CLI11) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:1008 (FetchContent_Populate)
+  C:/interactor-dress-on/.cpm-cache/cpm/CPM_0.39.0.cmake:802 (cpm_fetch_package)
+  cmake/recipes/cli11.cmake:22 (CPMAddPackage)
+  CMakeLists.txt:459 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (deprecated) at C:/interactor-dress-on/.cpm-cache/cli11/9e6fd3fcb946a91f4a10e874dc9d09753d96ed7f/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Configuring done (95.4s)
+-- Generating done (0.9s)
+-- Build files have been written to: C:/interactor-dress-on/gates/0b-crosscompile/build-clothfit
+=== configure exit=0 ===
+=== build (keep going) ===
+[113/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_cot.c.o
+[114/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_coth.c.o
+[115/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_exp.c.o
+[116/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_ex10.c.o
+[117/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_exp2.c.o
+[118/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_expm.c.o
+[119/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_log.c.o
+[120/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_lg10.c.o
+[121/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_lg1p.c.o
+[122/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_log2.c.o
+[123/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_sin.c.o
+[124/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_sinh.c.o
+[125/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_sqr.c.o
+[126/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_sqrt.c.o
+[127/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_tan.c.o
+[128/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/j_tanh.c.o
+[129/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_acos.c.o
+[130/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_erf.c.o
+[131/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_acsh.c.o
+[132/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_acot.c.o
+[133/306] Building CXX object _deps/simplebvh-build/CMakeFiles/simple_bvh.dir/src/SimpleBVH/BVH.cpp.o
+[134/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_acth.c.o
+[135/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_asin.c.o
+[136/306] Building CXX object _deps/scalable-ccd-build/CMakeFiles/scalable_ccd.dir/src/scalable_ccd/broad_phase/sort_and_sweep.cpp.o
+[137/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_asnh.c.o
+[138/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_atan.c.o
+[139/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_atnh.c.o
+[140/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_atn1.c.o
+[141/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_cos.c.o
+[142/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_cos1.c.o
+[143/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_cosh.c.o
+[144/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_cot.c.o
+[145/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_coth.c.o
+[146/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_ep1.c.o
+[147/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_epm1.c.o
+[148/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_exp.c.o
+[149/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_ex10.c.o
+[150/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_exp2.c.o
+[151/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_glbl.c.o
+[152/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_expm.c.o
+[153/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_log.c.o
+[154/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_log1.c.o
+[155/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_lg10.c.o
+[156/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_log2.c.o
+[157/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_pred.c.o
+[158/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_rtrg.c.o
+[159/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_sin.c.o
+[160/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_sin1.c.o
+[161/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_sinh.c.o
+[162/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_sqr.c.o
+[163/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_sqrt.c.o
+[164/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_succ.c.o
+[165/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_tan.c.o
+[166/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_tanh.c.o
+[167/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_cth1.c.o
+[168/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_scan.c.o
+[169/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_prnt.c.o
+[170/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve_linear.dir/src/polysolve/linear/SaddlePointSolver.cpp.o
+[171/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_errm.c.o
+[172/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_ari.c.o
+[173/306] Building C object _deps/filib-build/CMakeFiles/filib_filib.dir/src/q_comp.c.o
+[174/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/Criteria.cpp.o
+[175/306] Building CXX object _deps/scalable-ccd-build/CMakeFiles/scalable_ccd.dir/src/scalable_ccd/utils/pca.cpp.o
+[176/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/PostStepData.cpp.o
+[177/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/Problem.cpp.o
+[178/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/LBFGS.cpp.o
+[179/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/GradientDescent.cpp.o
+[180/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/BoxConstraintSolver.cpp.o
+[181/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/ADAM.cpp.o
+[182/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/box_constraints/MMAAux.cpp.o
+[183/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/BFGS.cpp.o
+[184/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/line_search/Armijo.cpp.o
+[185/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/Solver.cpp.o
+[186/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/box_constraints/MMA.cpp.o
+[187/306] Linking CXX static library _deps\finite-diff-build\libfinitediff_finitediff.a
+[188/306] Linking C static library lib\libpredicates.a
+[189/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/Newton.cpp.o
+[190/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/descent_strategies/box_constraints/LBFGSB.cpp.o
+[191/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/line_search/Backtracking.cpp.o
+[192/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/line_search/LineSearch.cpp.o
+[193/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/barrier/barrier.cpp.o
+[194/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/line_search/NoLineSearch.cpp.o
+[195/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve.dir/src/polysolve/nonlinear/line_search/RobustArmijo.cpp.o
+[196/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/barrier/adaptive_stiffness.cpp.o
+[197/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ipc.cpp.o
+[198/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/aabb.cpp.o
+[199/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/broad_phase.cpp.o
+[200/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/sweep_and_tiniest_queue.cpp.o
+[201/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/collision_mesh.cpp.o
+[202/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/brute_force.cpp.o
+[203/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/sweep_and_prune.cpp.o
+[204/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/bvh.cpp.o
+[205/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ccd/aabb.cpp.o
+[206/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/voxel_size_heuristic.cpp.o
+[207/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ccd/inexact_point_edge.cpp.o
+[208/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/spatial_hash.cpp.o
+[209/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ccd/additive_ccd.cpp.o
+[210/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ccd/ccd.cpp.o
+[211/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/broad_phase/hash_grid.cpp.o
+[212/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/edge_face.cpp.o
+[213/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/continuous_collision_candidate.cpp.o
+[214/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ccd/point_static_plane.cpp.o
+[215/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/ccd/nonlinear_ccd.cpp.o
+[216/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/candidates.cpp.o
+[217/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/edge_edge.cpp.o
+[218/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/face_face.cpp.o
+[219/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/edge_vertex.cpp.o
+[220/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/face_vertex.cpp.o
+[221/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/candidates/vertex_vertex.cpp.o
+[222/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/collisions/collision.cpp.o
+[223/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/collisions/edge_edge.cpp.o
+[224/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/collisions/plane_vertex.cpp.o
+[225/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/edge_edge_mollifier.cpp.o
+[226/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/edge_edge.cpp.o
+[227/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/collisions/collisions_builder.cpp.o
+[228/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/line_line.cpp.o
+[229/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/collisions/collisions.cpp.o
+[230/306] Building CXX object _deps/polysolve-build/CMakeFiles/polysolve_linear.dir/src/polysolve/linear/Solver.cpp.o
+[231/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/point_edge.cpp.o
+[232/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/distance_type.cpp.o
+[233/306] Linking CXX static library _deps\polysolve-build\libpolysolve_linear.a
+[234/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/point_line.cpp.o
+[235/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/point_point.cpp.o
+[236/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/smooth_friction_mollifier.cpp.o
+[237/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/point_plane.cpp.o
+[238/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/normal_force_magnitude.cpp.o
+[239/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/distance/point_triangle.cpp.o
+[240/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/relative_velocity.cpp.o
+[241/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/friction_collisions.cpp.o
+[242/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/closest_point.cpp.o
+[243/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/tangent_basis.cpp.o
+[244/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/collisions/edge_edge.cpp.o
+[245/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/collisions/edge_vertex.cpp.o
+[246/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/collisions/friction_collision.cpp.o
+[247/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/collisions/face_vertex.cpp.o
+[248/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/implicits/plane.cpp.o
+[249/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/friction/collisions/vertex_vertex.cpp.o
+[250/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/potentials/barrier_potential.cpp.o
+[251/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/area_gradient.cpp.o
+[252/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/unordered_map_and_set.cpp.o
+[253/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/logger.cpp.o
+[254/306] Linking CXX static library _deps\tight-inclusion-build\libtight_inclusion.a
+[255/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/interval.cpp.o
+[256/306] Linking CXX static library _deps\scalable-ccd-build\libscalable_ccd.a
+[257/306] Linking CXX static library _deps\simplebvh-build\libsimple_bvh.a
+[258/306] Linking CXX static library _deps\abseil-cpp-build\absl\hash\libabsl_hash.a
+[259/306] Linking C static library _deps\filib-build\libfilib_filib.a
+[260/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/vertex_to_min_edge.cpp.o
+[261/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/autogen/auto_derivatives3.cpp.o
+[262/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/intersection.cpp.o
+[263/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/utils/save_obj.cpp.o
+[264/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/autogen/auto_derivatives2.cpp.o
+[265/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/autogen/auto_derivatives1.cpp.o
+[266/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/io/OBJWriter.cpp.o
+[267/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/io/OBJReader.cpp.o
+[268/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/mesh/MeshUtils.cpp.o
+[269/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/potentials/distance_based_potential.cpp.o
+[270/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/FullNLProblem.cpp.o
+[271/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/io/MatrixIO.cpp.o
+[272/306] Building C object CMakeFiles/polyfem.dir/src/polyfem/utils/getRSS.c.o
+[273/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/forms/garment_forms/FitForm.cpp.o
+FAILED: [code=1] CMakeFiles/polyfem.dir/src/polyfem/solver/forms/garment_forms/FitForm.cpp.o 
+C:/contract-manifest/3-interactor/cloth-fit/src/polyfem/solver/forms/garment_forms\FitForm.hpp:10:10: fatal error: 'openvdb/openvdb.h' file not found
+[274/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/Logger.cpp.o
+[275/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/forms/ContactForm.cpp.o
+[276/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/forms/garment_forms/GarmentALForm.cpp.o
+[277/306] Building CXX object _deps/ipc-toolkit-build/CMakeFiles/ipc_toolkit.dir/src/ipc/potentials/friction_potential.cpp.o
+[278/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/SpecPaths.cpp.o
+[279/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/par_for.cpp.o
+[280/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/StringUtils.cpp.o
+[281/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/JSONUtils.cpp.o
+[282/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/MatrixCache.cpp.o
+[284/306] Linking CXX static library _deps\polysolve-build\libpolysolve.a
+[285/306] Linking CXX static library _deps\ipc-toolkit-build\libipc_toolkit.a
+[286/306] Building CXX object CMakeFiles/weftfit_retarget.dir/src/retarget_bridge/weftfit_retarget.cpp.o
+[287/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/garment/run_retarget.cpp.o
+FAILED: [code=1] CMakeFiles/polyfem.dir/src/polyfem/garment/run_retarget.cpp.o 
+C:/contract-manifest/3-interactor/cloth-fit/src\polyfem/solver/forms/garment_forms/FitForm.hpp:10:10: fatal error: 'openvdb/openvdb.h' file not found
+[288/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/garment/GarmentNLProblem.cpp.o
+[289/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/utils/MatrixUtils.cpp.o
+[290/306] Building CXX object CMakeFiles/weftfit_retarget_stub.dir/retarget_bridge_generated/weftfit_retarget_stubs.cc.o
+[291/306] Building CXX object CMakeFiles/weftfit_retarget.dir/src/polyfem/garment/run_retarget.cpp.o
+FAILED: [code=1] CMakeFiles/weftfit_retarget.dir/src/polyfem/garment/run_retarget.cpp.o 
+C:/contract-manifest/3-interactor/cloth-fit/src\polyfem/solver/forms/garment_forms/FitForm.hpp:10:10: fatal error: 'openvdb/openvdb.h' file not found
+[292/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/forms/garment_forms/CurveCenterTargetForm.cpp.o
+[293/306] Building CXX object CMakeFiles/weftfit_retarget_stub.dir/src/retarget_bridge/loader.cpp.o
+[294/306] Building CXX object CMakeFiles/weftfit_retarget.dir/src/polyfem/garment/GarmentNLProblem.cpp.o
+[295/306] Building CXX object CMakeFiles/PolyFEM_bin.dir/src/polyfem/garment/run_retarget.cpp.o
+FAILED: [code=1] CMakeFiles/PolyFEM_bin.dir/src/polyfem/garment/run_retarget.cpp.o 
+C:/contract-manifest/3-interactor/cloth-fit/src\polyfem/solver/forms/garment_forms/FitForm.hpp:10:10: fatal error: 'openvdb/openvdb.h' file not found
+[296/306] Linking CXX static library libweftfit_retarget_stub.a
+[297/306] Building CXX object CMakeFiles/PolyFEM_bin.dir/src/polyfem/main.cpp.o
+FAILED: [code=1] CMakeFiles/PolyFEM_bin.dir/src/polyfem/main.cpp.o 
+C:/contract-manifest/3-interactor/cloth-fit/src\polyfem/solver/forms/garment_forms/FitForm.hpp:10:10: fatal error: 'openvdb/openvdb.h' file not found
+[298/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/forms/garment_forms/GarmentForm.cpp.o
+[299/306] Building CXX object CMakeFiles/PolyFEM_bin.dir/src/polyfem/garment/GarmentNLProblem.cpp.o
+[300/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/solver/forms/garment_forms/CurveConstraintForm.cpp.o
+[301/306] Building CXX object CMakeFiles/polyfem.dir/src/polyfem/garment/optimize.cpp.o
+[302/306] Building CXX object CMakeFiles/weftfit_retarget.dir/src/polyfem/garment/optimize.cpp.o
+[303/306] Building CXX object CMakeFiles/PolyFEM_bin.dir/src/polyfem/garment/optimize.cpp.o
+=== build exit=1 ===

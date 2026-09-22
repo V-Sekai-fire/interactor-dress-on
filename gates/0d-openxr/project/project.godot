@@ -1,0 +1,9 @@
+config_version=5
+
+[application]
+config/name="Gate 0D - OpenXR reaches SteamVR"
+config/features=PackedStringArray("4.4")
+
+[xr]
+openxr/enabled=true
+shaders/enabled=true

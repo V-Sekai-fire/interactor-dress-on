@@ -1,4 +1,5 @@
-build/
+build*/
 .godot/
 *.exp
 *.lib
+.cpm-cache/

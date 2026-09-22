@@ -1,0 +1,10 @@
+-- Generating done (0.0s)
+=== build ===
+FAILED: [code=1] CMakeFiles/mwt_subset.dir/shim/delaunay_geogram.cpp.o 
+C:/interactor-dress-on/gates/0b-crosscompile/cassie-thirdparty/shim/delaunay_geogram.cpp:38:10: fatal error: 'core/math/delaunay_2d.h' file not found
+   38 | #include "core/math/delaunay_2d.h"
+[2/4] Building CXX object CMakeFiles/geogram_subset.dir/C_/contract-manifest/4-entities/godot/thirdparty/geogram/src/lib/geogram/delaunay/delaunay_2d.cpp.o
+[3/4] Linking CXX static library libgeogram_subset.a
+=== build exit=1 ===
+-rw-r--r-- 1 ernest.lee 197121 6090556 Sep 22 14:36 build/libgeogram_subset.a
+-rw-r--r-- 1 ernest.lee 197121 2003474 Sep 22 14:31 build/libpmp_subset.a

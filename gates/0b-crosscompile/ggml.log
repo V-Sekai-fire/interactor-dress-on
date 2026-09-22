@@ -1,0 +1,39 @@
+=== configure ===
+-- The C compiler identification is Clang 23.1.1
+-- The CXX compiler identification is Clang 23.1.1
+-- The ASM compiler identification is Clang with GNU-like command-line
+-- Found assembler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Users/ernest.lee/scoop/apps/llvm/current/bin/clang++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Setting GGML_NATIVE_DEFAULT to OFF
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- sccache found, compilation results will be cached. Disable with GGML_CCACHE=OFF.
+-- CMAKE_SYSTEM_PROCESSOR: riscv64
+-- GGML_SYSTEM_ARCH: riscv64
+-- Including CPU backend
+-- riscv64 detected
+-- Adding CPU backend variant ggml-cpu: -march=rv64gcv_zfh_zvfh_zicbop_zihintpause;-mabi=lp64d 
+-- ggml version: 0.19.0
+-- ggml commit:  04b55bba
+-- Configuring done (2.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/interactor-dress-on/gates/0b-crosscompile/build-ggml
+=== configure exit=0 ===
+=== build ===
+[18/28] Linking CXX static library src\libggml-base.a
+[27/28] Linking CXX static library src\libggml-cpu.a
+[28/28] Linking CXX static library src\libggml.a
+=== build exit=0 ===
+-rw-r--r-- 1 ernest.lee 197121 3020884 Sep 22 14:14 build-ggml/src/libggml-base.a
+-rw-r--r-- 1 ernest.lee 197121 2733876 Sep 22 14:15 build-ggml/src/libggml-cpu.a
+-rw-r--r-- 1 ernest.lee 197121  158620 Sep 22 14:15 build-ggml/src/libggml.a

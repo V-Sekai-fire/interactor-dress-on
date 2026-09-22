@@ -1,0 +1,6 @@
+-- Generating done (0.0s)
+-- Build files have been written to: C:/interactor-dress-on/gates/0c-threads/build
+[18/20] Linking CXX static library sandbox_cmake\libsandbox_api.a
+[20/20] Linking CXX executable threadprobe
+=== run ===
+PASS-SEQUENTIAL spawn=ok hw=2 started=4 finished=4 max_live=1

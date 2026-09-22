@@ -25,7 +25,7 @@ evidence.
 | [0B](gates/0b-crosscompile/) | Does the heavy C++ cross-compile for riscv64? | **PASS** — ggml, PMP, Geogram clean; cloth-fit 179/184 TUs, single blocker (OpenVDB → libigl); Godot Delaunay2D → Geogram's |
 | [0C](gates/0c-threads/) | Do guest threads run? | **PASS-SEQUENTIAL** — they complete, never overlap |
 | [0D](gates/0d-openxr/) | Does stock Godot's OpenXR reach SteamVR? | plumbing works; no HMD present on either runtime |
-| 0E | Drive the RD probe over transport-godot-mcp | next |
+| [0E](gates/0e-mcp/) | Drive the RD probe over transport-godot-mcp | **PASS** — `tools/call` → `call_method(/root/Main, rd_probe)` returns the 0A result |
 
 ## Host-side addons (stock Godot, GDScript only)
 
@@ -44,6 +44,6 @@ guest/     the ELF: ADD_API_FUNCTION surface, rd_compute, pipeline
 vendor/    ggml + trellis2 + cassie subset + cloth-dynamics + cloth-fit
 kernels/   AVBD .spv and ggml vulkan-shaders, embedded
 project/   minimal stock-Godot project
-gates/     the gates, kept as runnable evidence (0A–0D in)
+gates/     the gates, kept as runnable evidence (0A–0E in)
 tests/     host-side native tests that need no sandbox
 ```

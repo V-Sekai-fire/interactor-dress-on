@@ -1,0 +1,16 @@
+config_version=5
+
+[application]
+config/name="interactor-dress-on"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.4")
+
+[autoload]
+McpRuntime="*res://addons/vsekai_godot_mcp/mcp_runtime.gd"
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/godot_sandbox/plugin.cfg", "res://addons/vsekai_godot_mcp/plugin.cfg")
+
+[xr]
+openxr/enabled=true
+shaders/enabled=true

@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+control nd=   1 ns=  1 barrier=true  host_us=  10392  OK value=1 expected=1 setup_us=7489 loop_us=2635 read_us=190 us_per_dispatch=2635.0 us_per_submit=2635.0
+control nd=   1 ns=  1 barrier=false host_us=    744  OK value=1 expected=1 setup_us=356 loop_us=274 read_us=75 us_per_dispatch=274.0 us_per_submit=274.0
+control nd=  16 ns=  1 barrier=true  host_us=    400  OK value=16 expected=16 setup_us=127 loop_us=185 read_us=70 us_per_dispatch=11.6 us_per_submit=185.0
+control nd=  16 ns=  1 barrier=false host_us=    349  WRONG value=6 expected=16 setup_us=122 loop_us=139 read_us=71 us_per_dispatch=8.7 us_per_submit=139.0
+control nd=  64 ns=  1 barrier=true  host_us=    544  OK value=64 expected=64 setup_us=114 loop_us=343 read_us=69 us_per_dispatch=5.4 us_per_submit=343.0
+control nd=  64 ns=  1 barrier=false host_us=    378  WRONG value=23 expected=64 setup_us=116 loop_us=172 read_us=70 us_per_dispatch=2.7 us_per_submit=172.0
+control nd= 256 ns=  1 barrier=true  host_us=   1221  OK value=256 expected=256 setup_us=121 loop_us=1007 read_us=75 us_per_dispatch=3.9 us_per_submit=1007.0
+control nd= 256 ns=  1 barrier=false host_us=    580  WRONG value=75 expected=256 setup_us=123 loop_us=364 read_us=75 us_per_dispatch=1.4 us_per_submit=364.0
+control nd=   1 ns= 16 barrier=true  host_us=   1310  OK value=16 expected=16 setup_us=114 loop_us=1108 read_us=69 us_per_dispatch=69.3 us_per_submit=69.3
+control nd=   1 ns= 16 barrier=false host_us=   1361  OK value=16 expected=16 setup_us=118 loop_us=1161 read_us=63 us_per_dispatch=72.6 us_per_submit=72.6
+control nd=   1 ns= 64 barrier=true  host_us=   4652  OK value=64 expected=64 setup_us=118 loop_us=4353 read_us=117 us_per_dispatch=68.0 us_per_submit=68.0
+control nd=   1 ns= 64 barrier=false host_us=   5217  OK value=64 expected=64 setup_us=345 loop_us=4727 read_us=86 us_per_dispatch=73.9 us_per_submit=73.9
+control nd=  16 ns= 16 barrier=true  host_us=   2312  OK value=256 expected=256 setup_us=354 loop_us=1867 read_us=68 us_per_dispatch=7.3 us_per_submit=116.7
+control nd=  16 ns= 16 barrier=false host_us=   1466  WRONG value=109 expected=256 setup_us=123 loop_us=1256 read_us=68 us_per_dispatch=4.9 us_per_submit=78.5
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

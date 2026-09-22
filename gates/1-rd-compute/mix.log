@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+shape nd= 16 ns=  1 gdscript        41933      614      392   (host_us x3)
+shape nd= 16 ns=  1 guest           21386    10441    10879   (host_us x3)
+shape nd= 16 ns=  1 guest-quiet     10793     9563    10009   (host_us x3)
+shape nd= 16 ns=  1 gdscript          663      366      377   (host_us x3)
+shape nd= 16 ns=  1 guest-quiet     10113     9677     9672   (host_us x3)
+shape nd= 16 ns=  1 guest            9824     9850    10376   (host_us x3)
+shape nd=  1 ns= 16 gdscript         1724     1286     1286   (host_us x3)
+shape nd=  1 ns= 16 guest           10514     8851     8543   (host_us x3)
+shape nd=  1 ns= 16 guest-quiet      8396     8143     8378   (host_us x3)
+shape nd=  1 ns= 16 gdscript         1497     2200     1329   (host_us x3)
+shape nd=  1 ns= 16 guest-quiet      8741     8234     8434   (host_us x3)
+shape nd=  1 ns= 16 guest            8679     8849    10153   (host_us x3)
+shape nd= 64 ns=  1 gdscript          944      527      504   (host_us x3)
+shape nd= 64 ns=  1 guest            9822     9698     9768   (host_us x3)
+shape nd= 64 ns=  1 guest-quiet      9677     9851     9822   (host_us x3)
+shape nd= 64 ns=  1 gdscript          791      498      482   (host_us x3)
+shape nd= 64 ns=  1 guest-quiet      9398    10079    10781   (host_us x3)
+shape nd= 64 ns=  1 guest           10085     9791     9609   (host_us x3)
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

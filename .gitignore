@@ -3,3 +3,4 @@ build*/
 *.exp
 *.lib
 .cpm-cache/
+tools/openxr-simulator/

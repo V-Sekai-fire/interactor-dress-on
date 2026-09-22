@@ -1,8 +1,30 @@
-# Gate 0D — does stock Godot's OpenXR reach SteamVR?
+# Gate 0D — does stock Godot's OpenXR reach a runtime with an HMD?
 
-**Result: the plumbing works; no head-mounted display was present.**
+**Result: PASS on OpenXR-Simulator.** `run-simulator.log`:
 
-Two runs, both logged here:
+```
+OpenXR: Created instance for OpenXR 1.1.54
+OpenXR: Running on OpenXR runtime:  OpenXR Simulator Runtime   1.0.27
+OpenXR: XrGraphicsRequirementsVulkan2KHR:
+PASS: OpenXR session up
+```
+
+Stock Godot 4.7.2, `--rendering-driver vulkan --xr-mode on`, and
+`XR_RUNTIME_JSON` pointed at `tools/openxr-simulator/openxr_simulator.abs.json`
+(elliotttate/OpenXR-Simulator 1.5.0, the user's choice over SteamVR's null
+driver). Nothing registered system-wide; SteamVR untouched. The simulator
+opens a desktop stereo window, so from here every VR stage can be exercised
+without a headset.
+
+One trap cost a run: the zip's own `openxr_simulator.json` says
+`"library_path": "openxr_simulator.dll"`, a bare filename, and the OpenXR
+loader searches a bare filename on the *system* library path, not beside the
+manifest — "failed to load with error 2". The `.abs.json` beside it carries an
+absolute path with forward slashes (a backslash-escaped one fails the loader's
+JSON parse). `tools/openxr-simulator/` is gitignored; fetch 1.5.0 from the
+release and write the `.abs.json` as the README there describes.
+
+The two headset runtimes, kept as the controls (both logged here):
 
 - `run.log` — default runtime. `OpenXR: Running on OpenXR runtime:
   VirtualDesktopXR 1.0.10`, then `XR_ERROR_FORM_FACTOR_UNAVAILABLE`. The
@@ -32,10 +54,8 @@ not the same as a headset being connected.
   (`0a-renderingdevice/project/control.gd` is the template) so "XR blocked
   it" is separable from "no runtime was present".
 
-## To turn this into a PASS
+## With a real headset
 
-Either connect the headset so SteamVR presents an HMD, or enable SteamVR's
-null driver for headset-less testing (`steamvr.vrsettings`:
-`"driver_null": {"enable": true}`, `"steamvr": {"requireHmd": false,
-"forcedDriver": "null"}`). The latter is what "test often" wants, and it is
-the user's config to change.
+Connect it so SteamVR (or VirtualDesktopXR) presents an HMD and run the same
+script with `XR_RUNTIME_JSON` at that runtime's manifest. The simulator run is
+the one the stages are tested against day to day.

@@ -1,0 +1,113 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+set_probe: ok 552 bytes
+open: ok
+round 0 ticks    n=1000 host_us=     650  us_per_call=    0.65  ticks n=1000 last=1256913
+round 0 clock    n=1000 host_us=      95  us_per_call=    0.10  clock n=1000 last=1790115965490018
+round 0 limit    n=1000 host_us=    1667  us_per_call=    1.67  limit n=1000 last=32
+round 0 bind     n=1000 host_us=   17596  us_per_call=   17.60  bind n=1000
+round 0 dispatch n=1000 host_us=   13172  us_per_call=   13.17  dispatch n=1000
+round 0 barrier  n=1000 host_us=   13256  us_per_call=   13.26  barrier n=1000
+round 0 submit   n=  32 host_us=   77519  us_per_call= 2422.47  submit n=32
+round 0 buffer   n=  32 host_us=    1319  us_per_call=   41.22  buffer n=32
+round 0 shader   n=  32 host_us=    3581  us_per_call=  111.91  shader n=32
+round 0 shader-pba n=  32 host_us=    2288  us_per_call=   71.50  shader-pba n=32
+round 0 pipeline n=  32 host_us=    1701  us_per_call=   53.16  pipeline n=32
+ERROR: Maximum number of scoped variants reached.
+   at: create_scoped_variant (C:/Users/ernest.lee/AppData/Local/Temp/gs/src/sandbox.cpp:2015)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:21)
+[] Exception when calling:
+  _ZL8rd_calls6Stringi (0x4be74)
+Backtrace:
+-> [0] 0x000000000004E284 + 0x004: sys_node_create
+-> [1] 0x0000000000050A70 + 0x088: _ZN3rdc6Device11uniform_setE3RIDRKSt6vectorINS_7BindingESaIS3_EEj
+-> [-] 0x4be74 + 0x0: _ZL8rd_calls6Stringi
+
+Message: Maximum number of scoped variants reached.
+
+
+ERROR: Exception: Maximum number of scoped variants reached.
+   at: handle_exception (C:/Users/ernest.lee/AppData/Local/Temp/gs/src/sandbox_exception.cpp:107)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:21)
+round 0 uset     n=  32 host_us=    6942  us_per_call=  216.94  <null>
+round 0 readback n=  32 host_us=    5786  us_per_call=  180.81  readback n=32 bytes=128
+round 0 instantiate n=  32 host_us=     765  us_per_call=   23.91  instantiate n=32
+round 1 ticks    n=1000 host_us=     117  us_per_call=    0.12  ticks n=1000 last=1412048
+round 1 clock    n=1000 host_us=      89  us_per_call=    0.09  clock n=1000 last=1790115974234743
+round 1 limit    n=1000 host_us=    1680  us_per_call=    1.68  limit n=1000 last=32
+round 1 bind     n=1000 host_us=   11110  us_per_call=   11.11  bind n=1000
+round 1 dispatch n=1000 host_us=   11958  us_per_call=   11.96  dispatch n=1000
+round 1 barrier  n=1000 host_us=   13068  us_per_call=   13.07  barrier n=1000
+round 1 submit   n=  32 host_us=   76412  us_per_call= 2387.88  submit n=32
+round 1 buffer   n=  32 host_us=    1361  us_per_call=   42.53  buffer n=32
+round 1 shader   n=  32 host_us=    3721  us_per_call=  116.28  shader n=32
+round 1 shader-pba n=  32 host_us=    1986  us_per_call=   62.06  shader-pba n=32
+round 1 pipeline n=  32 host_us=    1586  us_per_call=   49.56  pipeline n=32
+ERROR: Maximum number of scoped variants reached.
+   at: create_scoped_variant (C:/Users/ernest.lee/AppData/Local/Temp/gs/src/sandbox.cpp:2015)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:21)
+[] Exception when calling:
+  _ZL8rd_calls6Stringi (0x4be74)
+Backtrace:
+-> [0] 0x000000000004E284 + 0x004: sys_node_create
+-> [1] 0x0000000000050A70 + 0x088: _ZN3rdc6Device11uniform_setE3RIDRKSt6vectorINS_7BindingESaIS3_EEj
+-> [-] 0x4be74 + 0x0: _ZL8rd_calls6Stringi
+
+Message: Maximum number of scoped variants reached.
+
+
+ERROR: Exception: Maximum number of scoped variants reached.
+   at: handle_exception (C:/Users/ernest.lee/AppData/Local/Temp/gs/src/sandbox_exception.cpp:107)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:21)
+round 1 uset     n=  32 host_us=    6163  us_per_call=  192.59  <null>
+round 1 readback n=  32 host_us=    4346  us_per_call=  135.81  readback n=32 bytes=128
+round 1 instantiate n=  32 host_us=     631  us_per_call=   19.72  instantiate n=32
+round 2 ticks    n=1000 host_us=     141  us_per_call=    0.14  ticks n=1000 last=1554288
+round 2 clock    n=1000 host_us=      92  us_per_call=    0.09  clock n=1000 last=1790115974376966
+round 2 limit    n=1000 host_us=    1471  us_per_call=    1.47  limit n=1000 last=32
+round 2 bind     n=1000 host_us=   10310  us_per_call=   10.31  bind n=1000
+round 2 dispatch n=1000 host_us=   11488  us_per_call=   11.49  dispatch n=1000
+round 2 barrier  n=1000 host_us=   11604  us_per_call=   11.60  barrier n=1000
+round 2 submit   n=  32 host_us=   74999  us_per_call= 2343.72  submit n=32
+round 2 buffer   n=  32 host_us=    1270  us_per_call=   39.69  buffer n=32
+round 2 shader   n=  32 host_us=    3272  us_per_call=  102.25  shader n=32
+round 2 shader-pba n=  32 host_us=    1988  us_per_call=   62.13  shader-pba n=32
+round 2 pipeline n=  32 host_us=    1419  us_per_call=   44.34  pipeline n=32
+ERROR: Maximum number of scoped variants reached.
+   at: create_scoped_variant (C:/Users/ernest.lee/AppData/Local/Temp/gs/src/sandbox.cpp:2015)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:21)
+[] Exception when calling:
+  _ZL8rd_calls6Stringi (0x4be74)
+Backtrace:
+-> [0] 0x000000000004E284 + 0x004: sys_node_create
+-> [1] 0x0000000000050A70 + 0x088: _ZN3rdc6Device11uniform_setE3RIDRKSt6vectorINS_7BindingESaIS3_EEj
+-> [-] 0x4be74 + 0x0: _ZL8rd_calls6Stringi
+
+Message: Maximum number of scoped variants reached.
+
+
+ERROR: Exception: Maximum number of scoped variants reached.
+   at: handle_exception (C:/Users/ernest.lee/AppData/Local/Temp/gs/src/sandbox_exception.cpp:107)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:21)
+round 2 uset     n=  32 host_us=    6118  us_per_call=  191.19  <null>
+round 2 readback n=  32 host_us=    4206  us_per_call=  131.44  readback n=32 bytes=128
+round 2 instantiate n=  32 host_us=     617  us_per_call=   19.28  instantiate n=32
+WARNING: 3 RIDs of type "StorageBuffer" were leaked.
+   at: _free_rids (servers/rendering/rendering_device.cpp:8686)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:24)
+WARNING: 3 RIDs of type "Shader" were leaked.
+   at: _free_rids (servers/rendering/rendering_device.cpp:8686)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://probe_rd_calls.gd:24)
+close: closed
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

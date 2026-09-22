@@ -1,0 +1,3 @@
+event: message
+data: {"id":2.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"PASS: GPU compute reached from the guest (device held from an earlier vmcall)\"}","type":"text"}],"isError":false}}
+

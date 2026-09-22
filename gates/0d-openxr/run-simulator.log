@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenXR: Created instance for OpenXR 1.1.54
+OpenXR: Running on OpenXR runtime:  OpenXR Simulator Runtime   1.0.27
+OpenXR: XrGraphicsRequirementsVulkan2KHR:
+ - minApiVersionSupported:  1.0.0
+ - maxApiVersionSupported:  1.4.0
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+openxr interface: <OpenXRInterface#-9223372023835655905>
+initialized: true
+PASS: OpenXR session up
+OpenXR: No viewport was marked with use_xr, there is no rendered output!
+ERROR: 2 RID allocations of type 'N9OpenXRAPI18InteractionProfileE' were leaked at exit.
+ERROR: Attempt to disconnect a nonexistent connection from '<OpenXRSpatialEntityExtension#4143972567>'. Signal: 'spatial_discovery_recommended', callable: 'OpenXRSpatialMarkerTrackingCapability::_on_spatial_discovery_recommended'.
+   at: _disconnect (core/object/object.cpp:1640)

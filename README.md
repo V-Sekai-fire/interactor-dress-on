@@ -24,8 +24,22 @@ evidence.
 | [0A](gates/0a-renderingdevice/) | Can a sandbox guest drive RenderingDevice compute? | **PASS** — stock Godot 4.7.2, RTX 4090 |
 | [0B](gates/0b-crosscompile/) | Does the heavy C++ cross-compile for riscv64? | **PASS** — ggml, PMP, Geogram clean; cloth-fit 179/184 TUs, single blocker (OpenVDB → libigl); Godot Delaunay2D → Geogram's |
 | [0C](gates/0c-threads/) | Do guest threads run? | **PASS-SEQUENTIAL** — they complete, never overlap |
-| [0D](gates/0d-openxr/) | Does stock Godot's OpenXR reach SteamVR? | plumbing works; no HMD present on either runtime |
+| [0D](gates/0d-openxr/) | Does stock Godot's OpenXR reach a runtime with an HMD? | **PASS** — OpenXR-Simulator 1.5.0 via per-process `XR_RUNTIME_JSON`; SteamVR/VDXR present no HMD without a headset |
 | [0E](gates/0e-mcp/) | Drive the RD probe over transport-godot-mcp | **PASS** — `tools/call` → `call_method(/root/Main, rd_probe)` returns the 0A result |
+
+## Stages
+
+| stage | what | result |
+|---|---|---|
+| [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; `submit+sync` bimodal per process (open) |
+
+Three rules shape everything after Stage 1: **state machines and queues, not
+waits** (no `sync()` in the frame that `submit()`s; the host advances each
+ELF's state machine from `_process`); **batch / CPU / GPU chosen per problem**
+(the in-guest `AvbdCpu` is a first-class backend for small meshes); and
+**composition over one monolith** — one ELF per stage in its own Sandbox node
+(`curvenet`, `infer`, `fit`, `drape`), meshes crossing through the host as
+packed arrays.
 
 ## Host-side addons (stock Godot, GDScript only)
 
@@ -40,10 +54,14 @@ Neither touches the ELF. VR adds an OpenXR runtime to the host requirements.
 ## Layout
 
 ```
-guest/     the ELF: ADD_API_FUNCTION surface, rd_compute, pipeline
-vendor/    ggml + trellis2 + cassie subset + cloth-dynamics + cloth-fit
-kernels/   AVBD .spv and ggml vulkan-shaders, embedded
-project/   minimal stock-Godot project
-gates/     the gates, kept as runnable evidence (0A–0E in)
-tests/     host-side native tests that need no sandbox
+guest/     rd_compute (static lib), rd_enums.h, main.cpp (dress_on.elf, Stage 1)
+           later: curvenet/ infer/ fit/ drape/ — one ELF per stage
+vendor/    sandbox-api (guest API + cmake helper), xr-grid; later ggml, trellis2,
+           skin-tokens, cassie subset, cloth-dynamics, cloth-fit
+kernels/   .slang sources and their .spv (probe, accumulate; AVBD's to come)
+project/   the stock-Godot project: main.gd composes the Sandbox nodes,
+           gate_*.gd / probe_*.gd / control_*.gd are the runnable evidence
+gates/     0A–0E and the stage records, with their logs
+tools/     OpenXR-Simulator (gitignored; see gates/0d-openxr/)
+build.sh   riscv64 cross-build of every ELF into project/
 ```

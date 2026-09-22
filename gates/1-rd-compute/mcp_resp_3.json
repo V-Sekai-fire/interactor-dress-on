@@ -1,0 +1,3 @@
+event: message
+data: {"id":3.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"nd=64 ns=1 barrier=true host_us=148543 OK value=64 expected=64 setup_us=3989 loop_us=143121 read_us=1315 us_per_dispatch=2236.3 us_per_submit=143121.0\"}","type":"text"}],"isError":false}}
+

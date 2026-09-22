@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+set_probe: ok 552 bytes
+open: ok
+round 0 ticks    n=1000 host_us=     720  us_per_call=    0.72  ticks n=1000 last=1295344
+round 0 clock    n=1000 host_us=     117  us_per_call=    0.12  clock n=1000 last=1790116138147097
+round 0 limit    n=1000 host_us=    1750  us_per_call=    1.75  limit n=1000 last=32
+round 0 bind     n=1000 host_us=   17812  us_per_call=   17.81  bind n=1000
+round 0 dispatch n=1000 host_us=   14565  us_per_call=   14.57  dispatch n=1000
+round 0 barrier  n=1000 host_us=   13547  us_per_call=   13.55  barrier n=1000
+round 0 submit   n=  32 host_us=   84655  us_per_call= 2645.47  submit n=32
+round 0 buffer   n=  32 host_us=    1558  us_per_call=   48.69  buffer n=32
+round 0 shader   n=  32 host_us=    3744  us_per_call=  117.00  shader n=32
+round 0 shader-pba n=  32 host_us=    2225  us_per_call=   69.53  shader-pba n=32
+round 0 pipeline n=  32 host_us=    2010  us_per_call=   62.81  pipeline n=32
+round 0 uset     n=  32 host_us=     899  us_per_call=   28.09  uset n=32
+round 0 readback n=  32 host_us=    5446  us_per_call=  170.19  readback n=32 bytes=128
+round 0 instantiate n=  32 host_us=     818  us_per_call=   25.56  instantiate n=32
+round 1 ticks    n=1000 host_us=     118  us_per_call=    0.12  ticks n=1000 last=1454856
+round 1 clock    n=1000 host_us=      93  us_per_call=    0.09  clock n=1000 last=1790116275745155
+round 1 limit    n=1000 host_us=    2543  us_per_call=    2.54  limit n=1000 last=32
+round 1 bind     n=1000 host_us=   12108  us_per_call=   12.11  bind n=1000
+round 1 dispatch n=1000 host_us=   13859  us_per_call=   13.86  dispatch n=1000
+round 1 barrier  n=1000 host_us=   14004  us_per_call=   14.00  barrier n=1000
+round 1 submit   n=  32 host_us=   87342  us_per_call= 2729.44  submit n=32
+round 1 buffer   n=  32 host_us=    1536  us_per_call=   48.00  buffer n=32
+round 1 shader   n=  32 host_us=    3574  us_per_call=  111.69  shader n=32
+round 1 shader-pba n=  32 host_us=    2000  us_per_call=   62.50  shader-pba n=32
+round 1 pipeline n=  32 host_us=    1928  us_per_call=   60.25  pipeline n=32
+round 1 uset     n=  32 host_us=     785  us_per_call=   24.53  uset n=32
+round 1 readback n=  32 host_us=    5119  us_per_call=  159.97  readback n=32 bytes=128
+round 1 instantiate n=  32 host_us=     875  us_per_call=   27.34  instantiate n=32
+round 2 ticks    n=1000 host_us=     137  us_per_call=    0.14  ticks n=1000 last=1609396
+round 2 clock    n=1000 host_us=      93  us_per_call=    0.09  clock n=1000 last=1790116275899740
+round 2 limit    n=1000 host_us=    1720  us_per_call=    1.72  limit n=1000 last=32
+round 2 bind     n=1000 host_us=   10675  us_per_call=   10.68  bind n=1000
+round 2 dispatch n=1000 host_us=   12365  us_per_call=   12.37  dispatch n=1000
+round 2 barrier  n=1000 host_us=   12078  us_per_call=   12.08  barrier n=1000
+round 2 submit   n=  32 host_us=   78762  us_per_call= 2461.31  submit n=32
+round 2 buffer   n=  32 host_us=    1270  us_per_call=   39.69  buffer n=32
+round 2 shader   n=  32 host_us=    3290  us_per_call=  102.81  shader n=32
+round 2 shader-pba n=  32 host_us=    1960  us_per_call=   61.25  shader-pba n=32
+round 2 pipeline n=  32 host_us=    1479  us_per_call=   46.22  pipeline n=32
+round 2 uset     n=  32 host_us=     657  us_per_call=   20.53  uset n=32
+round 2 readback n=  32 host_us=    4618  us_per_call=  144.31  readback n=32 bytes=128
+round 2 instantiate n=  32 host_us=     757  us_per_call=   23.66  instantiate n=32
+close: closed
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

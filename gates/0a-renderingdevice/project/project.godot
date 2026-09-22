@@ -1,0 +1,8 @@
+config_version=5
+
+[application]
+config/name="Gate 0A - RenderingDevice from a sandbox guest"
+config/features=PackedStringArray("4.4")
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/godot_sandbox/plugin.cfg")

@@ -1,0 +1,4 @@
+build/
+.godot/
+*.exp
+*.lib

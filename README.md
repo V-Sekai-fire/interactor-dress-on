@@ -29,7 +29,7 @@ evidence.
 
 ## Host-side addons (stock Godot, GDScript only)
 
-- **VR pen** — `V-Sekai/transport-xr-grid`'s `procedural_3d_grid`: XR controller
+- **VR pen** — `V-Sekai-fire/transport-xr-grid`'s `procedural_3d_grid`: XR controller
   strokes → `pen_begin / pen_point / pen_end` on the guest.
 - **MCP** — `V-Sekai-fire/transport-godot-mcp`: editor bridge on 8788, in-game
   bridge on 8789, so an agent can play the project and `call_method` into the

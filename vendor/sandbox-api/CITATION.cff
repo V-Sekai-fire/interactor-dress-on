@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: If you use this code, cite godot-sandbox.
+title: godot-sandbox guest API and cmake helper (vendored)
+abstract: >-
+  The C++ guest API (program/cpp/docker/api) and the add_sandbox_program cmake
+  helper (program/cpp/cmake) from the org's godot-sandbox fork, unmodified
+  except that the cmake example directory is omitted. This is everything a
+  guest ELF needs to build against; the runtime addon is separate
+  (project/addons/godot_sandbox).
+type: software
+authors:
+  - name: libriscv contributors
+    website: https://github.com/libriscv/godot-sandbox
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/godot-sandbox
+commit: 9c3c9f60e828d3340ea522ecbeb0eb5af3bd82a3
+license: BSD-3-Clause

@@ -1,0 +1,26 @@
+# The 24 AVBD kernels, by their Lean/Slang module names. Order is the order
+# the forward step dispatches them, then dual updates, self-collision, backward.
+vbd_init
+spring_force
+vbd_gather_spring
+attachment_force_al
+vbd_gather_attachment
+triangle_membrane_force_al
+vbd_gather_triangle
+triangle_bending_force_al
+vbd_gather_bending
+vbd_solve_apply
+attachment_dual_update
+triangle_membrane_dual_update
+triangle_bending_dual_update
+self_collision_scan
+vbd_solve_apply_backward
+vbd_gather_spring_backward
+vbd_gather_attachment_backward
+vbd_gather_triangle_backward
+vbd_gather_bending_backward
+attachment_force_al_backward
+spring_force_backward
+triangle_membrane_force_al_backward
+triangle_bending_force_al_backward
+vbd_init_backward

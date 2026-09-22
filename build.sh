@@ -41,6 +41,15 @@ NINJA="$(command -v ninja || true)"
 # CMake wants the toolchain path in its own spelling.
 TOOLCHAIN="$(cygpath -m "$SYSROOT/toolchain.cmake" 2>/dev/null || echo "$SYSROOT/toolchain.cmake")"
 
+# The AVBD kernels: Lean -> Slang (committed) -> cpp (committed) + SPIR-V
+# embedded into the build dir. --no-emit skips lake; set AVBD_EMIT=1 to
+# regenerate the Slang from cloth-dynamics/lean.
+if [ "${AVBD_EMIT:-0}" = 1 ]; then
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh"
+else
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh" --no-emit
+fi
+
 if [ ! -f "$BUILD/build.ninja" ]; then
 	cmake -S "$HERE" -B "$BUILD" -G Ninja \
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \

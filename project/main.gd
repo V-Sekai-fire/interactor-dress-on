@@ -15,7 +15,7 @@ func _ready() -> void:
 	add_child(_sb)
 	# Every Array, RDUniform and returned Variant is scoped to one vmcall; the
 	# default cap (100) is hit by ~30 uniform sets. Stage 1 finding.
-	_sb.references_max = 4096
+	_sb.references_max = 65536
 	_sb.program = load("res://dress_on.elf")
 	print("[dress-on] sandbox loaded dress_on.elf")
 
@@ -57,6 +57,23 @@ func rd_bench(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> S
 	var r = _sb.vmcall("rd_bench", spirv, n_dispatch, n_submit, barrier)
 	var dt := Time.get_ticks_usec() - t0
 	return "nd=%d ns=%d barrier=%s host_us=%d %s" % [n_dispatch, n_submit, barrier, dt, str(r)]
+
+# --- Stage 2: the AVBD solver, cpu or rd --------------------------------------
+
+func avbd_fixture(backend: String = "rd") -> String:
+	if _sb == null:
+		return "FAIL: no sandbox"
+	var t0 := Time.get_ticks_usec()
+	var r = _sb.vmcall("avbd_fixture", backend)
+	return "host_us=%d %s" % [Time.get_ticks_usec() - t0, str(r)]
+
+func avbd_bench(backend: String = "rd-batched", nx: int = 32, ny: int = 32, substeps: int = 5, iters: int = 10) -> String:
+	if _sb == null:
+		return "FAIL: no sandbox"
+	var t0 := Time.get_ticks_usec()
+	var r = _sb.vmcall("avbd_bench", backend, nx, ny, substeps, iters)
+	var dt := Time.get_ticks_usec() - t0
+	return "host_us=%d ms/substep=%.2f %s" % [dt, dt / 1000.0 / substeps, str(r)]
 
 func rd_last_step() -> String:
 	return str(_sb.vmcall("rd_last_step")) if _sb != null else "FAIL: no sandbox"

@@ -32,6 +32,9 @@ evidence.
 | stage | what | result |
 |---|---|---|
 | [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; `submit+sync` bimodal per process (open) |
+| [2](gates/2-avbd/) | AVBD in the guest: Lean → Slang → `cpp` (`AvbdCpu`) and `spirv` (`AvbdRd`), one driver | **PASS (forward + duals)** — oracle exact on both; crossover ≈100 vertices, GPU 10× at 1024; backward + self-collision next |
+
+The standing rules are in [AGENTS.md](AGENTS.md).
 
 Three rules shape everything after Stage 1: **state machines and queues, not
 waits** (no `sync()` in the frame that `submit()`s; the host advances each

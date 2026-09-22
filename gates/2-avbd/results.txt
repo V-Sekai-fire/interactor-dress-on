@@ -1,0 +1,14 @@
+fixture cpu host_us=     482  PASS cpu: PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+fixture rd  host_us=  403559  PASS rd: PASS four_vertex_all_constraints (max_abs_diff=2.38419e-07 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+bench cpu          8x8   host_us=    30029  ms/substep=     6.01  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+bench rd           8x8   host_us=    35515  ms/substep=     7.10  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+bench rd-batched   8x8   host_us=    26265  ms/substep=     5.25  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+bench cpu         16x16  host_us=    84871  ms/substep=    16.97  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+bench rd          16x16  host_us=    32031  ms/substep=     6.41  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+bench rd-batched  16x16  host_us=    27429  ms/substep=     5.49  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+bench cpu         32x32  host_us=   360882  ms/substep=    72.18  cpu nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+bench rd          32x32  host_us=    41462  ms/substep=     8.29  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+bench rd-batched  32x32  host_us=    35604  ms/substep=     7.12  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+bench rd          64x64  host_us=    80126  ms/substep=    16.03  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+bench rd-batched  64x64  host_us=    73504  ms/substep=    14.70  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+RESULT: PASS

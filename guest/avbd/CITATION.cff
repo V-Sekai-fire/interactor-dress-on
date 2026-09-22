@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: If you use this code, cite the AVBD sandbox guest it is vendored from.
+title: AVBD sandbox guest (vendored)
+abstract: >-
+  The AVBD CPU guest from V-Sekai-fire/interactor-mujoco-sandbox-demo
+  (guest-avbd): the Lean-generated kernels driven by AvbdCpu, the Eigen-free
+  predictor/velocity/grab driver (avbd_sim.h), the panel mesh builder
+  (cloth_grid) and slangc's cpp prelude (slang-rt). Adapted here: params
+  blocks follow Lean HEAD (count guards, dual-update beta/penaltyMax), the
+  topology (CSR, colouring) is shared with AvbdRd through avbd_topology, the
+  driver is templated over the backend, and run()/sync()/numColors() give
+  AvbdCpu the same surface as AvbdRd. The kernels themselves are not vendored;
+  kernels/avbd/gen.sh regenerates them from cloth-dynamics/lean.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: chibifire
+repository-code: https://github.com/V-Sekai-fire/interactor-mujoco-sandbox-demo
+commit: a8d11c5
+license:
+  - Apache-2.0
+  - MIT

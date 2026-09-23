@@ -1,0 +1,48 @@
+PROBE graph qwen rd_native nodes=76 dispatches=45 barriers=39 (barrier_all: 44) host_us(entry..submit)=900 frames=1 run_ms=2.7 status=0/0/0
+PROBE graph qwen drop k=1 barriers=38 detected=1 differing=5888 worst_rel_l2=1.207e-01 [barrier 1 before dispatch 2 MUL 'node_3' f32]
+PROBE graph qwen drop k=2 barriers=38 detected=1 differing=963 worst_rel_l2=4.421e-03 [barrier 2 before dispatch 3 MUL_MAT 'node_4' f32]
+PROBE graph qwen drop k=3 barriers=38 detected=1 differing=1920 worst_rel_l2=2.059e+00 [barrier 3 before dispatch 4 CPY 'cache.v.0 (view) (copy of  (reshaped) (view))' f32]
+PROBE graph qwen drop k=4 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 4 before dispatch 5 CONCAT 'node_9' f32]
+PROBE graph qwen drop k=5 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 5 before dispatch 7 CONCAT 'node_14' f32]
+PROBE graph qwen drop k=6 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 6 before dispatch 8 CONCAT 'node_15' f32]
+PROBE graph qwen drop k=7 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 7 before dispatch 9 REPEAT 'node_18' f32]
+PROBE graph qwen drop k=8 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 8 before dispatch 10 CONT ' (permuted) (cont)' f32]
+PROBE graph qwen drop k=9 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 9 before dispatch 11 CONT ' (permuted) (cont) (reshaped) (reshaped) (permuted) (transposed' f32]
+PROBE graph qwen drop k=10 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 10 before dispatch 12 MUL_MAT 'node_27' f32]
+PROBE graph qwen drop k=11 barriers=38 detected=1 differing=3840 worst_rel_l2=1.427e+00 [barrier 11 before dispatch 13 RMS_NORM 'node_29' f32]
+PROBE graph qwen drop k=12 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 12 before dispatch 14 REPEAT 'node_30' f32]
+PROBE graph qwen drop k=13 barriers=38 detected=1 differing=3840 worst_rel_l2=1.412e+00 [barrier 13 before dispatch 15 MUL 'node_31' f32]
+PROBE graph qwen drop k=14 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 14 before dispatch 16 ROPE 'node_32' f32]
+PROBE graph qwen drop k=15 barriers=38 detected=1 differing=1920 worst_rel_l2=9.755e-01 [barrier 15 before dispatch 17 CPY 'cache.k.0 (view) (copy of  (view))' f32]
+PROBE graph qwen drop k=16 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 18 CONCAT 'node_36' f32]
+PROBE graph qwen drop k=17 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 17 before dispatch 20 CONCAT 'node_41' f32]
+PROBE graph qwen drop k=18 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 18 before dispatch 21 CONCAT 'node_42' f32]
+PROBE graph qwen drop k=19 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 19 before dispatch 22 REPEAT 'node_45' f32]
+PROBE graph qwen drop k=20 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 20 before dispatch 23 CONT ' (permuted) (cont)' f32]
+PROBE graph qwen drop k=21 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 21 before dispatch 24 MUL_MAT 'node_51' f32]
+PROBE graph qwen drop k=22 barriers=38 detected=1 differing=1792 worst_rel_l2=2.395e-02 [barrier 22 before dispatch 25 RMS_NORM 'node_53' f32]
+PROBE graph qwen drop k=23 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 23 before dispatch 26 REPEAT 'node_54' f32]
+PROBE graph qwen drop k=24 barriers=38 detected=1 differing=1792 worst_rel_l2=1.134e-02 [barrier 24 before dispatch 27 MUL 'node_55' f32]
+PROBE graph qwen drop k=25 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 25 before dispatch 28 ROPE 'node_56' f32]
+PROBE graph qwen drop k=26 barriers=38 detected=1 differing=896 worst_rel_l2=6.689e-03 [barrier 26 before dispatch 29 MUL_MAT 'node_58' f32]
+PROBE graph qwen drop k=27 barriers=38 detected=1 differing=896 worst_rel_l2=1.887e-01 [barrier 27 before dispatch 30 SCALE 'node_59' f32]
+PROBE graph qwen drop k=28 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 28 before dispatch 31 SOFT_MAX 'node_60' f32]
+PROBE graph qwen drop k=29 barriers=38 detected=1 differing=1792 worst_rel_l2=5.657e+00 [barrier 29 before dispatch 32 MUL_MAT 'node_61' f32]
+PROBE graph qwen drop k=30 barriers=38 detected=1 differing=1792 worst_rel_l2=7.206e-01 [barrier 30 before dispatch 33 CONT ' (permuted) (cont)' f32]
+PROBE graph qwen drop k=31 barriers=38 detected=1 differing=896 worst_rel_l2=2.664e-02 [barrier 31 before dispatch 34 MUL_MAT 'node_65' f32]
+PROBE graph qwen drop k=32 barriers=38 detected=1 differing=1792 worst_rel_l2=1.022e+00 [barrier 32 before dispatch 35 ADD 'node_66' f32]
+PROBE graph qwen drop k=33 barriers=38 detected=1 differing=1792 worst_rel_l2=1.431e-01 [barrier 33 before dispatch 36 RMS_NORM 'node_67' f32]
+PROBE graph qwen drop k=34 barriers=38 detected=1 differing=1792 worst_rel_l2=2.899e-02 [barrier 34 before dispatch 38 MUL 'node_69' f32]
+PROBE graph qwen drop k=35 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 35 before dispatch 39 MUL_MAT 'node_70' f32]
+PROBE graph qwen drop k=36 barriers=38 detected=1 differing=1792 worst_rel_l2=1.708e-01 [barrier 36 before dispatch 40 SILU 'node_71' f32]
+PROBE graph qwen drop k=37 barriers=38 detected=1 differing=1792 worst_rel_l2=2.821e-01 [barrier 37 before dispatch 42 MUL 'node_73' f32]
+PROBE graph qwen drop k=38 barriers=38 detected=1 differing=120 worst_rel_l2=1.380e-02 [barrier 38 before dispatch 43 MUL_MAT 'node_74' f32]
+PROBE graph qwen drop k=39 barriers=38 detected=1 differing=1792 worst_rel_l2=1.725e+00 [barrier 39 before dispatch 44 ADD 'node_75' f32]
+PROBE graph qwen rd_f16_vs_rd_f32_info output=layer_out n=1792 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=20/39 detected nodes=76 dispatches=45 barriers=39/44 status=0/0/0/0 wall_s=2.0
+RESULT: PASS (graph qwen)
+ggml_test: rd stats graphs=45 nodes=3420 dispatches=2025 skipped=1395 barriers=1721 failed_graphs=0 last{nodes=76 dispatches=45 barriers=39 skipped=31} pipelines=12 set0_created=10 slots_created=45 coop_yields=0 waits=45 faults=0 params_bytes=518400 set_bytes=82999304 get_bytes=1382400 copies=0 clears=45 buffers_live=0 bytes_live=0

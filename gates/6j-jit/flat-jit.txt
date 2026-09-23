@@ -1,0 +1,17 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T10:50:47
+args: --gate=loop --out=C:/Users/ernest.lee/AppData/Local/Temp/jit/flat-jit.txt --wallclock=2800 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER               98 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 11 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1203 ms  vm    1140.9 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               618 ms  vm     608.8 ms  heap 3.1 MiB  frames 1112  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN         2361 ms  vm    2358.3 ms  heap 8.3 MiB  frames 4768  OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+      HEARTBEAT FIT_RUN t=30 s | fit_step 30 s heap 36.8 MiB
+      HEARTBEAT FIT_RUN t=60 s | fit_step 60 s heap 38.2 MiB
+      HEARTBEAT FIT_RUN t=90 s | fit_step 90 s heap 38.9 MiB
+      HEARTBEAT FIT_RUN t=120 s | fit_step 120 s heap 30.4 MiB
+      HEARTBEAT FIT_RUN t=150 s | fit_step 150 s heap 30.4 MiB

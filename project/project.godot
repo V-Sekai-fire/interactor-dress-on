@@ -16,6 +16,10 @@ enabled=PackedStringArray("res://addons/godot_sandbox/plugin.cfg", "res://addons
 ; No Docker: a guest fault on Linux/macOS otherwise pulls and starts the addon's
 ; C++ compiler container to print a source line (Gate 0H; godot-sandbox PR #4).
 toolchain/docker_enabled=false
+; Native translation (user, 2026-09-23): off until cut 6J ships the bintr-<hash> libraries;
+; with it on and no library present this addon build segfaults on Windows (probe, 2026-09-23).
+binary_translation/enabled=false
+binary_translation/cache_dir="res://bintr/"
 
 [xr]
 openxr/enabled=true

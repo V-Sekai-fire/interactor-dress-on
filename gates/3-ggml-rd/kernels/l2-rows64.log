@@ -1,0 +1,107 @@
+ggml-rd L2: 104 cases, 6 packers, 16 kernels, control=none
+OK   SOFT_MAX ne=[10,5,4,3] scale=1               out=[10,5,4,3]         dispatches=1 nmse=5.542e-15 (max 1e-06) exact=272/600
+OK   SOFT_MAX ne=[16,16,1,1] scale=1              out=[16,16,1,1]        dispatches=1 nmse=7.075e-15 (max 1e-06) exact=82/256
+OK   SOFT_MAX ne=[15,15,1,1] scale=1              out=[15,15,1,1]        dispatches=1 nmse=3.744e-15 (max 1e-06) exact=142/225
+OK   SOFT_MAX ne=[16,1024,1,1] scale=1            out=[16,1024,1,1]      dispatches=1 nmse=7.118e-15 (max 1e-06) exact=6287/16384
+OK   SOFT_MAX ne=[15,1023,1,1] scale=1            out=[15,1023,1,1]      dispatches=1 nmse=5.289e-15 (max 1e-06) exact=7957/15345
+OK   SOFT_MAX ne=[1024,16,1,1] scale=1            out=[1024,16,1,1]      dispatches=1 nmse=6.948e-15 (max 1e-06) exact=6571/16384
+OK   SOFT_MAX ne=[1023,15,1,1] scale=1            out=[1023,15,1,1]      dispatches=1 nmse=9.633e-15 (max 1e-06) exact=5402/15345
+OK   SOFT_MAX ne=[16,16,1,1] scale=0.1            out=[16,16,1,1]        dispatches=1 nmse=5.504e-15 (max 1e-06) exact=114/256
+OK   SOFT_MAX ne=[15,15,1,1] scale=0.1            out=[15,15,1,1]        dispatches=1 nmse=5.186e-15 (max 1e-06) exact=124/225
+OK   SOFT_MAX ne=[16,1024,1,1] scale=0.1          out=[16,1024,1,1]      dispatches=1 nmse=4.750e-15 (max 1e-06) exact=7914/16384
+OK   SOFT_MAX ne=[15,1023,1,1] scale=0.1          out=[15,1023,1,1]      dispatches=1 nmse=4.309e-15 (max 1e-06) exact=9807/15345
+OK   SOFT_MAX ne=[1024,16,1,1] scale=0.1          out=[1024,16,1,1]      dispatches=1 nmse=5.104e-15 (max 1e-06) exact=6923/16384
+OK   SOFT_MAX ne=[1023,15,1,1] scale=0.1          out=[1023,15,1,1]      dispatches=1 nmse=4.358e-15 (max 1e-06) exact=7150/15345
+OK   SOFT_MAX ne=[1024,1024,1,1] scale=0.1        out=[1024,1024,1,1]    dispatches=1 nmse=5.190e-15 (max 1e-06) exact=456204/1048576
+OK   SOFT_MAX ne=[1023,1023,1,1] scale=0.1        out=[1023,1023,1,1]    dispatches=1 nmse=5.093e-15 (max 1e-06) exact=462677/1046529
+OK   SOFT_MAX ne=[16,2,32,1] scale=0.1 inplace    out=[16,2,32,1]        dispatches=1 nmse=3.784e-15 (max 1e-06) exact=553/1024
+OK   SOFT_MAX ne=[200000,4,1,1] scale=1           out=[200000,4,1,1]     dispatches=1 nmse=2.247e-14 (max 1e-06) exact=137663/800000
+OK   SOFT_MAX ne=[643251,3,1,1] scale=1           out=[643251,3,1,1]     dispatches=1 nmse=2.565e-14 (max 1e-06) exact=358561/1929753
+OK   SOFT_MAX ne=[7,3,5,2] scale=1                out=[7,3,5,2]          dispatches=1 nmse=1.724e-15 (max 1e-06) exact=160/210
+OK   SOFT_MAX ne=[1,3,5,2] scale=1                out=[1,3,5,2]          dispatches=1 nmse=0.000e+00 (max 1e-06) exact=30/30
+OK   SOFT_MAX ne=[300,64,1,1] scale=1 x in [-200,200) out=[300,64,1,1]       dispatches=1 nmse=4.327e-15 (max 1e-06) exact=16414/19200
+OK   SOFT_MAX ne=[512,512,8,1] scale=1            out=[512,512,8,1]      dispatches=1 nmse=7.352e-15 (max 1e-06) exact=830813/2097152
+OK   SOFT_MAX ne=[54000,8,2,1] scale=1            out=[54000,8,2,1]      dispatches=1 nmse=8.969e-15 (max 1e-06) exact=321375/864000
+OK   SOFT_MAX ne=[1029,1029,2,1] scale=0.125      out=[1029,1029,2,1]    dispatches=1 nmse=5.116e-15 (max 1e-06) exact=939231/2117682
+OK   SOFT_MAX then ADD chain [77,64,4] scale=0.125 out=[77,64,4,1]        dispatches=2 nmse=8.733e-17 (max 1e-06) exact=18915/19712
+OK   NORM ne=[64,5,4,3] eps=0                     out=[64,5,4,3]         dispatches=1 nmse=2.859e-15 (max 1e-07) exact=2785/3840
+OK   RMS_NORM ne=[64,5,4,3] eps=0                 out=[64,5,4,3]         dispatches=1 nmse=5.916e-16 (max 1e-07) exact=3598/3840
+OK   NORM ne=[1025,5,4,3] eps=0                   out=[1025,5,4,3]       dispatches=1 nmse=1.557e-15 (max 1e-07) exact=49800/61500
+OK   RMS_NORM ne=[1025,5,4,3] eps=0               out=[1025,5,4,3]       dispatches=1 nmse=1.659e-15 (max 1e-07) exact=49964/61500
+OK   NORM ne=[64,5,4,3] eps=1e-06                 out=[64,5,4,3]         dispatches=1 nmse=1.527e-15 (max 1e-07) exact=3010/3840
+OK   RMS_NORM ne=[64,5,4,3] eps=1e-06             out=[64,5,4,3]         dispatches=1 nmse=1.326e-15 (max 1e-07) exact=3247/3840
+OK   NORM ne=[1025,5,4,3] eps=1e-06               out=[1025,5,4,3]       dispatches=1 nmse=2.484e-15 (max 1e-07) exact=49437/61500
+OK   RMS_NORM ne=[1025,5,4,3] eps=1e-06           out=[1025,5,4,3]       dispatches=1 nmse=1.530e-15 (max 1e-07) exact=50909/61500
+OK   NORM ne=[64,5,4,3] eps=10                    out=[64,5,4,3]         dispatches=1 nmse=3.526e-16 (max 1e-07) exact=3338/3840
+OK   RMS_NORM ne=[64,5,4,3] eps=10                out=[64,5,4,3]         dispatches=1 nmse=8.112e-16 (max 1e-07) exact=3531/3840
+OK   NORM ne=[1025,5,4,3] eps=10                  out=[1025,5,4,3]       dispatches=1 nmse=4.980e-16 (max 1e-07) exact=55618/61500
+OK   RMS_NORM ne=[1025,5,4,3] eps=10              out=[1025,5,4,3]       dispatches=1 nmse=8.670e-16 (max 1e-07) exact=56511/61500
+OK   NORM ne=[1025,5,4,3] view eps=0.0001         out=[512,2,2,1]        dispatches=1 nmse=4.831e-18 (max 1e-07) exact=1946/2048
+OK   RMS_NORM ne=[1025,5,4,3] view eps=0.0001     out=[512,2,2,1]        dispatches=1 nmse=1.937e-15 (max 1e-07) exact=1574/2048
+OK   NORM ne=[64,5,4,3] permuted-rows eps=0.1     out=[64,5,4,3]         dispatches=1 nmse=6.015e-15 (max 1e-07) exact=1707/3840
+OK   NORM ne=[1025,5,4,3] permuted-rows eps=1e-06 out=[1025,5,4,3]       dispatches=1 nmse=4.958e-14 (max 1e-07) exact=11977/61500
+OK   NORM ne=[64,5,4,3] inplace eps=1e-06         out=[64,5,4,3]         dispatches=1 nmse=1.527e-15 (max 1e-07) exact=3010/3840
+OK   RMS_NORM ne=[64,5,4,3] inplace eps=1e-06     out=[64,5,4,3]         dispatches=1 nmse=1.326e-15 (max 1e-07) exact=3247/3840
+OK   NORM ne=[7,3,5,2] eps=1e-05                  out=[7,3,5,2]          dispatches=1 nmse=8.797e-16 (max 1e-07) exact=194/210
+OK   RMS_NORM ne=[1,3,5,2] eps=1e-05              out=[1,3,5,2]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=30/30
+OK   NORM ne=[257,1,1,1] eps=1e-05                out=[257,1,1,1]        dispatches=1 nmse=2.284e-14 (max 1e-07) exact=7/257
+OK   NORM ne=[1024,1029,1,1] eps=1e-05            out=[1024,1029,1,1]    dispatches=1 nmse=2.008e-15 (max 1e-07) exact=855797/1053696
+OK   NORM ne=[512,16,16,16] eps=1e-05             out=[512,16,16,16]     dispatches=1 nmse=1.812e-15 (max 1e-07) exact=1716160/2097152
+OK   NORM ne=[1536,512,1,1] eps=1e-06             out=[1536,512,1,1]     dispatches=1 nmse=2.315e-15 (max 1e-07) exact=623513/786432
+OK   NORM ne=[512,5400,1,1] eps=1e-05             out=[512,5400,1,1]     dispatches=1 nmse=1.786e-15 (max 1e-07) exact=2267159/2764800
+OK   RMS_NORM ne=[896,512,1,1] eps=1.19209e-07    out=[896,512,1,1]      dispatches=1 nmse=1.134e-15 (max 1e-07) exact=399868/458752
+OK   RMS_NORM ne=[128,8,514,1] eps=1e-06          out=[128,8,514,1]      dispatches=1 nmse=1.323e-15 (max 1e-07) exact=450147/526336
+OK   RMS_NORM ne=[128,12,912,1] eps=1e-12         out=[128,12,912,1]     dispatches=1 nmse=1.331e-15 (max 1e-07) exact=1196943/1400832
+OK   MEAN ne=[10,5,4,3] eps=0                     out=[1,5,4,3]          dispatches=1 nmse=1.960e-15 (max 1e-07) exact=39/60
+OK   MEAN ne=[33,1,1,1] eps=0                     out=[1,1,1,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1/1
+OK   MEAN ne=[33,256,1,1] eps=0                   out=[1,256,1,1]        dispatches=1 nmse=3.510e-15 (max 1e-07) exact=112/256
+OK   MEAN ne=[32769,1,1,1] eps=0                  out=[1,1,1,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1/1
+OK   MEAN ne=[32,256,1,1] eps=0                   out=[1,256,1,1]        dispatches=1 nmse=2.424e-15 (max 1e-07) exact=138/256
+OK   MEAN ne=[32768,1,1,1] eps=0                  out=[1,1,1,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1/1
+OK   MEAN ne=[256,256,3,1] eps=0                  out=[1,256,3,1]        dispatches=1 nmse=2.573e-15 (max 1e-07) exact=471/768
+OK   MEAN ne=[66,10,8,6] view eps=0               out=[1,5,4,3]          dispatches=1 nmse=3.610e-15 (max 1e-07) exact=24/60
+OK   NORM_MUL_ADD chain [1025,5,4,3] eps=1e-5     out=[1025,5,4,3]       dispatches=5 nmse=1.649e-15 (max 1e-07) exact=55114/61500
+OK   RMS_NORM_MUL chain [896,64] eps=1e-6         out=[896,64,1,1]       dispatches=2 nmse=1.017e-15 (max 1e-07) exact=51893/57344
+OK   ADD ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
+OK   MUL ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
+OK   ADD ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
+OK   MUL ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
+OK   ADD ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=50/50
+OK   MUL ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=50/50
+OK   ADD ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=200/200
+OK   MUL ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=200/200
+OK   ADD ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=600/600
+OK   MUL ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=600/600
+OK   ADD ne=[10,5,4,3] nr=[2,1,1,1]               out=[20,5,4,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   MUL ne=[10,5,4,3] nr=[2,1,1,1]               out=[20,5,4,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   ADD ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   MUL ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   ADD ne=[10,5,4,3] nr=[1,1,2,1]               out=[10,5,8,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   MUL ne=[10,5,4,3] nr=[1,1,2,1]               out=[10,5,8,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   ADD ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   MUL ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=1200/1200
+OK   ADD ne=[10,5,4,3] nr=[1,1,2,2]               out=[10,5,8,6]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=2400/2400
+OK   MUL ne=[10,5,4,3] nr=[1,1,2,2]               out=[10,5,8,6]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=2400/2400
+OK   ADD ne=[10,5,4,3] nr=[1,2,2,2]               out=[10,10,8,6]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=4800/4800
+OK   MUL ne=[10,5,4,3] nr=[1,2,2,2]               out=[10,10,8,6]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=4800/4800
+OK   ADD ne=[10,5,4,3] nr=[2,2,2,2]               out=[20,10,8,6]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=9600/9600
+OK   MUL ne=[10,5,4,3] nr=[2,2,2,2]               out=[20,10,8,6]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=9600/9600
+OK   ADD ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=600/600
+OK   MUL ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=600/600
+OK   ADD ne=[10,5,4,3] nr=[2,2,2,2] perm1         out=[20,10,8,6]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=9600/9600
+OK   MUL ne=[10,5,4,3] nr=[2,2,2,2] perm1         out=[20,10,8,6]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=9600/9600
+OK   ADD ne=[10,5,4,6] nr=[1,1,1,1] overlap       out=[10,5,4,4]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=800/800
+OK   MUL ne=[10,5,4,6] nr=[1,1,1,1] overlap       out=[10,5,4,4]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=800/800
+OK   ADD ne=[7,3,5,2] nr=[3,1,1,1]                out=[21,3,5,2]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=630/630
+OK   MUL ne=[7,3,5,2] nr=[3,1,1,1]                out=[21,3,5,2]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=630/630
+OK   ADD ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=143/143
+OK   MUL ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=0.000e+00 (max 1e-07) exact=143/143
+OK   ADD ne=[1280,1,1,1] nr=[1,16,16,1]           out=[1280,16,16,1]     dispatches=1 nmse=0.000e+00 (max 1e-07) exact=327680/327680
+OK   MUL ne=[1280,1,1,1] nr=[1,16,16,1]           out=[1280,16,16,1]     dispatches=1 nmse=0.000e+00 (max 1e-07) exact=327680/327680
+OK   ADD ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatches=1 nmse=0.000e+00 (max 1e-07) exact=655360/655360
+OK   MUL ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatches=1 nmse=0.000e+00 (max 1e-07) exact=655360/655360
+OK   ADD inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=144/144
+OK   MUL inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=144/144
+OK   ADD then MUL chain [9,7,5,3]                 out=[9,7,5,3]          dispatches=2 nmse=0.000e+00 (max 1e-07) exact=945/945
+summary: 104/104 cases OK
+RESULT: PASS

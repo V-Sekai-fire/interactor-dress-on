@@ -1,0 +1,13 @@
+# lake build (default target Cloth) in lean/
+# 2026-09-23T07:53:46Z  Lake version 5.0.0-src+d024af0 (Lean version 4.30.0)  toolchain leanprover/lean4:v4.30.0
+ℹ [71/76] Replayed Cloth.Avbd.CsrProperties
+info: Cloth/Avbd/CsrProperties.lean:84:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:87:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:90:0: Unable to find a counter-example
+ℹ [73/76] Replayed Cloth.Avbd.ColoringProperties
+info: Cloth/Avbd/ColoringProperties.lean:83:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:86:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:89:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:92:0: Unable to find a counter-example
+Build completed successfully (76 jobs).
+# exit 0  wall 2 s

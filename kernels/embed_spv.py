@@ -8,13 +8,14 @@ uses. Precedent: modules/cassie/spv_to_header.py.
 
     python kernels/embed_spv.py kernels/avbd guest/avbd_kernels.inc
     python kernels/embed_spv.py --namespace drape_kernels <spv dir> <out.inc>
+    python kernels/embed_spv.py --namespace ggml_kernels build/spv-ggml build/ggml_kernels.inc
 
 --namespace names the C++ namespace (default avbd_kernels), so two stages'
-tables can coexist in one guest.
+tables can coexist in one guest (or one translation unit).
 """
 
+import argparse
 import pathlib
-import sys
 
 
 def ident(name):
@@ -75,11 +76,9 @@ def emit(src_dir, out_path, namespace="avbd_kernels"):
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
-    ns = "avbd_kernels"
-    if len(args) == 4 and args[0] == "--namespace":
-        ns = args[1]
-        args = args[2:]
-    if len(args) != 2:
-        raise SystemExit(__doc__)
-    emit(args[0], args[1], ns)
+    ap = argparse.ArgumentParser(usage=__doc__)
+    ap.add_argument("--namespace", default="avbd_kernels")
+    ap.add_argument("src_dir")
+    ap.add_argument("out_path")
+    a = ap.parse_args()
+    emit(a.src_dir, a.out_path, a.namespace)

@@ -91,10 +91,12 @@ CREATE_SYSCALL(__wrap_calloc, SYSCALL_CALLOC);
 // further down that know about aligned blocks; these are the heap's own.
 CREATE_SYSCALL(sandbox_native_realloc, SYSCALL_REALLOC);
 CREATE_SYSCALL(sandbox_native_free, SYSCALL_FREE);
-CREATE_SYSCALL(__wrap_memset, SYSCALL_MEMSET);
-CREATE_SYSCALL(__wrap_memcpy, SYSCALL_MEMCPY);
-CREATE_SYSCALL(__wrap_memmove, SYSCALL_MEMMOVE);
-CREATE_SYSCALL(__wrap_memcmp, SYSCALL_MEMCMP);
+// interactor-dress-on (Cut 3): __wrap_memset/memcpy/memmove/memcmp are C
+// functions below that split long spans; these are the bare syscalls.
+CREATE_SYSCALL(sandbox_native_memset, SYSCALL_MEMSET);
+CREATE_SYSCALL(sandbox_native_memcpy, SYSCALL_MEMCPY);
+CREATE_SYSCALL(sandbox_native_memmove, SYSCALL_MEMMOVE);
+CREATE_SYSCALL(sandbox_native_memcmp, SYSCALL_MEMCMP);
 CREATE_SYSCALL(__wrap_strlen, SYSCALL_STRLEN);
 CREATE_SYSCALL_STRCMP(__wrap_strcmp, SYSCALL_STRCMP);
 // CREATE_SYSCALL_STRCMP here would clobber a2, maxlen
@@ -102,6 +104,68 @@ CREATE_SYSCALL(__wrap_strncmp, SYSCALL_STRCMP);
 
 extern "C" void *__wrap_malloc(size_t size);
 extern "C" void __wrap_free(void *ptr);
+extern "C" void *sandbox_native_memset(void *dest, int ch, size_t size);
+extern "C" void *sandbox_native_memcpy(void *dest, const void *src, size_t size);
+extern "C" void *sandbox_native_memmove(void *dest, const void *src, size_t size);
+extern "C" int sandbox_native_memcmp(const void *a, const void *b, size_t size);
+
+// interactor-dress-on (Cut 3): long spans. The host views at most 16 MiB of
+// guest memory per memory syscall, so a longer memcpy (ggml's
+// test-backend-ops copies 64 MiB tensors) was a protection fault. Longer
+// spans go in 16 MiB pieces.
+namespace {
+constexpr size_t kNativeSpan = size_t(16) << 20;
+}
+
+extern "C" void *__wrap_memset(void *dest, int ch, size_t size) {
+	char *d = (char *)dest;
+	for (; size > kNativeSpan; d += kNativeSpan, size -= kNativeSpan) {
+		sandbox_native_memset(d, ch, kNativeSpan);
+	}
+	sandbox_native_memset(d, ch, size);
+	return dest;
+}
+
+extern "C" void *__wrap_memcpy(void *dest, const void *src, size_t size) {
+	char *d = (char *)dest;
+	const char *s = (const char *)src;
+	for (; size > kNativeSpan; d += kNativeSpan, s += kNativeSpan, size -= kNativeSpan) {
+		sandbox_native_memcpy(d, s, kNativeSpan);
+	}
+	sandbox_native_memcpy(d, s, size);
+	return dest;
+}
+
+extern "C" void *__wrap_memmove(void *dest, const void *src, size_t size) {
+	char *d = (char *)dest;
+	const char *s = (const char *)src;
+	if (size <= kNativeSpan) {
+		return sandbox_native_memmove(dest, src, size);
+	}
+	if (d <= s) { // front to back: each piece is read before it is overwritten
+		for (size_t o = 0; o < size; o += kNativeSpan) {
+			sandbox_native_memmove(d + o, s + o, size - o < kNativeSpan ? size - o : kNativeSpan);
+		}
+	} else { // back to front
+		for (size_t o = size; o > 0;) {
+			const size_t n = o < kNativeSpan ? o : kNativeSpan;
+			o -= n;
+			sandbox_native_memmove(d + o, s + o, n);
+		}
+	}
+	return dest;
+}
+
+extern "C" int __wrap_memcmp(const void *a, const void *b, size_t size) {
+	const char *x = (const char *)a;
+	const char *y = (const char *)b;
+	for (; size > kNativeSpan; x += kNativeSpan, y += kNativeSpan, size -= kNativeSpan) {
+		if (const int r = sandbox_native_memcmp(x, y, kNativeSpan)) {
+			return r;
+		}
+	}
+	return sandbox_native_memcmp(x, y, size);
+}
 #endif // WRAP_FANCY
 
 extern "C" void *sandbox_native_realloc(void *ptr, size_t size);

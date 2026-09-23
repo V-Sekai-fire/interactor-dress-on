@@ -1,0 +1,114 @@
+== p0-direct.log
+phase 0: ok newton 41 minimize 1 energy 0.00033678666696946268 |grad| 0.310932 status 4 wall 35.69 s cpu 34.95 s; intersections none
+polysolve timers (sum over minimizes): f 0.09  grad_f 0.20  update_direction 13.50  line_search 20.40  constraint_set_update 0.00
+  [SparseNewton] assembly 6.01  linear_solve 4.49
+  [SparseProjectedNewton] assembly 2.09  linear_solve 0.90
+  [Backtracking] constraint_set_update 1.84  nan_inf 0.09  broad_phase_ccd 6.87  narrow_phase_ccd 11.00  classical_line_search 2.02
+  fallbacks: -> SparseProjectedNewton x1
+
+== p0-direct-samply.log
+phase 0: ok newton 41 minimize 1 energy 0.00033678666696946268 |grad| 0.310932 status 4 wall 38.72 s cpu 37.38 s; intersections none
+polysolve timers (sum over minimizes): f 0.10  grad_f 0.21  update_direction 12.80  line_search 24.00  constraint_set_update 0.00
+  [SparseNewton] assembly 5.67  linear_solve 4.79
+  [SparseProjectedNewton] assembly 1.55  linear_solve 0.78
+  [Backtracking] constraint_set_update 1.97  nan_inf 0.09  broad_phase_ccd 7.62  narrow_phase_ccd 13.80  classical_line_search 2.15
+  fallbacks: -> SparseProjectedNewton x1
+
+== p0-direct-counters.log
+exit 0 wall 44.37 s 
+phase 0: ok newton 41 minimize 1 energy 0.00033678666696946268 |grad| 0.310932 status 4 wall 43.59 s cpu 42.02 s; intersections none
+polysolve timers (sum over minimizes): f 0.12  grad_f 0.27  update_direction 15.40  line_search 26.30  constraint_set_update 0.00
+  [SparseNewton] assembly 6.80  linear_solve 5.93
+  [SparseProjectedNewton] assembly 1.71  linear_solve 0.87
+  [Backtracking] constraint_set_update 2.25  nan_inf 0.11  broad_phase_ccd 8.35  narrow_phase_ccd 14.90  classical_line_search 2.46
+  fallbacks: -> SparseProjectedNewton x1
+linear solves 42: n [8047]; nnz(H) min/median/max 295417 / 295669 / 295765 (mean 295641, n=42)
+  SparseNewton: solves 36; iterations -; at max_iter 1000: 0
+  SparseProjectedNewton: solves 6; iterations -; at max_iter 1000: 0
+candidates ccd builds 44: total 3111 / 55116 / 3304228 (mean 368291, n=44); ee 2522 / 41247 / 2335280 (mean 265300, n=44); fv 589 / 13869 / 968948 (mean 102990, n=44); ev 0 / 0 / 0 (mean 0, n=44); vv 0 / 0 / 0 (mean 0, n=44)
+candidates static builds 1: total 3111 / 3111 / 3111 (mean 3111, n=1); ee 2522 / 2522 / 2522 (mean 2522, n=1); fv 589 / 589 / 589 (mean 589, n=1); ev 0 / 0 / 0 (mean 0, n=1); vv 0 / 0 / 0 (mean 0, n=1)
+active constraints (Collisions::build) 72: total 0 / 74 / 153 (mean 73, n=72); vv 0 / 0 / 3 (mean 0, n=72); ev 0 / 16 / 39 (mean 15, n=72); ee 0 / 47.5 / 86 (mean 45, n=72); fv 0 / 11 / 25 (mean 12, n=72)
+
+== p0-cg-jacobi.log
+exit 0 wall 15.03 s 
+phase 0: ok newton 13 minimize 1 energy 0.023054751201408683 |grad| 0.629955 status 4 wall 14.29 s cpu 13.67 s; intersections none
+polysolve timers (sum over minimizes): f 0.06  grad_f 0.12  update_direction 9.30  line_search 3.15  constraint_set_update 0.00
+  [SparseNewton] assembly 0.58  linear_solve 0.84
+  [SparseProjectedNewton] assembly 0.90  linear_solve 0.72
+  [SparseRegularizedNewton (reg_weight=1)] assembly 4.61  linear_solve 1.62
+  [Backtracking] constraint_set_update 0.02  nan_inf 0.04  broad_phase_ccd 2.82  narrow_phase_ccd 0.11  classical_line_search 0.06
+  fallbacks: -> SparseProjectedNewton x3, -> SparseRegularizedNewton (reg_weight=1) x3, -> SparseRegularizedNewton (reg_weight=10000) x1
+linear solves 20: n [8047]; nnz(H) min/median/max 295417 / 295417 / 295525 (mean 295450, n=20)
+  SparseNewton: solves 3; iterations 1000 / 1000 / 1000 (mean 1000, n=3); at max_iter 1000: 3
+  SparseProjectedNewton: solves 3; iterations 1000 / 1000 / 1000 (mean 1000, n=3); at max_iter 1000: 3
+  SparseRegularizedNewton (reg_weight=1): solves 9; iterations 235 / 616 / 1000 (mean 651, n=9); at max_iter 1000: 1
+  SparseRegularizedNewton (reg_weight=10000): solves 5; iterations 17 / 32 / 68 (mean 37, n=5); at max_iter 1000: 0
+candidates ccd builds 16: total 3111 / 4961 / 8618 (mean 5198, n=16); ee 2522 / 3957 / 6703 (mean 4117, n=16); fv 589 / 1004 / 1915 (mean 1081, n=16); ev 0 / 0 / 0 (mean 0, n=16); vv 0 / 0 / 0 (mean 0, n=16)
+candidates static builds 1: total 3111 / 3111 / 3111 (mean 3111, n=1); ee 2522 / 2522 / 2522 (mean 2522, n=1); fv 589 / 589 / 589 (mean 589, n=1); ev 0 / 0 / 0 (mean 0, n=1); vv 0 / 0 / 0 (mean 0, n=1)
+active constraints (Collisions::build) 14: total 0 / 19.5 / 94 (mean 42, n=14); vv 0 / 0.5 / 9 (mean 2, n=14); ev 0 / 15 / 47 (mean 23, n=14); ee 0 / 5.5 / 36 (mean 16, n=14); fv 0 / 0 / 4 (mean 1, n=14)
+
+== p0-cg-jacobi-samply.log
+phase 0: ok newton 13 minimize 1 energy 0.023054751201408683 |grad| 0.629955 status 4 wall 11.09 s cpu 10.69 s; intersections none
+polysolve timers (sum over minimizes): f 0.04  grad_f 0.09  update_direction 7.23  line_search 2.13  constraint_set_update 0.00
+  [SparseNewton] assembly 0.57  linear_solve 0.76
+  [SparseProjectedNewton] assembly 0.75  linear_solve 0.57
+  [SparseRegularizedNewton (reg_weight=1)] assembly 3.40  linear_solve 1.18
+  [Backtracking] constraint_set_update 0.01  nan_inf 0.02  broad_phase_ccd 1.90  narrow_phase_ccd 0.09  classical_line_search 0.04
+  fallbacks: -> SparseProjectedNewton x3, -> SparseRegularizedNewton (reg_weight=1) x3, -> SparseRegularizedNewton (reg_weight=10000) x1
+
+== p0-bicgstab-jacobi.log
+exit 0 wall 19.62 s 
+phase 0: ok newton 13 minimize 1 energy 0.023054751202681859 |grad| 0.629955 status 4 wall 18.81 s cpu 18.06 s; intersections none
+polysolve timers (sum over minimizes): f 0.06  grad_f 0.13  update_direction 13.60  line_search 3.25  constraint_set_update 0.00
+  [SparseNewton] assembly 0.56  linear_solve 1.65
+  [SparseProjectedNewton] assembly 0.98  linear_solve 1.70
+  [SparseRegularizedNewton (reg_weight=1)] assembly 4.65  linear_solve 3.99
+  [Backtracking] constraint_set_update 0.02  nan_inf 0.04  broad_phase_ccd 2.89  narrow_phase_ccd 0.12  classical_line_search 0.06
+  fallbacks: -> SparseProjectedNewton x3, -> SparseRegularizedNewton (reg_weight=1) x3, -> SparseRegularizedNewton (reg_weight=10000) x1
+linear solves 20: n [8047]; nnz(H) min/median/max 295417 / 295417 / 295525 (mean 295450, n=20)
+  SparseNewton: solves 3; iterations 1000 / 1000 / 1000 (mean 1000, n=3); at max_iter 1000: 3
+  SparseProjectedNewton: solves 3; iterations 1000 / 1000 / 1000 (mean 1000, n=3); at max_iter 1000: 3
+  SparseRegularizedNewton (reg_weight=1): solves 9; iterations 185 / 842 / 1000 (mean 718, n=9); at max_iter 1000: 2
+  SparseRegularizedNewton (reg_weight=10000): solves 5; iterations 10 / 24 / 47 (mean 25, n=5); at max_iter 1000: 0
+candidates ccd builds 16: total 3111 / 4961 / 8618 (mean 5198, n=16); ee 2522 / 3957 / 6703 (mean 4117, n=16); fv 589 / 1004 / 1915 (mean 1081, n=16); ev 0 / 0 / 0 (mean 0, n=16); vv 0 / 0 / 0 (mean 0, n=16)
+candidates static builds 1: total 3111 / 3111 / 3111 (mean 3111, n=1); ee 2522 / 2522 / 2522 (mean 2522, n=1); fv 589 / 589 / 589 (mean 589, n=1); ev 0 / 0 / 0 (mean 0, n=1); vv 0 / 0 / 0 (mean 0, n=1)
+active constraints (Collisions::build) 14: total 0 / 19.5 / 94 (mean 42, n=14); vv 0 / 0.5 / 9 (mean 2, n=14); ev 0 / 15 / 47 (mean 23, n=14); ee 0 / 5.5 / 36 (mean 16, n=14); fv 0 / 0 / 4 (mean 1, n=14)
+
+== p0-minres-jacobi.log
+exit 0 wall 18.05 s 
+phase 0: ok newton 13 minimize 1 energy 0.026497182568297358 |grad| 0.217557 status 4 wall 17.18 s cpu 16.31 s; intersections none
+polysolve timers (sum over minimizes): f 0.07  grad_f 0.15  update_direction 11.80  line_search 3.31  constraint_set_update 0.00
+  [SparseNewton] assembly 0.57  linear_solve 0.91
+  [SparseProjectedNewton] assembly 1.00  linear_solve 0.82
+  [SparseRegularizedNewton (reg_weight=1e+16)] assembly 5.58  linear_solve 2.90
+  [Backtracking] constraint_set_update 0.02  nan_inf 0.04  broad_phase_ccd 2.92  narrow_phase_ccd 0.13  classical_line_search 0.08
+  fallbacks: -> SparseProjectedNewton x3, -> SparseRegularizedNewton (reg_weight=1) x3, -> SparseRegularizedNewton (reg_weight=10000) x2, -> SparseRegularizedNewton (reg_weight=1e+08) x1, -> SparseRegularizedNewton (reg_weight=1e+12) x1, -> GradientDescent x1
+linear solves 23: n [8047]; nnz(H) min/median/max 295417 / 295417 / 295525 (mean 295446, n=23)
+  SparseNewton: solves 3; iterations 1000 / 1000 / 1000 (mean 1000, n=3); at max_iter 1000: 3
+  SparseProjectedNewton: solves 3; iterations 1000 / 1000 / 1000 (mean 1000, n=3); at max_iter 1000: 3
+  SparseRegularizedNewton (reg_weight=1): solves 9; iterations 228 / 763 / 1000 (mean 695, n=9); at max_iter 1000: 2
+  SparseRegularizedNewton (reg_weight=10000): solves 6; iterations 17 / 37.5 / 1000 (mean 197, n=6); at max_iter 1000: 1
+  SparseRegularizedNewton (reg_weight=1e+08): solves 1; iterations 1000 / 1000 / 1000 (mean 1000, n=1); at max_iter 1000: 1
+  SparseRegularizedNewton (reg_weight=1e+12): solves 1; iterations 1000 / 1000 / 1000 (mean 1000, n=1); at max_iter 1000: 1
+candidates ccd builds 16: total 3111 / 4984 / 10553 (mean 5518, n=16); ee 2522 / 3971.5 / 7886 (mean 4340, n=16); fv 589 / 1012.5 / 2667 (mean 1178, n=16); ev 0 / 0 / 0 (mean 0, n=16); vv 0 / 0 / 0 (mean 0, n=16)
+candidates static builds 1: total 3111 / 3111 / 3111 (mean 3111, n=1); ee 2522 / 2522 / 2522 (mean 2522, n=1); fv 589 / 589 / 589 (mean 589, n=1); ev 0 / 0 / 0 (mean 0, n=1); vv 0 / 0 / 0 (mean 0, n=1)
+active constraints (Collisions::build) 17: total 0 / 14 / 94 (mean 35, n=17); vv 0 / 0 / 9 (mean 2, n=17); ev 0 / 14 / 47 (mean 20, n=17); ee 0 / 1 / 36 (mean 13, n=17); fv 0 / 0 / 4 (mean 1, n=17)
+
+== p0-gmres-jacobi.log
+exit 0 wall 28.21 s 
+phase 0: ok newton 22 minimize 1 energy 0.11722900497194011 |grad| 0.780796 status 4 wall 27.32 s cpu 26.16 s; intersections none
+polysolve timers (sum over minimizes): f 0.11  grad_f 0.23  update_direction 20.60  line_search 4.41  constraint_set_update 0.00
+  [SparseNewton] assembly 0.86  linear_solve 2.85
+  [SparseProjectedNewton] assembly 1.21  linear_solve 2.84
+  [SparseRegularizedNewton (reg_weight=10000)] assembly 8.14  linear_solve 4.66
+  [Backtracking] constraint_set_update 0.03  nan_inf 0.06  broad_phase_ccd 3.88  narrow_phase_ccd 0.16  classical_line_search 0.10
+  fallbacks: -> SparseProjectedNewton x4, -> SparseRegularizedNewton (reg_weight=1) x4, -> SparseRegularizedNewton (reg_weight=10000) x4
+linear solves 34: n [8047]; nnz(H) min/median/max 295417 / 295435 / 295525 (mean 295442, n=34)
+  SparseNewton: solves 4; iterations 1000 / 1000 / 1000 (mean 1000, n=4); at max_iter 1000: 4
+  SparseProjectedNewton: solves 4; iterations 1000 / 1000 / 1000 (mean 1000, n=4); at max_iter 1000: 4
+  SparseRegularizedNewton (reg_weight=1): solves 7; iterations 355 / 1000 / 1000 (mean 908, n=7); at max_iter 1000: 6
+  SparseRegularizedNewton (reg_weight=10000): solves 19; iterations 11 / 16 / 71 (mean 22, n=19); at max_iter 1000: 0
+candidates ccd builds 25: total 3111 / 3805 / 8901 (mean 4461, n=25); ee 2522 / 3034 / 6898 (mean 3549, n=25); fv 589 / 772 / 2003 (mean 911, n=25); ev 0 / 0 / 0 (mean 0, n=25); vv 0 / 0 / 0 (mean 0, n=25)
+candidates static builds 1: total 3111 / 3111 / 3111 (mean 3111, n=1); ee 2522 / 2522 / 2522 (mean 2522, n=1); fv 589 / 589 / 589 (mean 589, n=1); ev 0 / 0 / 0 (mean 0, n=1); vv 0 / 0 / 0 (mean 0, n=1)
+active constraints (Collisions::build) 23: total 0 / 54 / 94 (mean 44, n=23); vv 0 / 1 / 9 (mean 2, n=23); ev 0 / 23 / 47 (mean 21, n=23); ee 0 / 26 / 36 (mean 20, n=23); fv 0 / 0 / 4 (mean 1, n=23)
+

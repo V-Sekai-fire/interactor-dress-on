@@ -1,0 +1,5 @@
+ROW 10
+PERF NEG [32,16,1024,1] (Pixal3D x48) reps=128 iters=5 warmup=1 dispatches=128 barriers=127 elements=524288 bytes_per_dispatch=4194304 OK
+perf 10: 1/1 rows OK
+RESULT: PASS (perf 10)
+ggml_test: rd stats graphs=96 nodes=7236 dispatches=7236 skipped=0 barriers=7140 failed_graphs=0 last{nodes=128 dispatches=128 barriers=127 skipped=0} pipelines=8 set0_created=41 slots_created=256 coop_yields=1 waits=96 faults=15 params_bytes=1852416 set_bytes=629890320 get_bytes=629886208 copies=0 clears=11 buffers_live=0 bytes_live=0

@@ -1,0 +1,481 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: Godot RenderingDevice (NVIDIA GeForce RTX 4090)
+  Device memory: 24576 MB (24576 MB free)
+
+[GET_ROWS] ERR = 1.747845422 > 0.000000100   GET_ROWS(type=f32,n=76800,m=5,r=4,be1=1,be2=2,v=0): FAIL
+[GET_ROWS] ERR = 1.999791496 > 0.000000100   GET_ROWS(type=f32,n=256,m=80000,r=70000,be1=2,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.599074866 > 0.000000100   GET_ROWS(type=f32,n=256,m=5,r=4,be1=700,be2=100,v=0): FAIL
+  GET_ROWS(type=q4_0,n=76800,m=5,r=4,be1=1,be2=2,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=80000,r=70000,be1=2,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=700,be2=100,v=0): not supported [RD0] 
+[GET_ROWS] ERR = 0.031049265 > 0.000000100   GET_ROWS(type=f32,n=1,m=8,r=2,be1=1,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.422817117 > 0.000000100   GET_ROWS(type=f32,n=256,m=5,r=4,be1=1,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 2.120750335 > 0.000000100   GET_ROWS(type=f32,n=256,m=5,r=4,be1=1,be2=1,v=1): FAIL
+[GET_ROWS] ERR = 1.842382553 > 0.000000100   GET_ROWS(type=f32,n=256,m=5,r=4,be1=7,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.854233229 > 0.000000100   GET_ROWS(type=f32,n=256,m=5,r=4,be1=7,be2=1,v=1): FAIL
+[GET_ROWS] ERR = 1.514271825 > 0.000000100   GET_ROWS(type=f16,n=256,m=5,r=4,be1=1,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.080292631 > 0.000000100   GET_ROWS(type=f16,n=256,m=5,r=4,be1=1,be2=1,v=1): FAIL
+[GET_ROWS] ERR = 1.567795862 > 0.000000100   GET_ROWS(type=f16,n=256,m=5,r=4,be1=7,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.749393178 > 0.000000100   GET_ROWS(type=f16,n=256,m=5,r=4,be1=7,be2=1,v=1): FAIL
+[GET_ROWS] ERR = 0.957544016 > 0.000000100   GET_ROWS(type=bf16,n=256,m=5,r=4,be1=1,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.031120391 > 0.000000100   GET_ROWS(type=bf16,n=256,m=5,r=4,be1=1,be2=1,v=1): FAIL
+[GET_ROWS] ERR = 1.554408805 > 0.000000100   GET_ROWS(type=bf16,n=256,m=5,r=4,be1=7,be2=1,v=0): FAIL
+[GET_ROWS] ERR = 1.569148907 > 0.000000100   GET_ROWS(type=bf16,n=256,m=5,r=4,be1=7,be2=1,v=1): FAIL
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+[REPEAT] ERR = 1.940845900 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,1,1]): FAIL
+[REPEAT] ERR = 1.913810656 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,1],nr=[2,1,1,1]): FAIL
+[REPEAT] ERR = 1.978517249 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,1],nr=[1,2,1,1]): FAIL
+[REPEAT] ERR = 2.075570897 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,2,1]): FAIL
+[REPEAT] ERR = 1.896136915 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,1,2]): FAIL
+[REPEAT] ERR = 2.129995511 > 0.000000100   REPEAT(type=f16,ne=[10,5,4,1],nr=[2,1,1,1]): FAIL
+[REPEAT] ERR = 1.888939583 > 0.000000100   REPEAT(type=i16,ne=[10,5,4,1],nr=[1,1,1,2]): FAIL
+[REPEAT] ERR = 1.861230855 > 0.000000100   REPEAT(type=bf16,ne=[10,5,4,1],nr=[2,1,1,1]): FAIL
+[REPEAT] ERR = 2.038523257 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,1,1]): FAIL
+[REPEAT] ERR = 1.968979166 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,3],nr=[2,1,1,1]): FAIL
+[REPEAT] ERR = 2.079950838 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,3],nr=[1,2,1,1]): FAIL
+[REPEAT] ERR = 1.999472613 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,2,1]): FAIL
+[REPEAT] ERR = 1.954657711 > 0.000000100   REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,1,2]): FAIL
+[REPEAT] ERR = 2.019296013 > 0.000000100   REPEAT(type=f16,ne=[10,5,4,3],nr=[2,1,1,1]): FAIL
+[REPEAT] ERR = 1.945431904 > 0.000000100   REPEAT(type=i16,ne=[10,5,4,3],nr=[1,1,1,2]): FAIL
+[REPEAT] ERR = 1.930216081 > 0.000000100   REPEAT(type=bf16,ne=[10,5,4,3],nr=[2,1,1,1]): FAIL
+[DUP] ERR = 2.018961251 > 0.000000100   DUP(type=f32,ne=[10,10,20,1]): FAIL
+[DUP] ERR = 1.971107601 > 0.000000100   DUP(type=f16,ne=[10,10,20,1]): FAIL
+[DUP] ERR = 2.088731912 > 0.000000100   DUP(type=i16,ne=[10,10,20,1]): FAIL
+[DUP] ERR = 1.998927802 > 0.000000100   DUP(type=f32,ne=[10,10,5,1],permute=[0,2,1,3]): FAIL
+[DUP] ERR = 1.938591808 > 0.000000100   DUP(type=f16,ne=[10,10,5,1],permute=[0,2,1,3]): FAIL
+[DUP] ERR = 2.172757757 > 0.000000100   DUP(type=f32,ne=[10,10,5,1],permute=[1,0,2,3]): FAIL
+[DUP] ERR = 2.100852964 > 0.000000100   DUP(type=f16,ne=[10,10,5,1],permute=[1,0,2,3]): FAIL
+[DUP] ERR = 2.047863598 > 0.000000100   DUP(type=i16,ne=[10,8,3,1],permute=[0,2,1,3]): FAIL
+[DUP] ERR = 2.079066185 > 0.000000100   DUP(type=i16,ne=[10,8,3,1],permute=[1,2,0,3]): FAIL
+[CONT] ERR = 1.031152531 > 0.000000100   CONT(type=f32,ne=[2,1,1,1],use_view_slice=1): FAIL
+[CONT] ERR = 1.594152178 > 0.000000100   CONT(type=f32,ne=[2,1,3,5],use_view_slice=1): FAIL
+[CONT] ERR = 2.453062921 > 0.000000100   CONT(type=f32,ne=[2,3,5,7],use_view_slice=1): FAIL
+[CONT] ERR = 2.089519405 > 0.000000100   CONT(type=f32,ne=[1,4,4,1],use_view_slice=1): FAIL
+[CONT] ERR = 1.870537492 > 0.000000100   CONT(type=f32,ne=[1,8,17,1],use_view_slice=1): FAIL
+[CONT] ERR = 1.900247801 > 0.000000100   CONT(type=f32,ne=[10,10,10,1],use_view_slice=1): FAIL
+[CONT] ERR = 5.382202493 > 0.000000100   CONT(type=f32,ne=[2,1,1,1],use_view_slice=0): FAIL
+[CONT] ERR = 2.415110229 > 0.000000100   CONT(type=f32,ne=[2,1,3,5],use_view_slice=0): FAIL
+[CONT] ERR = 2.152431915 > 0.000000100   CONT(type=f32,ne=[2,3,5,7],use_view_slice=0): FAIL
+[CONT] ERR = 2.197954872 > 0.000000100   CONT(type=f32,ne=[1,4,4,1],use_view_slice=0): FAIL
+[CONT] ERR = 2.057335661 > 0.000000100   CONT(type=f32,ne=[1,8,17,1],use_view_slice=0): FAIL
+[CONT] ERR = 2.046139111 > 0.000000100   CONT(type=f32,ne=[10,10,10,1],use_view_slice=0): FAIL
+[CONT] ERR = 17.292689609 > 0.000000100   CONT(type=f16,ne=[2,1,1,1],use_view_slice=0): FAIL
+[CONT] ERR = 2.198216158 > 0.000000100   CONT(type=f16,ne=[2,1,3,5],use_view_slice=0): FAIL
+[CONT] ERR = 1.989191338 > 0.000000100   CONT(type=f16,ne=[2,3,5,7],use_view_slice=0): FAIL
+[CONT] ERR = 1.486600496 > 0.000000100   CONT(type=f16,ne=[1,4,4,1],use_view_slice=0): FAIL
+[CONT] ERR = 1.792547682 > 0.000000100   CONT(type=f16,ne=[1,8,17,1],use_view_slice=0): FAIL
+[CONT] ERR = 1.958320530 > 0.000000100   CONT(type=f16,ne=[10,10,10,1],use_view_slice=0): FAIL
+[CONT] ERR = 2.512900000 > 0.000000100   CONT(type=bf16,ne=[2,1,1,1],use_view_slice=0): FAIL
+[CONT] ERR = 2.156115633 > 0.000000100   CONT(type=bf16,ne=[2,1,3,5],use_view_slice=0): FAIL
+[CONT] ERR = 1.785109161 > 0.000000100   CONT(type=bf16,ne=[2,3,5,7],use_view_slice=0): FAIL
+[CONT] ERR = 1.996061411 > 0.000000100   CONT(type=bf16,ne=[1,4,4,1],use_view_slice=0): FAIL
+[CONT] ERR = 1.752719758 > 0.000000100   CONT(type=bf16,ne=[1,8,17,1],use_view_slice=0): FAIL
+[CONT] ERR = 1.943516666 > 0.000000100   CONT(type=bf16,ne=[10,10,10,1],use_view_slice=0): FAIL
+[CONCAT] ERR = 0.777483540 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): FAIL
+[CONCAT] ERR = 0.780858756 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): FAIL
+[CONCAT] ERR = 0.786004840 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.768599476 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.743639680 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): FAIL
+[CONCAT] ERR = 0.744205826 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): FAIL
+[CONCAT] ERR = 0.738512393 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.742516296 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.700406270 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): FAIL
+[CONCAT] ERR = 0.689969621 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): FAIL
+[CONCAT] ERR = 0.700548379 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.695842219 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.666471931 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): FAIL
+[CONCAT] ERR = 0.668861286 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): FAIL
+[CONCAT] ERR = 0.668383538 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.666804022 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+[CONCAT] ERR = 0.776681545 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): FAIL
+[CONCAT] ERR = 0.772715999 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): FAIL
+[CONCAT] ERR = 0.776000526 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.767544002 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.732651564 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): FAIL
+[CONCAT] ERR = 0.744922527 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): FAIL
+[CONCAT] ERR = 0.731290509 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.725852067 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.699761980 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): FAIL
+[CONCAT] ERR = 0.703901831 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): FAIL
+[CONCAT] ERR = 0.702601994 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.691744612 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.669004887 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): FAIL
+[CONCAT] ERR = 0.657216201 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): FAIL
+[CONCAT] ERR = 0.649433218 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.649689624 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): not supported [RD0] 
+[CONCAT] ERR = 0.791803833 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): FAIL
+[CONCAT] ERR = 0.769146760 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): FAIL
+[CONCAT] ERR = 0.782849794 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.782283488 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.748891926 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): FAIL
+[CONCAT] ERR = 0.737441982 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): FAIL
+[CONCAT] ERR = 0.737274788 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.732308624 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.700122110 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): FAIL
+[CONCAT] ERR = 0.706124396 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): FAIL
+[CONCAT] ERR = 0.696103096 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.704752140 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.665418130 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): FAIL
+[CONCAT] ERR = 0.675256800 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): FAIL
+[CONCAT] ERR = 0.662190917 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.672303116 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): not supported [RD0] 
+[CONCAT] ERR = 0.782834291 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): FAIL
+[CONCAT] ERR = 0.785923443 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): FAIL
+[CONCAT] ERR = 0.782082817 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.767311550 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.729055992 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): FAIL
+[CONCAT] ERR = 0.748503306 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): FAIL
+[CONCAT] ERR = 0.741418981 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.714144829 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.697264519 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): FAIL
+[CONCAT] ERR = 0.703811907 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): FAIL
+[CONCAT] ERR = 0.697576083 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.698153770 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.664474148 > 0.000000100   CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): FAIL
+[CONCAT] ERR = 0.659119834 > 0.000000100   CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): FAIL
+[CONCAT] ERR = 0.670565094 > 0.000000100   CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): FAIL
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): not supported [RD0] 
+[CONCAT] ERR = 0.664502365 > 0.000000100   CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): FAIL
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  0/129 tests passed
+
+Failing tests:
+  GET_ROWS(type=f32,n=76800,m=5,r=4,be1=1,be2=2,v=0)
+  GET_ROWS(type=f32,n=256,m=80000,r=70000,be1=2,be2=1,v=0)
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=700,be2=100,v=0)
+  GET_ROWS(type=f32,n=1,m=8,r=2,be1=1,be2=1,v=0)
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=1,be2=1,v=0)
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=1,be2=1,v=1)
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=7,be2=1,v=0)
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=7,be2=1,v=1)
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=1,be2=1,v=0)
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=1,be2=1,v=1)
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=7,be2=1,v=0)
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=7,be2=1,v=1)
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=1,be2=1,v=0)
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=1,be2=1,v=1)
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=7,be2=1,v=0)
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=7,be2=1,v=1)
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,1,1])
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[2,1,1,1])
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,2,1,1])
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,2,1])
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,1,2])
+  REPEAT(type=f16,ne=[10,5,4,1],nr=[2,1,1,1])
+  REPEAT(type=i16,ne=[10,5,4,1],nr=[1,1,1,2])
+  REPEAT(type=bf16,ne=[10,5,4,1],nr=[2,1,1,1])
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,1,1])
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[2,1,1,1])
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,2,1,1])
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,2,1])
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,1,2])
+  REPEAT(type=f16,ne=[10,5,4,3],nr=[2,1,1,1])
+  REPEAT(type=i16,ne=[10,5,4,3],nr=[1,1,1,2])
+  REPEAT(type=bf16,ne=[10,5,4,3],nr=[2,1,1,1])
+  DUP(type=f32,ne=[10,10,20,1])
+  DUP(type=f16,ne=[10,10,20,1])
+  DUP(type=i16,ne=[10,10,20,1])
+  DUP(type=f32,ne=[10,10,5,1],permute=[0,2,1,3])
+  DUP(type=f16,ne=[10,10,5,1],permute=[0,2,1,3])
+  DUP(type=f32,ne=[10,10,5,1],permute=[1,0,2,3])
+  DUP(type=f16,ne=[10,10,5,1],permute=[1,0,2,3])
+  DUP(type=i16,ne=[10,8,3,1],permute=[0,2,1,3])
+  DUP(type=i16,ne=[10,8,3,1],permute=[1,2,0,3])
+  CONT(type=f32,ne=[2,1,1,1],use_view_slice=1)
+  CONT(type=f32,ne=[2,1,3,5],use_view_slice=1)
+  CONT(type=f32,ne=[2,3,5,7],use_view_slice=1)
+  CONT(type=f32,ne=[1,4,4,1],use_view_slice=1)
+  CONT(type=f32,ne=[1,8,17,1],use_view_slice=1)
+  CONT(type=f32,ne=[10,10,10,1],use_view_slice=1)
+  CONT(type=f32,ne=[2,1,1,1],use_view_slice=0)
+  CONT(type=f32,ne=[2,1,3,5],use_view_slice=0)
+  CONT(type=f32,ne=[2,3,5,7],use_view_slice=0)
+  CONT(type=f32,ne=[1,4,4,1],use_view_slice=0)
+  CONT(type=f32,ne=[1,8,17,1],use_view_slice=0)
+  CONT(type=f32,ne=[10,10,10,1],use_view_slice=0)
+  CONT(type=f16,ne=[2,1,1,1],use_view_slice=0)
+  CONT(type=f16,ne=[2,1,3,5],use_view_slice=0)
+  CONT(type=f16,ne=[2,3,5,7],use_view_slice=0)
+  CONT(type=f16,ne=[1,4,4,1],use_view_slice=0)
+  CONT(type=f16,ne=[1,8,17,1],use_view_slice=0)
+  CONT(type=f16,ne=[10,10,10,1],use_view_slice=0)
+  CONT(type=bf16,ne=[2,1,1,1],use_view_slice=0)
+  CONT(type=bf16,ne=[2,1,3,5],use_view_slice=0)
+  CONT(type=bf16,ne=[2,3,5,7],use_view_slice=0)
+  CONT(type=bf16,ne=[1,4,4,1],use_view_slice=0)
+  CONT(type=bf16,ne=[1,8,17,1],use_view_slice=0)
+  CONT(type=bf16,ne=[10,10,10,1],use_view_slice=0)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3)
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3)
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3)
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3)
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3)
+  Backend RD0: FAIL
+1/2 backends passed
+FAIL
+ggml_test: test-backend-ops returned 1
+ggml_test: rd stats graphs=6236 nodes=13263 dispatches=6998 skipped=6265 barriers=2607 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=30 set0_created=1136 slots_created=256 coop_yields=5 waits=1202 faults=241 params_bytes=1791488 set_bytes=6033447900 get_bytes=8857216440 copies=0 clears=0 buffers_live=0 bytes_live=0

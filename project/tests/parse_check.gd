@@ -6,12 +6,15 @@ extends SceneTree
 const OUT := "res://../gates/8-loop/parse_check.txt"
 const PATHS := ["res://main.gd", "res://gate_loop.gd", "res://stages/sandbox_util.gd", "res://stages/stage_base.gd",
 		"res://stages/dress_on_stage.gd", "res://stages/drape_stage.gd", "res://stages/curvenet_stage.gd",
-		"res://stages/fit_stage.gd", "res://stages/infer_stage.gd", "res://stages/pipeline.gd",
+		"res://stages/fit_stage.gd", "res://stages/infer_stage.gd", "res://stages/ggml_stage.gd", "res://stages/pipeline.gd",
 		"res://util/skeleton15.gd", "res://util/mesh_topo.gd", "res://util/mesh_wire.gd", "res://util/obj_io.gd",
 		"res://xr/pen_source_scripted.gd", "res://xr/pen_bridge.gd", "res://xr/xr_world.gd",
 		"res://tests/test_loop_units.gd", "res://tests/wrapper_audit.gd", "res://tests/probe_main_wrappers.gd",
 		"res://gate_curvenet.gd", "res://gate_fit.gd", "res://gate_fit_smoke.gd", "res://gate_drape.gd", "res://gate_lbfgsb.gd",
-		"res://gate_runtime.gd", "res://probe_curvenet_wrappers.gd", "res://xr_main.tscn", "res://main.tscn"]
+		"res://gate_runtime.gd", "res://probe_curvenet_wrappers.gd", "res://infer_host.gd", "res://graph_dump.gd",
+		"res://gate_ggml_rd.gd", "res://gate_ggml_rd_serial.gd", "res://gate_ggml_graph.gd", "res://census_ggml_rd.gd",
+		"res://perf_ggml_fa.gd", "res://probe_ggml_wrappers.gd", "res://probe_ggml_wrappers_k7.gd",
+		"res://probe_ggml_wrappers_graph.gd", "res://xr_main.tscn", "res://main.tscn"]
 
 func _initialize() -> void:
 	var f := FileAccess.open(ProjectSettings.globalize_path(OUT), FileAccess.WRITE)

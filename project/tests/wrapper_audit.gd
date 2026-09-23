@@ -19,15 +19,18 @@ extends RefCounted
 const GUESTS := {
 	"guest/main.cpp": "dress_on",
 	"guest/probes/main.cpp": "dress_on",
+	"guest/rd_worker/main.cpp": "dress_on",
 	"guest/curvenet/main.cpp": "curvenet",
 	"guest/drape/main.cpp": "drape",
 	"guest/fit/main.cpp": "fit",
+	"guest/ggml_test/main.cpp": "ggml",
 }
 const STAGE_FILES := {
 	"dress_on": "res://stages/dress_on_stage.gd",
 	"curvenet": "res://stages/curvenet_stage.gd",
 	"drape": "res://stages/drape_stage.gd",
 	"fit": "res://stages/fit_stage.gd",
+	"ggml": "res://stages/ggml_stage.gd",
 }
 
 static func read(path: String) -> String:
@@ -117,11 +120,18 @@ static func _func_from_header(line: String) -> Dictionary:
 	var at := line.find("func ") + 5
 	var open := line.find("(", at)
 	var name := line.substr(at, open - at).strip_edges()
+	# Brackets and commas inside a string default ("-o ADD,MUL -b RD0") are
+	# text, not syntax.
 	var d := 0
 	var close := -1
+	var in_str := false
 	for i in range(open, line.length()):
 		var ch := line[i]
-		if ch == "(" or ch == "[" or ch == "{":
+		if ch == "\"":
+			in_str = not in_str
+		elif in_str:
+			continue
+		elif ch == "(" or ch == "[" or ch == "{":
 			d += 1
 		elif ch == ")" or ch == "]" or ch == "}":
 			d -= 1
@@ -131,10 +141,15 @@ static func _func_from_header(line: String) -> Dictionary:
 	var params := PackedStringArray()
 	var inner := line.substr(open + 1, close - open - 1)
 	d = 0
+	in_str = false
 	var start := 0
 	for i in inner.length():
 		var ch := inner[i]
-		if ch == "(" or ch == "[" or ch == "{":
+		if ch == "\"":
+			in_str = not in_str
+		elif in_str:
+			continue
+		elif ch == "(" or ch == "[" or ch == "{":
 			d += 1
 		elif ch == ")" or ch == "]" or ch == "}":
 			d -= 1

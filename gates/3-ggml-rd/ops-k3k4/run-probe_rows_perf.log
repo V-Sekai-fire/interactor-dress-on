@@ -1,0 +1,13 @@
+PROBE rows_perf op=RMS_NORM ne=[896,512,1,1] p=1.19209e-07 chain=1024 t1_us=386 tN_us=6295 per_op_us=5.8 GBps=953 check=ok (Skin-Tokens RMS_NORM x21947)
+PROBE rows_perf op=RMS_NORM ne=[128,8,514,1] p=1e-06 chain=1024 t1_us=462 tN_us=8846 per_op_us=8.2 GBps=771 check=ok (Skin-Tokens q/k RMS_NORM x21560)
+PROBE rows_perf op=SOFT_MAX ne=[512,512,8,1] p=1 chain=1024 t1_us=519 tN_us=16723 per_op_us=15.8 GBps=2118 check=ok (Skin-Tokens attention SOFT_MAX x11542)
+PROBE rows_perf op=NORM ne=[512,54000,1,1] p=1e-05 chain=88 t1_us=531 tN_us=42581 per_op_us=483.3 GBps=915 check=ok (Skin-Tokens NORM x1964)
+PROBE rows_perf op=SOFT_MAX ne=[54000,512,8,1] p=1 chain=4 t1_us=7128 tN_us=27209 per_op_us=6693.7 GBps=529 check=ok (Skin-Tokens SOFT_MAX, rows > 16384, x4)
+PROBE rows_perf op=RMS_NORM ne=[128,12,4096,1] p=1e-12 chain=528 t1_us=478 tN_us=37501 per_op_us=70.3 GBps=1075 check=ok (Pixal3D ss_flow q/k RMS_NORM x240)
+PROBE rows_perf op=NORM ne=[1536,4096,1,1] p=1e-06 chain=1024 t1_us=289 tN_us=50522 per_op_us=49.1 GBps=2050 check=ok (Pixal3D ss_flow NORM x182)
+PROBE rows_perf op=NORM ne=[1024,1029,1,1] p=1e-05 chain=1024 t1_us=473 tN_us=14102 per_op_us=13.3 GBps=1265 check=ok (Pixal3D DINO NORM x80)
+PROBE rows_perf op=SOFT_MAX ne=[1029,1029,16,1] p=0.125 chain=144 t1_us=476 tN_us=28569 per_op_us=196.5 GBps=1380 check=ok (Pixal3D DINO SOFT_MAX x24)
+PROBE rows_perf op=NORM ne=[32,64,64,64] p=1e-05 chain=74 t1_us=738 tN_us=42314 per_op_us=569.5 GBps=236 check=ok (Pixal3D ss_dec NORM x12)
+PROBE rows_perf op=NORM ne=[128,32,32,32] p=1e-05 chain=596 t1_us=478 tN_us=43248 per_op_us=71.9 GBps=934 check=ok (Pixal3D ss_dec NORM x14)
+RESULT: PASS (rows_perf)
+ggml_test: rd stats graphs=2235 nodes=167879 dispatches=166959 skipped=920 barriers=165581 failed_graphs=0 last{nodes=596 dispatches=596 barriers=595 skipped=0} pipelines=9 set0_created=370 slots_created=1024 coop_yields=5 waits=1315 faults=72 params_bytes=42741504 set_bytes=213490936 get_bytes=505539212 copies=0 clears=0 buffers_live=0 bytes_live=0

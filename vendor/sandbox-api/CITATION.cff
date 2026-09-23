@@ -19,7 +19,11 @@ abstract: >-
   renamed free/realloc syscalls) consult it first. The table is freed when
   no aligned block is live. posix_memalign answers EINVAL/ENOMEM instead of
   1. Gate 0F probe 17 (gates/0f-runtime) checks 3000 blocks at 64/128/4096
-  alignment against a copy of the old fallback.
+  alignment against a copy of the old fallback. And in the --wrap build,
+  __wrap_memset/memcpy/memmove/memcmp are C functions that split a span into
+  16 MiB pieces over the bare syscalls: the host views at most 16 MiB of
+  guest memory per memory syscall, and ggml's test-backend-ops copies 64 MiB
+  tensors (Gate 3, a protection fault above 16 MiB).
 type: software
 authors:
   - name: libriscv contributors

@@ -17,11 +17,7 @@ func _ready() -> void:
 	stage_name = "curvenet"
 	# A PMP remesh of a whole garment runs far past the default 8000 x 2^20
 	# instructions (Gate 0F probe 5); 2^24 units is effectively unbounded.
-	# allocations_max: the addon's default is 4000 live heap chunks. The Linux
-	# build ran out of them inside curvenet_build on the loop's skirt ("Too many
-	# arena chunks", Gate 0H) where the Windows build of the same ELF did not,
-	# so the cap is set here as fit_stage.gd sets its own.
-	open_sandbox("res://curvenet.elf", 1024, 4096, 1 << 24, {"allocations_max": 1000000}, PackedStringArray(REQUIRED))
+	open_sandbox("res://curvenet.elf", 1024, 4096, 1 << 24, {}, PackedStringArray(REQUIRED))
 
 func _cn_call(fn: String, args: Array = []) -> String:
 	if sandbox == null:

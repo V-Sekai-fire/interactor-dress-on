@@ -1,0 +1,27 @@
+# ggml-rd L0 negative controls, 2026-09-23T08:28:03Z
+== (1) native_decide on add_f32's pin with numthreads 256 -> 128 (must be rejected)
+<tmp>/NegGgml.lean:6:2: error: Tactic `native_decide` evaluated that the proposition
+  LeanSlang.emit addF32 = expectedAdd.replace "[numthreads(256, 1, 1)]" "[numthreads(128, 1, 1)]"
+is false
+PASS the changed pin is rejected
+== (1b) native_decide on norm_f32's pin with the first tree step 128u -> 127u (must be rejected)
+<tmp>/NegGgmlNorm.lean:6:2: error: Tactic `native_decide` evaluated that the proposition
+  LeanSlang.emit normF32 = expectedNorm.replace "sh[(t + 128u)]" "sh[(t + 127u)]"
+is false
+PASS the changed norm pin is rejected
+== (1c) native_decide on mul_mat_tiled_f16_f32's pin with As[16][65] -> As[16][64] (must be rejected)
+<tmp>/NegGgmlMm.lean:7:2: error: Tactic `native_decide` evaluated that the proposition
+  LeanSlang.emit (shader Ty.f16 Ty.f32) =
+    expected.replace "groupshared float As[16][65];" "groupshared float As[16][64];"
+is false
+PASS the changed pin is rejected
+== (2) gen.sh check against a copy of kernels/ggml whose add_f32.slang says 255u for 256u (must fail)
+== emitting Slang from Lean at <checkout>/lean ==
+DIFF: Lean emits a different slang/add_f32.slang:
+43c43
+<   uint e = ((((gid.y * pw(54u)) + gid.x) * 255u) + lid.x);
+---
+>   uint e = ((((gid.y * pw(54u)) + gid.x) * 256u) + lid.x);
+error: 1 committed file(s) differ from the Lean emission; rerun with --update and review
+PASS the tampered copy is refused
+RESULT: PASS

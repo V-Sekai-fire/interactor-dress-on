@@ -1,0 +1,4 @@
+# python3 gates/6-fit/budget/eval_gap.py (branch cut-6c @0649680) gates/8-loop/flat.fitted.obj gates/6-fit/budget/guest-psd-prof.fitted.obj  2026-09-23T08:43:47-07:00
+reference gates\8-loop\flat.fitted.obj: n 932  gap mean 1.8395  p95 5.2153  max 9.3480 voxels
+gates/8-loop/flat.fitted.obj: n 932  gap mean 1.8395 (d +0.0000)  p95 5.2153 (d +0.0000)  max 9.3480 voxels  guard PASS
+gates/6-fit/budget/guest-psd-prof.fitted.obj: n 932  gap mean 1.8342 (d -0.0053)  p95 5.3572 (d +0.1418)  max 10.1107 voxels  guard PASS

@@ -1,0 +1,88 @@
+// ggml-rd probes for Gate 3, each a pump job that prints its numbers and a
+// final "RESULT: PASS" or "RESULT: FAIL" line:
+//
+//   chain <n>        n in-place ADDs (x += 1) on one tensor in one ggml
+//                    buffer, one graph: every dispatch reads what the one
+//                    before wrote, in the same RD buffer. x must be exactly n
+//                    and the graph must have n - 1 barriers. The ordering
+//                    Gate 0F lost (80% of increments) with read-only sources.
+//   independent <n>  n ADDs into n separate outputs of one buffer, one graph:
+//                    no dispatch touches another's bytes, so barrier elision
+//                    records 0 barriers (n - 1 under GGML_RD_BARRIER_ALL=1),
+//                    and every output must be exact.
+//   files <path>     the READ and UPLOAD requests: READ a host file of f32s,
+//                    UPLOAD the same file into a tensor's RD buffer, read the
+//                    tensor back, and compute x + x on the GPU: both exact.
+//   alias <rw|ro>    the render-graph aliasing hazard (Gate 0F finding 4), as
+//                    an A/B on one recording: x += 1 in place, 1000 times,
+//                    4096 elements, one compute list with a barrier between
+//                    every two dispatches, x bound at b1 and b4 of one set
+//                    (one ggml buffer is one RD buffer). The words come from
+//                    ggml-rd's own packer. rw uses add_f32, whose sources are
+//                    read-write: every element must end at exactly 1000. ro
+//                    uses the control ctl_add_f32_rosrc, identical but for
+//                    read-only sources: Godot records each span's usage of
+//                    the buffer from its first binding (a read), does not
+//                    order the spans, and increments are lost; the probe
+//                    PASSes when they are (the hazard is still there, and
+//                    read-write sources are what avoid it).
+//   perf <set>       GPU time per op (ggml-rd's timestamps around the compute
+//                    list) on the census's hottest data-movement shapes: a
+//                    graph of K copies against one of 1, per op = the
+//                    difference / (K - 1). Numbers, no threshold: RESULT PASS
+//                    when every case was timed.
+//   rows_perf        (probes_rows.cpp) the GPU time per op of NORM, RMS_NORM
+//                    and SOFT_MAX on the census's hottest shapes, from
+//                    in-place chains of 1 and N ops timed on the host clock;
+//                    rows_perf sweep: 64- vs 256-thread NORM/RMS_NORM kernels
+//                    over row lengths 32..1024 (ops/rows.h's kShortRow).
+//   mm_perf <all|labels>  MUL_MAT on the census's hottest shapes and the
+//                    4096 x 1536 x 1024 benchmark (f16, bf16, f32): per shape,
+//                    a short and a long graph of r1 < r2 independent
+//                    MUL_MATs over the same operands, each timed on the HOST
+//                    clock (Time.get_ticks_usec) from graph_compute to its
+//                    synchronize (a frame later, rule 4), best of 3; the
+//                    per-op time is the difference over r2 - r1, which
+//                    cancels the frame and the packing. Every shape's last
+//                    output is checked against a double sum over the same
+//                    inputs (3 columns x first and last batch): nmse < 1e-8.
+//   conv_perf <shape|all>  (probe_conv.cpp) the census' hottest IM2COL and
+//                    CONV_3D shapes: host-timed graphs of 1 and 9 copies,
+//                    and 4096 sampled outputs against a reference.
+//   graph <qwen|dit|sconv>  (probe_graph.cpp) G3.graph: the apps' own graph
+//                    builders on random weights on ggml-rd only; the outputs
+//                    are dumped for the host oracle (tests/ggml_graph_oracle:
+//                    ggml-vulkan / host ggml-cpu), never compared with the
+//                    in-guest ggml-cpu; barrier elision vs barrier-all bit
+//                    for bit; the dropped-barrier control.
+//   cost <decode|dit>  (probe_graph.cpp) G3.cost: host us per graph and per
+//                    node, dispatches, barriers and frames per graph, GPU time.
+//   fa_perf <lq,lk,reps>  FLASH_ATTN_EXT at a census shape (D = 128, 12
+//                    heads, f32, no mask): a one-node graph computed reps
+//                    times, one submit and one WAIT_GPU each (the host times
+//                    the period), then 8 sampled query rows checked against
+//                    a double reference.
+#pragma once
+
+#include <cstddef>
+#include <cstdint>
+#include <string>
+
+namespace rdc {
+class Device;
+}
+
+namespace probes {
+
+// The device the alias probe records on directly (the one ggml-rd uses).
+void set_device(rdc::Device *dev);
+bool start(const std::string &name, const std::string &arg, std::string &err);
+
+// The last G3.graph run's ggml-rd outputs, for the host oracle: one
+// "<arm>/<output> <bytes>" line per entry (f32 little-endian), and a pointer
+// to bytes [offset, offset + bytes) of entry `index` (bytes clamped to the
+// entry; nullptr past its end).
+std::string graph_dump_list();
+const uint8_t *graph_dump_chunk(size_t index, size_t offset, size_t &bytes);
+
+} // namespace probes

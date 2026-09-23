@@ -56,3 +56,20 @@ a missing ICD file is written under `/tmp` and named with `VK_ICD_FILENAMES`.
    `docker pull`/`docker run` cycles for one fault. Patched in the org fork
    (V-Sekai-fire/godot-sandbox PR #4: the lookup honours the setting), and
    `project.godot` sets `toolchain/docker_enabled=false`.
+
+## Desk runs on the desk's GPUs (2026-09-23) — Linux image, Vulkan through dzn
+
+The user asked that nothing goes to RunPod before it passes locally, and not on
+the CPU. Docker Desktop's Linux containers reach the RTX cards through WSL2's
+D3D12; Mesa's dzn is Vulkan on top of it (`tools/runpod/loop/wsl-test`: Arch +
+`vulkan-dzn` around the loop image's own `/opt/godot` and `/app`). vulkaninfo:
+`Microsoft Direct3D12 (NVIDIA GeForce RTX 3090)` and `(RTX 4090)`, discrete,
+Vulkan 1.2.354. NVIDIA's own Linux Vulkan driver is not reachable there (the
+driver store's `nv-vk64.json` is the Windows ICD); Gate 0H V2 covered it.
+
+| run | result |
+|---|---|
+| full job through the handler, 4090, fit.elf | AUTHOR 2 cycles / 2 openings; MESH 932 v; **FIT 329 Newton, 1601 s**; **CHECK `OK none`** (push-vertex control INTERSECTS); **DRAPE FAILED** at its first call: `Too many arena chunks (fa0)` in drape.elf — the same Linux-only 4000-chunk default as curvenet in run 1 |
+| fix | `stages/sandbox_util.gd` gives every stage `allocations_max` 1,000,000 (fit keeps 4,000,000); curvenet's own override removed |
+| MESH + DRAPE, fit as fixture | **DRAPE 100 steps, finite**, 119 ms/step through dzn (40.6 ms on the same card natively on Windows), 0 arena faults |
+| full job through the handler after the fix, 4090 via dzn | **`RESULT: PASS FIXTURE:infer,rig`** in 1760 s: CHECK `OK none` (control INTERSECTS), DRAPE 100 finite steps, 0 arena faults. The Linux loop image passes the whole loop on a GPU before anything goes to RunPod |

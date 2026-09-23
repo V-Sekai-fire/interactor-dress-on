@@ -1,0 +1,351 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: Godot RenderingDevice (NVIDIA GeForce RTX 4090)
+  Device memory: 24576 MB (24576 MB free)
+
+[NORM] ERR = 1.945461909 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.974299231 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,inplace=0): FAIL
+[NORM] ERR = 1.966171049 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.054501085 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000000,inplace=0): FAIL
+[NORM] ERR = 2.038515061 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,noncontig_rows=1): FAIL
+[NORM] ERR = 2.000114245 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.998775509 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000000,inplace=0): FAIL
+[NORM] ERR = 1.963227789 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.025702117 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000000,inplace=0): FAIL
+[NORM] ERR = 2.005997275 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000000,noncontig_rows=1): FAIL
+[NORM] ERR = 2.012488726 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.992826970 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,inplace=0): FAIL
+[NORM] ERR = 1.898579624 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000001,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.033208764 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000001,inplace=0): FAIL
+[NORM] ERR = 1.968673967 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,noncontig_rows=1): FAIL
+[NORM] ERR = 2.003081643 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000001,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.007331579 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000001,inplace=0): FAIL
+[NORM] ERR = 2.007592627 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000001,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.080830609 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000001,inplace=0): FAIL
+[NORM] ERR = 2.004207881 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000001,noncontig_rows=1): FAIL
+[NORM] ERR = 2.031655847 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000100,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.052438889 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000100,inplace=0): FAIL
+[NORM] ERR = 2.335958068 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000100,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.062444561 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000100,inplace=0): FAIL
+[NORM] ERR = 1.958134036 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000100,noncontig_rows=1): FAIL
+[NORM] ERR = 1.993685857 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000100,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.999613735 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000100,inplace=0): FAIL
+[NORM] ERR = 2.046939033 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000100,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.039675033 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000100,inplace=0): FAIL
+[NORM] ERR = 2.001612898 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000100,noncontig_rows=1): FAIL
+[NORM] ERR = 2.040561683 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.100000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.985910331 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.100000,inplace=0): FAIL
+[NORM] ERR = 2.199050439 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.100000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.008189286 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.100000,inplace=0): FAIL
+[NORM] ERR = 1.988756041 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.100000,noncontig_rows=1): FAIL
+[NORM] ERR = 2.005497933 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.100000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.006202406 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.100000,inplace=0): FAIL
+[NORM] ERR = 1.986103894 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.100000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.007935028 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.100000,inplace=0): FAIL
+[NORM] ERR = 2.002878722 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.100000,noncontig_rows=1): FAIL
+[NORM] ERR = 2.025434833 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=10.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.993208118 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=10.000000,inplace=0): FAIL
+[NORM] ERR = 2.040305201 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=1,eps=10.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.039556444 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=10.000000,inplace=0): FAIL
+[NORM] ERR = 2.000289195 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=10.000000,noncontig_rows=1): FAIL
+[NORM] ERR = 2.012773783 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=10.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 1.998676703 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=10.000000,inplace=0): FAIL
+[NORM] ERR = 1.940024580 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=1,eps=10.000000,noncontig_rows=0): FAIL
+[RMS_NORM] ERR = 2.078019397 > 0.000000100   RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=10.000000,inplace=0): FAIL
+[NORM] ERR = 1.990083014 > 0.000000100   NORM(type=f32,ne=[1025,5,4,3],v=0,eps=10.000000,noncontig_rows=1): FAIL
+[RMS_NORM] ERR = 2.021568960 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,inplace=1): FAIL
+[SOFT_MAX] ERR = 0.458479130 > 0.000001000   SOFT_MAX(type=f32,ne=[16,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.477298166 > 0.000001000   SOFT_MAX(type=f32,ne=[15,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.491786605 > 0.000001000   SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.481939002 > 0.000001000   SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.476376390 > 0.000001000   SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.475705902 > 0.000001000   SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.476921325 > 0.000001000   SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.477281003 > 0.000001000   SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006790567 > 0.000001000   SOFT_MAX(type=f32,ne=[16,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006007213 > 0.000001000   SOFT_MAX(type=f32,ne=[15,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006581504 > 0.000001000   SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006563736 > 0.000001000   SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006613273 > 0.000001000   SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006567496 > 0.000001000   SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006642136 > 0.000001000   SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006644905 > 0.000001000   SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.006919409 > 0.000001000   SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): FAIL
+[SOFT_MAX] ERR = 0.006629352 > 0.000001000   SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): FAIL
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f32,nr23=[3,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[2,3],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f16,nr23=[3,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[2,3],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f32,nr23=[3,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[2,3],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f16,nr23=[3,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[2,3],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f32,nr23=[3,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[2,3],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f16,nr23=[3,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[2,3],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f32,nr23=[3,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[2,3],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=0,m_prec=f16,nr23=[3,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[2,3],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=1,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f32,nr23=[3,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[2,3],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f16,nr23=[3,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[2,3],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f32,nr23=[3,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[2,3],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f16,nr23=[3,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[2,3],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f32,nr23=[3,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[2,3],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f16,nr23=[3,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[2,3],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=1.000000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f32,nr23=[3,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[2,3],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,16,1,3],mask=1,sinks=1,m_prec=f16,nr23=[3,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[2,3],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[32,2,32,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[32,2,32,1],mask=1,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[32,2,32,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[32,2,32,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[200001,2,3,1],mask=1,sinks=1,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+  SOFT_MAX(type=f32,ne=[200001,2,3,1],mask=1,sinks=1,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=8.000000,inplace=0): not supported [RD0] 
+[SOFT_MAX] ERR = 0.476633503 > 0.000001000   SOFT_MAX(type=f32,ne=[200000,1,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.477075365 > 0.000001000   SOFT_MAX(type=f32,ne=[200000,4,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+[SOFT_MAX] ERR = 0.477498390 > 0.000001000   SOFT_MAX(type=f32,ne=[643251,3,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0): FAIL
+  0/72 tests passed
+
+Failing tests:
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000000,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,noncontig_rows=1)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000000,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000000,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000000,noncontig_rows=1)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000001,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000001,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,noncontig_rows=1)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000001,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000001,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000001,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000001,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000001,noncontig_rows=1)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000100,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000100,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000100,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000100,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000100,noncontig_rows=1)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000100,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000100,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000100,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.000100,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.000100,noncontig_rows=1)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.100000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.100000,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.100000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.100000,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.100000,noncontig_rows=1)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.100000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.100000,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.100000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=0.100000,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=0.100000,noncontig_rows=1)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=10.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=10.000000,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=1,eps=10.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=10.000000,inplace=0)
+  NORM(type=f32,ne=[64,5,4,3],v=0,eps=10.000000,noncontig_rows=1)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=10.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=0,eps=10.000000,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=1,eps=10.000000,noncontig_rows=0)
+  RMS_NORM(type=f32,ne=[1025,5,4,3],v=1,eps=10.000000,inplace=0)
+  NORM(type=f32,ne=[1025,5,4,3],v=0,eps=10.000000,noncontig_rows=1)
+  RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000001,inplace=1)
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[16,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[15,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[16,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[15,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1024,16,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1023,15,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1024,1024,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[1023,1023,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1)
+  SOFT_MAX(type=f32,ne=[16,2,32,1],mask=0,sinks=0,m_prec=f16,nr23=[1,1],scale=0.100000,max_bias=0.000000,inplace=1)
+  SOFT_MAX(type=f32,ne=[200000,1,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[200000,4,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  SOFT_MAX(type=f32,ne=[643251,3,1,1],mask=0,sinks=0,m_prec=f32,nr23=[1,1],scale=1.000000,max_bias=0.000000,inplace=0)
+  Backend RD0: FAIL
+1/2 backends passed
+FAIL
+ggml_test: test-backend-ops returned 1
+ggml_test: rd stats graphs=1155 nodes=1791 dispatches=871 skipped=920 barriers=573 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=9 set0_created=235 slots_created=256 coop_yields=1 waits=235 faults=72 params_bytes=222976 set_bytes=213490936 get_bytes=505537052 copies=0 clears=0 buffers_live=0 bytes_live=0

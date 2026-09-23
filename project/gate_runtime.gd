@@ -612,6 +612,8 @@ func _p13_refs() -> bool:
 	var sb = fr[0]
 	var def_to: int = sb.execution_timeout
 	var ladder := []
+	# rd_compute's recovery off first: the hazard as finding 2 found it.
+	sb.vmcall("p_recovery", false)
 	for n in [1000, 2000, 4000, 10000]:
 		sb.vmcall("refs_setup")
 		var res := _refs_run(sb, n)
@@ -623,8 +625,19 @@ func _p13_refs() -> bool:
 			var ended := str(sb.vmcall("p_list_end"))
 			var again := str(sb.vmcall("refs_setup"))
 			_v(13, "references", "PASS" if refused.begins_with("FAIL buffer_update refused") and again == "ok" else "FAIL",
-				"a vmcall killed mid-recording (n=%d at the default budget) leaves its compute list open: next buffer_update -> %s | p_list_end -> %s | then -> %s" % [
+				"recovery off: a vmcall killed mid-recording (n=%d at the default budget) leaves its compute list open: next buffer_update -> %s | p_list_end -> %s | then -> %s" % [
 				n, refused, ended, again])
+			# The fix (Cut 3): recovery on, killed the same way, and the next
+			# buffer_update goes through with no p_list_end.
+			var r0 := str(sb.vmcall("p_recovery", true))
+			var res2 := _refs_run(sb, n)
+			var next := str(sb.vmcall("refs_setup"))
+			var r1 := str(sb.vmcall("p_recovery", true))
+			var k0 := int(r0.get_slice("recoveries=", 1))
+			var k1 := int(r1.get_slice("recoveries=", 1))
+			_v(13, "references", "PASS" if not res2[0] and next == "ok" and k1 == k0 + 1 else "FAIL",
+				"recovery on (rdc::Device, Cut 3): killed again (%s); next buffer_update -> %s with no p_list_end; recoveries %d -> %d" % [
+				res2[1], next, k0, k1])
 	_v(13, "references", "INFO", "at default execution_timeout=%d, references_max=65536 (each dispatch = 4 host calls + a barrier per 4): %s" % [def_to, " | ".join(ladder)])
 	# The aliased shape (saxpby, y and dst the same buffer): see probe 16.
 	sb.execution_timeout = 1000000

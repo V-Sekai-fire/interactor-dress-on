@@ -967,6 +967,14 @@ static Variant refs_usets(int64_t n) {
 	return text("uniform_sets made=" + std::to_string(made) + " of " + std::to_string(n));
 }
 
+// Probe 13's arms: rdc::Device ends a compute list that a killed vmcall
+// left open before its next buffer_update/copy/clear, list_begin or submit
+// (Cut 3, for finding 2). Off, that call is refused as Gate 0F found.
+static Variant p_recovery(bool on) {
+	g_dev.set_recovery(on);
+	return text(std::string("recovery ") + (on ? "on" : "off") + " recoveries=" + std::to_string(g_dev.recoveries()));
+}
+
 // Recovery: a vmcall killed mid-recording (references_max, a trap) leaves
 // the compute list open, and every later list_begin/buffer_update on the
 // device is refused until it is ended.
@@ -1354,6 +1362,7 @@ int main() {
 	ADD_API_FUNCTION(big_buffer, "String", "int bytes, bool direct", "Empty buffer + clear + whole-buffer saxpby + readback");
 	ADD_API_FUNCTION(refs_usets, "String", "int n", "Create and free n uniform sets in one call");
 	ADD_API_FUNCTION(p_list_end, "String", "", "End a compute list a failed call left open");
+	ADD_API_FUNCTION(p_recovery, "String", "bool on", "rd_compute's compute-list recovery on or off (gate hook)");
 	ADD_API_FUNCTION(p_rd_close, "String", "", "Free the guest's RenderingDevice");
 	ADD_API_FUNCTION(refs_setup, "String", "", "Four +1 counters for refs_run");
 	ADD_API_FUNCTION(refs_setup_one, "String", "int k", "Counter k for refs_run, one per call");

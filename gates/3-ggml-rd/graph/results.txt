@@ -1,0 +1,143 @@
+# Gate 3 G3.graph + G3.cost, 2026-09-23T12:52:54, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+oracle: ggml_graph_oracle.exe
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+execution_timeout=4000000 memory_max=3600
+runs selected: ["graph_qwen", "graph_sconv", "graph_dit8", "graph_dit"]
+== graph_qwen: STARTED probe graph
+== graph_qwen: done in 2.0 s, frames=46 pumps=46 vm_ms=1980.4 waits=45 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph qwen rd_native nodes=76 dispatches=45 barriers=39 (barrier_all: 44) host_us(entry..submit)=900 frames=1 run_ms=2.7 status=0/0/0
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=layer_out n=1792 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=20/39 detected nodes=76 dispatches=45 barriers=39/44 status=0/0/0/0 wall_s=2.0
+   RESULT: PASS (graph qwen)
+   rd: graphs=45 nodes=3420 dispatches=2025 skipped=1395 barriers=1721 failed_graphs=0 last{nodes=76 dispatches=45 barriers=39 skipped=31} pipelines=12 set0_created=10 slots_created=45 coop_yields=0 waits=45 faults=0 params_bytes=518400 set_bytes=82999304 get_bytes=1382400 copies=0 clears=45 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=45 submits=45 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 11 files 54272 bytes to <checkout>/build/graph-dumps/graph_qwen in 0.0 s
+   oracle: ggml_graph_oracle.exe --graph=qwen --dump=<checkout>/build/graph-dumps/graph_qwen --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_qwen.txt --ref=cpu --check=vulkan
+== graph_qwen oracle: exited in 17.9 s
+   ORACLE graph=qwen ref=cpu check=vulkan vk=precise dump=<checkout>/build/graph-dumps/graph_qwen
+   ORACLE cpu_native status=0 nodes=76 ms=1621.6
+   ORACLE cpu_native rerun status=0 ms=2700.2 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=76 ms=2934.4
+   ORACLE cpu_f32 rerun status=0 ms=1769.5 repeat=bit-identical
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=76 ms=25.4
+   ORACLE vulkan_native rerun status=0 ms=1.1 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=76 ms=9.9
+   ORACLE vulkan_f32 rerun status=0 ms=1.2 repeat=bit-identical
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=layer_out n=1792 rel_l2=6.721e-05 rel_l2_of_branch=0.000342 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=k_cache_row_beam0 n=1024 rel_l2=2.094e-04 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=v_cache_row_beam0 n=1024 rel_l2=2.021e-04 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=k_cache_row_beam1 n=1024 rel_l2=2.060e-04 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=v_cache_row_beam1 n=1024 rel_l2=1.980e-04 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=layer_out n=1792 rel_l2=2.461e-07 rel_l2_of_branch=0.000001 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=k_cache_row_beam0 n=1024 rel_l2=1.388e-05 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=v_cache_row_beam0 n=1024 rel_l2=1.467e-07 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=k_cache_row_beam1 n=1024 rel_l2=1.288e-05 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=v_cache_row_beam1 n=1024 rel_l2=1.979e-07 finite=1
+   ORACLE check vulkan vs cpu: native 2.094e-04 f32 1.388e-05
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=1792)
+   ORACLE qwen SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=2.097e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=9.166e-06 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=9.166e-06 rel_l2(cpu_f16,cpu_f32)=2.091e-04 rel_l2(rd_f16,vulkan_f16)=1.574e-05 rel_l2(rd_f32,vulkan_f32)=1.574e-05 ref_ms=1622/2934 inputs=bit-identical wall_s=9.8
+   RESULT: PASS (oracle qwen)
+== graph_sconv: STARTED probe graph
+== graph_sconv: done in 2.9 s, frames=57 pumps=57 vm_ms=2879.2 waits=54 coops=2 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph sconv rd_native nodes=789 dispatches=571 barriers=359 (barrier_all: 570) host_us(entry..submit)=4271 frames=1 run_ms=54.5 status=0/0/0
+   PROBE graph sconv rd_f16_vs_rd_f32_info output=subdiv n=5056 rel_l2=0.000e+00 finite=1
+   PROBE graph sconv rd_f16_vs_rd_f32_info output=h1 n=647168 rel_l2=0.000e+00 finite=1
+   PROBE graph sconv rd_f16_vs_rd_f32_info output=x n=161792 rel_l2=0.000e+00 finite=1
+   PROBE graph sconv SUMMARY weights=f16 reference=host (dumped: 6 outputs, 6.2 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=16/48 detected nodes=789 dispatches=571 barriers=359/570 status=0/0/0/0 wall_s=2.9 L=632 neighbours=6200/17064
+   RESULT: PASS (graph sconv)
+   rd: graphs=99 nodes=46026 dispatches=32859 skipped=13167 barriers=21270 failed_graphs=0 last{nodes=789 dispatches=571 barriers=359 skipped=218} pipelines=17 set0_created=16 slots_created=571 coop_yields=2 waits=99 faults=0 params_bytes=8411904 set_bytes=165558984 get_bytes=177209856 copies=0 clears=99 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=99 submits=99 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 6 files 6512128 bytes to <checkout>/build/graph-dumps/graph_sconv in 0.0 s
+   oracle: ggml_graph_oracle.exe --graph=sconv --dump=<checkout>/build/graph-dumps/graph_sconv --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_sconv.txt --ref=cpu --check=vulkan
+== graph_sconv oracle: exited in 302.0 s
+   ORACLE graph=sconv ref=cpu check=vulkan vk=precise dump=<checkout>/build/graph-dumps/graph_sconv
+   ORACLE cpu_native status=0 nodes=789 ms=72120.4
+   ORACLE cpu_native rerun status=0 ms=137545.6 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=789 ms=47194.3
+   ORACLE cpu_f32 rerun status=0 ms=41096.0 repeat=bit-identical
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=789 ms=2311.7
+   ORACLE vulkan_native rerun status=0 ms=28.3 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=789 ms=536.3
+   ORACLE vulkan_f32 rerun status=0 ms=13.2 repeat=bit-identical
+   PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=subdiv n=5056 rel_l2=2.735e-04 finite=1
+   PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=h1 n=647168 rel_l2=2.741e-04 finite=1
+   PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=x n=161792 rel_l2=1.648e-04 finite=1
+   PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=subdiv n=5056 rel_l2=4.522e-07 finite=1
+   PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=h1 n=647168 rel_l2=4.839e-07 finite=1
+   PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=x n=161792 rel_l2=3.321e-07 finite=1
+   ORACLE check vulkan vs cpu: native 2.741e-04 f32 4.839e-07
+   ORACLE sconv SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=2.741e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.826e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=4.826e-07 rel_l2(cpu_f16,cpu_f32)=2.741e-04 rel_l2(rd_f16,vulkan_f16)=4.575e-07 rel_l2(rd_f32,vulkan_f32)=4.575e-07 ref_ms=72120/47194 inputs=bit-identical wall_s=302.0
+   RESULT: PASS (oracle sconv)
+== graph_dit8: STARTED probe graph
+== graph_dit8: done in 4.4 s, frames=55 pumps=55 vm_ms=4376.2 waits=54 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph dit rd_native nodes=103 dispatches=70 barriers=62 (barrier_all: 69) host_us(entry..submit)=1111 frames=1 run_ms=10.4 status=0/0/0
+   PROBE graph dit rd_bf16_vs_rd_f32_info output=block_out n=786432 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 9.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=8/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=4.4
+   RESULT: PASS (graph dit:8)
+   rd: graphs=153 nodes=51588 dispatches=36639 skipped=14949 barriers=24577 failed_graphs=0 last{nodes=103 dispatches=70 barriers=62 skipped=33} pipelines=22 set0_created=24 slots_created=571 coop_yields=2 waits=153 faults=0 params_bytes=9379584 set_bytes=441785032 get_bytes=516948480 copies=0 clears=153 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=153 submits=153 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 3 files 9437184 bytes to <checkout>/build/graph-dumps/graph_dit8 in 0.0 s
+   oracle: ggml_graph_oracle.exe --graph=dit:8 --dump=<checkout>/build/graph-dumps/graph_dit8 --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_dit8.txt --ref=vulkan --check=cpu
+== graph_dit8 oracle: exited in 10.8 s
+   ORACLE graph=dit:8 ref=vulkan check=cpu vk=precise dump=<checkout>/build/graph-dumps/graph_dit8
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=103 ms=36.1
+   ORACLE vulkan_native rerun status=0 ms=6.8 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=103 ms=13.8
+   ORACLE vulkan_f32 rerun status=0 ms=6.9 repeat=bit-identical
+   ORACLE cpu_native status=0 nodes=103 ms=2701.9
+   ORACLE cpu_native rerun status=0 ms=3420.0 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=103 ms=1601.3
+   ORACLE cpu_f32 rerun status=0 ms=1865.2 repeat=bit-identical
+   PROBE graph dit:8 cpu_bf16_vs_vulkan_bf16_oracle_check output=block_out n=786432 rel_l2=5.565e-04 rel_l2_of_branch=0.001033 finite=1
+   PROBE graph dit:8 cpu_f32_vs_vulkan_f32_oracle_check output=block_out n=786432 rel_l2=4.507e-05 rel_l2_of_branch=0.000084 finite=1
+   ORACLE check cpu vs vulkan: native 5.565e-04 f32 4.507e-05
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=786432)
+   ORACLE dit:8 SUMMARY ref=vulkan(precise) weights=bf16 rel_l2(rd_bf16,vulkan_bf16)=8.766e-04 (<=1e-3: yes) rel_l2(rd_f32,vulkan_f32)=3.475e-07 (<=1e-4: yes) info rel_l2(rd_bf16,vulkan_f32)=3.475e-07 rel_l2(vulkan_bf16,vulkan_f32)=8.766e-04 rel_l2(rd_bf16,cpu_bf16)=9.311e-04 rel_l2(rd_f32,cpu_f32)=4.507e-05 ref_ms=36/14 inputs=bit-identical wall_s=10.8
+   RESULT: PASS (oracle dit:8)
+== graph_dit: STARTED probe graph
+== graph_dit: done in 14.6 s, frames=55 pumps=55 vm_ms=14584.2 waits=54 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph dit rd_native nodes=103 dispatches=70 barriers=62 (barrier_all: 69) host_us(entry..submit)=972 frames=1 run_ms=82.0 status=0/0/0
+   PROBE graph dit rd_bf16_vs_rd_f32_info output=block_out n=6291456 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 72.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=5/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=14.6
+   RESULT: PASS (graph dit)
+   rd: graphs=207 nodes=57150 dispatches=40419 skipped=16731 barriers=27884 failed_graphs=0 last{nodes=103 dispatches=70 barriers=62 skipped=33} pipelines=22 set0_created=32 slots_created=571 coop_yields=2 waits=207 faults=0 params_bytes=10347264 set_bytes=798751432 get_bytes=3234857472 copies=0 clears=207 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=207 submits=207 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 3 files 75497472 bytes to <checkout>/build/graph-dumps/graph_dit in 0.1 s
+   oracle: ggml_graph_oracle.exe --graph=dit --dump=<checkout>/build/graph-dumps/graph_dit --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_dit.txt --ref=vulkan --check=cpu
+== graph_dit oracle: exited in 24.9 s
+   ORACLE graph=dit ref=vulkan check=cpu vk=precise dump=<checkout>/build/graph-dumps/graph_dit
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=103 ms=1145.5
+   ORACLE vulkan_native rerun status=0 ms=43.1 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=103 ms=44.4
+   ORACLE vulkan_f32 rerun status=0 ms=42.2 repeat=bit-identical
+   ORACLE cpu_native status=0 nodes=103 ms=4291.4
+   ORACLE cpu_native rerun status=0 ms=5743.5 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=103 ms=6032.9
+   ORACLE cpu_f32 rerun status=0 ms=5941.8 repeat=bit-identical
+   PROBE graph dit cpu_bf16_vs_vulkan_bf16_oracle_check output=block_out n=6291456 rel_l2=5.567e-04 rel_l2_of_branch=0.001033 finite=1
+   PROBE graph dit cpu_f32_vs_vulkan_f32_oracle_check output=block_out n=6291456 rel_l2=4.507e-05 rel_l2_of_branch=0.000084 finite=1
+   ORACLE check cpu vs vulkan: native 5.567e-04 f32 4.507e-05
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=6291456)
+   ORACLE dit SUMMARY ref=vulkan(precise) weights=bf16 rel_l2(rd_bf16,vulkan_bf16)=8.764e-04 (<=1e-3: yes) rel_l2(rd_f32,vulkan_f32)=3.137e-07 (<=1e-4: yes) info rel_l2(rd_bf16,vulkan_f32)=3.137e-07 rel_l2(vulkan_bf16,vulkan_f32)=8.764e-04 rel_l2(rd_bf16,cpu_bf16)=9.304e-04 rel_l2(rd_f32,cpu_f32)=4.507e-05 ref_ms=1145/44 inputs=bit-identical wall_s=24.8
+   RESULT: PASS (oracle dit)
+== verdicts
+PASS graph_qwen: G3.graph Qwen3 decoder layer (f16): ggml-rd vs host ggml-cpu rel-L2 <= 1e-3, f32 arm <= 1e-4, elision == barrier-all bit for bit, dropped barrier detected
+PASS graph_sconv: G3.graph sparse-conv level (f16), vs host ggml-cpu: the same criteria
+PASS graph_dit8: G3.graph DiT block at 512 tokens (bf16), vs ggml-vulkan: the same criteria
+PASS graph_dit: G3.graph DiT block (bf16), vs ggml-vulkan: the same criteria
+PASS rule 4: no sync in its submit's frame (rule4_same_frame_syncs=0)
+close: CLOSED permanent_slots=0
+wall_s=380.6
+RESULT: PASS

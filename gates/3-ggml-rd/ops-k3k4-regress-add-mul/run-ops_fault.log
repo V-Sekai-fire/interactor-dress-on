@@ -1,0 +1,169 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: Godot RenderingDevice (NVIDIA GeForce RTX 4090)
+  Device memory: 24576 MB (24576 MB free)
+
+  ADD(type=f16,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[2,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,2,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,2,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,1,2],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,2,2],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,2,2,2],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[2,2,2,2],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[2,1,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,2,1,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,2,1],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,1,2],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,1,2,2],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[1,2,2,2],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,3],nr=[2,2,2,2],nf=1,perm1=1,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,6],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): not supported [RD0] 
+  ADD(type=f16,ne=[10,5,4,5],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,120,120],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,4,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,65536,1],nr=[256,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1280,1,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1280,1,1,1],nr=[1,16,16,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1280,16,16,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1280,1,1,1],nr=[1,256,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,1280,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[16,16,1280,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,1920,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,2560,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,1280,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,1920,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[1,1,640,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[5120,1,1,1],nr=[1,256,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[640,1,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+  ADD(type=f16,ne=[64,262144,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+[ADD] ERR = 0.618497202 > 0.000000100   ADD(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.473918842 > 0.000000100   ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.001400416 > 0.000000100   ADD(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.853475546 > 0.000000100   ADD(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.904173425 > 0.000000100   ADD(type=f32,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.964940830 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.927228684 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[2,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.014851620 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,2,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.120708706 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.986368847 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,2],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.988047370 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,2],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.937290787 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.000112613 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[2,2,2,2],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 4.167738290 > 0.000000100   ADD(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.352633769 > 0.000000100   ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 0.998742088 > 0.000000100   ADD(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 0.911324025 > 0.000000100   ADD(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.111107868 > 0.000000100   ADD(type=f32,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.022189956 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.013128329 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[2,1,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 0.916463881 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,2,1,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 0.955818589 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,1],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 0.995374071 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,2],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.011799955 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,2],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.086862532 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.027777652 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[2,2,2,2],nf=1,perm1=1,src_overlap=0): FAIL
+[ADD] ERR = 1.113386154 > 0.000000100   ADD(type=f32,ne=[10,5,4,6],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): FAIL
+[ADD] ERR = 1.009616639 > 0.000000100   ADD(type=f32,ne=[10,5,4,5],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): FAIL
+[ADD] ERR = 0.981003620 > 0.000000100   ADD(type=f32,ne=[1,1,120,120],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): FAIL
+[ADD] ERR = 0.909531714 > 0.000000100   ADD(type=f32,ne=[1,1,4,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1): FAIL
+[ADD] ERR = 0.994709202 > 0.000000100   ADD(type=f32,ne=[1,1,65536,1],nr=[256,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.067916375 > 0.000000100   ADD(type=f32,ne=[1280,1,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.997049564 > 0.000000100   ADD(type=f32,ne=[1280,1,1,1],nr=[1,16,16,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.999117245 > 0.000000100   ADD(type=f32,ne=[1280,16,16,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.971372151 > 0.000000100   ADD(type=f32,ne=[1280,1,1,1],nr=[1,256,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.987924559 > 0.000000100   ADD(type=f32,ne=[1,1,1280,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.001511212 > 0.000000100   ADD(type=f32,ne=[16,16,1280,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.042299386 > 0.000000100   ADD(type=f32,ne=[1,1,1920,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.000566126 > 0.000000100   ADD(type=f32,ne=[1,1,2560,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.966890346 > 0.000000100   ADD(type=f32,ne=[1,1,1280,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.996570127 > 0.000000100   ADD(type=f32,ne=[1,1,1920,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 0.976678045 > 0.000000100   ADD(type=f32,ne=[1,1,640,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.004403684 > 0.000000100   ADD(type=f32,ne=[5120,1,1,1],nr=[1,256,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.065684325 > 0.000000100   ADD(type=f32,ne=[640,1,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.000343109 > 0.000000100   ADD(type=f32,ne=[64,262144,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.917537534 > 0.000000100   ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,1],nf=16,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.276349671 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[2,1,1,1],nf=2,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.446189885 > 0.000000100   ADD(type=f32,ne=[16,5,4,3],nr=[1,2,1,1],nf=3,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.661597395 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,1],nf=4,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.793761613 > 0.000000100   ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,2],nf=5,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.617539796 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,2],nf=6,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.812193769 > 0.000000100   ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=7,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.843824711 > 0.000000100   ADD(type=f32,ne=[16,5,4,3],nr=[2,2,2,2],nf=8,perm1=0,src_overlap=0): FAIL
+[ADD] ERR = 1.875310457 > 0.000000100   ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,1],nf=16,perm1=0,src_overlap=0): FAIL
+  0/54 tests passed
+
+Failing tests:
+  ADD(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[2,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,2,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,2],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,2],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[2,2,2,2],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[2,1,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,2,1,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,1],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,1,2],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,2],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[2,2,2,2],nf=1,perm1=1,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,6],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1)
+  ADD(type=f32,ne=[10,5,4,5],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1)
+  ADD(type=f32,ne=[1,1,120,120],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1)
+  ADD(type=f32,ne=[1,1,4,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=1)
+  ADD(type=f32,ne=[1,1,65536,1],nr=[256,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1280,1,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1280,1,1,1],nr=[1,16,16,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1280,16,16,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1280,1,1,1],nr=[1,256,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,1280,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[16,16,1280,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,1920,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,2560,1],nr=[16,16,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,1280,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,1920,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[1,1,640,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[5120,1,1,1],nr=[1,256,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[640,1,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[64,262144,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,1],nf=16,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[2,1,1,1],nf=2,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[16,5,4,3],nr=[1,2,1,1],nf=3,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,1],nf=4,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,2],nf=5,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,1,2,2],nf=6,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=7,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[16,5,4,3],nr=[2,2,2,2],nf=8,perm1=0,src_overlap=0)
+  ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,1],nf=16,perm1=0,src_overlap=0)
+  Backend RD0: FAIL
+1/2 backends passed
+FAIL
+ggml_test: test-backend-ops returned 1
+ggml_test: rd stats graphs=1304 nodes=2464 dispatches=1099 skipped=1365 barriers=777 failed_graphs=0 last{nodes=35 dispatches=16 barriers=15 skipped=19} pipelines=2 set0_created=259 slots_created=256 coop_yields=2 waits=259 faults=112 params_bytes=281344 set_bytes=2040240916 get_bytes=3724112456 copies=0 clears=0 buffers_live=0 bytes_live=0

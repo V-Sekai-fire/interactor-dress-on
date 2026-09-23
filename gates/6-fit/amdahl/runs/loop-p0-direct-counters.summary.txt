@@ -1,0 +1,6 @@
+ccd candidates per build: n=104 min=448 median=40704.5 max=527210 mean=72100 total=7498348
+  top5 share: 0.212 top5: [527210, 295802, 291053, 242901, 234779]
+  8B/pair readback max MB: 4.22 mean MB: 0.577
+static candidates: n=1 min=448 median=448 max=448 mean=448 total=448
+collisions per build: n=103 min=6 median=97 max=124 mean=91 total=9421
+n: [2797] nnz: n=102 min=106639 median=107167.0 max=107563 mean=107177 total=10932042 solvers: {'SparseNewton': 91, 'SparseProjectedNewton': 11}

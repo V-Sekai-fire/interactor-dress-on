@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: If you use this software, cite it as below.
+title: interactor-dress-on
+abstract: >-
+  A garment authoring loop for Godot: image -> curvenet -> dress-on -> drape,
+  as godot-sandbox RISC-V guest ELFs that need only the godot_sandbox addon
+  and GPU rendering. The GPU is reached only through Godot's RenderingDevice
+  (guest/rd_compute); every kernel is generated from Lean (lean/ -> Slang ->
+  cpp | spirv). curvenet.elf turns pen strokes into a welded garment mesh
+  (Cassie on a namespaced godot-lite shim, Geogram, PMP), fit.elf dresses it
+  onto the body intersection-free (cloth-fit: PolyFEM + ipc-toolkit, OpenVDB
+  replaced by a Lean brick-grid SDF), drape.elf drapes it on the GPU (AVBD,
+  L-BFGS-B as Lean kernels), and ggml-rd runs ggml graphs on the same GPU
+  layer. Image -> mesh calls the org's Pixal3D service and returns OpenUSD.
+  Version 0.1.0 (2026-09-23): the loop passes end to end on the FoxGirl body
+  and rig fixtures (Gate 8), the fit with force_psd_projection in 627 s, and
+  the same loop runs as a RunPod queue worker (tools/runpod, Gate 0H). The
+  release carries fit.elf, which the tree does not: a riscv64 cross-build of
+  cloth-fit (V-Sekai-fire/cloth-fit, MIT; PolyFEM and ipc-toolkit, MIT;
+  vendor/cloth-fit/CITATION.cff and vendor/cloth-fit-patches/CITATION.cff)
+  with the Lean tricubic SDF sampler of kernels/fit (Apache-2.0, after
+  OpenVDB's). Every vendored component carries its own CITATION.cff with its
+  license: Cassie and the Godot core subset (MIT, entities-godot), Geogram
+  (BSD-3-Clause), PMP (MIT), the MWT triangulator (MPL-2.0), ggml (MIT), the
+  cloth-dynamics Lean tree, its AVBD/DiffCloth ports and the LBFGSpp-derived
+  drape kernels (MIT), godot-sandbox and its guest API (BSD-3-Clause),
+  xr-grid's pen (MIT), the FoxGirl fixture (MIT). This repository's own code
+  has no license file yet.
+authors:
+  - name: K. S. Ernest (iFire) Lee
+  - name: V-Sekai
+repository-code: https://github.com/V-Sekai-fire/interactor-dress-on
+version: 0.1.0
+date-released: "2026-09-23"

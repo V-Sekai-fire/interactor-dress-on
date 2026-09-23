@@ -38,7 +38,7 @@ RUN wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERS
 WORKDIR /app
 COPY project/ /app/project/
 COPY vendor/xr-grid/ /app/vendor/xr-grid/
-ARG FIT_ELF_SHA256=c95c6166efa8f7bb91253690a59720c911f28853a7128eaed73bfb09b0bdedd3
+ARG FIT_ELF_SHA256=f9f290c613eaf085b9f374d4b48d8210311508aede5cd689865c1caa3169bf27
 COPY --from=fit-elf /fit.elf /app/project/fit.elf
 RUN echo "$FIT_ELF_SHA256  /app/project/fit.elf" | sha256sum -c -
 # The import registers the addon and the ELFs (first run after adding an ELF).

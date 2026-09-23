@@ -1,0 +1,22 @@
+# Gate 3 K8 FLASH_ATTN_EXT timing, 2026-09-23T07:34:43, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+OK   lq=16 lk=5 reps=50 tiled: waits=50 period mean=0.750 median=0.715 min=0.417 ms (frames=51 pumps=51 vm_ms=66.6 waits=50 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=16 lk=5 d=128 heads=12 reps=50 status=0 dispatches=50 barriers=0 gflop_per_node=0.00 sampled_max_abs_err=1.622e-07 serial=0
+OK   lq=4096 lk=4096 reps=20 tiled: waits=20 period mean=29.235 median=29.305 min=28.129 ms (frames=21 pumps=21 vm_ms=2455.1 waits=20 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=4096 lk=4096 d=128 heads=12 reps=20 status=0 dispatches=20 barriers=0 gflop_per_node=103.08 sampled_max_abs_err=1.141e-07 serial=0
+OK   lq=4096 lk=1029 reps=30 tiled: waits=30 period mean=12.489 median=12.512 min=11.501 ms (frames=31 pumps=31 vm_ms=724.3 waits=30 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=4096 lk=1029 d=128 heads=12 reps=30 status=0 dispatches=30 barriers=0 gflop_per_node=25.90 sampled_max_abs_err=6.405e-08 serial=0
+OK   lq=912 lk=1029 reps=50 tiled: waits=50 period mean=2.522 median=2.336 min=1.811 ms (frames=51 pumps=51 vm_ms=459.1 waits=50 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=912 lk=1029 d=128 heads=12 reps=50 status=0 dispatches=50 barriers=0 gflop_per_node=5.77 sampled_max_abs_err=8.069e-08 serial=0
+OK   lq=912 lk=912 reps=50 tiled: waits=50 period mean=2.307 median=2.290 min=1.806 ms (frames=51 pumps=51 vm_ms=397.6 waits=50 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=912 lk=912 d=128 heads=12 reps=50 status=0 dispatches=50 barriers=0 gflop_per_node=5.11 sampled_max_abs_err=7.568e-08 serial=0
+OK   lq=4096 lk=5 reps=50 tiled: waits=50 period mean=0.862 median=0.843 min=0.543 ms (frames=51 pumps=51 vm_ms=58.3 waits=50 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=4096 lk=5 d=128 heads=12 reps=50 status=0 dispatches=50 barriers=0 gflop_per_node=0.13 sampled_max_abs_err=1.591e-07 serial=0
+OK   lq=912 lk=1029 reps=30 GGML_RD_SERIAL=1: waits=30 period mean=8.328 median=8.789 min=6.451 ms (frames=31 pumps=31 vm_ms=587.1 waits=30 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=912 lk=1029 d=128 heads=12 reps=30 status=0 dispatches=30 barriers=0 gflop_per_node=5.77 sampled_max_abs_err=8.069e-08 serial=1
+OK   lq=4096 lk=4096 reps=10 GGML_RD_SERIAL=1: waits=10 period mean=74.799 median=74.978 min=73.226 ms (frames=11 pumps=11 vm_ms=2194.8 waits=10 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0) | PROBE fa_perf lq=4096 lk=4096 d=128 heads=12 reps=10 status=0 dispatches=10 barriers=0 gflop_per_node=103.08 sampled_max_abs_err=1.141e-07 serial=1
+== per FA node (upper bound: the period between WAIT_GPUs)
+FLASH_ATTN_EXT D=128 H=12 Lq=16 Lk=5 f32 tiled: median 0.715 ms (min 0.417, mean 0.750) per node, 0.000 GFLOP, 0.00 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=4096 Lk=4096 f32 tiled: median 29.305 ms (min 28.129, mean 29.235) per node, 103.079 GFLOP, 3.52 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=4096 Lk=1029 f32 tiled: median 12.512 ms (min 11.501, mean 12.489) per node, 25.896 GFLOP, 2.07 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=912 Lk=1029 f32 tiled: median 2.336 ms (min 1.811, mean 2.522) per node, 5.766 GFLOP, 2.47 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=912 Lk=912 f32 tiled: median 2.290 ms (min 1.806, mean 2.307) per node, 5.110 GFLOP, 2.23 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=4096 Lk=5 f32 tiled: median 0.843 ms (min 0.543, mean 0.862) per node, 0.126 GFLOP, 0.15 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=912 Lk=1029 f32 GGML_RD_SERIAL=1: median 8.789 ms (min 6.451, mean 8.328) per node, 5.766 GFLOP, 0.66 TFLOP/s at the median
+FLASH_ATTN_EXT D=128 H=12 Lq=4096 Lk=4096 f32 GGML_RD_SERIAL=1: median 74.978 ms (min 73.226, mean 74.799) per node, 103.079 GFLOP, 1.37 TFLOP/s at the median
+close: CLOSED permanent_slots=0
+wall_s=7.8
+RESULT: PASS

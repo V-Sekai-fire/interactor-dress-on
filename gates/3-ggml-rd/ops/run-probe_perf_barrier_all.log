@@ -1,0 +1,14 @@
+PROBE perf CONCAT f32 [128,8,514]+[128,8,1] dim2 (KV cache): k=254 barriers=253 t1_us=6.3 tk_us=1209.9 per_op_us=4.76 bytes=4218880 GBps=887
+PROBE perf CONCAT f32 [128,8,515,1]+[128,8,515,1] dim3: k=127 barriers=126 t1_us=8.2 tk_us=905.8 per_op_us=7.12 bytes=8437760 GBps=1184
+PROBE perf CPY f32 [128,8]: k=256 barriers=255 t1_us=3.5 tk_us=816.2 per_op_us=3.19 bytes=8192 GBps=3
+PROBE perf REPEAT f32 [128,8,1,514]->[128,8,2,514]: k=170 barriers=169 t1_us=8.9 tk_us=1400.0 per_op_us=8.23 bytes=6316032 GBps=767
+PROBE perf CONT f32 permute(0,2,1,3) [128,8,2,514]: k=127 barriers=126 t1_us=9.9 tk_us=1066.2 per_op_us=8.38 bytes=8421376 GBps=1005
+PROBE perf CONT f32 transpose [128,515,16,2]: k=63 barriers=62 t1_us=30.7 tk_us=1822.7 per_op_us=28.90 bytes=16875520 GBps=584
+PROBE perf GET_ROWS f32 [896,33036] x10: k=256 barriers=255 t1_us=3.8 tk_us=427.3 per_op_us=1.66 bytes=71720 GBps=43
+PROBE perf GET_ROWS f32 [512,246] x246 (pixal3d): k=256 barriers=255 t1_us=3.9 tk_us=619.8 per_op_us=2.42 bytes=1008600 GBps=418
+PROBE perf CONT f16 permute(0,2,1,3) [1024,1024] (pixal3d): k=256 barriers=255 t1_us=11.7 tk_us=2859.8 per_op_us=11.17 bytes=4194304 GBps=376
+PROBE perf CONCAT f32 [1,64,12,4096]x2 dim0 (pixal3d): k=21 barriers=20 t1_us=38.3 tk_us=787.5 per_op_us=37.46 bytes=50331648 GBps=1344
+PROBE perf CPY bf16->f32 [1536,4096]: k=28 barriers=27 t1_us=43.8 tk_us=1157.5 per_op_us=41.25 bytes=37748736 GBps=915
+PROBE perf CPY f32->f16 [1536,4096]: k=28 barriers=27 t1_us=67.1 tk_us=1815.7 per_op_us=64.77 bytes=37748736 GBps=583
+RESULT: PASS (perf)
+ggml_test: rd stats graphs=77 nodes=5277 dispatches=4373 skipped=904 barriers=2403 failed_graphs=0 last{nodes=28 dispatches=28 barriers=27 skipped=0} pipelines=9 set0_created=77 slots_created=256 coop_yields=1 waits=77 faults=0 params_bytes=1119488 set_bytes=108160 get_bytes=579584 copies=0 clears=0 buffers_live=0 bytes_live=0

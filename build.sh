@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Build the guest ELFs (one per stage: dress_on, drape, curvenet, fit; and
-# Gate 0F's probes) for the RISC-V sandbox and drop them into project/.
+# Build the guest ELFs (one per stage: dress_on, drape, curvenet, fit; Gate
+# 0F's probes; Gate 3's ggml_test) for the RISC-V sandbox and drop them into
+# project/.
 #
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
-#   GGML_SRC=<V-Sekai-fire/ggml checkout> ./build.sh   # probes.elf's probe 15, until vendor/ggml
+#   GGML_EMIT=1 ./build.sh    # also check kernels/ggml against a fresh Lean emission
 #   BUILD_FIT=0 ./build.sh    # skip fit.elf (cloth-fit / PolyFEM, the long part)
 #   BUILD_DIR=C:/b/ido6-zb FIT_MARCH=rv64gc_zba_zbb_zbs_zbc FIT_ELF=fit_zb BUILD_TARGETS=fit_zb ./build.sh
 #                             # Gate 6.P's ISA A/B: project/fit_zb.elf, the solver at another -march
@@ -76,6 +77,15 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/drape/gen.sh" --no-emit
 fi
 
+# The ggml-rd kernels (Cut 3), same pattern: GGML_EMIT=1 re-emits them from
+# lean/ and fails if they differ from the committed kernels/ggml/slang/ (an
+# op family writes them with kernels/ggml/gen.sh --update).
+if [ "${GGML_EMIT:-0}" = 1 ]; then
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/ggml/gen.sh"
+else
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/ggml/gen.sh" --no-emit
+fi
+
 BUILD_FIT="${BUILD_FIT:-1}"
 if [ "$BUILD_FIT" = 0 ]; then WITH_FIT=OFF; else WITH_FIT=ON; fi
 if [ "$WITH_FIT" = ON ]; then
@@ -88,7 +98,6 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
 		-DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
 		-DCMAKE_BUILD_TYPE=Release \
-		${GGML_SRC:+-DGGML_SRC="$GGML_SRC"} \
 		-DDRESS_ON_WITH_FIT="$WITH_FIT" \
 		${FIT_MARCH:+-DFIT_MARCH="$FIT_MARCH"} ${FIT_ELF:+-DFIT_ELF="$FIT_ELF"}
 elif ! grep -q "^DRESS_ON_WITH_FIT:BOOL=$WITH_FIT\$" "$BUILD/CMakeCache.txt"; then
@@ -97,7 +106,8 @@ fi
 # BUILD_TARGETS (space-separated) limits the build, e.g. to one A/B fit ELF.
 # shellcheck disable=SC2086
 cmake --build "$BUILD" ${BUILD_TARGETS:+--target $BUILD_TARGETS} -- -j "${BUILD_JOBS:-8}"
-ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf"
+ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf" \
+	"$HERE/project/ggml_test.elf" "$HERE/project/rd_worker.elf"
 if [ "$WITH_FIT" = ON ]; then
 	ls -la "$HERE/project/${FIT_ELF:-fit}.elf"
 	sha256sum "$HERE/project/${FIT_ELF:-fit}.elf"

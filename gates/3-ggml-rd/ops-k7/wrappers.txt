@@ -1,0 +1,17 @@
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+ggml_probe_conv_perf -> STARTED probe conv_perf
+  status: DONE frames=168 pumps=168 vm_ms=4037.1 waits=167 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE conv_perf im2col_dino status=0 out=786432 K=10 per_graph_ms(R=1)=16.676 per_graph_ms(R=17)=16.694 per_op_ms=0.001 dispatches(R=17)=17 barriers=0 checked=4096 bad=0
+  PROBE conv_perf im2col_dino f16_exact=4096/4096
+  PROBE conv_perf conv3d_ss_a status=0 out=2097152 K=10 per_graph_ms(R=1)=16.666 per_graph_ms(R=17)=14.494 per_op_ms=-0.136 dispatches(R=17)=17 barriers=0 checked=4096 bad=0
+  PROBE conv_perf conv3d_ss_a nmse=2.502e-14 (max 5e-4) max_abs_err=4.127e-06 (vs double accumulation of the f16-rounded input)
+  PROBE conv_perf conv3d_ss_b status=0 out=262144 K=10 per_graph_ms(R=1)=16.572 per_graph_ms(R=17)=16.698 per_op_ms=0.008 dispatches(R=17)=17 barriers=0 checked=4096 bad=0
+  PROBE conv_perf conv3d_ss_b nmse=1.893e-13 (max 5e-4) max_abs_err=2.554e-05 (vs double accumulation of the f16-rounded input)
+  RESULT: PASS (conv_perf)
+ggml_ops_conv -> STARTED test-backend-ops -o IM2COL,CONV_3D -b RD0 env[]
+  status: DONE frames=352 pumps=352 vm_ms=110373.1 waits=350 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  350/350 tests passed
+  Backend RD0: OK
+rule4: rule4_same_frame_syncs=0
+close: CLOSED permanent_slots=0
+RESULT: PASS

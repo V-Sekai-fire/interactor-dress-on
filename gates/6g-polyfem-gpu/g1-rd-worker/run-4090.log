@@ -1,0 +1,363 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+Gate 6G.1 -- rd_compute from a worker Thread. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090 (NVIDIA), 16 threads
+n=2796 floats, k in [1, 10, 100], modes ["sync_get", "get", "sync"], 300 timed round trips per cell (+5 warm-up) and one 300-round vmcall; vsync=1; main thread id 1
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+A    PASS  rw_open on the main thread in 322143 us: OK n=2796 saxpby_groups=11 spirv_bytes=1668+3620 permanent_slots=0 27 of 27 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+A    PASS  k=1   sync_get singles n=300 min=194 p50=270 p90=412 p99=810 max=1226 mean=314.7 us bad=0 | batch 300/300 right, 330.4 us/rt
+A    PASS  k=1   get      singles n=300 min=125 p50=160 p90=273 p99=593 max=673 mean=190.5 us bad=0 | batch 300/300 right, 171.5 us/rt
+A    PASS  k=1   sync     singles n=300 min=93 p50=131 p90=222 p99=590 max=3738 mean=168.9 us bad=0 | batch 300/300 right, 142.6 us/rt
+A    PASS  k=10  sync_get singles n=300 min=266 p50=334 p90=630 p99=832 max=968 mean=386.8 us bad=0 | batch 300/300 right, 377.2 us/rt
+A    PASS  k=10  get      singles n=300 min=185 p50=217 p90=333 p99=556 max=567 mean=245.9 us bad=0 | batch 300/300 right, 256.6 us/rt
+A    PASS  k=10  sync     singles n=300 min=166 p50=204 p90=319 p99=566 max=696 mean=233.3 us bad=0 | batch 300/300 right, 220.3 us/rt
+A    PASS  k=100 sync_get singles n=300 min=881 p50=1015 p90=1343 p99=1711 max=3950 mean=1085.3 us bad=0 | batch 300/300 right, 1037.6 us/rt
+A    PASS  k=100 get      singles n=300 min=778 p50=914 p90=1064 p99=1383 max=3951 mean=945.9 us bad=0 | batch 300/300 right, 946.2 us/rt
+A    PASS  k=100 sync     singles n=300 min=781 p50=936 p90=1090 p99=1302 max=1516 mean=955.9 us bad=0 | batch 300/300 right, 1059.7 us/rt
+A    INFO  the ladder held the main thread for 2801 ms; frames advanced 0 (a main-thread sync blocks the frame)
+A    INFO  rw_stats: open=yes exact=3630 wrong=0 empty=0 unread=1815 rounds=5445 dispatches=201465 chain=196020 last=380605500.0 want=380605500.0 same_frame_syncs=3630 syncs=3630 submits=3630 permanent_slots=0 step=sync
+A    INFO  rule 4 on the main thread: every sync above is a same-frame sync (same_frame_syncs=3630), which is what the counter is for
+A    PASS  rw_close: closed permanent_slots_left=0
+FA   PASS  GDScript local device on the main thread (NVIDIA GeForce RTX 4090), opened in 292854 us
+FA   PASS  k=1   sync_get singles n=300 min=213 p50=251 p90=429 p99=835 max=1054 mean=293.5 us bad=0 | batch 300/300 right, 302.8 us/rt
+FA   PASS  k=1   get      singles n=300 min=115 p50=142 p90=200 p99=504 max=603 mean=164.1 us bad=0 | batch 300/300 right, 164.0 us/rt
+FA   PASS  k=1   sync     singles n=300 min=93 p50=121 p90=169 p99=545 max=2799 mean=150.5 us bad=0 | batch 300/300 right, 143.8 us/rt
+FA   PASS  k=10  sync_get singles n=300 min=260 p50=311 p90=576 p99=775 max=832 mean=360.7 us bad=0 | batch 300/300 right, 363.8 us/rt
+FA   PASS  k=10  get      singles n=300 min=173 p50=201 p90=328 p99=617 max=709 mean=235.5 us bad=0 | batch 300/300 right, 233.5 us/rt
+FA   PASS  k=10  sync     singles n=300 min=163 p50=185 p90=307 p99=567 max=618 mean=219.1 us bad=0 | batch 300/300 right, 212.9 us/rt
+FA   PASS  k=100 sync_get singles n=300 min=705 p50=840 p90=1076 p99=1357 max=3615 mean=895.1 us bad=0 | batch 300/300 right, 883.2 us/rt
+FA   PASS  k=100 get      singles n=300 min=607 p50=724 p90=872 p99=1056 max=3669 mean=760.6 us bad=0 | batch 300/300 right, 738.3 us/rt
+FA   PASS  k=100 sync     singles n=300 min=617 p50=733 p90=857 p99=1028 max=1249 mean=751.9 us bad=0 | batch 300/300 right, 757.9 us/rt
+N1   PASS  control: opened and round-tripped on the main thread: open=OK n=2796 saxpby_groups=11 spirv_bytes=1 round=1
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (submit) can only be called from the render thread. 
+   at: submit (servers/rendering/rendering_device.cpp:7885)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (sync) can only be called from the render thread. 
+   at: sync (servers/rendering/rendering_device.cpp:7895)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (submit) can only be called from the render thread. 
+   at: submit (servers/rendering/rendering_device.cpp:7885)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (sync) can only be called from the render thread. 
+   at: sync (servers/rendering/rendering_device.cpp:7895)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:531)
+N1   PASS  negative: the same device from worker thread 39: codes [-2, -2, -2] (-2 = nothing came back); open=yes exact=1 wrong=0 empty=3 unread=0 rounds=4 dispatches=13 chain=9 last=-1.0 want=25164.0 same_frame_syncs=3 syncs=3 submits=3 permanent_slots=0 step=buffer_get_data
+N1   PASS  back on the main thread, the device is intact: round=1 open=yes exact=2 wrong=0 empty=3 unread=0 rounds=5 dispatches=23 chain=18 last=50328.0 want=50328.0 same_frame_syncs=4 syncs=4 submits=4 permanent_slots=0 step=buffer_get_data
+N1   PASS  rw_close on the main thread: closed permanent_slots_left=0
+FN1  PASS  control: GDScript device on the main thread, round=1
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:421)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:429)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:430)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:431)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:432)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (submit) can only be called from the render thread. 
+   at: submit (servers/rendering/rendering_device.cpp:7885)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:434)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (sync) can only be called from the render thread. 
+   at: sync (servers/rendering/rendering_device.cpp:7895)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:435)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:438)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:421)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:429)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:430)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:431)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:432)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] _flat_round (res://gate_rd_worker.gd:438)
+       [1] <anonymous lambda> (res://gate_rd_worker.gd:561)
+FN1  PASS  negative, no sandbox: the GDScript device from worker thread 41: codes [-2, -2] (Godot's render-thread guard, not the sandbox)
+FN1  PASS  back on the main thread: round=1
+R0   INFO  baseline, the scene alone (400 spheres, shadows): frame time n=363 min=1653 p50=16659 p90=18182 p99=20475 max=23185 mean=16563.3 us, 0 over 25 ms; draw calls 7
+B    PASS  rw_open on worker thread 43 in 344728 us: OK n=2796 saxpby_groups=11 spirv_bytes=1668+3620 permanent_slots=0 27 of 27 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+B    PASS  k=1   sync_get singles n=300 min=207 p50=259 p90=512 p99=1203 max=1468 mean=329.7 us bad=0 | batch 300/300 right, 333.2 us/rt
+B    PASS  k=1   get      singles n=300 min=126 p50=147 p90=306 p99=761 max=1068 mean=190.8 us bad=0 | batch 300/300 right, 176.1 us/rt
+B    PASS  k=1   sync     singles n=300 min=97 p50=127 p90=268 p99=592 max=1255 mean=170.0 us bad=0 | batch 300/300 right, 161.1 us/rt
+B    PASS  k=10  sync_get singles n=300 min=281 p50=339 p90=648 p99=1318 max=1425 mean=420.8 us bad=0 | batch 300/300 right, 401.1 us/rt
+B    PASS  k=10  get      singles n=300 min=185 p50=228 p90=426 p99=841 max=1115 mean=280.2 us bad=0 | batch 300/300 right, 263.0 us/rt
+B    PASS  k=10  sync     singles n=300 min=150 p50=199 p90=351 p99=1070 max=1096 mean=244.7 us bad=0 | batch 300/300 right, 235.8 us/rt
+B    PASS  k=100 sync_get singles n=300 min=841 p50=1043 p90=1503 p99=2071 max=2365 mean=1135.9 us bad=0 | batch 300/300 right, 1119.2 us/rt
+B    PASS  k=100 get      singles n=300 min=778 p50=961 p90=1183 p99=1490 max=1907 mean=998.4 us bad=0 | batch 300/300 right, 1051.5 us/rt
+B    PASS  k=100 sync     singles n=300 min=825 p50=1060 p90=1350 p99=1923 max=2166 mean=1109.7 us bad=0 | batch 300/300 right, 1051.9 us/rt
+B    INFO  main thread advanced 192 frames in 3.4 s while the worker synced (56.2 fps): frame time n=192 min=2208 p50=16643 p90=17421 p99=18776 max=281808 mean=17793.1 us, 2 over 25 ms
+B    INFO  long frames and the worker phase they overlap: 281 ms[open] 59 ms[close]
+B    INFO  rw_stats: open=yes exact=3630 wrong=0 empty=0 unread=1815 rounds=5445 dispatches=201465 chain=196020 last=380605500.0 want=380605500.0 same_frame_syncs=3630 syncs=3630 submits=3630 permanent_slots=0 step=sync
+B    INFO  rule 4 on a worker: same_frame_syncs=3630 of syncs=3630 syncs landed in their submit's process frame; they block only the worker
+B    PASS  rw_close on the same worker in 95721 us: closed permanent_slots_left=0
+FB   PASS  GDScript local device on a worker Thread (NVIDIA GeForce RTX 4090, thread 45), opened in 280649 us; main advanced 155 frames
+FB   PASS  k=1   sync_get singles n=300 min=202 p50=261 p90=439 p99=1116 max=1448 mean=316.4 us bad=0 | batch 300/300 right, 330.5 us/rt
+FB   PASS  k=1   get      singles n=300 min=114 p50=143 p90=296 p99=962 max=1101 mean=192.0 us bad=0 | batch 300/300 right, 185.1 us/rt
+FB   PASS  k=1   sync     singles n=300 min=99 p50=124 p90=231 p99=558 max=1016 mean=158.7 us bad=0 | batch 300/300 right, 137.8 us/rt
+FB   PASS  k=10  sync_get singles n=300 min=242 p50=299 p90=569 p99=1293 max=1492 mean=370.3 us bad=0 | batch 300/300 right, 382.2 us/rt
+FB   PASS  k=10  get      singles n=300 min=166 p50=198 p90=351 p99=978 max=1130 mean=244.3 us bad=0 | batch 300/300 right, 239.2 us/rt
+FB   PASS  k=10  sync     singles n=300 min=146 p50=184 p90=309 p99=912 max=1221 mean=223.0 us bad=0 | batch 300/300 right, 225.2 us/rt
+FB   PASS  k=100 sync_get singles n=300 min=709 p50=840 p90=1233 p99=1901 max=1982 mean=939.2 us bad=0 | batch 300/300 right, 944.8 us/rt
+FB   PASS  k=100 get      singles n=300 min=626 p50=729 p90=953 p99=1261 max=1643 mean=783.9 us bad=0 | batch 300/300 right, 764.7 us/rt
+FB   PASS  k=100 sync     singles n=300 min=647 p50=764 p90=932 p99=1516 max=1773 mean=810.5 us bad=0 | batch 300/300 right, 834.5 us/rt
+O    PASS  on one worker: guest_open 327 ms, guest_close 94 ms, guest_open 275 ms, guest_close 89 ms, guest_open 276 ms, guest_close 96 ms, flat_create 274 ms, flat_free 89 ms, flat_create 260 ms, flat_free 85 ms, flat_create 267 ms, flat_free 83 ms
+O    INFO  main thread meanwhile: frame time n=71 min=1426 p50=16381 p90=58817 p99=265623 max=269508 mean=35552.5 us, 12 over 25 ms; long frames: 269 ms[guest_open] 56 ms[guest_close,guest_open] 265 ms[guest_open] 54 ms[guest_close,guest_open] 259 ms[guest_open] 59 ms[guest_close] 258 ms[flat_create] 58 ms[flat_free,flat_create] 252 ms[flat_create] 54 ms[flat_free,flat_create] 256 ms[flat_create] 56 ms[flat_free]
+N2   PASS  Thread 1 (id 51) opened the device and round-tripped: round=1
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (submit) can only be called from the render thread. 
+   at: submit (servers/rendering/rendering_device.cpp:7885)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (sync) can only be called from the render thread. 
+   at: sync (servers/rendering/rendering_device.cpp:7895)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_begin) can only be called from the render thread. 
+   at: compute_list_begin (servers/rendering/rendering_device.cpp:6655)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_bind_compute_pipeline) can only be called from the render thread. 
+   at: compute_list_bind_compute_pipeline (servers/rendering/rendering_device.cpp:6668)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_bind_uniform_set) can only be called from the render thread. 
+   at: compute_list_bind_uniform_set (servers/rendering/rendering_device.cpp:6745)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_dispatch) can only be called from the render thread. 
+   at: compute_list_dispatch (servers/rendering/rendering_device.cpp:6807)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (compute_list_end) can only be called from the render thread. 
+   at: compute_list_end (servers/rendering/rendering_device.cpp:7091)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+ERROR: This function (buffer_get_data) can only be called from the render thread. 
+   at: buffer_get_data (servers/rendering/rendering_device.cpp:1289)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://gate_rd_worker.gd:703)
+N2   PASS  negative: Thread 2 (id 53, a new Thread as stage_base.start() makes per call) on Thread 1's device: codes [-2, -2]; open=yes exact=1 wrong=0 empty=2 unread=0 rounds=3 dispatches=12 chain=9 last=-1.0 want=25164.0 same_frame_syncs=2 syncs=2 submits=2 permanent_slots=0 step=buffer_get_data
+N2   INFO  the device is orphaned: free_rid and its teardown are render-thread-guarded too and its thread is gone; the Sandbox is kept to the end
+Q    call  rw_open   thread 55 host   340483 us -> OK n=2796 saxpby_groups=11 spirv_bytes=1668+3620 permanent_slots=0 27 of 27 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+Q    call  rw_rounds thread 55 host    73192 us -> 100
+Q    call  rw_rounds thread 55 host    30425 us -> 30
+Q    call  rw_rounds thread 55 host    30791 us -> 100
+Q    call  rw_stats  thread 55 host      116 us -> open=yes exact=230 wrong=0 empty=0 unread=0 rounds=230 dispatches=4100 chain=3870 last=10820520.0 want=10820520.0 same_frame_syncs=200 syncs=200 submits=200 permanent_slots=0 step=buffer_get_data
+Q    call  rw_close  thread 55 host    96250 us -> closed permanent_slots_left=0
+Q    PASS  one Thread (1 distinct thread id), six vmcalls posted 10 frames apart held one device from open to close: 6 of 6 answered right
+C0   INFO  baseline, scene + drape job on the main thread, no worker (10 s): frame time n=576 min=2348 p50=16585 p90=18218 p99=83008 max=95866 mean=17270.8 us, 13 over 25 ms (13 of them overlap a drape tick over 20 ms: 16 such ticks); draw calls 7, objects 1174
+C0   PASS  drape.elf bench_fwd on rd, main thread: 576 ticks, 11 jobs PASS, 0 FAIL (last: PASS bench_fwd rd: every size finite); same_frame_syncs=0 syncs=470 submits=470
+C    PASS  rw_open on worker thread 57 in 315163 us while the main thread renders and drapes
+C    PASS  k=1   sync_get singles n=300 min=191 p50=272 p90=714 p99=1249 max=1993 mean=369.8 us bad=0 | batch 300/300 right, 341.9 us/rt
+C    PASS  k=1   get      singles n=300 min=126 p50=155 p90=351 p99=870 max=1112 mean=210.4 us bad=0 | batch 300/300 right, 180.4 us/rt
+C    PASS  k=1   sync     singles n=300 min=92 p50=134 p90=331 p99=943 max=1125 mean=187.5 us bad=0 | batch 300/300 right, 166.0 us/rt
+C    PASS  k=10  sync_get singles n=300 min=265 p50=347 p90=674 p99=1278 max=1451 mean=425.6 us bad=0 | batch 300/300 right, 437.2 us/rt
+C    PASS  k=10  get      singles n=300 min=189 p50=223 p90=389 p99=1088 max=1174 mean=270.6 us bad=0 | batch 300/300 right, 274.0 us/rt
+C    PASS  k=10  sync     singles n=300 min=171 p50=209 p90=456 p99=884 max=1072 mean=269.3 us bad=0 | batch 300/300 right, 248.4 us/rt
+C    PASS  k=100 sync_get singles n=300 min=850 p50=1060 p90=1450 p99=2126 max=2466 mean=1145.8 us bad=0 | batch 300/300 right, 1139.4 us/rt
+C    PASS  k=100 get      singles n=300 min=741 p50=962 p90=1202 p99=1804 max=2007 mean=1000.5 us bad=0 | batch 300/300 right, 1017.7 us/rt
+C    PASS  k=100 sync     singles n=300 min=789 p50=1051 p90=1339 p99=2009 max=2188 mean=1104.7 us bad=0 | batch 300/300 right, 1001.1 us/rt
+C    INFO  main thread while the worker ran (3.4 s, 181 frames, 52.9 fps): frame time n=181 min=2310 p50=16637 p90=17233 p99=92840 max=285308 mean=18492.2 us, 6 over 25 ms; draw calls 7
+C    INFO  long frames and the worker phase they overlap: 285 ms[open] 46 ms[open,ladder,drape_tick>20ms] 26 ms[ladder,drape_tick>20ms] 94 ms[ladder,drape_tick>20ms] 92 ms[ladder,drape_tick>20ms] 78 ms[ladder,drape_tick>20ms]
+C    INFO  worker rw_stats: open=yes exact=3630 wrong=0 empty=0 unread=1815 rounds=5445 dispatches=201465 chain=196020 last=380605500.0 want=380605500.0 same_frame_syncs=3630 syncs=3630 submits=3630 permanent_slots=0 step=sync
+C    PASS  rw_close on the worker: closed permanent_slots_left=0
+C    PASS  drape.elf bench_fwd on rd, main thread: 181 ticks, 3 jobs PASS, 0 FAIL (last: PASS bench_fwd rd: every size finite); same_frame_syncs=0 syncs=148 submits=149
+E    PASS  k=10 submit in frame f, sync + read in frame f+1: 120 round trips, bad=0, submit-to-result n=120 min=2318 p50=16448 p90=16871 p99=17553 max=17843 mean=16006.1 us
+E    INFO  rule 4 kept: same_frame_syncs=0 of syncs=120 (rw_stats: open=yes exact=120 wrong=0 empty=0 unread=0 rounds=120 dispatches=1200 chain=1080 last=3019680.0 want=3019680.0 same_frame_syncs=0 syncs=120 submits=120 permanent_slots=0 step=buffer_get_data)
+
+SUMMARY TABLE (us per round trip; singles host-timed around one vmcall each, batch = one vmcall of 300 / 300)
+arm     k mode           p50      p90      p99      max batch_mean  rt/iter_skr  rt/iter_fox
+A       1 sync_get       270      412      810     1226      330.4           67          248
+A       1 get            160      273      593      673      171.5          130          477
+A       1 sync           131      222      590     3738      142.6          156          574
+A      10 sync_get       334      630      832      968      377.2           59          217
+A      10 get            217      333      556      567      256.6           87          319
+A      10 sync           204      319      566      696      220.3          101          371
+A     100 sync_get      1015     1343     1711     3950     1037.6           21           78
+A     100 get            914     1064     1383     3951      946.2           23           86
+A     100 sync           936     1090     1302     1516     1059.7           21           77
+FA      1 sync_get       251      429      835     1054      302.8           73          270
+FA      1 get            142      200      504      603      164.0          136          499
+FA      1 sync           121      169      545     2799      143.8          155          569
+FA     10 sync_get       311      576      775      832      363.8           61          225
+FA     10 get            201      328      617      709      233.5           95          351
+FA     10 sync           185      307      567      618      212.9          105          384
+FA    100 sync_get       840     1076     1357     3615      883.2           25           92
+FA    100 get            724      872     1056     3669      738.3           30          110
+FA    100 sync           733      857     1028     1249      757.9           29          108
+B       1 sync_get       259      512     1203     1468      333.2           67          245
+B       1 get            147      306      761     1068      176.1          127          465
+B       1 sync           127      268      592     1255      161.1          138          508
+B      10 sync_get       339      648     1318     1425      401.1           55          204
+B      10 get            228      426      841     1115      263.0           85          311
+B      10 sync           199      351     1070     1096      235.8           94          347
+B     100 sync_get      1043     1503     2071     2365     1119.2           19           73
+B     100 get            961     1183     1490     1907     1051.5           21           77
+B     100 sync          1060     1350     1923     2166     1051.9           21           77
+FB      1 sync_get       261      439     1116     1448      330.5           67          247
+FB      1 get            143      296      962     1101      185.1          120          442
+FB      1 sync           124      231      558     1016      137.8          162          594
+FB     10 sync_get       299      569     1293     1492      382.2           58          214
+FB     10 get            198      351      978     1130      239.2           93          342
+FB     10 sync           184      309      912     1221      225.2           99          363
+FB    100 sync_get       840     1233     1901     1982      944.8           23           86
+FB    100 get            729      953     1261     1643      764.7           29          107
+FB    100 sync           764      932     1516     1773      834.5           26           98
+C       1 sync_get       272      714     1249     1993      341.9           65          239
+C       1 get            155      351      870     1112      180.4          124          454
+C       1 sync           134      331      943     1125      166.0          134          493
+C      10 sync_get       347      674     1278     1451      437.2           51          187
+C      10 get            223      389     1088     1174      274.0           81          299
+C      10 sync           209      456      884     1072      248.4           90          329
+C     100 sync_get      1060     1450     2126     2466     1139.4           19           71
+C     100 get            962     1202     1804     2007     1017.7           21           80
+C     100 sync          1051     1339     2009     2188     1001.1           22           81
+E      10 sync_get     16448    16871    17553    17843    16006.1            1            5
+rt/iter: round trips per Newton iteration within 10% of its native time at the batch mean: skirt 224 ms native (5506 ms guest / 24.6), foxgirl 820 ms native
+SUMMARY: PASS=67 FAIL=0 INFO=15 wall_s=42.7 orphaned_devices=1
+WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

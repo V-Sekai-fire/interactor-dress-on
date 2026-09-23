@@ -1,0 +1,5 @@
+ROW 12
+PERF SCALE [54000,512,8,1] (skin-tokens x822) reps=8 iters=5 warmup=1 dispatches=8 barriers=7 elements=221184000 bytes_per_dispatch=1769472000 OK
+perf 12: 1/1 rows OK
+RESULT: PASS (perf 12)
+ggml_test: rd stats graphs=108 nodes=8820 dispatches=8820 skipped=0 barriers=8712 failed_graphs=0 last{nodes=8 dispatches=8 barriers=7 skipped=0} pipelines=8 set0_created=43 slots_created=256 coop_yields=1 waits=108 faults=15 params_bytes=2257920 set_bytes=629890320 get_bytes=629886208 copies=0 clears=13 buffers_live=0 bytes_live=0

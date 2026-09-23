@@ -5,14 +5,14 @@
 #
 # 1. Source audit (tests/wrapper_audit.gd): every ADD_API_FUNCTION /
 #    add_sandbox_api_function in guest/**/main.cpp (dress_on, probes, curvenet,
-#    drape, fit) is reached from a public main.gd function, through its stage
+#    drape, fit, ggml_test) is reached from a public main.gd function, through its stage
 #    file, and every such wrapper's parameters all have defaults. FAIL names
 #    each guest entry point that has none. Controls: main.gd with the
 #    p_memalign delegate deleted must report exactly dress_on:p_memalign
 #    missing; with rd_calls' defaults stripped, exactly its two parameters;
 #    and every guest file must yield names (an empty read is not a pass).
 # 2. Runtime: main.tscn's Main has every wrapper the old main.gd had
-#    (279b31b), every cut-4/5/6 one and Cut 8's, each callable with no
+#    (279b31b), every cut-4/5/6 one, Cut 8's and Cut 3's, each callable with no
 #    argument (compiled method list), and a sample answers through the stages.
 extends SceneTree
 
@@ -44,6 +44,15 @@ const MAIN_8D59 := ["cn_reset", "cn_set_param", "cn_get_param", "cn_set_body_sph
 		"fit_probe_exceptions", "fit_probe_io_paths", "fit_probe_ldlt8k", "fit_probe_libm", "fit_probe_stl",
 		"fit_probe_instret", "fit_probe_heap", "fit_push_control", "fit_push_flat",
 		"rd_bench_quiet", "rd_calls", "rd_set_probe"]
+# main.gd at cut-3 f1a4bab (ggml_test.elf), every public method it added.
+const CUT3 := ["p_recovery", "ggml_attach", "ggml_ops_start", "ggml_probe_start", "ggml_pump", "ggml_output",
+		"ggml_rd_stats", "ggml_rd_close", "ggml_job_status", "ggml_ops_add_mul", "ggml_ops_barrier_all",
+		"ggml_ops_fault", "ggml_probe_chain", "ggml_probe_independent", "ggml_probe_alias_rw", "ggml_probe_alias_ro",
+		"ggml_ops_k1k5", "ggml_probe_census", "ggml_probe_census_fault", "ggml_probe_perf", "ggml_ops_move",
+		"ggml_ops_move_fault", "ggml_probe_perf_move", "ggml_ops_conv", "ggml_ops_conv_fault", "ggml_probe_conv_perf",
+		"ggml_ops_rows", "ggml_probe_rows_perf", "ggml_ops_mul_mat", "ggml_probe_mm_perf", "ggml_ops_flash_attn",
+		"ggml_probe_fa_perf", "ggml_ops_all", "ggml_graph_qwen", "ggml_graph_sconv", "ggml_graph_dit",
+		"ggml_dump_list", "ggml_graph_dump", "ggml_cost_decode", "ggml_cost_dit", "ggml_probe_files"]
 const CUT8 := ["dress_on_run", "dress_on_run_drop_seam", "dress_on_run_push_vertex", "dress_on_run_opts",
 		"dress_on_status", "dress_on_result", "dress_on_author_done", "dress_on_stages"]
 # Properties Gate 6 sets on /root/Main (forwarded to the fit stage).
@@ -55,7 +64,7 @@ const CALLS := [["rd_open", ""], ["rd_probe", "PASS"], ["rd_bench", "nd=1 ns=1 b
 		["echo_i", "9007199254740993"], ["p_exceptions", "caught runtime_error"], ["p_memalign", ""],
 		["dress_on_stages", "infer:"], ["drape_status", "IDLE"], ["drape_open", ""], ["drape_job_names", "sphere_forward"],
 		["cn_reset", ""], ["cn_get_param", "0.03"], ["check_names", ""], ["fit_status", ""],
-		["dress_on_status", "IDLE"]]
+		["dress_on_status", "IDLE"], ["ggml_job_status", "IDLE"], ["ggml_rd_stats", "IDLE"]]
 
 var _out: FileAccess
 var _main: Node
@@ -124,11 +133,11 @@ func _process(_d: float) -> bool:
 	var have := {}
 	for m in _main.get_script().get_script_method_list():
 		have[m.name] = m.args.size() - m.default_args.size()
-	for m in OLD + MAIN_8D59 + CUT8:
+	for m in OLD + MAIN_8D59 + CUT8 + CUT3:
 		if have.get(m, -1) != 0:
 			missing.append(m)
-	_ok(missing.is_empty(), "wrappers on /root/Main callable with no argument: %d old (279b31b) + %d main (8d59e6a + 5) + %d Cut 8, missing %s" % [
-			OLD.size(), MAIN_8D59.size(), CUT8.size(), str(missing)])
+	_ok(missing.is_empty(), "wrappers on /root/Main callable with no argument: %d old (279b31b) + %d main (8d59e6a + 5) + %d Cut 8 + %d Cut 3, missing %s" % [
+			OLD.size(), MAIN_8D59.size(), CUT8.size(), CUT3.size(), str(missing)])
 	var props := []
 	for p in PROPS:
 		if _main.get(p) == null:

@@ -1,0 +1,29 @@
+# ggml-rd L0, 2026-09-23T08:27:13Z
+== lake build Ggml
+Build completed successfully (29 jobs).
+PASS lake build Ggml
+== kernels/ggml/gen.sh (check mode: Lean's emission vs the committed files)
+== emitting Slang from Lean at <checkout>/lean ==
+== 67 kernels, 1 control(s) and the params header match Lean ==
+== slangc -target cpp ==
+norm_f32: group-shared, no cpp (the host runs norm_f32_serial)
+rms_norm_f32: group-shared, no cpp (the host runs rms_norm_f32_serial)
+mean_f32: group-shared, no cpp (the host runs mean_f32_serial)
+soft_max_f32: group-shared, no cpp (the host runs soft_max_f32_serial)
+norm_f32_t64: group-shared, no cpp (the host runs norm_f32_t64_serial)
+rms_norm_f32_t64: group-shared, no cpp (the host runs rms_norm_f32_t64_serial)
+soft_max_f32_t64: group-shared, no cpp (the host runs soft_max_f32_t64_serial)
+flash_attn_ext_f32_d64: group-shared, no cpp (the host runs flash_attn_ext_f32_d64_serial)
+flash_attn_ext_f32_d128: group-shared, no cpp (the host runs flash_attn_ext_f32_d128_serial)
+flash_attn_ext_f16_d64: group-shared, no cpp (the host runs flash_attn_ext_f16_d64_serial)
+flash_attn_ext_f16_d128: group-shared, no cpp (the host runs flash_attn_ext_f16_d128_serial)
+== slangc -target spirv -O0 -preserve-params (+ reflection), spirv-val ==
+== fixed-layout check + kernel table ==
+wrote <checkout>/kernels/ggml/GgmlKernelTable.inc: 67 kernels, all on the fixed layout
+== embedding SPIR-V ==
+embedded 67 kernels, 618480 bytes -> <tmp>/build/ggml_kernels.inc
+== controls: compiled alike, the layout check must refuse each ==
+control ctl_add_f32_rosrc: refused by the layout check, as it must be
+embedded 1 kernels, 4240 bytes -> <tmp>/build/ggml_controls.inc
+PASS gen.sh check
+RESULT: PASS

@@ -1,0 +1,33 @@
+ROW 0
+CENSUS NEG [256,1,1,1] (timing floor, not census) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=256/256 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+ROW 1
+CENSUS SILU [3072,1,2,1] (skin-tokens x10724) range [-8,8): nmse=1.343e-15 (max 1e-07) exact=3230/6144 inf_ok=1 nan=0 nmse_vs_f64: rd=2.028e-15 cpu=1.616e-15 OK
+ROW 2
+CENSUS SILU [3072,514,1,1] (skin-tokens x56) range [-8,8): nmse=1.450e-15 (max 1e-07) exact=837626/1579008 inf_ok=1 nan=0 nmse_vs_f64: rd=2.158e-15 cpu=1.664e-15 OK
+ROW 3
+CENSUS SILU [4096,32,1,1] (Pixal3D x40) range [-8,8): nmse=1.462e-15 (max 1e-07) exact=69316/131072 inf_ok=1 nan=0 nmse_vs_f64: rd=2.155e-15 cpu=1.648e-15 OK
+ROW 4
+CENSUS SILU [16,16,16,512] (Pixal3D x17) range [-8,8): nmse=1.450e-15 (max 1e-07) exact=1113069/2097152 inf_ok=1 nan=0 nmse_vs_f64: rd=2.160e-15 cpu=1.667e-15 OK
+ROW 5
+CENSUS GELU [8192,4096,1,1] (Pixal3D x60) range [-6,6): nmse=5.527e-08 (max 1e-07) exact=2359051/33554432 inf_ok=1 nan=0 nmse_vs_f64: rd=8.455e-16 cpu=5.527e-08 OK
+ROW 6
+CENSUS GELU_ERF [2048,512,1,1] (skin-tokens x766) range [-6,6): nmse=2.115e-15 (max 1e-07) exact=542687/1048576 inf_ok=1 nan=0 nmse_vs_f64: rd=2.396e-15 cpu=1.035e-15 OK
+ROW 7
+CENSUS GELU_ERF [4096,1029,1,1] (Pixal3D x24) range [-6,6): nmse=2.113e-15 (max 1e-07) exact=2184886/4214784 inf_ok=1 nan=0 nmse_vs_f64: rd=2.392e-15 cpu=1.038e-15 OK
+ROW 8
+CENSUS SIGMOID [1,16384,1,1] (skin-tokens x212) range [-12,12): nmse=7.891e-16 (max 1e-07) exact=9172/16384 inf_ok=1 nan=0 nmse_vs_f64: rd=1.582e-15 cpu=1.376e-15 OK
+ROW 9
+CENSUS NEG [1,64,12,4096] (Pixal3D x120) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=3145728/3145728 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+ROW 10
+CENSUS NEG [32,16,1024,1] (Pixal3D x48) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=524288/524288 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+ROW 11
+CENSUS SCALE [515,1,16,2] (skin-tokens x10724) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=16480/16480 inf_ok=1 nan=0 OK
+ROW 12
+CENSUS SCALE [54000,64,8,1] (census ne1 cut) (skin-tokens x822) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=27648000/27648000 inf_ok=1 nan=0 OK
+ROW 13
+CENSUS DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=4227136/4227136 inf_ok=1 nan=0 OK
+ROW 14
+CENSUS ROPE [128,8,514,1] (skin-tokens x21560) range [-1,1): nmse=2.941e-11 (max 1e-07) exact=93454/526336 inf_ok=1 nan=0 OK
+census all: 15/15 rows OK
+RESULT: PASS (census all)
+ggml_test: rd stats graphs=169 nodes=6672 dispatches=5761 skipped=911 barriers=2403 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=22 set0_created=103 slots_created=256 coop_yields=1 waits=169 faults=0 params_bytes=1474816 set_bytes=567622920 get_bytes=316109632 copies=0 clears=0 buffers_live=0 bytes_live=0

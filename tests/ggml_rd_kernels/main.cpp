@@ -10,6 +10,7 @@
 #include <cfloat>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <random>
 #include <string>
@@ -262,6 +263,13 @@ Outcome run_case(const L2Case &c, Control control) {
 } // namespace
 
 int main(int argc, char **argv) {
+	// Kernels with workgroup barriers have no cpp emit (kernels/ggml/gen.sh);
+	// their packers pick the <k>_serial sibling under this switch.
+#ifdef _WIN32
+	_putenv_s("GGML_RD_SERIAL", "1");
+#else
+	setenv("GGML_RD_SERIAL", "1", 1);
+#endif
 	Control control = NONE;
 	for (int i = 1; i < argc; ++i) {
 		if (std::strcmp(argv[i], "--control=swap-nb") == 0) {

@@ -12,7 +12,9 @@
 #                                                           ->  guest/ggml-rd/ggml_rd_params.h (committed)
 #     slangc -target cpp                                    ->  cpp/<k>_emit.cpp           (committed;
 #                                                               the host test harness tests/ggml_rd_kernels
-#                                                               runs them against ggml-cpu)
+#                                                               runs them against ggml-cpu; none for a
+#                                                               kernel with workgroup barriers, whose
+#                                                               <k>_serial sibling it runs instead)
 #     slangc -target spirv -O0 -preserve-params             ->  <build>/spv-ggml/<k>.spv + .refl.json
 #       spirv-val                                           ->  (fails the run on any error)
 #       gen_ggml_kernel_table.py (fixed-layout check)       ->  GgmlKernelTable.inc        (committed)

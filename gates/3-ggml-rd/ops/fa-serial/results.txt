@@ -1,0 +1,12 @@
+# Gate 3 G3.ops, 2026-09-23T07:38:49, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+== ops_serial: done in 762.1 s, frames=151 pumps=151 vm_ms=761936.6 waits=150 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=150 FAIL=0 not_supported=4997 | 150/150 tests passed | Backend RD0: OK
+   FLASH_ATTN_EXT: OK=150 FAIL=0 not_supported=4997
+   rd: graphs=1200 nodes=1200 dispatches=150 skipped=1050 barriers=0 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=4 set0_created=150 slots_created=1 coop_yields=0 waits=150 faults=0 params_bytes=38400 set_bytes=928014336 get_bytes=694738944 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=150 submits=150 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== verdicts
+PASS ops_serial: test-backend-ops -o FLASH_ATTN_EXT -b RD0 with GGML_RD_SERIAL=1: OK=150 FAIL=0 not_supported=4997 (Backend RD0: OK)
+PASS rule 4: no sync in its submit's frame (rule4_same_frame_syncs=0)
+close: CLOSED permanent_slots=0
+wall_s=762.9
+RESULT: PASS

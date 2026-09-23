@@ -56,7 +56,7 @@ const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
 # GGML_GATE_OPS in the environment replaces the list for one run.
-const OPS := "ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT"
+const OPS := "ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT,FLASH_ATTN_EXT"
 const FAULT_OPS := "ADD"
 # Cases that must be OK, never "not supported": the census's required type
 # rows, as regexes over a case's test-backend-ops parameters, by op.

@@ -6,8 +6,8 @@
 #     -O1, which drops the unused s2 from the SPIR-V while the reflection
 #     JSON still lists it; and kernels/avbd's saxpby, another layout;
 #   - every cpp emit compiled for riscv64 by the guest's clang (the x86
-#     compile is the L2 harness, tests/ggml_rd_kernels); a kernel that shares group memory has
-#     none (slangc's cpp target rejects it) and is listed as SKIP, its
+#     compile is the L2 harness, tests/ggml_rd_kernels); a kernel that shares group
+#     memory has none (slangc's cpp target rejects it) and is listed as SKIP, its
 #     sibling compiled in its place;
 #   - the cpp siblings (kernels/ggml/cpp_siblings.txt), two controls that
 #     must fail: slangc -target cpp on mul_mat_tiled_f16_f32 (its group
@@ -63,8 +63,13 @@ rc=0
 	echo "== cpp emits compiled for riscv64 ($("$CLANG" --version | head -1))"
 	for k in $KERNELS; do
 		case " $GPU_ONLY " in *" $k "*) echo "SKIP riscv64 $k (GPU-only: cpp_siblings.txt names its sibling)"; continue ;; esac
-		if [ ! -f "$ROOT/kernels/ggml/cpp/${k}_emit.cpp" ] && grep -q '^groupshared \|GroupMemoryBarrierWithGroupSync' "$ROOT/kernels/ggml/slang/$k.slang"; then
-			echo "SKIP riscv64 $k (group-shared: no cpp target; ${k}_serial is its cpp sibling)"
+		if grep -q '^groupshared \|GroupMemoryBarrierWithGroupSync' "$ROOT/kernels/ggml/slang/$k.slang"; then
+			if [ -f "$ROOT/kernels/ggml/cpp/${k}_serial_emit.cpp" ] && [ ! -f "$ROOT/kernels/ggml/cpp/${k}_emit.cpp" ]; then
+				echo "SKIP riscv64 $k (group-shared, no cpp emit; ${k}_serial is compiled instead)"
+			else
+				echo "FAIL $k: a group-shared kernel needs ${k}_serial's emit and no emit of its own"
+				rc=1
+			fi
 			continue
 		fi
 		if "$CLANG" --target=riscv64-unknown-linux-gnu --sysroot="$SYSROOT/sysroot" -march=rv64gc -mabi=lp64d \

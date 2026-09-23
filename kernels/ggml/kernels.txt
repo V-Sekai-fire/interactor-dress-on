@@ -61,3 +61,11 @@ im2col_f32
 im2col_f16
 conv3d_f32
 conv3d_f16
+flash_attn_ext_f32_d64
+flash_attn_ext_f32_d64_serial
+flash_attn_ext_f32_d128
+flash_attn_ext_f32_d128_serial
+flash_attn_ext_f16_d64
+flash_attn_ext_f16_d64_serial
+flash_attn_ext_f16_d128
+flash_attn_ext_f16_d128_serial

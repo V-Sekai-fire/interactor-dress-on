@@ -121,7 +121,8 @@ def main():
     w.append('}')
     w.append('')
     open(sys.argv[2], 'w', newline='\n').write('\n'.join(w))
-    print('wrote %s: %d kernels (%d run by their cpp sibling)' % (sys.argv[2], len(kernels), len(sibling)))
+    print('wrote %s: %d kernels, %d with a host runner (%d by a sibling)' % (sys.argv[2], len(kernels), len(runs),
+          sum(1 for k, r in runs.items() if r != k)))
 
 
 if __name__ == '__main__':

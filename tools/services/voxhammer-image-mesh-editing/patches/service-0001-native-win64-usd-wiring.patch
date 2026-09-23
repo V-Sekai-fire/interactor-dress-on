@@ -1,0 +1,327 @@
+diff --git a/server.py b/server.py
+index 02a2998..28264ae 100644
+--- a/server.py
++++ b/server.py
+@@ -12,17 +12,44 @@ a_splice pastes the original geometry back outside the mask before a_decode
+ runs -- that ordering is exactly what the domain's guards enforce and what
+ this dispatcher's fixed step list reproduces.
+ 
+-No weights of its own -- runs on microsoft/TRELLIS.2's backbone (RFD 0038).
++No weights of its own -- runs on microsoft/TRELLIS-image-large (VoxHammer's
++image-conditioned backbone).
++
++Native win-64 wiring (interactor-dress-on tools/services/voxhammer-image-mesh-editing,
++patch service-0001): every mesh crosses as OpenUSD. The request's `mesh` is a
++USD layer holding one triangle UsdGeom.Mesh, `region` a USD layer holding one
++UsdGeom.Cube in the same frame, and `reference`/`source_view`/`view_mask` are
++the edited view, the source render of that view and its 2D mask (PNG). The
++real path runs VoxHammer's Windows driver (V-Sekai-fire/VoxHammer
++run_edit_test.py: Mitsuba Step-1 render, USD voxel sets, no Blender, no
++nvdiffrast) and returns an edited Mesh with vertex displayColor in the
++caller's frame. VoxHammer fuses a_invert..a_decode into one call (run_edit):
++inversion, the masked re-denoise that splices the preserved latents back, and
++the decode run in that order inside it, so those four steps share one timing.
+ """
+ 
+ import base64
+ import os
++import subprocess
++import sys
+ import tempfile
++import time
+ import urllib.request
+ from pathlib import Path
+ 
+ STUB = os.environ.get("WEFTSPUN_STUB") == "1"
+ _READY = {"loaded": False}
++_RT = {}  # driver module + loaded pipeline, real mode only
++
++HERE = Path(__file__).resolve().parent
++VOXHAMMER = Path(os.environ.get("VOXHAMMER_ROOT") or HERE.parent / "VoxHammer").resolve()
++
++
++def _default_model() -> Path:
++    common = subprocess.run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
++                            cwd=HERE.parent.parent, capture_output=True, text=True).stdout.strip()
++    return Path(common).parent / "models" / "TRELLIS-image-large"
++
+ 
+ # The solved plan, same 7 steps as plan.ex (regenerate both together if the
+ # domain changes -- see domain.ex's header).
+@@ -54,32 +81,149 @@ def _fetch(value: str, work: Path, name: str) -> Path:
+ 
+ def _validate(job_input: dict) -> dict:
+     if not job_input.get("mesh"):
+-        raise InputError("mesh is required: a URL, a data URI, or base64 GLB/USD bytes")
++        raise InputError("mesh is required: a URL, a data URI, or base64 USD bytes")
+     if not job_input.get("reference"):
+         raise InputError("reference is required")
+     if not job_input.get("region"):
+         raise InputError("region is required: a mask")
++    if not STUB:
++        for k in ("source_view", "view_mask"):
++            if not job_input.get(k):
++                raise InputError(f"{k} is required: the image edit is conditioned on "
++                                 "(source render, edited view, 2D mask) of one view")
+     return {
+         "mesh": job_input["mesh"],
+         "reference": job_input["reference"],
+         "region": job_input["region"],
++        "source_view": job_input.get("source_view"),
++        "view_mask": job_input.get("view_mask"),
+         "seed": int(job_input.get("seed", -1)),
++        "views": int(job_input.get("views", 150)),
+     }
+ 
+ 
++def _as_usd(path: Path, work: Path, stem: str) -> Path:
++    """The bytes must be an OpenUSD layer (crate or text); GLB is refused."""
++    head = path.read_bytes()[:8]
++    if head == b"PXR-USDC":
++        out = work / f"{stem}.usdc"
++    elif head.startswith(b"#usda"):
++        out = work / f"{stem}.usda"
++    else:
++        raise InputError(f"{stem} must be an OpenUSD layer (usda text or usdc crate), got {head!r}")
++    path.replace(out)
++    return out
++
++
++def _mark_region(state: dict) -> None:
++    """The mesh and the region Cube are put in VoxHammer's unit frame (y-up,
++    largest extent 1, bbox centred) with the SAME scale/offset, so the mask
++    means what the caller drew; the inverse maps the result back."""
++    import numpy as np
++    usd_io = _RT["usd_io"]
++    work = state["work"]
++    v, f, _rgb, up = usd_io.read_mesh(state["mesh_path"])
++    if up == "Z":
++        v = usd_io.zup_to_yup(v)
++    lo, hi, rup = usd_io.read_cube(state["region_path"])
++    if rup == "Z":
++        c = usd_io.zup_to_yup(np.array([lo, hi]))
++        lo, hi = c.min(0), c.max(0)
++    scale = 1.0 / float((v.max(0) - v.min(0)).max())
++    vs = v * scale
++    offset = -(vs.min(0) + vs.max(0)) / 2
++    state.update(up=up, scale=scale, offset=offset)
++    state["unit_mesh"] = work / "unit_mesh.usda"
++    state["unit_region"] = work / "unit_region.usda"
++    usd_io.write_mesh(state["unit_mesh"], vs + offset, f, None, up="Y", frame="unit-cube-yup")
++    usd_io.write_cube(state["unit_region"], lo * scale + offset, hi * scale + offset, up="Y",
++                      frame="unit-cube-yup")
++    state["render_dir"] = work / "render"
++    state["render_dir"].mkdir()
++
++
++def _voxelize(state: dict) -> None:
++    """Step 1 (Mitsuba render, out of process: drjit and torch each want the
++    card to themselves while loading) then Steps 2-3 (DINOv2 features, voxels,
++    the deleted-voxel set from the region)."""
++    cmd = [sys.executable, str(VOXHAMMER / "tools" / "render_hammersley.py"), "--mesh", str(state["unit_mesh"]),
++           "--out", str(state["render_dir"]), "--seed", str(state["seed"]), "--views", str(state["views"]),
++           "--keep-frame"]
++    t = time.time()
++    subprocess.run(cmd, cwd=VOXHAMMER, check=True)
++    state["times"]["render_s"] = round(time.time() - t, 2)
++    import torch
++    inference = _RT["drv"].inference
++    t = time.time()
++    # extract_features runs DINOv2 with autograd on and keeps every batch's tokens:
++    # measured, the 4090 filled to 24.1 GB by batch 3 of 15 and WDDM paged it out
++    # (24 s -> 76 s a batch) until it failed. Its bare `except:` then reports success,
++    # so the file it should have written is the check.
++    features = state["render_dir"] / "features.npz"
++    with torch.no_grad():
++        inference.run_feature_extraction(str(state["render_dir"]))
++    if not features.exists():
++        raise RuntimeError("VoxHammer feature extraction failed (features.npz not written); see the server log")
++    state["times"]["features_s"] = round(time.time() - t, 2)
++    inference.run_voxel_masking(str(state["unit_region"]), str(state["render_dir"]))
++
++
++def _edit(state: dict) -> None:
++    """a_invert, a_edit_image, a_splice, a_decode: VoxHammer's run_edit."""
++    import numpy as np
++    import torch
++    drv = _RT["drv"]
++    np.random.seed(state["seed"])
++    torch.manual_seed(state["seed"])
++    drv._EXPORT_STATE["gaussian_path"] = None
++    drv._EXPORT_STATE["last_mesh"] = None
++    t = time.time()
++    with torch.no_grad():  # the decode's to_glb re-enables grad inside; the export needs none
++        drv.inference.run_3d_editing(_RT["pipeline"], str(state["render_dir"]),
++                                     str(state["work"] / "edited_unit.glb"), str(state["image_dir"]),
++                                     False, "", "")
++    state["times"]["edit_s"] = round(time.time() - t, 2)
++    if drv._EXPORT_STATE.get("last_mesh") is None:
++        raise RuntimeError("VoxHammer's decode produced no mesh")
++
++
++def _write_layer(state: dict) -> None:
++    """The decoded mesh, back in the caller's frame, as a crate with real geometry."""
++    usd_io = _RT["usd_io"]
++    vy, f, rgb = _RT["drv"]._EXPORT_STATE["last_mesh"]
++    v = (vy - state["offset"]) / state["scale"]
++    if state["up"] == "Z":
++        v = usd_io.yup_to_zup(v)
++    from pxr import Usd, UsdGeom
++    src = Usd.Stage.Open(str(state["mesh_path"]))
++    mpu = UsdGeom.GetStageMetersPerUnit(src)
++    edited = state["work"] / "edited.usdc"
++    usd_io.write_mesh(edited, v, f, rgb, up=state["up"], meters_per_unit=mpu, frame="source",
++                      source=f"voxhammer:TRELLIS-image-large:seed{state['seed']}")
++    state["edited"] = edited
++    state["faces"] = int(len(f))
++    state["vertices"] = int(len(v))
++
++
++_STEPS = {
++    "a_mark_region": _mark_region,
++    "a_voxelize": _voxelize,
++    "a_invert": _edit,          # fused: run_edit runs invert -> edit -> splice -> decode
++    "a_edit_image": None,
++    "a_splice": None,
++    "a_decode": None,
++    "a_write_layer": _write_layer,
++}
++
++
+ def _run_plan(state: dict) -> None:
+-    """Runs PLAN in order. Each action is NOT YET wired to VoxHammer's real
+-    inversion/edit/splice/decode implementation -- see README's Status. In
+-    stub mode each step just marks its state flag, proving the dispatcher
+-    follows the domain's order without needing the model."""
++    """Runs PLAN in order. In stub mode each step just marks its state flag,
++    proving the dispatcher follows the domain's order without needing the
++    model."""
+     for step in PLAN:
+-        if STUB:
+-            state[step] = True
+-            continue
+-        raise NotImplementedError(
+-            f"VoxHammer's real '{step}' implementation is not yet wired up -- "
+-            "see Nelipot-Lee/VoxHammer and README's Status section"
+-        )
++        if not STUB and _STEPS[step] is not None:
++            _STEPS[step](state)
++        state[step] = True
+ 
+ 
+ def _write_edited(work: Path) -> Path:
+@@ -104,7 +248,8 @@ def _write_edited(work: Path) -> Path:
+ 
+ def _to_usd(edited: Path, work: Path) -> Path:
+     """RFD 0053: the edit is a sublayer over the source mesh, not a flat
+-    file -- muting this layer returns the original."""
++    file -- muting this layer returns the original. /Asset/Edit references the
++    edited crate, so opening the layer beside it composes the real geometry."""
+     from pxr import Sdf, Usd, UsdGeom
+ 
+     layer = work / "edit.usda"
+@@ -114,6 +259,8 @@ def _to_usd(edited: Path, work: Path) -> Path:
+     root = UsdGeom.Xform.Define(stage, "/Asset")
+     stage.SetDefaultPrim(root.GetPrim())
+     edit = stage.DefinePrim("/Asset/Edit")
++    if not STUB:
++        edit.GetReferences().AddReference("./" + edited.name)
+     edit.CreateAttribute("weftspun:sourceAsset", Sdf.ValueTypeNames.Asset).Set(
+         Sdf.AssetPath(edited.name)
+     )
+@@ -131,12 +278,24 @@ def _encode(path: Path) -> str:
+ def predict(job_input: dict) -> dict:
+     args = _validate(job_input)
+     work = Path(tempfile.mkdtemp())
+-    _fetch(args["mesh"], work, "input.mesh")
+-
+-    state = {"mode": {"conditioning": "image"}}
++    mesh = _fetch(args["mesh"], work, "input.mesh")
++
++    state = {"mode": {"conditioning": "image"}, "work": work, "times": {},
++             "seed": args["seed"] if args["seed"] >= 0 else 0, "views": args["views"]}
++    if not STUB:
++        state["mesh_path"] = _as_usd(mesh, work, "input")
++        state["region_path"] = _as_usd(_fetch(args["region"], work, "region.bin"), work, "region")
++        state["image_dir"] = work / "images"
++        state["image_dir"].mkdir()
++        for key, name in (("source_view", "2d_render.png"), ("reference", "2d_edit.png"),
++                          ("view_mask", "2d_mask.png")):
++            _fetch(args[key], state["image_dir"], name)
++        import torch
++        torch.cuda.reset_peak_memory_stats()
++    t0 = time.time()
+     _run_plan(state)
+ 
+-    edited = _write_edited(work)
++    edited = _write_edited(work) if STUB else state["edited"]
+     layer = _to_usd(edited, work)
+ 
+     # The mesh travels with the layer. RFD 0053's rule -- muting the layer
+@@ -145,7 +304,7 @@ def predict(job_input: dict) -> dict:
+     # caller never sees. Returning only the layer shipped a reference that
+     # could not resolve anywhere but on this machine, for as long as the
+     # directory survived.
+-    return {
++    out = {
+         "layer": _encode(layer),
+         "mesh": _encode(edited),
+         "mesh_name": edited.name,
+@@ -153,9 +312,35 @@ def predict(job_input: dict) -> dict:
+         "seed": args["seed"],
+         "stub": STUB,
+     }
++    if not STUB:
++        import torch
++        state["times"]["total_s"] = round(time.time() - t0, 2)
++        out.update(times=state["times"], faces=state["faces"], vertices=state["vertices"],
++                   peak_vram_mib=int(torch.cuda.max_memory_allocated() / 2 ** 20))
++    return out
+ 
+ 
+ def load() -> None:
++    if not STUB:
++        # OpenUSD before torch/open3d (their DLL copies otherwise win); the driver
++        # imports usd_io first and then monkeypatches VoxHammer's Blender/PLY/nvdiffrast
++        # boundaries onto USD. Its relative asset paths want the checkout as cwd.
++        shims = VOXHAMMER / "vendor-shims"
++        for p in (VOXHAMMER, VOXHAMMER / "tools", *(shims / d for d in ("nvdiffrast-shim", "kaolin-shim", "rembg-shim"))):
++            sys.path.insert(0, str(p))
++        os.chdir(VOXHAMMER)
++        import usd_io
++        import run_edit_test as drv
++        from trellis.pipelines import TrellisImageTo3DPipeline
++
++        model = Path(os.environ.get("VOXHAMMER_TRELLIS") or _default_model())
++        if not (model / "pipeline.json").exists():
++            raise SystemExit(f"{model} has no pipeline.json: run `pixi run fetch`")
++        t = time.time()
++        pipeline = TrellisImageTo3DPipeline.from_pretrained(str(model))
++        pipeline.cuda()
++        _RT.update(usd_io=usd_io, drv=drv, pipeline=pipeline, load_s=round(time.time() - t, 1))
++        print(f"[server] TRELLIS-image-large loaded from {model} in {_RT['load_s']} s", flush=True)
+     _READY["loaded"] = True
+ 
+ 
+@@ -170,11 +355,14 @@ def build_app():
+         mesh: str
+         reference: str
+         region: str
++        source_view: str | None = None
++        view_mask: str | None = None
+         seed: int = -1
++        views: int = 150
+ 
+     @app.get("/health")
+     def health():
+-        return {"status": "ok", "ready": _READY["loaded"], "stub": STUB}
++        return {"status": "ok", "ready": _READY["loaded"], "stub": STUB, "load_s": _RT.get("load_s")}
+ 
+     @app.post("/predict")
+     def run(request: PredictRequest):
+@@ -190,4 +378,4 @@ if __name__ == "__main__":
+     import uvicorn
+ 
+     load()
+-    uvicorn.run(build_app(), host="0.0.0.0", port=int(os.environ.get("PORT", "8000")))
++    uvicorn.run(build_app(), host=os.environ.get("HOST", "127.0.0.1"), port=int(os.environ.get("PORT", "8000")))

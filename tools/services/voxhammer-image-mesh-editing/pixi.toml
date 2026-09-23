@@ -1,0 +1,88 @@
+# VoxHammer image-conditioned mesh editing as a native win-64 service.
+#
+# Stage 7 (AGENTS.md): the loop calls this over HTTP; meshes cross as OpenUSD.
+# The service code is not copied in: `pixi run fetch` clones
+#   V-Sekai-fire/interactor-voxhammer-image-mesh-editing  (server.py, domain)
+#   V-Sekai-fire/VoxHammer                                 (edit path, trellis, USD driver)
+# at the commits pinned in fetch.py into src/ (gitignored) and applies
+# patches/*.patch, then places microsoft/TRELLIS-image-large (pinned revision)
+# under <main checkout>/models/ and checks it against tools/models/manifest.tsv.
+#
+# Wheel sources (every one prebuilt for win_amd64 / cp311; nothing CUDA is compiled):
+#   torch 2.4.0+cu118, torchvision 0.19.0+cu118  download.pytorch.org/whl/cu118
+#   xformers 0.0.27.post2 (cu118 build)          download.pytorch.org/whl/cu118
+#   spconv-cu118, cumm-cu118                     pypi.org (traveller59 win_amd64 wheels)
+#   mitsuba 3.9.1, drjit                         pypi.org (the Step-1 renderer, cuda_ad_rgb)
+#   open3d 0.19.0, usd-core, xatlas, pymeshfix   pypi.org
+#   utils3d                                      git EasternJournalist/utils3d @ 9a4eb15 (pure python)
+#   pysdf                                        pypi sdist, built by MSVC (VS2022) against conda-forge eigen
+# Not installed, and why (the same three decisions VoxHammer's own win-64 pixi.toml records):
+#   flash-attn  -- no Windows wheel for torch 2.4 + cu118; ATTN_BACKEND=xformers covers
+#                  both trellis attention paths.
+#   nvdiffrast  -- needs an nvcc matching torch's cu118 (this machine has 12.4); the
+#                  VoxHammer checkout ships an import shim that raises on use, and the
+#                  driver replaces the only caller (to_glb) with a Gaussian vertex-colour export.
+#   kaolin      -- one symbol used (check_tensor); shimmed.
+#   bpy         -- cannot share a process with pxr (Blender bundles its own USD/TBB);
+#                  the driver stubs it and renders with Mitsuba instead.
+# The shims are plain python in src/VoxHammer/vendor-shims; the patched server puts them on
+# sys.path (pixi does not expand $VARS in activation.env on win-64, measured), so the
+# environment solves before fetch has run.
+
+[workspace]
+name = "voxhammer-image-mesh-editing"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[dependencies]
+python = "3.11.*"
+eigen = "*"
+git = "*"
+
+[pypi-options]
+extra-index-urls = ["https://download.pytorch.org/whl/cu118"]
+
+[pypi-dependencies]
+numpy = "<2"
+torch = "==2.4.0"
+torchvision = "==0.19.0"
+xformers = "==0.0.27.post2"
+spconv-cu118 = "*"
+diffusers = "==0.34.0"
+transformers = ">=4.44,<4.50"
+accelerate = "*"
+sentencepiece = "*"
+safetensors = "*"
+huggingface-hub = "*"
+opencv-python = "*"
+pillow = "*"
+tqdm = "*"
+utils3d = { git = "https://github.com/EasternJournalist/utils3d.git", rev = "9a4eb15e4021b67b12c460c7057d642626897ec8" }
+usd-core = "*"
+open3d = "==0.19.0"
+pysdf = "*"
+trimesh = "*"
+xatlas = "*"
+pyvista = "*"
+pymeshfix = "*"
+plyfile = "*"
+igraph = "*"
+easydict = "*"
+scipy = "*"
+mitsuba = "==3.9.1"
+fastapi = "==0.115.5"
+uvicorn = "==0.32.1"
+pydantic = "==2.10.3"
+
+[activation.env]
+ATTN_BACKEND = "xformers"
+# voxhammer/edit_pipeline.py sets ATTN_BACKEND=sdpa at import; trellis's sparse modules
+# read SPARSE_ATTN_BACKEND first and would otherwise fall back to flash_attn (absent).
+SPARSE_ATTN_BACKEND = "xformers"
+SPCONV_ALGO = "native"
+
+[tasks]
+fetch = "python fetch.py"
+serve = { cmd = "python src/service/server.py", env = { PORT = "8765" } }
+smoke = "python smoke.py"

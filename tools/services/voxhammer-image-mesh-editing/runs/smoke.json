@@ -1,0 +1,45 @@
+{
+  "gpu": "RTX 4090 (nvidia-smi index 1)",
+  "idle_mib": 1191,
+  "_faces_in": 8050,
+  "_verts_in": 5243,
+  "server_ready_s": 48.2,
+  "model_load_s": 35.9,
+  "request_wall_s": 227.5,
+  "times": {
+    "render_s": 8.14,
+    "features_s": 17.95,
+    "edit_s": 123.78,
+    "total_s": 227.31
+  },
+  "faces": 425628,
+  "vertices": 212812,
+  "peak_vram_mib": 13042,
+  "plan": [
+    "a_mark_region",
+    "a_voxelize",
+    "a_invert",
+    "a_edit_image",
+    "a_splice",
+    "a_decode",
+    "a_write_layer"
+  ],
+  "stub": false,
+  "crate_magic": "PXR-USDC",
+  "layer_mesh_prims": 1,
+  "layer_faces": 425628,
+  "layer_extent": [
+    [
+      -0.3110492527484894,
+      -0.49762827157974243,
+      -0.16171294450759888
+    ],
+    [
+      0.295362263917923,
+      0.500025749206543,
+      0.16109015047550201
+    ]
+  ],
+  "pass": true,
+  "nvidia_smi_peak_mib": 18621
+}

@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: If you use this service, cite VoxHammer and TRELLIS, whose code and weights it runs.
+title: VoxHammer image mesh editing, native win-64 service for Stage 7
+abstract: >-
+  Nothing is vendored. fetch.py clones two org repositories at pinned commits
+  into src/ (gitignored): V-Sekai-fire/interactor-voxhammer-image-mesh-editing
+  at 51d677b61a44c3bb5b68e77d1ab16630e08a724d (server.py, domain.ex, plan.ex)
+  and V-Sekai-fire/VoxHammer at 63e5ff8daa342122986a2b69e40ea567572bc5e6
+  (VoxHammer's edit path and its trellis copy, plus the org's Windows
+  adaptations: the USD driver run_edit_test.py, the Mitsuba Step-1 renderer
+  tools/render_hammersley.py, tools/usd_io.py, and the nvdiffrast, kaolin and
+  rembg import shims). Local adaptation, applied at fetch time:
+  patches/service-0001-native-win64-usd-wiring.patch wires server.py's
+  NotImplementedError steps to that driver (a_mark_region, a_voxelize, the
+  fused a_invert..a_decode, a_write_layer), requires the request mesh and
+  region to be OpenUSD layers (GLB refused), maps mesh and region into
+  VoxHammer's unit frame with one scale and offset and the result back, makes
+  /Asset/Edit reference the edited crate so the returned layer composes real
+  geometry, and binds 127.0.0.1 by default. Weights: microsoft/TRELLIS-image-large
+  at 25e0d31ffbebe4b5a97464dd851910efc3002d96, with pipeline.json adapted to
+  name ss_enc_conv3d_16l8_fp16 and slat_enc_swin8_B_64l8_fp16 as VoxHammer's
+  README Step 1 instructs (tools/models/manifest.tsv rows). DINOv2
+  (dinov2_vitl14_reg) arrives through torch.hub from facebookresearch/dinov2,
+  as VoxHammer's extract_feature.py and TRELLIS load it; that one is not pinned.
+authors:
+  - name: Lin Li
+  - name: Zehuan Huang
+  - name: Haoran Feng
+  - name: Gengxiong Zhuang
+  - name: Rui Chen
+  - name: Chunchao Guo
+  - name: Lu Sheng
+  - name: The TRELLIS authors (Microsoft)
+  - name: K. S. Ernest (iFire) Lee
+repository-code: https://github.com/V-Sekai-fire/VoxHammer
+commit: 63e5ff8daa342122986a2b69e40ea567572bc5e6
+license: MIT

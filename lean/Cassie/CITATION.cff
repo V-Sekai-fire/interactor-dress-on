@@ -31,7 +31,7 @@ abstract: >-
   (collinear samples) gave alpha = det_y / 0 instead of the seg_length / 3
   fallback, and den = 0 stepped u to inf or NaN. The module's prebuilt
   modules/cassie/thirdparty/avbd/curve_generate_bezier.cpu.cpp and
-  curve_newton.cpu.cpp at c165a519d2 carry the same bug ("< 0.0f"), so the
+  curve_newton.cpu.cpp at 18cc59c642 carry the same bug ("< 0.0f"), so the
   CASSIE module as shipped never fires them either. They are now
   .litFloatExact (LeanSlang emit-fp 60532ae), emitted as 1.0e-12f and
   1.0e-9f and pinned by native_decide to the whole emitted line; the
@@ -42,5 +42,5 @@ authors:
   - name: K. S. Ernest (iFire) Lee
   - name: V-Sekai-fire
 repository-code: https://github.com/V-Sekai-fire/entities-godot
-commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+commit: 18cc59c642f123e19650687e3de84ffe2faa37f6
 license: MIT

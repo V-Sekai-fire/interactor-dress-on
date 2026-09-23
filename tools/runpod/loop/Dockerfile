@@ -5,7 +5,8 @@
 #   Dockerfile path  tools/runpod/loop/Dockerfile
 # No GPU is needed to build; nothing is compiled here. fit.elf is gitignored (a
 # 7 MB riscv64 build of cloth-fit that takes longer than RunPod's 30-minute build
-# limit to cross-compile), so it comes from this repo's release, checksum-pinned.
+# limit to cross-compile), so it comes from this repo's release (the tag is the
+# root CITATION.cff version, v<version>), checksum-pinned.
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -30,11 +31,12 @@ RUN wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERS
 WORKDIR /app
 COPY project/ /app/project/
 COPY vendor/xr-grid/ /app/vendor/xr-grid/
-ARG ELF_RELEASE=runpod-elf-1
-ARG FIT_ELF_SHA256=
+ARG ELF_RELEASE=v0.1.0
+ARG FIT_ELF_SHA256=c95c6166efa8f7bb91253690a59720c911f28853a7128eaed73bfb09b0bdedd3
 ADD https://github.com/V-Sekai-fire/interactor-dress-on/releases/download/${ELF_RELEASE}/fit.elf /app/project/fit.elf
-RUN if [ -n "$FIT_ELF_SHA256" ]; then echo "$FIT_ELF_SHA256  /app/project/fit.elf" | sha256sum -c -; fi \
-    && /opt/godot/godot --headless --path /app/project --import > /tmp/import.log 2>&1; tail -3 /tmp/import.log
+RUN echo "$FIT_ELF_SHA256  /app/project/fit.elf" | sha256sum -c -
+# The import registers the addon and the ELFs (first run after adding an ELF).
+RUN /opt/godot/godot --headless --path /app/project --import > /tmp/import.log 2>&1 || (tail -20 /tmp/import.log; exit 1)
 
 COPY tools/runpod/loop/handler.py /app/handler.py
 CMD ["python3", "-u", "/app/handler.py"]

@@ -31,5 +31,5 @@ authors:
   - name: Computer Graphics Group, RWTH Aachen
   - name: V-Sekai-fire
 repository-code: https://github.com/V-Sekai-fire/entities-godot
-commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+commit: 18cc59c642f123e19650687e3de84ffe2faa37f6
 license: MIT

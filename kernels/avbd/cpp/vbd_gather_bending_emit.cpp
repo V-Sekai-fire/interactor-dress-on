@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 1 "C:/interactor-dress-on/kernels/avbd/slang/vbd_gather_bending.slang"
+#line 1 "slang/vbd_gather_bending.slang"
 struct VbdGatherBendingParams_0
 {
     uint32_t colorOffset_0;

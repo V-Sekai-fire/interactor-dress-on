@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 25 "C:/interactor-dress-on/kernels/avbd/slang/attachment_force_al.slang"
+#line 25 "slang/attachment_force_al.slang"
 struct GlobalParams_0
 {
     StructuredBuffer<Vector<float, 3> > positions_0;

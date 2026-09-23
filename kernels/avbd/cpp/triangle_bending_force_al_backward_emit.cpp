@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 115 "C:/interactor-dress-on/kernels/avbd/slang/triangle_bending_force_al_backward.slang"
+#line 115 "slang/triangle_bending_force_al_backward.slang"
 struct GlobalParams_0
 {
     StructuredBuffer<Vector<float, 3> > positions_0;

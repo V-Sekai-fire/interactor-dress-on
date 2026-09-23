@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 1 "C:/interactor-dress-on/kernels/avbd/slang/triangle_bending_dual_update.slang"
+#line 1 "slang/triangle_bending_dual_update.slang"
 struct TriangleBendingDualUpdateParams_0
 {
     float beta_0;

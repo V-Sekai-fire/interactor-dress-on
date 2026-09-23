@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 1 "C:/interactor-dress-on/kernels/avbd/slang/vbd_init.slang"
+#line 1 "slang/vbd_init.slang"
 struct VbdInitParams_0
 {
     float invHSquared_0;

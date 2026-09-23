@@ -50,8 +50,11 @@ fi
 
 mkdir -p "$HERE/cpp" "$BUILD/spv"
 echo "== slangc -target cpp =="
+# Relative paths from $HERE: slangc writes the input path into a #line
+# directive, and an absolute one would make the committed cpp depend on
+# where the checkout (or worktree) lives.
 for k in $KERNELS; do
-	"$SLANGC" -target cpp -stage compute -entry main -o "$HERE/cpp/${k}_emit.cpp" "$HERE/slang/$k.slang"
+	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -o "cpp/${k}_emit.cpp" "slang/$k.slang" )
 done
 echo "== slangc -target spirv (+ reflection) =="
 for k in $KERNELS; do

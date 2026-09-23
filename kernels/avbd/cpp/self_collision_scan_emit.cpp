@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 1 "C:/interactor-dress-on/kernels/avbd/slang/self_collision_scan.slang"
+#line 1 "slang/self_collision_scan.slang"
 struct SelfCollisionScanParams_0
 {
     uint32_t nVerts_0;

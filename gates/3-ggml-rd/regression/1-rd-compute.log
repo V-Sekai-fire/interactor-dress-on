@@ -1,0 +1,28 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+open:  ok
+probe: PASS: GPU compute reached from the guest (device held from an earlier vmcall)
+bench nd=   1 ns=  1 barrier=true  host_us=   1452  OK value=1 expected=1 setup_us=553 loop_us=531 read_us=231 us_per_dispatch=531.0 us_per_submit=531.0 | bind_pipe=3 bind_set=2 dispatch=4 barrier=1 submit=513
+bench nd=   1 ns=  1 barrier=false host_us=   1101  OK value=1 expected=1 setup_us=-523985619 loop_us=330 read_us=294 us_per_dispatch=330.0 us_per_submit=330.0 | bind_pipe=2 bind_set=3 dispatch=5 barrier=0 submit=313
+bench nd=  16 ns=  1 barrier=true  host_us=   3778  OK value=16 expected=16 setup_us=-523985656 loop_us=2917 read_us=405 us_per_dispatch=182.3 us_per_submit=2917.0 | bind_pipe=25 bind_set=16 dispatch=25 barrier=2337 submit=505
+bench nd=  16 ns=  1 barrier=false host_us=   1157  WRONG value=7 expected=16 setup_us=-523985611 loop_us=414 read_us=235 us_per_dispatch=25.9 us_per_submit=414.0 | bind_pipe=18 bind_set=17 dispatch=26 barrier=4 submit=339
+bench nd=  64 ns=  1 barrier=true  host_us=   2507  OK value=64 expected=64 setup_us=-523985558 loop_us=911 read_us=1031 us_per_dispatch=14.2 us_per_submit=911.0 | bind_pipe=63 bind_set=62 dispatch=69 barrier=110 submit=593
+bench nd=  64 ns=  1 barrier=false host_us=   1940  WRONG value=16 expected=64 setup_us=-523985561 loop_us=889 read_us=486 us_per_dispatch=13.9 us_per_submit=889.0 | bind_pipe=58 bind_set=62 dispatch=76 barrier=6 submit=667
+bench nd= 256 ns=  1 barrier=true  host_us=   4124  OK value=256 expected=256 setup_us=-523985608 loop_us=3111 read_us=520 us_per_dispatch=12.2 us_per_submit=3111.0 | bind_pipe=362 bind_set=351 dispatch=385 barrier=559 submit=1362
+bench nd= 256 ns=  1 barrier=false host_us=   2657  WRONG value=75 expected=256 setup_us=-523985603 loop_us=1775 read_us=377 us_per_dispatch=6.9 us_per_submit=1775.0 | bind_pipe=353 bind_set=337 dispatch=388 barrier=86 submit=545
+bench nd=   1 ns= 16 barrier=true  host_us=   9733  OK value=16 expected=16 setup_us=-523985669 loop_us=8859 read_us=430 us_per_dispatch=553.7 us_per_submit=553.7 | bind_pipe=49 bind_set=35 dispatch=53 barrier=4 submit=8591
+bench nd=   1 ns= 16 barrier=false host_us=   8757  OK value=16 expected=16 setup_us=-523985530 loop_us=7678 read_us=464 us_per_dispatch=479.9 us_per_submit=479.9 | bind_pipe=42 bind_set=31 dispatch=44 barrier=6 submit=7469
+bench nd=   1 ns= 64 barrier=true  host_us=  36979  OK value=64 expected=64 setup_us=-523985520 loop_us=35770 read_us=585 us_per_dispatch=558.9 us_per_submit=558.9 | bind_pipe=192 bind_set=128 dispatch=176 barrier=32 submit=34843
+bench nd=   1 ns= 64 barrier=false host_us=  33812  OK value=64 expected=64 setup_us=-523985504 loop_us=32677 read_us=521 us_per_dispatch=510.6 us_per_submit=510.6 | bind_pipe=196 bind_set=134 dispatch=184 barrier=31 submit=31710
+bench nd=  16 ns= 16 barrier=true  host_us=   9629  OK value=256 expected=256 setup_us=-523985637 loop_us=8565 read_us=577 us_per_dispatch=33.5 us_per_submit=535.3 | bind_pipe=229 bind_set=204 dispatch=253 barrier=326 submit=7422
+bench nd=  16 ns= 16 barrier=false host_us=   9642  WRONG value=109 expected=256 setup_us=-523985597 loop_us=8551 read_us=568 us_per_dispatch=33.4 us_per_submit=534.4 | bind_pipe=235 bind_set=214 dispatch=254 barrier=54 submit=7675
+no-barrier arm: 4 of 7 counts wrong -> the render graph does NOT order same-buffer dispatches; barrier() is mandatory
+close: closed
+RESULT: PASS
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

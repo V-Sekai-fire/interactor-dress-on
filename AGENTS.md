@@ -57,7 +57,9 @@ our own, no host DLL. The GPU is reachable only through Godot's
 ## Facts that cost time (do not relearn)
 
 - Run Godot with `--rendering-driver vulkan`; `--headless` hands back a null
-  RenderingDevice. `--xr-mode off` on non-VR runs.
+  RenderingDevice. `--xr-mode off` on non-VR runs, headless ones included:
+  without it a headless run hung after OpenXR failed to start, twice
+  (Gate 3).
 - Godot buffers stdout when redirected: **poll the port**, or write results to
   a file from GDScript; never wait on the log. `--quit-after` never fires under
   `--xr-mode on`; quit on a wall clock, in every branch.
@@ -73,12 +75,17 @@ our own, no host DLL. The GPU is reachable only through Godot's
   first bound read-only and then written in the same span is recorded as
   read-only, and later spans race its writes (Gate 0F finding 4: 0 of 4096
   exact). Bind a written buffer read-write first; never alias a read-only
-  source binding with the read-write destination for an in-place op.
+  source binding with the read-write destination for an in-place op. A
+  storage binding that can share a buffer with a written one is declared
+  read-write even when the kernel only reads it: ggml-rd's sources are, and
+  one buffer at b1 and b4 over 1000 dependent spans is exact where the
+  read-only control loses (`gates/3-ggml-rd/`).
 - `buffer_update` is refused inside a compute list; `RDUniform` binds whole
   buffers; every buffer is created with contents (zeros if none), except
   `rdc::Device::storage_buffer_uninit` for sizes a zero array cannot reach
-  (4 GiB−256), which must be `buffer_clear`ed. `buffer_get_data` stages the
-  whole buffer; read big buffers through `buffer_copy` into a small one.
+  (4 GiB−256), which must be `buffer_clear`ed (`storage_buffer_empty` does
+  both). `buffer_get_data` stages the whole buffer; read big buffers through
+  `Device::buffer_get_into` (a `buffer_copy` into a small staging buffer).
 - A guest static can hold the RenderingDevice across vmcalls (handle = engine
   instance id in unrestricted mode); RefCounted helpers are per-call only.
 - An RID (any handle a host call returns) is a per-vmcall scoped Variant: the
@@ -97,7 +104,10 @@ our own, no host DLL. The GPU is reachable only through Godot's
 - The guest has no filesystem (`openat` → EBADF); every byte comes through
   the host. `fesetround` is accepted and ignored.
 - `slangc -preserve-params` keeps unused bindings only at `-O0`; at the
-  default `-O1` the optimiser strips them again (Gate 0F finding 9).
+  default `-O1` the optimiser strips them again (Gate 0F finding 9) while
+  the reflection JSON still lists them. Shared-layout kernels compile at
+  `-O0 -preserve-params`, and the layout check reads the SPIR-V
+  (`kernels/ggml/gen_ggml_kernel_table.py`).
 - godot-sandbox caches an Object call's method name in a 32-slot direct-mapped
   cache keyed by the guest ADDRESS of the name string; two hot names in one
   slot evict each other and each call re-resolves (~2-5 ms). It is decided
@@ -128,6 +138,26 @@ our own, no host DLL. The GPU is reachable only through Godot's
   (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
   Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
   `lake update LeanSlang` (only that package; the other revs must not move).
+- A local RenderingDevice drops whatever is recorded between `submit()` and
+  `sync()` (sync's `_begin_frame` clears the graph): sync before any
+  buffer_update/copy/clear or compute list, and let the host upload only
+  while the guest is idle.
+- A vmcall killed while recording (execution_timeout, references_max, a
+  trap) leaves its compute list open, and Godot then refuses every
+  buffer_update and list_begin on that device. `rdc::Device` ends the
+  orphaned list before its next such call (`recoveries()` counts them;
+  Gate 0F probe 13 has the hazard and the fix as two arms).
+- The host views at most **16 MiB** of guest memory per syscall: a
+  PackedByteArray made from guest memory or fetched into it, and a
+  memcpy/memset/memmove/memcmp, fault above that ("Protection fault").
+  `rdc::Device` splits buffer_update and staged reads, the pump splits READ,
+  and `vendor/sandbox-api` splits the mem* wrappers.
+- With unboxed arguments (the default) declare an Object parameter as
+  `Object`, never `Variant`: the host passes a bare handle, and a Variant
+  parameter reads it as a pointer (it arrives as Nil).
+- Guest threads are serialized (Gate 0C), so ggml's spin barriers never
+  release: every in-guest ggml-cpu backend runs one thread (ggml_test.elf
+  wraps `ggml_backend_init_by_type` to set it; the default is 4).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 - godot-sandbox's guest heap has no aligned entry point (malloc/calloc/
@@ -140,8 +170,9 @@ our own, no host DLL. The GPU is reachable only through Godot's
   `native.cpp`: over-allocate, return the aligned address, and map it back
   to the host block in a side table that the wrapped `free`/`realloc`
   consult (a header below the block cannot work: the host only frees the
-  pointer it returned). Gate 0F probe 17 checks it; re-vendoring
-  sandbox-api must keep that patch, or the bug returns silently.
+  pointer it returned). Gate 0F probe 17 checks it (ggml's 64-byte
+  buffers need it too, Gate 3); re-vendoring sandbox-api must keep that
+  patch and Gate 3's 16 MiB mem* split, or the bugs return silently.
 - A native flat control built with llvm-mingw links libc++; the guest links
   libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
   between them from the same seed: use the engine's raw output (Gate 4).

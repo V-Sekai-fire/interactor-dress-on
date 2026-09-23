@@ -1,0 +1,9 @@
+ggml-rd: no RD device (no RenderingDevice was attached; headless?)
+Testing 1 devices
+
+Backend 1/1: CPU
+  Skipping
+1/1 backends passed
+OK
+ggml_test: test-backend-ops returned 0
+ggml_test: rd stats graphs=0 nodes=0 dispatches=0 skipped=0 barriers=0 failed_graphs=0 last{nodes=0 dispatches=0 barriers=0 skipped=0} pipelines=0 set0_created=0 slots_created=0 coop_yields=0 waits=0 faults=0 params_bytes=0 set_bytes=0 get_bytes=0 copies=0 clears=0 buffers_live=0 bytes_live=0

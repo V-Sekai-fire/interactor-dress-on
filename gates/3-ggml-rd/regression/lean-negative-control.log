@@ -1,0 +1,29 @@
+# negative control: numthreads(64 -> numthreads(32 in a copy of vbd_init.slang
+# occurrences before: 1
+# occurrences after:  1
+DIFF vbd_init
+SAME spring_force
+SAME vbd_gather_spring
+SAME attachment_force_al
+SAME vbd_gather_attachment
+SAME triangle_membrane_force_al
+SAME vbd_gather_triangle
+SAME triangle_bending_force_al
+SAME vbd_gather_bending
+SAME vbd_solve_apply
+SAME attachment_dual_update
+SAME triangle_membrane_dual_update
+SAME triangle_bending_dual_update
+SAME self_collision_scan
+SAME vbd_solve_apply_backward
+SAME vbd_gather_spring_backward
+SAME vbd_gather_attachment_backward
+SAME vbd_gather_triangle_backward
+SAME vbd_gather_bending_backward
+SAME attachment_force_al_backward
+SAME spring_force_backward
+SAME triangle_membrane_force_al_backward
+SAME triangle_bending_force_al_backward
+SAME vbd_init_backward
+SAME saxpby
+RESULT 1 DIFF (expect 1: vbd_init)

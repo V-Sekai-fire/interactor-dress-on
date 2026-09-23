@@ -1,0 +1,44 @@
+ggml-rd L2: 41 cases, 2 packers, 2 kernels, control=swap-nb
+NOOP ADD ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
+NOOP MUL ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
+NOOP ADD ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
+NOOP MUL ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
+DETECTED ADD ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=4.731e-01 (max 1e-07) exact=10/50
+DETECTED MUL ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=1.434e+00 (max 1e-07) exact=10/50
+DETECTED ADD ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=8.435e-01 (max 1e-07) exact=40/200
+DETECTED MUL ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=2.576e-01 (max 1e-07) exact=40/200
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=7.579e-01 (max 1e-07) exact=120/600
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=7.557e-02 (max 1e-07) exact=120/600
+DETECTED ADD ne=[10,5,4,3] nr=[2,1,1,1]               out=[20,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=240/1200
+DETECTED MUL ne=[10,5,4,3] nr=[2,1,1,1]               out=[20,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=240/1200
+DETECTED ADD ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=8.782e-01 (max 1e-07) exact=120/1200
+DETECTED MUL ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=7.678e-02 (max 1e-07) exact=120/1200
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,2,1]               out=[10,5,8,3]         dispatches=1 nmse=8.807e-01 (max 1e-07) exact=150/1200
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,2,1]               out=[10,5,8,3]         dispatches=1 nmse=5.725e-03 (max 1e-07) exact=150/1200
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=7.674e-01 (max 1e-07) exact=240/1200
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=3.785e-02 (max 1e-07) exact=240/1200
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,2,2]               out=[10,5,8,6]         dispatches=1 nmse=9.308e-01 (max 1e-07) exact=300/2400
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,2,2]               out=[10,5,8,6]         dispatches=1 nmse=5.833e-03 (max 1e-07) exact=300/2400
+DETECTED ADD ne=[10,5,4,3] nr=[1,2,2,2]               out=[10,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=480/4800
+DETECTED MUL ne=[10,5,4,3] nr=[1,2,2,2]               out=[10,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=480/4800
+DETECTED ADD ne=[10,5,4,3] nr=[2,2,2,2]               out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
+DETECTED MUL ne=[10,5,4,3] nr=[2,2,2,2]               out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=8.689e-01 (max 1e-07) exact=120/600
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=7.660e-02 (max 1e-07) exact=120/600
+DETECTED ADD ne=[10,5,4,3] nr=[2,2,2,2] perm1         out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
+DETECTED MUL ne=[10,5,4,3] nr=[2,2,2,2] perm1         out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
+DETECTED ADD ne=[10,5,4,6] nr=[1,1,1,1] overlap       out=[10,5,4,4]         dispatches=1 nmse=8.135e-01 (max 1e-07) exact=160/800
+DETECTED MUL ne=[10,5,4,6] nr=[1,1,1,1] overlap       out=[10,5,4,4]         dispatches=1 nmse=5.575e-03 (max 1e-07) exact=160/800
+DETECTED ADD ne=[7,3,5,2] nr=[3,1,1,1]                out=[21,3,5,2]         dispatches=1 nmse=7.859e-01 (max 1e-07) exact=126/630
+DETECTED MUL ne=[7,3,5,2] nr=[3,1,1,1]                out=[21,3,5,2]         dispatches=1 nmse=5.401e-03 (max 1e-07) exact=126/630
+DETECTED ADD ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=5.691e-01 (max 1e-07) exact=13/143
+DETECTED MUL ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=1.074e+01 (max 1e-07) exact=13/143
+DETECTED ADD ne=[1280,1,1,1] nr=[1,16,16,1]           out=[1280,16,16,1]     dispatches=1 nmse=9.252e-01 (max 1e-07) exact=20480/327680
+DETECTED MUL ne=[1280,1,1,1] nr=[1,16,16,1]           out=[1280,16,16,1]     dispatches=1 nmse=6.266e-03 (max 1e-07) exact=20480/327680
+DETECTED ADD ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatches=1 nmse=1.007e+00 (max 1e-07) exact=1024/655360
+DETECTED MUL ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatches=1 nmse=6.635e-03 (max 1e-07) exact=1024/655360
+DETECTED ADD inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=4.558e-01 (max 1e-07) exact=36/144
+DETECTED MUL inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=1.440e-01 (max 1e-07) exact=36/144
+DETECTED ADD then MUL chain [9,7,5,3]                 out=[9,7,5,3]          dispatches=2 nmse=1.000e+00 (max 1e-07) exact=135/945
+summary: swapped strides detected in 37 cases, missed in 0, no-op in 4 (of those, 4 still OK)
+RESULT: PASS

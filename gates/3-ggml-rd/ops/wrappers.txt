@@ -1,0 +1,26 @@
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+attach again: ATTACHED (ggml_rd_close first to re-attach)
+ggml_probe_chain -> STARTED probe chain
+  same-frame ggml_pump: RUNNING frames=1 pumps=1 vm_ms=43.4 waits=0 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  status: DONE frames=3 pumps=3 vm_ms=94.0 waits=1 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE chain n=256 status=0 nodes=256 dispatches=256 barriers=255 exact=256/256 x[0]=256 x[255]=256 barrier_all=0
+  RESULT: PASS (chain)
+ggml_probe_files -> STARTED probe files
+  same-frame ggml_pump: RUNNING frames=1 pumps=3 vm_ms=1.3 waits=1 coops=0 reads=1 read_bytes=16384 uploads=1 upload_bytes=16384
+  status: DONE frames=2 pumps=4 vm_ms=4.5 waits=1 coops=0 reads=1 read_bytes=16384 uploads=1 upload_bytes=16384
+  PROBE files path=<home>/AppData/Roaming/Godot/app_userdata/interactor-dress-on/ggml_upload_probe.f32 read_bytes=16384 upload_offset=512 upload_exact=4096/4096 x+x_exact=4096/4096 status=0
+  RESULT: PASS (files)
+ggml_probe_alias_rw -> STARTED probe alias
+  same-frame ggml_pump: RUNNING frames=1 pumps=1 vm_ms=6.1 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  status: DONE frames=2 pumps=2 vm_ms=11.7 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE alias rw kernel=add_f32 rounds=1000 barriers=999 elements=4096 exact=4096/4096 min=1000 max=1000 mean=1000.0 (want 1000)
+  RESULT: PASS (alias rw)
+ggml_ops_fault_short -> STARTED test-backend-ops -o ADD -b RD0 -p ne=\[10,5,4,3\] env[GGML_RD_FAULT=1]
+  same-frame ggml_pump: RUNNING frames=1 pumps=1 vm_ms=2697.2 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  status: DONE frames=21 pumps=21 vm_ms=3124.3 waits=20 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  0/20 tests passed
+  Backend RD0: [1;31mFAIL[0m
+stats: graphs=96 nodes=397 dispatches=292 skipped=105 barriers=270 failed_graphs=0 last{nodes=17 dispatches=7 barriers=6 skipped=10} pipelines=1 set0_created=22 slots_created=256 coop_yields=1 waits=22 faults=35 params_bytes=74752 set_bytes=1157920 get_bytes=1887584 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=23 submits=23 recoveries=0 permanent_slots=0 | 29 of 29 Renderi
+close: CLOSED permanent_slots=0
+status after close: IDLE
+RESULT: PASS

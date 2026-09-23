@@ -164,7 +164,7 @@ tests/ggml_rd_kernels/build.sh
 ./build.sh && godot --path project --headless --import
 godot --path project --script gate_ggml_rd.gd --rendering-driver vulkan --xr-mode off -- \
   --ops=SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,DIAG_MASK_INF,ROPE \
-  --fault-ops=SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,ROPE --out=k1k5
+  --fault-ops=SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,ROPE --out=ops/k1k5
 godot --path project --script census_ggml_rd.gd --rendering-driver vulkan --xr-mode off -- --out=k1k5
 ```
 

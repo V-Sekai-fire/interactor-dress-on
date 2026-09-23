@@ -25,6 +25,8 @@ namespace probes {
 
 // probes_rows.cpp: NORM/RMS_NORM/SOFT_MAX GPU time on the census's shapes.
 bool rows_perf(ggml_backend_t be, const std::string &arg);
+// probe_conv.cpp (family K7): the census' IM2COL and CONV_3D shapes, timed.
+bool conv_perf(ggml_backend_t be, const std::string &which);
 
 namespace {
 
@@ -652,6 +654,13 @@ void job(void *) {
 		}
 	} else if (name == "mm_perf") {
 		mm_perf(g_args.arg.empty() ? "all" : g_args.arg);
+	} else if (name == "conv_perf") {
+		ggml_backend_t be = rd_backend();
+		const bool ok = be != nullptr && conv_perf(be, g_args.arg);
+		if (be != nullptr) {
+			ggml_backend_free(be);
+		}
+		result(ok, "conv_perf");
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -665,8 +674,8 @@ void set_device(rdc::Device *dev) {
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
 	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "perf"
-			&& name != "rows_perf" && name != "mm_perf" && !census::known(name)) {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias, census, perf, rows_perf, mm_perf)";
+			&& name != "rows_perf" && name != "mm_perf" && name != "conv_perf" && !census::known(name)) {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, census, perf, rows_perf, mm_perf, conv_perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

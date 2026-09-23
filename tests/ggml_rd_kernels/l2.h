@@ -33,6 +33,9 @@ struct L2Case {
 	// The output does not depend on the source values (SOFT_MAX of a one-element
 	// row is 1): the swapped-stride control cannot change it, so counts it NOOP.
 	bool value_blind = false;
+	// The source whose nb1 and nb2 the swap-nb control swaps: 0, or 1 for
+	// an op that reads src0 for its shape only (IM2COL).
+	int control_src = 0;
 };
 
 using L2Maker = void (*)(std::vector<L2Case> &out);

@@ -2,7 +2,8 @@
 //
 //   ggml_rd_l2                    every case: the kernels vs ggml-cpu
 //   ggml_rd_l2 --control=swap-nb  the same with src0's nb1 and nb2 swapped
-//                                 after packing: every case where the swap
+//                                 after packing (src1's for a case with
+//                                 control_src = 1): every case where the swap
 //                                 changes an address must FAIL
 //
 // The last line is "RESULT: PASS" or "RESULT: FAIL".
@@ -205,11 +206,12 @@ Outcome run_case(const L2Case &c, Control control) {
 		}
 		w[W_KERNEL] = uint32_t(p.kernel);
 		if (control == SWAP_NB) {
-			std::swap(w[W_SRC0 + T_NB + 1], w[W_SRC0 + T_NB + 2]);
+			const uint32_t ws = c.control_src == 1 ? W_SRC1 : W_SRC0;
+			std::swap(w[ws + T_NB + 1], w[ws + T_NB + 2]);
 			// A no-op when the two strides are equal or neither dimension
 			// is ever indexed past 0.
-			const bool indexed = w[W_SRC0 + T_NE + 1] > 1 || w[W_SRC0 + T_NE + 2] > 1;
-			if (w[W_SRC0 + T_NB + 1] != w[W_SRC0 + T_NB + 2] && indexed) {
+			const bool indexed = w[ws + T_NE + 1] > 1 || w[ws + T_NE + 2] > 1;
+			if (w[ws + T_NB + 1] != w[ws + T_NB + 2] && indexed) {
 				o.swap_noop = false;
 			}
 			// Swapped strides can reach past the memory block (a [1,16384]

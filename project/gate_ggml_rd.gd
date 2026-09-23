@@ -37,13 +37,15 @@
 # each run's full output in run-<name>.log beside it; the last line is
 # RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
 #
-# User arguments (after `--`) override the defaults, so an op family runs
-# its own ops into its own evidence folder without editing this file:
+# An op family runs the same gate on its own ops, into its own folder,
+# with user arguments after `++` (or `--`), e.g.
+#   ... --script gate_ggml_rd.gd --rendering-driver vulkan --xr-mode off ++ \
+#       --ops=IM2COL,CONV_3D --fault-ops=IM2COL,CONV_3D --out=ops-k7 --probe=conv_perf:all
 #   --ops=NORM,RMS_NORM   the ops of "ops main" and "ops barrier_all" (OPS)
 #   --fault=NORM          the ops of the fault control (FAULT_OPS; also
 #                         spelled --fault-ops=)
-#   --out=<name>          results in gates/3-ggml-rd/ops/<name>/; with a
-#                         slash, a folder from the checkout (OUT_DIR)
+#   --out=<folder>        results in gates/3-ggml-rd/<folder>/ (e.g. ops-k7,
+#                         ops/k1k5); a path starting gates/ is from the checkout
 #   --probe=rows_perf[:arg]  one more probe after the ops runs (repeatable);
 #                            it must print RESULT: PASS
 #   runs=ops_main,probe_mm_perf  only those runs (the verdicts of the runs left
@@ -114,8 +116,7 @@ func _strip_ansi(t: String) -> String:
 	re.compile("\u001b\\[[0-9;]*m")
 	return re.sub(t, "", true)
 
-func _initialize() -> void:
-	_t0 = Time.get_ticks_msec()
+func _parse_user_args() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--ops="):
 			_ops = a.trim_prefix("--ops=")
@@ -128,9 +129,12 @@ func _initialize() -> void:
 			var parg: String = pa[1] if pa.size() > 1 else ""
 			_extra_probes.append(["probe_" + pa[0] + ("_" + parg if parg != "" else ""), "probe", pa[0], parg, ""])
 		elif a.begins_with("--out="):
-			# A bare name lands under ops/; a path is taken from the checkout.
 			var o := a.trim_prefix("--out=").trim_suffix("/")
-			_out_dir = ("res://../" + o + "/") if o.contains("/") else (OUT_DIR + o + "/")
+			_out_dir = ("res://../" + o + "/") if o.begins_with("gates/") else ("res://../gates/3-ggml-rd/" + o + "/")
+
+func _initialize() -> void:
+	_t0 = Time.get_ticks_msec()
+	_parse_user_args()
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	_rd = RenderingServer.create_local_rendering_device()

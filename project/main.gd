@@ -433,6 +433,10 @@ func ggml_probe_perf() -> String: return ggml_probe_start("perf", "all", "")
 func ggml_ops_move() -> String: return ggml_ops_start("-o CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT -b RD0", "")
 func ggml_ops_move_fault() -> String: return ggml_ops_start("-o DUP,CONT,GET_ROWS,CONCAT,REPEAT -p ^(?!type=i32,) -b RD0", "GGML_RD_FAULT=1")  # must FAIL
 func ggml_probe_perf_move() -> String: return ggml_probe_start("perf", "move", "")  # GPU time per op, hot shapes
+# Family K7 (IM2COL, CONV_3D).
+func ggml_ops_conv() -> String: return ggml_ops_start("-o IM2COL,CONV_3D -b RD0", "")
+func ggml_ops_conv_fault() -> String: return ggml_ops_start("-o IM2COL,CONV_3D -b RD0", "GGML_RD_FAULT=1")  # must FAIL
+func ggml_probe_conv_perf() -> String: return ggml_probe_start("conv_perf", "all", "")
 func ggml_probe_files() -> String:
 	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)

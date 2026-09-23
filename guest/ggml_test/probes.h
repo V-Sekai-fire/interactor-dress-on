@@ -46,6 +46,9 @@
 //                    cancels the frame and the packing. Every shape's last
 //                    output is checked against a double sum over the same
 //                    inputs (3 columns x first and last batch): nmse < 1e-8.
+//   conv_perf <shape|all>  (probe_conv.cpp) the census' hottest IM2COL and
+//                    CONV_3D shapes: host-timed graphs of 1 and 9 copies,
+//                    and 4096 sampled outputs against a reference.
 #pragma once
 
 #include <string>

@@ -70,6 +70,10 @@ static const KernelDesc kKernels[] = {
 	{ "mul_mat_serial_vec_f16_f32", { 32, 8, 1 } },
 	{ "mul_mat_serial_vec_bf16_f32", { 32, 8, 1 } },
 	{ "mul_mat_serial_vec_f16_f16", { 32, 8, 1 } },
+	{ "im2col_f32", { 256, 1, 1 } },
+	{ "im2col_f16", { 256, 1, 1 } },
+	{ "conv3d_f32", { 256, 1, 1 } },
+	{ "conv3d_f16", { 256, 1, 1 } },
 };
 static const uint32_t kKernelCount = sizeof(kKernels) / sizeof(kKernels[0]);
 

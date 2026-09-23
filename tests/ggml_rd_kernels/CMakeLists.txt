@@ -50,13 +50,10 @@ target_include_directories(ggml_rd_l2 PRIVATE
 	${ROOT}/kernels/ggml/cpp
 	${ROOT}/guest/avbd/slang-rt
 )
-# An index past the memory block reads/writes element 0 instead of faulting
-# (as a GPU's robust buffer access would not fault): the swap-nb control moves
-# addresses of the large cases past the 256 MiB block.
+# An emit's out-of-range index reads and writes element 0 instead of leaving
+# the memory block, as a robust Vulkan device keeps an access inside its
+# buffer: the swap-nb control's swapped strides point far past the block
+# (MUL_MAT's src0, the row kernels' large cases) and must then fail a case,
+# not the process. Cases that pass never index out of range.
 target_compile_definitions(ggml_rd_l2 PRIVATE SLANG_ENABLE_BOUND_ZERO_INDEX)
 target_link_libraries(ggml_rd_l2 PRIVATE ggml ggml-cpu ggml-base -static)
-# An out-of-range index reads and writes element 0 instead of leaving the
-# memory block (the control arm swaps strides, which sends MUL_MAT's src0
-# reads far past it; the GPU's robust buffer access keeps them in the buffer
-# the same way). Cases that pass never index out of range.
-target_compile_definitions(ggml_rd_l2 PRIVATE SLANG_ENABLE_BOUND_ZERO_INDEX)

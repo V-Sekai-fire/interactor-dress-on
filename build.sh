@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Build the guest ELFs (one per stage: dress_on, drape, curvenet; and Gate
-# 0F's probes) for the RISC-V sandbox and drop them into project/.
+# Build the guest ELFs (one per stage: dress_on, drape, curvenet; Gate
+# 0F's probes; Gate 3's ggml_test) for the RISC-V sandbox and drop them
+# into project/.
 #
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
-#   GGML_SRC=<V-Sekai-fire/ggml checkout> ./build.sh   # probes.elf's probe 15, until vendor/ggml
+#   GGML_EMIT=1 ./build.sh    # also check kernels/ggml against a fresh Lean emission
 #
 # Needs: cmake, ninja, a clang++ with a riscv64 target (auto-located if the
 # bare clang++ is mingw-only), and the riscv64 glibc sysroot from the org's
@@ -60,12 +61,21 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/probes/gen.sh" --no-emit
 fi
 
+# The ggml-rd kernels (Cut 3), same pattern: GGML_EMIT=1 re-emits them from
+# lean/ and fails if they differ from the committed kernels/ggml/slang/ (an
+# op family writes them with kernels/ggml/gen.sh --update).
+if [ "${GGML_EMIT:-0}" = 1 ]; then
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/ggml/gen.sh"
+else
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/ggml/gen.sh" --no-emit
+fi
+
 if [ ! -f "$BUILD/build.ninja" ]; then
 	cmake -S "$HERE" -B "$BUILD" -G Ninja \
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
 		-DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
-		-DCMAKE_BUILD_TYPE=Release \
-		${GGML_SRC:+-DGGML_SRC="$GGML_SRC"}
+		-DCMAKE_BUILD_TYPE=Release
 fi
 cmake --build "$BUILD"
-ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf"
+ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" \
+	"$HERE/project/probes.elf" "$HERE/project/ggml_test.elf"

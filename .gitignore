@@ -8,3 +8,6 @@ tools/oxrsys/
 /models/
 /.venv-convert/
 lean/.lake/
+
+# Gate 3 writes this probe input at run time.
+/gates/3-ggml-rd/ops/upload_probe.f32

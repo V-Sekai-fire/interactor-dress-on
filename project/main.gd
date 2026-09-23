@@ -328,3 +328,109 @@ func curvenet_extract_demo() -> String:
 	var c := MeshWire.cube()
 	var r := _cn_call("curvenet_extract", [c.vertices, c.triangles, 200, 1e-3, 1e-2, 0.0])
 	return r
+
+# --- Cut 3: ggml_test.elf, ggml-rd under test-backend-ops ----------------------
+# Its own Sandbox, created on first use, with a host-owned local
+# RenderingDevice that the guest adopts. A job (test-backend-ops, or a probe)
+# runs on a guest fiber; _process pumps it once per frame through
+# infer_host.gd (WAIT_GPU / COOP / READ / UPLOAD / DONE / ERROR), so a sync
+# always lands a frame after its submit (rule 4). gate_ggml_rd.gd is the
+# gate. Every entry point has a wrapper of its own name with its arguments
+# defaulted (AGENTS.md rule 8), and the gate's runs have presets; start one,
+# then poll ggml_job_status() until it is not RUNNING.
+
+const GGML_TOTAL_MB := 24576  # what ggml-rd reports as device memory (Godot has no call for it)
+
+var _ggml = null                      # the Sandbox running ggml_test.elf
+var _ggml_rd: RenderingDevice = null  # the device the guest adopted
+var _ggml_host = null                 # InferHost: pumps the running job
+var _ggml_pumped_frame := -1          # at most one pump per frame (rule 4)
+
+func ggml_attach(total_mb: int = GGML_TOTAL_MB) -> String:
+	if _ggml != null:
+		return "ATTACHED (ggml_rd_close first to re-attach)"
+	var sb = ClassDB.instantiate("Sandbox")
+	if sb == null:
+		return "FAIL: no Sandbox class"
+	_ggml = sb
+	add_child(_ggml)
+	_ggml.memory_max = 2048  # before program= (Gate 0F): whole test tensors live in the heap
+	_ggml.program = load("res://ggml_test.elf")
+	_ggml.references_max = 65536
+	_ggml.execution_timeout = 1000000  # host calls are charged against it (Gate 0F finding 6)
+	_ggml_rd = RenderingServer.create_local_rendering_device()
+	var r := str(_ggml.vmcall("ggml_attach", _ggml_rd, total_mb))
+	_ggml_host = preload("res://infer_host.gd").new(_ggml, _ggml_rd, "ggml_pump")
+	_ggml_host.state = "done"
+	return r
+
+func _ggml_started(r: String) -> String:
+	if r.begins_with("STARTED"):
+		_ggml_host.reset()
+	return r
+
+func ggml_ops_start(args: String = "-o ADD,MUL -b RD0", env: String = "") -> String:
+	var e := "" if _ggml != null else ggml_attach()
+	if _ggml == null:
+		return e
+	return _ggml_started(str(_ggml.vmcall("ggml_ops_start", args, env)))
+
+func ggml_probe_start(name: String = "chain", arg: String = "256", env: String = "") -> String:
+	var e := "" if _ggml != null else ggml_attach()
+	if _ggml == null:
+		return e
+	return _ggml_started(str(_ggml.vmcall("ggml_probe_start", name, arg, env)))
+
+# One pump, at most once per frame; _process calls it too.
+func ggml_pump() -> String:
+	var f := Engine.get_process_frames()
+	if _ggml_host != null and _ggml_host.state == "running" and f != _ggml_pumped_frame:
+		_ggml_pumped_frame = f
+		_ggml_host.pump_frame()
+	return ggml_job_status()
+
+func ggml_output() -> String:
+	return str(_ggml.vmcall("ggml_output")) if _ggml != null else "IDLE"
+
+func ggml_rd_stats() -> String:
+	return str(_ggml.vmcall("ggml_rd_stats")) if _ggml != null else "IDLE"
+
+func ggml_rd_close() -> String:
+	if _ggml == null:
+		return "IDLE"
+	var r := str(_ggml.vmcall("ggml_rd_close"))
+	if r.begins_with("CLOSED"):
+		_ggml.queue_free()
+		_ggml = null
+		_ggml_host = null
+		if _ggml_rd != null:
+			_ggml_rd.free()
+			_ggml_rd = null
+	return r
+
+# "RUNNING ...", "DONE ..." or "ERROR ...", with the pump counters.
+func ggml_job_status() -> String:
+	if _ggml_host == null:
+		return "IDLE"
+	return "%s %s%s" % [_ggml_host.state.to_upper(), _ggml_host.summary(),
+			(" " + _ggml_host.text) if _ggml_host.text != "" else ""]
+
+# The gate's runs (gate_ggml_rd.gd), as presets.
+func ggml_ops_add_mul() -> String: return ggml_ops_start("-o ADD,MUL -b RD0", "")
+func ggml_ops_barrier_all() -> String: return ggml_ops_start("-o ADD,MUL -b RD0", "GGML_RD_BARRIER_ALL=1")
+func ggml_ops_fault() -> String: return ggml_ops_start("-o ADD -b RD0", "GGML_RD_FAULT=1")  # must FAIL
+func ggml_probe_chain() -> String: return ggml_probe_start("chain", "256", "")
+func ggml_probe_independent() -> String: return ggml_probe_start("independent", "64", "")
+func ggml_probe_alias_rw() -> String: return ggml_probe_start("alias", "rw", "")
+func ggml_probe_alias_ro() -> String: return ggml_probe_start("alias", "ro", "")  # the control: must lose counts
+func ggml_probe_files() -> String:
+	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	for i in 4096:
+		f.store_float(0.5 * i - 7.25)
+	f.close()
+	return ggml_probe_start("files", path, "")
+
+func _process(_delta: float) -> void:
+	if _ggml_host != null and _ggml_host.state == "running":
+		ggml_pump()

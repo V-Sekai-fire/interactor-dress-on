@@ -1,0 +1,33 @@
+ROW 0
+CENSUS NEG [256,1,1,1] (timing floor, not census) range [-1,1): nmse=2.007e+00 (max 1e-07) exact=0/256 inf_ok=1 nan=0 nmse_vs_f64: rd=2.007e+00 cpu=0.000e+00 FAIL
+ROW 1
+CENSUS SILU [3072,1,2,1] (skin-tokens x10724) range [-8,8): nmse=1.313e+00 (max 1e-07) exact=0/6144 inf_ok=1 nan=0 nmse_vs_f64: rd=1.313e+00 cpu=1.616e-15 FAIL
+ROW 2
+CENSUS SILU [3072,514,1,1] (skin-tokens x56) range [-8,8): nmse=1.314e+00 (max 1e-07) exact=0/1579008 inf_ok=1 nan=0 nmse_vs_f64: rd=1.314e+00 cpu=1.664e-15 FAIL
+ROW 3
+CENSUS SILU [4096,32,1,1] (Pixal3D x40) range [-8,8): nmse=1.314e+00 (max 1e-07) exact=0/131072 inf_ok=1 nan=0 nmse_vs_f64: rd=1.314e+00 cpu=1.648e-15 FAIL
+ROW 4
+CENSUS SILU [16,16,16,512] (Pixal3D x17) range [-8,8): nmse=1.313e+00 (max 1e-07) exact=0/2097152 inf_ok=1 nan=0 nmse_vs_f64: rd=1.313e+00 cpu=1.667e-15 FAIL
+ROW 5
+CENSUS GELU [8192,4096,1,1] (Pixal3D x60) range [-6,6): nmse=1.286e+00 (max 1e-07) exact=166198/33554432 inf_ok=1 nan=0 nmse_vs_f64: rd=1.286e+00 cpu=5.527e-08 FAIL
+ROW 6
+CENSUS GELU_ERF [2048,512,1,1] (skin-tokens x766) range [-6,6): nmse=1.290e+00 (max 1e-07) exact=1551/1048576 inf_ok=1 nan=0 nmse_vs_f64: rd=1.290e+00 cpu=1.035e-15 FAIL
+ROW 7
+CENSUS GELU_ERF [4096,1029,1,1] (Pixal3D x24) range [-6,6): nmse=1.287e+00 (max 1e-07) exact=6228/4214784 inf_ok=1 nan=0 nmse_vs_f64: rd=1.287e+00 cpu=1.038e-15 FAIL
+ROW 8
+CENSUS SIGMOID [1,16384,1,1] (skin-tokens x212) range [-12,12): nmse=9.230e-01 (max 1e-07) exact=0/16384 inf_ok=1 nan=0 nmse_vs_f64: rd=9.230e-01 cpu=1.376e-15 FAIL
+ROW 9
+CENSUS NEG [1,64,12,4096] (Pixal3D x120) range [-1,1): nmse=2.000e+00 (max 1e-07) exact=0/3145728 inf_ok=1 nan=0 nmse_vs_f64: rd=2.000e+00 cpu=0.000e+00 FAIL
+ROW 10
+CENSUS NEG [32,16,1024,1] (Pixal3D x48) range [-1,1): nmse=2.002e+00 (max 1e-07) exact=0/524288 inf_ok=1 nan=0 nmse_vs_f64: rd=2.002e+00 cpu=0.000e+00 FAIL
+ROW 11
+CENSUS SCALE [515,1,16,2] (skin-tokens x10724) range [-1,1): nmse=2.002e+00 (max 1e-07) exact=0/16480 inf_ok=1 nan=0 FAIL
+ROW 12
+CENSUS SCALE [54000,64,8,1] (census ne1 cut) (skin-tokens x822) range [-1,1): nmse=1.999e+00 (max 1e-07) exact=1/27648000 inf_ok=1 nan=0 FAIL
+ROW 13
+CENSUS DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) range [-1,1): nmse=2.000e+00 (max 1e-07) exact=2109456/4227136 inf_ok=1 nan=0 FAIL
+ROW 14
+CENSUS ROPE [128,8,514,1] (skin-tokens x21560) range [-1,1): nmse=4.436e-02 (max 1e-07) exact=677/526336 inf_ok=1 nan=0 FAIL
+census all: 0/15 rows OK
+RESULT: FAIL (census all)
+ggml_test: rd stats graphs=30 nodes=30 dispatches=30 skipped=0 barriers=0 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=8 set0_created=30 slots_created=1 coop_yields=0 waits=30 faults=15 params_bytes=7680 set_bytes=629890320 get_bytes=629886208 copies=0 clears=0 buffers_live=0 bytes_live=0

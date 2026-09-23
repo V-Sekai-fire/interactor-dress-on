@@ -1,0 +1,5 @@
+ROW 4
+PERF SILU [16,16,16,512] (Pixal3D x17) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=2097152 bytes_per_dispatch=16777216 OK
+perf 4: 1/1 rows OK
+RESULT: PASS (perf 4)
+ggml_test: rd stats graphs=60 nodes=3876 dispatches=3876 skipped=0 barriers=3816 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=35 slots_created=256 coop_yields=1 waits=60 faults=15 params_bytes=992256 set_bytes=629890320 get_bytes=629886208 copies=0 clears=5 buffers_live=0 bytes_live=0

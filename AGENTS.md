@@ -176,6 +176,12 @@ our own, no host DLL. The GPU is reachable only through Godot's
 - A native flat control built with llvm-mingw links libc++; the guest links
   libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
   between them from the same seed: use the engine's raw output (Gate 4).
+- test-backend-ops cannot fail an op on values where its output holds
+  infinities: `nmse()` sums `-inf - -inf = NaN`, and `NaN > max_err` is
+  false (DIAG_MASK_INF passes with every source read one element off).
+  Its inf check still catches a wrong position or sign. Judge such ops
+  with an inf-aware NMSE, as L2 and the census probe do
+  (gates/3-ggml-rd/k1k5).
 
 ## Conventions
 

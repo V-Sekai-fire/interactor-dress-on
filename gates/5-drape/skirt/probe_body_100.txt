@@ -1,0 +1,12 @@
+# probe_drape_skirt 2026-09-23T08:45:39 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=100 caps=false body=true
+mesh 2682 v 5220 f, 44 pins, 14 capsules, body 5128 v 10171 f
+    [drape-scene]  nV=0 nTri=0 nBend=0 nAttach=0 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+--- rd:10: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+    QUEUED forward 100 on rd
+    IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=-3.280416 friction_events=87559 projections=39452 self_pushes=6881 wall_ms=4359.2 ms/step=43.592 | ticks=301 non-finite vertices 0 of 2682 (first -1)
+    [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+--- rd:10:selfCollision=0: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+    QUEUED forward 100 on rd
+    IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=-3.274353 friction_events=88022 projections=39466 self_pushes=0 wall_ms=4063.6 ms/step=40.636 | ticks=101 non-finite vertices 0 of 2682 (first -1)
+CLOSED device=freed permanent_slots=0
+END

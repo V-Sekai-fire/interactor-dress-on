@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstdio>
 
+#include "body_mesh.h"
+
 namespace {
 
 // Upstream stores the plane's corner points as Particle::pos, a Vec3f.
@@ -84,6 +86,39 @@ Primitive make_capsule(const v3d &bottom, const v3d &axis, double radius, double
 	p.mu = mu;
 	return p;
 }
+
+Primitive make_mesh_collider(std::shared_ptr<const BodyMesh> body, double skin, double band, double depth, double mu) {
+	Primitive p;
+	p.kind = PrimKind::Mesh;
+	p.body = std::move(body);
+	p.skin = skin;
+	p.band = band;
+	p.depth = depth;
+	p.mu = mu;
+	return p;
+}
+
+namespace {
+
+// The body's closest point to `pos` within reach of a contact, the outward
+// normal there and the signed distance to the skin.
+bool mesh_query(const Primitive &pr, const v3d &pos, BodyMesh::Hit &h, v3d &normal, double &dist, double &l) {
+	if (!pr.body) {
+		return false;
+	}
+	const double R = std::max(pr.depth, pr.skin + pr.band);
+	if (!pr.body->closest(pos, R * R, h)) {
+		return false;
+	}
+	const v3d d = pos - h.point;
+	l = std::sqrt(h.dist2);
+	const double side = d.dot(h.pseudo) >= 0.0 ? 1.0 : -1.0;
+	normal = l > 1e-12 ? d * (side / l) : h.pseudo;
+	dist = side * l - pr.skin;
+	return true;
+}
+
+} // namespace
 
 bool Primitive::isInContact(const v3d &pos, const v3d &vel, v3d &normal, double &dist, v3d &v_out) const {
 	(void)vel;
@@ -167,6 +202,15 @@ bool Primitive::isInContact(const v3d &pos, const v3d &vel, v3d &normal, double 
 			}
 			return dist < delta;
 		}
+		case PrimKind::Mesh: {
+			BodyMesh::Hit h;
+			double l = 0.0;
+			if (!mesh_query(*this, pos, h, normal, dist, l)) {
+				return false;
+			}
+			v_out = velocity;
+			return dist < band;
+		}
 	}
 	return false;
 }
@@ -203,6 +247,29 @@ m3d Primitive::projectionJacobian(const v3d &pos) const {
 			const v3d n = d / l;
 			return aa + (m3d::identity() - aa - m3d::outer(n, n)) * ((radius + 0.1) / l);
 		}
+		case PrimKind::Mesh: {
+			// p' = c + skin n: on a face c moves in the plane (I - N N^T);
+			// on an edge along it (a a^T) and n turns about it; at a corner
+			// c is fixed and n turns about it.
+			BodyMesh::Hit h;
+			v3d n;
+			double dist = 0.0, l = 0.0;
+			if (!mesh_query(*this, pos, h, n, dist, l)) {
+				return m3d::identity();
+			}
+			if (h.region == BodyMesh::Region::Face) {
+				return m3d::identity() - m3d::outer(h.pseudo, h.pseudo);
+			}
+			if (!(l > 0.0)) {
+				return m3d::identity();
+			}
+			const m3d nn = m3d::outer(n, n);
+			if (h.region == BodyMesh::Region::Vertex) {
+				return (m3d::identity() - nn) * (skin / l);
+			}
+			const m3d aa = m3d::outer(h.edgeDir, h.edgeDir);
+			return aa + (m3d::identity() - aa - nn) * (skin / l);
+		}
 	}
 	return m3d::identity();
 }
@@ -220,6 +287,11 @@ std::string Primitive::describe() const {
 		case PrimKind::Capsule:
 			std::snprintf(b, sizeof b, "capsule c=(%g,%g,%g) a=(%g,%g,%g) r=%g len=%g mu=%.6f", center.x, center.y,
 					center.z, axis.x, axis.y, axis.z, radius, length, mu);
+			break;
+		case PrimKind::Mesh:
+			std::snprintf(b, sizeof b, "mesh nV=%zu nTri=%u bvh=%zu skin=%g band=%g depth=%g mu=%.6f",
+					body ? body->v.size() : size_t(0), body ? body->nTri() : 0u, body ? body->nodes() : size_t(0), skin,
+					band, depth, mu);
 			break;
 	}
 	return b;

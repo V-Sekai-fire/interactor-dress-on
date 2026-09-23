@@ -37,8 +37,12 @@ public:
 	// to AvbdRd so drivers are templated over the backend.
 	int run(int iters, bool duals) {
 		for (int i = 0; i < iters; ++i) {
-			if (step() != 0) {
+			const bool last = i + 1 == iters && dbgColor_ >= 0;
+			if (step_impl(last ? dbgColor_ : -1, last ? dbgStage_ : 5) != 0) {
 				return -1;
+			}
+			if (last) {
+				break;
 			}
 			if (duals) {
 				stepDualAttachments();
@@ -99,6 +103,16 @@ public:
 	// wrong once a dual update has run after the step.
 	void setLambdaSnapshotForTest(bool use) { useLambdaSnapshot_ = use; }
 
+	// The per-kernel bisection's hooks, as AvbdRd's (avbd_rd.h): the last
+	// iteration of run() stops in colour `color` after `stage` (0 init and the
+	// four force kernels, 1-4 the gathers, 5 the solve); -1 runs whole
+	// iterations. readDebugForTest reads a buffer by the kernels' name.
+	void setDebugStopForTest(int color, int stage) {
+		dbgColor_ = color;
+		dbgStage_ = stage;
+	}
+	std::vector<float> readDebugForTest(const char *name) const;
+
 	void restrictToOwned(uint32_t nOwned);
 	void setPositions(const float *positions);
 
@@ -107,6 +121,9 @@ public:
 	bool ready() const { return meshReady_; }
 
 private:
+	// One iteration; colour `stopColor` (-1: none) ends after `stopStage`.
+	int step_impl(int stopColor, int stopStage);
+	int dbgColor_ = -1, dbgStage_ = -1;
 	uint32_t nVerts_ = 0, nSprings_ = 0, nAttach_ = 0, nTri_ = 0, nBend_ = 0;
 	float invHSq_ = 0.0f;
 	float beta_ = 0.0f, penaltyMax_ = 1e10f;

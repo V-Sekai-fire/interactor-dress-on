@@ -1,0 +1,28 @@
+# probe_drape_skirt 2026-09-23T08:37:38 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=1 caps=false
+mesh 2682 v 5220 f, 44 pins, 14 capsules
+DATA mesh_obj 185598 bytes, 1 keys
+DATA mesh_pins 194 bytes, 2 keys
+DATA mesh_capsules 1229 bytes, 3 keys
+STARTED mesh_bisect rd scale=10 caps=0
+ticks=17 wall_s=2.2
+PASS mesh_bisect mesh x10: rd stays finite and within 0.001 of cpu over 16 iterations of the first step
+[drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+[drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0 colours cpu 9 rd 9
+iteration  1: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 4.77e-07 at v463
+iteration  2: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v187
+iteration  3: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v263
+iteration  4: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v263
+iteration  5: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v343
+iteration  6: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v343
+iteration  7: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v559
+iteration  8: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v23
+iteration  9: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
+iteration 10: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v76
+iteration 11: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v114
+iteration 12: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
+iteration 13: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
+iteration 14: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
+iteration 15: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v42
+iteration 16: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v71
+CLOSED device=freed permanent_slots=0
+END

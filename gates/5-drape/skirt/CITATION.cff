@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: If you use these files, cite cloth-fit's garment-data they come from and the paper it accompanies.
+title: The fitted LCL skirt on FoxGirl, Gate 5 G10's drape scene
+abstract: >-
+  G10's scene, from Gate 8's integration run fitdrape3 (cut-8 branch,
+  gates/8-loop). body.obj is Gate 8's FoxGirl fixture
+  (project/fixtures/foxgirl/avatar.obj on cut-8: cloth-fit's garment-data
+  assets/avatars/FoxGirl/avatar.obj, converted by
+  tools/fixtures/foxgirl_convert.py: Blender (x, y, z) -> Godot (x, z, -y),
+  scaled by 0.283917636 to 1.7 m, feet on y = 0), unchanged.
+  fitted_skirt.obj is fit.elf's result for LCL_Skirt_DressEvening_003 on that
+  body in fitdrape3 (fitdrape3.fitted.obj, body metres, the garment fixture's
+  2682 vertices and 5220 triangles), rewritten with 9 decimals by
+  skirt_prep.py. fitted_skirt_pins.txt is the mesh's boundary loop with the
+  highest mean y (44 vertices, 0-based), as pipeline.gd picks the waist pins.
+  fitted_skirt_capsules.txt is fitdrape3.json's 14 skeleton capsules (bottom,
+  unit axis, radius, length in body metres; radius = median skin distance
+  less 0.1 / 10, the contact offset at drape scale 10).
+authors:
+  - name: Zizhou Huang
+  - name: The PolyFEM contributors
+  - name: K. S. Ernest (iFire) Lee
+repository-code: https://github.com/V-Sekai-fire/cloth-fit
+commit: d2bd59a61d73048c2431bf25bfc7d125c7a8a37d
+license: MIT

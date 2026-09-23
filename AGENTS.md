@@ -168,6 +168,10 @@ our own, no host DLL. The GPU is reachable only through Godot's
   references_max, execution_timeout before `program=`; a missing ELF or
   entry point is a reason, not an error). In XR the root viewport reads back
   black: screenshot a SubViewport on the same World3D.
+- The GPU and the guest CPU round the same Slang differently (the driver
+  forms FMAs slangc's cpp build does not), so a sum at float noise can be
+  exactly 0 on rd and not on cpu. Guard every division by a computed norm in
+  the Lean kernel (Gate 5 G10: a bending hinge went NaN on rd only).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 - godot-sandbox's guest heap has no aligned entry point (malloc/calloc/

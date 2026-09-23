@@ -1,0 +1,25 @@
+# probe_drape_skirt 2026-09-23T08:27:17 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=1 caps=false
+mesh 2682 v 5220 f, 44 pins, 14 capsules
+--- rd:10: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=43.8 ms/step=43.830 | ticks=3 non-finite vertices 2682 of 2682 (first 0)
+--- rd:5: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE DONE forward rd steps=1 (+1 of 1) finite=yes ymin=1.444200 friction_events=0 projections=0 self_pushes=4 wall_ms=26.1 ms/step=26.062 | ticks=4 non-finite vertices 0 of 2682 (first -1)
+--- rd:10:selfCollision=0: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=15.9 ms/step=15.945 | ticks=2 non-finite vertices 2682 of 2682 (first 0)
+--- rd:10:iters=1: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=2.889935 friction_events=0 projections=0 self_pushes=16 wall_ms=8.6 ms/step=8.646 | ticks=4 non-finite vertices 72 of 2682 (first 264)
+--- rd:10:colors=0: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=2.910234 friction_events=0 projections=0 self_pushes=10 wall_ms=9.0 ms/step=8.985 | ticks=4 non-finite vertices 1895 of 2682 (first 0)
+--- rd:10:bending=0: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE DONE forward rd steps=1 (+1 of 1) finite=yes ymin=2.888211 friction_events=0 projections=0 self_pushes=14 wall_ms=11.4 ms/step=11.429 | ticks=4 non-finite vertices 0 of 2682 (first -1)
+--- rd:10:membrane=0: LOADED rd [drape-scene] mesh nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0
+    QUEUED forward 1 on rd
+    IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=16.0 ms/step=15.951 | ticks=3 non-finite vertices 2682 of 2682 (first 0)
+CLOSED device=freed permanent_slots=0
+END

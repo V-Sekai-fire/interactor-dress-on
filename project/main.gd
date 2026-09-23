@@ -122,6 +122,9 @@ func drape_scene_mesh(positions: PackedFloat32Array = PackedFloat32Array(), tria
 		pins: PackedInt32Array = PackedInt32Array(), material: PackedFloat32Array = PackedFloat32Array()) -> String:
 	return drape.drape_scene_mesh(positions, triangles, pins, material)
 func drape_primitive(kind: String = "clear", params: PackedFloat32Array = PackedFloat32Array()) -> String: return drape.drape_primitive(kind, params)
+func drape_primitive_mesh(positions: PackedFloat32Array = PackedFloat32Array(), triangles: PackedInt32Array = PackedInt32Array(),
+		params: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return drape.drape_primitive_mesh(positions, triangles, params)
 func drape_config(key: String = "iters", value: float = 16.0) -> String: return drape.drape_config(key, value)
 func drape_forward(steps: int = 100) -> String: return drape.drape_forward(steps)
 func drape_target(kind: String = "trajectory", verts: PackedInt32Array = PackedInt32Array(),

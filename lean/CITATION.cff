@@ -31,7 +31,10 @@ abstract: >-
   v0.0.6 plus the half and double scalars and the litHalf, litInt and cast
   expressions (additive; the AVBD emission is byte-identical), and not to
   main, whose libslang FFI extern_lib default target breaks lake exe on
-  Windows. No Lean source is modified.
+  Windows. No Lean source is modified. Local additions, not from
+  cloth-dynamics: Drape.lean, Drape/ (the drape L-BFGS-B kernels, a port of
+  LBFGSpp's algorithm; see kernels/drape/CITATION.cff), EmitDrape.lean, and
+  the lean_lib Drape and lean_exe emit_drape entries in lakefile.lean.
 type: software
 authors:
   - name: K. S. Ernest (Fire) Lee

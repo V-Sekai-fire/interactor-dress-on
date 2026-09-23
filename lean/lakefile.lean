@@ -22,6 +22,13 @@ require plausible from git
 lean_exe emit_shaders where
   root := `EmitShaders
 
+-- drape.elf's L-BFGS-B kernels (Cut 5). A default target, so a bare
+-- `lake build` checks their native_decide pins as well as Cloth's.
+@[default_target] lean_lib Drape
+
+lean_exe emit_drape where
+  root := `EmitDrape
+
 -- Iterative-deepening witness search over the plausible ladder. Shares
 -- the `Level` shape (walkSteps / finBound / numInst) that witness-cpp
 -- mirrors on the C++ side, so a property stated here and a property

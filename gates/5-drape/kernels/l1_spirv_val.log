@@ -1,0 +1,12 @@
+# spirv-val --target-env vulkan1.2 over build/spv-drape (kernels/drape/gen.sh), SPIRV-Tools v2026.3 v2026.3.rc1-0-gb707790a
+dot_reduce valid 3332 bytes caps: Shader 
+lb_apply_m valid 7944 bytes caps: Shader 
+lb_box_project valid 1500 bytes caps: Shader 
+lb_cauchy valid 37768 bytes caps: Shader 
+lb_compact valid 11168 bytes caps: Shader 
+lb_multi_dot valid 4304 bytes caps: Shader 
+lb_pg_inf valid 3048 bytes caps: Shader 
+lb_ring_store valid 1980 bytes caps: Shader 
+lb_step_max valid 3928 bytes caps: Shader 
+lb_subspace valid 98228 bytes caps: Shader 
+saxpby valid 1656 bytes caps: Shader 

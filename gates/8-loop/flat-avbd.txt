@@ -1,0 +1,12 @@
+STATE INFER              141 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 21 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1156 ms  vm    1094.0 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               644 ms  vm     635.2 ms  heap 3.1 MiB  frames 1165  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN          363 ms  vm     351.7 ms  heap 2.7 MiB  frames 1  FIT(avbd): QUEUED fit 300 on rd | 932 fit vertices (0 nofit), k 60.0 gap 0.0 iters 32 steps <= 300 tol 0.0005 refresh 1 kBend 0.00001 | fit.elf fit_begin STARTED on the worker (for CHECK)
+STATE FIT_RUN          12918 ms  vm   12340.8 ms  heap 77.2 MiB  frames 901  IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00213 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1308 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0093 sim_s=0.6946 sim_rot_deg=2.549 y=6.4996..9.5814 finite=yes projections=150190 self_pushes=3341 wall_ms=12914.2 ms/step=43.047
+STATE FIT_READ             4 ms  vm       0.1 ms  heap 77.2 MiB  frames 1  FIT(avbd) 932 v
+STATE CHECK              853 ms  vm    2939.3 ms  heap 8.3 MiB  frames 1  OK none | control (one vertex pushed inside): OK INTERSECTS edge (5334,5634) face (2803,2624,2881)
+STATE DRAPE              173 ms  vm     154.1 ms  heap 2.7 MiB  frames 1  QUEUED forward 100 on rd | body mesh, 64 pins, scale 10.0
+STATE DRAPE_COLLECT     2190 ms  vm    2045.3 ms  heap 23.9 MiB  frames 256  IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.723830 friction_events=53339 projections=22627 self_pushes=92 wall_ms=2187.1 ms/step=21.871 | 932 finite vertices after RUNNING 354/355
+wall 19.8 s, frames 2345
+RESULT: PASS FIXTURE:infer,rig

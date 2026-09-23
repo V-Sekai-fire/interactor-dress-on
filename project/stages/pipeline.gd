@@ -109,8 +109,8 @@ const DEFAULTS := {
 	                          # vertices inside after 30 steps against the capsules' 186); capsules: 14
 	                          # along the skeleton; none
 	"fit_from": "",           # with fit as a fixture: an OBJ whose vertices are the fitted garment (a saved fit)
-	"fit_mode": "polyfem",    # polyfem: fit.elf (cloth-fit, 627 s on the authored skirt) | avbd: drape.elf's fit
-	                          # phase with drape_stage.gd's FIT_AVBD (Cut 6d, gates/6d-fit-avbd), CHECK by fit.elf
+	"fit_mode": "avbd",       # avbd (default): drape.elf's fit phase with drape_stage.gd's FIT_AVBD (Cut 6d,
+	                          # gates/6d-fit-avbd, 13 s), CHECK by fit.elf | polyfem: fit.elf (cloth-fit, 627 s)
 	"stop_after": "",         # "MESH" for --gate=pen
 }
 
@@ -180,7 +180,7 @@ func status() -> String:
 func summary() -> Dictionary:
 	var d := {"state": state, "reason": reason, "fixtures": fixtures, "records": records,
 			"wall_s": (Time.get_ticks_msec() - _run_t0) / 1000.0}
-	d["fit_mode"] = str(opts.get("fit_mode", "polyfem"))
+	d["fit_mode"] = str(opts.get("fit_mode", "avbd"))
 	for k in ["counts", "rings", "min_clearance", "mesh", "fit_config", "fit_begin", "fit_phases", "fit_avbd", "check",
 			"check_control", "drape", "drape_input", "drape_setup", "drape_body", "capsules", "pins"]:
 		if data.has(k):
@@ -471,7 +471,7 @@ func _mesh_done(g: Dictionary, note: String) -> void:
 # --- FIT --------------------------------------------------------------------------------------
 
 func _avbd() -> bool:
-	return str(opts.get("fit_mode", "polyfem")) == "avbd"
+	return str(opts.get("fit_mode", "avbd")) == "avbd"
 
 func _fit_begin(first: bool) -> void:
 	var g: Dictionary = data.garment

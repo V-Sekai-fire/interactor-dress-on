@@ -291,7 +291,7 @@ func _evaluate() -> void:
 		if fo != null:
 			var fv: PackedFloat32Array = p.data.fitted
 			var ft: PackedInt32Array = p.data.garment.triangles
-			fo.store_line("# %s fit result (body space) of Gate 8 run %s" % [str(p.opts.get("fit_mode", "polyfem")),
+			fo.store_line("# %s fit result (body space) of Gate 8 run %s" % [str(p.opts.get("fit_mode", "avbd")),
 					_out_path.get_file()])
 			for i in range(0, fv.size(), 3):
 				fo.store_line("v %.9f %.9f %.9f" % [fv[i], fv[i + 1], fv[i + 2]]) # GDScript has no %g

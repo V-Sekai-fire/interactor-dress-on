@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: If you use this addon, cite the entities-godot-cineform tree it is built from and the CineForm SDK it encodes with.
+title: godot-cineform, the CineForm exporter for Godot's Movie Maker (vendored binary)
+abstract: >-
+  V-Sekai-fire/entities-godot-cineform at bf4cf04a02924495d1c6168dd3ab52c72ad02532
+  (2026-09-22): a GDExtension MovieWriter that claims the .cfhd output extension
+  and writes CineForm (CFHD) frames, 12-bit RGB 4:4:4 at quality 0..5, plus the
+  48 kHz stereo PCM track, into a RIFF/AVI container, encoded with the org fork
+  of the CineForm SDK (V-Sekai-fire/cineform-sdk at 9c2973f, the LLVM-fixed
+  build). Vendored here as the Windows x86_64 release library only
+  (bin/libgodot_cineform.windows.template_release.x86_64.dll, 3,484,160 bytes,
+  built with clang 23), so the loop can be recorded with
+  `godot --write-movie <file>.cfhd --fixed-fps 30` (gates/8-loop, the
+  dress-on-fit recording of 2026-09-23: 1276 frames, 1152x648, 199 MB). Local
+  adaptation: cineform.gdextension maps the windows.debug and windows.editor
+  entries to the same release DLL, because the editor binary
+  (godot.console.exe) loads the debug/editor entry and no debug build is
+  shipped; the Linux and macOS entries name libraries that are not vendored.
+  Encoded recordings are transcoded to AV1 in Matroska by tools/av1mkv
+  (branch tool-av1mkv), never by FFmpeg.
+authors:
+  - name: K. S. Ernest (iFire) Lee
+  - name: V-Sekai
+repository-code: https://github.com/V-Sekai-fire/entities-godot-cineform
+commit: bf4cf04a02924495d1c6168dd3ab52c72ad02532
+license: MIT OR Apache-2.0

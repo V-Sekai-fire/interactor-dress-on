@@ -11,7 +11,12 @@
 # body (the fit gap mean / p95), and the table goes into ladder.txt.
 #
 #   godot --path project --script gate_fit_avbd.gd --rendering-driver vulkan --xr-mode off -- \
-#       --out=../gates/6d-fit-avbd/ladder.txt [--wallclock=900] [--only=name,name]
+#       --out=../gates/6d-fit-avbd/ladder.txt [--wallclock=900] [--only=name,name] [--garment=<obj>]
+#
+# <out>.authored.obj is the authored garment (body space) every run writes
+# after MESH; --garment=<obj> replaces its vertices (same order, same
+# triangles: a rotated or scaled copy of one, "Does the rotation generalise"
+# in the README) before the rungs, and --only=none runs no rung.
 #
 # The rungs are this file's; the loop has no knob for them (the user's rule:
 # a ladder and one pick, not a slider). The pick is drape_stage.gd's
@@ -32,6 +37,7 @@ extends SceneTree
 
 const SCENE := "res://xr_main.tscn"
 const MeshTopo := preload("res://util/mesh_topo.gd")
+const ObjIO := preload("res://util/obj_io.gd")
 const REF := "res://../gates/8-loop/flat-psd.fitted.obj"
 const AVATAR := "res://fixtures/foxgirl/avatar.obj"
 const EVAL := "res://../gates/6d-fit-avbd/ladder_eval.py"
@@ -178,6 +184,16 @@ func _process(_dt: float) -> bool:
 			var g: Dictionary = p.data.garment
 			_say("garment: %d v %d f, %d nofit; body %d v %d f" % [g.vertices.size() / 3, g.triangles.size() / 3,
 					g.nofit.size(), p.data.body_v.size() / 3, p.data.body_f.size() / 3])
+			_write_obj(_out_path.get_basename() + ".authored.obj", g.vertices, g.triangles,
+					"the authored garment (body space) of Gate 6d run %s" % _out_path.get_file())
+			if _arg("garment") != "":
+				var go := ObjIO.read(_arg("garment"))
+				if go.has("error") or go.v.size() != g.vertices.size():
+					_say("FAIL: --garment %s: %s" % [_arg("garment"), go.get("error", "%d floats, the mesh %d" % [go.v.size(), g.vertices.size()])])
+					_finish("FAIL")
+					return false
+				g.vertices = go.v
+				_say("garment vertices replaced from %s (y %.3f..%.3f)" % [_arg("garment").get_file(), _ymin(go.v), _ymax(go.v)])
 			# fit.elf's begin on its worker, for the checks (the CHECK state's
 			# setup: the real body as the phase-0 avatar, pipeline _fit_elf_begin).
 			if _main.fit.available():
@@ -301,6 +317,18 @@ func _on_state(s: String, rec: Dictionary) -> void:
 		_say("=> %s %s" % [s, rec.get("reason", "")])
 		return
 	_say("STATE %-13s %8d ms  vm %9.1f ms  %s" % [s, rec.ms, rec.vm_ms, rec.note])
+
+static func _ymin(v: PackedFloat32Array) -> float:
+	var m := INF
+	for i in range(1, v.size(), 3):
+		m = minf(m, v[i])
+	return m
+
+static func _ymax(v: PackedFloat32Array) -> float:
+	var m := -INF
+	for i in range(1, v.size(), 3):
+		m = maxf(m, v[i])
+	return m
 
 static func _kv(text: String, key: String) -> float:
 	var at := text.find(key)

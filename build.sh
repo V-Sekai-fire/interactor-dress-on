@@ -44,7 +44,7 @@ TOOLCHAIN="$(cygpath -m "$SYSROOT/toolchain.cmake" 2>/dev/null || echo "$SYSROOT
 
 # The AVBD kernels: Lean -> Slang (committed) -> cpp (committed) + SPIR-V
 # embedded into the build dir. --no-emit skips lake; set AVBD_EMIT=1 to
-# regenerate the Slang from cloth-dynamics/lean.
+# regenerate the Slang from lean/ (a subtree of cloth-dynamics/lean).
 if [ "${AVBD_EMIT:-0}" = 1 ]; then
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh"
 else

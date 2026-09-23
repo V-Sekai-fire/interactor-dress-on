@@ -1,0 +1,62 @@
+# lake build (default target Cloth) in lean/
+# 2026-09-23T02:03:12Z  Lake version 5.0.0-src+d024af0 (Lean version 4.30.0)  toolchain leanprover/lean4:v4.30.0
+ℹ [22/75] Replayed Cloth.Avbd.CsrProperties
+info: Cloth/Avbd/CsrProperties.lean:84:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:87:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:90:0: Unable to find a counter-example
+ℹ [24/75] Replayed Cloth.Avbd.ColoringProperties
+info: Cloth/Avbd/ColoringProperties.lean:83:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:86:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:89:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:92:0: Unable to find a counter-example
+✔ [26/75] Built LeanSlang.Types (984ms)
+✔ [27/75] Built LeanSlang.AST (969ms)
+✔ [28/75] Built LeanSlang.Emit (934ms)
+✔ [29/75] Built LeanSlang.TestFp (1.0s)
+✔ [30/75] Built LeanSlang.Test (1.0s)
+✔ [31/75] Built LeanSlang (705ms)
+✔ [32/75] Built Cloth.SlangCodegen.TriangleBendingForceAl (2.1s)
+✔ [33/75] Built Cloth.SlangCodegen.VbdGatherTriangleBackward (2.1s)
+✔ [34/75] Built Cloth.SlangCodegen.SpringForceBackward (2.1s)
+✔ [35/75] Built Cloth.SlangCodegen.AttachmentForceAl (2.1s)
+✔ [36/75] Built Cloth.SlangCodegen.TriangleMembraneDualUpdate (2.2s)
+✔ [37/75] Built Cloth.SlangCodegen.TriangleMembraneForceAl (2.1s)
+✔ [38/75] Built Cloth.SlangCodegen.TriangleBendingDualUpdate (2.1s)
+✔ [39/75] Built Cloth.SlangCodegen.SelfCollisionScan (2.1s)
+✔ [40/75] Built Cloth.SlangCodegen.VbdSolveApplyBackward (2.1s)
+✔ [41/75] Built Cloth.SlangCodegen.VbdInitBackward (2.1s)
+✔ [42/75] Built Cloth.SlangCodegen.VbdGatherAttachmentBackward (2.1s)
+✔ [43/75] Built Cloth.SlangCodegen.VbdGatherBendingBackward (2.2s)
+✔ [44/75] Built Cloth.SlangCodegen.VbdGatherSpringBackward (2.2s)
+✔ [45/75] Built Cloth.SlangCodegen.AttachmentForceAlBackward (2.2s)
+✔ [46/75] Built Cloth.SlangCodegen.TriangleBendingForceAlBackward (2.2s)
+✔ [47/75] Built Cloth.SlangCodegen.TriangleMembraneForceAlBackward (2.3s)
+✔ [48/75] Built Cloth.SlangCodegen.CGAlpha (1.6s)
+✔ [49/75] Built Cloth.SlangCodegen.CGBeta (1.9s)
+✔ [50/75] Built Cloth.SlangCodegen.SaxpbyIndirect (1.9s)
+✔ [51/75] Built Cloth.SlangCodegen.SpmvDf32 (1.0s)
+✔ [52/75] Built Cloth.SlangCodegen.SaxpbyIndirectDf32 (1.0s)
+✔ [53/75] Built Cloth.SlangCodegen.SpringForce (2.0s)
+✔ [54/75] Built Cloth.SlangCodegen.AttachmentForce (2.2s)
+✔ [55/75] Built Cloth.SlangCodegen.TriangleMembraneForce (2.2s)
+✔ [56/75] Built Cloth.SlangCodegen.TriangleBendingForce (2.2s)
+✔ [57/75] Built Cloth.SlangCodegen.VbdInit (2.2s)
+✔ [58/75] Built Cloth.SlangCodegen.VbdSolveApply (2.2s)
+✔ [59/75] Built Cloth.SlangCodegen.VbdGatherSpring (2.2s)
+✔ [60/75] Built Cloth.SlangCodegen.VbdGatherAttachment (2.2s)
+✔ [61/75] Built Cloth.SlangCodegen.VbdGatherTriangle (2.2s)
+✔ [62/75] Built Cloth.SlangCodegen.VbdGatherBending (2.2s)
+✔ [63/75] Built Cloth.SlangCodegen.AttachmentDualUpdate (2.2s)
+✔ [64/75] Built Cloth.SlangCodegen.Spmv (1.3s)
+✔ [65/75] Built Cloth.SlangCodegen.AssembleB (1.5s)
+✔ [66/75] Built Cloth.SlangCodegen.AttachmentProject (1.3s)
+✔ [67/75] Built Cloth.SlangCodegen.DotReduceSerial (1.4s)
+✔ [68/75] Built Cloth.SlangCodegen.SpringProject (1.4s)
+✔ [69/75] Built Cloth.SlangCodegen.TriangleBending (1.4s)
+✔ [70/75] Built Cloth.SlangCodegen.TriangleProject (1.5s)
+✔ [71/75] Built Cloth.SlangCodegen.Saxpby (1.4s)
+✔ [72/75] Built Cloth.SlangCodegen.DotReduce (1.5s)
+✔ [73/75] Built Cloth.SlangCodegen (728ms)
+✔ [74/75] Built Cloth (2.2s)
+Build completed successfully (75 jobs).
+# exit 0  wall 15 s

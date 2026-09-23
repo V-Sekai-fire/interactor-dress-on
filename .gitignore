@@ -7,3 +7,4 @@ tools/openxr-simulator/
 tools/oxrsys/
 /models/
 /.venv-convert/
+lean/.lake/

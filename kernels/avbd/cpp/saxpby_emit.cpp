@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 1 "C:/interactor-dress-on/kernels/avbd/slang/saxpby.slang"
+#line 1 "slang/saxpby.slang"
 struct SaxpbyParams_0
 {
     uint32_t n_0;

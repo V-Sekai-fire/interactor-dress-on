@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 25 "C:/interactor-dress-on/kernels/avbd/slang/vbd_gather_spring_backward.slang"
+#line 25 "slang/vbd_gather_spring_backward.slang"
 struct GlobalParams_0
 {
     StructuredBuffer<uint32_t> springP1Idx_0;

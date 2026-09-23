@@ -6,7 +6,7 @@
 #   kernels/avbd/gen.sh --from <dir>    # use .slang already emitted into <dir>
 #
 # One source, two targets, exactly as the org's guest-avbd does it:
-#   Lean (cloth-dynamics/lean, `lake exe emit_shaders`)  ->  slang/<k>.slang   (committed)
+#   Lean (lean/, `lake exe emit_shaders`)                ->  slang/<k>.slang   (committed)
 #     slangc -target cpp    ->  cpp/<k>_emit.cpp                                (committed)
 #     slangc -target spirv  ->  <build>/spv/<k>.spv + .refl.json               (build artefact)
 #       gen_avbd_kernel_table.py  ->  AvbdKernelTable.inc                       (committed)
@@ -18,7 +18,7 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
-LEAN="${CLOTH_LEAN:-/c/cloth-dynamics-standalone/lean}"
+LEAN="${CLOTH_LEAN:-$ROOT/lean}"
 BUILD="${BUILD_DIR:-$ROOT/build}"
 SLANGC="${SLANGC:-slangc}"
 command -v "$SLANGC" >/dev/null 2>&1 || SLANGC="$HOME/scoop/apps/vulkan/current/Bin/slangc"
@@ -50,8 +50,11 @@ fi
 
 mkdir -p "$HERE/cpp" "$BUILD/spv"
 echo "== slangc -target cpp =="
+# Relative paths from $HERE: slangc writes the input path into a #line
+# directive, and an absolute one would make the committed cpp depend on
+# where the checkout (or worktree) lives.
 for k in $KERNELS; do
-	"$SLANGC" -target cpp -stage compute -entry main -o "$HERE/cpp/${k}_emit.cpp" "$HERE/slang/$k.slang"
+	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -o "cpp/${k}_emit.cpp" "slang/$k.slang" )
 done
 echo "== slangc -target spirv (+ reflection) =="
 for k in $KERNELS; do

@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 56 "C:/interactor-dress-on/kernels/avbd/slang/spring_force_backward.slang"
+#line 56 "slang/spring_force_backward.slang"
 struct GlobalParams_0
 {
     StructuredBuffer<Vector<float, 3> > positions_0;

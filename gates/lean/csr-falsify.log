@@ -1,0 +1,20 @@
+# lake exe csr_falsify in lean/
+# 2026-09-23T02:03:27Z
+ℹ [20/44] Replayed Cloth.Avbd.CsrProperties
+info: Cloth/Avbd/CsrProperties.lean:84:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:87:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:90:0: Unable to find a counter-example
+ℹ [22/44] Replayed Cloth.Avbd.ColoringProperties
+info: Cloth/Avbd/ColoringProperties.lean:83:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:86:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:89:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:92:0: Unable to find a counter-example
+[csr-falsifiability] witness idx=0 mesh=(2, [[0, 1]])
+[csr-falsifiability] { query := "role-dropping CSR build is caught by rolesAddressTheRightVertex",
+  level := 0,
+  outcome := PlausibleWitnessDag.Outcome.found 0 }
+[coloring-falsifiability] witness idx=0 graph=(2, [[0, 1]])
+[coloring-falsifiability] { query := "all-one-color coloring is caught by separationHolds",
+  level := 0,
+  outcome := PlausibleWitnessDag.Outcome.found 0 }
+# exit 0  wall 1 s

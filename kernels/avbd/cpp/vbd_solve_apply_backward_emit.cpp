@@ -4282,7 +4282,7 @@ using namespace SLANG_PRELUDE_NAMESPACE;
 #endif
 
 
-#line 42 "C:/interactor-dress-on/kernels/avbd/slang/vbd_solve_apply_backward.slang"
+#line 42 "slang/vbd_solve_apply_backward.slang"
 struct GlobalParams_0
 {
     StructuredBuffer<Vector<float, 3> > v_out_0;

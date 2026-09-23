@@ -21,6 +21,10 @@ as the parent README warns.
   - `.text` is 3.17 MB and `.eh_frame` plus `.gcc_except_table` 0.73 MB.
   - Not stripped: 16,406 symbols.
   - A full rebuild with `-Werror=absolute-value` (see below) gives the same bytes.
+  - **The Gate 6 ELF** adds the 6.0 probes (`fit_probes.cpp`), `instret`
+    and `fit_push_vertex`: 6,978,336 bytes, sha256 `2575d7ca…`, 16,572
+    symbols. `link.log` now records this one; its present and absent counts
+    are the same.
 - **Compiled:** 206 objects, 27 of them PolyFEM, into 28 static libraries.
 - **Present:** Eigen (2,192 symbols), polysolve (813), polyfem (668),
   ipc (964), igl (458), spdlog (1,010), nlohmann (481), `fit::FitDriver`,
@@ -151,6 +155,12 @@ This misses the guest-vs-native bound (±2 Newton, 1e-6 relative) that the
 parent README proposes. What remains is a last-bit difference, which libm
 (riscv glibc against ucrt) or the GDScript float parse of the OBJs (against
 strtod) could cause. Which one it is has not been isolated.
+
+**Isolated since** (parent README, "Gate 6 in the guest"): it is neither. The
+wire arrays equal fit_native's bit for bit, and every libm function the
+solver calls is equal. What differs is the C++ library's order for tied
+sort keys, and SimpleBVH's Morton sort in the contact broad phase has such
+ties.
 
 The parent README's rule applies. The full four-phase guest run is judged by
 the native-vs-upstream five-part criterion. Its log says so; the bound is not

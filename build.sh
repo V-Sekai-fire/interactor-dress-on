@@ -5,6 +5,8 @@
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
 #   BUILD_FIT=0 ./build.sh    # skip fit.elf (cloth-fit / PolyFEM, the long part)
+#   BUILD_DIR=C:/b/ido6-zb FIT_MARCH=rv64gc_zba_zbb_zbs_zbc FIT_ELF=fit_zb BUILD_TARGETS=fit_zb ./build.sh
+#                             # Gate 6.P's ISA A/B: project/fit_zb.elf, the solver at another -march
 #
 # fit.elf needs the org forks (tools/fit/prepare_forks.sh, run here) and the
 # CPM packages cloth-fit pulls without a fork (CPM_SOURCE_CACHE, default
@@ -69,13 +71,16 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
 		-DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DDRESS_ON_WITH_FIT="$WITH_FIT"
+		-DDRESS_ON_WITH_FIT="$WITH_FIT" \
+		${FIT_MARCH:+-DFIT_MARCH="$FIT_MARCH"} ${FIT_ELF:+-DFIT_ELF="$FIT_ELF"}
 elif ! grep -q "^DRESS_ON_WITH_FIT:BOOL=$WITH_FIT\$" "$BUILD/CMakeCache.txt"; then
 	cmake -B "$BUILD" -DDRESS_ON_WITH_FIT="$WITH_FIT"
 fi
-cmake --build "$BUILD" -- -j "${BUILD_JOBS:-8}"
+# BUILD_TARGETS (space-separated) limits the build, e.g. to one A/B fit ELF.
+# shellcheck disable=SC2086
+cmake --build "$BUILD" ${BUILD_TARGETS:+--target $BUILD_TARGETS} -- -j "${BUILD_JOBS:-8}"
 ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf"
 if [ "$WITH_FIT" = ON ]; then
-	ls -la "$HERE/project/fit.elf"
-	sha256sum "$HERE/project/fit.elf"
+	ls -la "$HERE/project/${FIT_ELF:-fit}.elf"
+	sha256sum "$HERE/project/${FIT_ELF:-fit}.elf"
 fi

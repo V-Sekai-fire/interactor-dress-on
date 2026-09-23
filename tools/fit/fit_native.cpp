@@ -15,6 +15,15 @@
 //       A, B: .obj or .f64 garments with the same vertex order; prints the
 //       per-vertex distance (max, mean, p99) in voxels and the vertex-sampled
 //       Hausdorff distance (both directions, point to surface).
+//   fit_native --probe ldlt8k|libm|stl|ldlt|exceptions [--reps N]
+//       Gate 6.0: guest/fit/fit_probes.cpp, the code fit.elf's fit_probe runs.
+//       Prints the probe's line and the wall time of each of N calls (min
+//       first); the host times the guest's vmcall the same way.
+//   --dump-inputs DIR: after reading (and rounding), write the arrays the
+//       driver gets as raw little-endian files (avatar_v.f32, avatar_f.i32,
+//       garment_v.f32, garment_f.i32, skeleton_v.f32, target_skeleton_v.f32,
+//       skeleton_b.i32, no_fit.i32) so the Godot wire can be held to them bit
+//       for bit (gate_fit.gd's wire check).
 //
 // --io-probe: the binary is linked with --wrap for fopen/_wfopen/_open/
 // _wopen/_sopen_s/_wsopen_s/CreateFileA/CreateFileW, so every file open in
@@ -22,6 +31,7 @@
 // must count zero; the harness's own reads before it are the positive
 // control that the wrapper sees opens at all.
 #include "fit_driver.h"
+#include "fit_probes.h"
 
 #include <polyfem/garment/optimize.hpp>
 #include <polyfem/io/MatrixIO.hpp>
@@ -309,6 +319,8 @@ int main(int argc, char **argv) {
 	double voxel = 0.01;
 	std::vector<std::pair<std::string, std::string>> sets;
 	std::string cmp_a, cmp_b;
+	std::string probe, dump_dir;
+	int reps = 5;
 
 	for (int i = 1; i < argc; i++) {
 		const std::string a = argv[i];
@@ -337,6 +349,12 @@ int main(int argc, char **argv) {
 				return 2;
 			}
 			sets.emplace_back(kv.substr(0, eq), kv.substr(eq + 1));
+		} else if (a == "--probe") {
+			probe = next();
+		} else if (a == "--reps") {
+			reps = std::stoi(next());
+		} else if (a == "--dump-inputs") {
+			dump_dir = next();
 		} else if (a == "--compare") {
 			cmp_a = next();
 			cmp_b = next();
@@ -347,6 +365,32 @@ int main(int argc, char **argv) {
 	}
 	if (!cmp_a.empty())
 		return compare(cmp_a, cmp_b, voxel);
+	if (!probe.empty()) {
+		std::vector<double> ms;
+		std::string line;
+		for (int r = 0; r < reps; r++) {
+			const double t0 = now_s();
+			const std::string l = probe == "ldlt8k" ? fit::probe_ldlt8k()
+					: probe == "libm"               ? fit::probe_libm()
+					: probe == "stl"                ? fit::probe_stl()
+					: probe == "ldlt"               ? fit::probe_ldlt()
+					: probe == "exceptions"         ? fit::probe_exceptions()
+													: std::string("FAIL: unknown probe ") + probe;
+			ms.push_back((now_s() - t0) * 1e3);
+			if (r == 0)
+				line = l;
+			else if (l != line)
+				line += " [NOT REPEATABLE: " + l + "]";
+		}
+		std::printf("%s\n", line.c_str());
+		std::vector<double> s = ms;
+		std::sort(s.begin(), s.end());
+		std::printf("time_ms min %.3f median %.3f (reps %d:", s.front(), s[s.size() / 2], reps);
+		for (double m : ms)
+			std::printf(" %.3f", m);
+		std::printf(")\n");
+		return line.rfind("FAIL", 0) == 0 ? 1 : 0;
+	}
 
 	// The oracle of record runs one thread (tools/native/README.md). The
 	// driver sets no thread count; ipc-toolkit's TBB is held to one here.
@@ -403,6 +447,30 @@ int main(int argc, char **argv) {
 			round_f32(&in.skeleton_v);
 			round_f32(&in.target_skeleton_v);
 			round_f32(&in.target_avatar_skinning_weights);
+		}
+		if (!dump_dir.empty()) {
+			if (!out_dir.empty())
+				CreateDirectoryA(out_dir.c_str(), nullptr); // dump_dir may sit inside it
+			CreateDirectoryA(dump_dir.c_str(), nullptr);
+			auto dump_f = [&](const char *name, const std::vector<double> &v) {
+				std::vector<float> f(v.begin(), v.end());
+				std::ofstream o(dump_dir + "/" + name, std::ios::binary);
+				o.write(reinterpret_cast<const char *>(f.data()), std::streamsize(f.size() * sizeof(float)));
+			};
+			auto dump_i = [&](const char *name, const std::vector<int> &v) {
+				std::vector<int32_t> f(v.begin(), v.end());
+				std::ofstream o(dump_dir + "/" + name, std::ios::binary);
+				o.write(reinterpret_cast<const char *>(f.data()), std::streamsize(f.size() * sizeof(int32_t)));
+			};
+			dump_f("avatar_v.f32", in.avatar_v);
+			dump_i("avatar_f.i32", in.avatar_f);
+			dump_f("garment_v.f32", in.garment_v);
+			dump_i("garment_f.i32", in.garment_f);
+			dump_f("skeleton_v.f32", in.skeleton_v);
+			dump_f("target_skeleton_v.f32", in.target_skeleton_v);
+			dump_i("skeleton_b.i32", in.skeleton_b);
+			dump_i("no_fit.i32", in.no_fit_vertices);
+			std::printf("inputs dumped to %s\n", dump_dir.c_str());
 		}
 		for (const char *k : {"avatar_mesh_path", "garment_mesh_path", "source_skeleton_path", "target_skeleton_path",
 							  "avatar_skin_weights_path", "no_fit_spec_path", "root_path"})

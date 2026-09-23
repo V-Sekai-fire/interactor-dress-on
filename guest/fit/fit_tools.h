@@ -38,9 +38,8 @@ std::string strip_path_keys(const std::string &setup_json);
 // phase that builds the fit form).
 std::vector<double> sdf_sample(const std::vector<double> &points, double *voxel_size);
 
-// Probes, each returning "PASS ..." or "FAIL ...".
-std::string probe_io();         // fopen, ifstream, open: all refused, all counted
-std::string probe_ldlt();       // polysolve Eigen::SimplicialLDLT on a 1D Laplacian
-std::string probe_exceptions(); // a throw through std::function, caught by type
+// "PASS ..." or "FAIL ...": fopen, ifstream, open all refused, all counted.
+// The other probes are in fit_probes.h (shared with fit_native).
+std::string probe_io();
 
 } // namespace fit

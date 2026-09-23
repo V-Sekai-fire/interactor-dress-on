@@ -33,6 +33,7 @@ evidence.
 |---|---|---|
 | [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; the old "bimodal submit+sync" was godot-sandbox's 32-slot method-name cache colliding by string address (fixed in `rd_compute`, Cut A) |
 | [2](gates/2-avbd/) | AVBD in the guest: Lean → Slang → `cpp` (`AvbdCpu`) and `spirv` (`AvbdRd`), one driver | **PASS** — forward, duals, backward (gradcheck 5/5, stategrad 12/12 + 12/12, within 1.04e-6 of native) and self-collision exact on both; rd from 256 vertices (frame-driven, 3.2–4.8 ms/substep to 4096 vertices) |
+| [6](gates/6-fit/) | `fit.elf`: cloth-fit's garment retarget (PolyFEM, ipc-toolkit, Lean SDF sampler) in the guest, one phase per vmcall on a worker Thread | **PASS** on the five-part criterion — foxgirl in 42 min (219 Newton, ~20–25× native), no intersections, 0 file opens, fit gap 1.77/3.87 voxels, Hausdorff 7.42 to the oracle; `fit_weight=0` and the 5 cm push caught. Guest ≠ native bitwise after Newton 7 (libstdc++/libc++ tie order in SimpleBVH's Morton sort, not libm). memory_max floor 352 MiB (run at 440), phase ≤ 5.4e5 × 2^20 instructions; Stage 8: ≤ 1k-vertex garment, ~60 Newton |
 
 The standing rules are in [AGENTS.md](AGENTS.md).
 

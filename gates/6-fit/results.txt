@@ -1,0 +1,53 @@
+gate_fit 2026-09-23T00:28:51, arm report, tag report, args { "tag": "report", "arm": "report" }
+== Gate 6 foxgirl, guest run runs/full.txt ==
+(1) guest vs native same code (f32 inputs, serial TBB stand-in, guest numerics): MISS
+    Newton per phase guest 34/59/43/83 vs native 41/37/11/107 (bound +-2); energy 0.0013124782859826511 vs 0.0013414366755117495 (rel 0.021587593404692528, bound 1e-6); max |dv| 0.01435741 solve units (bound 1e-6)
+    compare gates/6-fit/runs/full.garment.f64 vs C:/b/fit-out-tbbs32/garment_final.obj: 2682 verts, voxel 0.01
+      per-vertex: max 1.43574 voxels (vertex 1699), mean 0.683312, p99 1.36034  [max 1.435741e-02 m]
+      hausdorff (vertex-sampled, point to surface): 0.832829 voxels (A->B 0.793605, B->A 0.832829)
+    trace: 39 of 698 guest / 627 native polyfem lines agree; first difference at line 40: Newton solve 0 (0 = phase 0), after Newton iteration 7
+        guest : [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.4375 descent_step_size=0.4375 final_step_size=0.4375)
+      ! guest : [polyfem] [debug] Min distance: 0.0006652093120624329
+      ! native: [polyfem] [debug] Min distance: 0.000665209312062554
+      ! guest : [polyfem] [debug] [SparseNewton][Backtracking] iters=8 f=3.53742 Df=1.0718 |grad f|=55.5297 |Dx|=2.31428 Dx.grad f(x)=-7.0621
+    -> the tight bound is missed; per gates/6-fit/README.md the guest result is judged by the five-part criterion (not loosened silently)
+(2) five-part criterion, guest result vs the 1-thread oracle C:/b/cf-up-out1/step_garment_252.obj:
+  run: summary full phases_ok 4/4 newton 219 (34/59/43/83) energy 0.0013124782859826511 host_s 2536.5 max_phase_instructions 561584187196 max_heap_used_mib 123.5 io_attempts 0 mem 2048 elf res://fit.elf fitweight0 no intersections none push INTERSECTS flat none
+  (1) intersection-free: PASS (final none, push control INTERSECTS)
+  (2) no file I/O: PASS (io_attempts 0; the positive control before fit_begin is in the run log)
+  (3) the fit holds: PASS (gap mean 1.7723 vs 1.8467 +- 0.25, p95 3.8689 vs 3.9207 +- 0.5 voxels)
+  (4) energy in upstream's basin: PASS (0.00131247828598 in [0.00116676, 0.00164714])
+  (5) coarse geometric bound: PASS (vs 1t: max 11.1533 / mean 5.7261 / Hausdorff 7.4193 voxels; bounds 11.63 / 8.24)
+      gates/6-fit/runs/full.garment.f64: fit verts 677  gap mean 1.7723  p50 1.5145  p95 3.8689  max 5.2520 voxels
+      compare gates/6-fit/runs/full.garment.f64 vs C:/b/cf-up-out1/step_garment_252.obj: 2682 verts, voxel 0.01
+        per-vertex: max 11.1533 voxels (vertex 1576), mean 5.72607, p99 10.388  [max 1.115335e-01 m]
+        hausdorff (vertex-sampled, point to surface): 7.41926 voxels (A->B 6.24852, B->A 7.41926)
+    five-part: PASS
+== control: fit_weight = 0 in the guest (runs/full-fw0.txt) must fail (3) ==
+    ok   (3) fails as it must: gap mean 5.1094 p95 8.4015 voxels
+    summary full-fw0 phases_ok 4/4 newton 145 (34/31/36/44) energy 8.8348423473311825e-05 host_s 1823.1 max_phase_instructions 485660849498 max_heap_used_mib 123.7 io_attempts 0 mem 2048 elf res://fit.elf fitweight0 yes intersections none push INTERSECTS flat none
+== 6.P confirm: runs/full-440.txt (1.25x the smallest memory_max that ran phases 0+1) ==
+    ok   the garment is bitwise the full run's
+    summary full-440 phases_ok 4/4 newton 219 (34/59/43/83) energy 0.0013124782859826511 host_s 2444.1 max_phase_instructions 561584099845 max_heap_used_mib 123.5 io_attempts 0 mem 440 elf res://fit.elf fitweight0 no intersections none push INTERSECTS flat none
+== 6.P control: runs/timeout-ctl.txt, execution_timeout 100000 units (< phase 0's ~463,000) must stop phase 0 ==
+    ok   the sandbox timed the vmcall out ("Sandbox: Timeout for fit_step")
+== runs ==
+  full-440           PASS  summary full-440 phases_ok 4/4 newton 219 (34/59/43/83) energy 0.0013124782859826511 host_s 2444.1 max_phase_instructions 561584099845 max_heap_used_mib 123.5 io_attempts 0 mem 440 elf res://fit.elf fitweight0 no intersections none push INTERSECTS flat none
+  full-fw0           PASS  summary full-fw0 phases_ok 4/4 newton 145 (34/31/36/44) energy 8.8348423473311825e-05 host_s 1823.1 max_phase_instructions 485660849498 max_heap_used_mib 123.7 io_attempts 0 mem 2048 elf res://fit.elf fitweight0 yes intersections none push INTERSECTS flat none
+  full               PASS  summary full phases_ok 4/4 newton 219 (34/59/43/83) energy 0.0013124782859826511 host_s 2536.5 max_phase_instructions 561584187196 max_heap_used_mib 123.5 io_attempts 0 mem 2048 elf res://fit.elf fitweight0 no intersections none push INTERSECTS flat none
+  ladder-128         -     KILLED by the operator at 23:19:34: no Newton iteration finished in 15 min of phase 0 (at memory_max 2048 the first finishes in ~2 min); the process was spinning one core (CPU time rising at wall rate)
+  ladder-160         -     EXIT 139 (inferred): the launcher printed two segfaults while this arm and ladder-192 (both at the start of phase 0's first Newton iteration) went silent; no guest exception was printed. Not rerun.
+  ladder-192         -     EXIT 139: the Godot process died with a segfault during phase 0, after 'Starting SparseNewton' and before Newton iteration 0 ended (run_arm.sh saw exit 139); no guest exception was printed. Run 1 (C:/b/ido6-ladder-crashed/ladder-192.run1.*) died at the same point.
+  ladder-224         FAIL  summary ladder-224 phases_ok 0/2 FAILED at phase 0, mem 224 MiB
+  ladder-256         FAIL  summary ladder-256 phases_ok 0/2 FAILED at phase 0, mem 256 MiB
+  ladder-320         -     EXIT 139: the Godot process died with a segfault during phase 0, right after Newton iteration 0 (run_arm.sh saw exit 139); no guest exception was printed. Run 1 (C:/b/ido6-ladder-crashed/ladder-320.run1.*) died at the same point.
+  ladder-352         PASS  summary ladder-352 phases_ok 2/4 newton 93 (34/59) energy 0.00049038939434413074 host_s 1225.9 max_phase_instructions 485660934552 max_heap_used_mib 123.2 io_attempts 0 mem 352 elf res://fit.elf fitweight0 no
+  ladder-384         PASS  summary ladder-384 phases_ok 2/4 newton 93 (34/59) energy 0.00049038939434413074 host_s 1291.8 max_phase_instructions 485660849795 max_heap_used_mib 123.2 io_attempts 0 mem 384 elf res://fit.elf fitweight0 no
+  ladder-512         PASS  summary ladder-512 phases_ok 2/4 newton 93 (34/59) energy 0.00049038939434413074 host_s 1293.9 max_phase_instructions 485660849786 max_heap_used_mib 123.2 io_attempts 0 mem 512 elf res://fit.elf fitweight0 no
+  p0-gc              PASS  summary p0-gc phases_ok 1/4 newton 34 (34) energy 0.0014895000331425965 host_s 686.2 max_phase_instructions 485660866796 max_heap_used_mib 122.8 io_attempts 0 mem 2048 elf res://fit.elf fitweight0 no
+  p0-v               PASS  summary p0-v phases_ok 1/4 newton 34 (34) energy 0.0014895000331425965 host_s 768.8 max_phase_instructions 455042859295 max_heap_used_mib 122.8 io_attempts 0 mem 2048 elf res://fit_v.elf fitweight0 no
+  p0-zb              PASS  summary p0-zb phases_ok 1/4 newton 34 (34) energy 0.0014895000331425965 host_s 696.7 max_phase_instructions 477881215049 max_heap_used_mib 122.8 io_attempts 0 mem 2048 elf res://fit_zb.elf fitweight0 no
+  probes             PASS  RESULT: PASS
+  timeout-ctl        FAIL  summary timeout-ctl phases_ok 0/1 FAILED at phase 0, mem 2048 MiB
+wall 11.0 s, frames 5
+RESULT: PASS

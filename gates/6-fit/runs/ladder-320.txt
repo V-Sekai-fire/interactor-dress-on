@@ -1,0 +1,7 @@
+gate_fit 2026-09-22T23:33:25, arm solve, tag ladder-320, args { "tag": "ladder-320", "arm": "solve", "phases": "2", "mem": "320", "wall": "7200" }
+ok   fit_configure: OK fit sandbox res://fit.elf memory_max 320 MiB execution_timeout 1073741824
+ok   io positive control (before fit_begin): PASS io: fopen refused (errno 13), ifstream refused, open -1 (errno 13); counted 3 of 3 (total 3)
+ok   fit_fixture_foxgirl (225 ms): OK reset | OK body 5128 v / 10171 f | OK skeletons 15 joints / 14 bones | OK garment 2682 v / 5220 f, no-fit 2005 | OK config 1046 bytes
+ok   fit_begin (4173 ms): OK begin: phases 4, target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248), source_scale 0.90869314092562126, io_attempts 0
+     fit_status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 last_instructions 0 heap_used 11.3 MiB heap_free 244.7 MiB chunks 79252 host_heap_usage=11825248 | last: 
+EXIT 139: the Godot process died with a segfault during phase 0, right after Newton iteration 0 (run_arm.sh saw exit 139); no guest exception was printed. Run 1 (C:/b/ido6-ladder-crashed/ladder-320.run1.*) died at the same point.

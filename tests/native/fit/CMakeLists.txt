@@ -226,7 +226,7 @@ add_custom_command(
     COMMENT "Embedding guest/fit/specs"
     VERBATIM)
 
-add_library(fit_driver STATIC "${REPO}/guest/fit/fit_driver.cpp" "${EMBED_CPP}")
+add_library(fit_driver STATIC "${REPO}/guest/fit/fit_driver.cpp" "${REPO}/guest/fit/fit_probes.cpp" "${EMBED_CPP}")
 target_link_libraries(fit_driver PUBLIC polyfem_fit)
 target_include_directories(fit_driver PUBLIC "${REPO}/guest/fit")
 add_dependencies(fit_driver check_specs)

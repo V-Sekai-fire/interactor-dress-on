@@ -1,31 +1,31 @@
-fit.elf: 6936208 bytes, sha256 f11ce4ca4c12ddcf904633817b0f97bee9bd17d2a5087b46fe91890373dabcdf
-symbols: 16406
+fit.elf: 6978336 bytes, sha256 2575d7cad0ec2ecdc05aa91843cf122a18b0f08b3718c7bed8c4cc487d869021
+symbols: 16572
 
 == sections (llvm-size -A) ==
 .note.ABI-tag                 32     66216
 .note.package                116     66248
-.rodata                   334912     66368
-.gcc_except_table         226166    401280
-.eh_frame_hdr              78524    627448
-.eh_frame                 501136    705976
-.text                    3174358   1211208
-.tdata                       112   4389664
-.tbss                        104   4389776
-.preinit_array                 8   4389776
-.fini_array                   16   4389784
-.init_array                  480   4389800
-.data.rel.ro               82560   4390280
-.got                       12032   4472840
-.relro_padding               248   4484872
-.data                       7548   4488968
-.tm_clone_table                0   4496520
-.sdata                         8   4496520
-.bss                       48976   4496544
+.rodata                   340160     66368
+.gcc_except_table         227718    406528
+.eh_frame_hdr              79068    634248
+.eh_frame                 503396    713320
+.text                    3192938   1220812
+.tdata                       112   4417848
+.tbss                        104   4417960
+.preinit_array                 8   4417960
+.fini_array                   16   4417968
+.init_array                  480   4417984
+.data.rel.ro               82880   4418464
+.got                       12048   4501344
+.relro_padding               400   4513392
+.data                       7548   4517488
+.tm_clone_table                0   4525040
+.sdata                         8   4525040
+.bss                       48976   4525056
 .riscv.attributes            249         0
 .comment                     352         0
 .gnu.warning.dlopen          130         0
 .gnu.warning.dlmopen         131         0
-Total                    4468198
+Total                    4496870
 
 == arch attribute (merged over every object) ==
 Value: rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0_zcd1p0_zba1p0_zbb1p0_zbc1p0_zbkc1p0_zbs1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvl128b1p0_zvl32b1p0_zvl64b1p0

@@ -44,7 +44,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
 set(CMAKE_DISABLE_FIND_PACKAGE_AVX TRUE)
-add_compile_options(-march=rv64gc -mabi=lp64d -ffp-contract=off)
+# FIT_MARCH is Gate 6.P's ISA A/B: rv64gc (the default, fit_native's numerics)
+# against e.g. rv64gc_zba_zbb_zbs_zbc or rv64gcv. FIT_ELF names the output
+# (project/<FIT_ELF>.elf), so an A/B build does not overwrite project/fit.elf.
+set(FIT_MARCH "rv64gc" CACHE STRING "-march for every fit.elf solver target")
+set(FIT_ELF "fit" CACHE STRING "fit.elf's target and file name (project/<FIT_ELF>.elf)")
+add_compile_options(-march=${FIT_MARCH} -mabi=lp64d -ffp-contract=off)
 # An unqualified abs(double) is C's int abs under libstdc++ and the double
 # overload under llvm-mingw's libc++: native and guest would silently differ
 # (it broke CurveCenterTargetForm's bone choice). Never again.
@@ -130,16 +135,17 @@ add_custom_command(
 add_library(fit_core STATIC
     "${FIT_REPO}/guest/fit/fit_driver.cpp"
     "${FIT_REPO}/guest/fit/fit_tools.cpp"
+    "${FIT_REPO}/guest/fit/fit_probes.cpp"
     "${FIT_EMBED_CPP}")
 target_include_directories(fit_core PUBLIC "${FIT_REPO}/guest/fit")
 target_link_libraries(fit_core PUBLIC polyfem)
 
 # --- fit.elf --------------------------------------------------------------------------
-add_stage_elf(fit guest/fit/main.cpp)
-target_link_libraries(fit PRIVATE fit_core)
-target_compile_options(fit PRIVATE -ffp-contract=off)
+add_stage_elf(${FIT_ELF} guest/fit/main.cpp)
+target_link_libraries(${FIT_ELF} PRIVATE fit_core)
+target_compile_options(${FIT_ELF} PRIVATE -ffp-contract=off)
 # Every file open in the ELF is counted and refused with EACCES
 # (guest/fit/fit_tools.cpp): the guest has no filesystem (Gate 0F probe 3), and
 # the driver must not try.
-target_link_options(fit PRIVATE
+target_link_options(${FIT_ELF} PRIVATE
     "-Wl,--wrap=open,--wrap=open64,--wrap=openat,--wrap=openat64,--wrap=fopen,--wrap=fopen64")

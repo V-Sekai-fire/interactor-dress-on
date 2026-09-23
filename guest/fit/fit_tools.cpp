@@ -4,9 +4,7 @@
 #include <polyfem/solver/forms/garment_forms/SdfGrid.hpp>
 #include <polyfem/solver/forms/garment_forms/SdfSpline.hpp>
 #include <polyfem/utils/Logger.hpp>
-#include <polysolve/linear/Solver.hpp>
 
-#include <Eigen/Sparse>
 #include <nlohmann/json.hpp>
 
 #include <cerrno>
@@ -15,7 +13,6 @@
 #include <cstdio>
 #include <fcntl.h>
 #include <fstream>
-#include <functional>
 #include <stdexcept>
 
 // ---------------------------------------------------------------------------
@@ -150,70 +147,6 @@ std::string probe_io() {
 			f ? "OPENED" : "refused", e_fopen, ifs_open ? "OPENED" : "refused", fd, e_open, counted, g_io_attempts);
 	if (f)
 		std::fclose(f);
-	return b;
-}
-
-std::string probe_ldlt() {
-	// 1D Laplacian (2 on the diagonal, -1 off it), b = A * x_true with
-	// x_true_i = sin(i): the solver must recover x_true.
-	const int n = 200;
-	polysolve::StiffnessMatrix A(n, n);
-	std::vector<Eigen::Triplet<double>> t;
-	for (int i = 0; i < n; i++) {
-		t.emplace_back(i, i, 2.0);
-		if (i + 1 < n) {
-			t.emplace_back(i, i + 1, -1.0);
-			t.emplace_back(i + 1, i, -1.0);
-		}
-	}
-	A.setFromTriplets(t.begin(), t.end());
-	Eigen::VectorXd x_true(n);
-	for (int i = 0; i < n; i++)
-		x_true[i] = std::sin(double(i));
-	const Eigen::VectorXd b = A * x_true;
-	// Through the embedded linear-solver spec (polysolve's rules are not on disk).
-	auto solver = polysolve::linear::Solver::create(nlohmann::json{{"solver", "Eigen::SimplicialLDLT"}}, polyfem::logger());
-	solver->analyze_pattern(A, n);
-	solver->factorize(A);
-	Eigen::VectorXd x(n);
-	x.setZero();
-	solver->solve(b, x);
-	const double res = (A * x - b).norm() / b.norm();
-	const double err = (x - x_true).cwiseAbs().maxCoeff();
-	char buf[256];
-	std::snprintf(buf, sizeof buf, "%s ldlt: %s n=%d, relative residual %.3e, max |x - x_true| %.3e",
-			(res < 1e-12 && err < 1e-9) ? "PASS" : "FAIL", solver->name().c_str(), n, res, err);
-	return buf;
-}
-
-namespace {
-struct ProbeError : std::runtime_error {
-	int code;
-	ProbeError(int c) : std::runtime_error("probe"), code(c) {}
-};
-} // namespace
-
-std::string probe_exceptions() {
-	std::function<int(int)> inner = [](int v) -> int {
-		if (v > 10)
-			throw ProbeError(v);
-		return v + 1;
-	};
-	std::function<int(int)> outer = [&](int v) { return inner(v) * 2; };
-	int caught = -1, normal = -1;
-	try {
-		outer(41);
-	} catch (const ProbeError &e) {
-		caught = e.code;
-	}
-	try {
-		normal = outer(4);
-	} catch (...) {
-		normal = -2;
-	}
-	char b[160];
-	std::snprintf(b, sizeof b, "%s exceptions: typed catch through two std::function got %d (want 41); control %d (want 10)",
-			(caught == 41 && normal == 10) ? "PASS" : "FAIL", caught, normal);
 	return b;
 }
 

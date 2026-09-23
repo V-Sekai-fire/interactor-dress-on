@@ -19,13 +19,17 @@
 
 #include <api.hpp>
 
+#include <cmath>
+#include <cstdint>
 #include <cstdio>
 #include <exception>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "fit_driver.h"
+#include "fit_probes.h"
 #include "fit_tools.h"
 
 namespace {
@@ -37,6 +41,16 @@ int g_io_at_begin = -1; // io_attempts when fit_begin started; -1 before
 int g_newton_total = 0;
 int g_preview_every = 1;
 fit::PhaseStats g_last;
+uint64_t g_last_instructions = 0; // instructions retired by the last fit_step / fit_run_all
+
+// libriscv's instruction counter through the instret CSR (Gate 6.P: the
+// execution_timeout a phase needs). It counts from the start of the vmcall,
+// so the difference across a call is that call's instructions.
+uint64_t instret() {
+	uint64_t v;
+	asm volatile("rdinstret %0" : "=r"(v));
+	return v;
+}
 
 Variant text(const std::string &s) {
 	return Variant(String(s));
@@ -258,12 +272,15 @@ Variant fit_step() {
 		if (d.done())
 			return text("DONE phases " + std::to_string(d.phase_count()) + " newton " + std::to_string(g_newton_total));
 		fit::PhaseStats st;
+		const uint64_t i0 = instret();
 		const bool ok = d.step(&st);
+		g_last_instructions = instret() - i0;
 		g_last = st;
 		g_newton_total += st.newton_iterations;
 		if (!ok)
 			return fail("fit_step: " + phase_text(st) + ": " + st.error);
-		return text("OK " + phase_text(st) + " io_attempts " + std::to_string(io_in_window()));
+		return text("OK " + phase_text(st) + " io_attempts " + std::to_string(io_in_window()) + " instructions " +
+				std::to_string(g_last_instructions) + " " + heap_text());
 	});
 }
 
@@ -271,6 +288,7 @@ Variant fit_run_all() {
 	return guarded("fit_run_all", [] {
 		fit::FitDriver &d = driver();
 		std::string log;
+		const uint64_t i0 = instret();
 		while (!d.done() && !d.failed()) {
 			fit::PhaseStats st;
 			const bool ok = d.step(&st);
@@ -280,8 +298,9 @@ Variant fit_run_all() {
 			if (!ok)
 				return fail("fit_run_all:\n" + log);
 		}
+		g_last_instructions = instret() - i0;
 		return text(log + "DONE phases " + std::to_string(d.phase_count()) + " newton " + std::to_string(g_newton_total) +
-				" io_attempts " + std::to_string(io_in_window()));
+				" io_attempts " + std::to_string(io_in_window()) + " instructions " + std::to_string(g_last_instructions));
 	});
 }
 
@@ -294,10 +313,10 @@ Variant fit_status() {
 			return text(b);
 		}
 		const fit::FitDriver &d = *g_drv;
-		std::snprintf(b, sizeof b, "phase %d/%d%s newton %d energy %.17g |grad| %.6g status %s io_attempts %d io_total %d %s",
+		std::snprintf(b, sizeof b, "phase %d/%d%s newton %d energy %.17g |grad| %.6g status %s io_attempts %d io_total %d last_instructions %llu %s",
 				d.next_phase(), d.phase_count(), d.failed() ? " FAILED" : d.done() ? " done" : "", g_newton_total, g_last.energy,
 				g_last.grad_norm, g_last.status.empty() ? "-" : g_last.status.c_str(), io_in_window(), fit::io_attempts(),
-				heap_text().c_str());
+				(unsigned long long)g_last_instructions, heap_text().c_str());
 		return text(b);
 	});
 }
@@ -364,6 +383,34 @@ Variant fit_check_intersections(PackedFloat32Array override_v) {
 	});
 }
 
+// The intersection check's positive control: the current garment (body space)
+// with one vertex moved `dist` solve units (the solve frame is the garment's
+// metric frame, voxel 0.01 = 1 cm) into the avatar along -grad SDF. The vertex
+// is the one with the smallest SDF value (the closest to the body, through the
+// Lean sampler). dist = 0 gives the unpushed garment through the same f32
+// round trip, the flat control. Hand the result to fit_check_intersections.
+Variant fit_push_vertex(double dist) {
+	return guarded("fit_push_vertex", [&] {
+		fit::FitDriver &d = driver();
+		std::vector<double> g;
+		d.garment_solve_frame(&g);
+		double h = 0;
+		const std::vector<double> s = fit::sdf_sample(g, &h);
+		const size_t n = g.size() / 3;
+		size_t best = 0;
+		for (size_t i = 1; i < n; i++)
+			if (s[10 * i] < s[10 * best])
+				best = i;
+		double gr[3] = {s[10 * best + 1], s[10 * best + 2], s[10 * best + 3]};
+		const double len = std::sqrt(gr[0] * gr[0] + gr[1] * gr[1] + gr[2] * gr[2]);
+		if (!(len > 0))
+			throw std::runtime_error("zero SDF gradient at the chosen vertex");
+		for (int j = 0; j < 3; j++)
+			g[3 * best + j] -= dist * gr[j] / len;
+		return Variant(PackedFloat32Array(solve_to_body_f32(g, d.normalisation())));
+	});
+}
+
 // The SDF grid sampled at points (solve frame, xyz): 10 doubles per point,
 // (x, gx, gy, gz, hxx, hxy, hxz, hyy, hyz, hzz). x is a distance in solve
 // units (the grid stores distances, clamped to [-h, 150h]); g and h are
@@ -386,6 +433,23 @@ Variant fit_probe(String what_s) {
 			return text(fit::probe_ldlt());
 		if (what == "exceptions")
 			return text(fit::probe_exceptions());
+		if (what == "ldlt8k")
+			return text(fit::probe_ldlt8k());
+		if (what == "libm")
+			return text(fit::probe_libm());
+		if (what == "stl")
+			return text(fit::probe_stl());
+		if (what == "instret") {
+			// Two reads around a known loop: the counter must advance by at
+			// least the loop's instructions.
+			const uint64_t a = instret();
+			volatile uint64_t acc = 0;
+			for (int i = 0; i < 100000; i++)
+				acc += uint64_t(i);
+			const uint64_t b = instret();
+			return text(std::string(b - a >= 100000 ? "PASS" : "FAIL") + " instret: " + std::to_string(b - a) +
+					" instructions over a 100000-iteration loop (at " + std::to_string(b) + " into this vmcall)");
+		}
 		if (what == "io_paths") {
 			std::string s = "io_total " + std::to_string(fit::io_attempts());
 			for (const std::string &p : fit::io_paths())
@@ -394,7 +458,7 @@ Variant fit_probe(String what_s) {
 		}
 		if (what == "heap")
 			return text(heap_text());
-		return fail("fit_probe: want io | ldlt | exceptions | io_paths | heap");
+		return fail("fit_probe: want io | ldlt | ldlt8k | libm | stl | instret | exceptions | io_paths | heap");
 	});
 }
 
@@ -420,8 +484,10 @@ int main() {
 	ADD_API_FUNCTION(fit_preview, "Variant", "int k", "Set the preview interval (k > 0); newest snapshot, body space");
 	ADD_API_FUNCTION(fit_check_intersections, "String", "PackedFloat32Array override",
 			"Intersection check on the current state, or with the garment replaced (body space)");
+	ADD_API_FUNCTION(fit_push_vertex, "Variant", "double dist",
+			"Current garment (body space) with its closest vertex moved dist solve units into the avatar");
 	ADD_API_FUNCTION(fit_sdf_dump, "Variant", "PackedFloat64Array pts",
 			"SDF grid via the Lean kernel at solve-frame points: 10 doubles each, index space");
-	ADD_API_FUNCTION(fit_probe, "String", "String what", "io | ldlt | exceptions | io_paths | heap");
+	ADD_API_FUNCTION(fit_probe, "String", "String what", "io | ldlt | ldlt8k | libm | stl | instret | exceptions | io_paths | heap");
 	halt();
 }

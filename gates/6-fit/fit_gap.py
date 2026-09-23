@@ -3,6 +3,9 @@ vertices (those not in no-fit.txt) sit from the avatar, in voxels.
 
     python gates/6-fit/fit_gap.py AVATAR.obj NO_FIT.txt VOXEL GARMENT.obj [GARMENT.obj ...]
 
+A GARMENT may also be a .f64 file (row-major xyz doubles, solve frame: what
+fit_native and gate_fit.gd write); only its vertices are used.
+
 AVATAR.obj is the avatar in the solve frame (the oracle's step_avatar_<last>.obj;
 every run here shares it). Distances are exact point-triangle (numpy, brute
 force over all avatar triangles), unsigned. Prints per garment: mean, p50,
@@ -14,6 +17,8 @@ import numpy as np
 
 
 def load_obj(path):
+    if path.endswith(".f64"):
+        return np.fromfile(path, dtype="<f8").reshape(-1, 3), None
     v, f = [], []
     with open(path) as fh:
         for line in fh:

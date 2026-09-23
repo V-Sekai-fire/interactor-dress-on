@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: If you use this code, cite ggml.
+title: ggml tensor library (vendored)
+abstract: >-
+  ggml, the tensor library, from the org's fork, added here as a squashed git
+  subtree at vendor/ggml. The guest ELFs build it static for riscv64 at
+  rv64gc with one thread and no dynamic backend loading (GGML_NATIVE,
+  GGML_BACKEND_DL, GGML_OPENMP, GGML_LLAMAFILE, GGML_RVV, GGML_RV_ZFH,
+  GGML_RV_ZVFH, GGML_RV_ZICBOP, GGML_RV_ZIHINTPAUSE and GGML_RV_ZVFBFWMA off;
+  __riscv_v_intrinsic undefined for ggml-cpu, Gate 0F finding 5). ggml-cpu is
+  the in-guest reference; guest/ggml-rd is the GPU backend, over Godot's
+  RenderingDevice, with kernels generated from lean/Ggml. Adapted here, in
+  tests/test-backend-ops.cpp only, both marked "interactor-dress-on": (1)
+  N_THREADS is wrapped in #ifndef so an embedder can set it (the guest builds
+  with -DN_THREADS=1; its threads are serialized, Gate 0C); (2) under
+  GGML_GUEST_REGISTER_BACKENDS, main() calls the embedder's
+  ggml_guest_register_backends() instead of ggml_backend_load_all(). The
+  guest also compiles the file with -Dmain=... and links it with
+  --wrap=ggml_backend_init_by_type (guest/ggml_test), which changes no
+  source. Nothing else is modified.
+type: software
+authors:
+  - name: Georgi Gerganov
+  - name: ggml contributors
+    website: https://github.com/ggml-org/ggml
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/ggml
+commit: 04b55bba4877e0d269e2db68911608485c08eb3a
+license: MIT

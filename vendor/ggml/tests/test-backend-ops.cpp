@@ -45,10 +45,20 @@
 #include <vector>
 #include <unordered_map>
 
+// interactor-dress-on: an embedder may set the thread count (the
+// godot-sandbox guest builds with -DN_THREADS=1: its threads are serialized).
+#ifndef N_THREADS
 #ifdef __EMSCRIPTEN__
 #   define N_THREADS 1
 #else
 #   define N_THREADS std::thread::hardware_concurrency()
+#endif
+#endif
+
+#ifdef GGML_GUEST_REGISTER_BACKENDS
+// interactor-dress-on: an embedder without dynamic loading (the
+// godot-sandbox guest) registers its backends itself, in this function.
+extern "C" void ggml_guest_register_backends(void);
 #endif
 
 static void init_tensor_uniform(ggml_tensor * tensor, float min = -1.0f, float max = 1.0f) {
@@ -10545,7 +10555,11 @@ int main(int argc, char ** argv) {
     }
 
     // load and enumerate backends
+#ifdef GGML_GUEST_REGISTER_BACKENDS
+    ggml_guest_register_backends();
+#else
     ggml_backend_load_all();
+#endif
 
     // Create printer for output format
     std::unique_ptr<printer> output_printer = create_printer(output_format);

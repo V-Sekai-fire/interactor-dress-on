@@ -28,6 +28,13 @@ lean_lib Probes
 lean_exe emit_probes where
   root := `EmitProbes
 
+-- The curvenet stage's kernels (Cut 4): CASSIE's four editing-pipeline
+-- kernels from entities-godot, see Cassie/CITATION.cff.
+lean_lib Cassie
+
+lean_exe emit_cassie where
+  root := `EmitCassie
+
 -- Iterative-deepening witness search over the plausible ladder. Shares
 -- the `Level` shape (walkSteps / finBound / numInst) that witness-cpp
 -- mirrors on the C++ side, so a property stated here and a property

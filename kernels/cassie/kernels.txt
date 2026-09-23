@@ -1,0 +1,9 @@
+# The five kernels the curvenet dispatchers (vendor/cassie/src/solver/
+# slang_dispatch) call, by their Lean/Slang module names: CASSIE's four
+# editing-pipeline kernels (lean/Cassie, emit_cassie) and DiffCloth's df32
+# sparse matrix-vector product (Cloth.SlangCodegen.SpmvDf32, emit_shaders).
+curve_casteljau
+curve_generate_bezier
+curve_newton
+curve_rdp
+spmv_df32

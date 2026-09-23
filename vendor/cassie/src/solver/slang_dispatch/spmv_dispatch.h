@@ -32,7 +32,7 @@
 
 // Public C++ entry point to the Slang-emitted SPMV kernel. The
 // implementation is in spmv_dispatch.cpp, which `#include`s the
-// slangc-emitted kernels/cassie/cpp/spmv_emit.cpp directly.
+// slangc-emitted kernels/cassie/cpp/spmv_df32_emit.cpp directly.
 //
 // Single source of truth: this kernel is generated from the Lean
 // `Cloth.SlangCodegen.Spmv` module → Slang source → slangc -target cpp.

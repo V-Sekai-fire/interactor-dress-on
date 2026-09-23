@@ -26,7 +26,15 @@ abstract: >-
   Lean-emitted kernels/cassie/cpp/<kernel>_emit.cpp inside a namespace,
   after the slang cpp prelude with its EXTERN_C macros emptied (the
   guest/avbd/avbd_cpu.cpp pattern), and call main_0_Thread instead of
-  _main_0 from thirdparty/avbd/*.cpu.cpp.
+  _main_0 from thirdparty/avbd/*.cpu.cpp. spmv_dispatch includes
+  spmv_df32_emit.cpp, named after the Lean module it is emitted from
+  (Cloth.SlangCodegen.SpmvDf32, kernels/cassie/kernels.txt), where
+  entities-godot names it spmv.cpu.cpp. The emits' struct, field and
+  entry names (CasteljauParams_0, GbParams_0, NewtonParams_0, RdpParams_0,
+  SpmvDf32Params_0, GlobalParams_0.*_0, main_0_Thread) are those the
+  dispatchers were written against: outside the prelude and #line
+  directives the five emits match thirdparty/avbd/*.cpu.cpp line for line
+  (gates/4-curvenet/kernel-parity.log).
   (3) CassieSurfacePatch::get_callback returns
   callable_mp(this, &CassieSurfacePatch::project) instead of the
   string-bound Callable(this, "project").

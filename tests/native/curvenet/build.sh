@@ -7,15 +7,15 @@
 # 1. configure + build every curvenet library and curvenet_smoke (-k 0, so
 #    one bad TU does not hide the rest); report the TU count;
 # 2. list the symbols cassie_core references that no library defines -- with
-#    CURVENET_KERNELS_PENDING=ON these are the five dispatchers' entry points
-#    and nothing else;
-# 3. run curvenet_smoke.
+#    the kernels built (the default) there are none; with
+#    CURVENET_KERNELS_PENDING=ON exactly the five dispatchers' entry points;
+# 3. run curvenet_smoke, and curvenet_kernels_smoke when the kernels are built.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../../.." && pwd)"
 OUT="${OUT:-$ROOT/build/native-curvenet}"
-PENDING="${CURVENET_KERNELS_PENDING:-ON}"
+PENDING="${CURVENET_KERNELS_PENDING:-OFF}"
 NINJA="$(command -v ninja || echo "$HOME/.pixi/bin/ninja.exe")"
 NM="$(command -v llvm-nm || echo nm)"
 m() { cygpath -m "$1" 2>/dev/null || echo "$1"; }
@@ -55,3 +55,7 @@ if [ "$PENDING" = ON ]; then want=5; else want=0; fi
 
 cmake --build "$OUT" --target curvenet_smoke
 "$OUT/curvenet_smoke"
+if [ "$PENDING" != ON ]; then
+	cmake --build "$OUT" --target curvenet_kernels_smoke
+	"$OUT/curvenet_kernels_smoke"
+fi

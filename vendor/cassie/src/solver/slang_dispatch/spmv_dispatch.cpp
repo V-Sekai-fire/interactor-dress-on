@@ -31,7 +31,7 @@
 // Slang-emitted SPMV kernel + dispatch wrapper.
 //
 // We #include the slangc -target cpp output (kernels/cassie/cpp/
-// spmv_emit.cpp) directly here, inside `namespace cassie_slang_spmv`,
+// spmv_df32_emit.cpp) directly here, inside `namespace cassie_slang_spmv`,
 // so `main_0_Thread`, `GlobalParams_0`, `SpmvDf32Params_0` etc. are
 // visible in this TU only — no duplicate-symbol risk if no other TU
 // includes the same file.
@@ -57,7 +57,7 @@
 #include "spmv_dispatch.h"
 
 // The Lean-emitted slangc -target cpp output for this kernel
-// (kernels/cassie/cpp/spmv_emit.cpp, regenerated from lean/Cassie by the
+// (kernels/cassie/cpp/spmv_df32_emit.cpp, from Cloth.SlangCodegen.SpmvDf32 by the
 // kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
 // comes in once at file scope; emptying the EXTERN_C macros demotes the
 // emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
@@ -71,7 +71,7 @@
 #define SLANG_PRELUDE_EXTERN_C_END
 
 namespace cassie_slang_spmv {
-#include "spmv_emit.cpp"
+#include "spmv_df32_emit.cpp"
 } // namespace cassie_slang_spmv
 
 namespace cassie_slang_dispatch {

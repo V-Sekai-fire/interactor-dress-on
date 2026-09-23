@@ -6,16 +6,16 @@
 #
 #   tests/native/curvenet/build.sh
 #
-# CURVENET_KERNELS_PENDING=ON (the default here until the Lean side lands
-# kernels/cassie/cpp/*_emit.cpp) leaves the five dispatch TUs out; build.sh
-# lists the symbols that leaves unresolved.
+# The five dispatch TUs build from the committed kernels/cassie/cpp/*_emit.cpp
+# (kernels/cassie/gen.sh). CURVENET_KERNELS_PENDING=ON leaves them out, and
+# build.sh then lists exactly their five symbols as unresolved.
 cmake_minimum_required(VERSION 3.16)
 project(curvenet_native C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(CURVENET_KERNELS_PENDING "Build curvenet without the Lean-emitted Cassie kernels" ON)
+option(CURVENET_KERNELS_PENDING "Build curvenet without the Lean-emitted Cassie kernels" OFF)
 include(${CMAKE_CURRENT_LIST_DIR}/../../../cmake/curvenet.cmake)
 
 add_executable(curvenet_smoke
@@ -29,3 +29,11 @@ set_source_files_properties(${CMAKE_CURRENT_LIST_DIR}/smoke_main.cpp PROPERTIES
 target_include_directories(curvenet_smoke PRIVATE "${CASSIE_SRC}")
 target_compile_options(curvenet_smoke PRIVATE ${CURVENET_STRICT_FP})
 target_link_libraries(curvenet_smoke PRIVATE cassie_core mwt_subset geogram_subset)
+
+# The five Lean-emitted kernels, run through the vendored dispatchers
+# (smoke_kernels.cpp); only when they are built.
+if(NOT CURVENET_KERNELS_PENDING)
+	add_executable(curvenet_kernels_smoke ${CMAKE_CURRENT_LIST_DIR}/smoke_kernels.cpp)
+	target_compile_options(curvenet_kernels_smoke PRIVATE ${CURVENET_STRICT_FP})
+	target_link_libraries(curvenet_kernels_smoke PRIVATE cassie_kernels)
+endif()

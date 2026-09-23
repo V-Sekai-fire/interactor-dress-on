@@ -6,16 +6,16 @@
 # include directory, PMP builds with PMP_NO_EIGEN, and the Cassie solver is
 # the Track 5 Eigen-free one. Eigen survives only in fit.elf.
 #
-# Every library is EXCLUDE_FROM_ALL until the curvenet ELF links them: the
-# kernels/cassie/cpp/*_emit.cpp the dispatchers include are produced by the
-# Lean side of Cut 4, and the default build must not wait on them.
+# Every library is EXCLUDE_FROM_ALL until the curvenet ELF links them. The
+# dispatchers include kernels/cassie/cpp/*_emit.cpp, which kernels/cassie/gen.sh
+# lowers from lean/ (Cassie.kernels and Cloth.SlangCodegen.SpmvDf32) and which
+# are committed.
 
 include(${CMAKE_CURRENT_LIST_DIR}/cassie_sources.cmake)
 
-# Until the Lean side of Cut 4 lands kernels/cassie/cpp/*_emit.cpp, the five
-# dispatch TUs cannot compile. ON leaves them (and cassie_kernels) out so the
-# rest of the stage can be compile- and link-checked; the symbols they would
-# define stay unresolved and are listed by tests/native/curvenet.
+# ON leaves the five dispatch TUs (and cassie_kernels) out, as before the
+# Lean side of Cut 4 landed; the symbols they define then stay unresolved and
+# are listed by tests/native/curvenet. OFF, the default, builds them.
 option(CURVENET_KERNELS_PENDING "Build curvenet without the Lean-emitted Cassie kernels" OFF)
 include(${CMAKE_CURRENT_LIST_DIR}/godot_lite.cmake)
 

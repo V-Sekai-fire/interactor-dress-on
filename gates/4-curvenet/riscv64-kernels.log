@@ -1,0 +1,20 @@
+cassie_kernels: libcassie_kernels.a, 25 text symbols, arch: ELF 64-bit LSB relocatable, UCB RISC-V
+cassie_core needs 5 cassie_slang_dispatch symbols:
+  cassie_slang_dispatch::curve_casteljau(float const*, float const*, float const*, float const*, float, float*, float*, float*, float*, float*, float*, float*, float*)
+  cassie_slang_dispatch::curve_generate_bezier(float const*, float const*, unsigned int, float const*, float const*, float*)
+  cassie_slang_dispatch::curve_newton_reparameterize(float const*, float const*, float const*, float const*, unsigned int, float const*, float const*, float*)
+  cassie_slang_dispatch::curve_rdp_reduce(float const*, unsigned int, float, unsigned int*)
+  cassie_slang_dispatch::spmv(int, int const*, int const*, int, float const*, float const*, int, float*)
+cassie_kernels defines 5:
+  cassie_slang_dispatch::curve_casteljau(float const*, float const*, float const*, float const*, float, float*, float*, float*, float*, float*, float*, float*, float*)
+  cassie_slang_dispatch::curve_generate_bezier(float const*, float const*, unsigned int, float const*, float const*, float*)
+  cassie_slang_dispatch::curve_newton_reparameterize(float const*, float const*, float const*, float const*, unsigned int, float const*, float const*, float*)
+  cassie_slang_dispatch::curve_rdp_reduce(float const*, unsigned int, float, unsigned int*)
+  cassie_slang_dispatch::spmv(int, int const*, int const*, int, float const*, float const*, int, float*)
+unresolved cassie_slang_dispatch symbols: 0
+  cassie_slang_curve_casteljau::main_0_Thread: 1
+  cassie_slang_curve_generate_bezier::main_0_Thread: 1
+  cassie_slang_curve_newton::main_0_Thread: 1
+  cassie_slang_curve_rdp::main_0_Thread: 1
+  cassie_slang_spmv::main_0_Thread: 1
+Eigen:: symbols in cassie_kernels + cassie_core: 0

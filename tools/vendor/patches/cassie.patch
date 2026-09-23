@@ -505,7 +505,7 @@ index ddaae22..46c02ea 100644
  	delete[] in_packed;
  	return out_count_scratch;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
-index 0750044..1fead53 100644
+index 0750044..52a2f06 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
 @@ -30,17 +30,15 @@
@@ -520,7 +520,7 @@ index 0750044..1fead53 100644
 -// TU only — no duplicate-symbol risk if no other TU includes the same
 -// file.
 +// We #include the slangc -target cpp output (kernels/cassie/cpp/
-+// spmv_emit.cpp) directly here, inside `namespace cassie_slang_spmv`,
++// spmv_df32_emit.cpp) directly here, inside `namespace cassie_slang_spmv`,
 +// so `main_0_Thread`, `GlobalParams_0`, `SpmvDf32Params_0` etc. are
 +// visible in this TU only — no duplicate-symbol risk if no other TU
 +// includes the same file.
@@ -538,7 +538,7 @@ index 0750044..1fead53 100644
  
 -#include "../../../thirdparty/avbd/spmv.cpu.cpp"
 +// The Lean-emitted slangc -target cpp output for this kernel
-+// (kernels/cassie/cpp/spmv_emit.cpp, regenerated from lean/Cassie by the
++// (kernels/cassie/cpp/spmv_df32_emit.cpp, from Cloth.SlangCodegen.SpmvDf32 by the
 +// kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
 +// comes in once at file scope; emptying the EXTERN_C macros demotes the
 +// emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
@@ -552,7 +552,7 @@ index 0750044..1fead53 100644
 +#define SLANG_PRELUDE_EXTERN_C_END
 +
 +namespace cassie_slang_spmv {
-+#include "spmv_emit.cpp"
++#include "spmv_df32_emit.cpp"
 +} // namespace cassie_slang_spmv
  
  namespace cassie_slang_dispatch {
@@ -567,7 +567,7 @@ index 0750044..1fead53 100644
  	}
  }
 diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
-index 93d4e00..eb31beb 100644
+index 93d4e00..59a995e 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
 +++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
 @@ -32,7 +32,7 @@
@@ -575,7 +575,7 @@ index 93d4e00..eb31beb 100644
  // Public C++ entry point to the Slang-emitted SPMV kernel. The
  // implementation is in spmv_dispatch.cpp, which `#include`s the
 -// slangc-emitted modules/cassie/thirdparty/avbd/spmv.cpu.cpp directly.
-+// slangc-emitted kernels/cassie/cpp/spmv_emit.cpp directly.
++// slangc-emitted kernels/cassie/cpp/spmv_df32_emit.cpp directly.
  //
  // Single source of truth: this kernel is generated from the Lean
  // `Cloth.SlangCodegen.Spmv` module → Slang source → slangc -target cpp.

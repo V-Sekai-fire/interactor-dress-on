@@ -1,0 +1,57 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T10:14:49
+args: --gate=loop --out=C:/Users/ernest.lee/AppData/Local/Temp/psd3/flat.txt --wallclock=2800 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              126 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 12 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1718 ms  vm    1639.9 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               959 ms  vm     946.2 ms  heap 3.1 MiB  frames 1713  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN         3640 ms  vm    3635.9 ms  heap 8.3 MiB  frames 7440  OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+      HEARTBEAT FIT_RUN t=30 s | fit_step 30 s heap 24.8 MiB
+      HEARTBEAT FIT_RUN t=60 s | fit_step 60 s heap 39.5 MiB
+      HEARTBEAT FIT_RUN t=90 s | fit_step 90 s heap 39.0 MiB
+      HEARTBEAT FIT_RUN t=120 s | fit_step 120 s heap 38.9 MiB
+      HEARTBEAT FIT_RUN t=150 s | fit_step 150 s heap 38.9 MiB
+      HEARTBEAT FIT_RUN t=180 s | fit_step 180 s heap 30.4 MiB
+      HEARTBEAT FIT_RUN t=210 s | fit_step 210 s heap 32.5 MiB
+      HEARTBEAT FIT_RUN t=240 s | fit_step 240 s heap 30.4 MiB
+      HEARTBEAT FIT_RUN t=270 s | fit_step 270 s heap 32.5 MiB
+      fit_step: host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimize 1 post_steps 51 energy 0.0089990401469356614 |grad| 5.45156 status 0 io_attempts 0 instructions 241672354577 heap_used 29.7 MiB heap_free 1608.7 MiB chunks 60784
+      HEARTBEAT FIT_RUN t=300 s | fit_step 4 s heap 27.0 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=330 s | fit_step 34 s heap 27.9 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=360 s | fit_step 64 s heap 32.2 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=390 s | fit_step 94 s heap 34.7 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=420 s | fit_step 124 s heap 32.6 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=450 s | fit_step 154 s heap 33.5 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=480 s | fit_step 184 s heap 40.8 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=510 s | fit_step 214 s heap 32.3 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=540 s | fit_step 244 s heap 33.5 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=570 s | fit_step 274 s heap 32.6 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=600 s | fit_step 304 s heap 33.5 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=630 s | fit_step 334 s heap 32.6 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      HEARTBEAT FIT_RUN t=660 s | fit_step 364 s heap 33.5 MiB | last host_ms=296379 OK phase 0 (substep 0, AL): newton 50 minimiz
+      fit_step: host_ms=388665 OK phase 1 (substep 0, reduced): newton 100 minimize 1 post_steps 101 energy 0.011233598165391394 |grad| 0.00854109 status 4 io_attempts 0 instructions 389650762562 heap_used 31.6 MiB heap_free 1606.8 MiB chunks 60784
+STATE FIT_RUN         685053 ms  vm  685045.5 ms  heap 31.6 MiB  frames 1514231  2 phases | phase 2/2 done newton 150 energy 0.011233598165391394 |grad| 0.00854109 status 4 io_attempts 0 io_total 0 last_instructions 389650762562 heap_used 31.6 MiB heap_free 1606.8 MiB chunks 60784
+STATE FIT_READ             3 ms  vm       0.1 ms  heap 31.6 MiB  frames 1  932 v
+STATE CHECK              882 ms  vm     881.4 ms  heap 31.6 MiB  frames 1  OK none | control (one vertex pushed inside): OK INTERSECTS edge (5357,5936) face (3074,3548,2588)
+STATE DRAPE              364 ms  vm     345.7 ms  heap 2.7 MiB  frames 1  QUEUED forward 100 on rd | body mesh, 64 pins, scale 10.0
+STATE DRAPE_COLLECT     2023 ms  vm    1876.8 ms  heap 29.5 MiB  frames 301  IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892202 friction_events=64708 projections=32400 self_pushes=455 wall_ms=2019.1 ms/step=20.191 | 932 finite vertices after RUNNING 399/400
+=> DONE 
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS pipeline: DONE 
+PASS cycles: cycles=2 (want 2)
+PASS openings: openings=2 (want 2: the waist and the hem)
+PASS patches: patches=2 (want 2: the front and back panels)
+INFO curvenet: curves=6 knots=4 degrees=[3, 3, 3, 3] edges=6 (4 knots of degree 3 have 6 edges)
+PASS mesh: 932 v 1728 f, 2 loops, 1 components
+PASS intersections: OK none
+PASS intersections control: one vertex pushed inside: OK INTERSECTS edge (5357,5936) face (3074,3548,2588)
+PASS drape: 100 steps queued, { "status": "IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892202 friction_events=64708 projections=32400 self_pushes=455 wall_ms=2019.1 ms/step=20.191", "last_running": "RUNNING 399/400", "ticks": 301, "vertices": 932, "finite": true }
+PASS screenshot: flat.png (1152x648)
+wall 696.3 s, frames 1523707
+RESULT: PASS FIXTURE:infer,rig
+drape rd_close: CLOSED device=freed permanent_slots=0

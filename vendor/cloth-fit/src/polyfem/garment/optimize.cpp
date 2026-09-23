@@ -1054,7 +1054,10 @@ namespace polyfem {
             intersection_data.face_to_object.resize(intersection_data.F.size(), 0);
             intersection_data.face_to_group.resize(intersection_data.F.size(), 0);
 
-            io::OBJWriter::write_with_groups(out_folder + "/intersection.obj", intersection_data);
+            // No out_folder (fit.elf, fit_driver): the guest has no files; the
+            // caller gets the ids from ipc::my_has_intersections instead.
+            if (!out_folder.empty())
+                io::OBJWriter::write_with_groups(out_folder + "/intersection.obj", intersection_data);
 
             // Create intersecting pair data
             OBJData pair_data;
@@ -1074,7 +1077,8 @@ namespace polyfem {
             pair_data.face_to_object.push_back(0);
             pair_data.face_to_group.push_back(0);
 
-            io::OBJWriter::write_with_groups(out_folder + "/intersecting_pair.obj", pair_data);
+            if (!out_folder.empty())
+                io::OBJWriter::write_with_groups(out_folder + "/intersecting_pair.obj", pair_data);
             log_and_throw_error("Unable to solve, initial solution has intersections!");
         }
     }
@@ -1370,6 +1374,12 @@ namespace polyfem {
 
 	json init(const json &p_args_in, const bool strict_validation)
 	{
+#ifdef POLYFEM_EMBEDDED_SPECS
+		// This init() reads its rules from the build machine's json-specs and
+		// creates the output directory. Embedded builds (fit.elf, fit_native) use
+		// fit::init_args (guest/fit/fit_driver.cpp), the same steps without files.
+		throw std::runtime_error("polyfem::init reads spec files; POLYFEM_EMBEDDED_SPECS builds use fit::init_args");
+#endif
 		json args_in = p_args_in; // mutable copy
         json args;
 

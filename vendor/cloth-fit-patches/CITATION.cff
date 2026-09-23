@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: If you use these patches, cite the trees they apply to.
+title: cloth-fit dependency patches for fit.elf
+abstract: >-
+  Patches applied to pinned V-Sekai-fire forks of cloth-fit's CPM
+  dependencies for the fit.elf build (Cut 6), kept as patch files so the
+  fork pins stay the revisions cloth-fit's recipes name.
+  polysolve-embedded-specs.patch applies to V-Sekai-fire/polysolve at
+  ee553dc6 (branch garment, from Huangzizhou/polysolve): Solver::create in
+  nonlinear/Solver.cpp, nonlinear/BoxConstraintSolver.cpp and
+  linear/Solver.cpp read their JSON rules from absolute build-machine paths
+  (POLYSOLVE_NON_LINEAR_SPEC, POLYSOLVE_LINEAR_SPEC); with the new CMake
+  option POLYSOLVE_EMBEDDED_SPECS they take them from
+  polysolve_embedded_spec(name), which the embedding program defines
+  (tools/fit/embed_files.py over guest/fit/specs). Off, the library is
+  unchanged. tools/fit/prepare_forks.sh applies it in the worktree
+  .forks/polysolve-guest; .forks/polysolve stays unpatched for the oracle.
+type: software
+authors:
+  - name: Zizhou Huang
+  - name: The PolyFEM contributors
+  - name: K. S. Ernest (iFire) Lee
+  - name: V-Sekai
+repository-code: https://github.com/V-Sekai-fire/polysolve
+commit: ee553dc6a330ef70bcc6ba2f05653fecd201c05f
+license: MIT

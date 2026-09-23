@@ -1,0 +1,3 @@
+# Patches apply to LF checkouts (tools/fit/prepare_forks.sh); keep them LF
+# whatever core.autocrlf says.
+*.patch -text

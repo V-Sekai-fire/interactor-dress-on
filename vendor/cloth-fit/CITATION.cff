@@ -50,8 +50,20 @@ abstract: >-
   _USE_MATH_DEFINES for the M_PI the OpenVDB headers used to bring in.
   Checked by Gate 6a (gates/6-fit/sdf) against OpenVDB on the foxgirl
   oracle.
-  The other fit.elf patches (POLYFEM_THREADING=NONE, embedded specs, no
-  file I/O) will be listed here as they land.
+  No file I/O for fit.elf (Cut 6), each change behind a guard that leaves
+  PolyFEM_bin unchanged: optimize.cpp writes its
+  intersection debug OBJs only with a non-empty out_folder, and under
+  POLYFEM_EMBEDDED_SPECS polyfem::init refuses to run (it reads the build
+  machine's json-specs; guest/fit/fit_driver.cpp has the file-free copy)
+  and utils/SpecPaths.cpp neither probes directories nor calls dladdr.
+  polysolve's own spec reads are replaced by
+  vendor/cloth-fit-patches/polysolve-embedded-specs.patch, applied to the
+  V-Sekai-fire/polysolve pin in a separate worktree
+  (tools/fit/prepare_forks.sh). POLYFEM_THREADING=NONE needs no source
+  change (a CMake option). Checked by gates/6-fit/driver: fit_native
+  (tests/native/fit) opens no file between FitDriver::begin and its last
+  phase, and built with upstream's numerics reproduces the 1-thread oracle
+  bitwise.
 type: software
 authors:
   - name: Zizhou Huang

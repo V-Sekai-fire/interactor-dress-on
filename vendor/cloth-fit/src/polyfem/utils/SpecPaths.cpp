@@ -3,10 +3,12 @@
 #include <cstdlib>
 #include <fstream>
 
+#ifndef POLYFEM_EMBEDDED_SPECS
 #if defined(_WIN32)
 #include <windows.h>
 #else
 #include <dlfcn.h>
+#endif
 #endif
 
 #ifndef POLYFEM_JSON_SPEC_DIR
@@ -21,6 +23,14 @@
 
 namespace polyfem::utils
 {
+#ifdef POLYFEM_EMBEDDED_SPECS
+	// Embedded builds (fit.elf, fit_native) carry their specs inside the binary
+	// (guest/fit/specs): no module path lookup (dladdr), no probing of the
+	// build machine's directories.
+	std::string module_dir() { return {}; }
+	std::vector<std::string> spec_dirs() { return {}; }
+	std::string input_spec_path() { return {}; }
+#else
 	namespace
 	{
 		std::string parent_of(const std::string &path)
@@ -84,4 +94,5 @@ namespace polyfem::utils
 				return dir + "/input-spec.json";
 		return POLYFEM_INPUT_SPEC;
 	}
+#endif
 }

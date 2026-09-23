@@ -1,0 +1,136 @@
+# run_p0.sh cg-jacobi: /c/b/fit-native-amdahl/fit_native.exe --phases 1 --out /c/b/amdahl-out/cg-jacobi --set /solver/linear/solver="Eigen::ConjugateGradient" --set /solver/linear/precond="Eigen::DiagonalPreconditioner"  (cap 180s)  2026-09-23T08:19:28-07:00
+inputs: avatar 5128 v / 10171 f, garment 2682 v / 5220 f, skeleton 15 v / 14 b, no-fit 2005, float32 yes, harness file opens 7
+[2026-09-23 08:19:29.415] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+[2026-09-23 08:19:29.416] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+[2026-09-23 08:19:29.417] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+[2026-09-23 08:19:29.418] [polyfem] [info] Shrunk avatar blended 0.010 toward the target body (0 = fully collapsed onto the skeleton, 1 = no shrink)
+[2026-09-23 08:19:29.547] [polyfem] [debug] curve 0 has 3 bone intersections
+[2026-09-23 08:19:29.547] [polyfem] [debug] curve normal [-0.011034943664410036, 0.055700501234311195, -0.9983865404644485]
+[2026-09-23 08:19:29.547] [polyfem] [debug] CurveTargetForm set curve center to bone 15 - 16, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+[2026-09-23 08:19:29.547] [polyfem] [debug] curve 1 has 1 bone intersections
+[2026-09-23 08:19:29.547] [polyfem] [debug] curve normal [0.004042139558851457, -0.06527869003077968, 0.9978588846804203]
+[2026-09-23 08:19:29.547] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+[2026-09-23 08:19:29.547] [polyfem] [info] Start substep 1 out of 2
+[amdahl] candidates ccd vv 0 ev 0 ee 2522 fv 589
+[2026-09-23 08:19:29.832] [polyfem] [debug] Set initial AL weight to 1
+[amdahl] candidates ccd vv 0 ev 0 ee 3033 fv 699
+[2026-09-23 08:19:30.849] [polyfem] [debug] Solving AL Problem with weight 1
+[amdahl] candidates static vv 0 ev 0 ee 2522 fv 589
+[amdahl] collisions vv 0 ev 0 ee 0 fv 0 pv 0
+[2026-09-23 08:19:31.087] [polyfem] [debug] Starting SparseNewton with Backtracking solve f₀=53.6213 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseNewton n 8047 nnz 295417 residual 2.163465e-03 info {"solver_error":1.0086782685158778e-05,"solver_iter":1000}
+[2026-09-23 08:19:31.537] [polyfem] [debug] [SparseNewton] large (or nan) linear solve residual 0.00216346516827553>1e-05 (‖∇f‖=214.48515704102945)
+[2026-09-23 08:19:31.537] [polyfem] [debug] [SparseNewton][Backtracking] Update direction could not be computed; reverting to SparseProjectedNewton
+[amdahl] linsolve SparseProjectedNewton n 8047 nnz 295417 residual 4.572185e-04 info {"solver_error":2.131702199167011e-06,"solver_iter":1000}
+[2026-09-23 08:19:32.075] [polyfem] [debug] [SparseProjectedNewton] large (or nan) linear solve residual 0.0004572184809257617>1e-05 (‖∇f‖=214.48515704102945)
+[2026-09-23 08:19:32.075] [polyfem] [debug] [SparseProjectedNewton][Backtracking] Update direction could not be computed; reverting to SparseRegularizedNewton (reg_weight=1)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 2.107491e-10 info {"solver_error":9.825703221502944e-13,"solver_iter":235}
+[amdahl] candidates ccd vv 0 ev 0 ee 6528 fv 1873
+[amdahl] collisions vv 9 ev 47 ee 36 fv 2 pv 0
+[2026-09-23 08:19:33.607] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.359375 descent_step_size=0.359375 final_step_size=0.359375)
+[2026-09-23 08:19:33.608] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=0 f=53.6213 Δf=nan ‖∇f‖=214.485 ‖Δx‖=1.1125 Δx⋅∇f(x)=-105.5 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295525 residual 4.234859e-04 info {"solver_error":1.5528711633975222e-06,"solver_iter":1000}
+[2026-09-23 08:19:34.211] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)] large (or nan) linear solve residual 0.00042348587934325>1e-05 (‖∇f‖=272.71153298069044)
+[2026-09-23 08:19:34.212] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] Update direction could not be computed; reverting to SparseRegularizedNewton (reg_weight=10000)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=10000) n 8047 nnz 295525 residual 2.373828e-10 info {"solver_error":8.683387497265935e-13,"solver_iter":68}
+[amdahl] candidates ccd vv 0 ev 0 ee 3027 fv 771
+[amdahl] collisions vv 7 ev 47 ee 36 fv 4 pv 0
+[2026-09-23 08:19:34.757] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:34.757] [polyfem] [debug] Min distance: 0.0006272227770821278
+[2026-09-23 08:19:34.757] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=10000)][Backtracking] iters=1 f=22.6511 Δf=30.9702 ‖∇f‖=272.712 ‖Δx‖=0.0132162 Δx⋅∇f(x)=-2.05833 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=10000) n 8047 nnz 295507 residual 1.096131e-10 info {"solver_error":6.976148221487038e-13,"solver_iter":43}
+[amdahl] candidates ccd vv 0 ev 0 ee 3030 fv 772
+[amdahl] collisions vv 6 ev 44 ee 36 fv 3 pv 0
+[2026-09-23 08:19:35.261] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:35.261] [polyfem] [debug] Min distance: 0.001103007157821832
+[2026-09-23 08:19:35.261] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=10000)][Backtracking] iters=2 f=20.7244 Δf=1.92673 ‖∇f‖=157.118 ‖Δx‖=0.0125727 Δx⋅∇f(x)=-1.71048 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=10000) n 8047 nnz 295525 residual 9.071284e-11 info {"solver_error":7.10840988738774e-13,"solver_iter":32}
+[amdahl] candidates ccd vv 0 ev 0 ee 3017 fv 766
+[amdahl] collisions vv 6 ev 40 ee 34 fv 2 pv 0
+[2026-09-23 08:19:35.756] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:35.757] [polyfem] [debug] Min distance: 0.0013616450937942446
+[2026-09-23 08:19:35.757] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=10000)][Backtracking] iters=3 f=19.0744 Δf=1.65002 ‖∇f‖=127.607 ‖Δx‖=0.011975 Δx⋅∇f(x)=-1.50958 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=10000) n 8047 nnz 295507 residual 3.776409e-11 info {"solver_error":3.1487722675306727e-13,"solver_iter":23}
+[amdahl] candidates ccd vv 0 ev 0 ee 3017 fv 766
+[amdahl] collisions vv 4 ev 39 ee 33 fv 2 pv 0
+[2026-09-23 08:19:36.240] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:36.240] [polyfem] [debug] Min distance: 0.001496098176678208
+[2026-09-23 08:19:36.240] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=10000)][Backtracking] iters=4 f=17.6021 Δf=1.47225 ‖∇f‖=119.934 ‖Δx‖=0.0114228 Δx⋅∇f(x)=-1.36836 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=10000) n 8047 nnz 295471 residual 1.891670e-11 info {"solver_error":1.6558286754805654e-13,"solver_iter":17}
+[amdahl] candidates ccd vv 0 ev 0 ee 3017 fv 766
+[amdahl] collisions vv 1 ev 31 ee 34 fv 1 pv 0
+[2026-09-23 08:19:36.805] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:36.805] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=10000)][Backtracking] SparseRegularizedNewton (reg_weight=10000) was successful for 5 iterations; resetting to SparseNewton
+[2026-09-23 08:19:36.806] [polyfem] [debug] Min distance: 0.001576673755617732
+[2026-09-23 08:19:36.806] [polyfem] [debug] [SparseNewton][Backtracking] iters=5 f=16.2655 Δf=1.33665 ‖∇f‖=114.253 ‖Δx‖=0.0108999 Δx⋅∇f(x)=-1.24513 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseNewton n 8047 nnz 295453 residual 1.552144e+00 info {"solver_error":0.014239863106406719,"solver_iter":1000}
+[2026-09-23 08:19:37.343] [polyfem] [debug] [SparseNewton] large (or nan) linear solve residual 1.5521436423889003>1e-05 (‖∇f‖=108.9998991414818)
+[2026-09-23 08:19:37.344] [polyfem] [debug] [SparseNewton][Backtracking] Update direction could not be computed; reverting to SparseProjectedNewton
+[amdahl] linsolve SparseProjectedNewton n 8047 nnz 295453 residual 5.175836e-01 info {"solver_error":0.004748477743484262,"solver_iter":1000}
+[2026-09-23 08:19:37.931] [polyfem] [debug] [SparseProjectedNewton] large (or nan) linear solve residual 0.5175835951186295>1e-05 (‖∇f‖=108.9998991414818)
+[2026-09-23 08:19:37.931] [polyfem] [debug] [SparseProjectedNewton][Backtracking] Update direction could not be computed; reverting to SparseRegularizedNewton (reg_weight=1)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295453 residual 1.026052e-10 info {"solver_error":9.254888940807463e-13,"solver_iter":832}
+[amdahl] candidates ccd vv 0 ev 0 ee 6703 fv 1915
+[amdahl] collisions vv 0 ev 15 ee 9 fv 0 pv 0
+[2026-09-23 08:19:38.804] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.4375 descent_step_size=0.4375 final_step_size=0.4375)
+[2026-09-23 08:19:38.805] [polyfem] [debug] Min distance: 0.0013457623524094837
+[2026-09-23 08:19:38.805] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=6 f=15.0489 Δf=1.2166 ‖∇f‖=109 ‖Δx‖=0.796807 Δx⋅∇f(x)=-29.1193 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 5.688635e-11 info {"solver_error":9.118944233117989e-13,"solver_iter":888}
+[amdahl] candidates ccd vv 0 ev 0 ee 5687 fv 1536
+[amdahl] collisions vv 1 ev 2 ee 0 fv 0 pv 0
+[2026-09-23 08:19:39.569] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:39.569] [polyfem] [debug] Min distance: 0.0017737001724901721
+[2026-09-23 08:19:39.569] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=7 f=5.03818 Δf=10.0107 ‖∇f‖=62.4524 ‖Δx‖=0.507839 Δx⋅∇f(x)=-9.5851 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 2.868304e-12 info {"solver_error":9.27158783260814e-13,"solver_iter":364}
+[amdahl] candidates ccd vv 0 ev 0 ee 4959 fv 1327
+[amdahl] collisions vv 0 ev 5 ee 2 fv 0 pv 0
+[2026-09-23 08:19:40.083] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:40.083] [polyfem] [debug] Min distance: 0.0014470951607107809
+[2026-09-23 08:19:40.083] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=8 f=0.117497 Δf=4.92069 ‖∇f‖=3.07077 ‖Δx‖=0.193999 Δx⋅∇f(x)=-0.08335 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 5.258384e-12 info {"solver_error":9.252630828140808e-13,"solver_iter":594}
+[amdahl] candidates ccd vv 0 ev 0 ee 4579 fv 1201
+[amdahl] collisions vv 0 ev 12 ee 1 fv 0 pv 0
+[2026-09-23 08:19:40.685] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:40.685] [polyfem] [debug] Min distance: 0.0015124881919793092
+[2026-09-23 08:19:40.686] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=9 f=0.0581543 Δf=0.0593425 ‖∇f‖=5.68063 ‖Δx‖=0.116166 Δx⋅∇f(x)=-0.0232138 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 5.198905e-12 info {"solver_error":8.308852109637309e-13,"solver_iter":757}
+[amdahl] candidates ccd vv 0 ev 0 ee 4492 fv 1173
+[amdahl] collisions vv 0 ev 15 ee 0 fv 0 pv 0
+[2026-09-23 08:19:41.507] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:41.508] [polyfem] [debug] Min distance: 0.0012515823720215783
+[2026-09-23 08:19:41.508] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=10 f=0.0412924 Δf=0.0168619 ‖∇f‖=6.25845 ‖Δx‖=0.0838024 Δx⋅∇f(x)=-0.0121963 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 6.653138e-12 info {"solver_error":8.454403768542332e-13,"solver_iter":616}
+[amdahl] candidates ccd vv 0 ev 0 ee 4354 fv 1134
+[amdahl] collisions vv 0 ev 14 ee 0 fv 0 pv 0
+[2026-09-23 08:19:42.122] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:42.122] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] SparseRegularizedNewton (reg_weight=1) was successful for 5 iterations; resetting to SparseNewton
+[2026-09-23 08:19:42.122] [polyfem] [debug] Min distance: 0.001622101459576577
+[2026-09-23 08:19:42.122] [polyfem] [debug] [SparseNewton][Backtracking] iters=11 f=0.0331728 Δf=0.00811952 ‖∇f‖=7.86444 ‖Δx‖=0.0662287 Δx⋅∇f(x)=-0.00849024 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[amdahl] linsolve SparseNewton n 8047 nnz 295417 residual 8.917687e+00 info {"solver_error":3.2216051843841416,"solver_iter":1000}
+[2026-09-23 08:19:42.585] [polyfem] [debug] [SparseNewton] large (or nan) linear solve residual 8.91768724169892>1e-05 (‖∇f‖=2.7680881831645108)
+[2026-09-23 08:19:42.585] [polyfem] [debug] [SparseNewton][Backtracking] Update direction could not be computed; reverting to SparseProjectedNewton
+[amdahl] linsolve SparseProjectedNewton n 8047 nnz 295417 residual 3.562110e-02 info {"solver_error":0.012868485341493091,"solver_iter":1000}
+[2026-09-23 08:19:43.113] [polyfem] [debug] [SparseProjectedNewton] large (or nan) linear solve residual 0.03562110220907529>1e-05 (‖∇f‖=2.7680881831645108)
+[2026-09-23 08:19:43.114] [polyfem] [debug] [SparseProjectedNewton][Backtracking] Update direction could not be computed; reverting to SparseRegularizedNewton (reg_weight=1)
+[amdahl] linsolve SparseRegularizedNewton (reg_weight=1) n 8047 nnz 295417 residual 2.026096e-12 info {"solver_error":7.263169054499799e-13,"solver_iter":576}
+[amdahl] candidates ccd vv 0 ev 0 ee 4310 fv 1113
+[amdahl] collisions vv 0 ev 14 ee 0 fv 0 pv 0
+[2026-09-23 08:19:43.722] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 08:19:43.722] [polyfem] [debug] Min distance: 0.0018241006274402614
+[2026-09-23 08:19:43.723] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=12 f=0.0267436 Δf=0.00642921 ‖∇f‖=2.76809 ‖Δx‖=0.0550041 Δx⋅∇f(x)=-0.00424162 (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 08:19:43.732] [polyfem] [info] [SparseRegularizedNewton (reg_weight=1)][Backtracking] Finished: Gradient vector norm too small took 12.6485s (iters=13 f=0.0230548 Δf=0.00368889 ‖∇f‖=0.629955 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=9.97975e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 08:19:43.732] [polyfem] [debug] [[35mtiming[0m] f: 6.00e-02s, grad_f: 1.24e-01s, update_direction: 9.30e+00s, line_search: 3.15e+00s, constraint_set_update: 1.01e-03s
+[2026-09-23 08:19:43.732] [polyfem] [debug] [[35mtiming[0m][SparseNewton] assembly: 5.76e-01s; linear_solve: 8.44e-01s
+[2026-09-23 08:19:43.732] [polyfem] [debug] [[35mtiming[0m][SparseProjectedNewton] assembly: 9.02e-01s; linear_solve: 7.21e-01s
+[2026-09-23 08:19:43.732] [polyfem] [debug] [[35mtiming[0m][SparseRegularizedNewton (reg_weight=1)] assembly: 4.61e+00s; linear_solve: 1.62e+00s
+[2026-09-23 08:19:43.732] [polyfem] [debug] [[35mtiming[0m][Backtracking] constraint_set_update 1.60e-02s, checking_for_nan_inf 3.97e-02s, broad_phase_ccd 2.82e+00s, narrow_phase_ccd 1.11e-01s, classical_line_search 5.75e-02s
+[2026-09-23 08:19:43.735] [polyfem] [debug] Current eta = 0.9991584992900674
+[amdahl] candidates ccd vv 0 ev 0 ee 3604 fv 895
+begin: ok  wall 0.46 s  cpu 0.44 s
+normalisation: target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248) source_scale 0.90869314092562126
+phase 0 (substep 0, AL): ok  newton 13  minimize 1  post_steps 14  energy 0.023054751201408683  |grad| 0.629955  status 4  wall 14.29 s  cpu 13.67 s
+final: phases 1/4  newton 13  post_steps 14  intersections none
+preview ring: latest seq 13, max |preview - final| 0
+time: begin+phases wall 14.82 s, cpu 14.17 s; process cpu 14.28 s; peak working set 101.4 MB
+sdf grid: voxel 0.01  bricks 0 (0 voxels)  0.00 MB  distance queries 0  winding queries 0  fill 0.00 s
+# exit 0  wall 15.03 s

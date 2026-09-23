@@ -1,0 +1,31 @@
+== default config, P0 unweighted
+  blend %: {'asm': 22.0, 'bp': 39.5, 'ccd': 17.0, 'csu': 4.9, 'sdf': 1.5, 'lin': 11.0, 'rest': 4.0}
+  bp         zero-cost  1.65x  fast  1.64x  60Hz  1.63x  ->    852-   848 s
+  +asm       zero-cost  2.60x  fast  2.50x  60Hz  2.47x  ->    564-   556 s
+  +csu+sdf   zero-cost  3.12x  fast  2.96x  60Hz  2.87x  ->    485-   471 s
+  +ccd       zero-cost  6.64x  fast  5.40x  60Hz  5.12x  ->    272-   258 s
+== default config, P0 ratio-weighted
+  blend %: {'asm': 19.5, 'bp': 41.4, 'ccd': 20.3, 'csu': 4.4, 'sdf': 1.5, 'lin': 9.2, 'rest': 3.7}
+  bp         zero-cost  1.71x  fast  1.69x  60Hz  1.68x  ->    827-   823 s
+  +asm       zero-cost  2.56x  fast  2.47x  60Hz  2.44x  ->    572-   563 s
+  +csu+sdf   zero-cost  3.01x  fast  2.87x  60Hz  2.79x  ->    499-   485 s
+  +ccd       zero-cost  7.73x  fast  6.02x  60Hz  5.68x  ->    245-   231 s
+== psd config (P0psd native, P1 guest)
+  blend %: {'asm': 29.9, 'bp': 35.8, 'ccd': 9.8, 'csu': 7.4, 'sdf': 3.1, 'lin': 10.1, 'rest': 4.0}
+  psd measured 2.27x (613 s)
+  +cpu fixes 1.60x on psd, 3.63x vs loop (383 s)
+  bp+asm    fast   2.88x on psd,  6.55x vs loop ( 213 s)
+  bp+asm    60Hz   2.82x on psd,  6.40x vs loop ( 218 s)
+  +csu+sdf  fast   4.05x on psd,  9.21x vs loop ( 151 s)
+  +csu+sdf  60Hz   3.83x on psd,  8.70x vs loop ( 160 s)
+  +ccd      fast   6.28x on psd, 14.27x vs loop (  98 s)
+  +ccd      60Hz   5.75x on psd, 13.08x vs loop ( 106 s)
+  floor (lin*0.9 + rest + contact) 7.14x on psd, 16.22x vs loop (86 s)
+  nofix bp        zero  1.56x fast  1.55x 60Hz  1.54x on psd
+  nofix bp+asm    zero  2.91x fast  2.77x 60Hz  2.71x on psd
+  nofix +csu+sdf  zero  4.19x fast  3.84x 60Hz  3.64x on psd
+  nofix +ccd      zero  7.11x fast  5.78x 60Hz  5.33x on psd
+  default all-moved 60Hz s_ccd=3: 4.25x
+  default all-moved 60Hz s_ccd=10: 5.12x
+  default all-moved 60Hz s_ccd=30: 5.43x
+  default + cpu fixes only: 1.56x (894 s)

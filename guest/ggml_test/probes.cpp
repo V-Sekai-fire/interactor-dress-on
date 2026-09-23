@@ -1,5 +1,7 @@
 #include "probes.h"
 
+#include "census.h"
+
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -306,6 +308,8 @@ void job(void *) {
 		files(g_args.arg);
 	} else if (name == "alias") {
 		alias(g_args.arg != "ro");
+	} else if (census::known(name)) {
+		census::run(name, g_args.arg.empty() ? "all" : g_args.arg);
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -318,8 +322,8 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias") {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias)";
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && !census::known(name)) {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, census, perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

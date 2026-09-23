@@ -4,3 +4,11 @@
 # GgmlKernelTable.inc, so ids are per build, never stored.
 add_f32
 mul_f32
+silu_f32
+gelu_f32
+gelu_erf_f32
+sigmoid_f32
+neg_f32
+scale_f32
+diag_mask_inf_f32
+rope_neox_f32

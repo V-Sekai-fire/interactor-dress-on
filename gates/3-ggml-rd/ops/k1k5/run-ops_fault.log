@@ -1,0 +1,573 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: Godot RenderingDevice (NVIDIA GeForce RTX 4090)
+  Device memory: 24576 MB (24576 MB free)
+
+  NEG(type=f16,ne_a=[128,2,2,2],v=0): not supported [RD0] 
+  NEG(type=f16,ne_a=[5,7,11,13],v=0): not supported [RD0] 
+  SIGMOID(type=f16,ne_a=[128,2,2,2],v=0): not supported [RD0] 
+  SIGMOID(type=f16,ne_a=[5,7,11,13],v=0): not supported [RD0] 
+  GELU(type=f16,ne_a=[128,2,2,2],v=0): not supported [RD0] 
+  GELU(type=f16,ne_a=[5,7,11,13],v=0): not supported [RD0] 
+  SILU(type=f16,ne_a=[128,2,2,2],v=0): not supported [RD0] 
+  SILU(type=f16,ne_a=[5,7,11,13],v=0): not supported [RD0] 
+  GELU_ERF(type=f16,ne_a=[128,2,2,2],v=0): not supported [RD0] 
+  GELU_ERF(type=f16,ne_a=[5,7,11,13],v=0): not supported [RD0] 
+  NEG(type=f16,ne_a=[128,2,2,2],v=1): not supported [RD0] 
+  NEG(type=f16,ne_a=[5,7,11,13],v=1): not supported [RD0] 
+  SIGMOID(type=f16,ne_a=[128,2,2,2],v=1): not supported [RD0] 
+  SIGMOID(type=f16,ne_a=[5,7,11,13],v=1): not supported [RD0] 
+  GELU(type=f16,ne_a=[128,2,2,2],v=1): not supported [RD0] 
+  GELU(type=f16,ne_a=[5,7,11,13],v=1): not supported [RD0] 
+  SILU(type=f16,ne_a=[128,2,2,2],v=1): not supported [RD0] 
+  SILU(type=f16,ne_a=[5,7,11,13],v=1): not supported [RD0] 
+  GELU_ERF(type=f16,ne_a=[128,2,2,2],v=1): not supported [RD0] 
+  GELU_ERF(type=f16,ne_a=[5,7,11,13],v=1): not supported [RD0] 
+[NEG] ERR = 2.088397932 > 0.000000100   NEG(type=f32,ne_a=[128,2,2,2],v=0): FAIL
+[NEG] ERR = 2.006025489 > 0.000000100   NEG(type=f32,ne_a=[5,7,11,13],v=0): FAIL
+[SIGMOID] ERR = 1.002224273 > 0.000000100   SIGMOID(type=f32,ne_a=[128,2,2,2],v=0): FAIL
+[SIGMOID] ERR = 1.001386775 > 0.000000100   SIGMOID(type=f32,ne_a=[5,7,11,13],v=0): FAIL
+[GELU] ERR = 1.305646041 > 0.000000100   GELU(type=f32,ne_a=[128,2,2,2],v=0): FAIL
+[GELU] ERR = 1.231319531 > 0.000000100   GELU(type=f32,ne_a=[5,7,11,13],v=0): FAIL
+[SILU] ERR = 1.239724018 > 0.000000100   SILU(type=f32,ne_a=[128,2,2,2],v=0): FAIL
+[SILU] ERR = 1.258234467 > 0.000000100   SILU(type=f32,ne_a=[5,7,11,13],v=0): FAIL
+[GELU_ERF] ERR = 1.198696447 > 0.000000100   GELU_ERF(type=f32,ne_a=[128,2,2,2],v=0): FAIL
+[GELU_ERF] ERR = 1.275419297 > 0.000000100   GELU_ERF(type=f32,ne_a=[5,7,11,13],v=0): FAIL
+[NEG] ERR = 2.043254302 > 0.000000100   NEG(type=f32,ne_a=[128,2,2,2],v=1): FAIL
+[NEG] ERR = 1.992574424 > 0.000000100   NEG(type=f32,ne_a=[5,7,11,13],v=1): FAIL
+[SIGMOID] ERR = 1.047729086 > 0.000000100   SIGMOID(type=f32,ne_a=[128,2,2,2],v=1): FAIL
+[SIGMOID] ERR = 0.963047418 > 0.000000100   SIGMOID(type=f32,ne_a=[5,7,11,13],v=1): FAIL
+[GELU] ERR = 1.236249611 > 0.000000100   GELU(type=f32,ne_a=[128,2,2,2],v=1): FAIL
+[GELU] ERR = 1.245926313 > 0.000000100   GELU(type=f32,ne_a=[5,7,11,13],v=1): FAIL
+[SILU] ERR = 1.267849204 > 0.000000100   SILU(type=f32,ne_a=[128,2,2,2],v=1): FAIL
+[SILU] ERR = 1.244756771 > 0.000000100   SILU(type=f32,ne_a=[5,7,11,13],v=1): FAIL
+[GELU_ERF] ERR = 1.233402167 > 0.000000100   GELU_ERF(type=f32,ne_a=[128,2,2,2],v=1): FAIL
+[GELU_ERF] ERR = 1.236008306 > 0.000000100   GELU_ERF(type=f32,ne_a=[5,7,11,13],v=1): FAIL
+[SCALE] ERR = 1.982334770 > 0.000000100   SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=0.000000,inplace=0): FAIL
+[SCALE] ERR = 1.135763963 > 0.000000100   SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=0): FAIL
+[SCALE] ERR = 1.158375558 > 0.000000100   SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=1): FAIL
+[SCALE] ERR = 1.146159061 > 0.000000100   SCALE(type=f32,ne=[100,10,10,10],scale=2.000000,bias=1.000000,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,40,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,52,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,64,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 0.922268148 > 0.000000100   ROPE(type=f32,ne_a=[64,1,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+[ROPE] ERR = 1.141992867 > 0.000000100   ROPE(type=f32,ne_a=[64,71,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+[ROPE] ERR = 1.126798808 > 0.000000100   ROPE(type=f32,ne_a=[64,8,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 0.334044767 > 0.000000100   ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+[ROPE] ERR = 0.590481675 > 0.000000100   ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+[ROPE] ERR = 0.421513793 > 0.000000100   ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+[ROPE] ERR = 1.290251592 > 0.000000100   ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,16,2,1],n_dims=80,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,16,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.209002183 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,40,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,52,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,64,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.187122643 > 0.000000100   ROPE(type=f32,ne_a=[64,1,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+[ROPE] ERR = 1.191833027 > 0.000000100   ROPE(type=f32,ne_a=[64,71,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+[ROPE] ERR = 1.236244643 > 0.000000100   ROPE(type=f32,ne_a=[64,8,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 0.281902686 > 0.000000100   ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+[ROPE] ERR = 0.506438681 > 0.000000100   ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+[ROPE] ERR = 0.464138716 > 0.000000100   ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+[ROPE] ERR = 1.297374201 > 0.000000100   ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,16,2,1],n_dims=80,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,16,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.066605720 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.200552855 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,40,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,52,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,64,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,1,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,71,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,8,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,16,2,1],n_dims=80,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,16,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,40,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,52,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,64,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,1,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,71,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,8,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,12,2,1],n_dims=20,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,28,2,1],n_dims=32,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[80,16,2,1],n_dims=80,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,16,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.329807966 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.328093816 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.220249512 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.027651800 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.198745719 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.204927323 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.494466075 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.207375444 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.196260495 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.267800640 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.128598402 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.295622715 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.044225865 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.709435563 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.289626886 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.516890708 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.227749907 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.288722762 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.556654632 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.175471129 > 0.000000100   ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+[ROPE] ERR = 1.293881958 > 0.000000100   ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): FAIL
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f16,ne_a=[36,16,2457,1],n_dims=36,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=2,inplace=0): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+[ROPE] ERR = 1.431410986 > 0.000000100   ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): FAIL
+[ROPE] ERR = 1.207482504 > 0.000000100   ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): FAIL
+[ROPE] ERR = 1.369450412 > 0.000000100   ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): FAIL
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=0,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=8,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=40,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=0,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,1],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  ROPE(type=f16,ne_a=[128,32,2,3],n_dims=128,mode=24,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=1,v=1,inplace=1): not supported [RD0] 
+  0/65 tests passed
+
+Failing tests:
+  NEG(type=f32,ne_a=[128,2,2,2],v=0)
+  NEG(type=f32,ne_a=[5,7,11,13],v=0)
+  SIGMOID(type=f32,ne_a=[128,2,2,2],v=0)
+  SIGMOID(type=f32,ne_a=[5,7,11,13],v=0)
+  GELU(type=f32,ne_a=[128,2,2,2],v=0)
+  GELU(type=f32,ne_a=[5,7,11,13],v=0)
+  SILU(type=f32,ne_a=[128,2,2,2],v=0)
+  SILU(type=f32,ne_a=[5,7,11,13],v=0)
+  GELU_ERF(type=f32,ne_a=[128,2,2,2],v=0)
+  GELU_ERF(type=f32,ne_a=[5,7,11,13],v=0)
+  NEG(type=f32,ne_a=[128,2,2,2],v=1)
+  NEG(type=f32,ne_a=[5,7,11,13],v=1)
+  SIGMOID(type=f32,ne_a=[128,2,2,2],v=1)
+  SIGMOID(type=f32,ne_a=[5,7,11,13],v=1)
+  GELU(type=f32,ne_a=[128,2,2,2],v=1)
+  GELU(type=f32,ne_a=[5,7,11,13],v=1)
+  SILU(type=f32,ne_a=[128,2,2,2],v=1)
+  SILU(type=f32,ne_a=[5,7,11,13],v=1)
+  GELU_ERF(type=f32,ne_a=[128,2,2,2],v=1)
+  GELU_ERF(type=f32,ne_a=[5,7,11,13],v=1)
+  SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=0.000000,inplace=0)
+  SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=0)
+  SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=1)
+  SCALE(type=f32,ne=[100,10,10,10],scale=2.000000,bias=1.000000,inplace=0)
+  ROPE(type=f32,ne_a=[64,1,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,71,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,8,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,1,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[64,71,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[64,8,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=20,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[80,32,2,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[80,32,4,1],n_dims=32,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[16,16,8192,1],n_dims=16,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.000000,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.000000,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.000000,af=1.424500,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.000000,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=0)
+  ROPE(type=f32,ne_a=[64,128,2,1],n_dims=64,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=0)
+  ROPE(type=f32,ne_a=[36,16,2457,1],n_dims=36,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=2,inplace=0)
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=0,inplace=1)
+  ROPE(type=f32,ne_a=[128,32,2,1],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1)
+  ROPE(type=f32,ne_a=[128,32,2,3],n_dims=128,mode=2,n_ctx=512,fs=1.424500,ef=0.746500,af=1.424500,ff=0,v=1,inplace=1)
+  Backend RD0: FAIL
+1/2 backends passed
+FAIL
+ggml_test: test-backend-ops returned 1
+ggml_test: rd stats graphs=1202 nodes=1838 dispatches=842 skipped=996 barriers=573 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=10 set0_created=206 slots_created=256 coop_yields=1 waits=206 faults=65 params_bytes=215552 set_bytes=1364375240 get_bytes=3360668292 copies=0 clears=0 buffers_live=0 bytes_live=0

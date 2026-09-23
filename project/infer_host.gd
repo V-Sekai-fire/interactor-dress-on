@@ -51,6 +51,13 @@ var reads := 0
 var read_bytes := 0
 var uploads := 0
 var upload_bytes := 0
+# Host-timed GPU waits: for every WAIT_GPU, the microseconds from the end of
+# the vmcall that yielded it (the submit) to the end of the next vmcall (the
+# one that syncs; a job that yields COOP right after its sync ends it
+# there). The guest clock is not a clock (AGENTS.md), so GPU time is timed
+# here. An upper bound: it includes the frame gap and the sync call.
+var wait_us: Array = []
+var _wait_t0 := 0
 
 var _feed := PackedByteArray()  # a READ's bytes, for the next pump call
 var _up := {}                   # an UPLOAD being carried across frames
@@ -73,6 +80,8 @@ func reset() -> void:
 	read_bytes = 0
 	uploads = 0
 	upload_bytes = 0
+	wait_us = []
+	_wait_t0 = 0
 	_feed = PackedByteArray()
 	_up = {}
 
@@ -93,7 +102,11 @@ func pump_frame() -> String:
 	while true:
 		var t0 := Time.get_ticks_usec()
 		var r = sb.vmcall(pump_method, _feed)
-		vm_us += Time.get_ticks_usec() - t0
+		var t1 := Time.get_ticks_usec()
+		vm_us += t1 - t0
+		if _wait_t0 > 0:
+			wait_us.append(t1 - _wait_t0)
+			_wait_t0 = 0
 		pumps += 1
 		_feed = PackedByteArray()
 		if typeof(r) != TYPE_ARRAY or r.size() < 3:
@@ -102,6 +115,7 @@ func pump_frame() -> String:
 		last_kind = hdr[0]
 		if last_kind == WAIT_GPU:
 			waits += 1
+			_wait_t0 = t1
 			return state
 		elif last_kind == COOP:
 			coops += 1

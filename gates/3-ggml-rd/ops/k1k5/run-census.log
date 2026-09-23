@@ -1,0 +1,346 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate 3 census shapes, 2026-09-23T07:40:13, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+ROW 0
+
+CENSUS NEG [256,1,1,1] (timing floor, not census) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=256/256 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+
+ROW 1
+
+CENSUS SILU [3072,1,2,1] (skin-tokens x10724) range [-8,8): nmse=1.343e-15 (max 1e-07) exact=3230/6144 inf_ok=1 nan=0 nmse_vs_f64: rd=2.028e-15 cpu=1.616e-15 OK
+
+ROW 2
+
+CENSUS SILU [3072,514,1,1] (skin-tokens x56) range [-8,8): nmse=1.450e-15 (max 1e-07) exact=837626/1579008 inf_ok=1 nan=0 nmse_vs_f64: rd=2.158e-15 cpu=1.664e-15 OK
+
+ROW 3
+
+CENSUS SILU [4096,32,1,1] (Pixal3D x40) range [-8,8): nmse=1.462e-15 (max 1e-07) exact=69316/131072 inf_ok=1 nan=0 nmse_vs_f64: rd=2.155e-15 cpu=1.648e-15 OK
+
+ROW 4
+
+CENSUS SILU [16,16,16,512] (Pixal3D x17) range [-8,8): nmse=1.450e-15 (max 1e-07) exact=1113069/2097152 inf_ok=1 nan=0 nmse_vs_f64: rd=2.160e-15 cpu=1.667e-15 OK
+
+ROW 5
+
+CENSUS GELU [8192,4096,1,1] (Pixal3D x60) range [-6,6): nmse=5.527e-08 (max 1e-07) exact=2359051/33554432 inf_ok=1 nan=0 nmse_vs_f64: rd=8.455e-16 cpu=5.527e-08 OK
+
+ROW 6
+
+CENSUS GELU_ERF [2048,512,1,1] (skin-tokens x766) range [-6,6): nmse=2.115e-15 (max 1e-07) exact=542687/1048576 inf_ok=1 nan=0 nmse_vs_f64: rd=2.396e-15 cpu=1.035e-15 OK
+
+ROW 7
+
+CENSUS GELU_ERF [4096,1029,1,1] (Pixal3D x24) range [-6,6): nmse=2.113e-15 (max 1e-07) exact=2184886/4214784 inf_ok=1 nan=0 nmse_vs_f64: rd=2.392e-15 cpu=1.038e-15 OK
+
+ROW 8
+
+CENSUS SIGMOID [1,16384,1,1] (skin-tokens x212) range [-12,12): nmse=7.891e-16 (max 1e-07) exact=9172/16384 inf_ok=1 nan=0 nmse_vs_f64: rd=1.582e-15 cpu=1.376e-15 OK
+
+ROW 9
+
+CENSUS NEG [1,64,12,4096] (Pixal3D x120) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=3145728/3145728 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+
+ROW 10
+
+CENSUS NEG [32,16,1024,1] (Pixal3D x48) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=524288/524288 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+
+ROW 11
+
+CENSUS SCALE [515,1,16,2] (skin-tokens x10724) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=16480/16480 inf_ok=1 nan=0 OK
+
+ROW 12
+
+CENSUS SCALE [54000,64,8,1] (census ne1 cut) (skin-tokens x822) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=27648000/27648000 inf_ok=1 nan=0 OK
+
+ROW 13
+
+CENSUS DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=4227136/4227136 inf_ok=1 nan=0 OK
+
+ROW 14
+
+CENSUS ROPE [128,8,514,1] (skin-tokens x21560) range [-1,1): nmse=2.941e-11 (max 1e-07) exact=93454/526336 inf_ok=1 nan=0 OK
+
+census all: 15/15 rows OK
+
+RESULT: PASS (census all)
+
+ggml_test: rd stats graphs=15 nodes=15 dispatches=15 skipped=0 barriers=0 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=8 set0_created=15 slots_created=1 coop_yields=0 waits=15 faults=0 params_bytes=3840 set_bytes=314945160 get_bytes=314943104 copies=0 clears=0 buffers_live=0 bytes_live=0
+
+CENSUS NEG [256,1,1,1] (timing floor, not census) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=256/256 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+CENSUS SILU [3072,1,2,1] (skin-tokens x10724) range [-8,8): nmse=1.343e-15 (max 1e-07) exact=3230/6144 inf_ok=1 nan=0 nmse_vs_f64: rd=2.028e-15 cpu=1.616e-15 OK
+CENSUS SILU [3072,514,1,1] (skin-tokens x56) range [-8,8): nmse=1.450e-15 (max 1e-07) exact=837626/1579008 inf_ok=1 nan=0 nmse_vs_f64: rd=2.158e-15 cpu=1.664e-15 OK
+CENSUS SILU [4096,32,1,1] (Pixal3D x40) range [-8,8): nmse=1.462e-15 (max 1e-07) exact=69316/131072 inf_ok=1 nan=0 nmse_vs_f64: rd=2.155e-15 cpu=1.648e-15 OK
+CENSUS SILU [16,16,16,512] (Pixal3D x17) range [-8,8): nmse=1.450e-15 (max 1e-07) exact=1113069/2097152 inf_ok=1 nan=0 nmse_vs_f64: rd=2.160e-15 cpu=1.667e-15 OK
+CENSUS GELU [8192,4096,1,1] (Pixal3D x60) range [-6,6): nmse=5.527e-08 (max 1e-07) exact=2359051/33554432 inf_ok=1 nan=0 nmse_vs_f64: rd=8.455e-16 cpu=5.527e-08 OK
+CENSUS GELU_ERF [2048,512,1,1] (skin-tokens x766) range [-6,6): nmse=2.115e-15 (max 1e-07) exact=542687/1048576 inf_ok=1 nan=0 nmse_vs_f64: rd=2.396e-15 cpu=1.035e-15 OK
+CENSUS GELU_ERF [4096,1029,1,1] (Pixal3D x24) range [-6,6): nmse=2.113e-15 (max 1e-07) exact=2184886/4214784 inf_ok=1 nan=0 nmse_vs_f64: rd=2.392e-15 cpu=1.038e-15 OK
+CENSUS SIGMOID [1,16384,1,1] (skin-tokens x212) range [-12,12): nmse=7.891e-16 (max 1e-07) exact=9172/16384 inf_ok=1 nan=0 nmse_vs_f64: rd=1.582e-15 cpu=1.376e-15 OK
+CENSUS NEG [1,64,12,4096] (Pixal3D x120) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=3145728/3145728 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+CENSUS NEG [32,16,1024,1] (Pixal3D x48) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=524288/524288 inf_ok=1 nan=0 nmse_vs_f64: rd=0.000e+00 cpu=0.000e+00 OK
+CENSUS SCALE [515,1,16,2] (skin-tokens x10724) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=16480/16480 inf_ok=1 nan=0 OK
+CENSUS SCALE [54000,64,8,1] (census ne1 cut) (skin-tokens x822) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=27648000/27648000 inf_ok=1 nan=0 OK
+CENSUS DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) range [-1,1): nmse=0.000e+00 (max 1e-07) exact=4227136/4227136 inf_ok=1 nan=0 OK
+CENSUS ROPE [128,8,514,1] (skin-tokens x21560) range [-1,1): nmse=2.941e-11 (max 1e-07) exact=93454/526336 inf_ok=1 nan=0 OK
+PASS census all: every row within test-backend-ops' NMSE on ggml-rd vs ggml-cpu (15 rows, frames=46 pumps=46 vm_ms=37174.9 waits=15 coops=30 reads=0 read_bytes=0 uploads=0 upload_bytes=0)
+== perf (host-timed; per-dispatch = (median - floor) / R, R - 1 barriers inside)
+ROW 0
+
+CENSUS NEG [256,1,1,1] (timing floor, not census) range [-1,1): nmse=2.007e+00 (max 1e-07) exact=0/256 inf_ok=1 nan=0 nmse_vs_f64: rd=2.007e+00 cpu=0.000e+00 FAIL
+
+ROW 1
+
+CENSUS SILU [3072,1,2,1] (skin-tokens x10724) range [-8,8): nmse=1.313e+00 (max 1e-07) exact=0/6144 inf_ok=1 nan=0 nmse_vs_f64: rd=1.313e+00 cpu=1.616e-15 FAIL
+
+ROW 2
+
+CENSUS SILU [3072,514,1,1] (skin-tokens x56) range [-8,8): nmse=1.314e+00 (max 1e-07) exact=0/1579008 inf_ok=1 nan=0 nmse_vs_f64: rd=1.314e+00 cpu=1.664e-15 FAIL
+
+ROW 3
+
+CENSUS SILU [4096,32,1,1] (Pixal3D x40) range [-8,8): nmse=1.314e+00 (max 1e-07) exact=0/131072 inf_ok=1 nan=0 nmse_vs_f64: rd=1.314e+00 cpu=1.648e-15 FAIL
+
+ROW 4
+
+CENSUS SILU [16,16,16,512] (Pixal3D x17) range [-8,8): nmse=1.313e+00 (max 1e-07) exact=0/2097152 inf_ok=1 nan=0 nmse_vs_f64: rd=1.313e+00 cpu=1.667e-15 FAIL
+
+ROW 5
+
+CENSUS GELU [8192,4096,1,1] (Pixal3D x60) range [-6,6): nmse=1.286e+00 (max 1e-07) exact=166198/33554432 inf_ok=1 nan=0 nmse_vs_f64: rd=1.286e+00 cpu=5.527e-08 FAIL
+
+ROW 6
+
+CENSUS GELU_ERF [2048,512,1,1] (skin-tokens x766) range [-6,6): nmse=1.290e+00 (max 1e-07) exact=1551/1048576 inf_ok=1 nan=0 nmse_vs_f64: rd=1.290e+00 cpu=1.035e-15 FAIL
+
+ROW 7
+
+CENSUS GELU_ERF [4096,1029,1,1] (Pixal3D x24) range [-6,6): nmse=1.287e+00 (max 1e-07) exact=6228/4214784 inf_ok=1 nan=0 nmse_vs_f64: rd=1.287e+00 cpu=1.038e-15 FAIL
+
+ROW 8
+
+CENSUS SIGMOID [1,16384,1,1] (skin-tokens x212) range [-12,12): nmse=9.230e-01 (max 1e-07) exact=0/16384 inf_ok=1 nan=0 nmse_vs_f64: rd=9.230e-01 cpu=1.376e-15 FAIL
+
+ROW 9
+
+CENSUS NEG [1,64,12,4096] (Pixal3D x120) range [-1,1): nmse=2.000e+00 (max 1e-07) exact=0/3145728 inf_ok=1 nan=0 nmse_vs_f64: rd=2.000e+00 cpu=0.000e+00 FAIL
+
+ROW 10
+
+CENSUS NEG [32,16,1024,1] (Pixal3D x48) range [-1,1): nmse=2.002e+00 (max 1e-07) exact=0/524288 inf_ok=1 nan=0 nmse_vs_f64: rd=2.002e+00 cpu=0.000e+00 FAIL
+
+ROW 11
+
+CENSUS SCALE [515,1,16,2] (skin-tokens x10724) range [-1,1): nmse=2.002e+00 (max 1e-07) exact=0/16480 inf_ok=1 nan=0 FAIL
+
+ROW 12
+
+CENSUS SCALE [54000,64,8,1] (census ne1 cut) (skin-tokens x822) range [-1,1): nmse=1.999e+00 (max 1e-07) exact=1/27648000 inf_ok=1 nan=0 FAIL
+
+ROW 13
+
+CENSUS DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) range [-1,1): nmse=2.000e+00 (max 1e-07) exact=2109456/4227136 inf_ok=1 nan=0 FAIL
+
+ROW 14
+
+CENSUS ROPE [128,8,514,1] (skin-tokens x21560) range [-1,1): nmse=4.436e-02 (max 1e-07) exact=677/526336 inf_ok=1 nan=0 FAIL
+
+census all: 0/15 rows OK
+
+RESULT: FAIL (census all)
+
+ggml_test: rd stats graphs=30 nodes=30 dispatches=30 skipped=0 barriers=0 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=8 set0_created=30 slots_created=1 coop_yields=0 waits=30 faults=15 params_bytes=7680 set_bytes=629890320 get_bytes=629886208 copies=0 clears=0 buffers_live=0 bytes_live=0
+
+   fault: CENSUS NEG [256,1,1,1] (timing floor, not census) range [-1,1): nmse=2.007e+00 (max 1e-07) exact=0/256 inf_ok=1 nan=0 nmse_vs_f64: rd=2.007e+00 cpu=0.000e+00 FAIL
+   fault: CENSUS SILU [3072,1,2,1] (skin-tokens x10724) range [-8,8): nmse=1.313e+00 (max 1e-07) exact=0/6144 inf_ok=1 nan=0 nmse_vs_f64: rd=1.313e+00 cpu=1.616e-15 FAIL
+   fault: CENSUS SILU [3072,514,1,1] (skin-tokens x56) range [-8,8): nmse=1.314e+00 (max 1e-07) exact=0/1579008 inf_ok=1 nan=0 nmse_vs_f64: rd=1.314e+00 cpu=1.664e-15 FAIL
+   fault: CENSUS SILU [4096,32,1,1] (Pixal3D x40) range [-8,8): nmse=1.314e+00 (max 1e-07) exact=0/131072 inf_ok=1 nan=0 nmse_vs_f64: rd=1.314e+00 cpu=1.648e-15 FAIL
+   fault: CENSUS SILU [16,16,16,512] (Pixal3D x17) range [-8,8): nmse=1.313e+00 (max 1e-07) exact=0/2097152 inf_ok=1 nan=0 nmse_vs_f64: rd=1.313e+00 cpu=1.667e-15 FAIL
+   fault: CENSUS GELU [8192,4096,1,1] (Pixal3D x60) range [-6,6): nmse=1.286e+00 (max 1e-07) exact=166198/33554432 inf_ok=1 nan=0 nmse_vs_f64: rd=1.286e+00 cpu=5.527e-08 FAIL
+   fault: CENSUS GELU_ERF [2048,512,1,1] (skin-tokens x766) range [-6,6): nmse=1.290e+00 (max 1e-07) exact=1551/1048576 inf_ok=1 nan=0 nmse_vs_f64: rd=1.290e+00 cpu=1.035e-15 FAIL
+   fault: CENSUS GELU_ERF [4096,1029,1,1] (Pixal3D x24) range [-6,6): nmse=1.287e+00 (max 1e-07) exact=6228/4214784 inf_ok=1 nan=0 nmse_vs_f64: rd=1.287e+00 cpu=1.038e-15 FAIL
+   fault: CENSUS SIGMOID [1,16384,1,1] (skin-tokens x212) range [-12,12): nmse=9.230e-01 (max 1e-07) exact=0/16384 inf_ok=1 nan=0 nmse_vs_f64: rd=9.230e-01 cpu=1.376e-15 FAIL
+   fault: CENSUS NEG [1,64,12,4096] (Pixal3D x120) range [-1,1): nmse=2.000e+00 (max 1e-07) exact=0/3145728 inf_ok=1 nan=0 nmse_vs_f64: rd=2.000e+00 cpu=0.000e+00 FAIL
+   fault: CENSUS NEG [32,16,1024,1] (Pixal3D x48) range [-1,1): nmse=2.002e+00 (max 1e-07) exact=0/524288 inf_ok=1 nan=0 nmse_vs_f64: rd=2.002e+00 cpu=0.000e+00 FAIL
+   fault: CENSUS SCALE [515,1,16,2] (skin-tokens x10724) range [-1,1): nmse=2.002e+00 (max 1e-07) exact=0/16480 inf_ok=1 nan=0 FAIL
+   fault: CENSUS SCALE [54000,64,8,1] (census ne1 cut) (skin-tokens x822) range [-1,1): nmse=1.999e+00 (max 1e-07) exact=1/27648000 inf_ok=1 nan=0 FAIL
+   fault: CENSUS DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) range [-1,1): nmse=2.000e+00 (max 1e-07) exact=2109456/4227136 inf_ok=1 nan=0 FAIL
+   fault: CENSUS ROPE [128,8,514,1] (skin-tokens x21560) range [-1,1): nmse=4.436e-02 (max 1e-07) exact=677/526336 inf_ok=1 nan=0 FAIL
+PASS control: GGML_RD_FAULT=1 fails every census row: 15 of 15 FAIL
+ROW 0
+
+PERF NEG [256,1,1,1] (timing floor, not census) reps=1 iters=5 warmup=1 dispatches=1 barriers=0 elements=256 bytes_per_dispatch=2048 OK
+
+perf 0: 1/1 rows OK
+
+RESULT: PASS (perf 0)
+
+ggml_test: rd stats graphs=36 nodes=36 dispatches=36 skipped=0 barriers=0 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=8 set0_created=31 slots_created=1 coop_yields=0 waits=36 faults=15 params_bytes=9216 set_bytes=629890320 get_bytes=629886208 copies=0 clears=1 buffers_live=0 bytes_live=0
+
+PERF NEG [256,1,1,1] (timing floor, not census) reps=1 iters=5 warmup=1 dispatches=1 barriers=0 elements=256 bytes_per_dispatch=2048 OK | graph us: median 664 min 341 (the floor) 
+ROW 1
+
+PERF SILU [3072,1,2,1] (skin-tokens x10724) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=6144 bytes_per_dispatch=49152 OK
+
+perf 1: 1/1 rows OK
+
+RESULT: PASS (perf 1)
+
+ggml_test: rd stats graphs=42 nodes=1572 dispatches=1572 skipped=0 barriers=1530 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=8 set0_created=32 slots_created=256 coop_yields=1 waits=42 faults=15 params_bytes=402432 set_bytes=629890320 get_bytes=629886208 copies=0 clears=2 buffers_live=0 bytes_live=0
+
+PERF SILU [3072,1,2,1] (skin-tokens x10724) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=6144 bytes_per_dispatch=49152 OK | graph us: median 548 min 533 | per dispatch -0.5 us, 49152 GB/s 
+ROW 2
+
+PERF SILU [3072,514,1,1] (skin-tokens x56) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=1579008 bytes_per_dispatch=12632064 OK
+
+perf 2: 1/1 rows OK
+
+RESULT: PASS (perf 2)
+
+ggml_test: rd stats graphs=48 nodes=1956 dispatches=1956 skipped=0 barriers=1908 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=33 slots_created=256 coop_yields=1 waits=48 faults=15 params_bytes=500736 set_bytes=629890320 get_bytes=629886208 copies=0 clears=3 buffers_live=0 bytes_live=0
+
+PERF SILU [3072,514,1,1] (skin-tokens x56) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=1579008 bytes_per_dispatch=12632064 OK | graph us: median 962 min 698 | per dispatch 4.7 us, 2713 GB/s 
+ROW 3
+
+PERF SILU [4096,32,1,1] (Pixal3D x40) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=131072 bytes_per_dispatch=1048576 OK
+
+perf 3: 1/1 rows OK
+
+RESULT: PASS (perf 3)
+
+ggml_test: rd stats graphs=54 nodes=3492 dispatches=3492 skipped=0 barriers=3438 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=8 set0_created=34 slots_created=256 coop_yields=1 waits=54 faults=15 params_bytes=893952 set_bytes=629890320 get_bytes=629886208 copies=0 clears=4 buffers_live=0 bytes_live=0
+
+PERF SILU [4096,32,1,1] (Pixal3D x40) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=131072 bytes_per_dispatch=1048576 OK | graph us: median 763 min 638 | per dispatch 0.4 us, 2711 GB/s 
+ROW 4
+
+PERF SILU [16,16,16,512] (Pixal3D x17) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=2097152 bytes_per_dispatch=16777216 OK
+
+perf 4: 1/1 rows OK
+
+RESULT: PASS (perf 4)
+
+ggml_test: rd stats graphs=60 nodes=3876 dispatches=3876 skipped=0 barriers=3816 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=35 slots_created=256 coop_yields=1 waits=60 faults=15 params_bytes=992256 set_bytes=629890320 get_bytes=629886208 copies=0 clears=5 buffers_live=0 bytes_live=0
+
+PERF SILU [16,16,16,512] (Pixal3D x17) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=2097152 bytes_per_dispatch=16777216 OK | graph us: median 983 min 792 | per dispatch 5.0 us, 3366 GB/s 
+ROW 5
+
+PERF GELU [8192,4096,1,1] (Pixal3D x60) reps=16 iters=5 warmup=1 dispatches=16 barriers=15 elements=33554432 bytes_per_dispatch=268435456 OK
+
+perf 5: 1/1 rows OK
+
+RESULT: PASS (perf 5)
+
+ggml_test: rd stats graphs=66 nodes=3972 dispatches=3972 skipped=0 barriers=3906 failed_graphs=0 last{nodes=16 dispatches=16 barriers=15 skipped=0} pipelines=8 set0_created=36 slots_created=256 coop_yields=1 waits=66 faults=15 params_bytes=1016832 set_bytes=629890320 get_bytes=629886208 copies=0 clears=6 buffers_live=0 bytes_live=0
+
+PERF GELU [8192,4096,1,1] (Pixal3D x60) reps=16 iters=5 warmup=1 dispatches=16 barriers=15 elements=33554432 bytes_per_dispatch=268435456 OK | graph us: median 7890 min 7389 | per dispatch 451.6 us, 594 GB/s 
+ROW 6
+
+PERF GELU_ERF [2048,512,1,1] (skin-tokens x766) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=1048576 bytes_per_dispatch=8388608 OK
+
+perf 6: 1/1 rows OK
+
+RESULT: PASS (perf 6)
+
+ggml_test: rd stats graphs=72 nodes=4356 dispatches=4356 skipped=0 barriers=4284 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=37 slots_created=256 coop_yields=1 waits=72 faults=15 params_bytes=1115136 set_bytes=629890320 get_bytes=629886208 copies=0 clears=7 buffers_live=0 bytes_live=0
+
+PERF GELU_ERF [2048,512,1,1] (skin-tokens x766) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=1048576 bytes_per_dispatch=8388608 OK | graph us: median 799 min 728 | per dispatch 2.1 us, 3977 GB/s 
+ROW 7
+
+PERF GELU_ERF [4096,1029,1,1] (Pixal3D x24) reps=32 iters=5 warmup=1 dispatches=32 barriers=31 elements=4214784 bytes_per_dispatch=33718272 OK
+
+perf 7: 1/1 rows OK
+
+RESULT: PASS (perf 7)
+
+ggml_test: rd stats graphs=78 nodes=4548 dispatches=4548 skipped=0 barriers=4470 failed_graphs=0 last{nodes=32 dispatches=32 barriers=31 skipped=0} pipelines=8 set0_created=38 slots_created=256 coop_yields=1 waits=78 faults=15 params_bytes=1164288 set_bytes=629890320 get_bytes=629886208 copies=0 clears=8 buffers_live=0 bytes_live=0
+
+PERF GELU_ERF [4096,1029,1,1] (Pixal3D x24) reps=32 iters=5 warmup=1 dispatches=32 barriers=31 elements=4214784 bytes_per_dispatch=33718272 OK | graph us: median 1129 min 867 | per dispatch 14.5 us, 2320 GB/s 
+ROW 8
+
+PERF SIGMOID [1,16384,1,1] (skin-tokens x212) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=16384 bytes_per_dispatch=131072 OK
+
+perf 8: 1/1 rows OK
+
+RESULT: PASS (perf 8)
+
+ggml_test: rd stats graphs=84 nodes=6084 dispatches=6084 skipped=0 barriers=6000 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=8 set0_created=39 slots_created=256 coop_yields=1 waits=84 faults=15 params_bytes=1557504 set_bytes=629890320 get_bytes=629886208 copies=0 clears=9 buffers_live=0 bytes_live=0
+
+PERF SIGMOID [1,16384,1,1] (skin-tokens x212) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=16384 bytes_per_dispatch=131072 OK | graph us: median 621 min 499 | per dispatch -0.2 us, 131072 GB/s 
+ROW 9
+
+PERF NEG [1,64,12,4096] (Pixal3D x120) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=3145728 bytes_per_dispatch=25165824 OK
+
+perf 9: 1/1 rows OK
+
+RESULT: PASS (perf 9)
+
+ggml_test: rd stats graphs=90 nodes=6468 dispatches=6468 skipped=0 barriers=6378 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=40 slots_created=256 coop_yields=1 waits=90 faults=15 params_bytes=1655808 set_bytes=629890320 get_bytes=629886208 copies=0 clears=10 buffers_live=0 bytes_live=0
+
+PERF NEG [1,64,12,4096] (Pixal3D x120) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=3145728 bytes_per_dispatch=25165824 OK | graph us: median 1328 min 1083 | per dispatch 10.4 us, 2426 GB/s 
+ROW 10
+
+PERF NEG [32,16,1024,1] (Pixal3D x48) reps=128 iters=5 warmup=1 dispatches=128 barriers=127 elements=524288 bytes_per_dispatch=4194304 OK
+
+perf 10: 1/1 rows OK
+
+RESULT: PASS (perf 10)
+
+ggml_test: rd stats graphs=96 nodes=7236 dispatches=7236 skipped=0 barriers=7140 failed_graphs=0 last{nodes=128 dispatches=128 barriers=127 skipped=0} pipelines=8 set0_created=41 slots_created=256 coop_yields=1 waits=96 faults=15 params_bytes=1852416 set_bytes=629890320 get_bytes=629886208 copies=0 clears=11 buffers_live=0 bytes_live=0
+
+PERF NEG [32,16,1024,1] (Pixal3D x48) reps=128 iters=5 warmup=1 dispatches=128 barriers=127 elements=524288 bytes_per_dispatch=4194304 OK | graph us: median 818 min 730 | per dispatch 1.2 us, 3486 GB/s 
+ROW 11
+
+PERF SCALE [515,1,16,2] (skin-tokens x10724) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=16480 bytes_per_dispatch=131840 OK
+
+perf 11: 1/1 rows OK
+
+RESULT: PASS (perf 11)
+
+ggml_test: rd stats graphs=102 nodes=8772 dispatches=8772 skipped=0 barriers=8670 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=8 set0_created=42 slots_created=256 coop_yields=1 waits=102 faults=15 params_bytes=2245632 set_bytes=629890320 get_bytes=629886208 copies=0 clears=12 buffers_live=0 bytes_live=0
+
+PERF SCALE [515,1,16,2] (skin-tokens x10724) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=16480 bytes_per_dispatch=131840 OK | graph us: median 738 min 597 | per dispatch 0.3 us, 456 GB/s 
+ROW 12
+
+PERF SCALE [54000,512,8,1] (skin-tokens x822) reps=8 iters=5 warmup=1 dispatches=8 barriers=7 elements=221184000 bytes_per_dispatch=1769472000 OK
+
+perf 12: 1/1 rows OK
+
+RESULT: PASS (perf 12)
+
+ggml_test: rd stats graphs=108 nodes=8820 dispatches=8820 skipped=0 barriers=8712 failed_graphs=0 last{nodes=8 dispatches=8 barriers=7 skipped=0} pipelines=8 set0_created=43 slots_created=256 coop_yields=1 waits=108 faults=15 params_bytes=2257920 set_bytes=629890320 get_bytes=629886208 copies=0 clears=13 buffers_live=0 bytes_live=0
+
+PERF SCALE [54000,512,8,1] (skin-tokens x822) reps=8 iters=5 warmup=1 dispatches=8 barriers=7 elements=221184000 bytes_per_dispatch=1769472000 OK | graph us: median 22253 min 22103 | per dispatch 2698.6 us, 656 GB/s 
+ROW 13
+
+PERF DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=4227136 bytes_per_dispatch=33817088 OK
+
+perf 13: 1/1 rows OK
+
+RESULT: PASS (perf 13)
+
+ggml_test: rd stats graphs=114 nodes=9204 dispatches=9204 skipped=0 barriers=9090 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=44 slots_created=256 coop_yields=1 waits=114 faults=15 params_bytes=2356224 set_bytes=629890320 get_bytes=629886208 copies=0 clears=14 buffers_live=0 bytes_live=0
+
+PERF DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=4227136 bytes_per_dispatch=33817088 OK | graph us: median 2264 min 2019 | per dispatch 25.0 us, 1353 GB/s 
+ROW 14
+
+PERF ROPE [128,8,514,1] (skin-tokens x21560) reps=512 iters=5 warmup=1 dispatches=512 barriers=511 elements=526336 bytes_per_dispatch=4212744 OK
+
+perf 14: 1/1 rows OK
+
+RESULT: PASS (perf 14)
+
+ggml_test: rd stats graphs=120 nodes=12276 dispatches=12276 skipped=0 barriers=12156 failed_graphs=0 last{nodes=512 dispatches=512 barriers=511 skipped=0} pipelines=8 set0_created=45 slots_created=512 coop_yields=2 waits=120 faults=15 params_bytes=3142656 set_bytes=629894432 get_bytes=629886208 copies=0 clears=15 buffers_live=0 bytes_live=0
+
+PERF ROPE [128,8,514,1] (skin-tokens x21560) reps=512 iters=5 warmup=1 dispatches=512 barriers=511 elements=526336 bytes_per_dispatch=4212744 OK | graph us: median 3090 min 2551 | per dispatch 4.7 us, 889 GB/s 
+PASS perf: 15 of 15 rows timed
+rd: graphs=120 nodes=12276 dispatches=12276 skipped=0 barriers=12156 failed_graphs=0 last{nodes=512 dispatches=512 barriers=511 skipped=0} pipelines=8 set0_created=45 slots_created=512 coop_yields=2 waits=120 faults=15 params_bytes=3142656 set_bytes=629894432 get_bytes=629886208 copies=0 clears=15 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=120 submits=120 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+close: CLOSED permanent_slots=0
+wall_s=74.9
+RESULT: PASS
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

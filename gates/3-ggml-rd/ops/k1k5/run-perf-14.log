@@ -1,0 +1,5 @@
+ROW 14
+PERF ROPE [128,8,514,1] (skin-tokens x21560) reps=512 iters=5 warmup=1 dispatches=512 barriers=511 elements=526336 bytes_per_dispatch=4212744 OK
+perf 14: 1/1 rows OK
+RESULT: PASS (perf 14)
+ggml_test: rd stats graphs=120 nodes=12276 dispatches=12276 skipped=0 barriers=12156 failed_graphs=0 last{nodes=512 dispatches=512 barriers=511 skipped=0} pipelines=8 set0_created=45 slots_created=512 coop_yields=2 waits=120 faults=15 params_bytes=3142656 set_bytes=629894432 get_bytes=629886208 copies=0 clears=15 buffers_live=0 bytes_live=0

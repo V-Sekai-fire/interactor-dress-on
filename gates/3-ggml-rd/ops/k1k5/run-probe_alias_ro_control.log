@@ -1,0 +1,3 @@
+PROBE alias ro kernel=ctl_add_f32_rosrc rounds=1000 barriers=999 elements=4096 exact=0/4096 min=12 max=161 mean=44.5 (want 1000)
+RESULT: PASS (alias ro (control))
+ggml_test: rd stats graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=102016 get_bytes=579584 copies=0 clears=0 buffers_live=0 bytes_live=0

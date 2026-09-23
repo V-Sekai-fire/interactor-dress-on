@@ -423,6 +423,12 @@ func ggml_probe_chain() -> String: return ggml_probe_start("chain", "256", "")
 func ggml_probe_independent() -> String: return ggml_probe_start("independent", "64", "")
 func ggml_probe_alias_rw() -> String: return ggml_probe_start("alias", "rw", "")
 func ggml_probe_alias_ro() -> String: return ggml_probe_start("alias", "ro", "")  # the control: must lose counts
+# Families K1/K5 (census_ggml_rd.gd): the census rows vs ggml-cpu, their
+# fault control, and the timed runs (row 0 is the timing floor).
+func ggml_ops_k1k5() -> String: return ggml_ops_start("-o SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,DIAG_MASK_INF,ROPE -b RD0", "")
+func ggml_probe_census() -> String: return ggml_probe_start("census", "all", "")
+func ggml_probe_census_fault() -> String: return ggml_probe_start("census", "all", "GGML_RD_FAULT=1")  # every row must FAIL
+func ggml_probe_perf() -> String: return ggml_probe_start("perf", "all", "")
 func ggml_probe_files() -> String:
 	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)

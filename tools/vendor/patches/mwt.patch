@@ -1,0 +1,12 @@
+diff --git a/vendor/mwt/DMWT.cpp b/vendor/mwt/DMWT.cpp
+index 3f41e50..981fbc9 100644
+--- a/vendor/mwt/DMWT.cpp
++++ b/vendor/mwt/DMWT.cpp
+@@ -3,6 +3,7 @@
+ #include "delaunay_geogram.h"
+ 
+ #include <chrono>
++#include <climits> // INT_MAX; the Godot-typed delaunay_geogram.h used to bring it in
+ #include <cmath>
+ #include <iostream>
+ 

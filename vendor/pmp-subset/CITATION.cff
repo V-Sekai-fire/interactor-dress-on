@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: If you use this code, cite the Polygon Mesh Processing Library.
+title: PMP (Polygon Mesh Processing Library) subset for curvenet.elf (vendored)
+abstract: >-
+  The pmp-library as the org's Godot fork carries it under thirdparty/pmp
+  (the pin cassie-triangulation uses, f2fb04f4, with the fork's
+  -fno-exceptions patches). Subset: core (surface_mesh) and the algorithms
+  remeshing, decimation, differential_geometry, normals, features,
+  utilities, distance_point_triangle and triangulation, with the headers
+  they include (barycentric_coordinates.h, io/io_flags.h, ...). Not
+  vendored: curvature, laplace, numerics, smoothing and the other Eigen
+  users. 9 sources, 16 headers and LICENSE.txt, 256,850 bytes before this
+  file. Built with PMP_SCALAR_TYPE_64=1 (pmp::Point is double).
+  tools/vendor/thirdparty_subset.sh reproduces the tree from the pinned
+  commit. Local adaptations (tools/vendor/patches/pmp.patch), both behind
+  PMP_NO_EIGEN so curvenet.elf is Eigen-free: mat_vec.h drops the
+  <Eigen/Dense> include and the Matrix construct-from/assign-from/cast-to
+  Eigen members; remeshing.cpp drops the curvature.h include and the
+  adaptive-sizing block of preprocessing() (adaptive_remeshing aborts with
+  a message; uniform_remeshing, the path Cassie uses, is unchanged).
+type: software
+authors:
+  - name: the Polygon Mesh Processing Library developers
+    website: https://www.pmp-library.org
+  - name: Computer Graphics Group, RWTH Aachen
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: MIT

@@ -1,0 +1,17 @@
+diff --git a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
+index ab4f257..c2c8f09 100644
+--- a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
++++ b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
+@@ -139,6 +139,12 @@ namespace GEO {
+         // -fno-exceptions patch: SCsub excludes parallel_delaunay_3d.cpp
+         // (PDEL needs OpenMP), delaunay_2d.cpp (we use 3D only), and the
+         // tetgen/triangle creators (license). Drop their factory registrations.
++        // interactor-dress-on: delaunay_2d.cpp is compiled again (Cassie's
++        // delaunay_triangulate_2d_raw runs on "BDEL2d" instead of Godot's
++        // Delaunay2D), so its two creators are registered again, as upstream
++        // geogram 1.9.9 registers them.
++        geo_register_Delaunay_creator(Delaunay2d, "BDEL2d");
++        geo_register_Delaunay_creator(RegularWeightedDelaunay2d, "BPOW2d");
+ 
+ #ifndef GEOGRAM_PSM
+         geo_register_Delaunay_creator(Delaunay_NearestNeighbors, "NN");

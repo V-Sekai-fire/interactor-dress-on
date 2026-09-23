@@ -51,6 +51,14 @@ function(add_stage_elf name)
 	)
 endfunction()
 
+# The curvenet stage (Cut 4): Cassie's pen -> curvenet -> mesh on Geogram,
+# PMP and MWT subsets, Eigen-free. cmake/curvenet.cmake defines its libraries.
+option(DRESS_ON_WITH_CURVENET "Build the Cassie curvenet stage libraries" ON)
+if(DRESS_ON_WITH_CURVENET)
+	include(cmake/curvenet.cmake OPTIONAL)
+endif()
+
+
 # Stage 1: the GPU layer's own probes.
 add_stage_elf(dress_on guest/main.cpp)
 

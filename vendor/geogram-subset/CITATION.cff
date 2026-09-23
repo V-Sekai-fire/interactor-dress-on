@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: If you use this code, cite Geogram.
+title: Geogram subset for curvenet.elf (vendored)
+abstract: >-
+  Geogram 1.9.9 (upstream BrunoLevy/geogram c40b4653) as the org's Godot fork
+  carries it under thirdparty/geogram, with that fork's -fno-exceptions
+  patches. Subset: the 61 sources modules/cassie/SCsub compiles
+  (basic minus geofile/android_utils/boolean_expression, numerics,
+  mesh/mesh and mesh_reorder, delaunay minus tetgen/triangle/
+  parallel_delaunay_3d, points minus co3ne, bibliography, OpenNL .c),
+  plus delaunay/delaunay_2d.cpp, which SCsub left out; the 122 headers
+  those sources and mwt's DelaunayFaces.cpp include, transitively; and
+  zlib.h/zconf.h from thirdparty/zlib (headers only, geofile.h wants them,
+  nothing links zlib). 185 files, 3,614,343 bytes before this file.
+  tools/vendor/thirdparty_subset.sh reproduces the tree from the pinned
+  commit. Local adaptation (tools/vendor/patches/geogram.patch):
+  delaunay/delaunay.cpp registers the "BDEL2d" and "BPOW2d" creators again
+  (the fork dropped them with delaunay_2d.cpp), so Cassie's
+  delaunay_triangulate_2d_raw can create a Delaunay2d.
+type: software
+authors:
+  - family-names: Lévy
+    given-names: Bruno
+  - name: Inria
+    website: https://github.com/BrunoLevy/geogram
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: BSD-3-Clause

@@ -1,0 +1,75 @@
+cff-version: 1.2.0
+message: If you use this code, cite CASSIE and the Godot module it is vendored from.
+title: CASSIE Godot module, curvenet subset (vendored)
+abstract: >-
+  83 of the 105 files under modules/cassie/src of the org's Godot fork
+  (entities-godot), 596,233 bytes: the pen-to-curvenet-to-mesh path of the
+  CASSIE sketching system (Yu et al., CHI 2021) as the fork ported it to
+  Godot. Kept: sketcher, beautifier and its params, stroke packet,
+  constraints, curve fit and RDP, the Eigen-free Track 5 solver with the
+  CPU dispatchers for the curve_* and spmv kernels, the sketch graph and
+  surface manager/patch pipeline, curvenet, knot, extractor, polar,
+  triangulator, remesh, refine, polygon_triangulation and delaunay_geogram.
+  Left out: cassie_path_3d, cassie_surface, intrinsic_triangulation,
+  polygon_triangulation_godot, profile_mover, edge_collider, quad_mesh, the
+  GPU dispatchers (cassie_mas_gpu, cassie_slang_gpu, saxpby_dispatch),
+  lean_ffi, register_types, doc_classes and tests; and every prebuilt
+  kernel (*.spv, *.cpu.cpp). tools/vendor/cassie_subset.sh reproduces the
+  tree from the pinned commit and applies tools/vendor/patches/cassie.patch,
+  which holds these local adaptations:
+  (1) delaunay_geogram.{h,cpp} rewritten: delaunay_triangulate_2d_raw runs
+  on GEO::Delaunay::create(2, "BDEL2d") in double, the input mapped into
+  the unit box first, instead of Godot's Delaunay2D; the Godot-typed
+  delaunay_triangulate_2d / delaunay_tetrahedralize_3d overloads are
+  dropped (mwt's DMWT.cpp:548 is the only caller).
+  (2) the four curve_* dispatchers and spmv_dispatch include the
+  Lean-emitted kernels/cassie/cpp/<kernel>_emit.cpp inside a namespace,
+  after the slang cpp prelude with its EXTERN_C macros emptied (the
+  guest/avbd/avbd_cpu.cpp pattern), and call main_0_Thread instead of
+  _main_0 from thirdparty/avbd/*.cpu.cpp.
+  (3) CassieSurfacePatch::get_callback returns
+  callable_mp(this, &CassieSurfacePatch::project) instead of the
+  string-bound Callable(this, "project").
+  (4) CassieSketcher gains split_closed_strokes (default true): a closed
+  stroke enters the sketch graph as two half polylines through
+  add_stroke_intersecting, so it bounds a two-edge cycle instead of a
+  self-loop edge that yields no patch.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: Godot Engine contributors
+    website: https://godotengine.org
+  - family-names: Yu
+    given-names: Emilie
+  - family-names: Arora
+    given-names: Rahul
+  - family-names: Stanko
+    given-names: Tibor
+  - family-names: Bærentzen
+    given-names: Jakob Andreas
+  - family-names: Singh
+    given-names: Karan
+  - family-names: Bousseau
+    given-names: Adrien
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: MIT
+references:
+  - type: conference-paper
+    title: "CASSIE: Curve and Surface Sketching in Immersive Environments"
+    authors:
+      - family-names: Yu
+        given-names: Emilie
+      - family-names: Arora
+        given-names: Rahul
+      - family-names: Stanko
+        given-names: Tibor
+      - family-names: Bærentzen
+        given-names: Jakob Andreas
+      - family-names: Singh
+        given-names: Karan
+      - family-names: Bousseau
+        given-names: Adrien
+    collection-title: Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems
+    doi: 10.1145/3411764.3445158
+    year: 2021

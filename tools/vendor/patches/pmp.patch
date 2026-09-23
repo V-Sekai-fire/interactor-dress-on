@@ -1,0 +1,92 @@
+diff --git a/vendor/pmp-subset/pmp/algorithms/remeshing.cpp b/vendor/pmp-subset/pmp/algorithms/remeshing.cpp
+index 4145f63..5d589fb 100644
+--- a/vendor/pmp-subset/pmp/algorithms/remeshing.cpp
++++ b/vendor/pmp-subset/pmp/algorithms/remeshing.cpp
+@@ -10,7 +10,15 @@
+ #include <memory>
+ #include <limits>
+ 
++// interactor-dress-on: PMP_NO_EIGEN compiles out adaptive remeshing's
++// curvature sizing (curvature.cpp needs Eigen and is not vendored). Uniform
++// remeshing, the path Cassie's refine/cassie_remesh use, is unchanged.
++#ifndef PMP_NO_EIGEN
+ #include "pmp/algorithms/curvature.h"
++#else
++#include <cstdio>
++#include <cstdlib>
++#endif
+ #include "pmp/algorithms/normals.h"
+ #include "pmp/algorithms/barycentric_coordinates.h"
+ #include "pmp/algorithms/differential_geometry.h"
+@@ -450,6 +458,13 @@ void Remeshing::preprocessing()
+     }
+     else
+     {
++#ifdef PMP_NO_EIGEN
++        // Adaptive sizing needs curvature(), compiled out under
++        // PMP_NO_EIGEN. Fail loudly rather than remesh with a wrong field.
++        std::fprintf(stderr,
++                     "pmp: adaptive_remeshing needs curvature (PMP_NO_EIGEN)\n");
++        std::abort();
++#else
+         // compute curvature for all mesh vertices, using cotan or Cohen-Steiner
+         // don't use two-ring neighborhood, since we otherwise compute
+         // curvature over sharp features edges, leading to high curvatures.
+@@ -550,6 +565,7 @@ void Remeshing::preprocessing()
+             // store target edge length
+             vsizing_[v] = h;
+         }
++#endif // PMP_NO_EIGEN
+     }
+ 
+     if (use_projection_)
+diff --git a/vendor/pmp-subset/pmp/mat_vec.h b/vendor/pmp-subset/pmp/mat_vec.h
+index f211f27..3c51170 100644
+--- a/vendor/pmp-subset/pmp/mat_vec.h
++++ b/vendor/pmp-subset/pmp/mat_vec.h
+@@ -13,7 +13,13 @@
+ #include <limits>
+ #include <initializer_list>
+ 
++// interactor-dress-on: PMP_NO_EIGEN drops the Eigen interop (the include
++// and the three Matrix <-> Eigen conversions below). Nothing in the
++// remeshing subset converts to or from Eigen; the Eigen users (curvature,
++// laplace, numerics, smoothing, ...) are not vendored.
++#ifndef PMP_NO_EIGEN
+ #include <Eigen/Dense>
++#endif
+ 
+ #include "pmp/exceptions.h"
+ 
+@@ -154,6 +160,7 @@ public:
+     }
+     // clang-format on
+ 
++#ifndef PMP_NO_EIGEN
+     //! construct from Eigen
+     template <typename Derived>
+     Matrix(const Eigen::MatrixBase<Derived>& m)
+@@ -173,6 +180,7 @@ public:
+                     (*this)(i, j) = m(i, j);
+         }
+     }
++#endif // PMP_NO_EIGEN
+ 
+     //! copy constructor from other scalar type
+     //! is also invoked for type-casting
+@@ -183,6 +191,7 @@ public:
+             data_[i] = static_cast<Scalar>(m[i]);
+     }
+ 
++#ifndef PMP_NO_EIGEN
+     //! assign from Eigen
+     template <typename Derived>
+     Matrix<Scalar, M, N>& operator=(const Eigen::MatrixBase<Derived>& m)
+@@ -214,6 +223,7 @@ public:
+                 m(i, j) = static_cast<OtherScalar>((*this)(i, j));
+         return m;
+     }
++#endif // PMP_NO_EIGEN
+ 
+     //! return identity matrix (only for square matrices, N==M)
+     static Matrix<Scalar, M, N> identity();

@@ -1,6 +1,7 @@
 #!/bin/sh
 # G2's flat control (sensitivity.cpp): LBFGSpp (double) from float32-rounded
-# inputs against the traces. Writes gates/5-drape/lbfgsb/sensitivity.log.
+# inputs against the traces. Writes gates/5-drape/lbfgsb/sensitivity.log and
+# gates/5-drape/oracle/f32io_control.txt (G2's per-trace band, Cut 5c).
 #
 #   tests/lbfgsb_oracle/sensitivity.sh      (ARIA=<clone> to reuse a checkout)
 set -e

@@ -1,8 +1,8 @@
-# Gate 5 drape.elf, 2026-09-23T08:50:33, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 4090
+# Gate 5 drape.elf, 2026-09-23T12:32:55, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 4090
 sandbox memory_max = 512
 sandbox execution_timeout = 8000
-oracle handed to the guest: 47 files (20 components, 5 problems, 20 traces, 2 inverse_min): DATA invmin_k_bend_density 1961 bytes, 47 keys
-G10 scene handed to the guest: DATA body_obj 340622 bytes, 51 keys
+oracle handed to the guest: 48 files (20 components, 5 problems, 20 traces, 1 control, 2 inverse_min): DATA invmin_k_bend_density 1961 bytes, 48 keys
+G10 scene handed to the guest: DATA body_obj 355924 bytes, 52 keys
 OPENED cpu
 LOADED cpu [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
 PASS G4 faces: the sphere scene's 1152 triangles equal native iter0/0.obj's 1152, in order
@@ -11,36 +11,36 @@ OPENED auto (rd from 160 vertices)
 api auto: LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
 SET [drape-config] solver=AVBD iters=16 damp=1 relax=1 color
 QUEUED forward 3 on rd
-PASS G4 api: drape_open(auto) picked rd for 625 vertices, 3 steps in 7 ticks, positions finite=true, frame 1 max|dx| = 1.164e-10: IDLE DONE forward rd steps=3 (+3 of 3) finite=yes ymin=-0.001814 friction_events=2 projections=0 self_pushes=0 wall_ms=41.7 ms/step=13.906
+PASS G4 api: drape_open(auto) picked rd for 625 vertices, 3 steps in 7 ticks, positions finite=true, frame 1 max|dx| = 1.164e-10: IDLE DONE forward rd steps=3 (+3 of 3) finite=yes ymin=-0.001814 friction_events=2 projections=0 self_pushes=0 wall_ms=68.7 ms/step=22.905
 wrappers: DATA trace_rosenbox_upstream_n25_m5_tight 3206 bytes, 47 keys
 wrappers: STARTED inverse_min cpu cases=0
 PASS G3 main.gd wrappers: lbfgsb_load_oracle + drape_job(inverse_min, cpu, cases=0) -> 'PASS inverse_min cpu (vec cpu): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.' after 1 frames; drape_job_names lists inverse_min and lbfgsb_replay
-job lbfgsb_components cpu                              ticks=     2 wall_ms=    167.1  PASS G1 cpu: 20/20 fixtures pass, control (theta x1.25) fails 20/20
-    PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=2.58e-08 M=1.19e-07 Mv=1.68e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=8.89e-08 drt0=3.49e-08 step_max0=2.94e-08 drt=3.31e-08 dg=9.69e-10 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.40e-07 pg_inf=5.88e-10 xcp=4.31e-08 vecc=2.10e-07 drt0=1.95e-06 step_max0=1.10e-06 drt=1.39e-07 dg=5.33e-08 step_max=7.79e-08 wall_ms=0.0
-    PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.25e-08 M=9.93e-08 Mv=6.84e-08 pg_inf=1.24e-09 xcp=3.43e-08 vecc=2.68e-07 drt0=1.87e-07 step_max0=7.39e-10 drt=1.30e-07 dg=6.49e-08 step_max=0.00e+00 wall_ms=0.0
+job lbfgsb_components cpu                              ticks=     2 wall_ms=    229.5  PASS G1 cpu: 20/20 fixtures pass, control (theta x1.25) fails 20/20
+    PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=2.58e-08 M=1.19e-07 Mv=1.68e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=8.89e-08 drt0=3.49e-08 step_max0=2.94e-08 drt=2.19e-08 dg=9.69e-10 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.40e-07 pg_inf=5.88e-10 xcp=4.31e-08 vecc=2.10e-07 drt0=1.95e-06 step_max0=1.10e-06 drt=7.34e-08 dg=6.06e-08 step_max=7.79e-08 wall_ms=0.0
+    PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.25e-08 M=9.93e-08 Mv=6.84e-08 pg_inf=1.24e-09 xcp=3.43e-08 vecc=2.68e-07 drt0=1.87e-07 step_max0=7.39e-10 drt=1.55e-07 dg=7.12e-08 step_max=0.00e+00 wall_ms=0.0
     PASS comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: theta=2.27e-08 M=1.84e-07 Mv=2.04e-07 pg_inf=1.77e-09 xcp=6.61e-06 vecc=2.66e-06 drt0=6.37e-06 step_max0=1.03e-06 drt=1.94e-07 dg=2.16e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=1.63e-07 Mv=2.22e-07 pg_inf=6.08e-08 xcp=4.54e-08 vecc=1.98e-07 drt0=2.23e-07 step_max0=6.91e-08 drt=8.01e-08 dg=1.99e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=2.09e-07 Mv=1.80e-07 pg_inf=1.84e-10 xcp=7.54e-07 vecc=1.30e-06 drt0=4.89e-07 step_max0=6.42e-07 drt=1.00e-07 dg=1.00e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=3.44e-08 Mv=1.03e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=1.36e-07 drt=5.84e-08 dg=2.74e-08 step_max=2.83e-08 wall_ms=0.0
-    PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=4.59e-09 M=9.34e-08 Mv=6.36e-08 pg_inf=2.19e-09 xcp=2.50e-08 vecc=8.42e-08 drt0=1.54e-07 step_max0=2.19e-08 drt=4.14e-08 dg=8.41e-09 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=9.22e-08 M=1.94e-07 Mv=3.31e-07 pg_inf=2.44e-10 xcp=5.01e-08 vecc=1.24e-07 drt0=1.74e-07 step_max0=1.65e-07 drt=1.69e-07 dg=5.93e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=1.63e-07 Mv=2.22e-07 pg_inf=6.08e-08 xcp=4.54e-08 vecc=1.98e-07 drt0=2.23e-07 step_max0=6.91e-08 drt=3.45e-08 dg=1.70e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=2.09e-07 Mv=1.80e-07 pg_inf=1.84e-10 xcp=7.54e-07 vecc=1.30e-06 drt0=4.89e-07 step_max0=6.42e-07 drt=8.39e-08 dg=1.55e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=3.44e-08 Mv=1.03e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=1.36e-07 drt=2.82e-08 dg=7.72e-09 step_max=3.48e-08 wall_ms=0.0
+    PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=4.59e-09 M=9.34e-08 Mv=6.36e-08 pg_inf=2.19e-09 xcp=2.50e-08 vecc=8.42e-08 drt0=1.54e-07 step_max0=2.19e-08 drt=4.14e-08 dg=5.10e-09 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=9.22e-08 M=1.94e-07 Mv=3.31e-07 pg_inf=2.44e-10 xcp=5.01e-08 vecc=1.24e-07 drt0=1.74e-07 step_max0=1.65e-07 drt=1.31e-07 dg=7.01e-08 step_max=0.00e+00 wall_ms=0.0
     PASS comp_09 n=5 m=10 ncorr=1 |newact|=4 |fv|=0 sub_rounds=0 sub_path=0: theta=2.47e-08 M=3.88e-08 Mv=7.13e-08 pg_inf=1.31e-09 xcp=1.48e-09 vecc=6.76e-08 drt0=9.53e-09 step_max0=1.31e-08 drt=1.31e-09 dg=3.74e-09 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.14e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=1.34e-07 vecc=2.35e-07 drt0=9.67e-08 step_max0=1.13e-07 drt=6.60e-08 dg=2.51e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=1.14e-07 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=1.58e-07 dg=4.60e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=4.03e-09 M=5.26e-07 Mv=4.91e-07 pg_inf=4.88e-10 xcp=3.93e-08 vecc=3.16e-08 drt0=1.61e-07 step_max0=1.56e-07 drt=3.04e-07 dg=3.53e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=7.04e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=4.68e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=2.89e-08 M=6.36e-08 Mv=5.99e-08 pg_inf=6.34e-08 xcp=3.80e-08 vecc=9.07e-08 drt0=2.82e-07 step_max0=2.46e-08 drt=1.00e-07 dg=2.33e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.14e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=1.34e-07 vecc=2.35e-07 drt0=9.67e-08 step_max0=1.13e-07 drt=4.58e-08 dg=2.40e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=1.14e-07 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=1.00e-07 dg=4.30e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=4.03e-09 M=5.26e-07 Mv=4.91e-07 pg_inf=4.88e-10 xcp=3.93e-08 vecc=3.16e-08 drt0=1.61e-07 step_max0=1.56e-07 drt=2.61e-07 dg=2.26e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=7.04e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=5.02e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=2.89e-08 M=6.36e-08 Mv=5.99e-08 pg_inf=6.34e-08 xcp=3.80e-08 vecc=9.07e-08 drt0=2.82e-07 step_max0=2.46e-08 drt=8.48e-08 dg=2.49e-08 step_max=0.00e+00 wall_ms=0.0
     PASS comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: theta=3.74e-08 M=3.07e-07 Mv=3.33e-07 pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.02e-07 drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=1.49e-07 pg_inf=1.65e-07 xcp=2.63e-08 vecc=3.97e-08 drt0=1.45e-06 step_max0=7.60e-07 drt=1.09e-07 dg=6.88e-08 step_max=1.03e-07 wall_ms=0.0
-    PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.47e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.97e-08 vecc=2.59e-07 drt0=2.12e-07 step_max0=7.45e-08 drt=1.38e-07 dg=2.90e-08 step_max=0.00e+00 wall_ms=0.0
-    PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=4.33e-08 M=1.11e-07 Mv=2.78e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=1.75e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.63e-08 dg=3.19e-08 step_max=2.02e-08 wall_ms=0.0
+    PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=1.49e-07 pg_inf=1.65e-07 xcp=2.63e-08 vecc=3.97e-08 drt0=1.45e-06 step_max0=7.60e-07 drt=8.54e-08 dg=7.69e-08 step_max=1.03e-07 wall_ms=0.0
+    PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.47e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.97e-08 vecc=2.59e-07 drt0=2.12e-07 step_max0=7.45e-08 drt=1.17e-07 dg=2.35e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=4.33e-08 M=1.11e-07 Mv=2.78e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=1.75e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.34e-08 dg=3.34e-08 step_max=2.02e-08 wall_ms=0.0
     PASS comp_19 n=37 m=5 ncorr=0 |newact|=11 |fv|=21 sub_rounds=0 sub_path=1: theta=0.00e+00 pg_inf=2.76e-09 xcp=8.05e-08 drt0=1.07e-07 step_max0=1.16e-07 drt=3.41e-08 dg=3.95e-09 step_max=0.00e+00 wall_ms=0.0
     control FAIL comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.54e-01(FAIL) Mv=2.11e-01(FAIL) pg_inf=2.52e-09 xcp=1.83e-09 vecc=2.50e-01(FAIL) drt0=3.49e-08 step_max0=2.94e-08 drt=2.27e-02(FAIL) dg=9.69e-10 step_max=0.00e+00 wall_ms=0.0
     control FAIL comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.74e-01(FAIL) pg_inf=5.88e-10 xcp=3.68e-03(FAIL) vecc=1.77e-01(FAIL) drt0=2.03e-06 step_max0=9.03e-07 drt=2.03e-01(FAIL) dg=1.73e-01(FAIL) step_max=2.72e-01(FAIL) wall_ms=0.0
     control FAIL comp_02 n=300 m=5 ncorr=1 |newact|=23 |fv|=183 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.24e-09 xcp=3.30e-02(FAIL) vecc=7.04e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.54e-01(FAIL) step_max0=1.75e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.68e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
     control FAIL comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: M=1.28e-01(FAIL) Mv=1.48e-01(FAIL) pg_inf=1.77e-09 xcp=7.58e-02(FAIL) vecc=2.62e-01(FAIL) drt0=7.41e-02(FAIL) step_max0=1.14e-02(FAIL) drt=7.70e-02(FAIL) dg=1.93e-03(FAIL) step_max=0.00e+00 wall_ms=0.0
-    control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=0.00e+00 wall_ms=99.9
+    control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=0.00e+00 wall_ms=134.8
     control FAIL comp_05 n=300 m=10 ncorr=7 |newact|=120 |fv|=83 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=1.84e-10 xcp=1.47e-01(FAIL) vecc=2.34e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.05e-01(FAIL) step_max0=1.14e-01(FAIL) drt=2.02e-01(FAIL) subLUP(FAIL) dg=7.89e-02(FAIL) step_max=0.00e+00 wall_ms=0.0
     control FAIL comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: M=1.95e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=2.88e-09 xcp=1.21e-02(FAIL) vecc=1.33e-01(FAIL) drt0=5.49e-07 step_max0=3.24e-07 drt=2.05e-01(FAIL) dg=1.30e-01(FAIL) step_max=2.91e-01(FAIL) wall_ms=0.0
     control FAIL comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: M=1.67e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=2.19e-09 xcp=2.92e-02(FAIL) vecc=1.43e-01(FAIL) drt0=1.14e-01(FAIL) step_max0=1.88e-01(FAIL) drt=2.00e-01(FAIL) dg=1.80e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
@@ -56,102 +56,102 @@ job lbfgsb_components cpu                              ticks=     2 wall_ms=    
     control FAIL comp_17 n=300 m=10 ncorr=10 |newact|=35 |fv|=169 sub_rounds=0 sub_path=2: M=1.69e-01(FAIL) Mv=1.72e-01(FAIL) pg_inf=2.28e-09 xcp=3.34e-02(FAIL) vecc=1.38e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.93e-01(FAIL) subLUP(FAIL) dg=1.62e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
     control FAIL comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: M=7.90e-02(FAIL) Mv=1.56e-01(FAIL) pg_inf=4.06e-10 xcp=2.87e-02(FAIL) vecc=1.32e-01(FAIL) drt0=4.31e-08 step_max0=9.71e-09 drt=9.48e-02(FAIL) dg=9.35e-02(FAIL) step_max=1.05e-01(FAIL) wall_ms=0.0
     control FAIL comp_19 n=37 m=5 ncorr=0 |newact|=9 |fv|=23 sub_rounds=0 sub_path=1: pg_inf=2.76e-09 xcp=9.17e-02(FAIL) newact(FAIL) fv(FAIL) drt0=1.13e-01(FAIL) step_max0=1.55e-01(FAIL) drt=2.00e-01(FAIL) subLUP(FAIL) dg=1.36e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
-    worst (fixtures): M=5.26e-07 Mv=4.91e-07 dg=6.88e-08 drt=3.04e-07 drt0=6.37e-06 pg_inf=1.65e-07 step_max=1.03e-07 step_max0=1.10e-06 theta=9.22e-08 vecc=2.66e-06 xcp=6.61e-06
+    worst (fixtures): M=5.26e-07 Mv=4.91e-07 dg=7.69e-08 drt=2.61e-07 drt0=6.37e-06 pg_inf=1.65e-07 step_max=1.03e-07 step_max0=1.10e-06 theta=9.22e-08 vecc=2.66e-06 xcp=6.61e-06
     worst (control): M=1.95e-01 Mv=2.11e-01 dg=2.00e-01 drt=2.13e-01 drt0=1.54e-01 pg_inf=1.65e-07 step_max=2.91e-01 step_max0=1.97e-01 vecc=7.04e-01 xcp=1.94e-01
     phases=394 dispatches=2732
 PASS G1 lbfgsb_components cpu: PASS G1 cpu: 20/20 fixtures pass, control (theta x1.25) fails 20/20
-job lbfgsb_components rd                               ticks=   395 wall_ms=    577.3  PASS G1 rd: 20/20 fixtures pass, control (theta x1.25) fails 20/20
-    PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=8.68e-08 M=1.66e-07 Mv=2.17e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=1.79e-07 drt0=3.49e-08 step_max0=2.94e-08 drt=2.30e-08 dg=9.69e-10 step_max=0.00e+00 wall_ms=22.7
-    PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.76e-07 pg_inf=5.88e-10 xcp=4.00e-08 vecc=6.79e-08 drt0=1.92e-06 step_max0=7.76e-07 drt=1.48e-07 dg=8.90e-08 step_max=1.87e-07 wall_ms=17.1
-    PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.53e-09 M=9.93e-08 Mv=6.79e-08 pg_inf=1.24e-09 xcp=6.46e-08 vecc=7.89e-07 drt0=3.13e-07 step_max0=2.01e-07 drt=1.13e-07 dg=5.48e-08 step_max=5.96e-08 wall_ms=10.4
-    PASS comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: theta=2.27e-08 M=1.84e-07 Mv=2.34e-07 pg_inf=1.77e-09 xcp=8.97e-05 vecc=3.72e-05 drt0=8.62e-05 step_max0=1.52e-05 drt=1.46e-07 dg=2.28e-08 step_max=0.00e+00 wall_ms=12.7
-    PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=2.69e-07 Mv=3.33e-07 pg_inf=6.08e-08 xcp=3.71e-08 vecc=1.98e-07 drt0=2.22e-07 step_max0=1.08e-07 drt=6.90e-08 dg=8.24e-10 step_max=5.96e-08 wall_ms=24.2
-    PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=1.20e-07 Mv=1.23e-07 pg_inf=1.84e-10 xcp=2.02e-06 vecc=4.11e-06 drt0=1.24e-06 step_max0=1.73e-06 drt=7.50e-08 dg=3.69e-09 step_max=5.96e-08 wall_ms=20.1
-    PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=5.87e-08 Mv=1.68e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=2.30e-07 drt=8.63e-08 dg=4.22e-08 step_max=3.48e-08 wall_ms=9.8
-    PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=7.10e-08 M=2.34e-07 Mv=3.73e-07 pg_inf=2.19e-09 xcp=1.60e-08 vecc=5.17e-08 drt0=1.16e-07 step_max0=6.24e-08 drt=9.02e-08 dg=1.33e-08 step_max=0.00e+00 wall_ms=6.6
-    PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=2.03e-08 M=1.45e-07 Mv=2.01e-07 pg_inf=2.44e-10 xcp=4.49e-08 vecc=1.24e-07 drt0=2.52e-07 step_max0=6.40e-08 drt=1.56e-07 dg=3.32e-08 step_max=5.96e-08 wall_ms=25.0
-    PASS comp_09 n=5 m=10 ncorr=1 |newact|=4 |fv|=0 sub_rounds=0 sub_path=0: theta=2.47e-08 M=1.31e-07 Mv=1.59e-07 pg_inf=1.31e-09 xcp=1.48e-09 vecc=6.76e-08 drt0=9.53e-09 step_max0=1.31e-08 drt=1.31e-09 dg=3.74e-09 step_max=0.00e+00 wall_ms=14.4
-    PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.95e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=4.46e-07 vecc=5.02e-07 drt0=1.59e-07 step_max0=1.23e-07 drt=4.58e-08 dg=2.28e-08 step_max=5.96e-08 wall_ms=11.6
-    PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=6.70e-08 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=2.09e-07 dg=8.63e-08 step_max=5.96e-08 wall_ms=23.6
-    PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=6.19e-08 M=3.06e-07 Mv=4.09e-07 pg_inf=4.88e-10 xcp=8.43e-08 vecc=2.02e-07 drt0=1.38e-07 step_max0=1.14e-07 drt=2.93e-07 dg=1.43e-07 step_max=0.00e+00 wall_ms=12.6
-    PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=8.22e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=8.12e-08 step_max=0.00e+00 wall_ms=6.4
-    PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=3.99e-08 M=1.26e-07 Mv=1.77e-07 pg_inf=6.34e-08 xcp=3.80e-08 vecc=1.02e-07 drt0=2.82e-07 step_max0=2.46e-08 drt=1.61e-07 dg=3.38e-08 step_max=5.96e-08 wall_ms=11.4
-    PASS comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: theta=3.74e-08 M=1.07e-07 Mv=1.26e-07 pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.02e-07 drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=9.1
-    PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=6.49e-08 pg_inf=1.65e-07 xcp=2.63e-08 vecc=1.11e-07 drt0=1.45e-06 step_max0=7.60e-07 drt=5.97e-08 dg=6.31e-09 step_max=2.32e-08 wall_ms=4.8
-    PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.98e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.91e-08 vecc=1.61e-07 drt0=2.36e-07 step_max0=3.60e-08 drt=1.29e-07 dg=1.41e-09 step_max=5.96e-08 wall_ms=28.2
-    PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=6.52e-08 M=3.83e-07 Mv=4.77e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=2.36e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.34e-08 dg=3.41e-08 step_max=2.02e-08 wall_ms=21.9
-    PASS comp_19 n=37 m=5 ncorr=0 |newact|=11 |fv|=21 sub_rounds=0 sub_path=1: theta=0.00e+00 pg_inf=2.76e-09 xcp=1.12e-07 drt0=1.71e-07 step_max0=2.19e-07 drt=3.41e-08 dg=3.95e-09 step_max=5.96e-08 wall_ms=4.8
-    control FAIL comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.54e-01(FAIL) Mv=2.11e-01(FAIL) pg_inf=2.52e-09 xcp=1.83e-09 vecc=2.50e-01(FAIL) drt0=3.49e-08 step_max0=2.94e-08 drt=2.27e-02(FAIL) dg=9.69e-10 step_max=0.00e+00 wall_ms=7.4
-    control FAIL comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.74e-01(FAIL) pg_inf=5.88e-10 xcp=3.68e-03(FAIL) vecc=1.77e-01(FAIL) drt0=2.03e-06 step_max0=9.03e-07 drt=2.03e-01(FAIL) dg=1.73e-01(FAIL) step_max=2.72e-01(FAIL) wall_ms=15.1
-    control FAIL comp_02 n=300 m=5 ncorr=1 |newact|=23 |fv|=183 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.24e-09 xcp=3.30e-02(FAIL) vecc=7.04e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.54e-01(FAIL) step_max0=1.75e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.68e-01(FAIL) step_max=5.96e-08 wall_ms=10.8
-    control FAIL comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: M=1.28e-01(FAIL) Mv=1.48e-01(FAIL) pg_inf=1.77e-09 xcp=7.57e-02(FAIL) vecc=2.62e-01(FAIL) drt0=7.41e-02(FAIL) step_max0=1.13e-02(FAIL) drt=7.70e-02(FAIL) dg=1.93e-03(FAIL) step_max=0.00e+00 wall_ms=10.5
-    control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=5.96e-08 wall_ms=21.9
-    control FAIL comp_05 n=300 m=10 ncorr=7 |newact|=120 |fv|=83 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=1.84e-10 xcp=1.47e-01(FAIL) vecc=2.34e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.05e-01(FAIL) step_max0=1.14e-01(FAIL) drt=2.02e-01(FAIL) subLUP(FAIL) dg=7.89e-02(FAIL) step_max=5.96e-08 wall_ms=21.4
-    control FAIL comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: M=1.95e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=2.88e-09 xcp=1.21e-02(FAIL) vecc=1.33e-01(FAIL) drt0=5.49e-07 step_max0=2.30e-07 drt=2.05e-01(FAIL) dg=1.30e-01(FAIL) step_max=2.91e-01(FAIL) wall_ms=10.3
-    control FAIL comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: M=1.67e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=2.19e-09 xcp=2.92e-02(FAIL) vecc=1.43e-01(FAIL) drt0=1.14e-01(FAIL) step_max0=1.88e-01(FAIL) drt=2.00e-01(FAIL) dg=1.80e-01(FAIL) step_max=0.00e+00 wall_ms=7.0
-    control FAIL comp_08 n=300 m=10 ncorr=10 |newact|=18 |fv|=191 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.97e-01(FAIL) pg_inf=2.44e-10 xcp=3.63e-02(FAIL) vecc=1.14e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.49e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.67e-01(FAIL) step_max=5.96e-08 wall_ms=24.0
-    control FAIL comp_09 n=5 m=10 ncorr=1 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.55e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.31e-09 xcp=7.62e-02(FAIL) vecc=7.07e-02(FAIL) newact(FAIL) fv(FAIL) drt0=2.55e-02(FAIL) step_max0=4.57e-02(FAIL) drt=6.87e-02(FAIL) subLUP(FAIL) dg=1.48e-02(FAIL) step_max=0.00e+00 wall_ms=13.5
-    control FAIL comp_10 n=37 m=5 ncorr=5 |newact|=18 |fv|=6 sub_rounds=0 sub_path=1: M=1.94e-01(FAIL) Mv=1.96e-01(FAIL) pg_inf=7.12e-10 xcp=1.94e-01(FAIL) vecc=1.28e-01(FAIL) newact(FAIL) fv(FAIL) drt0=9.86e-02(FAIL) step_max0=1.11e-01(FAIL) drt=1.78e-01(FAIL) subLUP(FAIL) dg=6.95e-02(FAIL) step_max=5.96e-08 wall_ms=11.2
-    control FAIL comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=1.98e-01(FAIL) pg_inf=7.75e-08 xcp=3.59e-03(FAIL) vecc=1.90e-01(FAIL) drt0=1.48e-01(FAIL) step_max0=1.97e-01(FAIL) drt=1.96e-01(FAIL) dg=1.96e-01(FAIL) step_max=5.96e-08 wall_ms=23.2
-    control FAIL comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: M=1.08e-01(FAIL) Mv=1.62e-01(FAIL) pg_inf=4.88e-10 xcp=2.04e-02(FAIL) vecc=1.86e-01(FAIL) drt0=6.17e-08 step_max0=6.60e-08 drt=5.00e-02(FAIL) dg=3.70e-02(FAIL) step_max=0.00e+00 wall_ms=13.5
-    control FAIL comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: M=1.73e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=8.26e-08 xcp=4.32e-02(FAIL) vecc=1.85e-01(FAIL) drt0=4.25e-02(FAIL) step_max0=1.93e-01(FAIL) drt=2.13e-01(FAIL) dg=1.90e-01(FAIL) step_max=0.00e+00 wall_ms=6.3
-    control FAIL comp_14 n=300 m=5 ncorr=3 |newact|=20 |fv|=175 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=6.34e-08 xcp=3.54e-02(FAIL) vecc=1.76e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.82e-01(FAIL) drt=2.06e-01(FAIL) subLUP(FAIL) dg=1.76e-01(FAIL) step_max=5.96e-08 wall_ms=12.3
-    control FAIL comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: M=1.57e-01(FAIL) Mv=1.76e-01(FAIL) pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.42e-01(FAIL) drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=9.8
-    control FAIL comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: M=1.58e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.65e-07 xcp=3.46e-03(FAIL) vecc=9.43e-02(FAIL) drt0=2.53e-06 step_max0=1.18e-06 drt=2.05e-01(FAIL) dg=2.00e-01(FAIL) step_max=2.53e-01(FAIL) wall_ms=5.4
-    control FAIL comp_17 n=300 m=10 ncorr=10 |newact|=35 |fv|=169 sub_rounds=0 sub_path=2: M=1.69e-01(FAIL) Mv=1.72e-01(FAIL) pg_inf=2.28e-09 xcp=3.34e-02(FAIL) vecc=1.38e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.93e-01(FAIL) subLUP(FAIL) dg=1.62e-01(FAIL) step_max=5.96e-08 wall_ms=28.7
-    control FAIL comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: M=7.90e-02(FAIL) Mv=1.56e-01(FAIL) pg_inf=4.06e-10 xcp=2.87e-02(FAIL) vecc=1.32e-01(FAIL) drt0=4.31e-08 step_max0=9.71e-09 drt=9.48e-02(FAIL) dg=9.35e-02(FAIL) step_max=1.05e-01(FAIL) wall_ms=20.3
-    control FAIL comp_19 n=37 m=5 ncorr=0 |newact|=9 |fv|=23 sub_rounds=0 sub_path=1: pg_inf=2.76e-09 xcp=9.17e-02(FAIL) newact(FAIL) fv(FAIL) drt0=1.13e-01(FAIL) step_max0=1.55e-01(FAIL) drt=2.00e-01(FAIL) subLUP(FAIL) dg=1.36e-01(FAIL) step_max=5.96e-08 wall_ms=4.6
-    worst (fixtures): M=3.83e-07 Mv=4.77e-07 dg=1.43e-07 drt=2.93e-07 drt0=8.62e-05 pg_inf=1.65e-07 step_max=1.87e-07 step_max0=1.52e-05 theta=8.68e-08 vecc=3.72e-05 xcp=8.97e-05
+job lbfgsb_components rd                               ticks=   395 wall_ms=   1964.7  PASS G1 rd: 20/20 fixtures pass, control (theta x1.25) fails 20/20
+    PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=8.68e-08 M=1.66e-07 Mv=2.17e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=1.79e-07 drt0=3.49e-08 step_max0=2.94e-08 drt=1.18e-08 dg=9.69e-10 step_max=0.00e+00 wall_ms=52.8
+    PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.76e-07 pg_inf=5.88e-10 xcp=4.00e-08 vecc=6.79e-08 drt0=1.92e-06 step_max0=7.76e-07 drt=7.34e-08 dg=6.06e-08 step_max=7.79e-08 wall_ms=60.7
+    PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.53e-09 M=9.93e-08 Mv=6.79e-08 pg_inf=1.24e-09 xcp=6.46e-08 vecc=7.89e-07 drt0=3.13e-07 step_max0=2.01e-07 drt=7.74e-08 dg=9.63e-09 step_max=5.96e-08 wall_ms=26.5
+    PASS comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: theta=2.27e-08 M=1.84e-07 Mv=2.34e-07 pg_inf=1.77e-09 xcp=8.97e-05 vecc=3.72e-05 drt0=8.62e-05 step_max0=1.52e-05 drt=1.70e-07 dg=2.22e-08 step_max=0.00e+00 wall_ms=46.3
+    PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=2.69e-07 Mv=3.33e-07 pg_inf=6.08e-08 xcp=3.71e-08 vecc=1.98e-07 drt0=2.22e-07 step_max0=1.08e-07 drt=5.23e-08 dg=2.90e-08 step_max=5.96e-08 wall_ms=87.1
+    PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=1.20e-07 Mv=1.23e-07 pg_inf=1.84e-10 xcp=2.02e-06 vecc=4.11e-06 drt0=1.24e-06 step_max0=1.73e-06 drt=8.39e-08 dg=1.21e-08 step_max=5.96e-08 wall_ms=58.9
+    PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=5.87e-08 Mv=1.68e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=2.30e-07 drt=2.82e-08 dg=7.72e-09 step_max=3.48e-08 wall_ms=31.8
+    PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=7.10e-08 M=2.34e-07 Mv=3.73e-07 pg_inf=2.19e-09 xcp=1.60e-08 vecc=5.17e-08 drt0=1.16e-07 step_max0=6.24e-08 drt=9.21e-08 dg=7.79e-08 step_max=0.00e+00 wall_ms=31.3
+    PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=2.03e-08 M=1.45e-07 Mv=2.01e-07 pg_inf=2.44e-10 xcp=4.49e-08 vecc=1.24e-07 drt0=2.52e-07 step_max0=6.40e-08 drt=8.30e-08 dg=1.64e-08 step_max=5.96e-08 wall_ms=72.8
+    PASS comp_09 n=5 m=10 ncorr=1 |newact|=4 |fv|=0 sub_rounds=0 sub_path=0: theta=2.47e-08 M=1.31e-07 Mv=1.59e-07 pg_inf=1.31e-09 xcp=1.48e-09 vecc=6.76e-08 drt0=9.53e-09 step_max0=1.31e-08 drt=1.31e-09 dg=3.74e-09 step_max=0.00e+00 wall_ms=35.1
+    PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.95e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=4.46e-07 vecc=5.02e-07 drt0=1.59e-07 step_max0=1.23e-07 drt=4.58e-08 dg=2.30e-08 step_max=5.96e-08 wall_ms=48.2
+    PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=6.70e-08 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=1.00e-07 dg=4.30e-08 step_max=5.96e-08 wall_ms=73.0
+    PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=6.19e-08 M=3.06e-07 Mv=4.09e-07 pg_inf=4.88e-10 xcp=8.43e-08 vecc=2.02e-07 drt0=1.38e-07 step_max0=1.14e-07 drt=1.30e-07 dg=2.69e-11 step_max=0.00e+00 wall_ms=46.6
+    PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=8.22e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=5.02e-08 step_max=0.00e+00 wall_ms=26.0
+    PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=3.99e-08 M=1.26e-07 Mv=1.77e-07 pg_inf=6.34e-08 xcp=3.80e-08 vecc=1.02e-07 drt0=2.82e-07 step_max0=2.46e-08 drt=8.62e-08 dg=3.23e-08 step_max=5.96e-08 wall_ms=36.0
+    PASS comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: theta=3.74e-08 M=1.07e-07 Mv=1.26e-07 pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.02e-07 drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=37.7
+    PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=6.49e-08 pg_inf=1.65e-07 xcp=2.63e-08 vecc=1.11e-07 drt0=1.45e-06 step_max0=7.60e-07 drt=8.54e-08 dg=7.69e-08 step_max=3.97e-08 wall_ms=23.7
+    PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.98e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.91e-08 vecc=1.61e-07 drt0=2.36e-07 step_max0=3.60e-08 drt=1.17e-07 dg=2.35e-08 step_max=5.96e-08 wall_ms=82.9
+    PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=6.52e-08 M=3.83e-07 Mv=4.77e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=2.36e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.01e-08 dg=2.94e-08 step_max=4.74e-08 wall_ms=71.8
+    PASS comp_19 n=37 m=5 ncorr=0 |newact|=11 |fv|=21 sub_rounds=0 sub_path=1: theta=0.00e+00 pg_inf=2.76e-09 xcp=1.12e-07 drt0=1.71e-07 step_max0=2.19e-07 drt=3.41e-08 dg=3.95e-09 step_max=5.96e-08 wall_ms=16.7
+    control FAIL comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.54e-01(FAIL) Mv=2.11e-01(FAIL) pg_inf=2.52e-09 xcp=1.83e-09 vecc=2.50e-01(FAIL) drt0=3.49e-08 step_max0=2.94e-08 drt=2.27e-02(FAIL) dg=9.69e-10 step_max=0.00e+00 wall_ms=29.0
+    control FAIL comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.74e-01(FAIL) pg_inf=5.88e-10 xcp=3.68e-03(FAIL) vecc=1.77e-01(FAIL) drt0=2.03e-06 step_max0=9.03e-07 drt=2.03e-01(FAIL) dg=1.73e-01(FAIL) step_max=2.72e-01(FAIL) wall_ms=53.9
+    control FAIL comp_02 n=300 m=5 ncorr=1 |newact|=23 |fv|=183 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.24e-09 xcp=3.30e-02(FAIL) vecc=7.04e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.54e-01(FAIL) step_max0=1.75e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.68e-01(FAIL) step_max=5.96e-08 wall_ms=34.0
+    control FAIL comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: M=1.28e-01(FAIL) Mv=1.48e-01(FAIL) pg_inf=1.77e-09 xcp=7.57e-02(FAIL) vecc=2.62e-01(FAIL) drt0=7.41e-02(FAIL) step_max0=1.13e-02(FAIL) drt=7.70e-02(FAIL) dg=1.93e-03(FAIL) step_max=0.00e+00 wall_ms=48.8
+    control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=5.96e-08 wall_ms=104.0
+    control FAIL comp_05 n=300 m=10 ncorr=7 |newact|=120 |fv|=83 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=1.84e-10 xcp=1.47e-01(FAIL) vecc=2.34e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.05e-01(FAIL) step_max0=1.14e-01(FAIL) drt=2.02e-01(FAIL) subLUP(FAIL) dg=7.89e-02(FAIL) step_max=5.96e-08 wall_ms=59.7
+    control FAIL comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: M=1.95e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=2.88e-09 xcp=1.21e-02(FAIL) vecc=1.33e-01(FAIL) drt0=5.49e-07 step_max0=2.30e-07 drt=2.05e-01(FAIL) dg=1.30e-01(FAIL) step_max=2.91e-01(FAIL) wall_ms=35.4
+    control FAIL comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: M=1.67e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=2.19e-09 xcp=2.92e-02(FAIL) vecc=1.43e-01(FAIL) drt0=1.14e-01(FAIL) step_max0=1.88e-01(FAIL) drt=2.00e-01(FAIL) dg=1.80e-01(FAIL) step_max=0.00e+00 wall_ms=29.6
+    control FAIL comp_08 n=300 m=10 ncorr=10 |newact|=18 |fv|=191 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.97e-01(FAIL) pg_inf=2.44e-10 xcp=3.63e-02(FAIL) vecc=1.14e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.49e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.67e-01(FAIL) step_max=5.96e-08 wall_ms=74.1
+    control FAIL comp_09 n=5 m=10 ncorr=1 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.55e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.31e-09 xcp=7.62e-02(FAIL) vecc=7.07e-02(FAIL) newact(FAIL) fv(FAIL) drt0=2.55e-02(FAIL) step_max0=4.57e-02(FAIL) drt=6.87e-02(FAIL) subLUP(FAIL) dg=1.48e-02(FAIL) step_max=0.00e+00 wall_ms=37.3
+    control FAIL comp_10 n=37 m=5 ncorr=5 |newact|=18 |fv|=6 sub_rounds=0 sub_path=1: M=1.94e-01(FAIL) Mv=1.96e-01(FAIL) pg_inf=7.12e-10 xcp=1.94e-01(FAIL) vecc=1.28e-01(FAIL) newact(FAIL) fv(FAIL) drt0=9.86e-02(FAIL) step_max0=1.11e-01(FAIL) drt=1.78e-01(FAIL) subLUP(FAIL) dg=6.95e-02(FAIL) step_max=5.96e-08 wall_ms=50.5
+    control FAIL comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=1.98e-01(FAIL) pg_inf=7.75e-08 xcp=3.59e-03(FAIL) vecc=1.90e-01(FAIL) drt0=1.48e-01(FAIL) step_max0=1.97e-01(FAIL) drt=1.96e-01(FAIL) dg=1.96e-01(FAIL) step_max=5.96e-08 wall_ms=74.0
+    control FAIL comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: M=1.08e-01(FAIL) Mv=1.62e-01(FAIL) pg_inf=4.88e-10 xcp=2.04e-02(FAIL) vecc=1.86e-01(FAIL) drt0=6.17e-08 step_max0=6.60e-08 drt=5.00e-02(FAIL) dg=3.70e-02(FAIL) step_max=0.00e+00 wall_ms=52.6
+    control FAIL comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: M=1.73e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=8.26e-08 xcp=4.32e-02(FAIL) vecc=1.85e-01(FAIL) drt0=4.25e-02(FAIL) step_max0=1.93e-01(FAIL) drt=2.13e-01(FAIL) dg=1.90e-01(FAIL) step_max=0.00e+00 wall_ms=28.8
+    control FAIL comp_14 n=300 m=5 ncorr=3 |newact|=20 |fv|=175 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=6.34e-08 xcp=3.54e-02(FAIL) vecc=1.76e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.82e-01(FAIL) drt=2.06e-01(FAIL) subLUP(FAIL) dg=1.76e-01(FAIL) step_max=5.96e-08 wall_ms=38.3
+    control FAIL comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: M=1.57e-01(FAIL) Mv=1.76e-01(FAIL) pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.42e-01(FAIL) drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=41.7
+    control FAIL comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: M=1.58e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.65e-07 xcp=3.46e-03(FAIL) vecc=9.43e-02(FAIL) drt0=2.53e-06 step_max0=1.18e-06 drt=2.05e-01(FAIL) dg=2.00e-01(FAIL) step_max=2.53e-01(FAIL) wall_ms=26.5
+    control FAIL comp_17 n=300 m=10 ncorr=10 |newact|=35 |fv|=169 sub_rounds=0 sub_path=2: M=1.69e-01(FAIL) Mv=1.72e-01(FAIL) pg_inf=2.28e-09 xcp=3.34e-02(FAIL) vecc=1.38e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.93e-01(FAIL) subLUP(FAIL) dg=1.62e-01(FAIL) step_max=5.96e-08 wall_ms=82.5
+    control FAIL comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: M=7.90e-02(FAIL) Mv=1.56e-01(FAIL) pg_inf=4.06e-10 xcp=2.87e-02(FAIL) vecc=1.32e-01(FAIL) drt0=4.31e-08 step_max0=9.71e-09 drt=9.48e-02(FAIL) dg=9.35e-02(FAIL) step_max=1.05e-01(FAIL) wall_ms=67.3
+    control FAIL comp_19 n=37 m=5 ncorr=0 |newact|=9 |fv|=23 sub_rounds=0 sub_path=1: pg_inf=2.76e-09 xcp=9.17e-02(FAIL) newact(FAIL) fv(FAIL) drt0=1.13e-01(FAIL) step_max0=1.55e-01(FAIL) drt=2.00e-01(FAIL) subLUP(FAIL) dg=1.36e-01(FAIL) step_max=5.96e-08 wall_ms=18.8
+    worst (fixtures): M=3.83e-07 Mv=4.77e-07 dg=7.79e-08 drt=1.70e-07 drt0=8.62e-05 pg_inf=1.65e-07 step_max=7.79e-08 step_max0=1.52e-05 theta=8.68e-08 vecc=3.72e-05 xcp=8.97e-05
     worst (control): M=1.95e-01 Mv=2.11e-01 dg=2.00e-01 drt=2.13e-01 drt0=1.54e-01 pg_inf=1.65e-07 step_max=2.91e-01 step_max0=1.97e-01 vecc=7.04e-01 xcp=1.94e-01
     phases=394 dispatches=2732
 PASS G1 lbfgsb_components rd: PASS G1 rd: 20/20 fixtures pass, control (theta x1.25) fails 20/20
-job lbfgsb_problems cpu                                ticks=     5 wall_ms=     47.8  FAIL G2 cpu: 19/20 traces pass
-    PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 2.1e-06) x rel 7.3e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=21 stages=22
+job lbfgsb_problems cpu                                ticks=     5 wall_ms=     71.0  PASS G2 cpu: 20/20 traces pass
+    PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 1.2e-06) x rel 6.2e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=21 stages=22
     PASS boxqp_n1000_m10_tight            iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.6e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.83e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=39 stages=40
-    PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 2.1e-06) x rel 7.3e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=21 stages=22
-    PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.0e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=39 stages=40
-    PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 2.2e-08) x rel 1.3e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=38 stages=39
-    PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 4.3e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.73e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=29.4 ms/iter=0.684 phases=141 stages=142
-    PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 6.9e-08) x rel 1.4e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
-    PASS rosen_n100_m5_tight              iters 43/43 nfev 50/50 f 118.811118/118.811118 (err 2.0e-07) x rel 1.6e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.05e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=0.0 ms/iter=0.000 phases=143 stages=144
-    PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986617/32.7986617 (err 3.5e-08) x rel 1.3e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=7.5 ms/iter=0.679 phases=35 stages=36
-    PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 1.7e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 1.01e-04 resets patho=0 chol=0 restores=0 first_f_divergence=27 wall_ms=0.0 ms/iter=0.000 phases=130 stages=131
-    PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798888/32.7798888 (err 2.0e-08) x rel 1.5e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
-    PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 5.6e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=21 wall_ms=3.8 ms/iter=0.085 phases=145 stages=146
-    FAIL rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506255872/0.0506045361 (err 2.1e-05(FAIL)) x rel 2.1e-04 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.69e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=69 stages=70
+    PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 1.2e-06) x rel 6.2e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=21 stages=22
+    PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.9e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=39 stages=40
+    PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 3.6e-08) x rel 1.2e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=38 stages=39
+    PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 5.3e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.65e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=42.8 ms/iter=0.995 phases=141 stages=142
+    PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 6.3e-08) x rel 8.5e-08 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosen_n100_m5_tight              iters 43/43 nfev 50/50 f 118.811118/118.811118 (err 2.0e-07) x rel 1.5e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.48e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=0.0 ms/iter=0.000 phases=143 stages=144
+    PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986615/32.7986617 (err 1.9e-07) x rel 1.6e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=11.1 ms/iter=1.011 phases=35 stages=36
+    PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 5.3e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 8.29e-05 resets patho=0 chol=0 restores=0 first_f_divergence=27 wall_ms=0.0 ms/iter=0.000 phases=130 stages=131
+    PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798888/32.7798888 (err 2.8e-08) x rel 1.8e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 1.2e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=20 wall_ms=6.2 ms/iter=0.138 phases=145 stages=146
+    PASS rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506108227/0.0506045361 (err 6.3e-06 band 9.66e-06 = 2 x LBFGSpp-f32io 4.83e-06) x rel 7.7e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.19e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=69 stages=70
     PASS rosen_n2_m10_tight               iters 21/21 nfev 27/27 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=75 stages=76
-    PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.0505960957/0.050596468 (err 3.7e-07) x rel 5.6e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 2.01e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=3.3 ms/iter=0.172 phases=69 stages=70
+    PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.0505961704/0.050596468 (err 3.0e-07) x rel 2.7e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 8.74e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=5.4 ms/iter=0.283 phases=69 stages=70
     PASS rosen_n2_m5_tight                iters 20/20 nfev 26/26 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=72 stages=73
-    PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 2.1e-08) x rel 1.8e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 7.3e-08) x rel 1.2e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
     PASS rosenbox_upstream_n25_m10_tight  iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 2.9e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=41 stages=42
-    PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 3.3e-07) x rel 1.7e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 4.5e-07) x rel 4.2e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
     PASS rosenbox_upstream_n25_m5_tight   iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 1.4e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=41 stages=42
-    worst measured/limit: f 20 x 0.21 iterations 0
-FAIL G2 lbfgsb_problems cpu: FAIL G2 cpu: 19/20 traces pass
-job lbfgsb_problems rd                                 ticks=  1250 wall_ms=   1128.6  FAIL G2 rd: 19/20 traces pass
-    PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 7.0e-07) x rel 1.2e-06 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=32.7 ms/iter=6.530 phases=21 stages=22
-    PASS boxqp_n1000_m10_tight            iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.6e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.83e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=93.1 ms/iter=8.459 phases=39 stages=40
-    PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 7.0e-07) x rel 1.2e-06 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=34.5 ms/iter=6.897 phases=21 stages=22
-    PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.9e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=74.8 ms/iter=6.801 phases=39 stages=40
-    PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 2.9e-08) x rel 5.9e-08 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=35.6 ms/iter=2.970 phases=38 stages=39
-    PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 5.3e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.68e-04 resets patho=0 chol=0 restores=0 first_f_divergence=30 wall_ms=155.3 ms/iter=3.611 phases=141 stages=142
-    PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 3.0e-08) x rel 1.0e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=26.6 ms/iter=2.663 phases=32 stages=33
-    PASS rosen_n100_m5_tight              iters 43/43 nfev 51/50 f 118.811118/118.811118 (err 2.0e-07) x rel 3.9e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 8.43e-05 resets patho=0 chol=0 restores=0 first_f_divergence=24 wall_ms=126.3 ms/iter=2.938 phases=145 stages=146
-    PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986617/32.7986617 (err 2.7e-08) x rel 1.7e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=25.1 ms/iter=2.284 phases=35 stages=36
-    PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 6.8e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 6.82e-05 resets patho=0 chol=0 restores=0 first_f_divergence=27 wall_ms=94.7 ms/iter=2.368 phases=130 stages=131
-    PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798889/32.7798888 (err 7.5e-08) x rel 2.1e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=23.2 ms/iter=2.323 phases=32 stages=33
-    PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 1.2e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=20 wall_ms=102.2 ms/iter=2.272 phases=145 stages=146
-    FAIL rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506258394/0.0506045361 (err 2.1e-05(FAIL)) x rel 2.1e-04 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.70e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=47.9 ms/iter=2.522 phases=69 stages=70
-    PASS rosen_n2_m10_tight               iters 21/21 nfev 27/27 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=52.6 ms/iter=2.504 phases=75 stages=76
-    PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.050596096/0.050596468 (err 3.7e-07) x rel 5.6e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 2.10e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=47.3 ms/iter=2.489 phases=69 stages=70
-    PASS rosen_n2_m5_tight                iters 20/20 nfev 26/26 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=49.9 ms/iter=2.494 phases=72 stages=73
-    PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 7.3e-08) x rel 1.2e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=23.5 ms/iter=2.355 phases=32 stages=33
-    PASS rosenbox_upstream_n25_m10_tight  iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 2.9e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=30.9 ms/iter=2.376 phases=41 stages=42
-    PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 4.5e-07) x rel 4.2e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=22.5 ms/iter=2.255 phases=32 stages=33
-    PASS rosenbox_upstream_n25_m5_tight   iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 1.4e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=28.7 ms/iter=2.208 phases=41 stages=42
-    worst measured/limit: f 20.3 x 0.211 iterations 0
-FAIL G2 lbfgsb_problems rd: FAIL G2 rd: 19/20 traces pass
-job inverse_min cpu                                    ticks=     2 wall_ms=      7.7  PASS inverse_min cpu (vec cpu): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.05e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
+    worst measured/limit: f 0.651 x 0.0774 iterations 0
+PASS G2 lbfgsb_problems cpu: PASS G2 cpu: 20/20 traces pass
+job lbfgsb_problems rd                                 ticks=  1248 wall_ms=   4974.5  PASS G2 rd: 20/20 traces pass
+    PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 1.1e-06) x rel 1.6e-06 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=97.4 ms/iter=19.483 phases=21 stages=22
+    PASS boxqp_n1000_m10_tight            iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.6e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.83e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=236.2 ms/iter=21.471 phases=39 stages=40
+    PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 1.1e-06) x rel 1.6e-06 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=102.4 ms/iter=20.480 phases=21 stages=22
+    PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.9e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=210.7 ms/iter=19.152 phases=39 stages=40
+    PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 4.8e-08) x rel 1.2e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=155.6 ms/iter=12.963 phases=38 stages=39
+    PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 6.1e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.77e-04 resets patho=0 chol=0 restores=0 first_f_divergence=30 wall_ms=613.0 ms/iter=14.256 phases=141 stages=142
+    PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 4.2e-08) x rel 4.0e-08 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=131.3 ms/iter=13.129 phases=32 stages=33
+    PASS rosen_n100_m5_tight              iters 43/43 nfev 50/50 f 118.811118/118.811118 (err 2.0e-07) x rel 3.6e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.31e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=582.8 ms/iter=13.554 phases=143 stages=144
+    PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986615/32.7986617 (err 1.9e-07) x rel 2.2e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=130.0 ms/iter=11.817 phases=35 stages=36
+    PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 5.4e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 1.58e-04 resets patho=0 chol=0 restores=0 first_f_divergence=26 wall_ms=489.6 ms/iter=12.240 phases=130 stages=131
+    PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798888/32.7798888 (err 1.9e-08) x rel 2.4e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=117.4 ms/iter=11.739 phases=32 stages=33
+    PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 5.6e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=20 wall_ms=527.6 ms/iter=11.725 phases=145 stages=146
+    PASS rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506108227/0.0506045361 (err 6.3e-06 band 9.66e-06 = 2 x LBFGSpp-f32io 4.83e-06) x rel 7.7e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.19e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=253.0 ms/iter=13.318 phases=69 stages=70
+    PASS rosen_n2_m10_tight               iters 21/21 nfev 27/27 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=273.3 ms/iter=13.014 phases=75 stages=76
+    PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.0505961704/0.050596468 (err 3.0e-07) x rel 2.7e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 8.74e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=247.3 ms/iter=13.017 phases=69 stages=70
+    PASS rosen_n2_m5_tight                iters 20/20 nfev 26/26 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=257.2 ms/iter=12.860 phases=72 stages=73
+    PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 2.1e-08) x rel 1.8e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=118.2 ms/iter=11.821 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m10_tight  iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 2.9e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=156.1 ms/iter=12.005 phases=41 stages=42
+    PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 3.3e-07) x rel 1.7e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=119.2 ms/iter=11.917 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m5_tight   iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 1.4e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=152.0 ms/iter=11.690 phases=41 stages=42
+    worst measured/limit: f 0.651 x 0.0774 iterations 0
+PASS G2 lbfgsb_problems rd: PASS G2 rd: 20/20 traces pass
+job inverse_min cpu                                    ticks=     2 wall_ms=     11.6  PASS inverse_min cpu (vec cpu): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.17e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
     k_tri: target at the truth, max |ours - host AvbdCpu| = 2.36e-07
       eval 1 x 0.5 f 1.65114181 g -3.62839079
       eval 2 x 1.5 f 0.109578139 g -0.474920511
@@ -166,21 +166,21 @@ job inverse_min cpu                                    ticks=     2 wall_ms=    
       eval 1 x 0.400000006 2.5 f 2.09721839 g -4.23898315 1.53514671
       eval 2 x 1.34024155 2.15949178 f 0.487556351 g -0.0549905449 0.940544009
       eval 3 x 1.39338148 1.90784431 f 0.272208161 g 0.00969445705 0.755307317
-      eval 4 x 1.51202154 0.925955951 f 0.0964578686 g -0.105591834 -0.647210658
-      eval 5 x 1.47197175 1.37342143 f 0.0110730395 g 0.0183471944 0.180154324
-      eval 6 x 1.482921 1.27523613 f 0.000445892255 g 0.00113424286 0.0360384025
-      eval 7 x 1.48654056 1.25033724 f 2.55105223e-05 g -0.00386849768 -0.00283908681
-      eval 8 x 1.48725474 1.2517035 f 2.06997528e-05 g -0.00331521477 -0.000449083804
-      eval 9 x 1.48935008 1.25246584 f 1.49273537e-05 g -0.00250669988 0.0013060593
-      eval 10 x 1.49462175 1.25246274 f 5.79350837e-06 g -0.000956932199 0.00261986582
-      eval 11 x 1.49894762 1.25120592 f 1.01511957e-06 g -4.44126636e-06 0.00167950091
-      eval 12 x 1.50018525 1.25019443 f 4.45687114e-08 g 0.000103074213 0.00036019535
-      eval 13 x 1.50005698 1.25000453 f 5.48936896e-10 g 1.76796893e-05 2.14735501e-05
-      eval 14 x 1.50000405 1.24999917 f 2.12641016e-12 g 9.07529738e-07 -4.60181496e-07
-    PASS k_bend_density: x 1.50000405 1.24999917 (truth 1.5,1.25) err 4.05e-06 (want <= 0.05); iterations 13 vs LBFGSpp 13 (want +-2), evaluations 14 vs 14; |x - x_LBFGSpp| 1.34e-07 (want <= 1e-3); f 2.13e-12; stop grad; host ms 4.3
+      eval 4 x 1.51202154 0.925955832 f 0.0964580246 g -0.10559196 -0.647211194
+      eval 5 x 1.47197175 1.37342155 f 0.0110730705 g 0.0183472075 0.180154547
+      eval 6 x 1.48292112 1.27523613 f 0.000445895139 g 0.00113423076 0.0360385031
+      eval 7 x 1.48654068 1.25033712 f 2.55092984e-05 g -0.00386840664 -0.00283910218
+      eval 8 x 1.48725486 1.25170338 f 2.06991527e-05 g -0.00331518403 -0.000449200568
+      eval 9 x 1.48935032 1.25246584 f 1.49274033e-05 g -0.00250659371 0.0013065394
+      eval 10 x 1.49462152 1.25246251 f 5.79371714e-06 g -0.000957131328 0.0026195168
+      eval 11 x 1.49894834 1.25120568 f 1.01453682e-06 g -4.3162072e-06 0.00167912629
+      eval 12 x 1.50018501 1.25019467 f 4.46645174e-08 g 0.000103152677 0.000360613631
+      eval 13 x 1.50005662 1.25000441 f 5.37440564e-10 g 1.75092828e-05 2.10591406e-05
+      eval 14 x 1.50000417 1.24999917 f 2.37501685e-12 g 9.40570942e-07 -6.14598036e-07
+    PASS k_bend_density: x 1.50000417 1.24999917 (truth 1.5,1.25) err 4.17e-06 (want <= 0.05); iterations 13 vs LBFGSpp 13 (want +-2), evaluations 14 vs 14; |x - x_LBFGSpp| 1.34e-07 (want <= 1e-3); f 2.38e-12; stop grad; host ms 6.7
     PASS k_bend_density zero-gradient arm (control): x 0.400000006 2.5 err 1.25 (want > 0.1), 1 iterations (grad); LBFGSpp's arm: err 1.25
-PASS G3 inverse_min cpu: PASS inverse_min cpu (vec cpu): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.05e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
-job inverse_min rd                                     ticks=   258 wall_ms=    412.9  PASS inverse_min rd (vec rd): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.05e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
+PASS G3 inverse_min cpu: PASS inverse_min cpu (vec cpu): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.17e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
+job inverse_min rd                                     ticks=   258 wall_ms=   1823.8  PASS inverse_min rd (vec rd): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.05e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
     k_tri: target at the truth, max |ours - host AvbdCpu| = 1.23e-07
       eval 1 x 0.5 f 1.6511419 g -3.62839103
       eval 2 x 1.5 f 0.109578116 g -0.474920452
@@ -189,14 +189,14 @@ job inverse_min rd                                     ticks=   258 wall_ms=    
       eval 5 x 1.98964298 f 4.05911572e-05 g -0.00784924068
       eval 6 x 1.99969387 f 3.53963903e-08 g -0.000231152517
       eval 7 x 1.99999881 f 7.22644167e-13 g -9.96290737e-07
-    PASS k_tri: x 1.99999881 (truth 2) err 1.19e-06 (want <= 0.05); iterations 6 vs LBFGSpp 6 (want +-2), evaluations 7 vs 7; |x - x_LBFGSpp| 1.32e-07 (want <= 1e-3); f 7.23e-13; stop grad; host ms 120.1
+    PASS k_tri: x 1.99999881 (truth 2) err 1.19e-06 (want <= 0.05); iterations 6 vs LBFGSpp 6 (want +-2), evaluations 7 vs 7; |x - x_LBFGSpp| 1.32e-07 (want <= 1e-3); f 7.23e-13; stop grad; host ms 547.2
     PASS k_tri zero-gradient arm (control): x 0.5 err 1.5 (want > 0.1), 1 iterations (grad); LBFGSpp's arm: err 1.5
     k_bend_density: target at the truth, max |ours - host AvbdCpu| = 2.39e-07
       eval 1 x 0.400000006 2.5 f 2.09721808 g -4.23898268 1.53514659
       eval 2 x 1.34024155 2.15949178 f 0.487556179 g -0.0549905524 0.940543711
       eval 3 x 1.39338148 1.90784431 f 0.272207978 g 0.0096944645 0.755307078
-      eval 4 x 1.51202166 0.925955713 f 0.0964579639 g -0.10559196 -0.647210956
-      eval 5 x 1.47197187 1.37342143 f 0.0110730243 g 0.0183471665 0.180154175
+      eval 4 x 1.51202154 0.925955772 f 0.0964579564 g -0.105591968 -0.647210956
+      eval 5 x 1.47197175 1.37342143 f 0.0110730351 g 0.0183470994 0.180154234
       eval 6 x 1.48292112 1.27523613 f 0.000445891099 g 0.00113410887 0.0360382572
       eval 7 x 1.48654068 1.25033736 f 2.55109595e-05 g -0.00386852655 -0.00283898064
       eval 8 x 1.48725486 1.2517035 f 2.06997085e-05 g -0.00331524597 -0.000449347252
@@ -206,10 +206,10 @@ job inverse_min rd                                     ticks=   258 wall_ms=    
       eval 12 x 1.50018561 1.25019479 f 4.46450452e-08 g 0.00010314965 0.000360515871
       eval 13 x 1.5000571 1.25000465 f 5.50493429e-10 g 1.77085658e-05 2.14622287e-05
       eval 14 x 1.50000405 1.24999928 f 2.12641016e-12 g 9.69910616e-07 -2.97329308e-07
-    PASS k_bend_density: x 1.50000405 1.24999928 (truth 1.5,1.25) err 4.05e-06 (want <= 0.05); iterations 13 vs LBFGSpp 13 (want +-2), evaluations 14 vs 14; |x - x_LBFGSpp| 1.27e-07 (want <= 1e-3); f 2.13e-12; stop grad; host ms 247.3
+    PASS k_bend_density: x 1.50000405 1.24999928 (truth 1.5,1.25) err 4.05e-06 (want <= 0.05); iterations 13 vs LBFGSpp 13 (want +-2), evaluations 14 vs 14; |x - x_LBFGSpp| 1.27e-07 (want <= 1e-3); f 2.13e-12; stop grad; host ms 1098.7
     PASS k_bend_density zero-gradient arm (control): x 0.400000006 2.5 err 1.25 (want > 0.1), 1 iterations (grad); LBFGSpp's arm: err 1.25
 PASS G3 inverse_min rd: PASS inverse_min rd (vec rd): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.3e-07; k_tri control err 1.5; k_bend_density err 4.05e-06 it 13/13 dx 1.3e-07; k_bend_density control err 1.25;
-job sphere_forward rd steps=350                        ticks=   967 wall_ms=   2212.3  PASS sphere_forward rd: 350 steps at mu 0.539770: DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897433 friction_events=133569 projections=28532 self_pushes=4576
+job sphere_forward rd steps=350                        ticks=   967 wall_ms=   5175.5  PASS sphere_forward rd: 350 steps at mu 0.539770: DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897433 friction_events=133569 projections=28532 self_pushes=4576
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.539770
     [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
     step    1 |dx|_max=0.00030243324 |dx|_mean=0.000100746867 pred_max=0.000302469125 drift_max=1.75464083e-06 drift@v0.y friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
@@ -223,8 +223,8 @@ job sphere_forward rd steps=350                        ticks=   967 wall_ms=   2
     step  100 |dx|_max=0.043307662 |dx|_mean=0.00487411721 pred_max=0.0440099239 drift_max=0.00824344158 drift@v599.y friction_blends=329 friction_events=330 projections=0 self_pairs=2 self_pushes=2
     step  200 |dx|_max=0.032994017 |dx|_mean=0.000400295248 pred_max=0.0326010063 drift_max=0.00164717436 drift@v37.x friction_blends=489 friction_events=489 projections=96 self_pairs=18 self_pushes=18
     step  350 |dx|_max=0.0325596929 |dx|_mean=0.000370698108 pred_max=0.0318153352 drift_max=0.00230346806 drift@v251.z friction_blends=514 friction_events=514 projections=215 self_pairs=26 self_pushes=26
-    DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897433 friction_events=133569 projections=28532 self_pushes=4576 wall_ms=2211.2 ms/step=6.318
-job sphere_forward cpu steps=100                       ticks=    80 wall_ms=   6752.4  PASS sphere_forward cpu: 100 steps at mu 0.539770: DONE forward cpu steps=100 (+100 of 100) finite=yes ymin=-1.618753 friction_events=13051 projections=0 self_pushes=81
+    DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897433 friction_events=133569 projections=28532 self_pushes=4576 wall_ms=5172.8 ms/step=14.779
+job sphere_forward cpu steps=100                       ticks=    80 wall_ms=   8965.7  PASS sphere_forward cpu: 100 steps at mu 0.539770: DONE forward cpu steps=100 (+100 of 100) finite=yes ymin=-1.618753 friction_events=13051 projections=0 self_pushes=81
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.539770
     [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
     step    1 |dx|_max=0.00030243324 |dx|_mean=0.000100746867 pred_max=0.000302469125 drift_max=1.75464083e-06 drift@v0.y friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
@@ -236,8 +236,8 @@ job sphere_forward cpu steps=100                       ticks=    80 wall_ms=   6
     step   20 |dx|_max=0.00604184717 |dx|_mean=0.00194901344 pred_max=0.00604256243 drift_max=0.000248432159 drift@v342.x friction_blends=21 friction_events=22 projections=0 self_pairs=0 self_pushes=0
     step   50 |dx|_max=0.0150594413 |dx|_mean=0.00452845963 pred_max=0.0150643587 drift_max=0.00166401267 drift@v211.y friction_blends=120 friction_events=121 projections=0 self_pairs=0 self_pushes=0
     step  100 |dx|_max=0.0433123112 |dx|_mean=0.0048827026 pred_max=0.0438504219 drift_max=0.00824844837 drift@v599.y friction_blends=323 friction_events=326 projections=0 self_pairs=2 self_pushes=2
-    DONE forward cpu steps=100 (+100 of 100) finite=yes ymin=-1.618753 friction_events=13051 projections=0 self_pushes=81 wall_ms=6750.7 ms/step=67.507
-job sphere_forward rd steps=350 mu=0.3                 ticks=   969 wall_ms=   2565.6  PASS sphere_forward rd: 350 steps at mu 0.300000: DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125
+    DONE forward cpu steps=100 (+100 of 100) finite=yes ymin=-1.618753 friction_events=13051 projections=0 self_pushes=81 wall_ms=8963.6 ms/step=89.636
+job sphere_forward rd steps=350 mu=0.3                 ticks=   969 wall_ms=   5174.5  PASS sphere_forward rd: 350 steps at mu 0.300000: DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
     [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
     step    1 |dx|_max=0.00030243324 |dx|_mean=0.000100746867 pred_max=0.000302469125 drift_max=1.75464083e-06 drift@v0.y friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
@@ -251,59 +251,104 @@ job sphere_forward rd steps=350 mu=0.3                 ticks=   969 wall_ms=   2
     step  100 |dx|_max=0.0413634777 |dx|_mean=0.00500090467 pred_max=0.0401505232 drift_max=0.0100389719 drift@v12.y friction_blends=328 friction_events=333 projections=0 self_pairs=2 self_pushes=2
     step  200 |dx|_max=0.0227300227 |dx|_mean=0.000491733954 pred_max=0.0227758586 drift_max=0.0012267828 drift@v14.z friction_blends=486 friction_events=486 projections=117 self_pairs=27 self_pushes=27
     step  350 |dx|_max=0.0397707261 |dx|_mean=0.000515232619 pred_max=0.0384604223 drift_max=0.00250160694 drift@v325.y friction_blends=515 friction_events=514 projections=223 self_pairs=32 self_pushes=32
-    DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2564.7 ms/step=7.328
-job sphere_backward rd steps=350 mus=0.5397701956236457,0.01,0.375146 ticks=  3927 wall_ms=   9736.7  PASS sphere_backward rd: 3 mu values, mode native
+    DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=5171.0 ms/step=14.774
+job sphere_backward rd steps=60 mus=0.5397701956236457,0.010000000000000009,0.23597573936785088 ticks=   541 wall_ms=   3467.8  PASS sphere_backward rd: 3 mu values, mode native
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-    target: mu 0.300000, 351 frames; DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2380.3 ms/step=6.801
-    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897433 friction_events=133569 projections=28532 self_pushes=4576 wall_ms=2381.9 ms/step=6.805
+    target: mu 0.300000, 61 frames; DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=725.2 ms/step=12.087
+    mu 0.539770 DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551573 friction_events=3621 projections=0 self_pushes=0 wall_ms=702.6 ms/step=11.711
+    RESULT mu=0.539770 mu_exact=0.5397701956236457 loss=1.9988183e-06 dL/dmu=0.0259210582
+      per-step dL/dmu (step N, N-1, ...): 2.41257e-08 2.59887e-08 2.52986e-08 2.43425e-08 2.75046e-08 1.92497e-08; summed once (no double carry) 3.24315781e-07
+      DONE backward rd mode=native loss=1.9988183e-06 dL/dmu_0=0.0259210582 dL/dkTri=-9.88550806e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-4.71431087e-19 raw(dk_tri=-5.6237557e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.28999e-06 wall_ms=224.7
+    mu 0.010000 DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551797 friction_events=3897 projections=0 self_pushes=0 wall_ms=710.2 ms/step=11.837
+    RESULT mu=0.010000 mu_exact=0.01000000000000001 loss=1.90703842e-05 dL/dmu=-0.233637768
+      per-step dL/dmu (step N, N-1, ...): -2.23579e-07 -2.33698e-07 -2.23097e-07 -2.11507e-07 -2.05569e-07 -1.77004e-07; summed once (no double carry) -2.40380806e-06
+      DONE backward rd mode=native loss=1.90703842e-05 dL/dmu_0=-0.233637768 dL/dkTri=-3.29237571e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.30434218e-18 raw(dk_tri=-1.87299596e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=5.77043e-06 wall_ms=191.5
+    mu 0.235976 DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551653 friction_events=3736 projections=0 self_pushes=0 wall_ms=697.0 ms/step=11.617
+    RESULT mu=0.235976 mu_exact=0.2359757393678509 loss=4.5123996e-07 dL/dmu=-0.0159834525
+      per-step dL/dmu (step N, N-1, ...): -1.49952e-08 -1.61713e-08 -1.51332e-08 -1.47866e-08 -1.59369e-08 -1.28481e-08; summed once (no double carry) -1.91002877e-07
+      DONE backward rd mode=native loss=4.5123996e-07 dL/dmu_0=-0.0159834525 dL/dkTri=1.4401861e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.5474886e-19 raw(dk_tri=8.19305869e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=8.6641e-07 wall_ms=206.6
+job sphere_backward cpu steps=60 mus=0.5397701956236457,0.010000000000000009,0.23597573936785088 ticks=   199 wall_ms=  21475.8  PASS sphere_backward cpu: 3 mu values, mode native
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    target: mu 0.300000, 61 frames; DONE forward cpu steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=5324.0 ms/step=88.733
+    mu 0.539770 DONE forward cpu steps=60 (+60 of 60) finite=yes ymin=-0.551574 friction_events=3621 projections=0 self_pushes=0 wall_ms=5248.6 ms/step=87.477
+    RESULT mu=0.539770 mu_exact=0.5397701956236457 loss=1.99835556e-06 dL/dmu=0.0259193073
+      per-step dL/dmu (step N, N-1, ...): 2.4124e-08 2.59868e-08 2.5297e-08 2.43413e-08 2.75033e-08 1.92488e-08; summed once (no double carry) 3.24303022e-07
+      DONE backward cpu mode=native loss=1.99835556e-06 dL/dmu_0=0.0259193073 dL/dkTri=-9.88630079e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.38865989e-18 raw(dk_tri=-5.62420667e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.29007e-06 wall_ms=62.3
+    mu 0.010000 DONE forward cpu steps=60 (+60 of 60) finite=yes ymin=-0.551798 friction_events=3897 projections=0 self_pushes=0 wall_ms=5202.8 ms/step=86.713
+    RESULT mu=0.010000 mu_exact=0.01000000000000001 loss=1.90723266e-05 dL/dmu=-0.233643358
+      per-step dL/dmu (step N, N-1, ...): -2.23585e-07 -2.33703e-07 -2.23103e-07 -2.11513e-07 -2.05574e-07 -1.77008e-07; summed once (no double carry) -2.40384973e-06
+      DONE backward cpu mode=native loss=1.90723266e-05 dL/dmu_0=-0.233643358 dL/dkTri=-3.29308579e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-2.44822857e-18 raw(dk_tri=-1.87339992e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=5.77048e-06 wall_ms=71.7
+    mu 0.235976 DONE forward cpu steps=60 (+60 of 60) finite=yes ymin=-0.551653 friction_events=3736 projections=0 self_pushes=0 wall_ms=5230.9 ms/step=87.182
+    RESULT mu=0.235976 mu_exact=0.2359757393678509 loss=4.51402122e-07 dL/dmu=-0.0159852938
+      per-step dL/dmu (step N, N-1, ...): -1.49969e-08 -1.61732e-08 -1.51351e-08 -1.47881e-08 -1.59382e-08 -1.28493e-08; summed once (no double carry) -1.91017067e-07
+      DONE backward cpu mode=native loss=4.51402122e-07 dL/dmu_0=-0.0159852938 dL/dkTri=1.4389299e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.56159108e-19 raw(dk_tri=8.18591231e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=8.66081e-07 wall_ms=58.8
+job sphere_backward rd steps=60 mus=0.5397701859474182,0.539770,0.5397702 ticks=   541 wall_ms=   3261.3  PASS sphere_backward rd: 3 mu values, mode native
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    target: mu 0.300000, 61 frames; DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=679.3 ms/step=11.322
+    mu 0.539770 DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551573 friction_events=3621 projections=0 self_pushes=0 wall_ms=654.7 ms/step=10.912
+    RESULT mu=0.539770 mu_exact=0.5397701859474182 loss=1.99878395e-06 dL/dmu=0.025921089
+      per-step dL/dmu (step N, N-1, ...): 2.41258e-08 2.59885e-08 2.52987e-08 2.43424e-08 2.75047e-08 1.92497e-08; summed once (no double carry) 3.24315725e-07
+      DONE backward rd mode=native loss=1.99878395e-06 dL/dmu_0=0.025921089 dL/dkTri=-9.88539509e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-2.93502609e-19 raw(dk_tri=-5.62369143e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.28998e-06 wall_ms=196.8
+    mu 0.539770 DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551573 friction_events=3621 projections=0 self_pushes=0 wall_ms=661.3 ms/step=11.021
+    RESULT mu=0.539770 mu_exact=0.53977 loss=1.99866196e-06 dL/dmu=0.0259207455
+      per-step dL/dmu (step N, N-1, ...): 2.41254e-08 2.59884e-08 2.52983e-08 2.43423e-08 2.75044e-08 1.92497e-08; summed once (no double carry) 3.2431518e-07
+      DONE backward rd mode=native loss=1.99866196e-06 dL/dmu_0=0.0259207455 dL/dkTri=-9.88636229e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-6.42187555e-21 raw(dk_tri=-5.62424166e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.28999e-06 wall_ms=203.7
+    mu 0.539770 DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551573 friction_events=3621 projections=0 self_pushes=0 wall_ms=658.3 ms/step=10.972
+    RESULT mu=0.539770 mu_exact=0.5397702 loss=1.99867392e-06 dL/dmu=0.0259208231
+      per-step dL/dmu (step N, N-1, ...): 2.41255e-08 2.59885e-08 2.52983e-08 2.43422e-08 2.75042e-08 1.92494e-08; summed once (no double carry) 3.24312657e-07
+      DONE backward rd mode=native loss=1.99867392e-06 dL/dmu_0=0.0259208231 dL/dkTri=-9.8859937e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-2.79629388e-20 raw(dk_tri=-5.62403197e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.28986e-06 wall_ms=197.3
+job sphere_backward rd steps=350 mus=0.5397701956236457,0.01,0.375146 ticks=  3927 wall_ms=  20289.6  PASS sphere_backward rd: 3 mu values, mode native
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    target: mu 0.300000, 351 frames; DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=4697.6 ms/step=13.422
+    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897433 friction_events=133569 projections=28532 self_pushes=4576 wall_ms=4877.8 ms/step=13.937
     RESULT mu=0.539770 mu_exact=0.5397701956236457 loss=0.00141610431 dL/dmu=0.0121090715
       per-step dL/dmu (step N, N-1, ...): 1.04549e-08 1.19558e-08 1.28916e-08 1.3512e-08 1.38413e-08 1.40561e-08; summed once (no double carry) 2.76335393e-07
-      DONE backward rd mode=native loss=0.00141610431 dL/dmu_0=0.0121090715 dL/dkTri=1.01070088e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=6.2608801e-15 raw(dk_tri=5.74976502e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.89936e-05 wall_ms=55.3
-    mu 0.010000 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-6.102720 friction_events=104486 projections=21265 self_pushes=5052 wall_ms=2392.5 ms/step=6.836
+      DONE backward rd mode=native loss=0.00141610431 dL/dmu_0=0.0121090715 dL/dkTri=1.01070088e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=6.2608801e-15 raw(dk_tri=5.74976502e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.89936e-05 wall_ms=230.2
+    mu 0.010000 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-6.102720 friction_events=104486 projections=21265 self_pushes=5052 wall_ms=4979.9 ms/step=14.228
     RESULT mu=0.010000 mu_exact=0.01 loss=1.64972503 dL/dmu=-50.674986
       per-step dL/dmu (step N, N-1, ...): -4.25617e-05 -4.97591e-05 -5.48486e-05 -5.98612e-05 -6.25518e-05 -6.51287e-05; summed once (no double carry) -0.00132913093
-      DONE backward rd mode=native loss=1.64972503 dL/dmu_0=-50.674986 dL/dkTri=2.33323197e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.10647573e-13 raw(dk_tri=1.32734974e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.00107119 wall_ms=54.6
-    mu 0.375146 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.929962 friction_events=134065 projections=31199 self_pushes=6917 wall_ms=2413.0 ms/step=6.894
+      DONE backward rd mode=native loss=1.64972503 dL/dmu_0=-50.674986 dL/dkTri=2.33323197e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.10647573e-13 raw(dk_tri=1.32734974e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.00107119 wall_ms=228.4
+    mu 0.375146 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.929962 friction_events=134065 projections=31199 self_pushes=6917 wall_ms=5033.0 ms/step=14.380
     RESULT mu=0.375146 mu_exact=0.375146 loss=0.000606529228 dL/dmu=0.00740848141
       per-step dL/dmu (step N, N-1, ...): 6.34305e-09 7.34725e-09 8.13241e-09 8.2299e-09 8.34844e-09 8.42833e-09; summed once (no double carry) 1.68947111e-07
-      DONE backward rd mode=native loss=0.000606529228 dL/dmu_0=0.00740848141 dL/dkTri=-6.64583123e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.74203045e-14 raw(dk_tri=-3.78073955e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.22143e-05 wall_ms=56.5
-job sphere_backward cpu steps=350 mus=0.5397701956236457,0.01,0.375146 ticks=  1336 wall_ms=  99525.3  PASS sphere_backward cpu: 3 mu values, mode native
+      DONE backward rd mode=native loss=0.000606529228 dL/dmu_0=0.00740848141 dL/dkTri=-6.64583123e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.74203045e-14 raw(dk_tri=-3.78073955e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.22143e-05 wall_ms=231.4
+job sphere_backward cpu steps=350 mus=0.5397701956236457,0.01,0.375146 ticks=  1336 wall_ms= 120581.2  PASS sphere_backward cpu: 3 mu values, mode native
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-    target: mu 0.300000, 351 frames; DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-2.953238 friction_events=133710 projections=32163 self_pushes=5858 wall_ms=25154.6 ms/step=71.870
-    mu 0.539770 DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-2.896674 friction_events=133187 projections=28515 self_pushes=4825 wall_ms=24753.9 ms/step=70.726
+    target: mu 0.300000, 351 frames; DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-2.953238 friction_events=133710 projections=32163 self_pushes=5858 wall_ms=30059.5 ms/step=85.884
+    mu 0.539770 DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-2.896674 friction_events=133187 projections=28515 self_pushes=4825 wall_ms=30445.8 ms/step=86.988
     RESULT mu=0.539770 mu_exact=0.5397701956236457 loss=0.00176293299 dL/dmu=0.0111706215
       per-step dL/dmu (step N, N-1, ...): 9.87736e-09 1.10357e-08 1.17443e-08 1.17601e-08 1.19872e-08 1.21461e-08; summed once (no double carry) 2.30972466e-07
-      DONE backward cpu mode=native loss=0.00176293299 dL/dmu_0=0.0111706215 dL/dkTri=7.33374136e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.75284163e-14 raw(dk_tri=4.17208397e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.04139e-05 wall_ms=52.3
-    mu 0.010000 DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-6.103374 friction_events=104485 projections=21341 self_pushes=4224 wall_ms=25118.2 ms/step=71.766
+      DONE backward cpu mode=native loss=0.00176293299 dL/dmu_0=0.0111706215 dL/dkTri=7.33374136e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.75284163e-14 raw(dk_tri=4.17208397e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=2.04139e-05 wall_ms=70.5
+    mu 0.010000 DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-6.103374 friction_events=104485 projections=21341 self_pushes=4224 wall_ms=30524.8 ms/step=87.214
     RESULT mu=0.010000 mu_exact=0.01 loss=1.64973362 dL/dmu=-51.0887817
       per-step dL/dmu (step N, N-1, ...): -4.3198e-05 -5.01533e-05 -5.46728e-05 -5.96691e-05 -6.28942e-05 -6.45923e-05; summed once (no double carry) -0.00133462251
-      DONE backward cpu mode=native loss=1.64973362 dL/dmu_0=-51.0887817 dL/dkTri=-1.31732359e-07 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-2.43547287e-13 raw(dk_tri=-7.49410751e-06 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.00107159 wall_ms=49.6
-    mu 0.375146 DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-2.929840 friction_events=134128 projections=31134 self_pushes=6826 wall_ms=24251.4 ms/step=69.290
+      DONE backward cpu mode=native loss=1.64973362 dL/dmu_0=-51.0887817 dL/dkTri=-1.31732359e-07 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-2.43547287e-13 raw(dk_tri=-7.49410751e-06 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.00107159 wall_ms=69.2
+    mu 0.375146 DONE forward cpu steps=350 (+350 of 350) finite=yes ymin=-2.929840 friction_events=134128 projections=31134 self_pushes=6826 wall_ms=29247.8 ms/step=83.565
     RESULT mu=0.375146 mu_exact=0.375146 loss=0.000945091747 dL/dmu=0.00583186226
       per-step dL/dmu (step N, N-1, ...): 5.76828e-09 5.14671e-09 5.24198e-09 5.27111e-09 6.94997e-09 5.45968e-09; summed once (no double carry) 1.3112285e-07
-      DONE backward cpu mode=native loss=0.000945091747 dL/dmu_0=0.00583186226 dL/dkTri=9.87929913e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=6.45325169e-15 raw(dk_tri=5.62022351e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.28054e-05 wall_ms=48.8
-job sphere_backward rd steps=350 mus=0.5397701859474182,0.539770,0.5397702 ticks=  3927 wall_ms=   9032.1  PASS sphere_backward rd: 3 mu values, mode native
+      DONE backward cpu mode=native loss=0.000945091747 dL/dmu_0=0.00583186226 dL/dkTri=9.87929913e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=6.45325169e-15 raw(dk_tri=5.62022351e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.28054e-05 wall_ms=51.1
+job sphere_backward rd steps=350 mus=0.5397701859474182,0.539770,0.5397702 ticks=  3927 wall_ms=  11338.1  PASS sphere_backward rd: 3 mu values, mode native
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-    target: mu 0.300000, 351 frames; DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2339.8 ms/step=6.685
-    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896569 friction_events=133380 projections=28578 self_pushes=4763 wall_ms=2187.3 ms/step=6.249
+    target: mu 0.300000, 351 frames; DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2740.0 ms/step=7.828
+    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896569 friction_events=133380 projections=28578 self_pushes=4763 wall_ms=2781.1 ms/step=7.946
     RESULT mu=0.539770 mu_exact=0.5397701859474182 loss=0.00140732793 dL/dmu=0.0126385336
       per-step dL/dmu (step N, N-1, ...): 1.08808e-08 1.25195e-08 1.35483e-08 1.42084e-08 1.45302e-08 1.44825e-08; summed once (no double carry) 2.76811606e-07
-      DONE backward rd mode=native loss=0.00140732793 dL/dmu_0=0.0126385336 dL/dkTri=-4.10326011e-11 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-5.58727874e-15 raw(dk_tri=-2.33429909e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.88605e-05 wall_ms=50.1
-    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896471 friction_events=133431 projections=28578 self_pushes=4515 wall_ms=2190.4 ms/step=6.258
+      DONE backward rd mode=native loss=0.00140732793 dL/dmu_0=0.0126385336 dL/dkTri=-4.10326011e-11 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-5.58727874e-15 raw(dk_tri=-2.33429909e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.88605e-05 wall_ms=105.0
+    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896471 friction_events=133431 projections=28578 self_pushes=4515 wall_ms=2766.8 ms/step=7.905
     RESULT mu=0.539770 mu_exact=0.53977 loss=0.001412376 dL/dmu=0.0124439951
       per-step dL/dmu (step N, N-1, ...): 1.08305e-08 1.2297e-08 1.31875e-08 1.37834e-08 1.39262e-08 1.37959e-08; summed once (no double carry) 2.76139737e-07
-      DONE backward rd mode=native loss=0.001412376 dL/dmu_0=0.0124439951 dL/dkTri=1.58964303e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-4.76431365e-15 raw(dk_tri=9.04330257e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.88521e-05 wall_ms=49.2
-    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897647 friction_events=133300 projections=28608 self_pushes=4677 wall_ms=2166.9 ms/step=6.191
+      DONE backward rd mode=native loss=0.001412376 dL/dmu_0=0.0124439951 dL/dkTri=1.58964303e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-4.76431365e-15 raw(dk_tri=9.04330257e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.88521e-05 wall_ms=99.0
+    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.897647 friction_events=133300 projections=28608 self_pushes=4677 wall_ms=2738.2 ms/step=7.823
     RESULT mu=0.539770 mu_exact=0.5397702 loss=0.00150847207 dL/dmu=0.0130591026
       per-step dL/dmu (step N, N-1, ...): 1.13933e-08 1.29272e-08 1.38217e-08 1.42778e-08 1.44578e-08 1.46299e-08; summed once (no double carry) 2.82922739e-07
-      DONE backward rd mode=native loss=0.00150847207 dL/dmu_0=0.0130591026 dL/dkTri=8.70672966e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=4.16139024e-15 raw(dk_tri=4.95316176e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.94579e-05 wall_ms=46.4
-job sim_gradcheck cpu scene=panel colors=0             ticks=   384 wall_ms=   1193.0  PASS sim_gradcheck cpu: panel single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
+      DONE backward rd mode=native loss=0.00150847207 dL/dmu_0=0.0130591026 dL/dkTri=8.70672966e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=4.16139024e-15 raw(dk_tri=4.95316176e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.94579e-05 wall_ms=103.2
+job sim_gradcheck cpu scene=panel colors=0             ticks=   384 wall_ms=   1429.7  PASS sim_gradcheck cpu: panel single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=0 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
     [drape-scene] gradcheck_panel nV=64 nTri=98 nBend=133 nAttach=2 prims=0
-    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063440 friction_events=0 projections=0 self_pushes=0 wall_ms=64.0 ms/step=3.198
-    DONE backward cpu mode=native loss=3.29643714e-06  dL/dkTri=1.92768767e-09 dL/dkBend=0 dL/dkAttach=1.42097637e-13 dL/ddensity=1.51221316e-17 raw(dk_tri=1.88913403e-07 dk_bend=0 dk_attach=1.42097637e-13) stepsBack=20 |dL/dx0|=6.253e-06 wall_ms=7.8
-    DONE backward cpu mode=step loss=3.29643714e-06  dL/dkTri=3.0832773e-09 dL/dkBend=0 dL/dkAttach=8.68183889e-14 dL/ddensity=-1.54452566e-06 raw(dk_tri=3.02161186e-07 dk_bend=0 dk_attach=8.68183889e-14) stepsBack=20 |dL/dx0|=0.000298665 wall_ms=62.3
-    DONE backward cpu mode=unrolled loss=3.29643714e-06  dL/dkTri=1.71215267e-07 dL/dkBend=0 dL/dkAttach=7.99310759e-13 dL/ddensity=-8.5634301e-05 raw(dk_tri=1.67790965e-05 dk_bend=0 dk_attach=7.99310759e-13) stepsBack=20 |dL/dx0|=0.000286952 wall_ms=218.3
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063440 friction_events=0 projections=0 self_pushes=0 wall_ms=80.0 ms/step=4.001
+    DONE backward cpu mode=native loss=3.29643714e-06  dL/dkTri=1.92768767e-09 dL/dkBend=0 dL/dkAttach=1.42097637e-13 dL/ddensity=1.51221316e-17 raw(dk_tri=1.88913403e-07 dk_bend=0 dk_attach=1.42097637e-13) stepsBack=20 |dL/dx0|=6.253e-06 wall_ms=9.5
+    DONE backward cpu mode=step loss=3.29643714e-06  dL/dkTri=3.0832773e-09 dL/dkBend=0 dL/dkAttach=8.68183889e-14 dL/ddensity=-1.54452566e-06 raw(dk_tri=3.02161186e-07 dk_bend=0 dk_attach=8.68183889e-14) stepsBack=20 |dL/dx0|=0.000298665 wall_ms=71.6
+    DONE backward cpu mode=unrolled loss=3.29643714e-06  dL/dkTri=1.71215267e-07 dL/dkBend=0 dL/dkAttach=7.99310759e-13 dL/ddensity=-8.5634301e-05 raw(dk_tri=1.67790965e-05 dk_bend=0 dk_attach=7.99310759e-13) stepsBack=20 |dL/dx0|=0.000286952 wall_ms=263.1
     scene=panel colors=single steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
     GC scene=panel colors=0 mode=native param=mu analytic=0 fd=0 rel=0
     GC scene=panel colors=0 mode=step param=mu analytic=0 fd=0 rel=0
@@ -317,13 +362,13 @@ job sim_gradcheck cpu scene=panel colors=0             ticks=   384 wall_ms=   1
     GC scene=panel colors=0 mode=step param=density analytic=-1.54452566e-06 fd=-8.56358171e-05 rel=0.981964
     GC scene=panel colors=0 mode=unrolled param=density analytic=-8.5634301e-05 fd=-8.56358171e-05 rel=1.77048e-05
       d/ddensity  fd(eps)=-8.56358171e-05 fd(10eps)=-8.5716026e-05  | native 1.51221316e-17 rel=1 | step -1.54452566e-06 rel=0.982 | unrolled -8.5634301e-05 rel=1.77e-05
-job sim_gradcheck cpu scene=plane colors=0             ticks=   384 wall_ms=   1209.0  PASS sim_gradcheck cpu: plane single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
+job sim_gradcheck cpu scene=plane colors=0             ticks=   384 wall_ms=   1421.5  PASS sim_gradcheck cpu: plane single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=0 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
     [drape-scene] gradcheck_plane nV=64 nTri=98 nBend=133 nAttach=0 prims=1 | prim0 plane c=(0,-0.02,0) n=(0.0995037,0.995037,0) R=4.24264 mu=0.250000
-    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.008565 friction_events=1280 projections=480 self_pushes=0 wall_ms=65.6 ms/step=3.280
-    DONE backward cpu mode=native loss=6.04217335e-06 dL/dmu_0=0.00449773144 dL/dkTri=1.06027041e-11 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.30772599e-16 raw(dk_tri=1.03906502e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=4.2392e-05 wall_ms=8.0
-    DONE backward cpu mode=step loss=6.04217335e-06 dL/dmu_0=9.65041987e-06 dL/dkTri=3.93790608e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.96886042e-07 raw(dk_tri=3.85914799e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000603604 wall_ms=62.7
-    DONE backward cpu mode=unrolled loss=6.04217335e-06 dL/dmu_0=5.12104641e-05 dL/dkTri=6.51862942e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-3.25935361e-06 raw(dk_tri=6.38825685e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000610285 wall_ms=216.3
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.008565 friction_events=1280 projections=480 self_pushes=0 wall_ms=76.7 ms/step=3.833
+    DONE backward cpu mode=native loss=6.04217335e-06 dL/dmu_0=0.00449773144 dL/dkTri=1.06027041e-11 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.30772599e-16 raw(dk_tri=1.03906502e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=4.2392e-05 wall_ms=10.0
+    DONE backward cpu mode=step loss=6.04217335e-06 dL/dmu_0=9.65041987e-06 dL/dkTri=3.93790608e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.96886042e-07 raw(dk_tri=3.85914799e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000603604 wall_ms=72.6
+    DONE backward cpu mode=unrolled loss=6.04217335e-06 dL/dmu_0=5.12104641e-05 dL/dkTri=6.51862942e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-3.25935361e-06 raw(dk_tri=6.38825685e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000610285 wall_ms=270.7
     scene=plane colors=single steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
     GC scene=plane colors=0 mode=native param=mu analytic=0.00449773144 fd=5.11552588e-05 rel=0.988626
     GC scene=plane colors=0 mode=step param=mu analytic=9.65041987e-06 fd=5.11552588e-05 rel=0.81135
@@ -337,13 +382,13 @@ job sim_gradcheck cpu scene=plane colors=0             ticks=   384 wall_ms=   1
     GC scene=plane colors=0 mode=step param=density analytic=-1.96886042e-07 fd=-3.33179493e-06 rel=0.940907
     GC scene=plane colors=0 mode=unrolled param=density analytic=-3.25935361e-06 fd=-3.33179493e-06 rel=0.0217424
       d/ddensity  fd(eps)=-3.33179493e-06 fd(10eps)=-3.2834814e-06  | native 1.30772599e-16 rel=1 | step -1.96886042e-07 rel=0.941 | unrolled -3.25935361e-06 rel=0.0217
-job sim_gradcheck cpu scene=panel colors=1             ticks=   384 wall_ms=   2177.0  PASS sim_gradcheck cpu: panel multi-colour table (information)
+job sim_gradcheck cpu scene=panel colors=1             ticks=   384 wall_ms=   2481.4  PASS sim_gradcheck cpu: panel multi-colour table (information)
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
     [drape-scene] gradcheck_panel nV=64 nTri=98 nBend=133 nAttach=2 prims=0
-    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063440 friction_events=0 projections=0 self_pushes=0 wall_ms=120.9 ms/step=6.045
-    DONE backward cpu mode=native loss=3.29482409e-06  dL/dkTri=1.92959027e-09 dL/dkBend=0 dL/dkAttach=1.42741188e-13 dL/ddensity=1.79225248e-17 raw(dk_tri=1.89099857e-07 dk_bend=0 dk_attach=1.42741188e-13) stepsBack=20 |dL/dx0|=6.25394e-06 wall_ms=10.8
-    DONE backward cpu mode=step loss=3.29482409e-06  dL/dkTri=3.08736035e-09 dL/dkBend=0 dL/dkAttach=8.79431408e-14 dL/ddensity=-1.54645359e-06 raw(dk_tri=3.02561325e-07 dk_bend=0 dk_attach=8.79431408e-14) stepsBack=20 |dL/dx0|=0.000298542 wall_ms=119.0
-    DONE backward cpu mode=unrolled loss=3.29482409e-06  dL/dkTri=1.71083549e-07 dL/dkBend=0 dL/dkAttach=8.0982624e-13 dL/ddensity=-8.55635051e-05 raw(dk_tri=1.67661881e-05 dk_bend=0 dk_attach=8.0982624e-13) stepsBack=20 |dL/dx0|=0.000286811 wall_ms=357.5
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063440 friction_events=0 projections=0 self_pushes=0 wall_ms=133.5 ms/step=6.676
+    DONE backward cpu mode=native loss=3.29482409e-06  dL/dkTri=1.92959027e-09 dL/dkBend=0 dL/dkAttach=1.42741188e-13 dL/ddensity=1.79225248e-17 raw(dk_tri=1.89099857e-07 dk_bend=0 dk_attach=1.42741188e-13) stepsBack=20 |dL/dx0|=6.25394e-06 wall_ms=11.4
+    DONE backward cpu mode=step loss=3.29482409e-06  dL/dkTri=3.08736035e-09 dL/dkBend=0 dL/dkAttach=8.79431408e-14 dL/ddensity=-1.54645359e-06 raw(dk_tri=3.02561325e-07 dk_bend=0 dk_attach=8.79431408e-14) stepsBack=20 |dL/dx0|=0.000298542 wall_ms=120.0
+    DONE backward cpu mode=unrolled loss=3.29482409e-06  dL/dkTri=1.71083549e-07 dL/dkBend=0 dL/dkAttach=8.0982624e-13 dL/ddensity=-8.55635051e-05 raw(dk_tri=1.67661881e-05 dk_bend=0 dk_attach=8.0982624e-13) stepsBack=20 |dL/dx0|=0.000286811 wall_ms=393.8
     scene=panel colors=multi steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
     GC scene=panel colors=1 mode=native param=mu analytic=0 fd=0 rel=0
     GC scene=panel colors=1 mode=step param=mu analytic=0 fd=0 rel=0
@@ -357,13 +402,13 @@ job sim_gradcheck cpu scene=panel colors=1             ticks=   384 wall_ms=   2
     GC scene=panel colors=1 mode=step param=density analytic=-1.54645359e-06 fd=-8.55482394e-05 rel=0.981923
     GC scene=panel colors=1 mode=unrolled param=density analytic=-8.55635051e-05 fd=-8.55482394e-05 rel=0.000178414
       d/ddensity  fd(eps)=-8.55482394e-05 fd(10eps)=-8.56363866e-05 | native 1.79225248e-17 rel=1 | step -1.54645359e-06 rel=0.982 | unrolled -8.55635051e-05 rel=0.000178
-job sim_gradcheck cpu scene=plane colors=1             ticks=   384 wall_ms=   2127.4  PASS sim_gradcheck cpu: plane multi-colour table (information)
+job sim_gradcheck cpu scene=plane colors=1             ticks=   384 wall_ms=   2501.4  PASS sim_gradcheck cpu: plane multi-colour table (information)
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
     [drape-scene] gradcheck_plane nV=64 nTri=98 nBend=133 nAttach=0 prims=1 | prim0 plane c=(0,-0.02,0) n=(0.0995037,0.995037,0) R=4.24264 mu=0.250000
-    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.008565 friction_events=1280 projections=480 self_pushes=0 wall_ms=118.6 ms/step=5.932
-    DONE backward cpu mode=native loss=5.89932751e-06 dL/dmu_0=0.0044732105 dL/dkTri=8.5600589e-12 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.97349056e-16 raw(dk_tri=8.38885779e-10 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=4.17693e-05 wall_ms=10.4
-    DONE backward cpu mode=step loss=5.89932751e-06 dL/dmu_0=9.60042693e-06 dL/dkTri=1.70083261e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-8.00614498e-08 raw(dk_tri=1.66681597e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000596283 wall_ms=111.2
-    DONE backward cpu mode=unrolled loss=5.89932751e-06 dL/dmu_0=5.09406071e-05 dL/dkTri=4.00648844e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.35677296e-06 raw(dk_tri=3.92635868e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000602876 wall_ms=329.8
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.008565 friction_events=1280 projections=480 self_pushes=0 wall_ms=132.1 ms/step=6.606
+    DONE backward cpu mode=native loss=5.89932751e-06 dL/dmu_0=0.0044732105 dL/dkTri=8.5600589e-12 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.97349056e-16 raw(dk_tri=8.38885779e-10 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=4.17693e-05 wall_ms=11.7
+    DONE backward cpu mode=step loss=5.89932751e-06 dL/dmu_0=9.60042693e-06 dL/dkTri=1.70083261e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-8.00614498e-08 raw(dk_tri=1.66681597e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000596283 wall_ms=122.0
+    DONE backward cpu mode=unrolled loss=5.89932751e-06 dL/dmu_0=5.09406071e-05 dL/dkTri=4.00648844e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.35677296e-06 raw(dk_tri=3.92635868e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000602876 wall_ms=387.6
     scene=plane colors=multi steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
     GC scene=plane colors=1 mode=native param=mu analytic=0.0044732105 fd=5.17290905e-05 rel=0.988436
     GC scene=plane colors=1 mode=step param=mu analytic=9.60042693e-06 fd=5.17290905e-05 rel=0.81441
@@ -377,367 +422,65 @@ job sim_gradcheck cpu scene=plane colors=1             ticks=   384 wall_ms=   2
     GC scene=plane colors=1 mode=step param=density analytic=-8.00614498e-08 fd=-8.37675431e-07 rel=0.904424
     GC scene=plane colors=1 mode=unrolled param=density analytic=-1.35677296e-06 fd=-8.37675431e-07 rel=0.382597
       d/ddensity  fd(eps)=-8.37675431e-07 fd(10eps)=-7.71446219e-07 | native 1.97349056e-16 rel=1 | step -8.00614498e-08 rel=0.904 | unrolled -1.35677296e-06 rel=0.383
-job lbfgsb_replay cpu                                  ticks=     1 wall_ms=      0.8  PASS G7 backwardLog replay (vec cpu): 0.539770 -> 0.010000 -> 0.375146 (the g0 interval gives [0.3751453, 0.3751457]; native 0.375146), 1 iteration, 3 evaluations, stop delta
+job lbfgsb_replay cpu                                  ticks=     1 wall_ms=      0.5  PASS G7 backwardLog replay (vec cpu): 0.539770 -> 0.010000 -> 0.375146 (the g0 interval gives [0.3751453, 0.3751457]; native 0.375146), 1 iteration, 3 evaluations, stop delta
     backwardLog nominal (g0 0.01153): evaluations 0.539770 -> 0.010000 -> 0.375146 (third 0.375145525); iterations 1, evaluations 3, stop delta
     backwardLog g0-5e-6 (g0 0.011525): evaluations 0.539770 -> 0.010000 -> 0.375146 (third 0.375145733); iterations 1, evaluations 3, stop delta
     backwardLog g0+5e-6 (g0 0.011535): evaluations 0.539770 -> 0.010000 -> 0.375145 (third 0.375145316); iterations 1, evaluations 3, stop delta
 PASS G7 lbfgsb_replay cpu: PASS G7 backwardLog replay (vec cpu): 0.539770 -> 0.010000 -> 0.375146 (the g0 interval gives [0.3751453, 0.3751457]; native 0.375146), 1 iteration, 3 evaluations, stop delta
-job lbfgsb_replay rd                                   ticks=    22 wall_ms=     39.8  PASS G7 backwardLog replay (vec rd): 0.539770 -> 0.010000 -> 0.375146 (the g0 interval gives [0.3751453, 0.3751457]; native 0.375146), 1 iteration, 3 evaluations, stop delta
+job lbfgsb_replay rd                                   ticks=    22 wall_ms=     28.4  PASS G7 backwardLog replay (vec rd): 0.539770 -> 0.010000 -> 0.375146 (the g0 interval gives [0.3751453, 0.3751457]; native 0.375146), 1 iteration, 3 evaluations, stop delta
     backwardLog nominal (g0 0.01153): evaluations 0.539770 -> 0.010000 -> 0.375146 (third 0.375145525); iterations 1, evaluations 3, stop delta
     backwardLog g0-5e-6 (g0 0.011525): evaluations 0.539770 -> 0.010000 -> 0.375146 (third 0.375145733); iterations 1, evaluations 3, stop delta
     backwardLog g0+5e-6 (g0 0.011535): evaluations 0.539770 -> 0.010000 -> 0.375145 (third 0.375145316); iterations 1, evaluations 3, stop delta
 PASS G7 lbfgsb_replay rd: PASS G7 backwardLog replay (vec rd): 0.539770 -> 0.010000 -> 0.375146 (the g0 interval gives [0.3751453, 0.3751457]; native 0.375146), 1 iteration, 3 evaluations, stop delta
-PASS G9 lbfgsb_bench cpu n=10 iters=10 ticks=    9 wall_ms=      8.6  PASS lbfgsb_bench cpu n=10 iterations=9 evaluations=30 f=-27.5921181 stop=the line search routine is unable to sufficiently decrease the function value phases=69
-PASS G9 lbfgsb_bench rd n=10 iters=10 ticks=   70 wall_ms=    135.0  PASS lbfgsb_bench rd n=10 iterations=9 evaluations=30 f=-27.5921181 stop=the line search routine is unable to sufficiently decrease the function value phases=69
-PASS G9 lbfgsb_bench cpu n=100 iters=10 ticks=    5 wall_ms=      3.9  PASS lbfgsb_bench cpu n=100 iterations=10 evaluations=12 f=-288.289589 stop=max_iterations phases=34
-PASS G9 lbfgsb_bench rd n=100 iters=10 ticks=   35 wall_ms=     38.8  PASS lbfgsb_bench rd n=100 iterations=10 evaluations=12 f=-288.289589 stop=max_iterations phases=34
-PASS G9 lbfgsb_bench cpu n=1000 iters=10 ticks=    5 wall_ms=      9.2  PASS lbfgsb_bench cpu n=1000 iterations=10 evaluations=13 f=-2886.40621 stop=max_iterations phases=36
-PASS G9 lbfgsb_bench rd n=1000 iters=10 ticks=   37 wall_ms=     94.6  PASS lbfgsb_bench rd n=1000 iterations=10 evaluations=13 f=-2886.40621 stop=max_iterations phases=36
-PASS G9 lbfgsb_bench cpu n=10000 iters=10 ticks=    6 wall_ms=     96.9  PASS lbfgsb_bench cpu n=10000 iterations=10 evaluations=18 f=-28887.1695 stop=max_iterations phases=46
-PASS G9 lbfgsb_bench rd n=10000 iters=10 ticks=   47 wall_ms=    778.1  PASS lbfgsb_bench rd n=10000 iterations=10 evaluations=18 f=-28887.1695 stop=max_iterations phases=46
-PASS G9 lbfgsb_bench cpu n=100000 iters=10 ticks=    8 wall_ms=   1435.9  PASS lbfgsb_bench cpu n=100000 iterations=10 evaluations=26 f=-288899.415 stop=max_iterations phases=62
-PASS G9 lbfgsb_bench rd n=100000 iters=10 ticks=   65 wall_ms=  11872.1  PASS lbfgsb_bench rd n=100000 iterations=10 evaluations=27 f=-288899.399 stop=max_iterations phases=64
-job bench_drape cpu sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 0 ticks=   187 wall_ms=  30416.9  PASS bench_drape cpu: every size finite
-    bench_drape cpu  4x4  nv=  16 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=25.9 ms/step=1.296
-    bench_drape cpu  6x6  nv=  36 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=60.6 ms/step=3.031
-    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=120.9 ms/step=6.045
-    bench_drape cpu 10x10 nv= 100 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=184.2 ms/step=9.209
-    bench_drape cpu 12x12 nv= 144 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=286.9 ms/step=14.343
-    bench_drape cpu 14x14 nv= 196 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=375.0 ms/step=18.750
-    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=556.8 ms/step=27.842
-    bench_drape cpu 20x20 nv= 400 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=821.5 ms/step=41.076
-    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=1281.7 ms/step=64.085
-    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=3324.9 ms/step=166.245
-    bench_drape cpu 48x48 nv=2304 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.042931 friction_events=376 projections=0 self_pushes=0 wall_ms=9815.1 ms/step=490.757
-    bench_drape cpu 64x64 nv=4096 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=12772.1 ms/step=638.607
+PASS G9 lbfgsb_bench cpu n=10 iters=10 ticks=    9 wall_ms=      4.7  PASS lbfgsb_bench cpu n=10 iterations=9 evaluations=30 f=-27.5921181 stop=the line search routine is unable to sufficiently decrease the function value phases=69
+PASS G9 lbfgsb_bench rd n=10 iters=10 ticks=   70 wall_ms=     88.3  PASS lbfgsb_bench rd n=10 iterations=9 evaluations=30 f=-27.5921181 stop=the line search routine is unable to sufficiently decrease the function value phases=69
+PASS G9 lbfgsb_bench cpu n=100 iters=10 ticks=    5 wall_ms=      2.6  PASS lbfgsb_bench cpu n=100 iterations=10 evaluations=12 f=-288.289589 stop=max_iterations phases=34
+PASS G9 lbfgsb_bench rd n=100 iters=10 ticks=   35 wall_ms=     57.1  PASS lbfgsb_bench rd n=100 iterations=10 evaluations=12 f=-288.289589 stop=max_iterations phases=34
+PASS G9 lbfgsb_bench cpu n=1000 iters=10 ticks=    5 wall_ms=     15.0  PASS lbfgsb_bench cpu n=1000 iterations=10 evaluations=13 f=-2886.40621 stop=max_iterations phases=36
+PASS G9 lbfgsb_bench rd n=1000 iters=10 ticks=   37 wall_ms=    132.0  PASS lbfgsb_bench rd n=1000 iterations=10 evaluations=13 f=-2886.40621 stop=max_iterations phases=36
+PASS G9 lbfgsb_bench cpu n=10000 iters=10 ticks=    6 wall_ms=    108.1  PASS lbfgsb_bench cpu n=10000 iterations=10 evaluations=18 f=-28887.1695 stop=max_iterations phases=46
+PASS G9 lbfgsb_bench rd n=10000 iters=10 ticks=   47 wall_ms=    953.6  PASS lbfgsb_bench rd n=10000 iterations=10 evaluations=18 f=-28887.1695 stop=max_iterations phases=46
+PASS G9 lbfgsb_bench cpu n=100000 iters=10 ticks=    8 wall_ms=   1764.4  PASS lbfgsb_bench cpu n=100000 iterations=10 evaluations=26 f=-288899.415 stop=max_iterations phases=62
+PASS G9 lbfgsb_bench rd n=100000 iters=10 ticks=   65 wall_ms=  14260.4  PASS lbfgsb_bench rd n=100000 iterations=10 evaluations=27 f=-288899.406 stop=max_iterations phases=64
+job bench_drape cpu sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 0 rep 0 ticks=   187 wall_ms=  25971.6  PASS bench_drape cpu: every size finite
+    bench_drape cpu  4x4  nv=  16 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=34.2 ms/step=1.710
+    bench_drape cpu  6x6  nv=  36 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=73.4 ms/step=3.668
+    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=165.1 ms/step=8.256
+    bench_drape cpu 10x10 nv= 100 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=239.6 ms/step=11.982
+    bench_drape cpu 12x12 nv= 144 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=365.0 ms/step=18.252
+    bench_drape cpu 14x14 nv= 196 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=473.1 ms/step=23.657
+    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=681.4 ms/step=34.069
+    bench_drape cpu 20x20 nv= 400 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=1117.6 ms/step=55.878
+    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=1631.3 ms/step=81.566
+    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=2565.8 ms/step=128.289
+    bench_drape cpu 48x48 nv=2304 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.042931 friction_events=376 projections=0 self_pushes=0 wall_ms=6212.8 ms/step=310.639
+    bench_drape cpu 64x64 nv=4096 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=11592.2 ms/step=579.608
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-job bench_drape rd sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 0 ticks=   481 wall_ms=   1773.8  PASS bench_drape rd: every size finite
-    bench_drape rd  4x4  nv=  16 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=236.1 ms/step=11.805
-    bench_drape rd  6x6  nv=  36 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=94.6 ms/step=4.731
-    bench_drape rd  8x8  nv=  64 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=95.6 ms/step=4.780
-    bench_drape rd 10x10 nv= 100 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=97.9 ms/step=4.893
-    bench_drape rd 12x12 nv= 144 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=106.3 ms/step=5.315
-    bench_drape rd 14x14 nv= 196 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=105.5 ms/step=5.276
-    bench_drape rd 16x16 nv= 256 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=107.4 ms/step=5.371
-    bench_drape rd 20x20 nv= 400 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=114.5 ms/step=5.727
-    bench_drape rd 24x24 nv= 576 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=132.8 ms/step=6.639
-    bench_drape rd 32x32 nv=1024 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=150.1 ms/step=7.504
-    bench_drape rd 48x48 nv=2304 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.042930 friction_events=376 projections=0 self_pushes=0 wall_ms=214.9 ms/step=10.744
-    bench_drape rd 64x64 nv=4096 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=316.5 ms/step=15.827
+job bench_drape rd sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 0 rep 0 ticks=   481 wall_ms=   1959.9  PASS bench_drape rd: every size finite
+    bench_drape rd  4x4  nv=  16 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=115.1 ms/step=5.755
+    bench_drape rd  6x6  nv=  36 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=118.5 ms/step=5.926
+    bench_drape rd  8x8  nv=  64 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=117.5 ms/step=5.874
+    bench_drape rd 10x10 nv= 100 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=123.8 ms/step=6.188
+    bench_drape rd 12x12 nv= 144 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=124.7 ms/step=6.234
+    bench_drape rd 14x14 nv= 196 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=128.1 ms/step=6.406
+    bench_drape rd 16x16 nv= 256 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=136.8 ms/step=6.838
+    bench_drape rd 20x20 nv= 400 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=148.0 ms/step=7.399
+    bench_drape rd 24x24 nv= 576 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=147.8 ms/step=7.390
+    bench_drape rd 32x32 nv=1024 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=175.0 ms/step=8.751
+    bench_drape rd 48x48 nv=2304 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.042930 friction_events=376 projections=0 self_pushes=0 wall_ms=263.1 ms/step=13.156
+    bench_drape rd 64x64 nv=4096 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=359.7 ms/step=17.984
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-job bench_drape cpu sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 90 ticks=   187 wall_ms=  22090.6  PASS bench_drape cpu: every size finite
-    bench_drape cpu  4x4  nv=  16 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=155.6 ms/step=7.781
-    bench_drape cpu  6x6  nv=  36 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=166.9 ms/step=8.343
-    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=166.6 ms/step=8.332
-    bench_drape cpu 10x10 nv= 100 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=200.5 ms/step=10.023
-    bench_drape cpu 12x12 nv= 144 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=318.0 ms/step=15.901
-    bench_drape cpu 14x14 nv= 196 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=389.2 ms/step=19.460
-    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=544.9 ms/step=27.244
-    bench_drape cpu 20x20 nv= 400 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=792.1 ms/step=39.603
-    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=1231.8 ms/step=61.590
-    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=2138.2 ms/step=106.912
-    bench_drape cpu 48x48 nv=2304 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.042931 friction_events=376 projections=0 self_pushes=0 wall_ms=5428.9 ms/step=271.443
-    bench_drape cpu 64x64 nv=4096 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=9845.1 ms/step=492.253
+job bench_drape cpu sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 90 rep 0 ticks=   187 wall_ms=  25197.3  PASS bench_drape cpu: every size finite
+    bench_drape cpu  4x4  nv=  16 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=155.5 ms/step=7.777
+    bench_drape cpu  6x6  nv=  36 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=166.7 ms/step=8.333
+    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=172.9 ms/step=8.645
+    bench_drape cpu 10x10 nv= 100 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=243.7 ms/step=12.184
+    bench_drape cpu 12x12 nv= 144 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=351.7 ms/step=17.585
+    bench_drape cpu 14x14 nv= 196 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=484.2 ms/step=24.208
+    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=622.9 ms/step=31.143
+    bench_drape cpu 20x20 nv= 400 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=931.9 ms/step=46.594
+    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=1345.3 ms/step=67.267
+    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=2371.4 ms/step=118.569
+    bench_drape cpu 48x48 nv=2304 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.042931 friction_events=376 projections=0 self_pushes=0 wall_ms=6089.1 ms/step=304.453
+    bench_drape cpu 64x64 nv=4096 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=11445.9 ms/step=572.296
     [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-job bench_drape rd sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 90 ticks=   481 wall_ms=   5475.7  PASS bench_drape rd: every size finite
-    bench_drape rd  4x4  nv=  16 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=433.4 ms/step=21.668
-    bench_drape rd  6x6  nv=  36 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.221
-    bench_drape rd  8x8  nv=  64 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=444.5 ms/step=22.223
-    bench_drape rd 10x10 nv= 100 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.222
-    bench_drape rd 12x12 nv= 144 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.221
-    bench_drape rd 14x14 nv= 196 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=444.5 ms/step=22.224
-    bench_drape rd 16x16 nv= 256 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=451.5 ms/step=22.577
-    bench_drape rd 20x20 nv= 400 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.223
-    bench_drape rd 24x24 nv= 576 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.220
-    bench_drape rd 32x32 nv=1024 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=445.7 ms/step=22.284
-    bench_drape rd 48x48 nv=2304 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.042930 friction_events=376 projections=0 self_pushes=0 wall_ms=468.0 ms/step=23.401
-    bench_drape rd 64x64 nv=4096 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=561.1 ms/step=28.056
-    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-job mesh_bisect rd scale=10                            ticks=    17 wall_ms=   1372.4  PASS mesh_bisect mesh x10: rd stays finite and within 0.001 of cpu over 16 iterations of the first step
-    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-    [drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0 colours cpu 9 rd 9
-    iteration  1: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 4.77e-07 at v463
-    iteration  2: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v187
-    iteration  3: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v263
-    iteration  4: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v263
-    iteration  5: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v343
-    iteration  6: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v343
-    iteration  7: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v559
-    iteration  8: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v23
-    iteration  9: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
-    iteration 10: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v76
-    iteration 11: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v114
-    iteration 12: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
-    iteration 13: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
-    iteration 14: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v55
-    iteration 15: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v42
-    iteration 16: non-finite floats cpu 0 rd 0 (first rd v-1); max|cpu - rd| 9.54e-07 at v71
-PASS G10 mesh_bisect rd: PASS mesh_bisect mesh x10: rd stays finite and within 0.001 of cpu over 16 iterations of the first step
-job mesh_parity rd scale=10 caps=1 steps=5 tol=1e-4    ticks=    27 wall_ms=   6085.7  PASS mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=yes, max|x_cpu - x_rd| over 5 steps = 2.98e-06 (tol 0.0001)
-    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-    [drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=14 | prim0 capsule c=(-0.00113,9.52752,-0.27279) a=(0.001915,0.993744,0.111665) r=0.735514 len=0.948843 mu=0.300000 | prim1 capsule c=(0.00069,10.4704,-0.16683) a=(0.00064,0.999598,0.028341) r=1.30746 len=2.95858 mu=0.300000 | prim2 capsule c=(0.00069,10.4704,-0.16683) a=(0.403473,0.914979,0.004754) r=0.387118 len=2.46696 mu=0.300000 | prim3 capsule c=(2.35667,11.1417,-0.13297) a=(-0.651094,0.758923,-0.01059) r=0.218986 len=2.08976 mu=0.300000 | prim4 capsule c=(3.79585,9.62856,-0.12785) a=(-0.689178,0.724588,-0.002454) r=0.939653 len=2.08825 mu=0.300000 | prim5 capsule c=(0.00069,10.4704,-0.16683) a=(-0.384708,0.923027,0.004631) r=0.385177 len=2.44397 mu=0.300000 | prim6 capsule c=(-2.31501,11.142,-0.13296) a=(0.655567,0.755061,-0.010752) r=0.213236 len=2.09816 mu=0.300000 | prim7 capsule c=(-3.7479,9.63851,-0.12553) a=(0.689893,0.723903,-0.003575) r=0.936992 len=2.07697 mu=0.300000 | prim8 capsule c=(0.97131,8.81631,-0.27191) a=(-0.807161,0.59033,-0.000731) r=0.836788 len=1.20476 mu=0.300000 | prim9 capsule c=(1.33821,5.2492,-0.29837) a=(-0.102312,0.994725,0.00738) r=0.710793 len=3.58603 mu=0.300000 | prim10 capsule c=(1.75327,0.33546,-0.38551) a=(-0.084157,0.996296,0.017668) r=0.399795 len=4.93201 mu=0.300000 | prim11 capsule c=(-0.98774,8.81613,-0.27102) a=(0.811129,0.584866,-0.001452) r=0.793421 len=1.21634 mu=0.300000 | prim12 capsule c=(-1.35558,5.24924,-0.29774) a=(0.102581,0.994697,0.00745) r=0.703622 len=3.5859 mu=0.300000 | prim13 capsule c=(-1.76781,0.33617,-0.38489) a=(0.083596,0.996343,0.017675) r=0.396954 len=4.93111 mu=0.300000
-    DONE forward rd steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=3206 projections=837 self_pushes=179 wall_ms=271.3 ms/step=54.257
-    DONE forward cpu steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=3206 projections=837 self_pushes=172 wall_ms=5790.9 ms/step=1158.188
-    step 1: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v18.y
-    step 2: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v1063.y
-    step 3: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v140.y
-    step 4: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.86e-06 at v140.y
-    step 5: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.98e-06 at v140.z
-PASS G10 mesh_parity rd: PASS mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=yes, max|x_cpu - x_rd| over 5 steps = 2.98e-06 (tol 0.0001)
-job mesh_parity rd scale=10 body=1 steps=5 tol=1e-4    ticks=    27 wall_ms=   6266.6  PASS mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=yes, max|x_cpu - x_rd| over 5 steps = 2.03e-06 (tol 0.0001)
-    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
-    [drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
-    DONE forward rd steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=4396 projections=2153 self_pushes=72 wall_ms=337.1 ms/step=67.415
-    DONE forward cpu steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=4396 projections=2153 self_pushes=71 wall_ms=5867.8 ms/step=1173.561
-    step 1: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v95.y
-    step 2: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v95.y
-    step 3: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v171.y
-    step 4: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v171.y
-    step 5: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.03e-06 at v686.z
-    inside the body (signed distance < 0): start 0 (deepest 0), after 5 steps cpu 0 (0) rd 0 (0); collider mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
-PASS G10 mesh_parity rd: PASS mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=yes, max|x_cpu - x_rd| over 5 steps = 2.03e-06 (tol 0.0001)
---- G7 optimize native: params=mu steps=350 mode=native
-OPENED rd
-LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
-QUEUED forward 350 on rd
-target forward (mu 0.3): IDLE DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2359.1 ms/step=6.740
-TARGET trajectory frames=351
-QUEUED optimize mu on rd (vec cpu)
-    DONE optimize cpu (delta) f=0.000658236532 pg=0.00748 mu=0.37497592 iterations=1 evaluations=3 wall_ms=6842.1
-    optimize params=mu steps=350 mode=native | m 10 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 0.001 max_iterations 0 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
-      x0 mu=0.539770186
-      eval 1 loss=0.00140732793 grad[0]=0.0126385335
-      try mu=0.00999999978
-      eval 2 loss=1.64830184 grad[0]=-50.7804451
-      try mu=0.37497592
-      eval 3 loss=0.000658236532 grad[0]=0.00747953122
-    DONE optimize cpu (delta) f=0.000658236532 pg=0.00748 mu=0.37497592 iterations=1 evaluations=3 wall_ms=6842.1
-    
-    host wall_ms=6844.6 ticks=2959
---- G7 optimize unrolled: params=mu steps=350 mode=unrolled delta=1e-10
-OPENED rd
-LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.374976
-QUEUED forward 350 on rd
-target forward (mu 0.3): IDLE DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2193.0 ms/step=6.266
-TARGET trajectory frames=351
-QUEUED optimize mu on rd (vec cpu)
-    FAIL optimize: the line search step became smaller than the minimum value allowed iterations=1 evaluations=12 wall_ms=38116.0
-    optimize params=mu steps=350 mode=unrolled delta=1e-10 | m 10 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 1e-10 max_iterations 8 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
-      x0 mu=0.539770186
-      eval 1 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.00999999978
-      eval 2 loss=1.64830184 grad[0]=-0.227583393
-      try mu=0.539769828
-      eval 3 loss=0.00155118842 grad[0]=1.24938015e-05
-      try mu=0.539770186
-      eval 4 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 5 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 6 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 7 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 8 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 9 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 10 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 11 loss=0.00140732793 grad[0]=1.20639043e-05
-      try mu=0.539770186
-      eval 12 loss=0.00140732793 grad[0]=1.20639043e-05
-    FAIL optimize: the line search step became smaller than the minimum value allowed iterations=1 evaluations=12 wall_ms=38116.0
-    
-    host wall_ms=38128.5 ticks=19033
---- G7 optimize step: params=mu steps=350 mode=step delta=1e-10
-OPENED rd
-LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
-QUEUED forward 350 on rd
-target forward (mu 0.3): IDLE DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2122.9 ms/step=6.065
-TARGET trajectory frames=351
-QUEUED optimize mu on rd (vec cpu)
-    DONE optimize cpu (grad) f=0.00140732793 pg=3.159e-06 mu=0.539770186 iterations=1 evaluations=1 wall_ms=2264.3
-    optimize params=mu steps=350 mode=step delta=1e-10 | m 10 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 1e-10 max_iterations 8 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
-      x0 mu=0.539770186
-      eval 1 loss=0.00140732793 grad[0]=3.1440627e-06
-    DONE optimize cpu (grad) f=0.00140732793 pg=3.159e-06 mu=0.539770186 iterations=1 evaluations=1 wall_ms=2264.3
-    
-    host wall_ms=2266.7 ticks=987
---- G7 optimize unrolled60: params=mu steps=60 mode=unrolled delta=1e-12 epsilon=1e-12 epsilon_rel=1e-12
-OPENED rd
-LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
-QUEUED forward 60 on rd
-target forward (mu 0.3): IDLE DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=327.4 ms/step=5.457
-TARGET trajectory frames=61
-QUEUED optimize mu on rd (vec cpu)
-    DONE optimize cpu (grad) f=4.3123831e-13 pg=0 mu=0.30004558 iterations=6 evaluations=9 wall_ms=11546.6
-    optimize params=mu steps=60 mode=unrolled delta=1e-12 epsilon=1e-12 epsilon_rel=1e-12 | m 10 epsilon 1e-12 epsilon_rel 1e-12 past 1 delta 1e-12 max_iterations 8 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
-      x0 mu=0.539770186
-      eval 1 loss=1.99878395e-06 grad[0]=6.86344265e-06
-      try mu=0.00999999978
-      eval 2 loss=1.90703544e-05 grad[0]=-0.000182832096
-      try mu=0.390409142
-      eval 3 loss=4.57159728e-07 grad[0]=5.01210161e-06
-    iter 1 f=4.57159728e-07 pg=5.007e-06 step=0.149361 mu=0.390409142
-      try mu=0.00999999978
-      eval 4 loss=1.90703544e-05 grad[0]=-0.000182832096
-      try mu=0.326569885
-      eval 5 loss=8.11981856e-08 grad[0]=1.9185195e-06
-    iter 2 f=8.11981856e-08 pg=1.907e-06 step=0.167817 mu=0.326569885
-      try mu=0.286979258
-      eval 6 loss=2.99184537e-08 grad[0]=-1.23992186e-06
-    iter 3 f=2.99184537e-08 pg=1.252e-06 step=1 mu=0.286979258
-      try mu=0.302521497
-      eval 7 loss=6.45789938e-10 grad[0]=2.00265887e-07
-    iter 4 f=6.45789938e-10 pg=2.086e-07 step=1 mu=0.302521497
-      try mu=0.300360262
-      eval 8 loss=4.57878801e-11 grad[0]=2.5452378e-08
-    iter 5 f=4.57878801e-11 pg=2.98e-08 step=1 mu=0.300360262
-      try mu=0.30004558
-      eval 9 loss=4.3123831e-13 grad[0]=4.5515316e-09
-    DONE optimize cpu (grad) f=4.3123831e-13 pg=0 mu=0.30004558 iterations=6 evaluations=9 wall_ms=11546.6
-    
-    host wall_ms=11557.2 ticks=6661
---- G7 optimize step60: params=mu steps=60 mode=step delta=1e-12 epsilon=1e-12 epsilon_rel=1e-12
-OPENED rd
-LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300046
-QUEUED forward 60 on rd
-target forward (mu 0.3): IDLE DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=324.8 ms/step=5.413
-TARGET trajectory frames=61
-QUEUED optimize mu on rd (vec cpu)
-    DONE optimize cpu (grad) f=5.59158138e-11 pg=0 mu=0.300524652 iterations=6 evaluations=28 wall_ms=14430.0
-    optimize params=mu steps=60 mode=step delta=1e-12 epsilon=1e-12 epsilon_rel=1e-12 | m 10 epsilon 1e-12 epsilon_rel 1e-12 past 1 delta 1e-12 max_iterations 8 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
-      x0 mu=0.539770186
-      eval 1 loss=1.99878395e-06 grad[0]=1.67778842e-06
-      try mu=0.00999999978
-      eval 2 loss=1.90703544e-05 grad[0]=-2.60323104e-05
-      try mu=0.533708453
-      eval 3 loss=1.90104205e-06 grad[0]=1.67175381e-06
-      try mu=0.527040541
-      eval 4 loss=1.8211984e-06 grad[0]=1.65959318e-06
-      try mu=0.519705832
-      eval 5 loss=1.73871695e-06 grad[0]=1.64762127e-06
-      try mu=0.511637688
-      eval 6 loss=1.65054864e-06 grad[0]=1.63311222e-06
-      try mu=0.502762735
-      eval 7 loss=1.55775479e-06 grad[0]=1.61989317e-06
-      try mu=0.493000239
-      eval 8 loss=1.44438557e-06 grad[0]=1.59189187e-06
-      try mu=0.482261509
-      eval 9 loss=1.32516121e-06 grad[0]=1.56035355e-06
-      try mu=0.470448911
-      eval 10 loss=1.19673712e-06 grad[0]=1.52477458e-06
-      try mu=0.457455069
-      eval 11 loss=1.06837495e-06 grad[0]=1.47625394e-06
-    iter 1 f=1.06837495e-06 pg=1.49e-06 step=0.0823151 mu=0.457455069
-      try mu=0.00999999978
-      eval 12 loss=1.90703544e-05 grad[0]=-2.60323104e-05
-      try mu=0.454049706
-      eval 13 loss=1.02944134e-06 grad[0]=1.46786783e-06
-      try mu=0.450303793
-      eval 14 loss=9.91761567e-07 grad[0]=1.45310264e-06
-      try mu=0.446183264
-      eval 15 loss=9.47492141e-07 grad[0]=1.43111538e-06
-      try mu=0.441650718
-      eval 16 loss=8.99461412e-07 grad[0]=1.40567192e-06
-      try mu=0.436664909
-      eval 17 loss=8.51144409e-07 grad[0]=1.38994096e-06
-      try mu=0.431180507
-      eval 18 loss=8.08551992e-07 grad[0]=1.37458778e-06
-      try mu=0.425147682
-      eval 19 loss=7.6084731e-07 grad[0]=1.35047389e-06
-      try mu=0.418511569
-      eval 20 loss=6.968459e-07 grad[0]=1.30900287e-06
-    iter 2 f=6.968459e-07 pg=1.311e-06 step=0.0870333 mu=0.418511569
-      try mu=0.113717377
-      eval 21 loss=4.87311956e-06 grad[0]=-8.4809235e-06
-      try mu=0.412758231
-      eval 22 loss=6.37540334e-07 grad[0]=1.26912425e-06
-      try mu=0.406429589
-      eval 23 loss=5.7960739e-07 grad[0]=1.22492713e-06
-      try mu=0.399468064
-      eval 24 loss=5.22177459e-07 grad[0]=1.17715706e-06
-    iter 3 f=5.22177459e-07 pg=1.162e-06 step=0.0624799 mu=0.399468064
-      try mu=0.229442179
-      eval 25 loss=5.26231337e-07 grad[0]=-1.76056085e-06
-      try mu=0.31218344
-      eval 26 loss=9.63314653e-09 grad[0]=1.97835149e-07
-    iter 4 f=9.63314653e-09 pg=2.086e-07 step=0.513361 mu=0.31218344
-      try mu=0.294550866
-      eval 27 loss=2.3784594e-09 grad[0]=-1.01367732e-07
-    iter 5 f=2.3784594e-09 pg=8.941e-08 step=1 mu=0.294550866
-      try mu=0.300524652
-      eval 28 loss=5.59158138e-11 grad[0]=7.8135729e-09
-    DONE optimize cpu (grad) f=5.59158138e-11 pg=0 mu=0.300524652 iterations=6 evaluations=28 wall_ms=14430.0
-    
-    host wall_ms=14461.5 ticks=3921
---- checks
-PASS G4 rd frames at mu 0.539770 against native iter0, every step finite (max|dx|; frame 1 <= 1e-5, frame 10 <= 1e-3): 0: 4.235e-22, 1: 1.164e-10, 10: 4.888e-6, 50: 5.007e-6, 100: 0.004167, 350: 0.1021
-PASS G4 cpu frames at mu 0.539770 against native iter0, every step finite (max|dx|; frame 1 <= 1e-5, frame 10 <= 1e-3): 0: 4.235e-22, 1: 1.164e-10, 10: 4.888e-6, 50: 6.437e-6, 100: 0.08204
-info G4 cpu vs rd frames (max|dx|): 0: 0.0, 1: 0.0, 10: 3.576e-7, 50: 2.235e-6, 100: 0.08205
-PASS G4 control: mu 0.3 sits further from the native mu-0.54 frames than ours at mu 0.54 (frames >= 50): 50: mu0.3-native 0.006834 vs ours-native 5.007e-6, 100: mu0.3-native 0.1443 vs ours-native 0.004167, 350: mu0.3-native 0.1839 vs ours-native 0.1021
-FAIL G5 native dL/dmu at mu 0.539770 (0.5397701956236457): ours (rd) 0.0121091, backwardLog 0.01153, rel 0.05022 (limit 5e-2); loss ours 0.001416104 native 0.00132918 (rel 0.0654); the cpu backend (same port, float order): dL/dmu 0.01117 (rel to rd 0.0775), loss 0.001763
-PASS G5 native dL/dmu at mu 0.010000 (0.01): ours (rd) -50.674986, backwardLog -50.45588, rel 0.004343 (limit 5e-2); loss ours 1.64972503 native 1.65198194 (rel 0.001366); the cpu backend (same port, float order): dL/dmu -51.09 (rel to rd 0.008166), loss 1.65
-FAIL G5 loss at mu 0.01 at backwardLog's printed precision (%.3f): ours 1.650 (1.64972503), backwardLog 1.652 (1.65198194)
-info G5 native dL/dmu at mu 0.375146 (0.375146): ours (rd) 0.0074085, backwardLog 0.00781, rel 0.05141 (limit 5e-2); loss ours 0.000606529 native 0.00047714 (rel 0.2712); the cpu backend (same port, float order): dL/dmu 0.005832 (rel to rd 0.2128), loss 9.451e-4
-info G5 flat control (the sphere demo's own conditioning; mu within 2e-7 of native's 0.5397701956236457): mu 0.5397701859474182: dL/dmu 0.0126385 loss 0.0014073; mu 0.53977: dL/dmu 0.012444 loss 0.0014124; mu 0.5397702: dL/dmu 0.0130591 loss 0.0015085; dL/dmu spans 0.012109..0.013059 (0.07549 of its mean), the loss 0.001407..0.001508 (0.06938): backwardLog's 0.01153 sits 0.05022 below the span
-PASS G6 panel single colour: PASS sim_gradcheck cpu: panel single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
-PASS G6 plane single colour: PASS sim_gradcheck cpu: plane single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
-G6 table: max rel error against central FD over mu, kTri, density (20 steps)
-  scene                      unrolled       step     native
-  panel colours=off          9.471e-5      0.982        1.0
-  panel colours=on           1.784e-4      0.982        1.0
-  plane colours=off           0.04349     0.9422        1.0
-  plane colours=on             0.5796     0.9044        1.0
-PASS G6 default mode: the smallest worst-case error over the table is unrolled (0.5796; step 0.982, native 1.0): the drape default is unrolled
-PASS G7 live native-mode optimize (rd, 350 steps, our dL/dmu): evaluations 0.539770 -> 0.010000 -> 0.374976 (native 0.539770 -> 0.010000 -> 0.375146); 1 iteration, delta stop: true; third evaluation within 1e-3 of native (1.701e-4), at printed precision: no (the G5 spread)
-    DONE optimize cpu (delta) f=0.000658236532 pg=0.00748 mu=0.37497592 iterations=1 evaluations=3 wall_ms=6842.1
-info G7 unrolled-mode optimize (recompute; rd, 350 steps, from mu0): last mu 0.539770 against the ground truth 0.3 (|err| 0.2398), 12 evaluations: FAIL optimize: the line search step became smaller than the minimum value allowed iterations=1 evaluations=12 wall_ms=38116.0
-info G7 step-mode optimize (recompute; rd, 350 steps, from mu0): last mu 0.539770 against the ground truth 0.3 (|err| 0.2398), 1 evaluations: DONE optimize cpu (grad) f=0.00140732793 pg=3.159e-06 mu=0.539770186 iterations=1 evaluations=1 wall_ms=2264.3
-info G7 unrolled-mode optimize (recompute; rd, 60 steps, from mu0): last mu 0.300046 against the ground truth 0.3 (|err| 4.558e-5), 9 evaluations: DONE optimize cpu (grad) f=4.3123831e-13 pg=0 mu=0.30004558 iterations=6 evaluations=9 wall_ms=11546.6
-info G7 step-mode optimize (recompute; rd, 60 steps, from mu0): last mu 0.300525 against the ground truth 0.3 (|err| 5.247e-4), 28 evaluations: DONE optimize cpu (grad) f=5.59158138e-11 pg=0 mu=0.300524652 iterations=6 evaluations=28 wall_ms=14430.0
-PASS G8 rd_rule4 after every job: same_frame_syncs=0 syncs=49668 submits=49668 (want same_frame_syncs=0 with syncs>0)
-PASS G8 rd_rule4_probe (positive control): PASS same_frame_syncs 0 -> 1; counter now 1
-PASS G8 llvm-nm -C project/drape.elf: 9502 symbols, 0 matching Eigen, 0 matching LBFGSpp (rc 0)
-G9 L-BFGS-B cost (box QP, 10 iterations, host wall of one job / its iterations)
-         n    cpu ms/it     rd ms/it   rd/cpu
-        10        0.956       14.999    15.69
-       100        0.386        3.884    10.07
-      1000        0.915        9.459    10.34
-     10000        9.687       77.812     8.03
-    100000      143.592     1187.210     8.27
-PASS G9 L-BFGS-B bench: every size ran on both backends; rd first cheaper at n = none up to 100000 (the optimize and lbfgsb jobs' auto stays cpu)
-G9 drape step cost at uncapped frames (sphere-demo scene at n x n, contact + self-collision, host ms per step over 20 frame-driven steps)
-     verts        cpu         rd   rd/cpu
-        16      1.296      11.81    9.109
-        36      3.031      4.731    1.561
-        64      6.045       4.78   0.7907
-       100      9.209      4.893   0.5313
-       144      14.34      5.315   0.3706
-       196      18.75      5.276   0.2814
-       256      27.84      5.371   0.1929
-       400      41.08      5.727   0.1394
-       576      64.08      6.639   0.1036
-      1024      166.2      7.504  0.04514
-      2304      490.8      10.74  0.02189
-      4096      638.6      15.83  0.02478
-info G9 crossover at uncapped frames: cpu cheaper up to 36 vertices, rd from 64
-G9 drape step cost at 90 fps (sphere-demo scene at n x n, contact + self-collision, host ms per step over 20 frame-driven steps)
-     verts        cpu         rd   rd/cpu
-        16      7.781      21.67    2.785
-        36      8.343      22.22    2.663
-        64      8.332      22.22    2.667
-       100      10.02      22.22    2.217
-       144       15.9      22.22    1.397
-       196      19.46      22.22    1.142
-       256      27.24      22.58   0.8287
-       400       39.6      22.22   0.5611
-       576      61.59      22.22   0.3608
-      1024      106.9      22.28   0.2084
-      2304      271.4       23.4  0.08621
-      4096      492.3      28.06    0.057
-FAIL G9 drape_open(auto) threshold 160 vertices sits at the measured crossover at 90 fps: cpu cheaper up to 196 vertices, rd from 256
-PASS G8 rd_close: CLOSED device=freed permanent_slots=0
-SUMMARY G1 PASS, G2 FAIL(2), G3 PASS, G4 PASS, G5 FAIL(2), G6 PASS, G7 PASS, G8 PASS, G9 FAIL(1), G10 PASS
-RESULT: FAIL

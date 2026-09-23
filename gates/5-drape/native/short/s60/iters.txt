@@ -1,0 +1,9 @@
+Total forward:1
+Total backprop:1Total forward:1
+Total backprop:1Total forward:2
+Total backprop:2Total forward:2
+Total backprop:2Total forward:3
+Total backprop:3Total forward:3
+Total backprop:3Total forward:3
+Total backprop:3Total forward:3
+Total backprop:3

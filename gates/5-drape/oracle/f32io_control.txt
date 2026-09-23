@@ -1,0 +1,22 @@
+# G2's flat control (tests/lbfgsb_oracle/sensitivity.cpp): per trace, |f_final - f_trace| of
+# LBFGSpp (double) under the float32 interface. G2's f band is max(1e-6 (1 + |f|), 2 x this).
+rosen_n2_m10_dc 4.830663e-06
+rosen_n2_m10_tight 6.921312e-09
+rosen_n2_m5_dc 2.607049e-07
+rosen_n2_m5_tight 6.921312e-09
+rosen_n10_m10_dc 5.095414e-07
+rosen_n10_m10_tight 1.774735e-06
+rosen_n10_m5_dc 4.008044e-08
+rosen_n10_m5_tight 1.774599e-06
+rosen_n100_m10_dc 7.660645e-10
+rosen_n100_m10_tight 2.014343e-07
+rosen_n100_m5_dc 1.231227e-07
+rosen_n100_m5_tight 2.015648e-07
+rosenbox_upstream_n25_m10_dc 7.515172e-08
+rosenbox_upstream_n25_m10_tight 4.488480e-07
+rosenbox_upstream_n25_m5_dc 4.755533e-07
+rosenbox_upstream_n25_m5_tight 4.488480e-07
+boxqp_n1000_m10_dc 1.436050e-06
+boxqp_n1000_m10_tight 1.293926e-06
+boxqp_n1000_m5_dc 1.436050e-06
+boxqp_n1000_m5_tight 1.282104e-06

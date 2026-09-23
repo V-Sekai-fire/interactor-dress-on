@@ -118,7 +118,7 @@ void lb_mv(uint nc, uint mc, inout float w[32]) {
   return;
 }
 
-uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
+uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, double theta) {
   uint ok = 1u;
   uint nP = 0u;
   for (uint k = 0u; k < nfree; ++k) {
@@ -129,7 +129,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   if (((nc < 1u) || (nP < 1u))) {
     for (uint k = 0u; k < nfree; ++k) {
       if ((wk[((7u * n) + k)] == 2.000000)) {
-        wk[((3u * n) + k)] = (wk[((8u * n) + k)] / theta);
+        wk[((3u * n) + k)] = float((double(wk[((8u * n) + k)]) / theta));
       }
     }
     return ok;
@@ -147,14 +147,14 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       wk[((9u * n) + iset[((8u + n) + k)])] = 1.000000;
     }
   }
-  float A11[256];
-  float A21[256];
-  float A22[256];
-  float Z[256];
-  float r1[16];
-  float qv[16];
-  float r2[16];
-  float tv[16];
+  double A11[256];
+  double A21[256];
+  double A22[256];
+  double Z[256];
+  double r1[16];
+  double qv[16];
+  double r2[16];
+  double tv[16];
   for (uint i = 0u; i < nc; ++i) {
     r1[i] = 0.000000;
     r2[i] = 0.000000;
@@ -167,10 +167,10 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   for (uint c = 0u; c < n; ++c) {
     if ((wk[((9u * n) + c)] == 1.000000)) {
       for (uint i = 0u; i < nc; ++i) {
-        float yi = Y[((i * n) + c)];
-        float si = S[((i * n) + c)];
+        double yi = double(Y[((i * n) + c)]);
+        double si = double(S[((i * n) + c)]);
         for (uint j = 0u; j < nc; ++j) {
-          float yj = Y[((j * n) + c)];
+          double yj = double(Y[((j * n) + c)]);
           A11[((i * 16u) + j)] = (A11[((i * 16u) + j)] + (yi * yj));
           if ((rk[i] <= rk[j])) {
             A21[((i * 16u) + j)] = (A21[((i * 16u) + j)] - (si * yj));
@@ -179,11 +179,11 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       }
     } else {
       for (uint i = 0u; i < nc; ++i) {
-        float si = S[((i * n) + c)];
+        double si = double(S[((i * n) + c)]);
         for (uint j = 0u; j < nc; ++j) {
-          A22[((i * 16u) + j)] = (A22[((i * 16u) + j)] + (si * S[((j * n) + c)]));
+          A22[((i * 16u) + j)] = (A22[((i * 16u) + j)] + (si * double(S[((j * n) + c)])));
           if ((rk[i] > rk[j])) {
-            A21[((i * 16u) + j)] = (A21[((i * 16u) + j)] + (si * Y[((j * n) + c)]));
+            A21[((i * 16u) + j)] = (A21[((i * 16u) + j)] + (si * double(Y[((j * n) + c)])));
           }
         }
       }
@@ -194,15 +194,15 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       A11[((i * 16u) + j)] = (A11[((i * 16u) + j)] / theta);
       A22[((i * 16u) + j)] = (theta * A22[((i * 16u) + j)]);
     }
-    A11[((i * 16u) + i)] = (A11[((i * 16u) + i)] + bf[((4u + ((4u * mc) * mc)) + i)]);
+    A11[((i * 16u) + i)] = (A11[((i * 16u) + i)] + double(bf[((4u + ((4u * mc) * mc)) + i)]));
   }
   for (uint k = 0u; k < nfree; ++k) {
     if ((wk[((7u * n) + k)] == 2.000000)) {
       uint c = iset[((8u + n) + k)];
-      float rv = wk[((8u * n) + k)];
+      double rv = double(wk[((8u * n) + k)]);
       for (uint j = 0u; j < nc; ++j) {
-        r1[j] = (r1[j] + (Y[((j * n) + c)] * rv));
-        r2[j] = (r2[j] + (S[((j * n) + c)] * rv));
+        r1[j] = (r1[j] + (double(Y[((j * n) + c)]) * rv));
+        r2[j] = (r2[j] + (double(S[((j * n) + c)]) * rv));
       }
     }
   }
@@ -210,7 +210,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
     r2[j] = (theta * r2[j]);
   }
   for (uint pj = 0u; pj < nc; ++pj) {
-    float ps = A11[((pj * 16u) + pj)];
+    double ps = A11[((pj * 16u) + pj)];
     for (uint pt = 0u; pt < pj; ++pt) {
       ps = (ps - (A11[((pj * 16u) + pt)] * A11[((pj * 16u) + pt)]));
     }
@@ -218,10 +218,10 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       ok = 0u;
       ps = (asfloat(872415232u) * asfloat(872415232u));
     }
-    float pd = sqrt(ps);
+    double pd = sqrt(ps);
     A11[((pj * 16u) + pj)] = pd;
     for (uint pi = (pj + 1u); pi < nc; ++pi) {
-      float pr = A11[((pi * 16u) + pj)];
+      double pr = A11[((pi * 16u) + pj)];
       for (uint pt = 0u; pt < pj; ++pt) {
         pr = (pr - (A11[((pi * 16u) + pt)] * A11[((pj * 16u) + pt)]));
       }
@@ -233,7 +233,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       Z[((i * 16u) + j)] = A21[((i * 16u) + j)];
     }
     for (uint zi = 0u; zi < nc; ++zi) {
-      float zr = Z[((i * 16u) + zi)];
+      double zr = Z[((i * 16u) + zi)];
       for (uint zt = 0u; zt < zi; ++zt) {
         zr = (zr - (A11[((zi * 16u) + zt)] * Z[((i * 16u) + zt)]));
       }
@@ -242,7 +242,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   }
   for (uint i = 0u; i < nc; ++i) {
     for (uint k = 0u; k < (i + 1u); ++k) {
-      float acc = A22[((i * 16u) + k)];
+      double acc = A22[((i * 16u) + k)];
       for (uint j = 0u; j < nc; ++j) {
         acc = (acc + (Z[((i * 16u) + j)] * Z[((k * 16u) + j)]));
       }
@@ -253,21 +253,21 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
     qv[j] = r1[j];
   }
   for (uint qi = 0u; qi < nc; ++qi) {
-    float qr = qv[qi];
+    double qr = qv[qi];
     for (uint qt = 0u; qt < qi; ++qt) {
       qr = (qr - (A11[((qi * 16u) + qt)] * qv[qt]));
     }
     qv[qi] = (qr / A11[((qi * 16u) + qi)]);
   }
   for (uint i = 0u; i < nc; ++i) {
-    float acc = r2[i];
+    double acc = r2[i];
     for (uint j = 0u; j < nc; ++j) {
       acc = (acc + (Z[((i * 16u) + j)] * qv[j]));
     }
     r2[i] = acc;
   }
   for (uint sj = 0u; sj < nc; ++sj) {
-    float ss = A22[((sj * 16u) + sj)];
+    double ss = A22[((sj * 16u) + sj)];
     for (uint st = 0u; st < sj; ++st) {
       ss = (ss - (A22[((sj * 16u) + st)] * A22[((sj * 16u) + st)]));
     }
@@ -275,10 +275,10 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       ok = 0u;
       ss = (asfloat(872415232u) * asfloat(872415232u));
     }
-    float sd = sqrt(ss);
+    double sd = sqrt(ss);
     A22[((sj * 16u) + sj)] = sd;
     for (uint si = (sj + 1u); si < nc; ++si) {
-      float sr = A22[((si * 16u) + sj)];
+      double sr = A22[((si * 16u) + sj)];
       for (uint st = 0u; st < sj; ++st) {
         sr = (sr - (A22[((si * 16u) + st)] * A22[((sj * 16u) + st)]));
       }
@@ -286,7 +286,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
     }
   }
   for (uint sfi = 0u; sfi < nc; ++sfi) {
-    float sfr = r2[sfi];
+    double sfr = r2[sfi];
     for (uint sft = 0u; sft < sfi; ++sft) {
       sfr = (sfr - (A22[((sfi * 16u) + sft)] * r2[sft]));
     }
@@ -294,21 +294,21 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   }
   for (uint sbq = 0u; sbq < nc; ++sbq) {
     uint sbi = ((nc - 1u) - sbq);
-    float sbr = r2[sbi];
+    double sbr = r2[sbi];
     for (uint sbt = (sbi + 1u); sbt < nc; ++sbt) {
       sbr = (sbr - (A22[((sbt * 16u) + sbi)] * r2[sbt]));
     }
     r2[sbi] = (sbr / A22[((sbi * 16u) + sbi)]);
   }
   for (uint j = 0u; j < nc; ++j) {
-    float acc = (-r1[j]);
+    double acc = (-r1[j]);
     for (uint i = 0u; i < nc; ++i) {
       acc = (acc + (A21[((i * 16u) + j)] * r2[i]));
     }
     tv[j] = acc;
   }
   for (uint tfi = 0u; tfi < nc; ++tfi) {
-    float tfr = tv[tfi];
+    double tfr = tv[tfi];
     for (uint tft = 0u; tft < tfi; ++tft) {
       tfr = (tfr - (A11[((tfi * 16u) + tft)] * tv[tft]));
     }
@@ -316,7 +316,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   }
   for (uint tbq = 0u; tbq < nc; ++tbq) {
     uint tbi = ((nc - 1u) - tbq);
-    float tbr = tv[tbi];
+    double tbr = tv[tbi];
     for (uint tbt = (tbi + 1u); tbt < nc; ++tbt) {
       tbr = (tbr - (A11[((tbt * 16u) + tbi)] * tv[tbt]));
     }
@@ -325,11 +325,11 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   for (uint k = 0u; k < nfree; ++k) {
     if ((wk[((7u * n) + k)] == 2.000000)) {
       uint c = iset[((8u + n) + k)];
-      float acc = 0.000000;
+      double acc = 0.000000;
       for (uint j = 0u; j < nc; ++j) {
-        acc = ((acc + (Y[((j * n) + c)] * tv[j])) + (S[((j * n) + c)] * (theta * r2[j])));
+        acc = ((acc + (double(Y[((j * n) + c)]) * tv[j])) + (double(S[((j * n) + c)]) * (theta * r2[j])));
       }
-      wk[((3u * n) + k)] = ((wk[((8u * n) + k)] / theta) + (acc / (theta * theta)));
+      wk[((3u * n) + k)] = float(((double(wk[((8u * n) + k)]) / theta) + (acc / (theta * theta))));
     }
   }
   return ok;
@@ -405,7 +405,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     wk[((7u * n) + k)] = 2.000000;
     wk[((8u * n) + k)] = (-wk[((2u * n) + k)]);
   }
-  if ((lb_solve_p(n, mc, nc, nfree, theta) == 0u)) {
+  if ((lb_solve_p(n, mc, nc, nfree, double(theta)) == 0u)) {
     iset[6u] = 1u;
   }
   uint inb = 1u;
@@ -486,7 +486,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
           wk[((8u * n) + k)] = (-(wk[((2u * n) + k)] - acc));
         }
       }
-      if ((lb_solve_p(n, mc, nc, nfree, theta) == 0u)) {
+      if ((lb_solve_p(n, mc, nc, nfree, double(theta)) == 0u)) {
         iset[6u] = 1u;
       }
     }

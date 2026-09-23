@@ -1,42 +1,84 @@
 # LBFGSpp (double) from float32-rounded x0/lb/ub vs the trace (exact inputs). Arm inputs: that
 # only. Arm interface: also f and g evaluated at float32 x, g returned as float32 (the guest view).
+# Arm storage: also x held in float32 (LBFGSpp's x rounded in place at every evaluation).
+# ensemble: the storage arm 200x with stochastic float32 rounding; |f - f_trace| quantiles.
 rosen_n2_m10_dc                  inputs    iters 19/19 f 0.050607083/0.0506045361 err 2.5e-06 (OUTSIDE 1e-6 abs+rel)
 rosen_n2_m10_dc                  interface iters 19/19 f 0.0506093668/0.0506045361 err 4.8e-06 (OUTSIDE 1e-6 abs+rel)
+rosen_n2_m10_dc                  storage   iters 19/19 f 0.0506070961/0.0506045361 err 2.6e-06 (OUTSIDE 1e-6 abs+rel)
+rosen_n2_m10_dc                  ensemble  200 runs: median 4.1e-06 p95 1.1e-05 max 1.8e-05; within the 1e-6 band 4/200
 rosen_n2_m10_tight               inputs    iters 21/21 f 0.0505960915/0.0505960984 err 6.9e-09 (within 1e-6 abs+rel)
 rosen_n2_m10_tight               interface iters 21/21 f 0.0505960915/0.0505960984 err 6.9e-09 (within 1e-6 abs+rel)
+rosen_n2_m10_tight               storage   iters 21/21 f 0.0505960915/0.0505960984 err 6.9e-09 (within 1e-6 abs+rel)
+rosen_n2_m10_tight               ensemble  200 runs: median 6.9e-09 p95 6.9e-09 max 6.9e-09; within the 1e-6 band 200/200
 rosen_n2_m5_dc                   inputs    iters 19/19 f 0.050596292/0.050596468 err 1.8e-07 (within 1e-6 abs+rel)
 rosen_n2_m5_dc                   interface iters 19/19 f 0.0505962073/0.050596468 err 2.6e-07 (within 1e-6 abs+rel)
+rosen_n2_m5_dc                   storage   iters 19/19 f 0.0505962912/0.050596468 err 1.8e-07 (within 1e-6 abs+rel)
+rosen_n2_m5_dc                   ensemble  200 runs: median 2.7e-07 p95 4.0e-07 max 1.6e-06; within the 1e-6 band 199/200
 rosen_n2_m5_tight                inputs    iters 20/20 f 0.0505960915/0.0505960984 err 6.9e-09 (within 1e-6 abs+rel)
 rosen_n2_m5_tight                interface iters 20/20 f 0.0505960915/0.0505960984 err 6.9e-09 (within 1e-6 abs+rel)
+rosen_n2_m5_tight                storage   iters 20/20 f 0.0505960915/0.0505960984 err 6.9e-09 (within 1e-6 abs+rel)
+rosen_n2_m5_tight                ensemble  200 runs: median 6.9e-09 p95 6.9e-09 max inf; within the 1e-6 band 199/200
 rosen_n10_m10_dc                 inputs    iters 11/11 f 32.7986616/32.7986617 err 1.0e-07 (within 1e-6 abs+rel)
 rosen_n10_m10_dc                 interface iters 11/11 f 32.7986612/32.7986617 err 5.1e-07 (within 1e-6 abs+rel)
+rosen_n10_m10_dc                 storage   iters 11/11 f 32.7986617/32.7986617 err 3.4e-08 (within 1e-6 abs+rel)
+rosen_n10_m10_dc                 ensemble  200 runs: median 1.6e-07 p95 4.2e-07 max 5.9e-07; within the 1e-6 band 200/200
 rosen_n10_m10_tight              inputs    iters 40/40 f 21.9430574/21.9430592 err 1.8e-06 (within 1e-6 abs+rel)
 rosen_n10_m10_tight              interface iters 40/40 f 21.9430574/21.9430592 err 1.8e-06 (within 1e-6 abs+rel)
+rosen_n10_m10_tight              storage   iters 40/40 f 21.9430574/21.9430592 err 1.8e-06 (within 1e-6 abs+rel)
+rosen_n10_m10_tight              ensemble  200 runs: median 1.8e-06 p95 1.8e-06 max 1.8e-06; within the 1e-6 band 200/200
 rosen_n10_m5_dc                  inputs    iters 10/10 f 32.7798888/32.7798888 err 3.6e-08 (within 1e-6 abs+rel)
 rosen_n10_m5_dc                  interface iters 10/10 f 32.7798888/32.7798888 err 4.0e-08 (within 1e-6 abs+rel)
+rosen_n10_m5_dc                  storage   iters 10/10 f 32.7798889/32.7798888 err 6.3e-08 (within 1e-6 abs+rel)
+rosen_n10_m5_dc                  ensemble  200 runs: median 8.2e-08 p95 2.1e-07 max 2.6e-07; within the 1e-6 band 200/200
 rosen_n10_m5_tight               inputs    iters 45/45 f 21.9430574/21.9430592 err 1.8e-06 (within 1e-6 abs+rel)
 rosen_n10_m5_tight               interface iters 45/45 f 21.9430574/21.9430592 err 1.8e-06 (within 1e-6 abs+rel)
+rosen_n10_m5_tight               storage   iters 45/45 f 21.9430574/21.9430592 err 1.8e-06 (within 1e-6 abs+rel)
+rosen_n10_m5_tight               ensemble  200 runs: median 1.8e-06 p95 1.8e-06 max 1.8e-06; within the 1e-6 band 200/200
 rosen_n100_m10_dc                inputs    iters 12/12 f 122.104946/122.104946 err 7.7e-09 (within 1e-6 abs+rel)
 rosen_n100_m10_dc                interface iters 12/12 f 122.104946/122.104946 err 7.7e-10 (within 1e-6 abs+rel)
+rosen_n100_m10_dc                storage   iters 12/12 f 122.104946/122.104946 err 4.7e-10 (within 1e-6 abs+rel)
+rosen_n100_m10_dc                ensemble  200 runs: median 4.5e-08 p95 1.3e-07 max 1.7e-07; within the 1e-6 band 200/200
 rosen_n100_m10_tight             inputs    iters 43/43 f 118.811118/118.811118 err 2.0e-07 (within 1e-6 abs+rel)
 rosen_n100_m10_tight             interface iters 43/43 f 118.811118/118.811118 err 2.0e-07 (within 1e-6 abs+rel)
+rosen_n100_m10_tight             storage   iters 43/43 f 118.811118/118.811118 err 2.0e-07 (within 1e-6 abs+rel)
+rosen_n100_m10_tight             ensemble  200 runs: median 2.0e-07 p95 2.0e-07 max 2.0e-07; within the 1e-6 band 200/200
 rosen_n100_m5_dc                 inputs    iters 10/10 f 122.130687/122.130687 err 8.5e-08 (within 1e-6 abs+rel)
 rosen_n100_m5_dc                 interface iters 10/10 f 122.130687/122.130687 err 1.2e-07 (within 1e-6 abs+rel)
+rosen_n100_m5_dc                 storage   iters 10/10 f 122.130687/122.130687 err 4.5e-08 (within 1e-6 abs+rel)
+rosen_n100_m5_dc                 ensemble  200 runs: median 8.2e-08 p95 1.9e-07 max 2.5e-07; within the 1e-6 band 200/200
 rosen_n100_m5_tight              inputs    iters 43/43 f 118.811118/118.811118 err 2.0e-07 (within 1e-6 abs+rel)
 rosen_n100_m5_tight              interface iters 43/43 f 118.811118/118.811118 err 2.0e-07 (within 1e-6 abs+rel)
+rosen_n100_m5_tight              storage   iters 43/43 f 118.811118/118.811118 err 2.0e-07 (within 1e-6 abs+rel)
+rosen_n100_m5_tight              ensemble  200 runs: median 2.0e-07 p95 2.0e-07 max 2.1e-07; within the 1e-6 band 200/200
 rosenbox_upstream_n25_m10_dc     inputs    iters 10/10 f 360.284608/360.284608 err 5.7e-08 (within 1e-6 abs+rel)
 rosenbox_upstream_n25_m10_dc     interface iters 10/10 f 360.284608/360.284608 err 7.5e-08 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m10_dc     storage   iters 10/10 f 360.284608/360.284608 err 7.3e-08 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m10_dc     ensemble  200 runs: median 7.3e-08 p95 1.7e-07 max 1.7e-07; within the 1e-6 band 200/200
 rosenbox_upstream_n25_m10_tight  inputs    iters 13/13 f 360.283586/360.283586 err 4.5e-07 (within 1e-6 abs+rel)
 rosenbox_upstream_n25_m10_tight  interface iters 13/13 f 360.283586/360.283586 err 4.5e-07 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m10_tight  storage   iters 13/13 f 360.283586/360.283586 err 4.5e-07 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m10_tight  ensemble  200 runs: median 4.5e-07 p95 4.5e-07 max 4.5e-07; within the 1e-6 band 200/200
 rosenbox_upstream_n25_m5_dc      inputs    iters 10/10 f 360.284614/360.284614 err 3.6e-07 (within 1e-6 abs+rel)
 rosenbox_upstream_n25_m5_dc      interface iters 10/10 f 360.284614/360.284614 err 4.8e-07 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m5_dc      storage   iters 10/10 f 360.284614/360.284614 err 4.5e-07 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m5_dc      ensemble  200 runs: median 3.3e-07 p95 5.0e-07 max 5.7e-07; within the 1e-6 band 200/200
 rosenbox_upstream_n25_m5_tight   inputs    iters 13/13 f 360.283586/360.283586 err 4.5e-07 (within 1e-6 abs+rel)
 rosenbox_upstream_n25_m5_tight   interface iters 13/13 f 360.283586/360.283586 err 4.5e-07 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m5_tight   storage   iters 13/13 f 360.283586/360.283586 err 4.5e-07 (within 1e-6 abs+rel)
+rosenbox_upstream_n25_m5_tight   ensemble  200 runs: median 4.5e-07 p95 4.5e-07 max 4.5e-07; within the 1e-6 band 200/200
 boxqp_n1000_m10_dc               inputs    iters 5/5 f -1932.88207/-1932.88207 err 1.4e-06 (within 1e-6 abs+rel)
 boxqp_n1000_m10_dc               interface iters 5/5 f -1932.88207/-1932.88207 err 1.4e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m10_dc               storage   iters 5/5 f -1932.88207/-1932.88207 err 1.4e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m10_dc               ensemble  200 runs: median 1.4e-06 p95 1.4e-06 max 1.5e-06; within the 1e-6 band 200/200
 boxqp_n1000_m10_tight            inputs    iters 11/11 f -1932.98535/-1932.98535 err 1.3e-06 (within 1e-6 abs+rel)
 boxqp_n1000_m10_tight            interface iters 11/11 f -1932.98535/-1932.98535 err 1.3e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m10_tight            storage   iters 11/11 f -1932.98535/-1932.98535 err 1.3e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m10_tight            ensemble  200 runs: median 1.3e-06 p95 1.3e-06 max 1.3e-06; within the 1e-6 band 200/200
 boxqp_n1000_m5_dc                inputs    iters 5/5 f -1932.88207/-1932.88207 err 1.4e-06 (within 1e-6 abs+rel)
 boxqp_n1000_m5_dc                interface iters 5/5 f -1932.88207/-1932.88207 err 1.4e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m5_dc                storage   iters 5/5 f -1932.88207/-1932.88207 err 1.4e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m5_dc                ensemble  200 runs: median 1.4e-06 p95 1.4e-06 max 1.5e-06; within the 1e-6 band 200/200
 boxqp_n1000_m5_tight             inputs    iters 11/11 f -1932.98535/-1932.98535 err 1.3e-06 (within 1e-6 abs+rel)
 boxqp_n1000_m5_tight             interface iters 11/11 f -1932.98535/-1932.98535 err 1.3e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m5_tight             storage   iters 11/11 f -1932.98535/-1932.98535 err 1.3e-06 (within 1e-6 abs+rel)
+boxqp_n1000_m5_tight             ensemble  200 runs: median 1.3e-06 p95 1.3e-06 max 1.3e-06; within the 1e-6 band 200/200

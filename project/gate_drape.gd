@@ -8,16 +8,22 @@
 #
 # G1 lbfgsb_components cpu+rd: the 20 LBFGSpp component fixtures (1e-4, sets
 #    identical); control theta x1.25 fails all 20.
-# G2 lbfgsb_problems cpu+rd: 20 LBFGSpp traces (f 1e-6 abs+rel, x 1e-3,
-#    iterations max(2, 25%)).
+# G2 lbfgsb_problems cpu+rd: 20 LBFGSpp traces (f 1e-6 abs+rel, or twice
+#    LBFGSpp's own movement under float32 I/O where that is larger
+#    (oracle/f32io_control.txt, Cut 5c); x 1e-3, iterations max(2, 25%)).
 # G3 inverse_min cpu+rd: k_tri 0.5 -> 2.0 and (k_bend, density) (0.4, 2.5) ->
 #    (1.5, 1.25) within 0.05; iterations within 2 and parameters within 1e-3 of
 #    LBFGSpp on the host-compiled AvbdCpu objective; zero-gradient arm > 0.1.
 # G4 sphere_forward: faces equal native; frame 1 <= 1e-5, frame 10 <= 1e-3 from
 #    native iter0; frames 50/100/350 reported; control mu 0.3 further from
 #    native than ours at frames >= 50; 100 steps cpu+rd finite, 350 rd.
-# G5 sphere_backward native: dL/dmu within 5e-2 of backwardLog at mu 0.539770
-#    and 0.01, loss at 0.01 prints 1.652; 0.375146 and the cpu spread reported.
+# G5 sphere_backward native, at the pre-chaos horizon (Cut 5c): over 60 steps
+#    (the runs match native per step through step 70, the self-collision
+#    onset), dL/dmu within 5e-2 of native's own 60-step run
+#    (native/short/s60/evaluations.txt: every mu its L-BFGS evaluated, at
+#    %.17g) at each of those mu, on rd and on cpu. The 350-step comparison
+#    against backwardLog (chaotic: 4.4e-9 in mu moves dL/dmu 7.8%) and both
+#    horizons' flat controls are reported.
 # G6 sim_gradcheck: unrolled vs central FD within 5e-2, single colour, 8x8
 #    pinned panel and panel on a plane, 20 steps, mu/kTri/density; the
 #    colours-on / step / native error table picks the default mode.
@@ -29,7 +35,9 @@
 #    has 0 Eigen (and 0 LBFGSpp) symbols.
 # G9 crossovers: L-BFGS-B ms/iteration cpu vs rd for n = 10..1e5; drape ms/step
 #    cpu vs rd with contact + self-collision, 8x8..64x64; drape_open(auto)'s
-#    threshold must sit at the measured crossover.
+#    threshold must lie inside the 90 fps crossover range measured over
+#    G9_REPEATS repeats (Cut 5c: one point check failed whenever the machine
+#    was loaded); each repeat records the machine's load.
 # G10 the fitted skirt at drape scale 10 (gates/5-drape/skirt: Gate 8's fit.elf
 #    result, its 44 waist pins, the 14 skeleton capsules, the FoxGirl body):
 #    mesh_parity cpu vs rd over 5 steps, capsules and the body mesh collider,
@@ -48,6 +56,9 @@ const NATIVE_FRAMES := [0, 1, 10, 50, 100, 350]
 const NATIVE_DLDMU := {"0.539770": 0.01153, "0.010000": -50.45588, "0.375146": 0.00781}
 const NATIVE_LOSS := {"0.539770": 0.00132918, "0.010000": 1.65198194, "0.375146": 0.00047714}
 const G5_GATED := ["0.539770", "0.010000"]
+# G5's gated horizon and its native reference (Cut 5c).
+const G5_STEPS := 60
+const NATIVE60 := "res://../gates/5-drape/native/short/s60/evaluations.txt"
 # The native run's initial mu exactly (guest/drape/drape_scene.h kNativeSphereMu0).
 const MU0 := "0.5397701956236457"
 const LB_SIZES := [10, 100, 1000, 10000, 100000]
@@ -58,6 +69,9 @@ const BENCH_SIZES := [4, 6, 8, 10, 12, 14, 16, 20, 24, 32, 48, 64]
 # the frame rate; drape_open(auto)'s threshold is taken at 90 fps.
 const BENCH_FPS := [0, 90]
 const AUTO_FPS := 90
+# The 90 fps bench runs this many times, cpu and rd interleaved; the
+# crossover is a range over the repeats, not one run's bracket.
+const G9_REPEATS := 3
 
 var _sb = null
 var _out: FileAccess
@@ -87,6 +101,8 @@ var _opt_step := 0
 var _opt_ticks := 0
 var _opt_results := {}
 var _auto_line := ""
+var _native60 := []      # [[mu text, mu, loss, dL/dmu], ...] from NATIVE60
+var _load := []          # G9: one machine-load sample per 90 fps repeat
 
 func _say(line: String) -> void:
 	print(line)
@@ -190,6 +206,14 @@ func _initialize() -> void:
 		_native[fr] = o[0]
 		if fr == 0:
 			_native_faces = o[1]
+	var re60 := RegEx.new()
+	re60.compile("\\[g5-native\\] mu=(\\S+) loss=(\\S+) dL/dmu=(\\S+)")
+	for m in re60.search_all(_text(NATIVE60)):
+		_native60.append([m.get_string(1), m.get_string(1).to_float(), m.get_string(2).to_float(), m.get_string(3).to_float()])
+	if _native60.size() < 2:
+		_fail("could not read G5's 60-step native reference " + NATIVE60)
+		_finish()
+		return
 	_sb = ClassDB.instantiate("Sandbox")
 	if _sb == null:
 		_fail("Sandbox class not registered")
@@ -218,9 +242,14 @@ func _plan() -> void:
 	_job("G4", "sphere_forward", "rd", "steps=%d" % steps_rd)
 	_job("G4", "sphere_forward", "cpu", "steps=%d" % steps_cpu)
 	_job("G4", "sphere_forward", "rd", "steps=%d mu=0.3" % steps_rd)
-	_job("G5", "sphere_backward", "rd", "steps=%d mus=%s,0.01,0.375146" % [steps_rd, MU0])
-	_job("G5", "sphere_backward", "cpu", "steps=%d mus=%s,0.01,0.375146" % [steps_rd, MU0])
-	_job("G5", "sphere_backward", "rd", "steps=%d mus=0.5397701859474182,0.539770,0.5397702" % steps_rd)
+	_job("G5", "sphere_backward", "rd", _g5_args60())
+	_job("G5", "sphere_backward", "cpu", _g5_args60())
+	_job("G5", "sphere_backward", "rd", "steps=%d mus=0.5397701859474182,0.539770,0.5397702" % G5_STEPS)
+	if not _quick:
+		# The 350-step comparison with backwardLog, reported.
+		_job("G5", "sphere_backward", "rd", "steps=350 mus=%s,0.01,0.375146" % MU0)
+		_job("G5", "sphere_backward", "cpu", "steps=350 mus=%s,0.01,0.375146" % MU0)
+		_job("G5", "sphere_backward", "rd", "steps=350 mus=0.5397701859474182,0.539770,0.5397702")
 	for c in [0, 1]:
 		for sc in ["panel", "plane"]:
 			_job("G6", "sim_gradcheck", "cpu", "scene=%s colors=%d%s" % [sc, c, " steps=8" if _quick else ""])
@@ -236,8 +265,10 @@ func _plan() -> void:
 		if not (_quick and n > 24):
 			sizes.append(str(n))
 	for fps in BENCH_FPS:
-		for b in ["cpu", "rd"]:
-			_job("G9", "bench_drape", b, "sizes=%s steps=%d" % [",".join(sizes), 6 if _quick else 20], "fps %d" % fps, fps)
+		for rep in range(G9_REPEATS if fps == AUTO_FPS else 1):
+			for b in ["cpu", "rd"]:
+				_job("G9", "bench_drape", b, "sizes=%s steps=%d" % [",".join(sizes), 6 if _quick else 20],
+						"fps %d rep %d" % [fps, rep], fps)
 	# G10: the fitted skirt at drape scale 10 (5 cpu steps are ~6 s each run).
 	_job("G10", "mesh_bisect", "rd", "scale=10")
 	_job("G10", "mesh_parity", "rd", "scale=10 caps=1 steps=5 tol=1e-4")
@@ -293,19 +324,23 @@ func _data() -> void:
 	for f in _files(ORACLE + "traces"):
 		_sb.vmcall("drape_job_data", "trace_" + f.get_basename(), _text(ORACLE + "traces/" + f))
 		n += 1
+	# G2's flat control (tests/lbfgsb_oracle/sensitivity.sh): each trace's f band
+	# is max(1e-6 (1 + |f|), 2 x LBFGSpp's own movement under float32 I/O).
+	_sb.vmcall("drape_job_data", "f32io_control", _text(ORACLE + "f32io_control.txt"))
+	n += 1
 	var r := ""
 	for c in ["k_tri", "k_bend_density"]:
 		r = str(_sb.vmcall("drape_job_data", "invmin_" + c, _text(ORACLE + "inverse_min/case_%s.txt" % c)))
 		n += 1
-	_say("oracle handed to the guest: %d files (20 components, 5 problems, 20 traces, 2 inverse_min): %s" % [n, r])
-	if n != 47 or not r.ends_with("47 keys"):
-		_fail("expected 47 oracle files")
+	_say("oracle handed to the guest: %d files (20 components, 5 problems, 20 traces, 1 control, 2 inverse_min): %s" % [n, r])
+	if n != 48 or not r.ends_with("48 keys"):
+		_fail("expected 48 oracle files")
 	# G10's scene: the fitted skirt, its pins and capsules, and the body.
 	for kf in [["mesh_obj", "fitted_skirt.obj"], ["mesh_pins", "fitted_skirt_pins.txt"],
 			["mesh_capsules", "fitted_skirt_capsules.txt"], ["body_obj", "body.obj"]]:
 		r = str(_sb.vmcall("drape_job_data", kf[0], _text(SKIRT + kf[1])))
 	_say("G10 scene handed to the guest: " + r)
-	if not r.ends_with("51 keys"):
+	if not r.ends_with("52 keys"):
 		_fail("expected the 4 G10 scene files after the oracle")
 	_phase = "api"
 
@@ -380,6 +415,8 @@ func _jobs() -> void:
 			_phase = "optimize"
 			return
 		_cur = _queue.pop_front()
+		if _cur[1] == "bench_drape" and _cur[5] == AUTO_FPS and _cur[2] == "cpu":
+			_load.append("%s: %s" % [_cur[4], _load_sample()])
 		Engine.max_fps = _cur[5]
 		var r := str(_sb.vmcall("drape_job_start", _cur[1], _cur[2], _cur[3]))
 		if not r.begins_with("STARTED"):
@@ -557,73 +594,82 @@ func _check_g4() -> void:
 	_check(cok and judged > 0, "G4 control: mu 0.3 sits further from the native mu-0.54 frames than ours at mu 0.54 (frames >= 50): " +
 			", ".join(PackedStringArray(cparts)))
 
-func _check_g5() -> void:
-	var bw := ""
-	var bwc := ""
-	var bwp := ""
-	for k in _results.keys():
-		if k.begins_with("sphere_backward rd") and k.contains("0.375146"):
-			bw = _results[k]
-		elif k.begins_with("sphere_backward rd"):
-			bwp = _results[k]
-		if k.begins_with("sphere_backward cpu"):
-			bwc = _results[k]
+func _g5_args60() -> String:
+	var mus := PackedStringArray()
+	for e in _native60:
+		mus.append(e[0])
+	return "steps=%d mus=%s" % [G5_STEPS, ",".join(mus)]
+
+# [[mu_exact, loss, dL/dmu], ...] from a sphere_backward job's RESULT lines.
+func _g5_results(r: String) -> Array:
 	var re := RegEx.new()
 	re.compile("RESULT mu=(\\S+) mu_exact=(\\S+) loss=(\\S+) dL/dmu=(\\S+)")
-	var cpu_g := {}
-	for m in re.search_all(bwc):
-		cpu_g[m.get_string(1)] = [m.get_string(3).to_float(), m.get_string(4).to_float()]
-	var n := 0
-	var g0 := NAN
-	var l0 := NAN
-	for m in re.search_all(bw):
-		var mu: String = m.get_string(1)
+	var out := []
+	for m in re.search_all(r):
+		out.append([m.get_string(2).to_float(), m.get_string(3).to_float(), m.get_string(4).to_float()])
+	return out
+
+# "dL/dmu spans a..b (x of its mean), the loss c..d (y)" over a flat control.
+func _g5_span(rows: Array) -> String:
+	if rows.is_empty():
+		return "no results"
+	var gmin := INF
+	var gmax := -INF
+	var lmin := INF
+	var lmax := -INF
+	var parts := PackedStringArray()
+	for r in rows:
+		parts.append("mu %s: dL/dmu %s loss %s" % [String.num(r[0], 16), String.num(r[2], 7), "%.6e" % r[1]])
+		gmin = minf(gmin, r[2])
+		gmax = maxf(gmax, r[2])
+		lmin = minf(lmin, r[1])
+		lmax = maxf(lmax, r[1])
+	return "%s; dL/dmu spans %s..%s (%s of its mean), the loss %s..%s (%s)" % ["; ".join(parts), String.num(gmin, 7),
+			String.num(gmax, 7), _g((gmax - gmin) / absf(0.5 * (gmax + gmin))), "%.6e" % lmin, "%.6e" % lmax,
+			_g((lmax - lmin) / absf(0.5 * (lmax + lmin)))]
+
+func _check_g5() -> void:
+	# Gated: 60 steps, against native's own 60-step run, on both backends.
+	for b in ["rd", "cpu"]:
+		var ours := _g5_results(_results.get("sphere_backward %s %s" % [b, _g5_args60()], ""))
+		var n := 0
+		for e in _native60:
+			for o in ours:
+				if absf(o[0] - e[1]) > 1e-12 * maxf(1.0, absf(e[1])):
+					continue
+				n += 1
+				var rel := absf(o[2] - e[3]) / absf(e[3])
+				_check(rel <= 5e-2, "G5 %s native dL/dmu over %d steps at mu %s: ours %s, native %s, rel %s (limit 5e-2); loss ours %s native %s (rel %s)" % [
+						b, G5_STEPS, e[0], String.num(o[2], 9), String.num(e[3], 9), _g(rel), "%.9e" % o[1],
+						"%.9e" % e[2], _g(absf(o[1] - e[2]) / e[2])])
+		if n != _native60.size():
+			_check(false, "G5 %s: matched %d of native's %d 60-step evaluations" % [b, n, _native60.size()])
+	var ctl60 := _g5_results(_results.get("sphere_backward rd steps=%d mus=0.5397701859474182,0.539770,0.5397702" % G5_STEPS, ""))
+	_say("info G5 flat control over %d steps (mu within 2e-7 of native's %s, rd): %s" % [G5_STEPS, MU0, _g5_span(ctl60)])
+	# Reported: the 350-step comparison with backwardLog (past the chaotic
+	# onset: the flat control below moves dL/dmu more than the old 5% limit).
+	var bw := _g5_results(_results.get("sphere_backward rd steps=350 mus=%s,0.01,0.375146" % MU0, ""))
+	var bwc := _g5_results(_results.get("sphere_backward cpu steps=350 mus=%s,0.01,0.375146" % MU0, ""))
+	for o in bw:
+		var mu := "%.6f" % o[0]
 		if not NATIVE_DLDMU.has(mu):
 			continue
-		var g := m.get_string(4).to_float()
 		var nat: float = NATIVE_DLDMU[mu]
-		var rel := absf(g - nat) / absf(nat)
-		var loss := m.get_string(3).to_float()
 		var natl: float = NATIVE_LOSS[mu]
-		if mu == "0.539770":
-			g0 = g
-			l0 = loss
 		var spread := ""
-		if cpu_g.has(mu):
-			var gc: float = cpu_g[mu][1]
-			spread = "; the cpu backend (same port, float order): dL/dmu %s (rel to rd %s), loss %s" % [_g(gc),
-					_g(absf(g - gc) / maxf(absf(g), 1e-30)), _g(cpu_g[mu][0])]
-		var line := "native dL/dmu at mu %s (%s): ours (rd) %s, backwardLog %s, rel %s (limit 5e-2); loss ours %s native %s (rel %s)%s" % [
-				mu, m.get_string(2), String.num(g, 7), String.num(nat, 7), _g(rel), String.num(loss, 9), String.num(natl, 9),
-				_g(absf(loss - natl) / natl), spread]
-		if mu in G5_GATED:
-			n += 1
-			_check(rel <= 5e-2, "G5 " + line)
-			if mu == "0.010000":
-				var printed := "%.3f" % loss
-				_check(printed == "1.652", "G5 loss at mu 0.01 at backwardLog's printed precision (%%.3f): ours %s (%s), backwardLog 1.652 (1.65198194)" % [printed, String.num(loss, 9)])
-		else:
-			_say("info G5 " + line)
-	if n != 2:
-		_check(false, "G5: parsed %d of 2 gated sphere_backward results" % n)
-	# The flat control on the problem itself: mu moved by less than 2e-7
-	# (float32 rounding of native's mu, the printed 0.539770, 0.5397702).
-	var parts := PackedStringArray()
-	var gmin := g0
-	var gmax := g0
-	var lmin := l0
-	var lmax := l0
-	for m in re.search_all(bwp):
-		var g := m.get_string(4).to_float()
-		var loss := m.get_string(3).to_float()
-		parts.append("mu %s: dL/dmu %s loss %s" % [m.get_string(2), String.num(g, 7), String.num(loss, 7)])
-		gmin = minf(gmin, g)
-		gmax = maxf(gmax, g)
-		lmin = minf(lmin, loss)
-		lmax = maxf(lmax, loss)
-	_say("info G5 flat control (the sphere demo's own conditioning; mu within 2e-7 of native's %s): %s; dL/dmu spans %s..%s (%s of its mean), the loss %s..%s (%s): backwardLog's 0.01153 sits %s below the span" % [
-			MU0, "; ".join(parts), String.num(gmin, 6), String.num(gmax, 6), _g((gmax - gmin) / (0.5 * (gmax + gmin))),
-			String.num(lmin, 6), String.num(lmax, 6), _g((lmax - lmin) / (0.5 * (lmax + lmin))), _g((gmin - 0.01153) / 0.01153)])
+		for c in bwc:
+			if absf(c[0] - o[0]) <= 1e-12:
+				spread = "; cpu backend dL/dmu %s (rel to rd %s), loss %s" % [_g(c[2]), _g(absf(o[2] - c[2]) / maxf(absf(o[2]), 1e-30)), _g(c[1])]
+		_say("info G5 350 steps, native dL/dmu at mu %s: ours (rd) %s, backwardLog %s, rel %s; loss ours %s (prints %.3f) native %s (rel %s)%s" % [
+				mu, String.num(o[2], 7), String.num(nat, 7), _g(absf(o[2] - nat) / absf(nat)), String.num(o[1], 9), o[1],
+				String.num(natl, 9), _g(absf(o[1] - natl) / natl), spread])
+	var ctl350 := _g5_results(_results.get("sphere_backward rd steps=350 mus=0.5397701859474182,0.539770,0.5397702", ""))
+	for o in bw:
+		if absf(o[0] - MU0.to_float()) <= 1e-12:
+			ctl350.push_front(o)
+	if not ctl350.is_empty():
+		_say("info G5 flat control over 350 steps (rd): %s; backwardLog's 0.01153 is %s from the span's low end" % [
+				_g5_span(ctl350), _g((ctl350.map(func(r): return r[2]).min() - 0.01153) / 0.01153)])
 
 func _check_g6() -> void:
 	# The single-colour unrolled verdicts are the jobs' own.
@@ -725,6 +771,27 @@ func _check_g8() -> void:
 	_check(rc == 0 and lines.size() > 1000 and eigen == 0 and lbfgspp == 0,
 			"G8 llvm-nm -C project/drape.elf: %d symbols, %d matching Eigen, %d matching LBFGSpp (rc %d)" % [lines.size(), eigen, lbfgspp, rc])
 
+# The machine's load, for G9's record: CPU load (Win32_Processor, averaged
+# over sockets), the GPU's utilisation and memory (nvidia-smi), and how many
+# other Godot and native-tool processes are running. Blocking, ~1 s; it runs
+# between jobs, never inside a timed one.
+func _load_sample() -> String:
+	var out := []
+	var cpu := "?"
+	if OS.execute("powershell", ["-NoProfile", "-Command",
+			"(Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average"], out) == 0 and out.size() > 0:
+		cpu = str(out[0]).strip_edges() + "%"
+	out = []
+	var gpu := "?"
+	if OS.execute("nvidia-smi", ["--query-gpu=name,utilization.gpu,memory.used", "--format=csv,noheader"], out) == 0 and out.size() > 0:
+		gpu = str(out[0]).strip_edges().replace("\n", " | ")
+	out = []
+	var procs := "?"
+	if OS.execute("tasklist", ["/FO", "CSV", "/NH"], out) == 0 and out.size() > 0:
+		var t := str(out[0])
+		procs = "godot.exe x%d, tool_cloth* x%d" % [t.count("\"godot.exe\""), t.count("\"tool_cloth")]
+	return "cpu load %s; gpu %s; %s" % [cpu, gpu, procs]
+
 func _check_g9() -> void:
 	_say("G9 L-BFGS-B cost (box QP, 10 iterations, host wall of one job / its iterations)")
 	_say("  %8s %12s %12s %8s" % ["n", "cpu ms/it", "rd ms/it", "rd/cpu"])
@@ -749,37 +816,55 @@ func _check_g9() -> void:
 	re2.compile("rd from (\\d+) vertices")
 	var m2 := re2.search(_auto_line if _auto_line != "" else str(_sb.vmcall("drape_open", "auto")))
 	var thr := int(m2.get_string(1)) if m2 != null else -1
+	var brackets := []   # [last_cpu, first_rd] per 90 fps repeat
 	for fps in BENCH_FPS:
-		var ms := {}
-		for k in _results.keys():
-			if not (k.begins_with("bench_drape") and k.ends_with(" fps %d" % fps)):
-				continue
-			for m in re.search_all(_results[k]):
-				var nv := int(m.get_string(3))
-				if not ms.has(nv):
-					ms[nv] = {}
-				ms[nv][m.get_string(1)] = m.get_string(4).to_float()
-		_say("G9 drape step cost at %s (sphere-demo scene at n x n, contact + self-collision, host ms per step over 20 frame-driven steps)" % (
-				"uncapped frames" if fps == 0 else "%d fps" % fps))
-		_say("  %8s %10s %10s %8s" % ["verts", "cpu", "rd", "rd/cpu"])
-		var nvs := ms.keys()
-		nvs.sort()
-		var last_cpu := 0
-		var first_rd := -1
-		for nv in nvs:
-			var d: Dictionary = ms[nv]
-			_say("  %8d %10s %10s %8s" % [nv, _g(d.get("cpu", NAN)), _g(d.get("rd", NAN)),
-					_g(float(d.get("rd", NAN)) / float(d.get("cpu", NAN)))])
-			if d.has("cpu") and d.has("rd"):
-				if d["rd"] < d["cpu"]:
-					if first_rd < 0:
-						first_rd = nv
-				elif first_rd < 0:
-					last_cpu = nv
-		var line := "crossover at %s: cpu cheaper up to %d vertices, rd from %s" % [
-				"uncapped frames" if fps == 0 else "%d fps" % fps, last_cpu, str(first_rd) if first_rd > 0 else "none measured"]
-		if fps == AUTO_FPS:
-			_check(first_rd > 0 and thr > last_cpu and thr <= first_rd,
-					"G9 drape_open(auto) threshold %d vertices sits at the measured %s" % [thr, line])
-		else:
+		for rep in range(G9_REPEATS if fps == AUTO_FPS else 1):
+			var tag := "fps %d rep %d" % [fps, rep]
+			var ms := {}
+			for k in _results.keys():
+				if not (k.begins_with("bench_drape") and k.ends_with(" " + tag)):
+					continue
+				for m in re.search_all(_results[k]):
+					var nv := int(m.get_string(3))
+					if not ms.has(nv):
+						ms[nv] = {}
+					ms[nv][m.get_string(1)] = m.get_string(4).to_float()
+			_say("G9 drape step cost at %s%s (sphere-demo scene at n x n, contact + self-collision, host ms per step over 20 frame-driven steps)" % [
+					"uncapped frames" if fps == 0 else "%d fps" % fps, (", repeat %d of %d" % [rep + 1, G9_REPEATS]) if fps == AUTO_FPS else ""])
+			_say("  %8s %10s %10s %8s" % ["verts", "cpu", "rd", "rd/cpu"])
+			var nvs := ms.keys()
+			nvs.sort()
+			var last_cpu := 0
+			var first_rd := -1
+			for nv in nvs:
+				var d: Dictionary = ms[nv]
+				_say("  %8d %10s %10s %8s" % [nv, _g(d.get("cpu", NAN)), _g(d.get("rd", NAN)),
+						_g(float(d.get("rd", NAN)) / float(d.get("cpu", NAN)))])
+				if d.has("cpu") and d.has("rd"):
+					if d["rd"] < d["cpu"]:
+						if first_rd < 0:
+							first_rd = nv
+					elif first_rd < 0:
+						last_cpu = nv
+			var line := "crossover at %s: cpu cheaper up to %d vertices, rd from %s" % [
+					tag, last_cpu, str(first_rd) if first_rd > 0 else "none measured"]
+			if fps == AUTO_FPS:
+				brackets.append([last_cpu, first_rd])
 			_say("info G9 " + line)
+	# The band: over the repeats, the crossover lies between the smallest
+	# "cpu cheaper up to" and the largest "rd from"; the threshold must lie in it.
+	var lo := 1 << 30
+	var hi := -1
+	var all_measured := brackets.size() == G9_REPEATS
+	for br in brackets:
+		lo = mini(lo, br[0])
+		hi = maxi(hi, br[1])
+		all_measured = all_measured and br[1] > 0
+	for l in _load:
+		_say("info G9 load at " + l)
+	_say("info G9 device: %s" % RenderingServer.get_video_adapter_name())
+	var mid := (lo + hi) / 2 if all_measured else -1
+	_check(all_measured and thr > lo and thr <= hi,
+			"G9 drape_open(auto) threshold %d vertices lies in the %d fps crossover range over %d repeats: cpu cheaper up to %s, rd from %s (per repeat %s; the range's middle is %d)" % [
+			thr, AUTO_FPS, brackets.size(), str(lo), str(hi), str(brackets), mid])
+

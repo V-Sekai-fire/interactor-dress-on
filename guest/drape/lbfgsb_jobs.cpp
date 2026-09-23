@@ -176,6 +176,19 @@ public:
 			err = "no trace_* data (drape_job_data first: gates/5-drape/oracle/traces)";
 			return false;
 		}
+		// G2's f band per trace comes with its flat control (Cut 5c).
+		auto ctl = lbfgsb_job_data().find("f32io_control");
+		if (ctl == lbfgsb_job_data().end()) {
+			err = "no data f32io_control (drape_job_data first: gates/5-drape/oracle/f32io_control.txt)";
+			return false;
+		}
+		std::vector<lbg::Trace *> tp;
+		for (lbg::Trace &t : traces_) {
+			tp.push_back(&t);
+		}
+		if (!lbg::applyF32Control(ctl->second, names_, tp, err)) {
+			return false;
+		}
 		for (size_t i = 0; i < traces_.size(); ++i) {
 			q.push([this, i]() { stepRun(i); });
 		}

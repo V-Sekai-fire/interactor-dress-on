@@ -4615,7 +4615,7 @@ static void lb_mv_0(uint32_t nc_0, uint32_t mc_0, FixedArray<float, 32>  * w_0, 
     return;
 }
 
-static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_t nfree_0, float theta_0, KernelContext_0 * kernelContext_1)
+static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_t nfree_0, double theta_0, KernelContext_0 * kernelContext_1)
 {
 
 #line 121
@@ -4631,13 +4631,13 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
     uint32_t pt_1;
 
 #line 121
-    float ps_0;
+    double ps_0;
 
 #line 121
-    float ps_1;
+    double ps_1;
 
 #line 121
-    float pr_0;
+    double pr_0;
 
 #line 121
     uint32_t _S6;
@@ -4734,7 +4734,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             {
 
 #line 132
-                *(&(kernelContext_1->globalParams_0->wk_0)[3U * n_1 + k_0]) = *(&(kernelContext_1->globalParams_0->wk_0)[8U * n_1 + k_0]) / theta_0;
+                *(&(kernelContext_1->globalParams_0->wk_0)[3U * n_1 + k_0]) = float(double(*(&(kernelContext_1->globalParams_0->wk_0)[8U * n_1 + k_0])) / theta_0);
 
 #line 131
             }
@@ -4841,14 +4841,14 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
     }
 
 #line 150
-    FixedArray<float, 256>  A11_0;
-    FixedArray<float, 256>  A21_0;
-    FixedArray<float, 256>  A22_0;
-    FixedArray<float, 256>  Z_0;
-    FixedArray<float, 16>  r1_0;
-    FixedArray<float, 16>  qv_0;
-    FixedArray<float, 16>  r2_0;
-    FixedArray<float, 16>  tv_0;
+    FixedArray<double, 256>  A11_0;
+    FixedArray<double, 256>  A21_0;
+    FixedArray<double, 256>  A22_0;
+    FixedArray<double, 256>  Z_0;
+    FixedArray<double, 16>  r1_0;
+    FixedArray<double, 16>  qv_0;
+    FixedArray<double, 16>  r2_0;
+    FixedArray<double, 16>  tv_0;
 
 #line 157
     i_2 = 0U;
@@ -4867,8 +4867,8 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
         }
 
 #line 159
-        r1_0[i_2] = 0.0f;
-        r2_0[i_2] = 0.0f;
+        r1_0[i_2] = 0.0;
+        r2_0[i_2] = 0.0;
 
 #line 160
         j_2 = 0U;
@@ -4890,9 +4890,9 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             uint32_t _S10 = i_2 * 16U + j_2;
 
 #line 162
-            A11_0[_S10] = 0.0f;
-            A21_0[_S10] = 0.0f;
-            A22_0[_S10] = 0.0f;
+            A11_0[_S10] = 0.0;
+            A21_0[_S10] = 0.0;
+            A22_0[_S10] = 0.0;
 
 #line 161
             j_2 = j_2 + 1U;
@@ -4948,8 +4948,8 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 uint32_t _S11 = i_2 * n_1 + c_0;
 
 #line 170
-                float _S12 = kernelContext_1->globalParams_0->Y_0.Load(_S11);
-                float _S13 = kernelContext_1->globalParams_0->S_0.Load(_S11);
+                double _S12 = double(kernelContext_1->globalParams_0->Y_0.Load(_S11));
+                double _S13 = double(kernelContext_1->globalParams_0->S_0.Load(_S11));
 
 #line 171
                 j_2 = 0U;
@@ -4968,7 +4968,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                     }
 
 #line 173
-                    float yj_0 = kernelContext_1->globalParams_0->Y_0.Load(j_2 * n_1 + c_0);
+                    double yj_0 = double(kernelContext_1->globalParams_0->Y_0.Load(j_2 * n_1 + c_0));
                     uint32_t _S14 = i_2 * 16U + j_2;
 
 #line 174
@@ -5018,7 +5018,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 }
 
 #line 182
-                float _S15 = kernelContext_1->globalParams_0->S_0.Load(i_2 * n_1 + c_0);
+                double _S15 = double(kernelContext_1->globalParams_0->S_0.Load(i_2 * n_1 + c_0));
 
 #line 182
                 j_2 = 0U;
@@ -5043,12 +5043,12 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                     uint32_t _S17 = j_2 * n_1 + c_0;
 
 #line 184
-                    A22_0[_S16] = A22_0[_S16] + _S15 * kernelContext_1->globalParams_0->S_0.Load(_S17);
+                    A22_0[_S16] = A22_0[_S16] + _S15 * double(kernelContext_1->globalParams_0->S_0.Load(_S17));
                     if((rk_0[i_2]) > rk_0[j_2])
                     {
 
 #line 186
-                        A21_0[_S16] = A21_0[_S16] + _S15 * kernelContext_1->globalParams_0->Y_0.Load(_S17);
+                        A21_0[_S16] = A21_0[_S16] + _S15 * double(kernelContext_1->globalParams_0->Y_0.Load(_S17));
 
 #line 185
                     }
@@ -5123,7 +5123,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
 
 
 
-        A11_0[i_2 * 16U + i_2] = A11_0[i_2 * 16U + i_2] + kernelContext_1->globalParams_0->bf_0.Load(4U + 4U * mc_1 * mc_1 + i_2);
+        A11_0[i_2 * 16U + i_2] = A11_0[i_2 * 16U + i_2] + double(kernelContext_1->globalParams_0->bf_0.Load(4U + 4U * mc_1 * mc_1 + i_2));
 
 #line 192
         i_2 = i_2 + 1U;
@@ -5155,7 +5155,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
 
 #line 201
             uint32_t _S19 = *(&(kernelContext_1->globalParams_0->iset_0)[8U + n_1 + k_0]);
-            float _S20 = *(&(kernelContext_1->globalParams_0->wk_0)[8U * n_1 + k_0]);
+            double _S20 = double(*(&(kernelContext_1->globalParams_0->wk_0)[8U * n_1 + k_0]));
 
 #line 202
             j_2 = 0U;
@@ -5177,8 +5177,8 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 uint32_t _S21 = j_2 * n_1 + _S19;
 
 #line 204
-                r1_0[j_2] = r1_0[j_2] + kernelContext_1->globalParams_0->Y_0.Load(_S21) * _S20;
-                r2_0[j_2] = r2_0[j_2] + kernelContext_1->globalParams_0->S_0.Load(_S21) * _S20;
+                r1_0[j_2] = r1_0[j_2] + double(kernelContext_1->globalParams_0->Y_0.Load(_S21)) * _S20;
+                r2_0[j_2] = r2_0[j_2] + double(kernelContext_1->globalParams_0->S_0.Load(_S21)) * _S20;
 
 #line 203
                 j_2 = j_2 + 1U;
@@ -5266,7 +5266,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 215
-            float _S23 = ps_0 - A11_0[_S22 + pt_0] * A11_0[_S22 + pt_0];
+            double _S23 = ps_0 - A11_0[_S22 + pt_0] * A11_0[_S22 + pt_0];
 
 #line 214
             uint32_t pt_2 = pt_0 + 1U;
@@ -5281,12 +5281,12 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
         }
 
 
-        if(ps_0 <= 0.0f)
+        if(ps_0 <= 0.0)
         {
             float _S24 = (U32_asfloat((872415232U)));
 
 #line 219
-            ps_1 = _S24 * _S24;
+            ps_1 = double(_S24 * _S24);
 
 #line 219
             ok_0 = 0U;
@@ -5304,7 +5304,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
 
 
 
-        float pd_0 = (F32_sqrt((ps_1)));
+        double pd_0 = (F64_sqrt((ps_1)));
         A11_0[_S22 + pj_0] = pd_0;
         uint32_t _S25 = pj_0 + 1U;
 
@@ -5349,7 +5349,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 }
 
 #line 226
-                float _S27 = pr_0 - A11_0[_S26 + pt_1] * A11_0[_S22 + pt_1];
+                double _S27 = pr_0 - A11_0[_S26 + pt_1] * A11_0[_S22 + pt_1];
 
 #line 225
                 uint32_t pt_3 = pt_1 + 1U;
@@ -5465,7 +5465,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 }
 
 #line 238
-                float _S30 = ps_0 - A11_0[pt_0 * 16U + pi_0] * Z_0[_S29 + pi_0];
+                double _S30 = ps_0 - A11_0[pt_0 * 16U + pi_0] * Z_0[_S29 + pi_0];
 
 #line 237
                 uint32_t zt_0 = pi_0 + 1U;
@@ -5557,7 +5557,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 }
 
 #line 247
-                float _S33 = ps_0 + Z_0[_S32 + j_2] * Z_0[k_0 * 16U + j_2];
+                double _S33 = ps_0 + Z_0[_S32 + j_2] * Z_0[k_0 * 16U + j_2];
 
 #line 246
                 uint32_t j_3 = j_2 + 1U;
@@ -5652,7 +5652,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 258
-            float _S34 = ps_0 - A11_0[pt_0 * 16U + pi_0] * qv_0[pi_0];
+            double _S34 = ps_0 - A11_0[pt_0 * 16U + pi_0] * qv_0[pi_0];
 
 #line 257
             uint32_t qt_0 = pi_0 + 1U;
@@ -5714,7 +5714,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 265
-            float _S35 = ps_0 + Z_0[i_2 * 16U + j_2] * qv_0[j_2];
+            double _S35 = ps_0 + Z_0[i_2 * 16U + j_2] * qv_0[j_2];
 
 #line 264
             uint32_t j_4 = j_2 + 1U;
@@ -5778,7 +5778,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 272
-            float _S37 = ps_0 - A22_0[_S36 + pt_1] * A22_0[_S36 + pt_1];
+            double _S37 = ps_0 - A22_0[_S36 + pt_1] * A22_0[_S36 + pt_1];
 
 #line 271
             uint32_t st_2 = pt_1 + 1U;
@@ -5793,12 +5793,12 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
         }
 
 
-        if(ps_0 <= 0.0f)
+        if(ps_0 <= 0.0)
         {
             float _S38 = (U32_asfloat((872415232U)));
 
 #line 276
-            ps_1 = _S38 * _S38;
+            ps_1 = double(_S38 * _S38);
 
 #line 276
             ok_0 = 0U;
@@ -5816,7 +5816,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
 
 
 
-        float sd_0 = (F32_sqrt((ps_1)));
+        double sd_0 = (F64_sqrt((ps_1)));
         A22_0[_S36 + pi_0] = sd_0;
         uint32_t _S39 = pi_0 + 1U;
 
@@ -5861,7 +5861,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 }
 
 #line 283
-                float _S41 = pr_0 - A22_0[_S40 + st_1] * A22_0[_S36 + st_1];
+                double _S41 = pr_0 - A22_0[_S40 + st_1] * A22_0[_S36 + st_1];
 
 #line 282
                 uint32_t st_3 = st_1 + 1U;
@@ -5929,7 +5929,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 291
-            float _S42 = ps_0 - A22_0[pt_1 * 16U + si_0] * r2_0[si_0];
+            double _S42 = ps_0 - A22_0[pt_1 * 16U + si_0] * r2_0[si_0];
 
 #line 290
             uint32_t sft_0 = si_0 + 1U;
@@ -5997,7 +5997,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 299
-            float _S44 = ps_0 - A22_0[st_1 * 16U + sbi_0] * r2_0[st_1];
+            double _S44 = ps_0 - A22_0[st_1 * 16U + sbi_0] * r2_0[st_1];
 
 #line 298
             uint32_t sbt_0 = st_1 + 1U;
@@ -6059,7 +6059,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 306
-            float _S45 = ps_0 + A21_0[i_2 * 16U + j_2] * r2_0[i_2];
+            double _S45 = ps_0 + A21_0[i_2 * 16U + j_2] * r2_0[i_2];
 
 #line 305
             uint32_t i_3 = i_2 + 1U;
@@ -6121,7 +6121,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 313
-            float _S46 = ps_0 - A11_0[st_1 * 16U + tft_0] * tv_0[tft_0];
+            double _S46 = ps_0 - A11_0[st_1 * 16U + tft_0] * tv_0[tft_0];
 
 #line 312
             uint32_t tft_1 = tft_0 + 1U;
@@ -6189,7 +6189,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 #line 321
-            float _S48 = ps_0 - A11_0[tbt_0 * 16U + tbi_0] * tv_0[tbt_0];
+            double _S48 = ps_0 - A11_0[tbt_0 * 16U + tbi_0] * tv_0[tbt_0];
 
 #line 320
             uint32_t tbt_1 = tbt_0 + 1U;
@@ -6238,7 +6238,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             uint32_t _S49 = *(&(kernelContext_1->globalParams_0->iset_0)[8U + n_1 + k_0]);
 
 #line 327
-            ps_0 = 0.0f;
+            ps_0 = 0.0;
 
 #line 327
             j_2 = 0U;
@@ -6261,7 +6261,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
                 uint32_t _S50 = j_2 * n_1 + _S49;
 
 #line 330
-                float _S51 = ps_0 + kernelContext_1->globalParams_0->Y_0.Load(_S50) * tv_0[j_2] + kernelContext_1->globalParams_0->S_0.Load(_S50) * (theta_0 * r2_0[j_2]);
+                double _S51 = ps_0 + double(kernelContext_1->globalParams_0->Y_0.Load(_S50)) * tv_0[j_2] + double(kernelContext_1->globalParams_0->S_0.Load(_S50)) * (theta_0 * r2_0[j_2]);
 
 #line 329
                 uint32_t j_5 = j_2 + 1U;
@@ -6276,7 +6276,7 @@ static uint32_t lb_solve_p_0(uint32_t n_1, uint32_t mc_1, uint32_t nc_1, uint32_
             }
 
 
-            *(&(kernelContext_1->globalParams_0->wk_0)[3U * n_1 + k_0]) = *(&(kernelContext_1->globalParams_0->wk_0)[8U * n_1 + k_0]) / theta_0 + ps_0 / (theta_0 * theta_0);
+            *(&(kernelContext_1->globalParams_0->wk_0)[3U * n_1 + k_0]) = float(double(*(&(kernelContext_1->globalParams_0->wk_0)[8U * n_1 + k_0])) / theta_0 + ps_0 / (theta_0 * theta_0));
 
 #line 326
         }
@@ -6815,11 +6815,14 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 #line 400
     }
 
-#line 400
-    uint32_t _S70 = lb_solve_p_0(n_2, mc_2, nc_2, nfree_1, theta_1, &kernelContext_2);
+#line 408
+    double _S70 = double(theta_1);
 
 #line 408
-    if(_S70 == 0U)
+    uint32_t _S71 = lb_solve_p_0(n_2, mc_2, nc_2, nfree_1, _S70, &kernelContext_2);
+
+#line 408
+    if(_S71 == 0U)
     {
 
 #line 409
@@ -6851,10 +6854,10 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
         }
 
 #line 413
-        uint32_t _S71 = 3U * n_2 + k_1;
+        uint32_t _S72 = 3U * n_2 + k_1;
 
 #line 413
-        if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S71])) < (*(&((&kernelContext_2)->globalParams_0->wk_0)[k_1])))
+        if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S72])) < (*(&((&kernelContext_2)->globalParams_0->wk_0)[k_1])))
         {
 
 #line 413
@@ -6866,7 +6869,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
         {
 
 #line 413
-            _S55 = (*(&((&kernelContext_2)->globalParams_0->wk_0)[_S71])) > (*(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + k_1]));
+            _S55 = (*(&((&kernelContext_2)->globalParams_0->wk_0)[_S72])) > (*(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + k_1]));
 
 #line 413
         }
@@ -7017,19 +7020,19 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             }
 
 #line 439
-            uint32_t _S72 = 3U * n_2 + k_1;
+            uint32_t _S73 = 3U * n_2 + k_1;
 
 #line 439
-            float * _S73 = (&((&kernelContext_2)->globalParams_0->wk_0)[_S72]);
+            float * _S74 = (&((&kernelContext_2)->globalParams_0->wk_0)[_S73]);
 
 #line 439
-            float yk_0 = *_S73;
-            float * _S74 = (&((&kernelContext_2)->globalParams_0->wk_0)[k_1]);
+            float yk_0 = *_S74;
+            float * _S75 = (&((&kernelContext_2)->globalParams_0->wk_0)[k_1]);
 
 #line 440
-            float lk_0 = *_S74;
+            float lk_0 = *_S75;
             float uk_0 = *(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + k_1]);
-            if((*_S73) < (*_S74))
+            if((*_S74) < (*_S75))
             {
 
 #line 442
@@ -7067,7 +7070,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 
 #line 443
                 *(&((&kernelContext_2)->globalParams_0->wk_0)[7U * n_2 + k_1]) = 0.0f;
-                *(&((&kernelContext_2)->globalParams_0->wk_0)[_S72]) = lk_0;
+                *(&((&kernelContext_2)->globalParams_0->wk_0)[_S73]) = lk_0;
                 *(&((&kernelContext_2)->globalParams_0->wk_0)[6U * n_2 + k_1]) = 0.0f;
 
 #line 445
@@ -7118,7 +7121,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 
 #line 449
                     *(&((&kernelContext_2)->globalParams_0->wk_0)[7U * n_2 + k_1]) = 1.0f;
-                    *(&((&kernelContext_2)->globalParams_0->wk_0)[_S72]) = uk_0;
+                    *(&((&kernelContext_2)->globalParams_0->wk_0)[_S73]) = uk_0;
                     *(&((&kernelContext_2)->globalParams_0->wk_0)[5U * n_2 + k_1]) = 0.0f;
 
 #line 451
@@ -7137,13 +7140,13 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                     *(&((&kernelContext_2)->globalParams_0->wk_0)[7U * n_2 + k_1]) = 2.0f;
                     *(&((&kernelContext_2)->globalParams_0->wk_0)[5U * n_2 + k_1]) = 0.0f;
                     *(&((&kernelContext_2)->globalParams_0->wk_0)[6U * n_2 + k_1]) = 0.0f;
-                    uint32_t _S75 = nP_2 + 1U;
+                    uint32_t _S76 = nP_2 + 1U;
 
 #line 457
                     nU_0 = nU_1;
 
 #line 457
-                    nP_1 = _S75;
+                    nP_1 = _S76;
 
 #line 448
                 }
@@ -7214,25 +7217,25 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                     }
 
 #line 467
-                    uint32_t _S76 = 7U * n_2 + nP_1;
+                    uint32_t _S77 = 7U * n_2 + nP_1;
 
 #line 467
-                    if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S76])) < 2.0f)
+                    if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S77])) < 2.0f)
                     {
-                        uint32_t _S77 = j_6 * n_2 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[8U + n_2 + nP_1]);
+                        uint32_t _S78 = j_6 * n_2 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[8U + n_2 + nP_1]);
 
 #line 469
-                        float _S78 = (&kernelContext_2)->globalParams_0->Y_0.Load(_S77);
+                        float _S79 = (&kernelContext_2)->globalParams_0->Y_0.Load(_S78);
 
 #line 469
-                        float _S79;
+                        float _S80;
 
 #line 469
-                        if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S76])) == 0.0f)
+                        if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S77])) == 0.0f)
                         {
 
 #line 469
-                            _S79 = *(&((&kernelContext_2)->globalParams_0->wk_0)[nP_1]);
+                            _S80 = *(&((&kernelContext_2)->globalParams_0->wk_0)[nP_1]);
 
 #line 469
                         }
@@ -7240,24 +7243,24 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                         {
 
 #line 469
-                            _S79 = *(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + nP_1]);
+                            _S80 = *(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + nP_1]);
 
 #line 469
                         }
 
 #line 469
-                        float _S80 = dy_0 + _S78 * _S79;
-                        float _S81 = (&kernelContext_2)->globalParams_0->S_0.Load(_S77);
+                        float _S81 = dy_0 + _S79 * _S80;
+                        float _S82 = (&kernelContext_2)->globalParams_0->S_0.Load(_S78);
 
 #line 470
-                        float _S82;
+                        float _S83;
 
 #line 470
-                        if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S76])) == 0.0f)
+                        if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S77])) == 0.0f)
                         {
 
 #line 470
-                            _S82 = *(&((&kernelContext_2)->globalParams_0->wk_0)[nP_1]);
+                            _S83 = *(&((&kernelContext_2)->globalParams_0->wk_0)[nP_1]);
 
 #line 470
                         }
@@ -7265,19 +7268,19 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                         {
 
 #line 470
-                            _S82 = *(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + nP_1]);
+                            _S83 = *(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + nP_1]);
 
 #line 470
                         }
 
 #line 470
-                        float _S83 = ds_0 + _S81 * _S82;
+                        float _S84 = ds_0 + _S82 * _S83;
 
 #line 470
-                        dy_0 = _S80;
+                        dy_0 = _S81;
 
 #line 470
-                        ds_0 = _S83;
+                        ds_0 = _S84;
 
 #line 467
                     }
@@ -7371,19 +7374,19 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                         }
 
 #line 484
-                        uint32_t _S84 = cv_0 * n_2;
+                        uint32_t _S85 = cv_0 * n_2;
 
 #line 484
-                        uint32_t _S85 = 8U + n_2 + nP_1;
+                        uint32_t _S86 = 8U + n_2 + nP_1;
 
 #line 484
-                        float _S86 = dy_0 + (&kernelContext_2)->globalParams_0->Y_0.Load(_S84 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S85])) * wq_0[cv_0] + (&kernelContext_2)->globalParams_0->S_0.Load(_S84 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S85])) * wq_0[nc_2 + cv_0];
+                        float _S87 = dy_0 + (&kernelContext_2)->globalParams_0->Y_0.Load(_S85 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S86])) * wq_0[cv_0] + (&kernelContext_2)->globalParams_0->S_0.Load(_S85 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S86])) * wq_0[nc_2 + cv_0];
 
 #line 483
                         uint32_t j_8 = cv_0 + 1U;
 
 #line 483
-                        dy_0 = _S86;
+                        dy_0 = _S87;
 
 #line 483
                         cv_0 = j_8;
@@ -7404,10 +7407,10 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             }
 
 #line 480
-            uint32_t _S87 = lb_solve_p_0(n_2, mc_2, nc_2, nfree_1, theta_1, &kernelContext_2);
+            uint32_t _S88 = lb_solve_p_0(n_2, mc_2, nc_2, nfree_1, _S70, &kernelContext_2);
 
 #line 489
-            if(_S87 == 0U)
+            if(_S88 == 0U)
             {
 
 #line 490
@@ -7484,23 +7487,23 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                         break;
                     }
 
-                    uint32_t _S88 = j_6 * n_2 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[8U + n_2 + nP_1]);
+                    uint32_t _S89 = j_6 * n_2 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[8U + n_2 + nP_1]);
 
 #line 501
-                    uint32_t _S89 = 3U * n_2 + nP_1;
+                    uint32_t _S90 = 3U * n_2 + nP_1;
 
 #line 501
-                    float _S90 = dy_0 + (&kernelContext_2)->globalParams_0->Y_0.Load(_S88) * *(&((&kernelContext_2)->globalParams_0->wk_0)[_S89]);
-                    float _S91 = ds_0 + (&kernelContext_2)->globalParams_0->S_0.Load(_S88) * *(&((&kernelContext_2)->globalParams_0->wk_0)[_S89]);
+                    float _S91 = dy_0 + (&kernelContext_2)->globalParams_0->Y_0.Load(_S89) * *(&((&kernelContext_2)->globalParams_0->wk_0)[_S90]);
+                    float _S92 = ds_0 + (&kernelContext_2)->globalParams_0->S_0.Load(_S89) * *(&((&kernelContext_2)->globalParams_0->wk_0)[_S90]);
 
 #line 498
                     uint32_t k_2 = nP_1 + 1U;
 
 #line 498
-                    dy_0 = _S90;
+                    dy_0 = _S91;
 
 #line 498
-                    ds_0 = _S91;
+                    ds_0 = _S92;
 
 #line 498
                     nP_1 = k_2;
@@ -7567,10 +7570,10 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                 }
 
 #line 513
-                uint32_t _S92 = 7U * n_2 + nP_1;
+                uint32_t _S93 = 7U * n_2 + nP_1;
 
 #line 513
-                if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S92])) < 2.0f)
+                if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S93])) < 2.0f)
                 {
 
 #line 513
@@ -7594,19 +7597,19 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                         }
 
 #line 516
-                        uint32_t _S93 = cv_0 * n_2;
+                        uint32_t _S94 = cv_0 * n_2;
 
 #line 516
-                        uint32_t _S94 = 8U + n_2 + nP_1;
+                        uint32_t _S95 = 8U + n_2 + nP_1;
 
 #line 516
-                        float _S95 = dy_0 + (&kernelContext_2)->globalParams_0->Y_0.Load(_S93 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S94])) * fy_0[cv_0] + (&kernelContext_2)->globalParams_0->S_0.Load(_S93 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S94])) * fy_0[nc_2 + cv_0];
+                        float _S96 = dy_0 + (&kernelContext_2)->globalParams_0->Y_0.Load(_S94 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S95])) * fy_0[cv_0] + (&kernelContext_2)->globalParams_0->S_0.Load(_S94 + *(&((slang_bit_cast<GlobalParams_0*>(globalParams_1))->iset_0)[_S95])) * fy_0[nc_2 + cv_0];
 
 #line 515
                         uint32_t j_9 = cv_0 + 1U;
 
 #line 515
-                        dy_0 = _S95;
+                        dy_0 = _S96;
 
 #line 515
                         cv_0 = j_9;
@@ -7616,7 +7619,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 
 
                     float res_0 = - dy_0 + *(&((&kernelContext_2)->globalParams_0->wk_0)[2U * n_2 + nP_1]) + theta_1 * *(&((&kernelContext_2)->globalParams_0->wk_0)[3U * n_2 + nP_1]);
-                    if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S92])) == 0.0f)
+                    if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S93])) == 0.0f)
                     {
 
 #line 520
@@ -7665,10 +7668,10 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             }
 
 #line 529
-            uint32_t _S96 = 7U * n_2 + nP_1;
+            uint32_t _S97 = 7U * n_2 + nP_1;
 
 #line 529
-            if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S96])) == 0.0f)
+            if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S97])) == 0.0f)
             {
 
 #line 529
@@ -7704,14 +7707,14 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             }
 
 #line 529
-            bool _S97;
+            bool _S98;
 
 
-            if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S96])) == 1.0f)
+            if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S97])) == 1.0f)
             {
 
 #line 532
-                _S97 = (*(&((&kernelContext_2)->globalParams_0->wk_0)[6U * n_2 + nP_1])) < 0.0f;
+                _S98 = (*(&((&kernelContext_2)->globalParams_0->wk_0)[6U * n_2 + nP_1])) < 0.0f;
 
 #line 532
             }
@@ -7719,7 +7722,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             {
 
 #line 532
-                _S97 = false;
+                _S98 = false;
 
 #line 532
             }
@@ -7728,7 +7731,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             uint32_t cv_1;
 
 #line 532
-            if(_S97)
+            if(_S98)
             {
 
 #line 532
@@ -7746,21 +7749,21 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             }
 
 #line 532
-            bool _S98;
+            bool _S99;
 
 
-            if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S96])) == 2.0f)
+            if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S97])) == 2.0f)
             {
 
 #line 535
-                uint32_t _S99 = 3U * n_2 + nP_1;
+                uint32_t _S100 = 3U * n_2 + nP_1;
 
 #line 535
-                if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S99])) < (*(&((&kernelContext_2)->globalParams_0->wk_0)[nP_1])))
+                if((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S100])) < (*(&((&kernelContext_2)->globalParams_0->wk_0)[nP_1])))
                 {
 
 #line 535
-                    _S98 = true;
+                    _S99 = true;
 
 #line 535
                 }
@@ -7768,7 +7771,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
                 {
 
 #line 535
-                    _S98 = (*(&((&kernelContext_2)->globalParams_0->wk_0)[_S99])) > (*(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + nP_1]));
+                    _S99 = (*(&((&kernelContext_2)->globalParams_0->wk_0)[_S100])) > (*(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + nP_1]));
 
 #line 535
                 }
@@ -7779,13 +7782,13 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
             {
 
 #line 535
-                _S98 = false;
+                _S99 = false;
 
 #line 535
             }
 
 #line 535
-            if(_S98)
+            if(_S99)
             {
 
 #line 535
@@ -7884,10 +7887,10 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
         }
 
 #line 557
-        uint32_t _S100 = 3U * n_2 + k_1;
+        uint32_t _S101 = 3U * n_2 + k_1;
 
 #line 557
-        *(&((&kernelContext_2)->globalParams_0->wk_0)[_S100]) = (F32_min(((F32_max((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S100])), (*(&((&kernelContext_2)->globalParams_0->wk_0)[k_1]))))), (*(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + k_1]))));
+        *(&((&kernelContext_2)->globalParams_0->wk_0)[_S101]) = (F32_min(((F32_max((*(&((&kernelContext_2)->globalParams_0->wk_0)[_S101])), (*(&((&kernelContext_2)->globalParams_0->wk_0)[k_1]))))), (*(&((&kernelContext_2)->globalParams_0->wk_0)[n_2 + k_1]))));
 
 #line 556
         k_1 = k_1 + 1U;
@@ -7953,10 +7956,10 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 
 
 
-    float _S101 = - (U32_asfloat((629145600U)));
+    float _S102 = - (U32_asfloat((629145600U)));
 
 #line 568
-    if((a_hi_0 + a_lo_0) <= _S101)
+    if((a_hi_0 + a_lo_0) <= _S102)
     {
 
 #line 569
@@ -8025,7 +8028,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 
 
 
-        if((a_hi_0 + a_lo_0) <= _S101)
+        if((a_hi_0 + a_lo_0) <= _S102)
         {
 
 #line 581

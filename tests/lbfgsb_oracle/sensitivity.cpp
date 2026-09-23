@@ -7,12 +7,25 @@
 // moves the result: a delta-test stop in mid-descent is a function of the
 // path, and the path of these problems amplifies a 1e-8 input rounding.
 //
+// Arms, all in LBFGSpp's own double arithmetic:
+//   inputs     x0, lb, ub rounded to float32;
+//   interface  also f and g evaluated at float32 x, g handed back as float32
+//              (what the guest's objective sees);
+//   storage    also x itself held in float32 (StoreF32);
+//   ensemble   the storage arm 200 times with stochastic rounding: the spread
+//              of f_final over float32-storage paths.
+// The interface arm's |f - f_trace| per trace goes to
+// <oracle>/f32io_control.txt; G2's f band for a trace is
+// max(1e-6 (1 + |f|), 2 x that) (Cut 5c, gates/5-drape/README.md).
+//
 //   sensitivity.exe <gates/5-drape/oracle>     (tests/lbfgsb_oracle/build.sh)
 
 #include <cmath>
 #include <cstdio>
 #include <fstream>
+#include <algorithm>
 #include <functional>
+#include <random>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -65,11 +78,51 @@ static std::string line(const std::string &text, const std::string &key) {
 
 static double fr(double v) { return std::isinf(v) ? v : double(float(v)); }
 
+// Round to a float32 neighbour: the nearest (rng null) or, stochastically,
+// either one in proportion to the distance.
+static double f32(double v, std::mt19937 *rng) {
+	if (std::isinf(v) || std::isnan(v)) {
+		return v;
+	}
+	const float f = float(v);
+	if (!rng) {
+		return f;
+	}
+	const float lo = double(f) <= v ? f : std::nextafter(f, -INFINITY);
+	const float hi = std::nextafter(lo, INFINITY);
+	const double p = (v - double(lo)) / (double(hi) - double(lo));
+	return std::uniform_real_distribution<double>(0.0, 1.0)(*rng) < p ? hi : lo;
+}
+
+// The storage arm's objective. LBFGSpp calls f(x, grad) with its own x by
+// reference, so rounding x here holds the solver's iterate in float32 (every
+// s = x - xp and the next trial start from the float32 point), as the guest's
+// X buffer does; g goes back as float32.
+struct StoreF32 {
+	const std::function<double(const Vec &, Vec &)> *fg;
+	std::mt19937 *rng;
+	double operator()(Vec &x, Vec &g) {
+		for (int i = 0; i < x.size(); i++) {
+			x[i] = f32(x[i], rng);
+		}
+		const double f = (*fg)(x, g);
+		for (int i = 0; i < g.size(); i++) {
+			g[i] = f32(g[i], rng);
+		}
+		return f;
+	}
+};
+
 int main(int argc, char **argv) {
 	const std::string dir = argc > 1 ? argv[1] : ".";
 	const char *probs[] = { "rosen_n2", "rosen_n10", "rosen_n100", "rosenbox_upstream_n25", "boxqp_n1000" };
 	std::printf("# LBFGSpp (double) from float32-rounded x0/lb/ub vs the trace (exact inputs). Arm inputs: that\n"
-			"# only. Arm interface: also f and g evaluated at float32 x, g returned as float32 (the guest view).\n");
+			"# only. Arm interface: also f and g evaluated at float32 x, g returned as float32 (the guest view).\n"
+			"# Arm storage: also x held in float32 (LBFGSpp's x rounded in place at every evaluation).\n"
+			"# ensemble: the storage arm 200x with stochastic float32 rounding; |f - f_trace| quantiles.\n");
+	std::string control = "# G2's flat control (tests/lbfgsb_oracle/sensitivity.cpp): per trace, |f_final - f_trace| of\n"
+						  "# LBFGSpp (double) under the float32 interface. G2's f band is max(1e-6 (1 + |f|), 2 x this).\n";
+	std::mt19937 rng(20260923u);
 	for (const char *pn : probs) {
 		const std::string pt = slurp(dir + "/problems/" + pn + ".txt");
 		const std::vector<double> lb0 = field(pt, "lb"), ub0 = field(pt, "ub"), x00 = field(pt, "x0");
@@ -157,23 +210,60 @@ int main(int argc, char **argv) {
 					}
 					return f;
 				};
-				for (int arm = 0; arm < 2; ++arm) {
+				const double tol = 1e-6 * (1.0 + std::fabs(fref));
+				for (int arm = 0; arm < 3; ++arm) {
 					Vec xa = x;
 					LBFGSpp::LBFGSBSolver<double> solver(prm);
 					double fx = 0.0;
 					int it = -1;
+					StoreF32 st{ &fg, nullptr };
 					try {
-						it = solver.minimize(arm == 0 ? fg : fgF, xa, fx, lb, ub);
+						if (arm == 2) {
+							it = solver.minimize(st, xa, fx, lb, ub);
+						} else {
+							it = solver.minimize(arm == 0 ? fg : fgF, xa, fx, lb, ub);
+						}
 					} catch (const std::exception &e) {
 						std::printf("%-32s exception %s\n", tn.c_str(), e.what());
 						continue;
 					}
-					const double err = std::fabs(fx - fref), tol = 1e-6 * (1.0 + std::fabs(fref));
+					const double err = std::fabs(fx - fref);
 					std::printf("%-32s %-9s iters %d/%d f %.9g/%.9g err %.1e (%s 1e-6 abs+rel)\n", tn.c_str(),
-							arm == 0 ? "inputs" : "interface", it, kref, fx, fref, err, err <= tol ? "within" : "OUTSIDE");
+							arm == 0 ? "inputs" : arm == 1 ? "interface" : "storage", it, kref, fx, fref, err,
+							err <= tol ? "within" : "OUTSIDE");
+					if (arm == 1) {
+						char b[128];
+						std::snprintf(b, sizeof b, "%s %.6e\n", tn.c_str(), err);
+						control += b;
+					}
 				}
+				std::vector<double> errs;
+				for (int r = 0; r < 200; ++r) {
+					Vec xa = x;
+					LBFGSpp::LBFGSBSolver<double> solver(prm);
+					double fx = 0.0;
+					StoreF32 st{ &fg, &rng };
+					try {
+						solver.minimize(st, xa, fx, lb, ub);
+						errs.push_back(std::fabs(fx - fref));
+					} catch (const std::exception &) {
+						errs.push_back(INFINITY);
+					}
+				}
+				std::sort(errs.begin(), errs.end());
+				const long within = long(std::count_if(errs.begin(), errs.end(), [tol](double e) { return e <= tol; }));
+				std::printf("%-32s ensemble  200 runs: median %.1e p95 %.1e max %.1e; within the 1e-6 band %ld/200\n",
+						tn.c_str(), errs[100], errs[190], errs[199], within);
 			}
 		}
 	}
+	const std::string cpath = dir + "/f32io_control.txt";
+	FILE *cf = std::fopen(cpath.c_str(), "wb");
+	if (!cf) {
+		std::fprintf(stderr, "cannot write %s\n", cpath.c_str());
+		return 1;
+	}
+	std::fputs(control.c_str(), cf);
+	std::fclose(cf);
 	return 0;
 }

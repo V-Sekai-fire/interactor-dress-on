@@ -101,8 +101,18 @@ struct Trace {
 	std::vector<int> L, U;
 	// Per iterate k: f and the projected-gradient norm.
 	std::vector<double> iterF, iterPg;
+	// G2's flat control for this trace: |f_final - f_trace| of LBFGSpp itself
+	// under the float32 interface (gates/5-drape/oracle/f32io_control.txt,
+	// tests/lbfgsb_oracle/sensitivity.cpp); -1 if none was given. The f band
+	// is max(1e-6 (1 + |f|), 2 x this).
+	double fCtl32 = -1.0;
 	bool parse(const std::string &text, std::string &err);
 };
+
+// Set every trace's fCtl32 from f32io_control.txt ("<trace> <err>" lines);
+// false (and err) if a trace has no line.
+bool applyF32Control(const std::string &controlText, const std::vector<std::string> &names,
+		std::vector<Trace *> &traces, std::string &err);
 
 class ProblemRun {
 public:

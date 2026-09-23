@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <map>
 #include <set>
 #include <sstream>
 
@@ -477,6 +478,33 @@ double Problem::fg(const std::vector<float> &xf, std::vector<double> &g) const {
 	return 0.5 * xax - bx;
 }
 
+bool applyF32Control(const std::string &controlText, const std::vector<std::string> &names,
+		std::vector<Trace *> &traces, std::string &err) {
+	std::map<std::string, double> ctl;
+	std::istringstream in(controlText);
+	std::string ln;
+	while (std::getline(in, ln)) {
+		if (ln.empty() || ln[0] == '#') {
+			continue;
+		}
+		std::istringstream ss(ln);
+		std::string name;
+		double e = -1.0;
+		if (ss >> name >> e) {
+			ctl[name] = e;
+		}
+	}
+	for (size_t i = 0; i < names.size() && i < traces.size(); ++i) {
+		auto it = ctl.find(names[i]);
+		if (it == ctl.end()) {
+			err = "f32io_control has no line for " + names[i];
+			return false;
+		}
+		traces[i]->fCtl32 = it->second;
+	}
+	return true;
+}
+
 bool Trace::parse(const std::string &text, std::string &err) {
 	std::istringstream in(text);
 	std::string ln;
@@ -628,7 +656,11 @@ void ProblemRun::finish(bool converged) {
 	const double fAtX = p_.fg(x, g);
 	// f: |f - fref| <= 1e-6 (1 + |fref|).
 	const double fErr = std::fabs(f - t_.fFinal);
-	const double fTol = 1e-6 * (1.0 + std::fabs(t_.fFinal));
+	// Cut 5c: where LBFGSpp itself, under the float32 interface, already leaves
+	// the 1e-6 band (the control), the band is twice the control's movement.
+	const double fTolBase = 1e-6 * (1.0 + std::fabs(t_.fFinal));
+	const bool ctlBand = 2.0 * t_.fCtl32 > fTolBase;
+	const double fTol = ctlBand ? 2.0 * t_.fCtl32 : fTolBase;
 	// x: |x - xref|_inf <= 1e-3 |xref|_inf.
 	double dx = 0.0, xr = 0.0;
 	for (uint32_t i = 0; i < p_.n && i < t_.x.size(); ++i) {
@@ -656,10 +688,11 @@ void ProblemRun::finish(bool converged) {
 	itRatio = dIt / itTol;
 	const bool fOk = fErr <= fTol, xOk = xRel <= 1e-3, itOk = dIt <= itTol;
 	pass_ = fOk && xOk && setsOk && itOk;
-	line_ = fmt("%s %-32s iters %d/%d%s nfev %d/%d f %.9g/%.9g (err %.1e%s) x rel %.1e%s |L| %zu/%zu |U| %zu/%zu%s "
+	line_ = fmt("%s %-32s iters %d/%d%s nfev %d/%d f %.9g/%.9g (err %.1e%s%s) x rel %.1e%s |L| %zu/%zu |U| %zu/%zu%s "
 				"stop %s/%s pg %.2e resets patho=%d chol=%d restores=%d",
 			pass_ ? "PASS" : "FAIL", name_.c_str(), drv_.iterations(), t_.niter, itOk ? "" : "(FAIL)", drv_.nfev(),
-			t_.nfev, f, t_.fFinal, fErr, fOk ? "" : "(FAIL)", xRel, xOk ? "" : "(FAIL)", L.size(), t_.L.size(),
+			t_.nfev, f, t_.fFinal, fErr, fOk ? "" : "(FAIL)",
+			ctlBand ? fmt(" band %.2e = 2 x LBFGSpp-f32io %.2e", fTol, t_.fCtl32).c_str() : "", xRel, xOk ? "" : "(FAIL)", L.size(), t_.L.size(),
 			U.size(), t_.U.size(), setsOk ? "" : "(FAIL)", drv_.reason().c_str(), t_.status.c_str(), drv_.pgNorm(),
 			drv_.pathological(), drv_.cholResets(), drv_.restores());
 	(void)fAtX;

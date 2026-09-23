@@ -1,0 +1,54 @@
+Record 0
+============Backward Iter Info:======================
+Loss:0.000
+Number of Converged Iter:0
+Total Backward Iter:0
+Backward Total Runtime[ms]:0.0000000
+Backward Non Solve Time[ms]:0.000000
+Backward Direct-Solve Time[ms]:0.000000
+Backward Iter-Solve Time[ms]:0.000000
+============Timer Breakdown:======================
+Direct-Solve[ms]:0.00000	|nan%
+Iter-Solve[ms]:0.00000	|nan%
+
+============Gradient Info:======================
+dL_dmu_0:0.02601
+============Parameter Info:======================
+mu from prim0:0.539770
+Corresponding forward Idx: 0
+Record 1
+============Backward Iter Info:======================
+Loss:0.000
+Number of Converged Iter:0
+Total Backward Iter:0
+Backward Total Runtime[ms]:0.0000000
+Backward Non Solve Time[ms]:0.000000
+Backward Direct-Solve Time[ms]:0.000000
+Backward Iter-Solve Time[ms]:0.000000
+============Timer Breakdown:======================
+Direct-Solve[ms]:0.00000	|nan%
+Iter-Solve[ms]:0.00000	|nan%
+
+============Gradient Info:======================
+dL_dmu_0:-0.23403
+============Parameter Info:======================
+mu from prim0:0.010000
+Corresponding forward Idx: 1
+Record 2
+============Backward Iter Info:======================
+Loss:0.000
+Number of Converged Iter:0
+Total Backward Iter:0
+Backward Total Runtime[ms]:0.0000000
+Backward Non Solve Time[ms]:0.000000
+Backward Direct-Solve Time[ms]:0.000000
+Backward Iter-Solve Time[ms]:0.000000
+============Timer Breakdown:======================
+Direct-Solve[ms]:0.00000	|nan%
+Iter-Solve[ms]:0.00000	|nan%
+
+============Gradient Info:======================
+dL_dmu_0:-0.01601
+============Parameter Info:======================
+mu from prim0:0.235976
+Corresponding forward Idx: 2

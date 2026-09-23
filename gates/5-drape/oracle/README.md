@@ -134,6 +134,24 @@ U <c> i…     # active at ub: x_i ≥ ub_i − 1e-9·max(1,|ub_i|)
 | rosenbox_upstream_n25 | 10 / 10 | 13 / 13 | 360.283586 | 22/1 |
 | boxqp_n1000 | 5 / 5 | 11 / 11 | −1932.98535 | 250/250 (xstar err 8.3e-5 / 7.8e-5) |
 
+## `f32io_control.txt` (G2's flat control, Cut 5c)
+
+This file is written by `tests/lbfgsb_oracle/sensitivity.sh`, not by
+`gen.cpp`. Each line is `<trace> <err>`, where err is |f_final − f_trace|
+for unmodified LBFGSpp (double) on that trace under the float32 interface
+the guest has:
+
+- float32-rounded x0, lb and ub;
+- f and g evaluated at float32 x;
+- g handed back as float32.
+
+For each trace, G2's f band is max(1e-6 (1 + |f|), 2 × err). Only
+`rosen_n2_m10_dc` has 2 × err above the 1e-6 band: its err is 4.83e-6, so
+its band is 9.66e-6. Every other trace keeps the 1e-6 band. The gate hands
+this file to the guest as `f32io_control`, and G2 refuses to run without it.
+The evidence for this band (the storage arm and the stochastic-rounding
+ensemble) is in `../lbfgsb/sensitivity.log` and in `../README.md` under G2.
+
 ## `inverse_min/case_<name>.txt` (G3, 2 files)
 
 Made by `tests/inverse_min_oracle/build.sh` (`oracle.cpp`), not by `gen.cpp`:

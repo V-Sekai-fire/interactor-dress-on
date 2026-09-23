@@ -74,22 +74,37 @@ private def mu := wkr 6
 private def cls := wkr 7
 private def rhs := wkr 8
 private def mark := wkr 9
+private def dT : SlangType := .scalar .double
+/-- Explicit float → double widenings for `lb_solve_p` (exact; slangc warns on
+    implicit ones). -/
+private def toD (e : E) : E := .cast dT e
+private def yD (j c : E) : E := toD (yAt j c)
+private def sD (j c : E) : E := toD (sAt j c)
 private def m16 (a : String) (i j : E) : E := at_ a (i * u maxM + j)
 
-/-- `uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta)`:
+/-- `uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, double theta)`:
     `y_P ← (PᵀBP)⁻¹ rhs_P` for P = {k : class k = 2}; returns 0 if a
-    Cholesky pivot was non-positive. -/
+    Cholesky pivot was non-positive.
+
+    Its arithmetic is double (the Gram blocks, both Cholesky factors, every
+    solve and the result before it is stored to `wk` as float). With these
+    in float the Schur complement of an ill-conditioned model loses the
+    direction: Gate 5's G2 trace rosen_n2_m10_dc ended 2.1e-5 from
+    LBFGSpp's f (1 in 5 float-rounding perturbations of its path landed
+    there) and 6.3e-6 with this function alone in double; the float32
+    vectors themselves account for the rest (gates/5-drape/README.md, G2).
+    The inputs and outputs stay float32 buffers. -/
 def solveP : SlangFunctionDecl :=
   let a11 := m16 "A11"; let a21 := m16 "A21"; let a22 := m16 "A22"; let zz := m16 "Z"
   { name := "lb_solve_p", retType := uT
-  , params := [arg "n" uT, arg "mc" uT, arg "nc" uT, arg "nfree" uT, arg "theta" fT]
+  , params := [arg "n" uT, arg "mc" uT, arg "nc" uT, arg "nfree" uT, arg "theta" dT]
   , body :=
       [ let_ uT "ok" (u 1)
       , let_ uT "nP" (u 0)
       , for_ "k" (u 0) (v "nfree") [ if_ (eq (cls (v "k")) (fl 2.0)) [ setv "nP" (v "nP" + u 1) ] ]
       , if_ (or_ (lt nc (u 1)) (lt (v "nP") (u 1)))
           [ for_ "k" (u 0) (v "nfree")
-              [ if_ (eq (cls (v "k")) (fl 2.0)) [ set (vy (v "k")) (rhs (v "k") / v "theta") ] ]
+              [ if_ (eq (cls (v "k")) (fl 2.0)) [ set (vy (v "k")) (toF (toD (rhs (v "k")) / v "theta")) ] ]
           , .ret (some (v "ok")) ]
       , let_ uT "oldest" ((at_ "st" (u 1) + v "mc" - nc) % v "mc")
       , arr uT "rk" maxM
@@ -97,14 +112,14 @@ def solveP : SlangFunctionDecl :=
       , for_ "c" (u 0) n [ set (mark (v "c")) (fl 0.0) ]
       , for_ "k" (u 0) (v "nfree")
           [ if_ (eq (cls (v "k")) (fl 2.0)) [ set (mark (fv (v "k"))) (fl 1.0) ] ]
-      , arr fT "A11" (maxM * maxM)
-      , arr fT "A21" (maxM * maxM)
-      , arr fT "A22" (maxM * maxM)
-      , arr fT "Z" (maxM * maxM)
-      , arr fT "r1" maxM
-      , arr fT "qv" maxM
-      , arr fT "r2" maxM
-      , arr fT "tv" maxM
+      , arr dT "A11" (maxM * maxM)
+      , arr dT "A21" (maxM * maxM)
+      , arr dT "A22" (maxM * maxM)
+      , arr dT "Z" (maxM * maxM)
+      , arr dT "r1" maxM
+      , arr dT "qv" maxM
+      , arr dT "r2" maxM
+      , arr dT "tv" maxM
       , for_ "i" (u 0) nc
           [ setAt "r1" (v "i") (fl 0.0), setAt "r2" (v "i") (fl 0.0)
           , for_ "j" (u 0) nc
@@ -114,66 +129,66 @@ def solveP : SlangFunctionDecl :=
       , for_ "c" (u 0) n
           [ if_ (eq (mark (v "c")) (fl 1.0))
               [ for_ "i" (u 0) nc
-                  [ let_ fT "yi" (yAt (v "i") (v "c"))
-                  , let_ fT "si" (sAt (v "i") (v "c"))
+                  [ let_ dT "yi" (yD (v "i") (v "c"))
+                  , let_ dT "si" (sD (v "i") (v "c"))
                   , for_ "j" (u 0) nc
-                      [ let_ fT "yj" (yAt (v "j") (v "c"))
+                      [ let_ dT "yj" (yD (v "j") (v "c"))
                       , set (a11 (v "i") (v "j")) (a11 (v "i") (v "j") + v "yi" * v "yj")
                       , if_ (le (at_ "rk" (v "i")) (at_ "rk" (v "j")))
                           [ set (a21 (v "i") (v "j")) (a21 (v "i") (v "j") - v "si" * v "yj") ] ] ] ]
               [ for_ "i" (u 0) nc
-                  [ let_ fT "si" (sAt (v "i") (v "c"))
+                  [ let_ dT "si" (sD (v "i") (v "c"))
                   , for_ "j" (u 0) nc
-                      [ set (a22 (v "i") (v "j")) (a22 (v "i") (v "j") + v "si" * sAt (v "j") (v "c"))
+                      [ set (a22 (v "i") (v "j")) (a22 (v "i") (v "j") + v "si" * sD (v "j") (v "c"))
                       , if_ (gt (at_ "rk" (v "i")) (at_ "rk" (v "j")))
-                          [ set (a21 (v "i") (v "j")) (a21 (v "i") (v "j") + v "si" * yAt (v "j") (v "c")) ] ] ] ] ]
+                          [ set (a21 (v "i") (v "j")) (a21 (v "i") (v "j") + v "si" * yD (v "j") (v "c")) ] ] ] ] ]
       , for_ "i" (u 0) nc
           [ for_ "j" (u 0) nc
               [ set (a11 (v "i") (v "j")) (a11 (v "i") (v "j") / v "theta")
               , set (a22 (v "i") (v "j")) (v "theta" * a22 (v "i") (v "j")) ]
-          , set (a11 (v "i") (v "i")) (a11 (v "i") (v "i") + at_ "bf" (dIx (v "mc") (v "i"))) ]
+          , set (a11 (v "i") (v "i")) (a11 (v "i") (v "i") + toD (at_ "bf" (dIx (v "mc") (v "i")))) ]
       -- r = [Y_Pᵀ rhs ; θ S_Pᵀ rhs]
       , for_ "k" (u 0) (v "nfree")
           [ if_ (eq (cls (v "k")) (fl 2.0))
               [ let_ uT "c" (fv (v "k"))
-              , let_ fT "rv" (rhs (v "k"))
+              , let_ dT "rv" (toD (rhs (v "k")))
               , for_ "j" (u 0) nc
-                  [ setAt "r1" (v "j") (at_ "r1" (v "j") + yAt (v "j") (v "c") * v "rv")
-                  , setAt "r2" (v "j") (at_ "r2" (v "j") + sAt (v "j") (v "c") * v "rv") ] ] ]
+                  [ setAt "r1" (v "j") (at_ "r1" (v "j") + yD (v "j") (v "c") * v "rv")
+                  , setAt "r2" (v "j") (at_ "r2" (v "j") + sD (v "j") (v "c") * v "rv") ] ] ]
       , for_ "j" (u 0) nc [ setAt "r2" (v "j") (v "theta" * at_ "r2" (v "j")) ] ]
-      ++ cholStmts "p" nc a11 "ok"
+      ++ cholStmts "p" nc a11 "ok" dT
       ++ [ for_ "i" (u 0) nc
             ([ for_ "j" (u 0) nc [ set (zz (v "i") (v "j")) (a21 (v "i") (v "j")) ] ]
-             ++ fwdStmts "z" nc a11 (fun t => zz (v "i") t)) ]
+             ++ fwdStmts "z" nc a11 (fun t => zz (v "i") t) dT) ]
       -- Schur complement A22 + Zᵀ-rows products, lower part
       ++ [ for_ "i" (u 0) nc
             [ for_ "k" (u 0) (v "i" + u 1)
-                [ let_ fT "acc" (a22 (v "i") (v "k"))
+                [ let_ dT "acc" (a22 (v "i") (v "k"))
                 , for_ "j" (u 0) nc [ setv "acc" (v "acc" + zz (v "i") (v "j") * zz (v "k") (v "j")) ]
                 , set (a22 (v "i") (v "k")) (v "acc") ] ]
          , for_ "j" (u 0) nc [ setAt "qv" (v "j") (at_ "r1" (v "j")) ] ]
-      ++ fwdStmts "q" nc a11 (at_ "qv")
+      ++ fwdStmts "q" nc a11 (at_ "qv") dT
       ++ [ for_ "i" (u 0) nc
-            [ let_ fT "acc" (at_ "r2" (v "i"))
+            [ let_ dT "acc" (at_ "r2" (v "i"))
             , for_ "j" (u 0) nc [ setv "acc" (v "acc" + zz (v "i") (v "j") * at_ "qv" (v "j")) ]
             , setAt "r2" (v "i") (v "acc") ] ]
-      ++ cholStmts "s" nc a22 "ok"
-      ++ fwdStmts "sf" nc a22 (at_ "r2")
-      ++ bwdStmts "sb" nc a22 (at_ "r2")
+      ++ cholStmts "s" nc a22 "ok" dT
+      ++ fwdStmts "sf" nc a22 (at_ "r2") dT
+      ++ bwdStmts "sb" nc a22 (at_ "r2") dT
       ++ [ for_ "j" (u 0) nc
-            [ let_ fT "acc" (-(at_ "r1" (v "j")))
+            [ let_ dT "acc" (-(at_ "r1" (v "j")))
             , for_ "i" (u 0) nc [ setv "acc" (v "acc" + a21 (v "i") (v "j") * at_ "r2" (v "i")) ]
             , setAt "tv" (v "j") (v "acc") ] ]
-      ++ fwdStmts "tf" nc a11 (at_ "tv")
-      ++ bwdStmts "tb" nc a11 (at_ "tv")
+      ++ fwdStmts "tf" nc a11 (at_ "tv") dT
+      ++ bwdStmts "tb" nc a11 (at_ "tv") dT
       ++ [ for_ "k" (u 0) (v "nfree")
             [ if_ (eq (cls (v "k")) (fl 2.0))
                 [ let_ uT "c" (fv (v "k"))
-                , let_ fT "acc" (fl 0.0)
+                , let_ dT "acc" (fl 0.0)
                 , for_ "j" (u 0) nc
-                    [ setv "acc" (v "acc" + yAt (v "j") (v "c") * at_ "tv" (v "j")
-                        + sAt (v "j") (v "c") * (v "theta" * at_ "r2" (v "j"))) ]
-                , set (vy (v "k")) (rhs (v "k") / v "theta" + v "acc" / (v "theta" * v "theta")) ] ]
+                    [ setv "acc" (v "acc" + yD (v "j") (v "c") * at_ "tv" (v "j")
+                        + sD (v "j") (v "c") * (v "theta" * at_ "r2" (v "j"))) ]
+                , set (vy (v "k")) (toF (toD (rhs (v "k")) / v "theta" + v "acc" / (v "theta" * v "theta"))) ] ]
          , .ret (some (v "ok")) ] }
 
 /-- `w[0..2nc) ← [Σ Y(j,c)·val ; θ Σ S(j,c)·val]` over free k where
@@ -252,7 +267,7 @@ private def solveRound : List St :=
        [ for_ "k" (u 0) (v "nfree")
            [ if_ (eq (cls (v "k")) (fl 2.0))
                (wRow "wq" (fv (v "k")) ++ [ set (rhs (v "k")) (-(vcc (v "k") - v "acc")) ]) ]
-       , if_ (eq (call "lb_solve_p" [n, v "mc", nc, v "nfree", v "theta"]) (u 0))
+       , if_ (eq (call "lb_solve_p" [n, v "mc", nc, v "nfree", toD (v "theta")]) (u 0))
            [ setAt "iset" (u 6) (u 1) ] ])
   , if_ (or_ (gt (v "nL") (u 0)) (gt (v "nU") (u 0)))
       ([ arr fT "fy" (2 * maxM) ]
@@ -326,7 +341,7 @@ def shader : SlangShaderModule :=
               , set (vcc (v "k")) (vcc (v "k") + at_ "g" (v "c"))
               , set (cls (v "k")) (fl 2.0)
               , set (rhs (v "k")) (-(vcc (v "k"))) ]
-          , if_ (eq (call "lb_solve_p" [n, v "mc", nc, v "nfree", v "theta"]) (u 0))
+          , if_ (eq (call "lb_solve_p" [n, v "mc", nc, v "nfree", toD (v "theta")]) (u 0))
               [ setAt "iset" (u 6) (u 1) ]
           , let_ uT "inb" (u 1)
           , for_ "k" (u 0) (v "nfree")
@@ -466,7 +481,7 @@ void lb_mv(uint nc, uint mc, inout float w[32]) {
   return;
 }
 
-uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
+uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, double theta) {
   uint ok = 1u;
   uint nP = 0u;
   for (uint k = 0u; k < nfree; ++k) {
@@ -477,7 +492,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   if (((nc < 1u) || (nP < 1u))) {
     for (uint k = 0u; k < nfree; ++k) {
       if ((wk[((7u * n) + k)] == 2.000000)) {
-        wk[((3u * n) + k)] = (wk[((8u * n) + k)] / theta);
+        wk[((3u * n) + k)] = float((double(wk[((8u * n) + k)]) / theta));
       }
     }
     return ok;
@@ -495,14 +510,14 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       wk[((9u * n) + iset[((8u + n) + k)])] = 1.000000;
     }
   }
-  float A11[256];
-  float A21[256];
-  float A22[256];
-  float Z[256];
-  float r1[16];
-  float qv[16];
-  float r2[16];
-  float tv[16];
+  double A11[256];
+  double A21[256];
+  double A22[256];
+  double Z[256];
+  double r1[16];
+  double qv[16];
+  double r2[16];
+  double tv[16];
   for (uint i = 0u; i < nc; ++i) {
     r1[i] = 0.000000;
     r2[i] = 0.000000;
@@ -515,10 +530,10 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   for (uint c = 0u; c < n; ++c) {
     if ((wk[((9u * n) + c)] == 1.000000)) {
       for (uint i = 0u; i < nc; ++i) {
-        float yi = Y[((i * n) + c)];
-        float si = S[((i * n) + c)];
+        double yi = double(Y[((i * n) + c)]);
+        double si = double(S[((i * n) + c)]);
         for (uint j = 0u; j < nc; ++j) {
-          float yj = Y[((j * n) + c)];
+          double yj = double(Y[((j * n) + c)]);
           A11[((i * 16u) + j)] = (A11[((i * 16u) + j)] + (yi * yj));
           if ((rk[i] <= rk[j])) {
             A21[((i * 16u) + j)] = (A21[((i * 16u) + j)] - (si * yj));
@@ -527,11 +542,11 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       }
     } else {
       for (uint i = 0u; i < nc; ++i) {
-        float si = S[((i * n) + c)];
+        double si = double(S[((i * n) + c)]);
         for (uint j = 0u; j < nc; ++j) {
-          A22[((i * 16u) + j)] = (A22[((i * 16u) + j)] + (si * S[((j * n) + c)]));
+          A22[((i * 16u) + j)] = (A22[((i * 16u) + j)] + (si * double(S[((j * n) + c)])));
           if ((rk[i] > rk[j])) {
-            A21[((i * 16u) + j)] = (A21[((i * 16u) + j)] + (si * Y[((j * n) + c)]));
+            A21[((i * 16u) + j)] = (A21[((i * 16u) + j)] + (si * double(Y[((j * n) + c)])));
           }
         }
       }
@@ -542,15 +557,15 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       A11[((i * 16u) + j)] = (A11[((i * 16u) + j)] / theta);
       A22[((i * 16u) + j)] = (theta * A22[((i * 16u) + j)]);
     }
-    A11[((i * 16u) + i)] = (A11[((i * 16u) + i)] + bf[((4u + ((4u * mc) * mc)) + i)]);
+    A11[((i * 16u) + i)] = (A11[((i * 16u) + i)] + double(bf[((4u + ((4u * mc) * mc)) + i)]));
   }
   for (uint k = 0u; k < nfree; ++k) {
     if ((wk[((7u * n) + k)] == 2.000000)) {
       uint c = iset[((8u + n) + k)];
-      float rv = wk[((8u * n) + k)];
+      double rv = double(wk[((8u * n) + k)]);
       for (uint j = 0u; j < nc; ++j) {
-        r1[j] = (r1[j] + (Y[((j * n) + c)] * rv));
-        r2[j] = (r2[j] + (S[((j * n) + c)] * rv));
+        r1[j] = (r1[j] + (double(Y[((j * n) + c)]) * rv));
+        r2[j] = (r2[j] + (double(S[((j * n) + c)]) * rv));
       }
     }
   }
@@ -558,7 +573,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
     r2[j] = (theta * r2[j]);
   }
   for (uint pj = 0u; pj < nc; ++pj) {
-    float ps = A11[((pj * 16u) + pj)];
+    double ps = A11[((pj * 16u) + pj)];
     for (uint pt = 0u; pt < pj; ++pt) {
       ps = (ps - (A11[((pj * 16u) + pt)] * A11[((pj * 16u) + pt)]));
     }
@@ -566,10 +581,10 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       ok = 0u;
       ps = (asfloat(872415232u) * asfloat(872415232u));
     }
-    float pd = sqrt(ps);
+    double pd = sqrt(ps);
     A11[((pj * 16u) + pj)] = pd;
     for (uint pi = (pj + 1u); pi < nc; ++pi) {
-      float pr = A11[((pi * 16u) + pj)];
+      double pr = A11[((pi * 16u) + pj)];
       for (uint pt = 0u; pt < pj; ++pt) {
         pr = (pr - (A11[((pi * 16u) + pt)] * A11[((pj * 16u) + pt)]));
       }
@@ -581,7 +596,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       Z[((i * 16u) + j)] = A21[((i * 16u) + j)];
     }
     for (uint zi = 0u; zi < nc; ++zi) {
-      float zr = Z[((i * 16u) + zi)];
+      double zr = Z[((i * 16u) + zi)];
       for (uint zt = 0u; zt < zi; ++zt) {
         zr = (zr - (A11[((zi * 16u) + zt)] * Z[((i * 16u) + zt)]));
       }
@@ -590,7 +605,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   }
   for (uint i = 0u; i < nc; ++i) {
     for (uint k = 0u; k < (i + 1u); ++k) {
-      float acc = A22[((i * 16u) + k)];
+      double acc = A22[((i * 16u) + k)];
       for (uint j = 0u; j < nc; ++j) {
         acc = (acc + (Z[((i * 16u) + j)] * Z[((k * 16u) + j)]));
       }
@@ -601,21 +616,21 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
     qv[j] = r1[j];
   }
   for (uint qi = 0u; qi < nc; ++qi) {
-    float qr = qv[qi];
+    double qr = qv[qi];
     for (uint qt = 0u; qt < qi; ++qt) {
       qr = (qr - (A11[((qi * 16u) + qt)] * qv[qt]));
     }
     qv[qi] = (qr / A11[((qi * 16u) + qi)]);
   }
   for (uint i = 0u; i < nc; ++i) {
-    float acc = r2[i];
+    double acc = r2[i];
     for (uint j = 0u; j < nc; ++j) {
       acc = (acc + (Z[((i * 16u) + j)] * qv[j]));
     }
     r2[i] = acc;
   }
   for (uint sj = 0u; sj < nc; ++sj) {
-    float ss = A22[((sj * 16u) + sj)];
+    double ss = A22[((sj * 16u) + sj)];
     for (uint st = 0u; st < sj; ++st) {
       ss = (ss - (A22[((sj * 16u) + st)] * A22[((sj * 16u) + st)]));
     }
@@ -623,10 +638,10 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
       ok = 0u;
       ss = (asfloat(872415232u) * asfloat(872415232u));
     }
-    float sd = sqrt(ss);
+    double sd = sqrt(ss);
     A22[((sj * 16u) + sj)] = sd;
     for (uint si = (sj + 1u); si < nc; ++si) {
-      float sr = A22[((si * 16u) + sj)];
+      double sr = A22[((si * 16u) + sj)];
       for (uint st = 0u; st < sj; ++st) {
         sr = (sr - (A22[((si * 16u) + st)] * A22[((sj * 16u) + st)]));
       }
@@ -634,7 +649,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
     }
   }
   for (uint sfi = 0u; sfi < nc; ++sfi) {
-    float sfr = r2[sfi];
+    double sfr = r2[sfi];
     for (uint sft = 0u; sft < sfi; ++sft) {
       sfr = (sfr - (A22[((sfi * 16u) + sft)] * r2[sft]));
     }
@@ -642,21 +657,21 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   }
   for (uint sbq = 0u; sbq < nc; ++sbq) {
     uint sbi = ((nc - 1u) - sbq);
-    float sbr = r2[sbi];
+    double sbr = r2[sbi];
     for (uint sbt = (sbi + 1u); sbt < nc; ++sbt) {
       sbr = (sbr - (A22[((sbt * 16u) + sbi)] * r2[sbt]));
     }
     r2[sbi] = (sbr / A22[((sbi * 16u) + sbi)]);
   }
   for (uint j = 0u; j < nc; ++j) {
-    float acc = (-r1[j]);
+    double acc = (-r1[j]);
     for (uint i = 0u; i < nc; ++i) {
       acc = (acc + (A21[((i * 16u) + j)] * r2[i]));
     }
     tv[j] = acc;
   }
   for (uint tfi = 0u; tfi < nc; ++tfi) {
-    float tfr = tv[tfi];
+    double tfr = tv[tfi];
     for (uint tft = 0u; tft < tfi; ++tft) {
       tfr = (tfr - (A11[((tfi * 16u) + tft)] * tv[tft]));
     }
@@ -664,7 +679,7 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   }
   for (uint tbq = 0u; tbq < nc; ++tbq) {
     uint tbi = ((nc - 1u) - tbq);
-    float tbr = tv[tbi];
+    double tbr = tv[tbi];
     for (uint tbt = (tbi + 1u); tbt < nc; ++tbt) {
       tbr = (tbr - (A11[((tbt * 16u) + tbi)] * tv[tbt]));
     }
@@ -673,11 +688,11 @@ uint lb_solve_p(uint n, uint mc, uint nc, uint nfree, float theta) {
   for (uint k = 0u; k < nfree; ++k) {
     if ((wk[((7u * n) + k)] == 2.000000)) {
       uint c = iset[((8u + n) + k)];
-      float acc = 0.000000;
+      double acc = 0.000000;
       for (uint j = 0u; j < nc; ++j) {
-        acc = ((acc + (Y[((j * n) + c)] * tv[j])) + (S[((j * n) + c)] * (theta * r2[j])));
+        acc = ((acc + (double(Y[((j * n) + c)]) * tv[j])) + (double(S[((j * n) + c)]) * (theta * r2[j])));
       }
-      wk[((3u * n) + k)] = ((wk[((8u * n) + k)] / theta) + (acc / (theta * theta)));
+      wk[((3u * n) + k)] = float(((double(wk[((8u * n) + k)]) / theta) + (acc / (theta * theta))));
     }
   }
   return ok;
@@ -753,7 +768,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     wk[((7u * n) + k)] = 2.000000;
     wk[((8u * n) + k)] = (-wk[((2u * n) + k)]);
   }
-  if ((lb_solve_p(n, mc, nc, nfree, theta) == 0u)) {
+  if ((lb_solve_p(n, mc, nc, nfree, double(theta)) == 0u)) {
     iset[6u] = 1u;
   }
   uint inb = 1u;
@@ -834,7 +849,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
           wk[((8u * n) + k)] = (-(wk[((2u * n) + k)] - acc));
         }
       }
-      if ((lb_solve_p(n, mc, nc, nfree, theta) == 0u)) {
+      if ((lb_solve_p(n, mc, nc, nfree, double(theta)) == 0u)) {
         iset[6u] = 1u;
       }
     }

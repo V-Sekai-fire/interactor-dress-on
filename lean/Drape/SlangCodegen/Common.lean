@@ -126,35 +126,36 @@ def dIx (mc j : E) : E := u 4 + u 4 * mc * mc + j
 
 /-- In-place lower Cholesky of the leading `k×k` block reached through
     `a row col`. A non-positive pivot clears `okVar` and is replaced by
-    ε² so the factor stays finite; callers report `okVar`. -/
-def cholStmts (pre : String) (k : E) (a : E → E → E) (okVar : String) : List St :=
+    ε² so the factor stays finite; callers report `okVar`. `ty` is the
+    type of the running sums (`lb_solve_p` passes double). -/
+def cholStmts (pre : String) (k : E) (a : E → E → E) (okVar : String) (ty : SlangType := fT) : List St :=
   let j := v (pre ++ "j"); let t := v (pre ++ "t"); let i := v (pre ++ "i")
   let s := pre ++ "s"; let d := pre ++ "d"; let r := pre ++ "r"
   [ for_ (pre ++ "j") (u 0) k
-      [ let_ fT s (a j j)
+      [ let_ ty s (a j j)
       , for_ (pre ++ "t") (u 0) j [ setv s (v s - a j t * a j t) ]
       , if_ (le (v s) (fl 0.0)) [ setv okVar (u 0), setv s (fltEps * fltEps) ]
-      , let_ fT d (call "sqrt" [v s])
+      , let_ ty d (call "sqrt" [v s])
       , set (a j j) (v d)
       , for_ (pre ++ "i") (j + u 1) k
-          [ let_ fT r (a i j)
+          [ let_ ty r (a i j)
           , for_ (pre ++ "t") (u 0) j [ setv r (v r - a i t * a j t) ]
           , set (a i j) (v r / v d) ] ] ]
 
 /-- `x ← C⁻¹ x` (forward substitution) with `C` lower from `cholStmts`. -/
-def fwdStmts (pre : String) (k : E) (c : E → E → E) (x : E → E) : List St :=
+def fwdStmts (pre : String) (k : E) (c : E → E → E) (x : E → E) (ty : SlangType := fT) : List St :=
   let i := v (pre ++ "i"); let t := v (pre ++ "t"); let r := pre ++ "r"
   [ for_ (pre ++ "i") (u 0) k
-      [ let_ fT r (x i)
+      [ let_ ty r (x i)
       , for_ (pre ++ "t") (u 0) i [ setv r (v r - c i t * x t) ]
       , set (x i) (v r / c i i) ] ]
 
 /-- `x ← C⁻ᵀ x` (back substitution). -/
-def bwdStmts (pre : String) (k : E) (c : E → E → E) (x : E → E) : List St :=
+def bwdStmts (pre : String) (k : E) (c : E → E → E) (x : E → E) (ty : SlangType := fT) : List St :=
   let q := pre ++ "q"; let i := v (pre ++ "i"); let t := v (pre ++ "t"); let r := pre ++ "r"
   [ for_ q (u 0) k
       [ let_ uT (pre ++ "i") (k - u 1 - v q)
-      , let_ fT r (x i)
+      , let_ ty r (x i)
       , for_ (pre ++ "t") (i + u 1) k [ setv r (v r - c t i * x t) ]
       , set (x i) (v r / c i i) ] ]
 

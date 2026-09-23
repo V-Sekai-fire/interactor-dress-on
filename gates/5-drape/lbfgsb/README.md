@@ -1,6 +1,6 @@
 # Gate 5 G1 and G2: the in-guest L-BFGS-B driver against LBFGSpp
 
-> **Superseded by the integrated Gate 5, [`../README.md`](../README.md)** (`project/gate_drape.gd`, `../results.txt`). This directory keeps the Task B run of 2026-09-23 as it was. Since then: the sphere demo runs at native's exact initial mu (0.5397701956236457, not the printed 0.539770), two L-BFGS-B guards use LBFGSpp's double epsilon, and trial points are clamped to the box.
+> **Superseded by the integrated Gate 5, [`../README.md`](../README.md)** (`project/gate_drape.gd`, `../results.txt`). This directory keeps the Task B run of 2026-09-23 as it was. Since then: the sphere demo runs at native's exact initial mu (0.5397701956236457, not the printed 0.539770), two L-BFGS-B guards use LBFGSpp's double epsilon, and trial points are clamped to the box. Cut 5c changed two more things. `lb_subspace`'s `lb_solve_p` now computes in double, which moves `rosen_n2_m10_dc` from 2.1e-5 to 6.3e-6. G2's band is now max(1e-6 (1 + |f|), 2 × LBFGSpp's own movement under float32 I/O), which is 9.66e-6 on that trace. `host_native.log` and `sensitivity.log` here have been re-run for Cut 5c. `results.txt` and `run.log` have not.
 
 **Result: G1 PASS on both backends. G2 FAIL, 19 of 20 traces on both backends.**
 The failing trace is `rosen_n2_m10_dc`, and the flat control below shows

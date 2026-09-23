@@ -1,0 +1,1 @@
+rotating_sphere-randseed-1-20260923_052125-forwardThresh--9.0-LBFGS

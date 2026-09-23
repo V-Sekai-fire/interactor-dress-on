@@ -71,6 +71,12 @@ int main(int argc, char **argv) {
 					rc = 1;
 					continue;
 				}
+				std::vector<lbg::Trace *> tp{ &t };
+				if (!lbg::applyF32Control(slurp(dir + "/f32io_control.txt"), { tn }, tp, err)) {
+					std::printf("FAIL %s: %s\n", tn.c_str(), err.c_str());
+					rc = 1;
+					continue;
+				}
 				lbg::ProblemRun r(tn, p, t, v);
 				while (r.step()) {
 				}

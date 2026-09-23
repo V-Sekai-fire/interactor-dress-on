@@ -63,7 +63,19 @@ endif()
 add_stage_elf(dress_on guest/main.cpp)
 
 # Stage 2: the drape -- the AVBD solver on both backends, its oracle and bench.
-add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp)
+add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp
+	guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp
+	guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/lbfgsb_jobs.cpp guest/drape/vec_cpu.cpp
+	guest/drape/vec_rd.cpp guest/drape/inverse_jobs.cpp)
+# The drape driver ports DiffCloth arithmetic that ran on x86-64 without FMA;
+# rv64gc has fused multiply-add, which clang would contract into.
+set_source_files_properties(guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp
+	guest/drape/inverse_jobs.cpp PROPERTIES COMPILE_OPTIONS "-ffp-contract=off")
+# The L-BFGS-B driver and its CPU kernels are compiled uncontracted too, so the
+# guest's cpu path computes what tests/lbfgsb_driver computes on the host.
+# vec_rd.cpp includes ${CMAKE_BINARY_DIR}/drape_kernels.inc (kernels/drape/gen.sh).
+set_source_files_properties(guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/vec_cpu.cpp
+	PROPERTIES COMPILE_OPTIONS "-ffp-contract=off")
 target_include_directories(drape PRIVATE guest guest/drape)
 target_link_libraries(drape PRIVATE avbd)
 

@@ -35,7 +35,10 @@ abstract: >-
   Windows. No upstream Lean source is modified. Added here, not upstream:
   Probes.* (HalfLoad, Set0), Probes.lean, EmitProbes.lean and the Probes
   lib and emit_probes exe in lakefile.lean, the Gate 0F probe kernels of
-  interactor-dress-on (gates/0f-runtime).
+  interactor-dress-on (gates/0f-runtime); Drape.lean, Drape/ (the drape
+  L-BFGS-B kernels, a port of LBFGSpp's algorithm; see
+  kernels/drape/CITATION.cff), EmitDrape.lean, and the lean_lib Drape and
+  lean_exe emit_drape entries in lakefile.lean.
 type: software
 authors:
   - name: K. S. Ernest (Fire) Lee

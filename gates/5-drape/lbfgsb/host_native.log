@@ -1,0 +1,83 @@
+PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=2.58e-08 M=1.19e-07 Mv=1.68e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=8.89e-08 drt0=3.49e-08 step_max0=2.94e-08 drt=3.31e-08 dg=9.69e-10 step_max=0.00e+00
+PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.40e-07 pg_inf=5.88e-10 xcp=4.31e-08 vecc=2.10e-07 drt0=1.95e-06 step_max0=1.10e-06 drt=1.39e-07 dg=5.33e-08 step_max=7.79e-08
+PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.25e-08 M=9.93e-08 Mv=6.84e-08 pg_inf=1.24e-09 xcp=3.43e-08 vecc=2.68e-07 drt0=1.87e-07 step_max0=7.39e-10 drt=1.30e-07 dg=6.49e-08 step_max=0.00e+00
+PASS comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: theta=2.27e-08 M=1.84e-07 Mv=2.04e-07 pg_inf=1.77e-09 xcp=6.61e-06 vecc=2.66e-06 drt0=6.37e-06 step_max0=1.03e-06 drt=1.94e-07 dg=2.16e-08 step_max=0.00e+00
+PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=1.63e-07 Mv=2.22e-07 pg_inf=6.08e-08 xcp=4.54e-08 vecc=1.98e-07 drt0=2.23e-07 step_max0=6.91e-08 drt=8.01e-08 dg=1.99e-08 step_max=0.00e+00
+PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=2.09e-07 Mv=1.80e-07 pg_inf=1.84e-10 xcp=7.54e-07 vecc=1.30e-06 drt0=4.89e-07 step_max0=6.42e-07 drt=1.00e-07 dg=1.00e-08 step_max=0.00e+00
+PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=3.44e-08 Mv=1.03e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=1.36e-07 drt=5.84e-08 dg=2.74e-08 step_max=2.83e-08
+PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=4.59e-09 M=9.34e-08 Mv=6.36e-08 pg_inf=2.19e-09 xcp=2.50e-08 vecc=8.42e-08 drt0=1.54e-07 step_max0=2.19e-08 drt=4.14e-08 dg=8.41e-09 step_max=0.00e+00
+PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=9.22e-08 M=1.94e-07 Mv=3.31e-07 pg_inf=2.44e-10 xcp=5.01e-08 vecc=1.24e-07 drt0=1.74e-07 step_max0=1.65e-07 drt=1.69e-07 dg=5.93e-08 step_max=0.00e+00
+PASS comp_09 n=5 m=10 ncorr=1 |newact|=4 |fv|=0 sub_rounds=0 sub_path=0: theta=2.47e-08 M=3.88e-08 Mv=7.13e-08 pg_inf=1.31e-09 xcp=1.48e-09 vecc=6.76e-08 drt0=9.53e-09 step_max0=1.31e-08 drt=1.31e-09 dg=3.74e-09 step_max=0.00e+00
+PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.14e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=1.34e-07 vecc=2.35e-07 drt0=9.67e-08 step_max0=1.13e-07 drt=6.60e-08 dg=2.51e-08 step_max=0.00e+00
+PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=1.14e-07 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=1.58e-07 dg=4.60e-08 step_max=0.00e+00
+PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=4.03e-09 M=5.26e-07 Mv=4.91e-07 pg_inf=4.88e-10 xcp=3.93e-08 vecc=3.16e-08 drt0=1.61e-07 step_max0=1.56e-07 drt=3.04e-07 dg=3.53e-08 step_max=0.00e+00
+PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=7.04e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=4.68e-08 step_max=0.00e+00
+PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=2.89e-08 M=6.36e-08 Mv=5.99e-08 pg_inf=6.34e-08 xcp=3.80e-08 vecc=9.07e-08 drt0=2.82e-07 step_max0=2.46e-08 drt=1.00e-07 dg=2.33e-08 step_max=0.00e+00
+PASS comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: theta=3.74e-08 M=3.07e-07 Mv=3.33e-07 pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.02e-07 drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00
+PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=1.49e-07 pg_inf=1.65e-07 xcp=2.63e-08 vecc=3.97e-08 drt0=1.45e-06 step_max0=7.60e-07 drt=1.09e-07 dg=6.88e-08 step_max=1.03e-07
+PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.47e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.97e-08 vecc=2.59e-07 drt0=2.12e-07 step_max0=7.45e-08 drt=1.38e-07 dg=2.90e-08 step_max=0.00e+00
+PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=4.33e-08 M=1.11e-07 Mv=2.78e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=1.75e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.63e-08 dg=3.19e-08 step_max=2.02e-08
+PASS comp_19 n=37 m=5 ncorr=0 |newact|=11 |fv|=21 sub_rounds=0 sub_path=1: theta=0.00e+00 pg_inf=2.76e-09 xcp=8.05e-08 drt0=1.07e-07 step_max0=1.16e-07 drt=3.41e-08 dg=3.95e-09 step_max=0.00e+00
+G1 fixtures: 20/20 pass; worst: M=5.26e-07 Mv=4.91e-07 dg=6.88e-08 drt=3.04e-07 drt0=6.37e-06 pg_inf=1.65e-07 step_max=1.03e-07 step_max0=1.10e-06 theta=9.22e-08 vecc=2.66e-06 xcp=6.61e-06
+control FAIL comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.54e-01(FAIL) Mv=2.11e-01(FAIL) pg_inf=2.52e-09 xcp=1.83e-09 vecc=2.50e-01(FAIL) drt0=3.49e-08 step_max0=2.94e-08 drt=2.27e-02(FAIL) dg=9.69e-10 step_max=0.00e+00
+control FAIL comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.74e-01(FAIL) pg_inf=5.88e-10 xcp=3.68e-03(FAIL) vecc=1.77e-01(FAIL) drt0=2.03e-06 step_max0=9.03e-07 drt=2.03e-01(FAIL) dg=1.73e-01(FAIL) step_max=2.72e-01(FAIL)
+control FAIL comp_02 n=300 m=5 ncorr=1 |newact|=23 |fv|=183 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.24e-09 xcp=3.30e-02(FAIL) vecc=7.04e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.54e-01(FAIL) step_max0=1.75e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.68e-01(FAIL) step_max=0.00e+00
+control FAIL comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: M=1.28e-01(FAIL) Mv=1.48e-01(FAIL) pg_inf=1.77e-09 xcp=7.58e-02(FAIL) vecc=2.62e-01(FAIL) drt0=7.41e-02(FAIL) step_max0=1.14e-02(FAIL) drt=7.70e-02(FAIL) dg=1.93e-03(FAIL) step_max=0.00e+00
+control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=0.00e+00
+control FAIL comp_05 n=300 m=10 ncorr=7 |newact|=120 |fv|=83 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=1.84e-10 xcp=1.47e-01(FAIL) vecc=2.34e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.05e-01(FAIL) step_max0=1.14e-01(FAIL) drt=2.02e-01(FAIL) subLUP(FAIL) dg=7.89e-02(FAIL) step_max=0.00e+00
+control FAIL comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: M=1.95e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=2.88e-09 xcp=1.21e-02(FAIL) vecc=1.33e-01(FAIL) drt0=5.49e-07 step_max0=3.24e-07 drt=2.05e-01(FAIL) dg=1.30e-01(FAIL) step_max=2.91e-01(FAIL)
+control FAIL comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: M=1.67e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=2.19e-09 xcp=2.92e-02(FAIL) vecc=1.43e-01(FAIL) drt0=1.14e-01(FAIL) step_max0=1.88e-01(FAIL) drt=2.00e-01(FAIL) dg=1.80e-01(FAIL) step_max=0.00e+00
+control FAIL comp_08 n=300 m=10 ncorr=10 |newact|=18 |fv|=191 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.97e-01(FAIL) pg_inf=2.44e-10 xcp=3.63e-02(FAIL) vecc=1.14e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.49e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.67e-01(FAIL) step_max=0.00e+00
+control FAIL comp_09 n=5 m=10 ncorr=1 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.55e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.31e-09 xcp=7.62e-02(FAIL) vecc=7.07e-02(FAIL) newact(FAIL) fv(FAIL) drt0=2.55e-02(FAIL) step_max0=4.57e-02(FAIL) drt=6.87e-02(FAIL) subLUP(FAIL) dg=1.48e-02(FAIL) step_max=0.00e+00
+control FAIL comp_10 n=37 m=5 ncorr=5 |newact|=18 |fv|=6 sub_rounds=0 sub_path=1: M=1.94e-01(FAIL) Mv=1.96e-01(FAIL) pg_inf=7.12e-10 xcp=1.94e-01(FAIL) vecc=1.28e-01(FAIL) newact(FAIL) fv(FAIL) drt0=9.86e-02(FAIL) step_max0=1.11e-01(FAIL) drt=1.78e-01(FAIL) subLUP(FAIL) dg=6.95e-02(FAIL) step_max=0.00e+00
+control FAIL comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=1.98e-01(FAIL) pg_inf=7.75e-08 xcp=3.59e-03(FAIL) vecc=1.90e-01(FAIL) drt0=1.48e-01(FAIL) step_max0=1.97e-01(FAIL) drt=1.96e-01(FAIL) dg=1.96e-01(FAIL) step_max=0.00e+00
+control FAIL comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: M=1.08e-01(FAIL) Mv=1.62e-01(FAIL) pg_inf=4.88e-10 xcp=2.04e-02(FAIL) vecc=1.86e-01(FAIL) drt0=9.18e-08 step_max0=2.42e-08 drt=5.00e-02(FAIL) dg=3.70e-02(FAIL) step_max=0.00e+00
+control FAIL comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: M=1.73e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=8.26e-08 xcp=4.32e-02(FAIL) vecc=1.85e-01(FAIL) drt0=4.25e-02(FAIL) step_max0=1.93e-01(FAIL) drt=2.13e-01(FAIL) dg=1.90e-01(FAIL) step_max=0.00e+00
+control FAIL comp_14 n=300 m=5 ncorr=3 |newact|=20 |fv|=175 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=6.34e-08 xcp=3.54e-02(FAIL) vecc=1.76e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.82e-01(FAIL) drt=2.06e-01(FAIL) subLUP(FAIL) dg=1.76e-01(FAIL) step_max=0.00e+00
+control FAIL comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: M=1.57e-01(FAIL) Mv=1.76e-01(FAIL) pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.42e-01(FAIL) drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00
+control FAIL comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: M=1.58e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.65e-07 xcp=3.46e-03(FAIL) vecc=9.43e-02(FAIL) drt0=2.53e-06 step_max0=1.18e-06 drt=2.05e-01(FAIL) dg=2.00e-01(FAIL) step_max=2.53e-01(FAIL)
+control FAIL comp_17 n=300 m=10 ncorr=10 |newact|=35 |fv|=169 sub_rounds=0 sub_path=2: M=1.69e-01(FAIL) Mv=1.72e-01(FAIL) pg_inf=2.28e-09 xcp=3.34e-02(FAIL) vecc=1.38e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.93e-01(FAIL) subLUP(FAIL) dg=1.62e-01(FAIL) step_max=0.00e+00
+control FAIL comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: M=7.90e-02(FAIL) Mv=1.56e-01(FAIL) pg_inf=4.06e-10 xcp=2.87e-02(FAIL) vecc=1.32e-01(FAIL) drt0=4.31e-08 step_max0=9.71e-09 drt=9.48e-02(FAIL) dg=9.35e-02(FAIL) step_max=1.05e-01(FAIL)
+control FAIL comp_19 n=37 m=5 ncorr=0 |newact|=9 |fv|=23 sub_rounds=0 sub_path=1: pg_inf=2.76e-09 xcp=9.17e-02(FAIL) newact(FAIL) fv(FAIL) drt0=1.13e-01(FAIL) step_max0=1.55e-01(FAIL) drt=2.00e-01(FAIL) subLUP(FAIL) dg=1.36e-01(FAIL) step_max=0.00e+00
+G1 control (theta x1.25): 0/20 pass; worst: M=1.95e-01 Mv=2.11e-01 dg=2.00e-01 drt=2.13e-01 drt0=1.54e-01 pg_inf=1.65e-07 step_max=2.91e-01 step_max0=1.97e-01 vecc=7.04e-01 xcp=1.94e-01
+FAIL rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506255872/0.0506045361 (err 2.1e-05(FAIL)) x rel 2.1e-04 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.69e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5
+    iter  0 f 75.4000154305 ref 75.4  pg 0 ref 2.7
+    iter  1 f 32.8000006485 ref 32.8  pg 2.1 ref 2.1
+    iter  2 f 19.0351359853 ref 19.0351348  pg 1.963 ref 1.963
+    iter  3 f 1.5631964516 ref 1.56319531  pg 1.75 ref 1.75
+    iter  4 f 1.53530714734 ref 1.53530627  pg 1.739 ref 1.739
+    iter  5 f 1.37152291255 ref 1.37151076  pg 1.541 ref 1.541
+    iter  6 f 0.978770130576 ref 0.978740897  pg 1.479 ref 1.479
+    iter  7 f 0.956154353432 ref 0.956153575  pg 1.377 ref 1.376
+    iter  8 f 0.918369303318 ref 0.918355313  pg 1.064 ref 1.064
+    iter  9 f 0.721026565699 ref 0.720785409  pg 1.098 ref 1.098
+    iter 10 f 0.555137862423 ref 0.554868326  pg 0.5419 ref 0.5418
+    iter 11 f 0.470625764115 ref 0.470636145  pg 1.191 ref 1.182
+    iter 12 f 0.346731906461 ref 0.347275936  pg 1.972 ref 1.973
+    iter 13 f 0.233481546321 ref 0.233766038  pg 0.9809 ref 0.9813
+    iter 14 f 0.177813363108 ref 0.177367256  pg 0.2674 ref 0.2667
+    iter 15 f 0.149170395163 ref 0.149337072  pg 2.132 ref 2.133
+    iter 16 f 0.125762961917 ref 0.125292505  pg 2.186 ref 2.186
+    iter 17 f 0.0855687776479 ref 0.0835933686  pg 2.229 ref 2.232
+    iter 18 f 0.0507708658786 ref 0.0506707594  pg 0.4117 ref 0.269
+    iter 19 f 0.0506255872225 ref 0.0506045361  pg 0.1689 ref 0.09033
+PASS rosen_n2_m10_tight               iters 21/21 nfev 27/27 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5
+PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.0505960957/0.050596468 (err 3.7e-07) x rel 5.6e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 2.01e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5
+PASS rosen_n2_m5_tight                iters 20/20 nfev 26/26 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5
+PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986617/32.7986617 (err 3.5e-08) x rel 1.3e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 1.7e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 1.01e-04 resets patho=0 chol=0 restores=0 first_f_divergence=27
+PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798888/32.7798888 (err 2.0e-08) x rel 1.5e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 5.6e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=21
+PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 2.2e-08) x rel 1.3e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 4.3e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.73e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25
+PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 6.9e-08) x rel 1.4e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosen_n100_m5_tight              iters 43/43 nfev 50/50 f 118.811118/118.811118 (err 2.0e-07) x rel 1.6e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.05e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25
+PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 2.1e-08) x rel 1.8e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosenbox_upstream_n25_m10_tight  iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 2.9e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 3.3e-07) x rel 1.7e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS rosenbox_upstream_n25_m5_tight   iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 1.4e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1
+PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 2.1e-06) x rel 7.3e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1
+PASS boxqp_n1000_m10_tight            iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.6e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.83e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1
+PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 2.1e-06) x rel 7.3e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1
+PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.0e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1
+G2: 19/20 pass

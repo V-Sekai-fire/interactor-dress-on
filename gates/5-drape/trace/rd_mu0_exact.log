@@ -1,0 +1,81 @@
+step   1 |dx|max 0.000302433/0.000302433 mean 0.000100747/0.000100747 pushes 0/0 
+step   2 |dx|max 0.000604831/0.000604831 mean 0.000201419/0.000201419 pushes 0/0 
+step   3 |dx|max 0.000907192/0.000907192 mean 0.000301694/0.000301694 pushes 0/0 
+step  25 |dx|max 0.00755008/0.00755008 mean 0.00239905/0.00239905 pushes 0/0 
+step  50 |dx|max 0.0150594/0.0150594 mean 0.00452846/0.00452846 pushes 0/0 
+step  69 |dx|max 0.0227714/0.0227714 mean 0.00560208/0.00560208 pushes 6/6 
+step  70 |dx|max 0.0229093/0.0229093 mean 0.00563713/0.00563713 pushes 6/6 
+step  71 |dx|max 0.0245876/0.0245876 mean 0.00560849/0.00560849 pushes 5/6 DIFF pushes
+step  72 |dx|max 0.0269724/0.0269724 mean 0.005639/0.00563902 pushes 3/3 DIFF mean,drift
+step  73 |dx|max 0.029853/0.029853 mean 0.00566795/0.00566796 pushes 0/0 DIFF mean,drift
+step  74 |dx|max 0.0321167/0.0321167 mean 0.00570072/0.00570072 pushes 0/0 DIFF drift
+step  75 |dx|max 0.0321488/0.0321488 mean 0.00572669/0.0057267 pushes 0/0 DIFF mean,drift
+step  76 |dx|max 0.0295564/0.0295564 mean 0.00573531/0.00573532 pushes 0/0 DIFF mean,drift
+step  80 |dx|max 0.0283022/0.0283022 mean 0.00571952/0.00571957 pushes 4/0 DIFF mean,pushes
+step  81 |dx|max 0.0304145/0.0304145 mean 0.00570651/0.0057064 pushes 4/0 DIFF mean,drift,pushes
+step  89 |dx|max 0.0349069/0.0349063 mean 0.00556503/0.00556512 pushes 5/4 DIFF max,mean,pred,drift,pushes
+step  90 |dx|max 0.0350509/0.0350509 mean 0.00549269/0.00549269 pushes 6/4 DIFF pred,drift,pushes
+step  91 |dx|max 0.0348686/0.0348686 mean 0.00543376/0.00543351 pushes 7/5 DIFF mean,drift,pushes
+step  92 |dx|max 0.0362138/0.0361935 mean 0.00541127/0.00541128 pushes 8/5 DIFF max,mean,drift,pushes
+step  93 |dx|max 0.0374426/0.0374125 mean 0.00533678/0.00533705 pushes 7/6 DIFF max,mean,pred,drift,pushes
+step  94 |dx|max 0.0380981/0.038054 mean 0.00532169/0.00532171 pushes 8/7 DIFF max,mean,pred,drift,pushes
+step  95 |dx|max 0.0368521/0.0367879 mean 0.00526202/0.00526187 pushes 7/7 DIFF max,mean,pred,drift
+step  97 |dx|max 0.040995/0.0409952 mean 0.00507023/0.00506923 pushes 2/4 DIFF max,mean,pred,drift,pushes
+step  99 |dx|max 0.0437075/0.0437094 mean 0.00497951/0.00497954 pushes 1/1 DIFF max,mean,pred,drift
+step 100 |dx|max 0.0433077/0.0433077 mean 0.00487412/0.00487422 pushes 2/2 DIFF mean,pred,drift
+step 101 |dx|max 0.04442/0.0444201 mean 0.00482244/0.00482401 pushes 2/4 DIFF max,mean,pushes
+step 102 |dx|max 0.0461501/0.0461502 mean 0.00475835/0.00475957 pushes 1/1 DIFF max,mean,pred,drift
+step 103 |dx|max 0.0469884/0.0469885 mean 0.00473054/0.00473314 pushes 1/2 DIFF max,mean,pred,drift,pushes
+step 104 |dx|max 0.0465957/0.0465957 mean 0.00465466/0.0046558 pushes 3/1 DIFF mean,pred,drift,pushes
+step 105 |dx|max 0.0463653/0.0463654 mean 0.00460009/0.00460084 pushes 6/1 DIFF max,mean,pushes
+step 106 |dx|max 0.0480787/0.0480785 mean 0.00454015/0.00453952 pushes 5/2 DIFF max,mean,pred,drift,pushes
+step 107 |dx|max 0.048366/0.0483657 mean 0.00443889/0.0044365 pushes 6/2 DIFF max,mean,pred,drift,pushes
+step 108 |dx|max 0.0473467/0.0473466 mean 0.00436213/0.0043551 pushes 8/2 DIFF max,mean,pred,drift,pushes
+step 109 |dx|max 0.0466516/0.0466514 mean 0.0042636/0.00426634 pushes 12/4 DIFF max,mean,pred,drift,drift@,pushes
+step 110 |dx|max 0.04355/0.0435492 mean 0.00409531/0.00408008 pushes 10/4 DIFF max,mean,pred,drift,pushes
+step 111 |dx|max 0.0451859/0.0444385 mean 0.0039615/0.00393987 pushes 12/7 DIFF max,mean,pred,drift,pushes
+step 112 |dx|max 0.0455998/0.0444649 mean 0.00383767/0.00381497 pushes 11/8 DIFF max,mean,pred,drift,pushes
+step 113 |dx|max 0.0436391/0.0423304 mean 0.00372305/0.00371985 pushes 11/8 DIFF max,mean,pred,drift,pushes
+step 114 |dx|max 0.0415519/0.0416406 mean 0.0036585/0.00364613 pushes 10/3 DIFF max,mean,pred,drift,pushes
+step 115 |dx|max 0.0418632/0.0420938 mean 0.00347565/0.00345081 pushes 11/6 DIFF max,mean,pred,drift,pushes
+step 116 |dx|max 0.0421746/0.042316 mean 0.00334119/0.00331758 pushes 15/7 DIFF max,mean,pred,drift,pushes
+step 117 |dx|max 0.0421352/0.0421252 mean 0.00325422/0.0032312 pushes 13/8 DIFF max,mean,pred,drift,pushes
+step 118 |dx|max 0.0419092/0.0421979 mean 0.00317742/0.00313336 pushes 16/8 DIFF max,mean,pred,drift,pushes
+step 119 |dx|max 0.0434523/0.0436151 mean 0.00302364/0.00297517 pushes 15/10 DIFF max,mean,pred,drift,drift@,pushes
+step 120 |dx|max 0.0450308/0.0449388 mean 0.00294133/0.00290433 pushes 15/8 DIFF max,mean,pred,drift,pushes
+step 121 |dx|max 0.0464849/0.046056 mean 0.0028601/0.0028231 pushes 13/8 DIFF max,mean,pred,drift,pushes
+step 122 |dx|max 0.0478141/0.0469818 mean 0.00268365/0.00266118 pushes 13/10 DIFF max,mean,pred,drift,drift@,pushes
+step 123 |dx|max 0.0489471/0.0484766 mean 0.00253545/0.0025163 pushes 15/9 DIFF max,mean,pred,drift,pushes
+step 124 |dx|max 0.0500703/0.0506529 mean 0.00239302/0.0023702 pushes 11/10 DIFF max,mean,pred,drift,drift@,pushes
+step 125 |dx|max 0.0506234/0.0524948 mean 0.00231276/0.00229813 pushes 13/11 DIFF max,mean,pred,drift,drift@,pushes
+step 126 |dx|max 0.0529379/0.0533981 mean 0.00219325/0.0021469 pushes 12/9 DIFF max,mean,pred,drift,drift@,pushes
+step 127 |dx|max 0.0536996/0.0538045 mean 0.00210516/0.00206718 pushes 13/12 DIFF max,mean,pred,drift,drift@,pushes
+step 128 |dx|max 0.0525126/0.053493 mean 0.00204085/0.00196537 pushes 14/12 DIFF max,mean,pred,drift,drift@,pushes
+step 129 |dx|max 0.0543076/0.0504727 mean 0.00189128/0.00184919 pushes 16/11 DIFF max,mean,pred,drift,drift@,pushes
+step 150 |dx|max 0.0247881/0.0251452 mean 0.000570931/0.00054525 pushes 15/9 DIFF max,mean,pred,drift,pushes
+step 175 |dx|max 0.0269984/0.0260579 mean 0.000411864/0.00040837 pushes 12/17 DIFF max,mean,pred,drift,pushes
+step 200 |dx|max 0.032994/0.0327809 mean 0.000400295/0.000400393 pushes 18/18 DIFF max,mean,pred,drift
+step 225 |dx|max 0.0335417/0.0296032 mean 0.000428924/0.000401698 pushes 24/20 DIFF max,mean,pred,drift,drift@,pushes
+step 250 |dx|max 0.0350748/0.0314604 mean 0.000374178/0.000381472 pushes 26/21 DIFF max,mean,pred,drift,drift@,pushes
+step 275 |dx|max 0.0246276/0.0243673 mean 0.000370581/0.000366943 pushes 19/17 DIFF max,mean,pred,drift,drift@,pushes
+step 300 |dx|max 0.0271003/0.0269586 mean 0.000360245/0.00032898 pushes 19/14 DIFF max,mean,pred,drift,drift@,pushes
+step 325 |dx|max 0.0383115/0.0356296 mean 0.000360955/0.000336358 pushes 23/19 DIFF max,mean,pred,drift,drift@,pushes
+step 350 |dx|max 0.0325597/0.0319478 mean 0.000370698/0.000361679 pushes 26/20 DIFF max,mean,pred,drift,drift@,pushes
+first step with any printed statistic or push count different: 71 (first push-count difference: 71)
+frame   1 max|dx| 0 (beyond the 6-digit print 0)
+frame  10 max|dx| 4.89e-06 (beyond the 6-digit print 4.9e-10)
+frame  20 max|dx| 5e-06 (beyond the 6-digit print 4.73e-10)
+frame  50 max|dx| 5e-06 (beyond the 6-digit print 1.8e-08)
+frame  60 max|dx| 5e-06 (beyond the 6-digit print 2e-08)
+frame  70 max|dx| 4.99e-06 (beyond the 6-digit print 2.4e-08)
+frame  71 max|dx| 4.99e-06 (beyond the 6-digit print 2.2e-08)
+frame  72 max|dx| 0.000112 (beyond the 6-digit print 0.000112)
+frame  75 max|dx| 2.93e-05 (beyond the 6-digit print 2.88e-05)
+frame  80 max|dx| 0.000279 (beyond the 6-digit print 0.000274)
+frame 100 max|dx| 0.00417 (beyond the 6-digit print 0.00416)
+frame 150 max|dx| 0.0978 (beyond the 6-digit print 0.0978)
+frame 200 max|dx| 0.0873 (beyond the 6-digit print 0.0873)
+frame 250 max|dx| 0.152 (beyond the 6-digit print 0.152)
+frame 300 max|dx| 0.0936 (beyond the 6-digit print 0.0936)
+frame 350 max|dx| 0.102 (beyond the 6-digit print 0.102)
+first frame beyond the print by more than 1e-6: 72

@@ -327,3 +327,136 @@ func curvenet_extract_demo() -> String:
 	var c := MeshWire.cube()
 	var r := _cn_call("curvenet_extract", [c.vertices, c.triangles, 200, 1e-3, 1e-2, 0.0])
 	return r
+
+# --- Cut 5: the drape (drape.elf), DiffCloth's sphere demo and host meshes -----
+# One session, advanced one frame at a time by _process (rule 4). Every guest
+# entry point has a wrapper here with defaults, so MCP call_method needs no
+# argument marshalling (rule 8): drape_sphere_demo, drape_forward, then poll
+# drape_status; drape_backward after a drape_target.
+
+var _drape_status := "IDLE no session"
+var _drape_job_status := ""
+var _drape_job_on := false
+
+func _process(_delta: float) -> void:
+	if _drape == null:
+		return
+	if not _drape_status.begins_with("IDLE"):
+		_drape_status = str(_drape.vmcall("drape_tick", Time.get_ticks_usec()))
+	if _drape_job_on:
+		_drape_job_status = str(_drape.vmcall("drape_job_tick", Time.get_ticks_usec()))
+		if not _drape_job_status.begins_with("RUNNING"):
+			_drape_job_on = false
+
+func _dv(name: String, args: Array = []) -> String:
+	if _drape == null:
+		return "FAIL: no drape sandbox"
+	return str(_drape.callv("vmcall", [name] + args))
+
+# backend: cpu | rd | auto (rd from 160 vertices at 90 fps: Gate 5 G9).
+func drape_open(backend: String = "auto") -> String:
+	return _dv("drape_open", [backend])
+
+func drape_sphere_demo(backend: String = "auto") -> String:
+	var o := drape_open(backend)
+	if not o.begins_with("OPENED"):
+		return o
+	return _dv("drape_scene_sphere_demo")
+
+func drape_scene_mesh(positions: PackedFloat32Array = PackedFloat32Array(), triangles: PackedInt32Array = PackedInt32Array(),
+		pins: PackedInt32Array = PackedInt32Array(), material: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return _dv("drape_scene_mesh", [positions, triangles, pins, material])
+
+# kind: sphere [c, r, mu] | plane [c, ul, ur, mu] | capsule [b, axis, r, len, mu] | clear.
+func drape_primitive(kind: String = "clear", params: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return _dv("drape_primitive", [kind, params])
+
+func drape_config(key: String = "iters", value: float = 16.0) -> String:
+	return _dv("drape_config", [key, value])
+
+# steps > 0 queues steps; 0 rewinds to the initial state.
+func drape_forward(steps: int = 100) -> String:
+	var r := _dv("drape_queue_forward", [steps])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+	return r
+
+# kind: trajectory (the recorded frames become the target) | points | clear.
+func drape_target(kind: String = "trajectory", verts: PackedInt32Array = PackedInt32Array(),
+		positions: PackedFloat32Array = PackedFloat32Array(), frame: int = -1) -> String:
+	return _dv("drape_set_target", [kind, verts, positions, frame])
+
+# loss: match_trajectory | target_points; mode: native | step | unrolled.
+func drape_backward(loss: String = "match_trajectory", mode: String = "unrolled") -> String:
+	var r := _dv("drape_queue_backward", [loss, mode])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+	return r
+
+# RUNNING k/N while the queue runs, then IDLE and the last result's first line.
+func drape_status() -> String:
+	return _drape_status
+
+func drape_result() -> String:
+	return _dv("drape_result")
+
+func drape_positions() -> PackedFloat32Array:
+	return _drape.vmcall("drape_positions") if _drape != null else PackedFloat32Array()
+
+func drape_frame(i: int = 0) -> PackedFloat32Array:
+	return _drape.vmcall("drape_frame", i) if _drape != null else PackedFloat32Array()
+
+func drape_faces() -> PackedInt32Array:
+	return _drape.vmcall("drape_faces") if _drape != null else PackedInt32Array()
+
+# Gate 5 jobs: sphere_forward, sphere_backward, sim_gradcheck, bench_drape,
+# inverse_min, lbfgsb_components, lbfgsb_problems, lbfgsb_replay, lbfgsb_bench.
+func drape_job(name: String = "sphere_forward", backend: String = "auto", args: String = "") -> String:
+	var r := _dv("drape_job_start", [name, backend, args])
+	_drape_job_on = r.begins_with("STARTED")
+	_drape_job_status = r
+	return r
+
+func drape_job_result() -> String:
+	return _drape_job_status
+
+func drape_job_frame(i: int = 0) -> PackedFloat32Array:
+	return _drape.vmcall("drape_job_frame", i) if _drape != null else PackedFloat32Array()
+
+func drape_job_names() -> String:
+	return _dv("drape_job_names")
+
+# L-BFGS-B over the session's parameters (drape.elf's drape_queue_optimize):
+# spec "params=mu[,kTri,...] loss=match_trajectory mode=native steps=N vec=cpu
+# m=10 delta=1e-3 ...", one x0/lb/ub value per parameter, max_iter 0 = to
+# convergence. Poll drape_status, then drape_optimize_result.
+func drape_optimize(spec: String = "params=mu mode=native", x0: PackedFloat32Array = PackedFloat32Array([0.5]),
+		lb: PackedFloat32Array = PackedFloat32Array([0.01]), ub: PackedFloat32Array = PackedFloat32Array([1.0]),
+		max_iter: int = 10) -> String:
+	var r := _dv("drape_queue_optimize", [spec, x0, lb, ub, max_iter])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+	return r
+
+func drape_optimize_result() -> String:
+	return _dv("drape_optimize_result")
+
+# Hand the drape jobs a data file by key ("clear" drops them all).
+func drape_job_data(key: String = "clear", text: String = "") -> String:
+	return _dv("drape_job_data", [key, text])
+
+# The Gate 5 oracle (gates/5-drape/oracle) into drape.elf, for the jobs
+# lbfgsb_components, lbfgsb_problems and inverse_min.
+func lbfgsb_load_oracle() -> String:
+	var root := ProjectSettings.globalize_path("res://../gates/5-drape/oracle/")
+	var r := drape_job_data("clear", "")
+	for f in ["k_tri", "k_bend_density"]:
+		r = drape_job_data("invmin_" + f, FileAccess.get_file_as_string(root + "inverse_min/case_" + f + ".txt"))
+	for sub in [["components", ""], ["problems", "prob_"], ["traces", "trace_"]]:
+		var d := DirAccess.open(root + sub[0])
+		if d == null:
+			return "FAIL: no " + root + sub[0]
+		for f in d.get_files():
+			if f.ends_with(".txt"):
+				r = drape_job_data(sub[1] + f.get_basename(), FileAccess.get_file_as_string(root + sub[0] + "/" + f))
+	return r

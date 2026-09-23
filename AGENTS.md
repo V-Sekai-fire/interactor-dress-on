@@ -145,6 +145,24 @@ our own, no host DLL. The GPU is reachable only through Godot's
 - A native flat control built with llvm-mingw links libc++; the guest links
   libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
   between them from the same seed: use the engine's raw output (Gate 4).
+- In a guest, a `std::vector<std::vector<T>>` kept alive in a long-lived
+  record (a `std::vector` of records, across stages) corrupted libc state:
+  "Illegal opcode" at an `ecall` in memmove/memcpy/puts/fflush, garbage
+  syscall numbers. As a local it is fine, and ASan on the host is clean. Keep
+  long-lived guest data flat (gates/5-drape/drape/README.md). Godot's
+  `--gpu-index` order is not stable (index 1 was the RTX 4090 on one boot,
+  index 0 on the next): check the adapter line in the log. The native
+  references ran on the 4090; the drape is bit-identical on the 3090.
+- DiffCloth's sphere demo is chaotic after its self-collision onset (step
+  ~70): a 9.7e-9 change of mu (mu0 vs float32(mu0)) moves the 350-step
+  dL/dmu by 4.4%, and a 4.4e-9 change moves it by 7.8% and the loss by 6.5%.
+  Compare with the native run at its exact seed-1 mu, 0.5397701956236457
+  (`kNativeSphereMu0`), never the printed 0.539770; at the exact value every
+  printed per-step statistic matches native to step 70 (gates/5-drape/trace).
+- An L-BFGS-B guard that LBFGSpp writes with `numeric_limits<double>::epsilon()`
+  as an absolute threshold keeps 2^-52 in the float32 kernels (`dblEps`), not
+  FLT_EPSILON: the sphere demo's gradients are ~1e-5, so fpp = g.g ~ 1e-10,
+  and FLT_EPSILON there shrank the first Cauchy step to nothing.
 
 ## Conventions
 

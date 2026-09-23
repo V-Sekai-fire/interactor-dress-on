@@ -1,0 +1,33 @@
+Record 0
+============Forward Info:======================
+Total PD Iters:32761
+Total Frames Converged:0
+Forward Total Runtime[ms]:24528.16100
+Loss:0.00133
+============Timer Breakdown:======================
+init[ms]:24516.83400		|99.954%
+PD init[ms]:7.74800		|0.032%
+============Parameter Info:======================
+mu from prim0:0.539770
+Record 1
+============Forward Info:======================
+Total PD Iters:32761
+Total Frames Converged:0
+Forward Total Runtime[ms]:21140.83000
+Loss:1.65198
+============Timer Breakdown:======================
+init[ms]:21129.68800		|99.947%
+PD init[ms]:7.12100		|0.034%
+============Parameter Info:======================
+mu from prim0:0.010000
+Record 2
+============Forward Info:======================
+Total PD Iters:32761
+Total Frames Converged:0
+Forward Total Runtime[ms]:30510.06100
+Loss:0.00048
+============Timer Breakdown:======================
+init[ms]:30499.52200		|99.965%
+PD init[ms]:6.90400		|0.023%
+============Parameter Info:======================
+mu from prim0:0.375146

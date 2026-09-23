@@ -33,7 +33,8 @@ abstract: >-
   w > 0.5); 8^3 bricks in an unordered_map, filled whole on first touch,
   each value a pure function of the voxel index; SdfGrid::cached() shares
   one grid per (avatar hash, voxel size) across the FitForm rebuilt every
-  substep. (3) New garment_forms/SdfSpline.{hpp,cpp}: the call site of the
+  substep, SdfGrid::current() hands it out for reporting. (3) New
+  garment_forms/SdfSpline.{hpp,cpp}: the call site of the
   Lean-emitted tricubic B-spline kernel (lean/Fit/SdfSplineHessian.lean ->
   kernels/fit/cpp/sdf_spline_hessian_emit.cpp) that replaces the openvdb
   fork's SplineSampler::sampleHessian; the CMake option FIT_KERNELS_PENDING

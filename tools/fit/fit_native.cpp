@@ -27,6 +27,9 @@
 #include <polyfem/io/MatrixIO.hpp>
 #include <polyfem/io/OBJData.hpp>
 #include <polyfem/mesh/MeshUtils.hpp>
+#ifdef FIT_SDF_GRID
+#include <polyfem/solver/forms/garment_forms/SdfGrid.hpp>
+#endif
 
 #include <igl/point_mesh_squared_distance.h>
 #include <nlohmann/json.hpp>
@@ -477,6 +480,15 @@ int main(int argc, char **argv) {
 	std::printf("preview ring: latest seq %lld, max |preview - final| %.3g\n", (long long)seq, pdiff);
 	std::printf("time: begin+phases wall %.2f s, cpu %.2f s; process cpu %.2f s; peak working set %.1f MB\n",
 				now_s() - t0, cpu_seconds() - c0, cpu_seconds(), peak_ws_mb());
+
+#ifdef FIT_SDF_GRID
+	if (const auto grid = polyfem::solver::SdfGrid::current()) {
+		const auto gs = grid->stats();
+		std::printf("sdf grid: voxel %g  bricks %zu (%zu voxels)  %.2f MB  distance queries %zu  winding queries %zu  fill %.2f s\n",
+					grid->voxel_size(), gs.bricks, gs.bricks * std::size_t(polyfem::solver::SdfGrid::kBrickVoxels),
+					gs.bytes / 1048576.0, gs.distance_queries, gs.winding_queries, gs.fill_seconds);
+	}
+#endif
 
 	if (control_push) {
 		// Control for the intersection check: one garment vertex pushed into

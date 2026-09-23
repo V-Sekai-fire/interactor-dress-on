@@ -1,0 +1,55 @@
+compare fit-out-sdf64/garment_final.obj vs cf-up-out1/step_garment_252.obj: 2682 verts, voxel 0.01
+  per-vertex: max 4.74707 voxels (vertex 1329), mean 2.77192, p99 4.48315  [max 4.747065e-02 m]
+  hausdorff (vertex-sampled, point to surface): 4.51922 voxels (A->B 4.34909, B->A 4.51922)
+compare fit-out-sdf64/garment_final.obj vs cf-up-out16/step_garment_253.obj: 2682 verts, voxel 0.01
+  per-vertex: max 9.12261 voxels (vertex 1576), mean 3.32167, p99 8.60408  [max 9.122608e-02 m]
+  hausdorff (vertex-sampled, point to surface): 5.16788 voxels (A->B 4.71438, B->A 5.16788)
+compare fit-out-sdf64/garment_final.obj vs cf-up-out16b/step_garment_188.obj: 2682 verts, voxel 0.01
+  per-vertex: max 0.869545 voxels (vertex 268), mean 0.385288, p99 0.785933  [max 8.695446e-03 m]
+  hausdorff (vertex-sampled, point to surface): 0.76093 voxels (A->B 0.76093, B->A 0.73059)
+compare fit-out-sdf64/garment_final.obj vs fit-out-f64/garment_final.obj: 2682 verts, voxel 0.01
+  per-vertex: max 5.38916 voxels (vertex 345), mean 1.73029, p99 5.05702  [max 5.389160e-02 m]
+  hausdorff (vertex-sampled, point to surface): 4.00545 voxels (A->B 4.00545, B->A 3.87627)
+compare fit-out-sdf64/garment_final.obj vs fit-out-f32c/garment_final.obj: 2682 verts, voxel 0.01
+  per-vertex: max 8.5874 voxels (vertex 1576), mean 3.0194, p99 8.07214  [max 8.587395e-02 m]
+  hausdorff (vertex-sampled, point to surface): 5.12396 voxels (A->B 4.93055, B->A 5.12396)
+compare fit-out-sdf32/garment_final.obj vs cf-up-out1/step_garment_252.obj: 2682 verts, voxel 0.01
+  per-vertex: max 10.2893 voxels (vertex 1576), mean 5.11686, p99 9.57466  [max 1.028928e-01 m]
+  hausdorff (vertex-sampled, point to surface): 6.69903 voxels (A->B 5.76184, B->A 6.69903)
+compare fit-out-sdf32/garment_final.obj vs cf-up-out16/step_garment_253.obj: 2682 verts, voxel 0.01
+  per-vertex: max 2.58596 voxels (vertex 355), mean 1.01041, p99 2.50379  [max 2.585962e-02 m]
+  hausdorff (vertex-sampled, point to surface): 1.67724 voxels (A->B 1.67724, B->A 1.55238)
+compare fit-out-sdf32/garment_final.obj vs cf-up-out16b/step_garment_188.obj: 2682 verts, voxel 0.01
+  per-vertex: max 7.06461 voxels (vertex 1576), mean 2.26663, p99 6.62477  [max 7.064610e-02 m]
+  hausdorff (vertex-sampled, point to surface): 4.46824 voxels (A->B 4.32434, B->A 4.46824)
+compare fit-out-upsdf64/garment_final.obj vs cf-up-out1/step_garment_252.obj: 2682 verts, voxel 0.01
+  per-vertex: max 11.4019 voxels (vertex 1382), mean 3.43811, p99 10.0231  [max 1.140186e-01 m]
+  hausdorff (vertex-sampled, point to surface): 6.03133 voxels (A->B 6.03133, B->A 5.75695)
+compare fit-out-upsdf64/garment_final.obj vs cf-up-out16/step_garment_253.obj: 2682 verts, voxel 0.01
+  per-vertex: max 9.85131 voxels (vertex 1391), mean 4.02791, p99 8.98354  [max 9.851309e-02 m]
+  hausdorff (vertex-sampled, point to surface): 8.17768 voxels (A->B 8.17768, B->A 6.95145)
+compare fit-out-upsdf64/garment_final.obj vs cf-up-out16b/step_garment_188.obj: 2682 verts, voxel 0.01
+  per-vertex: max 8.94637 voxels (vertex 1710), mean 2.65763, p99 7.87383  [max 8.946373e-02 m]
+  hausdorff (vertex-sampled, point to surface): 7.87304 voxels (A->B 7.87304, B->A 5.78275)
+compare fit-out-upsdf64/garment_final.obj vs fit-out-up64b/garment_final.obj: 2682 verts, voxel 0.01
+  per-vertex: max 11.4019 voxels (vertex 1382), mean 3.43811, p99 10.0231  [max 1.140186e-01 m]
+  hausdorff (vertex-sampled, point to surface): 6.03133 voxels (A->B 6.03133, B->A 5.75695)
+compare fit-out-sdf32/garment_final.obj vs fit-out-f32c/garment_final.obj: 2682 verts, voxel 0.01
+  per-vertex: max 1.41478 voxels (vertex 1699), mean 0.635013, p99 1.35842  [max 1.414780e-02 m]
+  hausdorff (vertex-sampled, point to surface): 0.798187 voxels (A->B 0.798187, B->A 0.760916)
+compare fit-out-sdf64/garment_final.obj vs fit-out-sdf32/garment_final.obj: 2682 verts, voxel 0.01
+  per-vertex: max 7.78882 voxels (vertex 1576), mean 2.50619, p99 7.31275  [max 7.788820e-02 m]
+  hausdorff (vertex-sampled, point to surface): 4.92597 voxels (A->B 4.89061, B->A 4.92597)
+compare fit-out-sdf64/garment_final.obj vs fit-out-upsdf64/garment_final.obj: 2682 verts, voxel 0.01
+  per-vertex: max 8.91041 voxels (vertex 168), mean 2.55762, p99 7.81622  [max 8.910408e-02 m]
+  hausdorff (vertex-sampled, point to surface): 7.70214 voxels (A->B 5.61098, B->A 7.70214)
+compare fit-out-sdf64-fw0/garment_final.obj vs cf-up-out1/step_garment_252.obj: 2682 verts, voxel 0.01
+  per-vertex: max 9.339 voxels (vertex 334), mean 4.90961, p99 9.00118  [max 9.338996e-02 m]
+  hausdorff (vertex-sampled, point to surface): 6.18274 voxels (A->B 6.04752, B->A 6.18274)
+compare fit-out-sdf64-fw0/garment_final.obj vs cf-up-out16/step_garment_253.obj: 2682 verts, voxel 0.01
+  per-vertex: max 6.2341 voxels (vertex 284), mean 2.69836, p99 5.79687  [max 6.234098e-02 m]
+  hausdorff (vertex-sampled, point to surface): 5.854 voxels (A->B 5.854, B->A 5.29246)
+compare fit-out-sdf64-fw0/garment_final.obj vs cf-up-out16b/step_garment_188.obj: 2682 verts, voxel 0.01
+  per-vertex: max 6.91169 voxels (vertex 230), mean 3.18954, p99 6.46389  [max 6.911695e-02 m]
+  hausdorff (vertex-sampled, point to surface): 5.5205 voxels (A->B 5.45829, B->A 5.5205)
+cmp fit-out-sdf64 fit-out-sdf64b garment_final.f64: identical (guest numerics + SdfGrid, run to run, different load)

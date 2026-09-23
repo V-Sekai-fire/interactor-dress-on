@@ -14,6 +14,13 @@
 #            OBJ writes guarded. Native only: an interim until the brick-grid
 #            SdfGrid FitForm (working tree) has its Lean kernel.
 #   sdfgrid  the working tree's FitForm + SdfGrid + SdfSpline (no OpenVDB).
+#            FIT_SDF_SAMPLER picks the spline sampler behind SdfSpline.hpp:
+#              kernel     SdfSpline.cpp over the Lean emit (needs FIT_KERNELS_DIR
+#                         and FIT_SLANG_PRELUDE_DIR)
+#              reference  sdf_spline_reference.cpp, the Gate 6a reference
+#                         (gates/6-fit/sdf/spline_ref.h); native only, the
+#                         default until the Lean kernel is emitted
+#              pending    SdfSpline.cpp with FIT_KERNELS_PENDING (throws)
 cmake_minimum_required(VERSION 3.25)
 
 # As cloth-fit's top level: tight-inclusion must not find AVX (it would add
@@ -119,10 +126,16 @@ if(FIT_SDF STREQUAL "openvdb")
     endif()
     list(APPEND POLYFEM_FIT_SOURCES "${FITFORM_SUB}/FitForm.cpp")
 else()
+    set(FIT_SDF_SAMPLER "reference" CACHE STRING "kernel | reference (native only) | pending")
+    set_property(CACHE FIT_SDF_SAMPLER PROPERTY STRINGS kernel reference pending)
     list(APPEND POLYFEM_FIT_SOURCES
         ${CF_SRC}/solver/forms/garment_forms/FitForm.cpp
-        ${CF_SRC}/solver/forms/garment_forms/SdfGrid.cpp
-        ${CF_SRC}/solver/forms/garment_forms/SdfSpline.cpp)
+        ${CF_SRC}/solver/forms/garment_forms/SdfGrid.cpp)
+    if(FIT_SDF_SAMPLER STREQUAL "reference")
+        list(APPEND POLYFEM_FIT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sdf_spline_reference.cpp")
+    else()
+        list(APPEND POLYFEM_FIT_SOURCES ${CF_SRC}/solver/forms/garment_forms/SdfSpline.cpp)
+    endif()
 endif()
 
 add_library(polyfem_fit STATIC ${POLYFEM_FIT_SOURCES})
@@ -132,11 +145,15 @@ if(FIT_SDF STREQUAL "openvdb")
     target_compile_definitions(polyfem_fit PUBLIC FIT_FITFORM_OUT_DIR)
     target_link_libraries(polyfem_fit PUBLIC openvdb)
 else()
+    target_compile_definitions(polyfem_fit PUBLIC FIT_SDF_GRID)
     set(FIT_KERNELS_DIR "" CACHE PATH "kernels/fit/cpp (sdf_spline_hessian_emit.cpp)")
     set(FIT_SLANG_PRELUDE_DIR "" CACHE PATH "slang-cpp-prelude.h directory")
-    if(FIT_KERNELS_DIR)
+    if(FIT_SDF_SAMPLER STREQUAL "kernel")
+        if(NOT EXISTS "${FIT_KERNELS_DIR}/sdf_spline_hessian_emit.cpp")
+            message(FATAL_ERROR "FIT_SDF_SAMPLER=kernel needs FIT_KERNELS_DIR with sdf_spline_hessian_emit.cpp")
+        endif()
         target_include_directories(polyfem_fit PRIVATE "${FIT_KERNELS_DIR}" "${FIT_SLANG_PRELUDE_DIR}")
-    else()
+    elseif(FIT_SDF_SAMPLER STREQUAL "pending")
         target_compile_definitions(polyfem_fit PRIVATE FIT_KERNELS_PENDING)
     endif()
 endif()

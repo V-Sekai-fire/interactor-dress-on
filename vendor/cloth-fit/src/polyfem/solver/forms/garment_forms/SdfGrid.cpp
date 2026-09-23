@@ -90,6 +90,12 @@ namespace polyfem::solver
 		g_cache_key = 0;
 	}
 
+	std::shared_ptr<const SdfGrid> SdfGrid::current()
+	{
+		std::lock_guard<std::mutex> lock(g_cache_mutex);
+		return g_cache;
+	}
+
 	double SdfGrid::compute_voxel(const int i, const int j, const int k) const
 	{
 		const Eigen::RowVector3d p(double(i) * h_, double(j) * h_, double(k) * h_);

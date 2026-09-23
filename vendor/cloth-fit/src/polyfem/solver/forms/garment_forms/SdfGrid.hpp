@@ -66,6 +66,8 @@ namespace polyfem::solver
 		/// kept; a different avatar or voxel size replaces it.
 		static std::shared_ptr<const SdfGrid> cached(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F, double voxel_size);
 		static void clear_cache();
+		/// The cached grid, or null (for reporting its Stats after a solve).
+		static std::shared_ptr<const SdfGrid> current();
 
 		double voxel_size() const { return h_; }
 

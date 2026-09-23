@@ -7,3 +7,7 @@ guest/fit/specs/*.json text eol=lf
 
 # slangc writes CRLF on Windows; the committed emits are LF.
 kernels/fit/cpp/*.cpp text eol=lf
+
+# Shell scripts that run inside Linux containers from this (Windows) checkout.
+tools/wheels/*.sh text eol=lf
+gates/7-pixal3d/own-wheels/*.sh text eol=lf

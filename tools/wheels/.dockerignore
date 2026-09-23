@@ -1,0 +1,4 @@
+# build.sh passes this directory as the context; the image needs only the environment
+*
+!pixi.toml
+!pixi.lock

@@ -1,0 +1,24 @@
+# The build environment for the Pixal3D CUDA extension wheels (tools/wheels/build.sh),
+# used inside tools/wheels/Dockerfile (linux-64 only). Python and torch match the
+# service's win-64 half (tools/services/pixal3d/pixi.toml): cp311, torch 2.8.0 + cu128.
+# nvcc is the CUDA 12.8 toolkit of the nvidia/cuda devel base image, the same minor
+# version torch 2.8.0+cu128 was built with (torch.utils.cpp_extension checks it).
+
+[workspace]
+name = "pixal3d-wheels-build"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = "3.11.*"
+pip = "*"
+# the setuptools that built the Space_Wheels_251210 set Pixal3D pins (their WHEEL files
+# say "Generator: setuptools (80.9.0)"), so the build does not float with its releases
+setuptools = "==80.9.0"
+wheel = "*"
+ninja = "*"
+
+[pypi-dependencies]
+torch = { version = "==2.8.0", index = "https://download.pytorch.org/whl/cu128" }
+numpy = "*"

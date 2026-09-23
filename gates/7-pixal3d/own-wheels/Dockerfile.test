@@ -1,0 +1,44 @@
+# Runtime test image for the own-built wheels (gates/7-pixal3d/own-wheels/test.sh).
+# ubuntu 24.04 (the RunPod worker's base) + pixi + env/pixi.lock: python 3.11,
+# torch 2.8.0+cu128 (triton 3.4.0), the five wheels, and the service's other
+# dependencies; then the service sources fetch.py pins, so smoke.py --imports-only
+# (the service's check) runs as it does on the desk. Nothing is compiled here.
+#
+#   context: the repository root
+#   --build-context wheels=<dir>: the .whl files env/pixi.toml names by path (an empty
+#     dir when env/pixi.toml names release URLs instead)
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+# git: fetch.py and utils3d-moge's git pin; gcc + libc6-dev: Triton's launcher stub
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates curl git gcc libc6-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+ARG PIXI_VERSION=0.79.0
+ARG PIXI_SHA256=b9b6dd2bdf4e0043c2c0cd6d15334a26c6851121bf5ae16c39b69add598bafdc
+RUN curl -fsSL -o /tmp/pixi.tar.gz \
+        "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-x86_64-unknown-linux-musl.tar.gz" \
+ && echo "${PIXI_SHA256}  /tmp/pixi.tar.gz" | sha256sum -c - \
+ && tar -xzf /tmp/pixi.tar.gz -C /usr/local/bin pixi \
+ && rm /tmp/pixi.tar.gz
+
+WORKDIR /env
+COPY gates/7-pixal3d/own-wheels/env/pixi.toml gates/7-pixal3d/own-wheels/env/pixi.lock ./
+COPY --from=wheels / ./wheels/
+RUN pixi install --locked && pixi clean cache --yes && rm -rf /root/.cache
+
+WORKDIR /app
+COPY tools/services/svc_common.py tools/services/
+COPY tools/services/pixal3d/fetch.py tools/services/pixal3d/smoke.py tools/services/pixal3d/
+COPY tools/services/pixal3d/patches/ tools/services/pixal3d/patches/
+RUN cd tools/services/pixal3d && /env/.pixi/envs/default/bin/python fetch.py --src
+COPY gates/7-pixal3d/own-wheels/kernels.py /app/
+
+ENV PATH=/env/.pixi/envs/default/bin:$PATH \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+    ATTN_BACKEND=sdpa \
+    PYTHONUTF8=1 \
+    PYTHONUNBUFFERED=1
+WORKDIR /app/tools/services/pixal3d

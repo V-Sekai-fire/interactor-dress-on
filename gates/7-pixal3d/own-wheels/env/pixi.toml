@@ -1,0 +1,50 @@
+# The runtime test environment for the own-built wheels (Dockerfile.test, test.sh):
+# the Pixal3D service's dependencies (tools/services/pixal3d/pixi.toml) on linux-64 with
+# the win-64 half's python and torch (3.11, torch 2.8.0 + cu128, so triton 3.4.0) and
+# the five CUDA extensions built by tools/wheels/build.sh from the org forks.
+
+[workspace]
+name = "pixal3d-own-wheels-test"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = "3.11.*"
+
+[pypi-dependencies]
+torch = { version = "==2.8.0", index = "https://download.pytorch.org/whl/cu128" }
+torchvision = { version = "==0.23.0", index = "https://download.pytorch.org/whl/cu128" }
+
+# tools/wheels/build.sh, cp311 linux_x86_64, torch 2.8.0 + cu128
+cumesh = { path = "wheels/cumesh-0.0.1-cp311-cp311-linux_x86_64.whl" }
+flex-gemm = { path = "wheels/flex_gemm-0.0.1-cp311-cp311-linux_x86_64.whl" }
+o-voxel = { path = "wheels/o_voxel-0.0.1-cp311-cp311-linux_x86_64.whl" }
+nvdiffrast = { path = "wheels/nvdiffrast-0.4.0-cp311-cp311-linux_x86_64.whl" }
+nvdiffrec-render = { path = "wheels/nvdiffrec_render-0.0.0-cp311-cp311-linux_x86_64.whl" }
+
+# The rest as tools/services/pixal3d/pixi.toml pins it.
+utils3d = { url = "https://github.com/V-Sekai-fire/Storages/releases/download/20260430/utils3d-0.0.2-py3-none-any.whl" }
+utils3d-moge = { git = "https://github.com/V-Sekai-fire/utils3d-moge.git", rev = "62f09d58509485564e24d5d9f6aac9ee9ebc0c37" }
+pillow = "==12.0.0"
+imageio = "==2.37.2"
+imageio-ffmpeg = "==0.6.0"
+tqdm = "==4.67.1"
+easydict = "==1.13"
+opencv-python-headless = "==4.12.0.88"
+trimesh = "==4.10.1"
+transformers = "==4.57.3"
+zstandard = "==0.25.0"
+kornia = "==0.8.2"
+timm = "==1.0.22"
+diffusers = "==0.37.1"
+accelerate = "==1.13.0"
+plyfile = "==1.1.3"
+safetensors = ">=0.5"
+einops = "*"
+scipy = "*"
+huggingface-hub = ">=0.34,<1.0"
+fastapi = "*"
+uvicorn = "*"
+requests = "*"
+usd-core = "*"

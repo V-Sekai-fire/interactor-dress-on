@@ -1,0 +1,10 @@
+# BuildKit reads <Dockerfile>.dockerignore beside the Dockerfile; the image COPYs named
+# files only, so this keeps the context small.
+*
+!tools/services/svc_common.py
+!tools/services/pixal3d/fetch.py
+!tools/services/pixal3d/smoke.py
+!tools/services/pixal3d/patches/
+!gates/7-pixal3d/own-wheels/env/pixi.toml
+!gates/7-pixal3d/own-wheels/env/pixi.lock
+!gates/7-pixal3d/own-wheels/kernels.py

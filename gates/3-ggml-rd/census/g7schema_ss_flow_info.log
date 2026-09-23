@@ -1,0 +1,8 @@
+=== C:/interactor-dress-on/models/Pixal3D-GGUF/Sparse/ss_flow_img_dit_1_3B_64_bf16.gguf
+error: unexpected architecture 'flux' (expected 'trellis2-ss-flow')
+trellis2.cpp 0.1.0
+rc=0
+=== C:/interactor-dress-on/models/Pixal3D-GGUF/shape/slat_flow_img2shape_dit_1_3B_512_bf16.gguf
+error: unexpected architecture 'flux' (expected 'trellis2-ss-flow')
+trellis2.cpp 0.1.0
+rc=0

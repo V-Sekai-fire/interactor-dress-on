@@ -1,0 +1,757 @@
+# source: models/BiRefNet_HR-matting/model.safetensors
+# tensors: 754  bytes: 444386812  dtypes: {'I64': 67, 'F16': 687}
+name	dtype	shape	bytes
+bb.layers.0.blocks.0.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.0.blocks.1.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.1.blocks.0.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.1.blocks.1.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.0.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.1.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.10.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.11.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.12.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.13.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.14.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.15.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.16.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.17.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.2.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.3.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.4.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.5.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.6.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.7.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.8.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.2.blocks.9.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.3.blocks.0.attn.relative_position_index	I64	[144, 144]	165888
+bb.layers.3.blocks.1.attn.relative_position_index	I64	[144, 144]	165888
+decoder.decoder_block1.bn_in.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.bn_out.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.dec_att.aspp1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.dec_att.aspp_deforms.0.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.dec_att.aspp_deforms.1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.dec_att.aspp_deforms.2.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.dec_att.bn1.num_batches_tracked	I64	[]	8
+decoder.decoder_block1.dec_att.global_avg_pool.2.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.bn_in.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.bn_out.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.dec_att.aspp1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.dec_att.aspp_deforms.0.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.dec_att.aspp_deforms.1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.dec_att.aspp_deforms.2.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.dec_att.bn1.num_batches_tracked	I64	[]	8
+decoder.decoder_block2.dec_att.global_avg_pool.2.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.bn_in.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.bn_out.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.dec_att.aspp1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.dec_att.aspp_deforms.0.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.dec_att.aspp_deforms.1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.dec_att.aspp_deforms.2.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.dec_att.bn1.num_batches_tracked	I64	[]	8
+decoder.decoder_block3.dec_att.global_avg_pool.2.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.bn_in.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.bn_out.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.dec_att.aspp1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.dec_att.aspp_deforms.0.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.dec_att.aspp_deforms.1.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.dec_att.aspp_deforms.2.bn.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.dec_att.bn1.num_batches_tracked	I64	[]	8
+decoder.decoder_block4.dec_att.global_avg_pool.2.num_batches_tracked	I64	[]	8
+decoder.gdt_convs_2.1.num_batches_tracked	I64	[]	8
+decoder.gdt_convs_3.1.num_batches_tracked	I64	[]	8
+decoder.gdt_convs_4.1.num_batches_tracked	I64	[]	8
+squeeze_module.0.bn_in.num_batches_tracked	I64	[]	8
+squeeze_module.0.bn_out.num_batches_tracked	I64	[]	8
+squeeze_module.0.dec_att.aspp1.bn.num_batches_tracked	I64	[]	8
+squeeze_module.0.dec_att.aspp_deforms.0.bn.num_batches_tracked	I64	[]	8
+squeeze_module.0.dec_att.aspp_deforms.1.bn.num_batches_tracked	I64	[]	8
+squeeze_module.0.dec_att.aspp_deforms.2.bn.num_batches_tracked	I64	[]	8
+squeeze_module.0.dec_att.bn1.num_batches_tracked	I64	[]	8
+squeeze_module.0.dec_att.global_avg_pool.2.num_batches_tracked	I64	[]	8
+bb.layers.0.blocks.0.attn.proj.bias	F16	[192]	384
+bb.layers.0.blocks.0.attn.proj.weight	F16	[192, 192]	73728
+bb.layers.0.blocks.0.attn.qkv.bias	F16	[576]	1152
+bb.layers.0.blocks.0.attn.qkv.weight	F16	[576, 192]	221184
+bb.layers.0.blocks.0.attn.relative_position_bias_table	F16	[529, 6]	6348
+bb.layers.0.blocks.0.mlp.fc1.bias	F16	[768]	1536
+bb.layers.0.blocks.0.mlp.fc1.weight	F16	[768, 192]	294912
+bb.layers.0.blocks.0.mlp.fc2.bias	F16	[192]	384
+bb.layers.0.blocks.0.mlp.fc2.weight	F16	[192, 768]	294912
+bb.layers.0.blocks.0.norm1.bias	F16	[192]	384
+bb.layers.0.blocks.0.norm1.weight	F16	[192]	384
+bb.layers.0.blocks.0.norm2.bias	F16	[192]	384
+bb.layers.0.blocks.0.norm2.weight	F16	[192]	384
+bb.layers.0.blocks.1.attn.proj.bias	F16	[192]	384
+bb.layers.0.blocks.1.attn.proj.weight	F16	[192, 192]	73728
+bb.layers.0.blocks.1.attn.qkv.bias	F16	[576]	1152
+bb.layers.0.blocks.1.attn.qkv.weight	F16	[576, 192]	221184
+bb.layers.0.blocks.1.attn.relative_position_bias_table	F16	[529, 6]	6348
+bb.layers.0.blocks.1.mlp.fc1.bias	F16	[768]	1536
+bb.layers.0.blocks.1.mlp.fc1.weight	F16	[768, 192]	294912
+bb.layers.0.blocks.1.mlp.fc2.bias	F16	[192]	384
+bb.layers.0.blocks.1.mlp.fc2.weight	F16	[192, 768]	294912
+bb.layers.0.blocks.1.norm1.bias	F16	[192]	384
+bb.layers.0.blocks.1.norm1.weight	F16	[192]	384
+bb.layers.0.blocks.1.norm2.bias	F16	[192]	384
+bb.layers.0.blocks.1.norm2.weight	F16	[192]	384
+bb.layers.0.downsample.norm.bias	F16	[768]	1536
+bb.layers.0.downsample.norm.weight	F16	[768]	1536
+bb.layers.0.downsample.reduction.weight	F16	[384, 768]	589824
+bb.layers.1.blocks.0.attn.proj.bias	F16	[384]	768
+bb.layers.1.blocks.0.attn.proj.weight	F16	[384, 384]	294912
+bb.layers.1.blocks.0.attn.qkv.bias	F16	[1152]	2304
+bb.layers.1.blocks.0.attn.qkv.weight	F16	[1152, 384]	884736
+bb.layers.1.blocks.0.attn.relative_position_bias_table	F16	[529, 12]	12696
+bb.layers.1.blocks.0.mlp.fc1.bias	F16	[1536]	3072
+bb.layers.1.blocks.0.mlp.fc1.weight	F16	[1536, 384]	1179648
+bb.layers.1.blocks.0.mlp.fc2.bias	F16	[384]	768
+bb.layers.1.blocks.0.mlp.fc2.weight	F16	[384, 1536]	1179648
+bb.layers.1.blocks.0.norm1.bias	F16	[384]	768
+bb.layers.1.blocks.0.norm1.weight	F16	[384]	768
+bb.layers.1.blocks.0.norm2.bias	F16	[384]	768
+bb.layers.1.blocks.0.norm2.weight	F16	[384]	768
+bb.layers.1.blocks.1.attn.proj.bias	F16	[384]	768
+bb.layers.1.blocks.1.attn.proj.weight	F16	[384, 384]	294912
+bb.layers.1.blocks.1.attn.qkv.bias	F16	[1152]	2304
+bb.layers.1.blocks.1.attn.qkv.weight	F16	[1152, 384]	884736
+bb.layers.1.blocks.1.attn.relative_position_bias_table	F16	[529, 12]	12696
+bb.layers.1.blocks.1.mlp.fc1.bias	F16	[1536]	3072
+bb.layers.1.blocks.1.mlp.fc1.weight	F16	[1536, 384]	1179648
+bb.layers.1.blocks.1.mlp.fc2.bias	F16	[384]	768
+bb.layers.1.blocks.1.mlp.fc2.weight	F16	[384, 1536]	1179648
+bb.layers.1.blocks.1.norm1.bias	F16	[384]	768
+bb.layers.1.blocks.1.norm1.weight	F16	[384]	768
+bb.layers.1.blocks.1.norm2.bias	F16	[384]	768
+bb.layers.1.blocks.1.norm2.weight	F16	[384]	768
+bb.layers.1.downsample.norm.bias	F16	[1536]	3072
+bb.layers.1.downsample.norm.weight	F16	[1536]	3072
+bb.layers.1.downsample.reduction.weight	F16	[768, 1536]	2359296
+bb.layers.2.blocks.0.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.0.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.0.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.0.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.0.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.0.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.0.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.0.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.0.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.0.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.0.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.0.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.0.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.1.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.1.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.1.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.1.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.1.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.1.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.1.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.1.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.1.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.1.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.1.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.1.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.1.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.10.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.10.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.10.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.10.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.10.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.10.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.10.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.10.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.10.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.10.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.10.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.10.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.10.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.11.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.11.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.11.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.11.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.11.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.11.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.11.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.11.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.11.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.11.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.11.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.11.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.11.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.12.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.12.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.12.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.12.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.12.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.12.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.12.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.12.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.12.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.12.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.12.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.12.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.12.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.13.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.13.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.13.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.13.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.13.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.13.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.13.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.13.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.13.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.13.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.13.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.13.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.13.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.14.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.14.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.14.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.14.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.14.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.14.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.14.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.14.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.14.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.14.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.14.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.14.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.14.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.15.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.15.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.15.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.15.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.15.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.15.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.15.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.15.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.15.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.15.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.15.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.15.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.15.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.16.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.16.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.16.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.16.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.16.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.16.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.16.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.16.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.16.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.16.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.16.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.16.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.16.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.17.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.17.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.17.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.17.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.17.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.17.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.17.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.17.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.17.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.17.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.17.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.17.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.17.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.2.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.2.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.2.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.2.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.2.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.2.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.2.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.2.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.2.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.2.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.2.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.2.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.2.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.3.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.3.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.3.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.3.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.3.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.3.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.3.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.3.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.3.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.3.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.3.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.3.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.3.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.4.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.4.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.4.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.4.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.4.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.4.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.4.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.4.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.4.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.4.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.4.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.4.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.4.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.5.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.5.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.5.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.5.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.5.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.5.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.5.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.5.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.5.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.5.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.5.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.5.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.5.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.6.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.6.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.6.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.6.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.6.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.6.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.6.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.6.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.6.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.6.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.6.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.6.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.6.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.7.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.7.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.7.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.7.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.7.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.7.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.7.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.7.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.7.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.7.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.7.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.7.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.7.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.8.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.8.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.8.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.8.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.8.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.8.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.8.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.8.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.8.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.8.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.8.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.8.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.8.norm2.weight	F16	[768]	1536
+bb.layers.2.blocks.9.attn.proj.bias	F16	[768]	1536
+bb.layers.2.blocks.9.attn.proj.weight	F16	[768, 768]	1179648
+bb.layers.2.blocks.9.attn.qkv.bias	F16	[2304]	4608
+bb.layers.2.blocks.9.attn.qkv.weight	F16	[2304, 768]	3538944
+bb.layers.2.blocks.9.attn.relative_position_bias_table	F16	[529, 24]	25392
+bb.layers.2.blocks.9.mlp.fc1.bias	F16	[3072]	6144
+bb.layers.2.blocks.9.mlp.fc1.weight	F16	[3072, 768]	4718592
+bb.layers.2.blocks.9.mlp.fc2.bias	F16	[768]	1536
+bb.layers.2.blocks.9.mlp.fc2.weight	F16	[768, 3072]	4718592
+bb.layers.2.blocks.9.norm1.bias	F16	[768]	1536
+bb.layers.2.blocks.9.norm1.weight	F16	[768]	1536
+bb.layers.2.blocks.9.norm2.bias	F16	[768]	1536
+bb.layers.2.blocks.9.norm2.weight	F16	[768]	1536
+bb.layers.2.downsample.norm.bias	F16	[3072]	6144
+bb.layers.2.downsample.norm.weight	F16	[3072]	6144
+bb.layers.2.downsample.reduction.weight	F16	[1536, 3072]	9437184
+bb.layers.3.blocks.0.attn.proj.bias	F16	[1536]	3072
+bb.layers.3.blocks.0.attn.proj.weight	F16	[1536, 1536]	4718592
+bb.layers.3.blocks.0.attn.qkv.bias	F16	[4608]	9216
+bb.layers.3.blocks.0.attn.qkv.weight	F16	[4608, 1536]	14155776
+bb.layers.3.blocks.0.attn.relative_position_bias_table	F16	[529, 48]	50784
+bb.layers.3.blocks.0.mlp.fc1.bias	F16	[6144]	12288
+bb.layers.3.blocks.0.mlp.fc1.weight	F16	[6144, 1536]	18874368
+bb.layers.3.blocks.0.mlp.fc2.bias	F16	[1536]	3072
+bb.layers.3.blocks.0.mlp.fc2.weight	F16	[1536, 6144]	18874368
+bb.layers.3.blocks.0.norm1.bias	F16	[1536]	3072
+bb.layers.3.blocks.0.norm1.weight	F16	[1536]	3072
+bb.layers.3.blocks.0.norm2.bias	F16	[1536]	3072
+bb.layers.3.blocks.0.norm2.weight	F16	[1536]	3072
+bb.layers.3.blocks.1.attn.proj.bias	F16	[1536]	3072
+bb.layers.3.blocks.1.attn.proj.weight	F16	[1536, 1536]	4718592
+bb.layers.3.blocks.1.attn.qkv.bias	F16	[4608]	9216
+bb.layers.3.blocks.1.attn.qkv.weight	F16	[4608, 1536]	14155776
+bb.layers.3.blocks.1.attn.relative_position_bias_table	F16	[529, 48]	50784
+bb.layers.3.blocks.1.mlp.fc1.bias	F16	[6144]	12288
+bb.layers.3.blocks.1.mlp.fc1.weight	F16	[6144, 1536]	18874368
+bb.layers.3.blocks.1.mlp.fc2.bias	F16	[1536]	3072
+bb.layers.3.blocks.1.mlp.fc2.weight	F16	[1536, 6144]	18874368
+bb.layers.3.blocks.1.norm1.bias	F16	[1536]	3072
+bb.layers.3.blocks.1.norm1.weight	F16	[1536]	3072
+bb.layers.3.blocks.1.norm2.bias	F16	[1536]	3072
+bb.layers.3.blocks.1.norm2.weight	F16	[1536]	3072
+bb.norm0.bias	F16	[192]	384
+bb.norm0.weight	F16	[192]	384
+bb.norm1.bias	F16	[384]	768
+bb.norm1.weight	F16	[384]	768
+bb.norm2.bias	F16	[768]	1536
+bb.norm2.weight	F16	[768]	1536
+bb.norm3.bias	F16	[1536]	3072
+bb.norm3.weight	F16	[1536]	3072
+bb.patch_embed.norm.bias	F16	[192]	384
+bb.patch_embed.norm.weight	F16	[192]	384
+bb.patch_embed.proj.bias	F16	[192]	384
+bb.patch_embed.proj.weight	F16	[192, 3, 4, 4]	18432
+decoder.conv_ms_spvn_2.bias	F16	[1]	2
+decoder.conv_ms_spvn_2.weight	F16	[1, 384, 1, 1]	768
+decoder.conv_ms_spvn_3.bias	F16	[1]	2
+decoder.conv_ms_spvn_3.weight	F16	[1, 768, 1, 1]	1536
+decoder.conv_ms_spvn_4.bias	F16	[1]	2
+decoder.conv_ms_spvn_4.weight	F16	[1, 1536, 1, 1]	3072
+decoder.conv_out1.0.bias	F16	[1]	2
+decoder.conv_out1.0.weight	F16	[1, 240, 1, 1]	480
+decoder.decoder_block1.bn_in.bias	F16	[64]	128
+decoder.decoder_block1.bn_in.running_mean	F16	[64]	128
+decoder.decoder_block1.bn_in.running_var	F16	[64]	128
+decoder.decoder_block1.bn_in.weight	F16	[64]	128
+decoder.decoder_block1.bn_out.bias	F16	[192]	384
+decoder.decoder_block1.bn_out.running_mean	F16	[192]	384
+decoder.decoder_block1.bn_out.running_var	F16	[192]	384
+decoder.decoder_block1.bn_out.weight	F16	[192]	384
+decoder.decoder_block1.conv_in.bias	F16	[64]	128
+decoder.decoder_block1.conv_in.weight	F16	[64, 480, 3, 3]	552960
+decoder.decoder_block1.conv_out.bias	F16	[192]	384
+decoder.decoder_block1.conv_out.weight	F16	[192, 64, 3, 3]	221184
+decoder.decoder_block1.dec_att.aspp1.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block1.dec_att.aspp1.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block1.dec_att.aspp1.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block1.dec_att.aspp1.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block1.dec_att.aspp1.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block1.dec_att.aspp1.bn.bias	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp1.bn.running_mean	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp1.bn.running_var	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp1.bn.weight	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block1.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block1.dec_att.aspp_deforms.0.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block1.dec_att.aspp_deforms.0.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block1.dec_att.aspp_deforms.0.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block1.dec_att.aspp_deforms.0.bn.bias	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.0.bn.running_mean	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.0.bn.running_var	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.0.bn.weight	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.bias	F16	[9]	18
+decoder.decoder_block1.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.weight	F16	[9, 64, 3, 3]	10368
+decoder.decoder_block1.dec_att.aspp_deforms.1.atrous_conv.offset_conv.bias	F16	[18]	36
+decoder.decoder_block1.dec_att.aspp_deforms.1.atrous_conv.offset_conv.weight	F16	[18, 64, 3, 3]	20736
+decoder.decoder_block1.dec_att.aspp_deforms.1.atrous_conv.regular_conv.weight	F16	[256, 64, 3, 3]	294912
+decoder.decoder_block1.dec_att.aspp_deforms.1.bn.bias	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.1.bn.running_mean	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.1.bn.running_var	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.1.bn.weight	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.bias	F16	[49]	98
+decoder.decoder_block1.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.weight	F16	[49, 64, 7, 7]	307328
+decoder.decoder_block1.dec_att.aspp_deforms.2.atrous_conv.offset_conv.bias	F16	[98]	196
+decoder.decoder_block1.dec_att.aspp_deforms.2.atrous_conv.offset_conv.weight	F16	[98, 64, 7, 7]	614656
+decoder.decoder_block1.dec_att.aspp_deforms.2.atrous_conv.regular_conv.weight	F16	[256, 64, 7, 7]	1605632
+decoder.decoder_block1.dec_att.aspp_deforms.2.bn.bias	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.2.bn.running_mean	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.2.bn.running_var	F16	[256]	512
+decoder.decoder_block1.dec_att.aspp_deforms.2.bn.weight	F16	[256]	512
+decoder.decoder_block1.dec_att.bn1.bias	F16	[64]	128
+decoder.decoder_block1.dec_att.bn1.running_mean	F16	[64]	128
+decoder.decoder_block1.dec_att.bn1.running_var	F16	[64]	128
+decoder.decoder_block1.dec_att.bn1.weight	F16	[64]	128
+decoder.decoder_block1.dec_att.conv1.weight	F16	[64, 1280, 1, 1]	163840
+decoder.decoder_block1.dec_att.global_avg_pool.1.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block1.dec_att.global_avg_pool.2.bias	F16	[256]	512
+decoder.decoder_block1.dec_att.global_avg_pool.2.running_mean	F16	[256]	512
+decoder.decoder_block1.dec_att.global_avg_pool.2.running_var	F16	[256]	512
+decoder.decoder_block1.dec_att.global_avg_pool.2.weight	F16	[256]	512
+decoder.decoder_block2.bn_in.bias	F16	[64]	128
+decoder.decoder_block2.bn_in.running_mean	F16	[64]	128
+decoder.decoder_block2.bn_in.running_var	F16	[64]	128
+decoder.decoder_block2.bn_in.weight	F16	[64]	128
+decoder.decoder_block2.bn_out.bias	F16	[384]	768
+decoder.decoder_block2.bn_out.running_mean	F16	[384]	768
+decoder.decoder_block2.bn_out.running_var	F16	[384]	768
+decoder.decoder_block2.bn_out.weight	F16	[384]	768
+decoder.decoder_block2.conv_in.bias	F16	[64]	128
+decoder.decoder_block2.conv_in.weight	F16	[64, 960, 3, 3]	1105920
+decoder.decoder_block2.conv_out.bias	F16	[384]	768
+decoder.decoder_block2.conv_out.weight	F16	[384, 64, 3, 3]	442368
+decoder.decoder_block2.dec_att.aspp1.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block2.dec_att.aspp1.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block2.dec_att.aspp1.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block2.dec_att.aspp1.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block2.dec_att.aspp1.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block2.dec_att.aspp1.bn.bias	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp1.bn.running_mean	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp1.bn.running_var	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp1.bn.weight	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block2.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block2.dec_att.aspp_deforms.0.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block2.dec_att.aspp_deforms.0.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block2.dec_att.aspp_deforms.0.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block2.dec_att.aspp_deforms.0.bn.bias	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.0.bn.running_mean	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.0.bn.running_var	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.0.bn.weight	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.bias	F16	[9]	18
+decoder.decoder_block2.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.weight	F16	[9, 64, 3, 3]	10368
+decoder.decoder_block2.dec_att.aspp_deforms.1.atrous_conv.offset_conv.bias	F16	[18]	36
+decoder.decoder_block2.dec_att.aspp_deforms.1.atrous_conv.offset_conv.weight	F16	[18, 64, 3, 3]	20736
+decoder.decoder_block2.dec_att.aspp_deforms.1.atrous_conv.regular_conv.weight	F16	[256, 64, 3, 3]	294912
+decoder.decoder_block2.dec_att.aspp_deforms.1.bn.bias	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.1.bn.running_mean	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.1.bn.running_var	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.1.bn.weight	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.bias	F16	[49]	98
+decoder.decoder_block2.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.weight	F16	[49, 64, 7, 7]	307328
+decoder.decoder_block2.dec_att.aspp_deforms.2.atrous_conv.offset_conv.bias	F16	[98]	196
+decoder.decoder_block2.dec_att.aspp_deforms.2.atrous_conv.offset_conv.weight	F16	[98, 64, 7, 7]	614656
+decoder.decoder_block2.dec_att.aspp_deforms.2.atrous_conv.regular_conv.weight	F16	[256, 64, 7, 7]	1605632
+decoder.decoder_block2.dec_att.aspp_deforms.2.bn.bias	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.2.bn.running_mean	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.2.bn.running_var	F16	[256]	512
+decoder.decoder_block2.dec_att.aspp_deforms.2.bn.weight	F16	[256]	512
+decoder.decoder_block2.dec_att.bn1.bias	F16	[64]	128
+decoder.decoder_block2.dec_att.bn1.running_mean	F16	[64]	128
+decoder.decoder_block2.dec_att.bn1.running_var	F16	[64]	128
+decoder.decoder_block2.dec_att.bn1.weight	F16	[64]	128
+decoder.decoder_block2.dec_att.conv1.weight	F16	[64, 1280, 1, 1]	163840
+decoder.decoder_block2.dec_att.global_avg_pool.1.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block2.dec_att.global_avg_pool.2.bias	F16	[256]	512
+decoder.decoder_block2.dec_att.global_avg_pool.2.running_mean	F16	[256]	512
+decoder.decoder_block2.dec_att.global_avg_pool.2.running_var	F16	[256]	512
+decoder.decoder_block2.dec_att.global_avg_pool.2.weight	F16	[256]	512
+decoder.decoder_block3.bn_in.bias	F16	[64]	128
+decoder.decoder_block3.bn_in.running_mean	F16	[64]	128
+decoder.decoder_block3.bn_in.running_var	F16	[64]	128
+decoder.decoder_block3.bn_in.weight	F16	[64]	128
+decoder.decoder_block3.bn_out.bias	F16	[768]	1536
+decoder.decoder_block3.bn_out.running_mean	F16	[768]	1536
+decoder.decoder_block3.bn_out.running_var	F16	[768]	1536
+decoder.decoder_block3.bn_out.weight	F16	[768]	1536
+decoder.decoder_block3.conv_in.bias	F16	[64]	128
+decoder.decoder_block3.conv_in.weight	F16	[64, 1920, 3, 3]	2211840
+decoder.decoder_block3.conv_out.bias	F16	[768]	1536
+decoder.decoder_block3.conv_out.weight	F16	[768, 64, 3, 3]	884736
+decoder.decoder_block3.dec_att.aspp1.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block3.dec_att.aspp1.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block3.dec_att.aspp1.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block3.dec_att.aspp1.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block3.dec_att.aspp1.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block3.dec_att.aspp1.bn.bias	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp1.bn.running_mean	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp1.bn.running_var	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp1.bn.weight	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block3.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block3.dec_att.aspp_deforms.0.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block3.dec_att.aspp_deforms.0.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block3.dec_att.aspp_deforms.0.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block3.dec_att.aspp_deforms.0.bn.bias	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.0.bn.running_mean	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.0.bn.running_var	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.0.bn.weight	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.bias	F16	[9]	18
+decoder.decoder_block3.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.weight	F16	[9, 64, 3, 3]	10368
+decoder.decoder_block3.dec_att.aspp_deforms.1.atrous_conv.offset_conv.bias	F16	[18]	36
+decoder.decoder_block3.dec_att.aspp_deforms.1.atrous_conv.offset_conv.weight	F16	[18, 64, 3, 3]	20736
+decoder.decoder_block3.dec_att.aspp_deforms.1.atrous_conv.regular_conv.weight	F16	[256, 64, 3, 3]	294912
+decoder.decoder_block3.dec_att.aspp_deforms.1.bn.bias	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.1.bn.running_mean	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.1.bn.running_var	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.1.bn.weight	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.bias	F16	[49]	98
+decoder.decoder_block3.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.weight	F16	[49, 64, 7, 7]	307328
+decoder.decoder_block3.dec_att.aspp_deforms.2.atrous_conv.offset_conv.bias	F16	[98]	196
+decoder.decoder_block3.dec_att.aspp_deforms.2.atrous_conv.offset_conv.weight	F16	[98, 64, 7, 7]	614656
+decoder.decoder_block3.dec_att.aspp_deforms.2.atrous_conv.regular_conv.weight	F16	[256, 64, 7, 7]	1605632
+decoder.decoder_block3.dec_att.aspp_deforms.2.bn.bias	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.2.bn.running_mean	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.2.bn.running_var	F16	[256]	512
+decoder.decoder_block3.dec_att.aspp_deforms.2.bn.weight	F16	[256]	512
+decoder.decoder_block3.dec_att.bn1.bias	F16	[64]	128
+decoder.decoder_block3.dec_att.bn1.running_mean	F16	[64]	128
+decoder.decoder_block3.dec_att.bn1.running_var	F16	[64]	128
+decoder.decoder_block3.dec_att.bn1.weight	F16	[64]	128
+decoder.decoder_block3.dec_att.conv1.weight	F16	[64, 1280, 1, 1]	163840
+decoder.decoder_block3.dec_att.global_avg_pool.1.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block3.dec_att.global_avg_pool.2.bias	F16	[256]	512
+decoder.decoder_block3.dec_att.global_avg_pool.2.running_mean	F16	[256]	512
+decoder.decoder_block3.dec_att.global_avg_pool.2.running_var	F16	[256]	512
+decoder.decoder_block3.dec_att.global_avg_pool.2.weight	F16	[256]	512
+decoder.decoder_block4.bn_in.bias	F16	[64]	128
+decoder.decoder_block4.bn_in.running_mean	F16	[64]	128
+decoder.decoder_block4.bn_in.running_var	F16	[64]	128
+decoder.decoder_block4.bn_in.weight	F16	[64]	128
+decoder.decoder_block4.bn_out.bias	F16	[1536]	3072
+decoder.decoder_block4.bn_out.running_mean	F16	[1536]	3072
+decoder.decoder_block4.bn_out.running_var	F16	[1536]	3072
+decoder.decoder_block4.bn_out.weight	F16	[1536]	3072
+decoder.decoder_block4.conv_in.bias	F16	[64]	128
+decoder.decoder_block4.conv_in.weight	F16	[64, 3456, 3, 3]	3981312
+decoder.decoder_block4.conv_out.bias	F16	[1536]	3072
+decoder.decoder_block4.conv_out.weight	F16	[1536, 64, 3, 3]	1769472
+decoder.decoder_block4.dec_att.aspp1.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block4.dec_att.aspp1.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block4.dec_att.aspp1.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block4.dec_att.aspp1.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block4.dec_att.aspp1.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block4.dec_att.aspp1.bn.bias	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp1.bn.running_mean	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp1.bn.running_var	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp1.bn.weight	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.bias	F16	[1]	2
+decoder.decoder_block4.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+decoder.decoder_block4.dec_att.aspp_deforms.0.atrous_conv.offset_conv.bias	F16	[2]	4
+decoder.decoder_block4.dec_att.aspp_deforms.0.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+decoder.decoder_block4.dec_att.aspp_deforms.0.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block4.dec_att.aspp_deforms.0.bn.bias	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.0.bn.running_mean	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.0.bn.running_var	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.0.bn.weight	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.bias	F16	[9]	18
+decoder.decoder_block4.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.weight	F16	[9, 64, 3, 3]	10368
+decoder.decoder_block4.dec_att.aspp_deforms.1.atrous_conv.offset_conv.bias	F16	[18]	36
+decoder.decoder_block4.dec_att.aspp_deforms.1.atrous_conv.offset_conv.weight	F16	[18, 64, 3, 3]	20736
+decoder.decoder_block4.dec_att.aspp_deforms.1.atrous_conv.regular_conv.weight	F16	[256, 64, 3, 3]	294912
+decoder.decoder_block4.dec_att.aspp_deforms.1.bn.bias	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.1.bn.running_mean	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.1.bn.running_var	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.1.bn.weight	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.bias	F16	[49]	98
+decoder.decoder_block4.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.weight	F16	[49, 64, 7, 7]	307328
+decoder.decoder_block4.dec_att.aspp_deforms.2.atrous_conv.offset_conv.bias	F16	[98]	196
+decoder.decoder_block4.dec_att.aspp_deforms.2.atrous_conv.offset_conv.weight	F16	[98, 64, 7, 7]	614656
+decoder.decoder_block4.dec_att.aspp_deforms.2.atrous_conv.regular_conv.weight	F16	[256, 64, 7, 7]	1605632
+decoder.decoder_block4.dec_att.aspp_deforms.2.bn.bias	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.2.bn.running_mean	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.2.bn.running_var	F16	[256]	512
+decoder.decoder_block4.dec_att.aspp_deforms.2.bn.weight	F16	[256]	512
+decoder.decoder_block4.dec_att.bn1.bias	F16	[64]	128
+decoder.decoder_block4.dec_att.bn1.running_mean	F16	[64]	128
+decoder.decoder_block4.dec_att.bn1.running_var	F16	[64]	128
+decoder.decoder_block4.dec_att.bn1.weight	F16	[64]	128
+decoder.decoder_block4.dec_att.conv1.weight	F16	[64, 1280, 1, 1]	163840
+decoder.decoder_block4.dec_att.global_avg_pool.1.weight	F16	[256, 64, 1, 1]	32768
+decoder.decoder_block4.dec_att.global_avg_pool.2.bias	F16	[256]	512
+decoder.decoder_block4.dec_att.global_avg_pool.2.running_mean	F16	[256]	512
+decoder.decoder_block4.dec_att.global_avg_pool.2.running_var	F16	[256]	512
+decoder.decoder_block4.dec_att.global_avg_pool.2.weight	F16	[256]	512
+decoder.gdt_convs_2.0.bias	F16	[16]	32
+decoder.gdt_convs_2.0.weight	F16	[16, 384, 3, 3]	110592
+decoder.gdt_convs_2.1.bias	F16	[16]	32
+decoder.gdt_convs_2.1.running_mean	F16	[16]	32
+decoder.gdt_convs_2.1.running_var	F16	[16]	32
+decoder.gdt_convs_2.1.weight	F16	[16]	32
+decoder.gdt_convs_3.0.bias	F16	[16]	32
+decoder.gdt_convs_3.0.weight	F16	[16, 768, 3, 3]	221184
+decoder.gdt_convs_3.1.bias	F16	[16]	32
+decoder.gdt_convs_3.1.running_mean	F16	[16]	32
+decoder.gdt_convs_3.1.running_var	F16	[16]	32
+decoder.gdt_convs_3.1.weight	F16	[16]	32
+decoder.gdt_convs_4.0.bias	F16	[16]	32
+decoder.gdt_convs_4.0.weight	F16	[16, 1536, 3, 3]	442368
+decoder.gdt_convs_4.1.bias	F16	[16]	32
+decoder.gdt_convs_4.1.running_mean	F16	[16]	32
+decoder.gdt_convs_4.1.running_var	F16	[16]	32
+decoder.gdt_convs_4.1.weight	F16	[16]	32
+decoder.gdt_convs_attn_2.0.bias	F16	[1]	2
+decoder.gdt_convs_attn_2.0.weight	F16	[1, 16, 1, 1]	32
+decoder.gdt_convs_attn_3.0.bias	F16	[1]	2
+decoder.gdt_convs_attn_3.0.weight	F16	[1, 16, 1, 1]	32
+decoder.gdt_convs_attn_4.0.bias	F16	[1]	2
+decoder.gdt_convs_attn_4.0.weight	F16	[1, 16, 1, 1]	32
+decoder.gdt_convs_pred_2.0.bias	F16	[1]	2
+decoder.gdt_convs_pred_2.0.weight	F16	[1, 16, 1, 1]	32
+decoder.gdt_convs_pred_3.0.bias	F16	[1]	2
+decoder.gdt_convs_pred_3.0.weight	F16	[1, 16, 1, 1]	32
+decoder.gdt_convs_pred_4.0.bias	F16	[1]	2
+decoder.gdt_convs_pred_4.0.weight	F16	[1, 16, 1, 1]	32
+decoder.ipt_blk1.conv1.bias	F16	[64]	128
+decoder.ipt_blk1.conv1.weight	F16	[64, 3, 3, 3]	3456
+decoder.ipt_blk1.conv_out.bias	F16	[48]	96
+decoder.ipt_blk1.conv_out.weight	F16	[48, 64, 3, 3]	55296
+decoder.ipt_blk2.conv1.bias	F16	[64]	128
+decoder.ipt_blk2.conv1.weight	F16	[64, 48, 3, 3]	55296
+decoder.ipt_blk2.conv_out.bias	F16	[96]	192
+decoder.ipt_blk2.conv_out.weight	F16	[96, 64, 3, 3]	110592
+decoder.ipt_blk3.conv1.bias	F16	[64]	128
+decoder.ipt_blk3.conv1.weight	F16	[64, 192, 3, 3]	221184
+decoder.ipt_blk3.conv_out.bias	F16	[192]	384
+decoder.ipt_blk3.conv_out.weight	F16	[192, 64, 3, 3]	221184
+decoder.ipt_blk4.conv1.bias	F16	[64]	128
+decoder.ipt_blk4.conv1.weight	F16	[64, 768, 3, 3]	884736
+decoder.ipt_blk4.conv_out.bias	F16	[384]	768
+decoder.ipt_blk4.conv_out.weight	F16	[384, 64, 3, 3]	442368
+decoder.ipt_blk5.conv1.bias	F16	[64]	128
+decoder.ipt_blk5.conv1.weight	F16	[64, 3072, 3, 3]	3538944
+decoder.ipt_blk5.conv_out.bias	F16	[384]	768
+decoder.ipt_blk5.conv_out.weight	F16	[384, 64, 3, 3]	442368
+decoder.lateral_block2.conv.bias	F16	[384]	768
+decoder.lateral_block2.conv.weight	F16	[384, 384, 1, 1]	294912
+decoder.lateral_block3.conv.bias	F16	[768]	1536
+decoder.lateral_block3.conv.weight	F16	[768, 768, 1, 1]	1179648
+decoder.lateral_block4.conv.bias	F16	[1536]	3072
+decoder.lateral_block4.conv.weight	F16	[1536, 1536, 1, 1]	4718592
+squeeze_module.0.bn_in.bias	F16	[64]	128
+squeeze_module.0.bn_in.running_mean	F16	[64]	128
+squeeze_module.0.bn_in.running_var	F16	[64]	128
+squeeze_module.0.bn_in.weight	F16	[64]	128
+squeeze_module.0.bn_out.bias	F16	[3072]	6144
+squeeze_module.0.bn_out.running_mean	F16	[3072]	6144
+squeeze_module.0.bn_out.running_var	F16	[3072]	6144
+squeeze_module.0.bn_out.weight	F16	[3072]	6144
+squeeze_module.0.conv_in.bias	F16	[64]	128
+squeeze_module.0.conv_in.weight	F16	[64, 5760, 3, 3]	6635520
+squeeze_module.0.conv_out.bias	F16	[3072]	6144
+squeeze_module.0.conv_out.weight	F16	[3072, 64, 3, 3]	3538944
+squeeze_module.0.dec_att.aspp1.atrous_conv.modulator_conv.bias	F16	[1]	2
+squeeze_module.0.dec_att.aspp1.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+squeeze_module.0.dec_att.aspp1.atrous_conv.offset_conv.bias	F16	[2]	4
+squeeze_module.0.dec_att.aspp1.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+squeeze_module.0.dec_att.aspp1.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+squeeze_module.0.dec_att.aspp1.bn.bias	F16	[256]	512
+squeeze_module.0.dec_att.aspp1.bn.running_mean	F16	[256]	512
+squeeze_module.0.dec_att.aspp1.bn.running_var	F16	[256]	512
+squeeze_module.0.dec_att.aspp1.bn.weight	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.bias	F16	[1]	2
+squeeze_module.0.dec_att.aspp_deforms.0.atrous_conv.modulator_conv.weight	F16	[1, 64, 1, 1]	128
+squeeze_module.0.dec_att.aspp_deforms.0.atrous_conv.offset_conv.bias	F16	[2]	4
+squeeze_module.0.dec_att.aspp_deforms.0.atrous_conv.offset_conv.weight	F16	[2, 64, 1, 1]	256
+squeeze_module.0.dec_att.aspp_deforms.0.atrous_conv.regular_conv.weight	F16	[256, 64, 1, 1]	32768
+squeeze_module.0.dec_att.aspp_deforms.0.bn.bias	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.0.bn.running_mean	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.0.bn.running_var	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.0.bn.weight	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.bias	F16	[9]	18
+squeeze_module.0.dec_att.aspp_deforms.1.atrous_conv.modulator_conv.weight	F16	[9, 64, 3, 3]	10368
+squeeze_module.0.dec_att.aspp_deforms.1.atrous_conv.offset_conv.bias	F16	[18]	36
+squeeze_module.0.dec_att.aspp_deforms.1.atrous_conv.offset_conv.weight	F16	[18, 64, 3, 3]	20736
+squeeze_module.0.dec_att.aspp_deforms.1.atrous_conv.regular_conv.weight	F16	[256, 64, 3, 3]	294912
+squeeze_module.0.dec_att.aspp_deforms.1.bn.bias	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.1.bn.running_mean	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.1.bn.running_var	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.1.bn.weight	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.bias	F16	[49]	98
+squeeze_module.0.dec_att.aspp_deforms.2.atrous_conv.modulator_conv.weight	F16	[49, 64, 7, 7]	307328
+squeeze_module.0.dec_att.aspp_deforms.2.atrous_conv.offset_conv.bias	F16	[98]	196
+squeeze_module.0.dec_att.aspp_deforms.2.atrous_conv.offset_conv.weight	F16	[98, 64, 7, 7]	614656
+squeeze_module.0.dec_att.aspp_deforms.2.atrous_conv.regular_conv.weight	F16	[256, 64, 7, 7]	1605632
+squeeze_module.0.dec_att.aspp_deforms.2.bn.bias	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.2.bn.running_mean	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.2.bn.running_var	F16	[256]	512
+squeeze_module.0.dec_att.aspp_deforms.2.bn.weight	F16	[256]	512
+squeeze_module.0.dec_att.bn1.bias	F16	[64]	128
+squeeze_module.0.dec_att.bn1.running_mean	F16	[64]	128
+squeeze_module.0.dec_att.bn1.running_var	F16	[64]	128
+squeeze_module.0.dec_att.bn1.weight	F16	[64]	128
+squeeze_module.0.dec_att.conv1.weight	F16	[64, 1280, 1, 1]	163840
+squeeze_module.0.dec_att.global_avg_pool.1.weight	F16	[256, 64, 1, 1]	32768
+squeeze_module.0.dec_att.global_avg_pool.2.bias	F16	[256]	512
+squeeze_module.0.dec_att.global_avg_pool.2.running_mean	F16	[256]	512
+squeeze_module.0.dec_att.global_avg_pool.2.running_var	F16	[256]	512
+squeeze_module.0.dec_att.global_avg_pool.2.weight	F16	[256]	512

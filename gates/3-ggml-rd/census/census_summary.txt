@@ -1,0 +1,33 @@
+skintokens: 1883592 nodes, 63 (op,type,contig,shape) classes
+pixal3d: 15813 nodes, 89 (op,type,contig,shape) classes
+p3_dino: 1624 nodes, 31 (op,type,contig,shape) classes
+p3_ss_flow: 3017 nodes, 32 (op,type,contig,shape) classes
+p3_ss_dec: 244 nodes, 14 (op,type,contig,shape) classes
+p3_slat512: 3014 nodes, 32 (op,type,contig,shape) classes
+p3_shape_dec: 7914 nodes, 35 (op,type,contig,shape) classes
+  ADD                          K2    skintokens=27892 pixal3d=2622 p3_dino=265 p3_ss_flow=545 p3_ss_dec=45 p3_slat512=545 p3_shape_dec=1222
+  CONCAT                       K2    skintokens=407393 pixal3d=218 p3_dino=98 p3_ss_flow=60 p3_ss_dec=0 p3_slat512=60 p3_shape_dec=0
+  CONT                         K2    skintokens=45400 pixal3d=2360 p3_dino=316 p3_ss_flow=452 p3_ss_dec=48 p3_slat512=451 p3_shape_dec=1093
+  CONV_3D                      K7    skintokens=0 pixal3d=20 p3_dino=0 p3_ss_flow=0 p3_ss_dec=20 p3_slat512=0 p3_shape_dec=0
+  CPY                          K2    skintokens=213864 pixal3d=0 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  DIAG_MASK_INF                K1    skintokens=56 pixal3d=0 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  FLASH_ATTN_EXT               K8    skintokens=0 pixal3d=120 p3_dino=0 p3_ss_flow=60 p3_ss_dec=0 p3_slat512=60 p3_shape_dec=0
+  GET_ROWS                     K2    skintokens=389 pixal3d=1080 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=1080
+  IM2COL                       K7    skintokens=0 pixal3d=1 p3_dino=1 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  MUL                          K2    skintokens=56251 pixal3d=2105 p3_dino=192 p3_ss_flow=390 p3_ss_dec=17 p3_slat512=390 p3_shape_dec=1116
+  MUL_MAT                      K6    skintokens=104037 pixal3d=1773 p3_dino=193 p3_ss_flow=215 p3_ss_dec=0 p3_slat512=215 p3_shape_dec=1150
+  NORM                         K3    skintokens=1964 pixal3d=289 p3_dino=49 p3_ss_flow=91 p3_ss_dec=17 p3_slat512=91 p3_shape_dec=41
+  PERMUTE                      noop  skintokens=67744 pixal3d=529 p3_dino=121 p3_ss_flow=180 p3_ss_dec=48 p3_slat512=180 p3_shape_dec=0
+  REPEAT                       K2    skintokens=71831 pixal3d=4 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=4
+  RESHAPE                      noop  skintokens=131856 pixal3d=1940 p3_dino=100 p3_ss_flow=360 p3_ss_dec=32 p3_slat512=360 p3_shape_dec=1088
+  RMS_NORM                     K3    skintokens=43507 pixal3d=240 p3_dino=0 p3_ss_flow=120 p3_ss_dec=0 p3_slat512=120 p3_shape_dec=0
+  ROPE                         K5    skintokens=21560 pixal3d=0 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  SCALE                        K1    skintokens=11546 pixal3d=0 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  SOFT_MAX                     K4    skintokens=11546 pixal3d=24 p3_dino=24 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  TRANSPOSE                    noop  skintokens=11546 pixal3d=3 p3_dino=1 p3_ss_flow=2 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  UNARY:GELU                   K1    skintokens=0 pixal3d=60 p3_dino=0 p3_ss_flow=30 p3_ss_dec=0 p3_slat512=30 p3_shape_dec=0
+  UNARY:GELU_ERF               K1    skintokens=766 pixal3d=24 p3_dino=24 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  UNARY:NEG                    K1    skintokens=0 pixal3d=168 p3_dino=48 p3_ss_flow=60 p3_ss_dec=0 p3_slat512=60 p3_shape_dec=0
+  UNARY:SIGMOID                K1    skintokens=212 pixal3d=0 p3_dino=0 p3_ss_flow=0 p3_ss_dec=0 p3_slat512=0 p3_shape_dec=0
+  UNARY:SILU                   K1    skintokens=10780 pixal3d=61 p3_dino=0 p3_ss_flow=2 p3_ss_dec=17 p3_slat512=2 p3_shape_dec=40
+  VIEW                         noop  skintokens=643452 pixal3d=2172 p3_dino=192 p3_ss_flow=450 p3_ss_dec=0 p3_slat512=450 p3_shape_dec=1080

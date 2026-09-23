@@ -23,7 +23,10 @@ namespace cn {
 // Drops every stroke, patch, curvenet and built mesh; keeps params and body.
 std::string reset();
 // snap_radius (0.03), surface_offset (0.002), target_edge_length (0.02),
-// split_closed (1), merge_eps (0.02), mirror (0; 1 = mirror across x=0).
+// split_closed (1), merge_eps (0.02), mirror (0; 1 = mirror across x=0),
+// boundary (0; a pen mode: a stroke begun while it is 1 is a boundary stroke,
+// the edge of an opening such as a skirt's waist or hem, and a cycle made
+// only of boundary strokes is an opening that gets no patch).
 std::string set_param(const std::string &name, double value);
 double get_param(const std::string &name);
 // The body the pen snaps to; also the sketch context's project_on_patch
@@ -36,7 +39,9 @@ std::string set_body(const std::vector<float> &vertices, const std::vector<int32
 // or -1.
 int pen_begin(float x, float y, float z, float pressure);
 std::string pen_point(int id, float x, float y, float z, float pressure);
-// "ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1"
+// "ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 openings=0"
+// cycles: face cycles that bound surface; openings: cycles made only of
+// boundary strokes.
 std::string pen_end(int id);
 
 int patch_count();
@@ -57,13 +62,16 @@ std::vector<float> curvenet_knots();
 // --- mesh ---------------------------------------------------------------------
 // Merge the active patches, weld vertices closer than weld_eps (<= 0: no
 // weld), orient every patch away from the body, and when
-// target_edge_length > 0 run PMP's uniform remesh with the boundary held as
-// a feature. "ok vertices=.. triangles=.. loops=.. components=.. euler=.."
+// target_edge_length > 0 run PMP's uniform remesh with the boundary and the
+// seams between patches held as features.
+// "ok patches=.. vertices=.. triangles=.. loops=.. components=.. euler=.."
 std::string mesh_build(double target_edge_length, double weld_eps);
 std::vector<float> mesh_vertices();
 std::vector<int32_t> mesh_indices();
 std::vector<int32_t> mesh_boundary_loops();
-std::vector<int32_t> mesh_patch_ids(); // one per triangle; -1 after a remesh
+// One per triangle: the index of the patch (as patch_vertices numbers them)
+// it came from; after a remesh, the patch nearest its centroid.
+std::vector<int32_t> mesh_patch_ids();
 
 // --- checks (checks.cpp) ------------------------------------------------------
 // One line per check:
@@ -91,7 +99,7 @@ BuiltMesh build_mesh(const std::vector<std::vector<float>> &part_vertices,
 		double target_edge_length, double weld_eps);
 // Counts written by the last pen_end / curvenet_build, for checks.
 struct Counts {
-	int edges = 0, nodes = 0, cycles = 0, curves = 0, knots = 0;
+	int edges = 0, nodes = 0, cycles = 0, openings = 0, curves = 0, knots = 0;
 };
 Counts counts();
 // The input samples (after snapping) of every committed stroke, flattened.

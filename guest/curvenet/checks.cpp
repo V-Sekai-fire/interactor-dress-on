@@ -27,6 +27,7 @@
 
 #include "../common/mesh_wire.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdarg>
 #include <cstdio>
@@ -559,6 +560,278 @@ Out mesh_weld() {
 	return o;
 }
 
+// A capped cylinder of radius r around the y axis from y0 to y1, nseg
+// segments around and nrow rows up, CCW-outward.
+void cylinder(float r, float y0, float y1, int nseg, int nrow, std::vector<float> &v, std::vector<int32_t> &f) {
+	v.clear();
+	f.clear();
+	for (int j = 0; j <= nrow; ++j) {
+		const float y = y0 + (y1 - y0) * float(j) / float(nrow);
+		for (int i = 0; i < nseg; ++i) {
+			const double a = 2 * Math::PI * i / nseg;
+			v.insert(v.end(), { float(r * std::cos(a)), y, float(r * std::sin(a)) });
+		}
+	}
+	auto id = [nseg](int i, int j) { return int32_t(j * nseg + i % nseg); };
+	for (int j = 0; j < nrow; ++j) {
+		for (int i = 0; i < nseg; ++i) {
+			const int32_t a = id(i, j), b = id(i + 1, j), c = id(i + 1, j + 1), d = id(i, j + 1);
+			f.insert(f.end(), { a, d, b, b, d, c });
+		}
+	}
+	const int32_t bot = int32_t(v.size() / 3), top = bot + 1;
+	v.insert(v.end(), { 0, y0, 0, 0, y1, 0 });
+	for (int i = 0; i < nseg; ++i) {
+		f.insert(f.end(), { bot, id(i, 0), id(i + 1, 0), top, id(i + 1, nrow), id(i, nrow) });
+	}
+}
+
+// Draws one stroke through the API, sample by sample; pen_end's answer.
+std::string pen_polyline(const std::vector<Vector3> &p) {
+	const int id = pen_begin(float(p[0].x), float(p[0].y), float(p[0].z), 0.5f);
+	for (size_t i = 1; i < p.size(); ++i) {
+		pen_point(id, float(p[i].x), float(p[i].y), float(p[i].z), 0.5f);
+	}
+	return pen_end(id);
+}
+
+// The Cut 8 scripted skirt (project/xr/pen_source_scripted.gd): a waist ring
+// and a hem ring, each as two half rings (left +x, right -x) from the front
+// (+z) to the back (-z), then a front and a back seam from waist to hem,
+// ending exactly on the ring points; half_samples 24, seam_samples 12.
+struct Skirt {
+	std::vector<std::pair<std::string, std::vector<Vector3>>> strokes;
+};
+
+Skirt skirt_strokes(float waist_y, float hem_y, float r) {
+	auto at = [r](float y, double a) { return Vector3(real_t(r * std::cos(a)), real_t(y), real_t(r * std::sin(a))); };
+	auto arc = [&](float y, double a0, double a1, int n) {
+		std::vector<Vector3> out;
+		for (int i = 0; i <= n; ++i) {
+			out.push_back(at(y, a0 + (a1 - a0) * double(i) / double(n)));
+		}
+		return out;
+	};
+	auto line = [](const Vector3 &a, const Vector3 &b, int n) {
+		std::vector<Vector3> out;
+		for (int i = 0; i <= n; ++i) {
+			out.push_back(a.lerp(b, real_t(double(i) / double(n))));
+		}
+		out[size_t(n)] = b;
+		return out;
+	};
+	const double pi = Math::PI;
+	Skirt s;
+	s.strokes.emplace_back("waist_left", arc(waist_y, pi / 2, -pi / 2, 24));
+	s.strokes.emplace_back("waist_right", arc(waist_y, pi / 2, 3 * pi / 2, 24));
+	s.strokes.emplace_back("hem_left", arc(hem_y, pi / 2, -pi / 2, 24));
+	s.strokes.emplace_back("hem_right", arc(hem_y, pi / 2, 3 * pi / 2, 24));
+	s.strokes.emplace_back("seam_front", line(at(waist_y, pi / 2), at(hem_y, pi / 2), 12));
+	s.strokes.emplace_back("seam_back", line(at(waist_y, -pi / 2), at(hem_y, -pi / 2), 12));
+	return s;
+}
+
+// What a patch touches, from its vertices: the waist ring (a vertex within
+// 1 cm of its height), the hem ring, the front seam and the back seam (a
+// vertex within 5 mm of the x = 0 plane on that side, at least 5 cm from
+// both rings, so a cap's knot does not count); side: the sign of its mean x.
+struct PatchTouch {
+	bool waist = false, hem = false, front = false, back = false, cap = false;
+	int side = 0;
+	bool panel() const { return waist && hem && front && back; }
+};
+
+PatchTouch patch_touch(const std::vector<float> &v, float waist_y, float hem_y) {
+	PatchTouch t;
+	double mean_x = 0, ymin = 1e30, ymax = -1e30;
+	for (size_t i = 0; i + 2 < v.size(); i += 3) {
+		const float x = v[i], y = v[i + 1], z = v[i + 2];
+		t.waist = t.waist || std::fabs(y - waist_y) < 0.01f;
+		t.hem = t.hem || std::fabs(y - hem_y) < 0.01f;
+		const bool mid = y > hem_y + 0.05f && y < waist_y - 0.05f;
+		t.front = t.front || (mid && z > 0 && std::fabs(x) < 0.005f);
+		t.back = t.back || (mid && z < 0 && std::fabs(x) < 0.005f);
+		mean_x += x;
+		ymin = std::min(ymin, double(y));
+		ymax = std::max(ymax, double(y));
+	}
+	t.side = mean_x > 0 ? 1 : -1;
+	t.cap = !v.empty() && ymax - ymin < 0.03;
+	return t;
+}
+
+// Draws the skirt; `boundary` marks the four half rings as boundary strokes,
+// `drop` names a stroke left out. Answers the last pen_end.
+std::string draw_skirt(const Skirt &s, bool boundary, const std::string &drop) {
+	reset();
+	std::string last;
+	for (const auto &st : s.strokes) {
+		if (st.first == drop) {
+			continue;
+		}
+		set_param("boundary", boundary && st.first.rfind("seam", 0) != 0 ? 1 : 0);
+		last = pen_polyline(st.second);
+	}
+	set_param("boundary", 0);
+	return last;
+}
+
+// skirt_tube: a skirt is an open tube, and the garment is its two panels,
+// each bounded by a half waist, a seam, a half hem and the other seam, never
+// the caps over the waist and the hem. The Cut 8 scripted skirt on a capped
+// cylinder body (r 0.15 m; rings of r 0.16 at y 0.9 and 0.5, which snap onto
+// it), the four half rings drawn as boundary strokes (param boundary = 1):
+//   - the stroke ends meet in 4 knots of degree 3 and the curvenet has 6
+//     curves (every half ring and seam end merges into a shared knot);
+//   - find_cycles sees the 2 panels and the 2 caps; the caps are made only of
+//     boundary strokes, so they are openings: 2 cycles, 2 openings, 2 patches,
+//     each a panel (it touches both rings and both seams), one per side;
+//   - mesh_build welds them into 1 component with 2 boundary loops (one at
+//     each ring), Euler characteristic 0, every interior edge shared by two
+//     triangles in opposite directions and every triangle facing outward;
+//     mesh_patch_ids names both panels;
+//   - the PMP remesh (0.02) keeps all that, and every remeshed triangle gets
+//     the patch of its own side (it used to get -1).
+// Controls: without the back seam, 0 panels (no patch at all); with the rings
+// drawn as ordinary strokes, the caps come back (4 patches, 2 of them caps).
+Out skirt_tube() {
+	const float waist_y = 0.9f, hem_y = 0.5f, ring_r = 0.16f;
+	std::vector<float> bv;
+	std::vector<int32_t> bf;
+	cylinder(0.15f, 0.3f, 1.1f, 64, 16, bv, bf);
+	const Skirt s = skirt_strokes(waist_y, hem_y, ring_r);
+	Out o;
+	set_body(bv, bf);
+
+	const std::string e = draw_skirt(s, true, "");
+	const int edges = kv(e, "edges"), nodes = kv(e, "nodes"), cycles = kv(e, "cycles"), openings = kv(e, "openings");
+	const int patches = patch_count();
+	int panels = 0, sides = 0;
+	std::vector<int> side_of(size_t(std::max(patches, 0)), 0);
+	for (int i = 0; i < patches; ++i) {
+		const PatchTouch t = patch_touch(patch_vertices(i), waist_y, hem_y);
+		panels += t.panel() ? 1 : 0;
+		sides += t.side;
+		side_of[size_t(i)] = t.side;
+	}
+
+	const std::string cb = curvenet_build();
+	const int curves = counts().curves, knots = counts().knots;
+	const std::vector<float> kn = curvenet_knots();
+	int deg3 = 0;
+	for (int k = 0; k < knots && size_t(1 + (k + 1) * mesh_wire::KNOT_STRIDE) <= kn.size(); ++k) {
+		deg3 += kn[1 + size_t(k) * mesh_wire::KNOT_STRIDE + 3] == 3.0f ? 1 : 0;
+	}
+	append(o.floats, kn);
+
+	// The welded mesh and its topology, orientation and patch ids; the same
+	// after the PMP remesh.
+	struct Topo {
+		int components = -1, loops = -1, euler = 0, loops_at_rings = 0, twice = -1, inward = -1, unassigned = -1,
+			wrong_side = -1, id_count = 0;
+	};
+	auto topo = [&](const std::string &answer) {
+		Topo t;
+		t.components = kv(answer, "components");
+		t.loops = kv(answer, "loops");
+		const std::vector<float> v = mesh_vertices();
+		const std::vector<int32_t> f = mesh_indices(), ids = mesh_patch_ids();
+		std::map<std::pair<int32_t, int32_t>, int> directed;
+		std::map<std::pair<int32_t, int32_t>, int> undirected;
+		std::map<int32_t, int> id_seen;
+		t.twice = 0;
+		t.inward = 0;
+		t.unassigned = 0;
+		t.wrong_side = 0;
+		for (size_t k = 0; k + 2 < f.size(); k += 3) {
+			Vector3 p[3];
+			for (int c = 0; c < 3; ++c) {
+				const int32_t a = f[k + c], b = f[k + (c + 1) % 3];
+				directed[{ a, b }] += 1;
+				undirected[{ std::min(a, b), std::max(a, b) }] += 1;
+				p[c] = Vector3(v[3 * size_t(a)], v[3 * size_t(a) + 1], v[3 * size_t(a) + 2]);
+			}
+			const Vector3 n = (p[1] - p[0]).cross(p[2] - p[0]);
+			const Vector3 c = (p[0] + p[1] + p[2]) / real_t(3);
+			t.inward += n.dot(Vector3(c.x, 0, c.z)) <= 0 ? 1 : 0;
+			const int32_t id = k / 3 < ids.size() ? ids[k / 3] : -1;
+			id_seen[id] += 1;
+			if (id < 0 || id >= patches) {
+				t.unassigned += 1;
+			} else if (std::fabs(c.x) > 0.01f && (c.x > 0 ? 1 : -1) != side_of[size_t(id)]) {
+				t.wrong_side += 1;
+			}
+		}
+		for (const auto &kv2 : directed) {
+			t.twice += kv2.second > 1 ? 1 : 0;
+		}
+		t.euler = int(v.size() / 3) - int(undirected.size()) + int(f.size() / 3);
+		t.id_count = int(id_seen.size());
+		std::vector<std::vector<int32_t>> loops;
+		mesh_wire::decode_loops(mesh_boundary_loops(), loops);
+		bool waist_loop = false, hem_loop = false;
+		for (const std::vector<int32_t> &l : loops) {
+			bool all_w = true, all_h = true;
+			for (int32_t i : l) {
+				all_w = all_w && std::fabs(v[3 * size_t(i) + 1] - waist_y) < 0.03f;
+				all_h = all_h && std::fabs(v[3 * size_t(i) + 1] - hem_y) < 0.03f;
+			}
+			waist_loop = waist_loop || all_w;
+			hem_loop = hem_loop || all_h;
+		}
+		t.loops_at_rings = int(waist_loop) + int(hem_loop);
+		return t;
+	};
+	const std::string m0 = mesh_build(0, 1e-5);
+	const Topo t0 = topo(m0);
+	append(o.floats, mesh_vertices());
+	const std::string m1 = mesh_build(0.02, 1e-5);
+	const Topo t1 = topo(m1);
+	append(o.floats, mesh_vertices());
+
+	// Controls.
+	const std::string drop = draw_skirt(s, true, "seam_back");
+	const int drop_patches = patch_count();
+	int drop_panels = 0;
+	for (int i = 0; i < drop_patches; ++i) {
+		drop_panels += patch_touch(patch_vertices(i), waist_y, hem_y).panel() ? 1 : 0;
+	}
+	const std::string plain = draw_skirt(s, false, "");
+	const int plain_patches = patch_count();
+	int plain_panels = 0, plain_caps = 0;
+	for (int i = 0; i < plain_patches; ++i) {
+		const PatchTouch t = patch_touch(patch_vertices(i), waist_y, hem_y);
+		plain_panels += t.panel() ? 1 : 0;
+		plain_caps += t.cap ? 1 : 0;
+	}
+
+	set_body({}, {});
+	reset();
+
+	o.ints = { nodes, edges, knots, deg3, curves, cycles, openings, patches, panels, sides, t0.components, t0.loops, t0.euler,
+		t0.loops_at_rings, t0.twice, t0.inward, t0.id_count, t0.unassigned, t0.wrong_side, t1.components, t1.loops, t1.euler,
+		t1.loops_at_rings, t1.twice, t1.inward, t1.id_count, t1.unassigned, t1.wrong_side, drop_patches, drop_panels,
+		plain_patches, plain_panels, plain_caps };
+	auto good = [](const Topo &t) {
+		return t.components == 1 && t.loops == 2 && t.euler == 0 && t.loops_at_rings == 2 && t.twice == 0 && t.inward == 0 &&
+				t.id_count == 2 && t.unassigned == 0 && t.wrong_side == 0;
+	};
+	o.pass = nodes == 4 && edges == 6 && knots == 4 && deg3 == 4 && curves == 6 && cycles == 2 && openings == 2 &&
+			patches == 2 && panels == 2 && sides == 0 && good(t0) && good(t1) && drop_panels == 0 && plain_patches == 4 &&
+			plain_panels == 2 && plain_caps == 2;
+	o.detail = fmt("rings as boundary strokes -> %d knots (%d of degree 3), %d curves, %d cycles + %d openings, %d patches, "
+				   "%d panels (one per side: %s); mesh: %d component, %d loops at the rings, Euler %d, %d directed edges used "
+				   "twice, %d inward, %d patch ids (%d unassigned, %d on the wrong side); remeshed: %d component, %d loops at "
+				   "the rings, Euler %d, %d ids, %d unassigned, %d on the wrong side; back seam dropped -> %d panels (%d "
+				   "patches), rings not boundary -> %d patches, %d caps (controls)",
+			knots, deg3, curves, cycles, openings, patches, panels, sides == 0 ? "yes" : "NO", t0.components,
+			t0.loops_at_rings, t0.euler, t0.twice, t0.inward, t0.id_count, t0.unassigned, t0.wrong_side, t1.components,
+			t1.loops_at_rings, t1.euler, t1.id_count, t1.unassigned, t1.wrong_side, drop_panels, drop_patches, plain_patches,
+			plain_caps) +
+			" [" + e + " | " + m0 + " | " + m1 + " | " + cb + " | " + drop + " | " + plain + "]";
+	return o;
+}
+
 const std::vector<std::pair<std::string, std::function<Out()>>> &table() {
 	static const std::vector<std::pair<std::string, std::function<Out()>>> t = {
 		{ "beautify_determinism", beautify_determinism },
@@ -570,6 +843,7 @@ const std::vector<std::pair<std::string, std::function<Out()>>> &table() {
 		{ "extractor_cube", extractor_cube },
 		{ "delaunay_small_scale", delaunay_small_scale },
 		{ "mesh_weld", mesh_weld },
+		{ "skirt_tube", skirt_tube },
 	};
 	return t;
 }

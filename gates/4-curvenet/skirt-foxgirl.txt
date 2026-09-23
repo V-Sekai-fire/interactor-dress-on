@@ -1,0 +1,112 @@
+# skirt on FoxGirl through curvenet.elf, 2026-09-23T08:59:00, Godot 4.7.2-stable (official)
+body 5128 vertices 10171 triangles; waist r 0.2047 at y 0.9528, hem r 0.2305 at y 0.5249 (grow 0.0348)
+== pen_source (rings, then seams) merge_eps 0.02
+   waist_left  boundary=1 pen_end    0.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   waist_right boundary=1 pen_end    6.3 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=2 cycles=0 openings=1
+   hem_left    boundary=1 pen_end    6.0 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=1
+   hem_right   boundary=1 pen_end    9.4 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=4 nodes=4 cycles=0 openings=2
+   seam_front  boundary=0 pen_end    7.5 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=5 nodes=4 cycles=0 openings=2
+   seam_back   boundary=0 pen_end 1058.5 ms  ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.523..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=930 triangles=1728 loops=2 components=1 euler=0 | loops at mean y [0.953, 0.525], patch ids { 1: 872, 0: 856 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2206 triangles=4276 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2138, 1: 2138 }
+   as expected
+== pen_source (rings, then seams) merge_eps 0.05
+   waist_left  boundary=1 pen_end    0.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   waist_right boundary=1 pen_end    4.5 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=2 cycles=0 openings=1
+   hem_left    boundary=1 pen_end    4.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=1
+   hem_right   boundary=1 pen_end    7.3 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=4 nodes=4 cycles=0 openings=2
+   seam_front  boundary=0 pen_end   10.4 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=5 nodes=4 cycles=0 openings=2
+   seam_back   boundary=0 pen_end 1055.5 ms  ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.523..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=930 triangles=1728 loops=2 components=1 euler=0 | loops at mean y [0.953, 0.525], patch ids { 1: 872, 0: 856 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2206 triangles=4276 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2138, 1: 2138 }
+   as expected
+== seams_first merge_eps 0.02
+   seam_front  boundary=0 pen_end    0.8 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   seam_back   boundary=0 pen_end    1.1 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=4 cycles=0 openings=0
+   waist_left  boundary=1 pen_end    4.0 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=0
+   hem_left    boundary=1 pen_end  828.3 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=4 nodes=4 cycles=1 openings=0
+   waist_right boundary=1 pen_end  264.6 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=5 nodes=4 cycles=2 openings=1
+   hem_right   boundary=1 pen_end  221.8 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.525..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=947 triangles=1762 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.953], patch ids { 1: 878, 0: 884 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2209 triangles=4284 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2142, 1: 2142 }
+   as expected
+== seams_first merge_eps 0.05
+   seam_front  boundary=0 pen_end    0.7 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   seam_back   boundary=0 pen_end    1.1 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=4 cycles=0 openings=0
+   waist_left  boundary=1 pen_end    3.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=0
+   hem_left    boundary=1 pen_end  853.6 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=4 nodes=4 cycles=1 openings=0
+   waist_right boundary=1 pen_end  283.6 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=5 nodes=4 cycles=2 openings=1
+   hem_right   boundary=1 pen_end  218.7 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.525..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=947 triangles=1762 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.953], patch ids { 1: 878, 0: 884 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2209 triangles=4284 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2142, 1: 2142 }
+   as expected
+== panel_by_panel merge_eps 0.02
+   seam_front  boundary=0 pen_end    0.7 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   waist_left  boundary=1 pen_end    2.0 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=3 cycles=0 openings=0
+   seam_back   boundary=0 pen_end    2.3 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=0
+   hem_left    boundary=1 pen_end  814.7 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=4 nodes=4 cycles=1 openings=0
+   waist_right boundary=1 pen_end  290.9 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=5 nodes=4 cycles=2 openings=1
+   hem_right   boundary=1 pen_end  213.9 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.525..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=940 triangles=1748 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.953], patch ids { 1: 874, 0: 874 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2205 triangles=4276 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2134, 1: 2142 }
+   as expected
+== panel_by_panel merge_eps 0.05
+   seam_front  boundary=0 pen_end    1.0 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   waist_left  boundary=1 pen_end    2.0 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=3 cycles=0 openings=0
+   seam_back   boundary=0 pen_end    2.3 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=0
+   hem_left    boundary=1 pen_end  796.4 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=4 nodes=4 cycles=1 openings=0
+   waist_right boundary=1 pen_end  281.5 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=5 nodes=4 cycles=2 openings=1
+   hem_right   boundary=1 pen_end  213.6 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.525..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=940 triangles=1748 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.953], patch ids { 1: 874, 0: 874 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2205 triangles=4276 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2134, 1: 2142 }
+   as expected
+== left_then_right_last_both merge_eps 0.02
+   seam_front  boundary=0 pen_end    0.7 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   seam_back   boundary=0 pen_end    1.1 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=4 cycles=0 openings=0
+   waist_left  boundary=1 pen_end    3.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=0
+   hem_left    boundary=1 pen_end  835.5 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=4 nodes=4 cycles=1 openings=0
+   hem_right   boundary=1 pen_end  276.7 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=5 nodes=4 cycles=2 openings=1
+   waist_right boundary=1 pen_end  270.2 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.523..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=953 triangles=1774 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.953], patch ids { 1: 892, 0: 882 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2210 triangles=4284 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2142, 1: 2142 }
+   as expected
+== left_then_right_last_both merge_eps 0.05
+   seam_front  boundary=0 pen_end    0.7 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   seam_back   boundary=0 pen_end    1.4 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=4 cycles=0 openings=0
+   waist_left  boundary=1 pen_end    5.4 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=0
+   hem_left    boundary=1 pen_end 1015.7 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=4 nodes=4 cycles=1 openings=0
+   hem_right   boundary=1 pen_end  377.5 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=5 nodes=4 cycles=2 openings=1
+   waist_right boundary=1 pen_end  235.2 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=6 nodes=4 cycles=2 openings=2
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["+x y 0.525..0.953", "-x y 0.523..0.953"]
+   mesh_build(0.03, 0.005): ok patches=2 vertices=953 triangles=1774 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.953], patch ids { 1: 892, 0: 882 }
+   mesh_build(0.00, 0.00001): ok patches=2 vertices=2210 triangles=4284 loops=2 components=1 euler=0 | loops at mean y [0.525, 0.952], patch ids { 0: 2142, 1: 2142 }
+   as expected
+== CONTROL rings not boundary
+   waist_left  boundary=0 pen_end    0.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   waist_right boundary=0 pen_end  240.4 ms  ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 openings=0
+   hem_left    boundary=0 pen_end    4.8 ms  ok=1 valid=1 closed=0 new_patches=0 patches=1 edges=3 nodes=4 cycles=1 openings=0
+   hem_right   boundary=0 pen_end  380.2 ms  ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=4 nodes=4 cycles=2 openings=0
+   seam_front  boundary=0 pen_end    6.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=2 edges=5 nodes=4 cycles=2 openings=0
+   seam_back   boundary=0 pen_end  612.2 ms  ok=1 valid=1 closed=0 new_patches=2 patches=4 edges=6 nodes=4 cycles=4 openings=0
+   curvenet: ok sketch curves=6 knots=4 intersections=4 needs_setup=0, knot degrees [3, 3, 3, 3]; patches: ["-x y 0.952..0.953", "-x y 0.523..0.526", "+x y 0.525..0.953", "-x y 0.523..0.953"]
+   mesh_build(0.03, 0.005): ok patches=4 vertices=1330 triangles=2594 loops=2 components=1 euler=-60 | loops at mean y [0.953, 0.946], patch ids { 2: 859, 3: 889, 0: 402, 1: 444 }
+   mesh_build(0.00, 0.00001): ok patches=4 vertices=3053 triangles=6096 loops=3 components=1 euler=0 | loops at mean y [0.952, 0.947, 0.528], patch ids { 0: 792, 1: 1028, 2: 2138, 3: 2138 }
+   as expected
+== CONTROL back seam dropped
+   waist_left  boundary=1 pen_end    0.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0
+   waist_right boundary=1 pen_end    5.1 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=2 cycles=0 openings=1
+   hem_left    boundary=1 pen_end    4.9 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=1
+   hem_right   boundary=1 pen_end    7.7 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=4 nodes=4 cycles=0 openings=2
+   seam_front  boundary=0 pen_end    7.1 ms  ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=5 nodes=4 cycles=0 openings=2
+   curvenet: ok sketch curves=5 knots=4 intersections=2 needs_setup=0, knot degrees [3, 2, 3, 2]; patches: []
+   mesh_build(0.03, 0.005): ok patches=0 vertices=0 triangles=0 loops=0 components=0 euler=0 | loops at mean y [], patch ids {  }
+   mesh_build(0.00, 0.00001): ok patches=0 vertices=0 triangles=0 loops=0 components=0 euler=0 | loops at mean y [], patch ids {  }
+   as expected
+RESULT: PASS (0 runs failed their expectation)

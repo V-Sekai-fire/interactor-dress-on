@@ -17,6 +17,14 @@ struct KernelDesc {
 static const KernelDesc kKernels[] = {
 	{ "add_f32", { 256, 1, 1 } },
 	{ "mul_f32", { 256, 1, 1 } },
+	{ "silu_f32", { 256, 1, 1 } },
+	{ "gelu_f32", { 256, 1, 1 } },
+	{ "gelu_erf_f32", { 256, 1, 1 } },
+	{ "sigmoid_f32", { 256, 1, 1 } },
+	{ "neg_f32", { 256, 1, 1 } },
+	{ "scale_f32", { 256, 1, 1 } },
+	{ "diag_mask_inf_f32", { 256, 1, 1 } },
+	{ "rope_neox_f32", { 256, 1, 1 } },
 };
 static const uint32_t kKernelCount = sizeof(kKernels) / sizeof(kKernels[0]);
 

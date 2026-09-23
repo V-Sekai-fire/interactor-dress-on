@@ -8,3 +8,7 @@ tools/oxrsys/
 /models/
 /.venv-convert/
 lean/.lake/
+/.forks/
+/build-native/
+/.cpm-cache-native/
+/tools/native/.pixi/

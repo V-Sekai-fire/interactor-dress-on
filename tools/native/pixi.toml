@@ -1,0 +1,23 @@
+# Native oracle build of upstream cloth-fit (PolyFEM_bin, openvdb_dump) from
+# vendor/cloth-fit. Same dependency set as vendor/cloth-fit/pixi.toml; the C++
+# compiler is llvm-mingw from the desk, not from conda. See README.md.
+[workspace]
+name = "cloth-fit-native"
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[dependencies]
+cmake = ">=3.31,<4"
+ninja = ">=1.12"
+python = ">=3.11"
+libboost-devel = ">=1.84"
+blosc = ">=1.21"
+pkg-config = "*"
+zlib = ">=1.2.13"
+# Headers only. The TBB that PolyFEM_bin runs is the static oneTBB v2021.9.0
+# that vendor/cloth-fit/cmake/recipes/onetbb.cmake builds (libtbb12.a; the exe
+# imports no tbb DLL), but OpenVDB and polyfem compile against this package's
+# headers, which come first on their include path. Pinned to 2021.9 so headers
+# and runtime are one release; the unpinned ">=2021.9,<2022" of cloth-fit's
+# pixi.toml resolved to 2021.13 for the C:/b/cf-up oracle build.
+tbb-devel = "2021.9.*"

@@ -116,6 +116,20 @@ struct weight_component {
 [[nodiscard]] result<bundle_metadata> inspect_gguf(
     const std::filesystem::path & path);
 
+// interactor-dress-on reader path: one gguf_init_from_callback over
+// reader.read() yields both the manifest (checked as inspect_gguf checks the
+// stream) and the tensor directory (open_component); once the backend
+// exists, the tensors are allocated on it and filled through
+// reader.upload(), tensor by tensor (upload_component).
+[[nodiscard]] result<bundle_metadata> inspect_gguf(const gguf_context * file);
+
+[[nodiscard]] result<std::unique_ptr<weight_component>> open_component(
+    bundle_reader & reader, std::string_view component, bundle_metadata & metadata);
+
+[[nodiscard]] result<void> upload_component(
+    bundle_reader & reader, std::string_view component,
+    weight_component & weights, ggml_backend_t backend);
+
 using tensor_snapshot = std::unordered_map<std::string, std::vector<float>>;
 
 // Qwen3 graph layout follows llama.cpp's Qwen3 implementation at the revision

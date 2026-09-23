@@ -5,6 +5,46 @@
 #include <unordered_map>
 
 namespace skintokens::detail {
+
+// interactor-dress-on: the manifest from a gguf_context that ggml parsed
+// (gguf_init_from_callback over a bundle_reader), with the same acceptance
+// rules as the stream parser below. Unlike it, array metadata is tolerated
+// (ggml has already bounded it).
+result<bundle_metadata> inspect_gguf(const gguf_context * file) {
+    if (file == nullptr) return std::unexpected(fail(error_code::invalid_format, "unparsed GGUF component"));
+    const std::uint32_t version = gguf_get_version(file);
+    if (version < 2U || version > 3U)
+        return std::unexpected(fail(error_code::invalid_format, "unsupported GGUF header"));
+    bundle_metadata output;
+    output.tensor_count = static_cast<std::uint64_t>(gguf_get_n_tensors(file));
+    const auto text = [&](const char * key, std::string & value) {
+        const std::int64_t id = gguf_find_key(file, key);
+        if (id >= 0 && gguf_get_kv_type(file, id) == GGUF_TYPE_STRING) value = gguf_get_val_str(file, id);
+    };
+    text("general.architecture", output.architecture);
+    text("skintokens.component", output.component);
+    text("skintokens.upstream_revision", output.upstream_revision);
+    text("skintokens.tokenrig_sha256", output.tokenrig_sha256);
+    text("skintokens.skin_vae_sha256", output.skin_vae_sha256);
+    if (const std::int64_t id = gguf_find_key(file, "skintokens.format_version"); id >= 0) {
+        switch (gguf_get_kv_type(file, id)) {
+        case GGUF_TYPE_UINT32: output.format_version = gguf_get_val_u32(file, id); break;
+        case GGUF_TYPE_UINT64: output.format_version = gguf_get_val_u64(file, id); break;
+        case GGUF_TYPE_INT64:
+            output.format_version = static_cast<std::uint64_t>(gguf_get_val_i64(file, id)); break;
+        default:
+            return std::unexpected(fail(error_code::invalid_format, "unsupported GGUF metadata type"));
+        }
+    }
+    if (output.architecture != "skintokens" || output.format_version != 1U || output.component.empty())
+        return std::unexpected(fail(error_code::incompatible_model, "GGUF is not a compatible SkinTokens component"));
+    if (output.upstream_revision.size() != 40U || output.tokenrig_sha256.size() != 64U ||
+        output.skin_vae_sha256.size() != 64U)
+        return std::unexpected(fail(error_code::incompatible_model, "GGUF model identity is incomplete"));
+    return output;
+}
+
+#if !defined(SKINTOKENS_GUEST)
 namespace {
 
 constexpr std::uint32_t gguf_magic = 0x46554747U;
@@ -85,5 +125,10 @@ result<bundle_metadata> inspect_gguf(const std::filesystem::path & path) {
         return std::unexpected(fail(error_code::incompatible_model, "GGUF model identity is incomplete"));
     return output;
 }
+#else
+result<bundle_metadata> inspect_gguf(const std::filesystem::path &) {
+    return std::unexpected(fail(error_code::io, "the guest has no filesystem; load through a bundle_reader"));
+}
+#endif // !SKINTOKENS_GUEST
 
 } // namespace skintokens::detail

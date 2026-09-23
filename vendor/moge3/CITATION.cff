@@ -1,0 +1,60 @@
+cff-version: 1.2.0
+message: If you use this code, cite MoGe and DINOv2, the models it ports.
+title: moge3, a ggml port of the MoGe-3 camera field-of-view path (Pixal3D's camera)
+abstract: >-
+  A C++/ggml port, written for the dress-on loop's infer stage (Cut 7), of the
+  part of MoGe-3 (V-Sekai-fire/MoGe at 74fbce0, "V3"; weights
+  Ruicheng/moge-3-vitl at 184008f) that Pixal3D's get_camera_params_wild_moge
+  uses: the DINOv2 ViT-L/14 encoder at 840x840 (60x60 tokens), the neck, the
+  points and mask heads with refine_steps = 0, then MoGe's
+  recover_focal_shift on a 64x64 sample and camera_angle_x = 2 atan(1/(2 fx)).
+  No MoGe source is copied; moge3.cpp re-expresses moge/model/v3.py, v2.py,
+  modules/dinov2_encoder.py, modules/conv_stack.py, the vendored DINOv2
+  vision_transformer.py / block.py and utils/geometry_torch.py as ggml graph
+  code. Local adaptations:
+  (1) only the FoV path: normal_head, scale_head, mask_token and the sparse
+  refiner (FlexGEMM/Triton) are not ported;
+  (2) square input only (Pixal3D's preprocess_image always gives one), so the
+  position embedding is bicubic-interpolated to 60x60 once at conversion
+  (tools/models/convert_moge3_to_gguf.py) instead of per call;
+  (3) ops outside ggml are decomposed into the Cut 3 ggml-rd op families:
+  every conv is CONV_3D direct, replicate padding is CONCAT of edge views,
+  ConvTranspose2d k2 s2 is a 1x1 conv plus a CONT(PERMUTE)/CONCAT pixel
+  shuffle (the converter bakes the weight as rows (a, b, co)), the x2
+  bilinear upsample is a CONCAT/SCALE/ADD stencil; ReLU is GGML_UNARY_OP_RELU
+  (ggml-rd needs a relu kernel, plan K11);
+  (4) the antialiased resize to 840, the ImageNet normalisation, the 64x64
+  bilinear sample, exp/sigmoid and the focal/shift solve run on the host;
+  the solve is a 1-D Levenberg-Marquardt run to convergence (as the CPU-torch
+  oracle gates/7-pixal3d/aux-models/moge3_ref.py does) instead of scipy
+  least_squares(ftol=1e-3);
+  (5) weights stream from a GGUF file on the host; the guest will take them
+  via host UPLOAD, and the backend will be ggml-rd with one thread.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: Microsoft
+    website: https://github.com/microsoft/MoGe
+  - name: Meta Platforms, Inc. and affiliates
+    website: https://github.com/facebookresearch/dinov2
+repository-code: https://github.com/V-Sekai-fire/MoGe
+commit: 74fbce054ebed49800de42d0ad0e83495065719a
+license: MIT
+references:
+  - type: software
+    title: MoGe
+    authors:
+      - name: Microsoft
+    repository-code: https://github.com/microsoft/MoGe
+    license: MIT
+  - type: software
+    title: DINOv2 (vendored in MoGe as moge/model/modules/dinov2)
+    authors:
+      - name: Meta Platforms, Inc. and affiliates
+    repository-code: https://github.com/facebookresearch/dinov2
+    license: Apache-2.0
+  - type: software
+    title: MoGe-3 ViT-L weights
+    authors:
+      - name: Ruicheng Wang
+    repository-code: https://huggingface.co/Ruicheng/moge-3-vitl

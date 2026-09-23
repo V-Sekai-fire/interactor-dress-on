@@ -797,8 +797,58 @@ model::model(model &&) noexcept = default;
 model & model::operator=(model &&) noexcept = default;
 model::~model() = default;
 
+// interactor-dress-on: the bundle through a bundle_reader. Same checks, same
+// order as the path overload below; the components' existence is asked of
+// the reader, and each GGUF is parsed once (gguf_init_from_callback), not
+// twice (manifest stream + gguf_init_from_file).
+result<model> model::load(bundle_reader & reader, const runtime_options & options) {
+    detail::profile_scope total_profile{"model.load.total"};
+    static constexpr std::string_view names[]{"mesh-encoder.gguf", "tokenrig.gguf", "skin-vae.gguf"};
+    for (const auto name : names)
+        if (!reader.exists(name))
+            return std::unexpected(detail::fail(error_code::io,
+                "model bundle is missing a component: " + std::string{name}));
+    auto output = std::make_unique<impl>();
+    auto mesh_weights = detail::open_component(reader, names[0], output->mesh_encoder);
+    if (!mesh_weights) return std::unexpected(mesh_weights.error());
+    auto tokenrig_weights = detail::open_component(reader, names[1], output->tokenrig);
+    if (!tokenrig_weights) return std::unexpected(tokenrig_weights.error());
+    auto skin_vae_weights = detail::open_component(reader, names[2], output->skin_vae);
+    if (!skin_vae_weights) return std::unexpected(skin_vae_weights.error());
+    const auto & mesh_encoder = output->mesh_encoder;
+    if (mesh_encoder.component != "mesh-encoder" || output->tokenrig.component != "tokenrig" ||
+        output->skin_vae.component != "skin-vae")
+        return std::unexpected(detail::fail(error_code::incompatible_model, "model bundle contains a component in the wrong file"));
+    const auto same_identity = [&](const detail::bundle_metadata & value) {
+        return value.upstream_revision == mesh_encoder.upstream_revision &&
+               value.tokenrig_sha256 == mesh_encoder.tokenrig_sha256 &&
+               value.skin_vae_sha256 == mesh_encoder.skin_vae_sha256;
+    };
+    if (!same_identity(output->tokenrig) || !same_identity(output->skin_vae))
+        return std::unexpected(detail::fail(error_code::incompatible_model, "model components have mismatched source identities"));
+    auto backend = detail::make_backend(options);
+    if (!backend) return std::unexpected(backend.error());
+    output->backend = std::move(*backend);
+    output->mesh_weights = std::move(*mesh_weights);
+    output->tokenrig_weights = std::move(*tokenrig_weights);
+    output->skin_vae_weights = std::move(*skin_vae_weights);
+    for (auto [name, weights] : {std::pair{names[0], output->mesh_weights.get()},
+                                 std::pair{names[1], output->tokenrig_weights.get()},
+                                 std::pair{names[2], output->skin_vae_weights.get()}}) {
+        auto uploaded = detail::upload_component(reader, name, *weights, output->backend->value);
+        if (!uploaded) return std::unexpected(uploaded.error());
+    }
+    return model{std::move(output)};
+}
+
 result<model> model::load(const std::filesystem::path & bundle, const runtime_options & options) {
     detail::profile_scope total_profile{"model.load.total"};
+#if defined(SKINTOKENS_GUEST)
+    (void)bundle;
+    (void)options;
+    return std::unexpected(detail::fail(error_code::io,
+        "the guest has no filesystem; load the bundle through a bundle_reader"));
+#else
     if (!std::filesystem::is_directory(bundle))
         return std::unexpected(detail::fail(error_code::io, "model bundle must be a directory"));
     auto output = std::make_unique<impl>();
@@ -833,6 +883,7 @@ result<model> model::load(const std::filesystem::path & bundle, const runtime_op
     output->tokenrig_weights = std::move(*tokenrig_weights);
     output->skin_vae_weights = std::move(*skin_vae_weights);
     return model{std::move(output)};
+#endif // SKINTOKENS_GUEST
 }
 
 result<skin> model::rig(const mesh & source, const generation_options & options) const {
@@ -894,9 +945,15 @@ result<skin> model::rig(const mesh & source, const generation_options & options)
     for (const auto value : model_target->rest_positions)
         normalized_joints.push_back({(value.x-center.x)/scale, (value.y-center.y)/scale,
                                      (value.z-center.z)/scale});
-    return decode_binding(*impl_->skin_vae_weights, impl_->backend->value, target,
+    auto bound = decode_binding(*impl_->skin_vae_weights, impl_->backend->value, target,
         generated->skin_codes, *vae_condition, sampled->points, sampled->normals, normalized,
         source.faces, normalized_joints, options.surface_postprocess);
+    if (bound) {
+        // interactor-dress-on: keep the token stream (skin::tokens).
+        bound->tokens = generated->skeleton_tokens;
+        for (const auto code : generated->skin_codes) bound->tokens.push_back(code + 267);
+    }
+    return bound;
 }
 
 result<skin> model::bind(const mesh & source, const skeleton & target, const generation_options & options) const {
@@ -953,9 +1010,15 @@ result<skin> model::bind(const mesh & source, const skeleton & target, const gen
         codes = std::move(*generated);
     }
     dump_token_trace_if_requested(prefix->tokens, codes);
-    return decode_binding(*impl_->skin_vae_weights, impl_->backend->value, target,
+    auto bound = decode_binding(*impl_->skin_vae_weights, impl_->backend->value, target,
         codes, *vae_condition, sampled->points, sampled->normals, prefix->normalized_vertices,
         source.faces, prefix->normalized_joints, options.surface_postprocess);
+    if (bound) {
+        // interactor-dress-on: keep the token stream (skin::tokens).
+        bound->tokens = prefix->tokens;
+        for (const auto code : codes) bound->tokens.push_back(code + 267);
+    }
+    return bound;
 }
 
 std::string_view model::backend_name() const noexcept {

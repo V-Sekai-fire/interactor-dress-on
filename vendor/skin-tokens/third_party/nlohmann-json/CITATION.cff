@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: If you use this header, cite nlohmann/json as below.
+title: JSON for Modern C++ (nlohmann/json) v3.11.2, single header (vendored)
+abstract: >-
+  single_include/nlohmann/json.hpp and LICENSE.MIT of V-Sekai-fire/json (the
+  org's fork of nlohmann/json) at tag v3.11.2, copied unmodified. skin-tokens
+  asks for nlohmann_json 3.11 (its CMakeLists.txt: find_package(nlohmann_json
+  3.11)) and uses it only in src/glb.cpp (host GLB I/O);
+  tests/native/infer/CMakeLists.txt puts this directory on its include path
+  as the nlohmann_json::nlohmann_json interface target. Byte-identical,
+  modulo line endings, to the 3.11.2 copy the org's stable-diffusion-ggml
+  carries in thirdparty/json.hpp, which the host build used before this.
+type: software
+authors:
+  - name: Niels Lohmann
+  - name: The nlohmann/json contributors
+    website: https://github.com/nlohmann/json
+repository-code: https://github.com/V-Sekai-fire/json
+commit: bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d
+version: 3.11.2
+license: MIT

@@ -195,6 +195,12 @@ struct skin {
     // False denotes the deterministic geometric integration baseline. It is
     // never presented as learned TokenRig output.
     bool learned = false;
+    // interactor-dress-on: the TokenRig sequence behind a learned binding --
+    // rig(): the generated skeleton tokens (from the start pair) then the raw
+    // skin-code tokens (before the 267 offset is removed); bind(): the
+    // skeleton prefix then the skin codes. Empty for the geometric baseline.
+    // The oracle a port (the guest ELF) is compared against token by token.
+    std::vector<std::int32_t> tokens;
 };
 
 struct skinned_asset {
@@ -203,13 +209,53 @@ struct skinned_asset {
     motion animation;
 };
 
-enum class device_kind : std::uint8_t { automatic, cpu, vulkan };
+// rd (interactor-dress-on): the ggml registry named "RD", ggml-rd over
+// Godot's RenderingDevice. With SKINTOKENS_GUEST, automatic means rd.
+enum class device_kind : std::uint8_t { automatic, cpu, vulkan, rd };
 
 struct runtime_options {
     device_kind device = device_kind::automatic;
+    // 0 = hardware concurrency. SKINTOKENS_GUEST forces 1 (the guest has one
+    // hart and no thread pool).
     std::uint32_t threads = 0;
+    // Ignored with SKINTOKENS_GUEST: backends are linked in, never loaded.
     std::filesystem::path backend_directory;
 };
+
+// interactor-dress-on: a bundle's three GGUF components ("mesh-encoder.gguf",
+// "tokenrig.gguf", "skin-vae.gguf") read through an interface instead of a
+// directory, because the guest ELF has no filesystem. GGUF metadata is parsed
+// by ggml's gguf_init_from_callback over read(); tensor data goes through
+// upload(), one call per tensor, after the tensor is allocated on the
+// backend. Host: make_file_bundle_reader (FILE*, fread +
+// ggml_backend_tensor_set). Guest: READ / UPLOAD requests to the host.
+struct tensor_upload {
+    std::string_view component;  // e.g. "tokenrig.gguf"
+    std::string_view name;       // GGUF tensor name
+    std::uint64_t offset = 0;    // absolute byte offset in the component
+    std::size_t bytes = 0;       // ggml_nbytes(tensor)
+    void * tensor = nullptr;     // ggml_tensor *, allocated on the backend
+};
+
+class SKINTOKENS_API bundle_reader {
+public:
+    virtual ~bundle_reader();
+    [[nodiscard]] virtual bool exists(std::string_view component) = 0;
+    // Byte size of the component; 0 when it is missing.
+    [[nodiscard]] virtual std::uint64_t size(std::string_view component) = 0;
+    // Up to `bytes` bytes at `offset` into `output`; returns the count read.
+    [[nodiscard]] virtual std::size_t read(std::string_view component, void * output,
+                                           std::uint64_t offset, std::size_t bytes) = 0;
+    // Fill one tensor's data. The default reads through a bounded scratch
+    // with read() and hands each chunk to ggml_backend_tensor_set.
+    [[nodiscard]] virtual bool upload(const tensor_upload & tensor);
+};
+
+#if !defined(SKINTOKENS_GUEST)
+// Host reader over a bundle directory: one FILE* per component, fread.
+[[nodiscard]] SKINTOKENS_API std::unique_ptr<bundle_reader> make_file_bundle_reader(
+    const std::filesystem::path & directory);
+#endif
 
 struct generation_options {
     std::uint64_t seed = 0;
@@ -236,6 +282,13 @@ public:
 
     [[nodiscard]] static result<model> load(
         const std::filesystem::path & bundle,
+        const runtime_options & options = {});
+
+    // interactor-dress-on: the same bundle through a reader (see
+    // bundle_reader). `reader` is used only during the call. With
+    // SKINTOKENS_GUEST this is the only load; the path overload fails.
+    [[nodiscard]] static result<model> load(
+        bundle_reader & reader,
         const runtime_options & options = {});
 
     [[nodiscard]] result<skin> rig(

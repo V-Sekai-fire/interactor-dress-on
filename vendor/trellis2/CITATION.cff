@@ -9,7 +9,16 @@ abstract: >-
   stage replaces its FoxGirl infer fixture with (Cut 7). At 1c22f5e the tree
   is TRELLIS.2 only (no Pixal3D code); Pixal3D's projection-attention
   conditioning is the port to come. Local adaptations:
-  (1) none to the tree yet. The host build (tests/native/infer/CMakeLists.txt)
+  (1) naf.h / naf.cpp, new files (not upstream): NAF, Pixal3D's DINOv3
+  feature upsampler (valeoai/NAF, mirrored as V-Sekai-fire/NAF @37f2dfc,
+  Apache-2.0), written as ggml graph code from the op census in
+  gates/7-pixal3d/aux-models/naf.md: reflect-padded 3x3 conv as a host
+  im2col table + GET_ROWS + MUL_MAT, GroupNorm(8) as NORM + MUL + ADD,
+  integer average pooling as RESHAPE + MEAN, 2-D axial RoPE as two NEOX ROPE
+  passes (base 1, host freq factors), and natten na2d in its exact block
+  form (GET_ROWS over a host window table + MUL_MAT + SOFT_MAX_EXT + MUL_MAT),
+  evaluated per block range. Weights from tools/models/convert_naf_to_gguf.py.
+  (2) nothing else in the tree yet. The host build (tests/native/infer/CMakeLists.txt)
   lists the library sources against the org ggml (V-Sekai-fire/ggml;
   C:/contract-manifest 2-contract/ggml @04b55bba on the host until Cut 3
   lands vendor/ggml), ggml-cpu only, instead of the upstream
@@ -48,3 +57,10 @@ references:
       - name: TencentARC
     repository-code: https://github.com/TencentARC/Pixal3D
     license: MIT
+  - type: software
+    title: 'NAF: Neighborhood Attention Filtering (naf.h / naf.cpp port)'
+    authors:
+      - name: valeo.ai
+    repository-code: https://github.com/V-Sekai-fire/NAF
+    commit: 37f2dfc180f2de53d98bd601109c0da0dd6b0f43
+    license: Apache-2.0

@@ -13,15 +13,19 @@ our own, no host DLL. The GPU is reachable only through Godot's
 `RenderingDevice`, via `guest/rd_compute` (Stage 1, measured).
 
 **One scoped exception (user, 2026-09-23): Stage 7 calls out.** Image →
-mesh and 3D editing are not in the sandbox: the loop calls the org's
-Pixal3D and VoxHammer model services over HTTP
-(`V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh`,
-`interactor-voxhammer-{image,text}-mesh-editing`; `POST /predict`, `/extract`)
-from GDScript, and loads the returned GLB with Godot's own GLTF importer.
-The services run from **pixi** environments (not Docker). No GDExtension,
-no host DLL: curvenet, fit and drape stay guest ELFs, the rig (4b) stays on
-ggml-rd. Without a reachable service the INFER state fails loudly, never a
-silent fixture.
+mesh is not in the sandbox: the loop calls the org's Pixal3D model service
+over HTTP (`V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh`;
+`POST /predict`, `/extract`) from GDScript. It answers with **OpenUSD**
+(a `.usdz`: USDC layer, UsdPreviewSurface material, textures), never GLB,
+and the loop reads it in the guest (the org's `flow-*` USD importer as a
+sandbox ELF; Gate 0G). The service runs natively from a **pixi**
+environment (win-64 on the desk, not Docker; a Linux image only for RunPod);
+no card is pinned, each launch takes the next GPU in round robin
+(`tools/services/svc_common.py`). Multi-view Pixal3D (the `_mv`
+checkpoints) is the next stretch goal; VoxHammer comes after it, as an edit
+agent over the loop's meshes scored with MaskScore (user, 2026-09-23). No GDExtension, no host DLL: curvenet, fit and drape stay guest
+ELFs, the rig (4b) stays on ggml-rd. Without a reachable service the INFER
+state fails loudly, never a silent fixture.
 
 ## Rules
 

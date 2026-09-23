@@ -182,6 +182,7 @@ func _process(_dt: float) -> void:
 	if state in TERMINAL:
 		return
 	_frames += 1
+	_heartbeat()
 	var first := _first
 	_first = false
 	match state:
@@ -195,6 +196,35 @@ func _process(_dt: float) -> void:
 		"CHECK": _check()
 		"DRAPE": _drape()
 		"DRAPE_COLLECT": _drape_collect()
+
+# A heartbeat while one guest call runs for minutes (a fit phase is one vmcall;
+# nothing else is written meanwhile). Every HEARTBEAT_S seconds of a state, one
+# progress line: the state, its age, the stage's in-flight call and its age, the
+# last fit phase seen, and the guest heap (a host-side reading, no vmcall). The
+# cost is one clock compare per frame and one line per HEARTBEAT_S; the gate
+# writes it to the results file, and the RunPod handler forwards it as job
+# progress.
+const HEARTBEAT_S := 30.0
+var _beat_ms := 0
+
+func _heartbeat() -> void:
+	var now := Time.get_ticks_msec()
+	if now - _enter_ms < HEARTBEAT_S * 1000.0 or now - _beat_ms < HEARTBEAT_S * 1000.0:
+		return
+	_beat_ms = now
+	var st = _stage_for(state)
+	var call := ""
+	if st != null and st.has_method("busy") and st.busy():
+		var p: Dictionary = st.poll()
+		call = "%s %.0f s" % [str(p.get("call", "")), float(p.get("host_ms", 0)) / 1000.0]
+	var last := ""
+	if data.has("fit_phases") and not data.fit_phases.is_empty():
+		last = " | last " + str(data.fit_phases[-1]).left(60)
+	progress.emit("HEARTBEAT %s t=%.0f s%s heap %s%s" % [state, (now - _enter_ms) / 1000.0,
+			(" | " + call) if call != "" else "", _fmt_heap(st.heap() if st != null else -1), last])
+
+func _fmt_heap(b: int) -> String:
+	return "-" if b < 0 else "%.1f MiB" % (b / 1048576.0)
 
 func _stage_for(s: String):
 	match s:

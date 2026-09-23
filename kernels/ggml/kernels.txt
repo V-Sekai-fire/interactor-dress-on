@@ -4,3 +4,18 @@
 # GgmlKernelTable.inc, so ids are per build, never stored.
 add_f32
 mul_f32
+cpy_b32
+cpy_b16
+cpy_f32_f16
+cpy_f32_bf16
+cpy_f16_f32
+cpy_bf16_f32
+cpy_f16_bf16
+cpy_bf16_f16
+get_rows_b32
+get_rows_f16
+get_rows_bf16
+concat_b32
+concat_b16
+repeat_b32
+repeat_b16

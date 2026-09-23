@@ -36,6 +36,13 @@ void ensure_idle() {
 	}
 	c.dev->sync();
 	c.pending = false;
+	if (c.ts_armed) {
+		// A local device resolves a submit's timestamps at its sync: the two
+		// graph_compute captured are the last two.
+		const int64_t n = c.dev->timestamps_count();
+		c.last_gpu_ns = n >= 2 ? c.dev->timestamp_gpu_ns(n - 1) - c.dev->timestamp_gpu_ns(n - 2) : -1;
+		c.ts_armed = false;
+	}
 }
 
 void coop() {
@@ -516,6 +523,14 @@ std::string ggml_backend_rd_stats(void) {
 void ggml_backend_rd_last_graph(int64_t *dispatches, int64_t *barriers) {
 	*dispatches = ctx().st.last_dispatches;
 	*barriers = ctx().st.last_barriers;
+}
+
+void ggml_backend_rd_set_timestamps(bool on) {
+	ctx().timestamps = on;
+}
+
+int64_t ggml_backend_rd_last_gpu_ns(void) {
+	return ctx().last_gpu_ns;
 }
 
 std::string ggml_backend_rd_last_error(void) {

@@ -91,6 +91,11 @@ bool ggml_backend_rd_tensor_upload(const ggml_tensor *tensor, size_t offset, con
 std::string ggml_backend_rd_stats(void);
 // The last graph's dispatches and barriers.
 void ggml_backend_rd_last_graph(int64_t *dispatches, int64_t *barriers);
+// GPU timestamps around every graph's compute list (also GGML_RD_TIMESTAMPS=1),
+// and the last synced graph's GPU time between them in ns (-1 if none).
+// Measurement only (Gate 3's perf probe): two host calls per graph.
+void ggml_backend_rd_set_timestamps(bool on);
+int64_t ggml_backend_rd_last_gpu_ns(void);
 std::string ggml_backend_rd_last_error(void);
 
 // Free every pipeline, shader, uniform set and the params and slot buffers

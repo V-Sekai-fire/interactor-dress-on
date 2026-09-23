@@ -134,6 +134,14 @@ public:
 	int64_t memory_usage();
 	// RenderingDevice.get_device_name(): the adapter, for descriptions.
 	std::string device_name();
+	// GPU timestamps (Godot's capture_timestamp), outside a compute list only.
+	// On a local device the values of what one submit recorded are readable
+	// right after its sync(), in nanoseconds (the RTX 4090: 50 copies of
+	// 16 MiB read 3.97 ms apart, 423 GB/s). For measurements (Gate 3's perf
+	// probe), never on a path that must be fast.
+	void capture_timestamp(const std::string &name);
+	int64_t timestamps_count();
+	int64_t timestamp_gpu_ns(int64_t index);
 
 	// --- recording: one compute list, then one submit + sync ---
 	// A vmcall killed mid-recording (execution_timeout, references_max, a

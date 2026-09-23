@@ -423,6 +423,10 @@ func ggml_probe_chain() -> String: return ggml_probe_start("chain", "256", "")
 func ggml_probe_independent() -> String: return ggml_probe_start("independent", "64", "")
 func ggml_probe_alias_rw() -> String: return ggml_probe_start("alias", "rw", "")
 func ggml_probe_alias_ro() -> String: return ggml_probe_start("alias", "ro", "")  # the control: must lose counts
+# The data-movement family (CPY/DUP/CONT, GET_ROWS, CONCAT, REPEAT).
+func ggml_ops_move() -> String: return ggml_ops_start("-o CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT -b RD0", "")
+func ggml_ops_move_fault() -> String: return ggml_ops_start("-o DUP,CONT,GET_ROWS,CONCAT,REPEAT -p ^(?!type=i32,) -b RD0", "GGML_RD_FAULT=1")  # must FAIL
+func ggml_probe_perf() -> String: return ggml_probe_start("perf", "move", "")  # GPU time per op, hot shapes
 func ggml_probe_files() -> String:
 	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)

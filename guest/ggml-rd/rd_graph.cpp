@@ -206,6 +206,10 @@ ggml_status graph_compute(ggml_cgraph *g) {
 	int64_t barriers = 0;
 	int bound_kernel = -1;
 	int64_t bound_set0 = 0;
+	const bool ts = c.timestamps || env_int("GGML_RD_TIMESTAMPS") != 0;
+	if (ts) {
+		d.capture_timestamp("ggml_rd_graph_begin");
+	}
 	d.list_begin();
 	for (uint32_t i = 0; i < n; ++i) {
 		const Dispatch &dp = ds[i];
@@ -238,6 +242,10 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		d.dispatch(dp.groups[0], dp.groups[1], dp.groups[2]);
 	}
 	d.list_end();
+	if (ts) {
+		d.capture_timestamp("ggml_rd_graph_end");
+		c.ts_armed = true;
+	}
 	d.submit();
 	c.pending = true;
 

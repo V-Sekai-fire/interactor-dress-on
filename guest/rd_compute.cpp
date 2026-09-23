@@ -60,6 +60,9 @@ enum Name : int {
 	N_FREE,
 	N_GET_MEMORY_USAGE,
 	N_GET_DEVICE_NAME,
+	N_CAPTURE_TIMESTAMP,
+	N_TIMESTAMPS_COUNT,
+	N_TIMESTAMP_GPU_TIME,
 	N_COUNT
 };
 
@@ -94,6 +97,9 @@ const char *const kNameText[N_COUNT] = {
 	"free",
 	"get_memory_usage",
 	"get_device_name",
+	"capture_timestamp",
+	"get_captured_timestamps_count",
+	"get_captured_timestamp_gpu_time",
 };
 
 constexpr unsigned kHostSlots = 32;
@@ -444,6 +450,21 @@ int64_t Device::memory_usage() {
 std::string Device::device_name() {
 	step_ = "get_device_name";
 	return rd_.call(nm(N_GET_DEVICE_NAME)).as_std_string();
+}
+
+void Device::capture_timestamp(const std::string &name) {
+	step_ = "capture_timestamp";
+	rd_.voidcall(nm(N_CAPTURE_TIMESTAMP), name);
+}
+
+int64_t Device::timestamps_count() {
+	step_ = "get_captured_timestamps_count";
+	return int64_t(rd_.call(nm(N_TIMESTAMPS_COUNT)));
+}
+
+int64_t Device::timestamp_gpu_ns(int64_t index) {
+	step_ = "get_captured_timestamp_gpu_time";
+	return int64_t(rd_.call(nm(N_TIMESTAMP_GPU_TIME), index));
 }
 
 // --- recording -------------------------------------------------------------

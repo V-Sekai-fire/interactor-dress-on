@@ -1,0 +1,3 @@
+C:/b/g6g0-out/g0-double-psd/garment_final.obj: fit verts 677  gap mean 1.9042  p50 1.7258  p95 3.9322  max 5.4622 voxels
+C:/b/g6g0-out/g1-df48-psd/garment_final.obj: fit verts 677  gap mean 1.9172  p50 1.6967  p95 3.9019  max 5.4167 voxels
+C:/b/g6g0-out/g3-df48-accd-psd/garment_final.obj: fit verts 677  gap mean 1.7964  p50 1.5302  p95 3.9848  max 5.4137 voxels

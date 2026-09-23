@@ -1,0 +1,51 @@
+reference C:/b/g6g0-logs/g0-double-psd.log
+
+== g0-double-psd: exit (0, 48.74, '')  phases [(0, 10, 0.00048603156308044793, 0.25002, '4', 9.85), (1, 17, 0.0006354711303986561, 0.00761229, '4', 8.96), (2, 7, 0.0004548192488568053, 0.447239, '4', 5.94), (3, 47, 0.0015371630972068565, 0.00916991, '4', 23.37)]  newton 81  intersections none  iterations logged 85
+  trajectory vs reference over 85 common records: first differing record None, first > 1e-6 record None, max rel |f| diff 0.000e+00, max rel |grad| diff 0.000e+00
+  line searches 81: collision-free step min 0.007812 median 0.5625  final step min 0.0004883 median 0.25  steps limited by CCD (cf<1) 45
+  min distance over iterations: min 0.000386456 last 0.00195893
+  [g6g] config forms=double ccd=ticcd audit=0 df_bits=48 bound_ub=2^-44
+
+== g1-df48-psd: exit (0, 162.92, '')  phases [(0, 10, 0.0006108991524679979, 0.692391, '4', 21.65), (1, 19, 0.0006241985746558077, 0.00432019, '4', 45.56), (2, 10, 0.00037353110320235354, 0.647838, '4', 19.66), (3, 35, 0.0015841669043766085, 0.00710559, '4', 75.39)]  newton 74  intersections none  iterations logged 78
+  trajectory vs reference over 78 common records: first differing record 0, first > 1e-6 record 1, max rel |f| diff 5.411e+03, max rel |grad| diff 1.079e+02
+    rec   0  SparseProjectedNewton  f 53.62128926025116 (ref 53.621289260257349, rel 1.15e-13)  |g| 214.485157 (ref 214.485157, rel 2.65e-16)
+    rec   1  SparseProjectedNewton  f 13.410910715543567 (ref 13.412437256532842, rel 1.14e-04)  |g| 107.3084743 (ref 106.6300998, rel 6.36e-03)
+    rec   2  SparseProjectedNewton  f 11.560232314153314 (ref 11.315965386969127, rel 2.16e-02)  |g| 116.161909 (ref 112.7128006, rel 3.06e-02)
+    rec   3  SparseProjectedNewton  f 10.628826880795753 (ref 10.606735042045175, rel 2.08e-03)  |g| 110.1591003 (ref 109.0176358, rel 1.05e-02)
+    rec   4  SparseProjectedNewton  f 8.2894882881937342 (ref 8.2809508712116884, rel 1.03e-03)  |g| 97.27800603 (ref 97.66620348, rel 3.97e-03)
+    rec   5  SparseProjectedNewton  f 1.8383505882051743 (ref 1.6036140597935682, rel 1.46e-01)  |g| 49.21848535 (ref 48.9823829, rel 4.82e-03)
+    rec   6  SparseProjectedNewton  f 0.1289357140177648 (ref 0.15101885962487133, rel 1.46e-01)  |g| 19.86393482 (ref 31.01001323, rel 3.59e-01)
+    rec   7  SparseProjectedNewton  f 0.0028537289170398154 (ref 0.0033974320464197488, rel 1.60e-01)  |g| 4.995174518 (ref 7.096593249, rel 2.96e-01)
+    rec   8  SparseProjectedNewton  f 0.0010342392497924846 (ref 0.0010556693823613611, rel 2.03e-02)  |g| 1.459753985 (ref 1.54430374, rel 5.47e-02)
+    rec   9  SparseProjectedNewton  f 0.00077718462303828979 (ref 0.00093586647877255962, rel 1.70e-01)  |g| 1.106644389 (ref 1.775428446, rel 3.77e-01)
+    rec  10  SparseProjectedNewton  f 0.0006108991524679979 (ref 0.00048603156308044793, rel 2.57e-01)  |g| 0.6923912186 (ref 0.2500203185, rel 1.77e+00)
+    rec  11  SparseProjectedNewton  f 0.0042105369760033918 (ref 0.0034865827871684153, rel 2.08e-01)  |g| 0.6581479164 (ref 0.2426748799, rel 1.71e+00)
+    rec  77  SparseProjectedNewton  f 0.0015841669043766085 (ref 0.0015536794100531053, rel 1.96e-02)  |g| 0.007105593462 (ref 0.07831347759, rel 9.09e-01)
+  line searches 74: collision-free step min 0.04149 median 0.5  final step min 0.001465 median 0.3438  steps limited by CCD (cf<1) 43
+  collision-free step vs reference, first 74 line searches: identical 19, ratio min 0.04688 max 22
+  min distance over iterations: min 0.00022164 last 0.00196093
+  [g6g] config forms=df ccd=ticcd audit=0 df_bits=48 bound_ub=2^-44
+
+== g3-df48-accd-psd: exit (0, 224.34, '')  phases [(0, 8, 0.004018835282943713, 0.820003, '4', 16.31), (1, 35, 0.0005086311943626807, 0.00584246, '4', 71.64), (2, 11, 0.0007084180373285682, 0.717788, '4', 24.23), (3, 50, 0.0014004200927798165, 0.00874953, '4', 111.55)]  newton 104  intersections none  iterations logged 103
+  trajectory vs reference over 85 common records: first differing record 0, first > 1e-6 record 1, max rel |f| diff 1.686e+04, max rel |grad| diff 7.619e+02
+    rec   0  SparseProjectedNewton  f 53.62128926025116 (ref 53.621289260257349, rel 1.15e-13)  |g| 214.485157 (ref 214.485157, rel 2.65e-16)
+    rec   1  SparseProjectedNewton  f 21.3304406361503 (ref 13.412437256532842, rel 5.90e-01)  |g| 135.5352994 (ref 106.6300998, rel 2.71e-01)
+    rec   2  SparseProjectedNewton  f 0.024547628781557546 (ref 11.315965386969127, rel 9.98e-01)  |g| 17.08600254 (ref 112.7128006, rel 8.48e-01)
+    rec   3  SparseProjectedNewton  f 0.0040188352829437128 (ref 10.606735042045175, rel 1.00e+00)  |g| 0.8200025844 (ref 109.0176358, rel 9.92e-01)
+    rec   4  SparseProjectedNewton  f 0.013607558003776823 (ref 8.2809508712116884, rel 9.98e-01)  |g| 0.8881403942 (ref 97.66620348, rel 9.91e-01)
+    rec   5  SparseProjectedNewton  f 0.0022640042194996086 (ref 1.6036140597935682, rel 9.99e-01)  |g| 0.2638228682 (ref 48.9823829, rel 9.95e-01)
+    rec   6  SparseProjectedNewton  f 0.0015802448720409884 (ref 0.15101885962487133, rel 9.90e-01)  |g| 0.1412548654 (ref 31.01001323, rel 9.95e-01)
+    rec   7  SparseProjectedNewton  f 0.0015472723201693163 (ref 0.0033974320464197488, rel 5.45e-01)  |g| 0.148830189 (ref 7.096593249, rel 9.79e-01)
+    rec   8  SparseProjectedNewton  f 0.0014758751821071483 (ref 0.0010556693823613611, rel 3.98e-01)  |g| 0.1232777923 (ref 1.54430374, rel 9.20e-01)
+    rec   9  SparseProjectedNewton  f 0.0014727995522853163 (ref 0.00093586647877255962, rel 5.74e-01)  |g| 0.1477607297 (ref 1.775428446, rel 9.17e-01)
+    rec  10  SparseProjectedNewton  f 0.0011978306223864648 (ref 0.00048603156308044793, rel 1.46e+00)  |g| 0.1741101791 (ref 0.2500203185, rel 3.04e-01)
+    rec  11  SparseProjectedNewton  f 0.0011641245582212681 (ref 0.0034865827871684153, rel 6.66e-01)  |g| 0.1628611604 (ref 0.2426748799, rel 3.29e-01)
+    rec  84  SparseProjectedNewton  f 0.0015271318857737171 (ref 0.0015371630972068565, rel 6.53e-03)  |g| 0.1520093635 (ref 0.009169911745, rel 1.56e+01)
+  line searches 104: collision-free step min 0.02346 median 0.7336  final step min 0.0007333 median 0.25  steps limited by CCD (cf<1) 62
+  collision-free step vs reference, first 81 line searches: identical 13, ratio min 0.03607 max 128
+  min distance over iterations: min 0.000363188 last 0.00195598
+  [g6g] config forms=df ccd=accd_df audit=1 df_bits=48 bound_ub=2^-44
+  [g6g] df-events accd-robust-df ops 2349601164 overflow 0 underflow_hi 4723016 underflow_lo 690958 nan 0 inf 0
+  [g6g] ccd-used calls 104 queries 6016252 hits 627  accd 9.59 s  flags zero_start 0 interval 0 nocert 0 cap 0 static 0  collision-free checks 6
+  [g6g] ccd-used step n 104  zero 0  max 1.000e+00  p99 1.047e+00  p50 7.244e-01  inf 0  nan 0
+  [g6g] ccd-audit (Tight Inclusion, ms 0, tol 1e-6, on [0, step]) steps 104 queries 6016252 FLAGGED 0  3.10 s

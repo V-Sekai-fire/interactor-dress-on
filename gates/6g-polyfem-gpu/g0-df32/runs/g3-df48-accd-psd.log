@@ -1,0 +1,487 @@
+# g6g0 g3-df48-accd-psd: C:/b/g6g0/fit_native.exe --phases 99 --out C:/b/g6g0-out/g3-df48-accd-psd  env: G6G_FORMS=df G6G_DF_BITS=48 G6G_CCD=accd_df G6G_AUDIT=1  (cap 1200s)  2026-09-23T14:02:19-07:00
+inputs: avatar 5128 v / 10171 f, garment 2682 v / 5220 f, skeleton 15 v / 14 b, no-fit 2005, float32 yes, harness file opens 7
+[2026-09-23 14:02:20.117] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+[2026-09-23 14:02:20.355] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+[2026-09-23 14:02:20.356] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+[2026-09-23 14:02:20.357] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+[2026-09-23 14:02:20.358] [polyfem] [info] Shrunk avatar blended 0.010 toward the target body (0 = fully collapsed onto the skeleton, 1 = no shrink)
+[2026-09-23 14:02:20.462] [polyfem] [debug] curve 0 has 3 bone intersections
+[2026-09-23 14:02:20.462] [polyfem] [debug] curve normal [-0.011034943664410036, 0.055700501234311195, -0.9983865404644485]
+[2026-09-23 14:02:20.462] [polyfem] [debug] CurveTargetForm set curve center to bone 15 - 16, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+[2026-09-23 14:02:20.462] [polyfem] [debug] curve 1 has 1 bone intersections
+[2026-09-23 14:02:20.462] [polyfem] [debug] curve normal [0.004042139558851457, -0.06527869003077968, 0.9978588846804203]
+[2026-09-23 14:02:20.462] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+[2026-09-23 14:02:20.462] [polyfem] [info] Start substep 1 out of 2
+[2026-09-23 14:02:20.670] [polyfem] [debug] Set initial AL weight to 1
+[2026-09-23 14:02:21.335] [polyfem] [debug] Solving AL Problem with weight 1
+[2026-09-23 14:02:21.490] [polyfem] [debug] Starting SparseProjectedNewton with Backtracking solve f₀=53.6213 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:21.528] [polyfem] [debug] [g6g-it] iter=0 strategy=SparseProjectedNewton f=53.62128926025116 grad_norm=214.48515704102951
+[2026-09-23 14:02:25.296] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.3693078952328648 descent_step_size=0.3693078952328648 final_step_size=0.3693078952328648)
+[2026-09-23 14:02:25.297] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=0 f=53.6213 Δf=nan ‖∇f‖=214.485 ‖Δx‖=16.9832 Δx⋅∇f(x)=-107.243 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:25.331] [polyfem] [debug] [g6g-it] iter=1 strategy=SparseProjectedNewton f=21.3304406361503 grad_norm=135.53529937497956
+[2026-09-23 14:02:26.513] [polyfem] [debug] [SparseProjectedNewton][Backtracking] Search direction not a descent direction (‖Δx‖=1.38953e+06; ‖g‖=135.535; Δx⋅g=0.379028≥0); reverting to SparseRegularizedNewton (reg_weight=1)
+[2026-09-23 14:02:26.549] [polyfem] [debug] [g6g-it] iter=1 strategy=SparseRegularizedNewton (reg_weight=1) f=21.3304406361503 grad_norm=135.53529937497956
+[2026-09-23 14:02:28.035] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.3792659020139979 descent_step_size=0.3792659020139979 final_step_size=0.3792659020139979)
+[2026-09-23 14:02:28.035] [polyfem] [debug] Min distance: inf
+[2026-09-23 14:02:28.035] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=1 f=21.3304 Δf=32.2908 ‖∇f‖=135.535 ‖Δx‖=0.680857 Δx⋅∇f(x)=-41.9997 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:28.070] [polyfem] [debug] [g6g-it] iter=2 strategy=SparseRegularizedNewton (reg_weight=1) f=8.3884219895312402 grad_norm=84.243743783888533
+[2026-09-23 14:02:29.509] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.36294859932231205 descent_step_size=0.36294859932231205 final_step_size=0.36294859932231205)
+[2026-09-23 14:02:29.509] [polyfem] [debug] Min distance: 0.0005691755705261784
+[2026-09-23 14:02:29.509] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=2 f=8.38842 Δf=12.942 ‖∇f‖=84.2437 ‖Δx‖=0.472573 Δx⋅∇f(x)=-16.4199 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:29.545] [polyfem] [debug] [g6g-it] iter=3 strategy=SparseRegularizedNewton (reg_weight=1) f=3.5908067269875299 grad_norm=140.89900530333935
+[2026-09-23 14:02:30.951] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.5360743415144213 descent_step_size=0.5360743415144213 final_step_size=0.5360743415144213)
+[2026-09-23 14:02:30.951] [polyfem] [debug] Min distance: 0.0010311618240707954
+[2026-09-23 14:02:30.951] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=3 f=3.59081 Δf=4.79762 ‖∇f‖=140.899 ‖Δx‖=0.352708 Δx⋅∇f(x)=-6.93145 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:30.986] [polyfem] [debug] [g6g-it] iter=4 strategy=SparseRegularizedNewton (reg_weight=1) f=0.84792758851340722 grad_norm=60.384718156356456
+[2026-09-23 14:02:32.333] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.31559938056751236 descent_step_size=0.31559938056751236 final_step_size=0.31559938056751236)
+[2026-09-23 14:02:32.333] [polyfem] [debug] Min distance: 0.0005165995118073305
+[2026-09-23 14:02:32.333] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=4 f=0.847928 Δf=2.74288 ‖∇f‖=60.3847 ‖Δx‖=0.221201 Δx⋅∇f(x)=-1.56991 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:32.369] [polyfem] [debug] [g6g-it] iter=5 strategy=SparseRegularizedNewton (reg_weight=1) f=0.4387218784162592 grad_norm=43.352249454113405
+[2026-09-23 14:02:33.720] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:02:33.721] [polyfem] [debug] Min distance: 0.0010651173540114423
+[2026-09-23 14:02:33.721] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] iters=5 f=0.438722 Δf=0.409206 ‖∇f‖=43.3522 ‖Δx‖=0.179857 Δx⋅∇f(x)=-0.776983 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:33.757] [polyfem] [debug] [g6g-it] iter=6 strategy=SparseRegularizedNewton (reg_weight=1) f=0.034709691376242816 grad_norm=15.467191873631837
+[2026-09-23 14:02:35.155] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:02:35.155] [polyfem] [debug] [SparseRegularizedNewton (reg_weight=1)][Backtracking] SparseRegularizedNewton (reg_weight=1) was successful for 5 iterations; resetting to SparseProjectedNewton
+[2026-09-23 14:02:35.156] [polyfem] [debug] Min distance: 0.000880670123503789
+[2026-09-23 14:02:35.156] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=6 f=0.0347097 Δf=0.404012 ‖∇f‖=15.4672 ‖Δx‖=0.0856368 Δx⋅∇f(x)=-0.0246845 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:35.191] [polyfem] [debug] [g6g-it] iter=7 strategy=SparseProjectedNewton f=0.024547628781557546 grad_norm=17.086002541553942
+[2026-09-23 14:02:36.653] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.7193901942186507 descent_step_size=0.7193901942186507 final_step_size=0.7193901942186507)
+[2026-09-23 14:02:36.654] [polyfem] [debug] Min distance: 0.0016332227507131363
+[2026-09-23 14:02:36.654] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=7 f=0.0245476 Δf=0.0101621 ‖∇f‖=17.086 ‖Δx‖=1.50881 Δx⋅∇f(x)=-0.0394219 (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:36.690] [polyfem] [debug] [g6g-it] iter=8 strategy=SparseProjectedNewton f=0.0040188352829437128 grad_norm=0.82000258435809792
+[2026-09-23 14:02:36.690] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 15.2055s (iters=8 f=0.00401884 Δf=0.0205288 ‖∇f‖=0.820003 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=9.86304e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:36.690] [polyfem] [debug] [[35mtiming[0m] f: 5.29e-02s, grad_f: 2.98e-01s, update_direction: 1.10e+01s, line_search: 3.88e+00s, constraint_set_update: 3.19e-04s
+[2026-09-23 14:02:36.690] [polyfem] [debug] [[35mtiming[0m][SparseProjectedNewton] assembly: 3.34e+00s; linear_solve: 3.30e-01s
+[2026-09-23 14:02:36.690] [polyfem] [debug] [[35mtiming[0m][SparseRegularizedNewton (reg_weight=1)] assembly: 6.61e+00s; linear_solve: 6.74e-01s
+[2026-09-23 14:02:36.690] [polyfem] [debug] [[35mtiming[0m][Backtracking] constraint_set_update 7.14e-02s, checking_for_nan_inf 4.35e-02s, broad_phase_ccd 1.56e+00s, narrow_phase_ccd 1.87e+00s, classical_line_search 1.15e-01s
+[2026-09-23 14:02:36.696] [polyfem] [debug] Current eta = 0.9996016630032308
+begin: ok  wall 0.35 s  cpu 0.36 s
+normalisation: target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248) source_scale 0.90869314092562126
+phase 0 (substep 0, AL): ok  newton 8  minimize 1  post_steps 9  energy 0.0040188352829437128  |grad| 0.820003  status 4  wall 16.31 s  cpu 16.31 s
+[2026-09-23 14:02:36.890] [polyfem] [debug] Successfully applied boundary conditions; solving in reduced space
+[2026-09-23 14:02:37.334] [polyfem] [debug] Starting SparseProjectedNewton with Backtracking solve f₀=0.0136076 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:37.378] [polyfem] [debug] [g6g-it] iter=0 strategy=SparseProjectedNewton f=0.013607558003776823 grad_norm=0.88814039423952251
+[2026-09-23 14:02:39.385] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.8081300444668464 descent_step_size=0.8081300444668464 final_step_size=0.8081300444668464)
+[2026-09-23 14:02:39.385] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=0 f=0.0136076 Δf=nan ‖∇f‖=0.88814 ‖Δx‖=2.86222 Δx⋅∇f(x)=-0.0232977 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:39.424] [polyfem] [debug] [g6g-it] iter=1 strategy=SparseProjectedNewton f=0.0022640042194996086 grad_norm=0.26382286824817486
+[2026-09-23 14:02:41.062] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.6344914840616269 descent_step_size=0.6344914840616269 final_step_size=0.6344914840616269)
+[2026-09-23 14:02:41.063] [polyfem] [debug] Min distance: 0.0018327212692548383
+[2026-09-23 14:02:41.063] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=1 f=0.002264 Δf=0.0113436 ‖∇f‖=0.263823 ‖Δx‖=0.802206 Δx⋅∇f(x)=-0.00147898 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:41.101] [polyfem] [debug] [g6g-it] iter=2 strategy=SparseProjectedNewton f=0.0015802448720409884 grad_norm=0.14125486537311577
+[2026-09-23 14:02:43.373] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.31341357588801877 descent_step_size=0.039176696986002346 final_step_size=0.039176696986002346)
+[2026-09-23 14:02:43.373] [polyfem] [debug] Min distance: 0.0018359257902293969
+[2026-09-23 14:02:43.373] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=2 f=0.00158024 Δf=0.000683759 ‖∇f‖=0.141255 ‖Δx‖=0.646456 Δx⋅∇f(x)=-0.00092374 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:43.411] [polyfem] [debug] [g6g-it] iter=3 strategy=SparseProjectedNewton f=0.0015472723201693163 grad_norm=0.14883018899969783
+[2026-09-23 14:02:45.265] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.26871502209656306 descent_step_size=0.13435751104828153 final_step_size=0.13435751104828153)
+[2026-09-23 14:02:45.265] [polyfem] [debug] Min distance: 0.0018464974096798349
+[2026-09-23 14:02:45.265] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=3 f=0.00154727 Δf=3.29726e-05 ‖∇f‖=0.14883 ‖Δx‖=0.585769 Δx⋅∇f(x)=-0.00055123 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:45.303] [polyfem] [debug] [g6g-it] iter=4 strategy=SparseProjectedNewton f=0.0014758751821071483 grad_norm=0.12327779234265565
+[2026-09-23 14:02:47.561] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.17002175131089015 descent_step_size=0.021252718913861268 final_step_size=0.021252718913861268)
+[2026-09-23 14:02:47.562] [polyfem] [debug] Min distance: 0.0018252659090684238
+[2026-09-23 14:02:47.562] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=4 f=0.00147588 Δf=7.13971e-05 ‖∇f‖=0.123278 ‖Δx‖=0.560075 Δx⋅∇f(x)=-0.000532053 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:47.600] [polyfem] [debug] [g6g-it] iter=5 strategy=SparseProjectedNewton f=0.0014727995522853163 grad_norm=0.1477607297241445
+[2026-09-23 14:02:49.181] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.8169665081537616 descent_step_size=0.8169665081537616 final_step_size=0.8169665081537616)
+[2026-09-23 14:02:49.181] [polyfem] [debug] Min distance: 0.0018973317497276323
+[2026-09-23 14:02:49.181] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=5 f=0.0014728 Δf=3.07563e-06 ‖∇f‖=0.147761 ‖Δx‖=0.435991 Δx⋅∇f(x)=-0.000486194 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:49.219] [polyfem] [debug] [g6g-it] iter=6 strategy=SparseProjectedNewton f=0.0011978306223864648 grad_norm=0.17411017906711979
+[2026-09-23 14:02:51.450] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.4910742209208916 descent_step_size=0.06138427761511145 final_step_size=0.06138427761511145)
+[2026-09-23 14:02:51.451] [polyfem] [debug] Min distance: 0.0019006861456354889
+[2026-09-23 14:02:51.451] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=6 f=0.00119783 Δf=0.000274969 ‖∇f‖=0.17411 ‖Δx‖=0.361185 Δx⋅∇f(x)=-0.000563803 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:51.488] [polyfem] [debug] [g6g-it] iter=7 strategy=SparseProjectedNewton f=0.0011641245582212681 grad_norm=0.1628611604217835
+[2026-09-23 14:02:53.915] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.3459483531432195 descent_step_size=0.021621772071451217 final_step_size=0.021621772071451217)
+[2026-09-23 14:02:53.916] [polyfem] [debug] Min distance: 0.0019017783126644445
+[2026-09-23 14:02:53.916] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=7 f=0.00116412 Δf=3.37061e-05 ‖∇f‖=0.162861 ‖Δx‖=0.314446 Δx⋅∇f(x)=-0.000493718 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:53.953] [polyfem] [debug] [g6g-it] iter=8 strategy=SparseProjectedNewton f=0.0011537475327280638 grad_norm=0.16110648903362237
+[2026-09-23 14:02:55.524] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:02:55.524] [polyfem] [debug] Min distance: 0.0019405880037221736
+[2026-09-23 14:02:55.524] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=8 f=0.00115375 Δf=1.0377e-05 ‖∇f‖=0.161106 ‖Δx‖=0.294058 Δx⋅∇f(x)=-0.000469423 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:55.562] [polyfem] [debug] [g6g-it] iter=9 strategy=SparseProjectedNewton f=0.00089769460694570907 grad_norm=0.042164028047109559
+[2026-09-23 14:02:58.377] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.05016032108673807 descent_step_size=0.0015675100339605647 final_step_size=0.0015675100339605647)
+[2026-09-23 14:02:58.378] [polyfem] [debug] Min distance: 0.0019405970725218098
+[2026-09-23 14:02:58.378] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=9 f=0.000897695 Δf=0.000256053 ‖∇f‖=0.042164 ‖Δx‖=1.3513 Δx⋅∇f(x)=-0.000373832 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:02:58.416] [polyfem] [debug] [g6g-it] iter=10 strategy=SparseProjectedNewton f=0.00089714562223535538 grad_norm=0.042000726175998045
+[2026-09-23 14:03:00.068] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:00.069] [polyfem] [debug] Min distance: 0.001958447857153535
+[2026-09-23 14:03:00.069] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=10 f=0.000897146 Δf=5.48985e-07 ‖∇f‖=0.0420007 ‖Δx‖=0.724372 Δx⋅∇f(x)=-0.000187668 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:00.106] [polyfem] [debug] [g6g-it] iter=11 strategy=SparseProjectedNewton f=0.00076706399204886581 grad_norm=0.037036698467481616
+[2026-09-23 14:03:02.402] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.048976274097027206 descent_step_size=0.012244068524256801 final_step_size=0.012244068524256801)
+[2026-09-23 14:03:02.403] [polyfem] [debug] Min distance: 0.0019026129128314007
+[2026-09-23 14:03:02.403] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=11 f=0.000767064 Δf=0.000130082 ‖∇f‖=0.0370367 ‖Δx‖=2.08751 Δx⋅∇f(x)=-0.000477797 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:02.440] [polyfem] [debug] [g6g-it] iter=12 strategy=SparseProjectedNewton f=0.00076268696645822296 grad_norm=0.045208834226671997
+[2026-09-23 14:03:04.311] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.17168218465434215 descent_step_size=0.08584109232717108 final_step_size=0.08584109232717108)
+[2026-09-23 14:03:04.311] [polyfem] [debug] Min distance: 0.0019068513361361874
+[2026-09-23 14:03:04.311] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=12 f=0.000762687 Δf=4.37703e-06 ‖∇f‖=0.0452088 ‖Δx‖=1.07346 Δx⋅∇f(x)=-0.000218993 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:04.349] [polyfem] [debug] [g6g-it] iter=13 strategy=SparseProjectedNewton f=0.00074444996867882129 grad_norm=0.040072746208531775
+[2026-09-23 14:03:06.238] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.11564880773664399 descent_step_size=0.057824403868321994 final_step_size=0.057824403868321994)
+[2026-09-23 14:03:06.238] [polyfem] [debug] Min distance: 0.0019094926521462747
+[2026-09-23 14:03:06.238] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=13 f=0.00074445 Δf=1.8237e-05 ‖∇f‖=0.0400727 ‖Δx‖=1.0121 Δx⋅∇f(x)=-0.000196308 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:06.276] [polyfem] [debug] [g6g-it] iter=14 strategy=SparseProjectedNewton f=0.00073331960341855521 grad_norm=0.037195650990951845
+[2026-09-23 14:03:08.358] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.0745549683729334 descent_step_size=0.01863874209323335 final_step_size=0.01863874209323335)
+[2026-09-23 14:03:08.358] [polyfem] [debug] Min distance: 0.001910286581436411
+[2026-09-23 14:03:08.358] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=14 f=0.00073332 Δf=1.11304e-05 ‖∇f‖=0.0371957 ‖Δx‖=0.981638 Δx⋅∇f(x)=-0.000183206 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:08.396] [polyfem] [debug] [g6g-it] iter=15 strategy=SparseProjectedNewton f=0.00072992569047229065 grad_norm=0.036436931224458166
+[2026-09-23 14:03:10.967] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.06057897629945219 descent_step_size=0.003786186018715762 final_step_size=0.003786186018715762)
+[2026-09-23 14:03:10.967] [polyfem] [debug] Min distance: 0.0019104501950177777
+[2026-09-23 14:03:10.967] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=15 f=0.000729926 Δf=3.39391e-06 ‖∇f‖=0.0364369 ‖Δx‖=0.984122 Δx⋅∇f(x)=-0.000179669 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:11.005] [polyfem] [debug] [g6g-it] iter=16 strategy=SparseProjectedNewton f=0.00072936698347190023 grad_norm=0.036638927340812401
+[2026-09-23 14:03:12.601] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:12.601] [polyfem] [debug] Min distance: 0.0017202549233306353
+[2026-09-23 14:03:12.601] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=16 f=0.000729367 Δf=5.58707e-07 ‖∇f‖=0.0366389 ‖Δx‖=0.299536 Δx⋅∇f(x)=-8.12378e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:12.639] [polyfem] [debug] [g6g-it] iter=17 strategy=SparseProjectedNewton f=0.00071343151907428762 grad_norm=0.45947996027567251
+[2026-09-23 14:03:15.613] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.023464064514812533 descent_step_size=0.0007332520160878916 final_step_size=0.0007332520160878916)
+[2026-09-23 14:03:15.614] [polyfem] [debug] Min distance: 0.0017203498028201003
+[2026-09-23 14:03:15.614] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=17 f=0.000713432 Δf=1.59355e-05 ‖∇f‖=0.45948 ‖Δx‖=2.08103 Δx⋅∇f(x)=-0.000604244 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:15.651] [polyfem] [debug] [g6g-it] iter=18 strategy=SparseProjectedNewton f=0.00071316488187304569 grad_norm=0.45907615745772967
+[2026-09-23 14:03:18.193] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.0685833162369649 descent_step_size=0.004286457264810306 final_step_size=0.004286457264810306)
+[2026-09-23 14:03:18.193] [polyfem] [debug] Min distance: 0.00172090308706408
+[2026-09-23 14:03:18.193] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=18 f=0.000713165 Δf=2.66637e-07 ‖∇f‖=0.459076 ‖Δx‖=0.844924 Δx⋅∇f(x)=-0.000258358 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:18.231] [polyfem] [debug] [g6g-it] iter=19 strategy=SparseProjectedNewton f=0.00071307987955357801 grad_norm=0.45770240276303137
+[2026-09-23 14:03:19.805] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:19.805] [polyfem] [debug] Min distance: 0.001849656707676263
+[2026-09-23 14:03:19.805] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=19 f=0.00071308 Δf=8.50023e-08 ‖∇f‖=0.457702 ‖Δx‖=0.352987 Δx⋅∇f(x)=-0.000176358 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:19.843] [polyfem] [debug] [g6g-it] iter=20 strategy=SparseProjectedNewton f=0.00059856745723477927 grad_norm=0.10900750285987805
+[2026-09-23 14:03:22.495] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.19760342036796263 descent_step_size=0.006175106886498832 final_step_size=0.006175106886498832)
+[2026-09-23 14:03:22.496] [polyfem] [debug] Min distance: 0.001850046020678428
+[2026-09-23 14:03:22.496] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=20 f=0.000598567 Δf=0.000114512 ‖∇f‖=0.109008 ‖Δx‖=0.249585 Δx⋅∇f(x)=-5.22321e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:22.533] [polyfem] [debug] [g6g-it] iter=21 strategy=SparseProjectedNewton f=0.00059837055902755827 grad_norm=0.10844441577309592
+[2026-09-23 14:03:24.522] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.25 final_step_size=0.25)
+[2026-09-23 14:03:24.522] [polyfem] [debug] Min distance: 0.0018471322319706803
+[2026-09-23 14:03:24.522] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=21 f=0.000598371 Δf=1.96898e-07 ‖∇f‖=0.108444 ‖Δx‖=0.151526 Δx⋅∇f(x)=-3.01268e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:24.560] [polyfem] [debug] [g6g-it] iter=22 strategy=SparseProjectedNewton f=0.00059689644938063283 grad_norm=0.11705524114546201
+[2026-09-23 14:03:26.147] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:26.147] [polyfem] [debug] Min distance: 0.001921682597095056
+[2026-09-23 14:03:26.147] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=22 f=0.000596896 Δf=1.47411e-06 ‖∇f‖=0.117055 ‖Δx‖=0.11897 Δx⋅∇f(x)=-2.74747e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:26.185] [polyfem] [debug] [g6g-it] iter=23 strategy=SparseProjectedNewton f=0.00057758333025060313 grad_norm=0.032881507570957626
+[2026-09-23 14:03:27.765] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:27.765] [polyfem] [debug] Min distance: 0.0019249615503600763
+[2026-09-23 14:03:27.765] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=23 f=0.000577583 Δf=1.93131e-05 ‖∇f‖=0.0328815 ‖Δx‖=0.098891 Δx⋅∇f(x)=-1.73984e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:27.802] [polyfem] [debug] [g6g-it] iter=24 strategy=SparseProjectedNewton f=0.00056329743158845989 grad_norm=0.022767296822271105
+[2026-09-23 14:03:29.800] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.7336064262326936 descent_step_size=0.1834016065581734 final_step_size=0.1834016065581734)
+[2026-09-23 14:03:29.800] [polyfem] [debug] Min distance: 0.001931640698690279
+[2026-09-23 14:03:29.800] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=24 f=0.000563297 Δf=1.42859e-05 ‖∇f‖=0.0227673 ‖Δx‖=0.145742 Δx⋅∇f(x)=-2.3508e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:29.837] [polyfem] [debug] [g6g-it] iter=25 strategy=SparseProjectedNewton f=0.00055918324369867234 grad_norm=0.018691160386206971
+[2026-09-23 14:03:31.601] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:03:31.602] [polyfem] [debug] Min distance: 0.001901242319822782
+[2026-09-23 14:03:31.602] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=25 f=0.000559183 Δf=4.11419e-06 ‖∇f‖=0.0186912 ‖Δx‖=0.135081 Δx⋅∇f(x)=-2.16545e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:31.639] [polyfem] [debug] [g6g-it] iter=26 strategy=SparseProjectedNewton f=0.00055534349615727187 grad_norm=0.20363326349487088
+[2026-09-23 14:03:33.193] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:33.193] [polyfem] [debug] Min distance: 0.0019379198989768638
+[2026-09-23 14:03:33.193] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=26 f=0.000555343 Δf=3.83975e-06 ‖∇f‖=0.203633 ‖Δx‖=0.271439 Δx⋅∇f(x)=-2.72439e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:33.230] [polyfem] [debug] [g6g-it] iter=27 strategy=SparseProjectedNewton f=0.00053671112418941802 grad_norm=0.052683297043556641
+[2026-09-23 14:03:34.782] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:34.782] [polyfem] [debug] Min distance: 0.0019537511076088113
+[2026-09-23 14:03:34.782] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=27 f=0.000536711 Δf=1.86324e-05 ‖∇f‖=0.0526833 ‖Δx‖=0.105909 Δx⋅∇f(x)=-6.35465e-06 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:34.820] [polyfem] [debug] [g6g-it] iter=28 strategy=SparseProjectedNewton f=0.00053222381837125744 grad_norm=0.012985123453652721
+[2026-09-23 14:03:37.065] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.0981241171777425 descent_step_size=0.012265514647217812 final_step_size=0.012265514647217812)
+[2026-09-23 14:03:37.065] [polyfem] [debug] Min distance: 0.0019374710809123394
+[2026-09-23 14:03:37.065] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=28 f=0.000532224 Δf=4.48731e-06 ‖∇f‖=0.0129851 ‖Δx‖=0.894256 Δx⋅∇f(x)=-8.88917e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:37.102] [polyfem] [debug] [g6g-it] iter=29 strategy=SparseProjectedNewton f=0.00053184844961836437 grad_norm=0.036198965943317535
+[2026-09-23 14:03:38.669] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:38.669] [polyfem] [debug] Min distance: 0.0019455586562429701
+[2026-09-23 14:03:38.670] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=29 f=0.000531848 Δf=3.75369e-07 ‖∇f‖=0.036199 ‖Δx‖=0.0227638 Δx⋅∇f(x)=-1.39237e-06 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:38.707] [polyfem] [debug] [g6g-it] iter=30 strategy=SparseProjectedNewton f=0.00053093516434226545 grad_norm=0.011703273360023142
+[2026-09-23 14:03:40.257] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:40.258] [polyfem] [debug] Min distance: 0.0019118020507006043
+[2026-09-23 14:03:40.258] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=30 f=0.000530935 Δf=9.13285e-07 ‖∇f‖=0.0117033 ‖Δx‖=0.0563123 Δx⋅∇f(x)=-3.95621e-06 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:40.295] [polyfem] [debug] [g6g-it] iter=31 strategy=SparseProjectedNewton f=0.00052988284671699011 grad_norm=0.060751851790443456
+[2026-09-23 14:03:42.920] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.9725016875270924 descent_step_size=0.03039067773522164 final_step_size=0.03039067773522164)
+[2026-09-23 14:03:42.920] [polyfem] [debug] Min distance: 0.0019131946226851734
+[2026-09-23 14:03:42.920] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=31 f=0.000529883 Δf=1.05232e-06 ‖∇f‖=0.0607519 ‖Δx‖=0.205998 Δx⋅∇f(x)=-1.55407e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:42.957] [polyfem] [debug] [g6g-it] iter=32 strategy=SparseProjectedNewton f=0.00052964220809535994 grad_norm=0.059494241276315661
+[2026-09-23 14:03:44.506] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:44.506] [polyfem] [debug] Min distance: 0.001958235795043252
+[2026-09-23 14:03:44.506] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=32 f=0.000529642 Δf=2.40639e-07 ‖∇f‖=0.0594942 ‖Δx‖=0.180073 Δx⋅∇f(x)=-1.54797e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:44.545] [polyfem] [debug] [g6g-it] iter=33 strategy=SparseProjectedNewton f=0.00051711306065661898 grad_norm=0.015050819333397089
+[2026-09-23 14:03:46.788] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.09865471839989226 descent_step_size=0.012331839799986533 final_step_size=0.012331839799986533)
+[2026-09-23 14:03:46.788] [polyfem] [debug] Min distance: 0.0019487834113450907
+[2026-09-23 14:03:46.788] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=33 f=0.000517113 Δf=1.25291e-05 ‖∇f‖=0.0150508 ‖Δx‖=0.744388 Δx⋅∇f(x)=-6.91763e-05 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:46.825] [polyfem] [debug] [g6g-it] iter=34 strategy=SparseProjectedNewton f=0.0005164768701043077 grad_norm=0.016119065839814772
+[2026-09-23 14:03:48.371] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:03:48.372] [polyfem] [debug] Min distance: 0.0019713735110364785
+[2026-09-23 14:03:48.372] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=34 f=0.000516477 Δf=6.36191e-07 ‖∇f‖=0.0161191 ‖Δx‖=0.154318 Δx⋅∇f(x)=-8.96253e-06 (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:48.409] [polyfem] [debug] [g6g-it] iter=35 strategy=SparseProjectedNewton f=0.00050863119436268074 grad_norm=0.0058424560746920358
+[2026-09-23 14:03:48.409] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 71.0811s (iters=35 f=0.000508631 Δf=7.84568e-06 ‖∇f‖=0.00584246 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=4.05556e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:48.409] [polyfem] [debug] [[35mtiming[0m] f: 1.98e-01s, grad_f: 1.15e+00s, update_direction: 4.26e+01s, line_search: 2.71e+01s, constraint_set_update: 4.38e-01s
+[2026-09-23 14:03:48.409] [polyfem] [debug] [[35mtiming[0m][SparseProjectedNewton] assembly: 3.83e+01s; linear_solve: 4.22e+00s
+[2026-09-23 14:03:48.409] [polyfem] [debug] [[35mtiming[0m][Backtracking] constraint_set_update 2.01e+01s, checking_for_nan_inf 1.99e-01s, broad_phase_ccd 2.60e+00s, narrow_phase_ccd 2.33e+00s, classical_line_search 2.07e+01s
+phase 1 (substep 0, reduced): ok  newton 35  minimize 1  post_steps 36  energy 0.00050863119436268074  |grad| 0.00584246  status 4  wall 71.64 s  cpu 71.38 s
+[2026-09-23 14:03:48.415] [polyfem] [info] Start substep 2 out of 2
+[2026-09-23 14:03:48.531] [polyfem] [debug] Set initial AL weight to 1
+[2026-09-23 14:03:48.765] [polyfem] [debug] Solving AL Problem with weight 1
+[2026-09-23 14:03:48.771] [polyfem] [debug] Starting SparseProjectedNewton with Backtracking solve f₀=53.6216 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:48.811] [polyfem] [debug] [g6g-it] iter=0 strategy=SparseProjectedNewton f=53.621627591505728 grad_norm=214.48379618190293
+[2026-09-23 14:03:51.933] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.050087089951575514 descent_step_size=0.050087089951575514 final_step_size=0.050087089951575514)
+[2026-09-23 14:03:51.933] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=0 f=53.6216 Δf=nan ‖∇f‖=214.484 ‖Δx‖=6.34365 Δx⋅∇f(x)=-107.242 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:51.969] [polyfem] [debug] [g6g-it] iter=1 strategy=SparseProjectedNewton f=48.399144718416721 grad_norm=200.69135138418798
+[2026-09-23 14:03:54.940] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.04866712813326113 descent_step_size=0.04866712813326113 final_step_size=0.04866712813326113)
+[2026-09-23 14:03:54.940] [polyfem] [debug] Min distance: 0.0003631878388306024
+[2026-09-23 14:03:54.940] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=1 f=48.3991 Δf=5.22248 ‖∇f‖=200.691 ‖Δx‖=5.72922 Δx⋅∇f(x)=-96.78 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:54.977] [polyfem] [debug] [g6g-it] iter=2 strategy=SparseProjectedNewton f=43.820437309504726 grad_norm=188.00739913326785
+[2026-09-23 14:03:58.327] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.10332753395728878 descent_step_size=0.10332753395728878 final_step_size=0.10332753395728878)
+[2026-09-23 14:03:58.327] [polyfem] [debug] Min distance: 0.0003945124986701142
+[2026-09-23 14:03:58.327] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=2 f=43.8204 Δf=4.57871 ‖∇f‖=188.007 ‖Δx‖=5.38053 Δx⋅∇f(x)=-87.6097 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:03:58.366] [polyfem] [debug] [g6g-it] iter=3 strategy=SparseProjectedNewton f=35.247318641787828 grad_norm=165.94303168439009
+[2026-09-23 14:04:01.230] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.21461756238917307 descent_step_size=0.21461756238917307 final_step_size=0.21461756238917307)
+[2026-09-23 14:04:01.231] [polyfem] [debug] Min distance: 0.0004687748305880643
+[2026-09-23 14:04:01.231] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=3 f=35.2473 Δf=8.57312 ‖∇f‖=165.943 ‖Δx‖=4.91258 Δx⋅∇f(x)=-70.4592 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:01.268] [polyfem] [debug] [g6g-it] iter=4 strategy=SparseProjectedNewton f=21.788842337636645 grad_norm=144.4962844254255
+[2026-09-23 14:04:03.669] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.38619249135537714 descent_step_size=0.38619249135537714 final_step_size=0.38619249135537714)
+[2026-09-23 14:04:03.669] [polyfem] [debug] Min distance: 0.0006333114615794301
+[2026-09-23 14:04:03.669] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=4 f=21.7888 Δf=13.4585 ‖∇f‖=144.496 ‖Δx‖=3.79942 Δx⋅∇f(x)=-43.525 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:03.707] [polyfem] [debug] [g6g-it] iter=5 strategy=SparseProjectedNewton f=8.235548340832775 grad_norm=88.765625119922717
+[2026-09-23 14:04:05.689] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.9202195847302299 descent_step_size=0.9202195847302299 final_step_size=0.9202195847302299)
+[2026-09-23 14:04:05.690] [polyfem] [debug] Min distance: 0.0010817792487066422
+[2026-09-23 14:04:05.690] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=5 f=8.23555 Δf=13.5533 ‖∇f‖=88.7656 ‖Δx‖=2.38992 Δx⋅∇f(x)=-16.4412 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:05.728] [polyfem] [debug] [g6g-it] iter=6 strategy=SparseProjectedNewton f=0.07387175475270763 grad_norm=38.482725043815435
+[2026-09-23 14:04:07.190] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:07.191] [polyfem] [debug] Min distance: 0.0015708988624824553
+[2026-09-23 14:04:07.191] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=6 f=0.0738718 Δf=8.16168 ‖∇f‖=38.4827 ‖Δx‖=0.591708 Δx⋅∇f(x)=-0.137142 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:07.226] [polyfem] [debug] [g6g-it] iter=7 strategy=SparseProjectedNewton f=0.0027158354774917317 grad_norm=7.7357415199024748
+[2026-09-23 14:04:08.527] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:04:08.527] [polyfem] [debug] Min distance: 0.0016718812312283456
+[2026-09-23 14:04:08.527] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=7 f=0.00271584 Δf=0.0711559 ‖∇f‖=7.73574 ‖Δx‖=0.234175 Δx⋅∇f(x)=-0.00292274 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:08.563] [polyfem] [debug] [g6g-it] iter=8 strategy=SparseProjectedNewton f=0.0016190729888661286 grad_norm=4.287051802581531
+[2026-09-23 14:04:09.866] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.7056237370973477 descent_step_size=0.35281186854867386 final_step_size=0.35281186854867386)
+[2026-09-23 14:04:09.866] [polyfem] [debug] Min distance: 0.0017244784773396697
+[2026-09-23 14:04:09.866] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=8 f=0.00161907 Δf=0.00109676 ‖∇f‖=4.28705 ‖Δx‖=0.265295 Δx⋅∇f(x)=-0.0013209 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:09.902] [polyfem] [debug] [g6g-it] iter=9 strategy=SparseProjectedNewton f=0.0012111849008396131 grad_norm=2.8480526941061628
+[2026-09-23 14:04:11.205] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.3460544150601841 descent_step_size=0.17302720753009204 final_step_size=0.17302720753009204)
+[2026-09-23 14:04:11.205] [polyfem] [debug] Min distance: 0.0017451223382803087
+[2026-09-23 14:04:11.205] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=9 f=0.00121118 Δf=0.000407888 ‖∇f‖=2.84805 ‖Δx‖=0.2777 Δx⋅∇f(x)=-0.000772814 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:11.241] [polyfem] [debug] [g6g-it] iter=10 strategy=SparseProjectedNewton f=0.0011096949206257636 grad_norm=2.3934922047931306
+[2026-09-23 14:04:12.529] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:12.530] [polyfem] [debug] Min distance: 0.001854162061313155
+[2026-09-23 14:04:12.530] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=10 f=0.00110969 Δf=0.00010149 ‖∇f‖=2.39349 ‖Δx‖=0.204371 Δx⋅∇f(x)=-0.000652818 (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:12.565] [polyfem] [debug] [g6g-it] iter=11 strategy=SparseProjectedNewton f=0.00070841803732856823 grad_norm=0.71778799445364749
+[2026-09-23 14:04:12.565] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 23.7993s (iters=11 f=0.000708418 Δf=0.000401277 ‖∇f‖=0.717788 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=1.69908e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:12.565] [polyfem] [debug] [[35mtiming[0m] f: 6.79e-02s, grad_f: 3.67e-01s, update_direction: 1.42e+01s, line_search: 9.13e+00s, constraint_set_update: 1.89e-04s
+[2026-09-23 14:04:12.565] [polyfem] [debug] [[35mtiming[0m][SparseProjectedNewton] assembly: 1.32e+01s; linear_solve: 1.04e+00s
+[2026-09-23 14:04:12.565] [polyfem] [debug] [[35mtiming[0m][Backtracking] constraint_set_update 2.59e-01s, checking_for_nan_inf 6.19e-02s, broad_phase_ccd 1.77e+00s, narrow_phase_ccd 6.55e+00s, classical_line_search 3.38e-01s
+[2026-09-23 14:04:12.570] [polyfem] [debug] Current eta = 0.9999814789341526
+phase 2 (substep 1, AL): ok  newton 11  minimize 1  post_steps 12  energy 0.00070841803732856823  |grad| 0.717788  status 4  wall 24.23 s  cpu 24.09 s
+[2026-09-23 14:04:12.759] [polyfem] [debug] Successfully applied boundary conditions; solving in reduced space
+[2026-09-23 14:04:13.141] [polyfem] [debug] Starting SparseProjectedNewton with Backtracking solve f₀=0.00624949 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:13.185] [polyfem] [debug] [g6g-it] iter=0 strategy=SparseProjectedNewton f=0.0062494934660413132 grad_norm=0.71345913949073236
+[2026-09-23 14:04:15.255] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.036071112302021646 descent_step_size=0.009017778075505412 final_step_size=0.009017778075505412)
+[2026-09-23 14:04:15.256] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=0 f=0.00624949 Δf=nan ‖∇f‖=0.713459 ‖Δx‖=1.97396 Δx⋅∇f(x)=-0.00865228 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:15.294] [polyfem] [debug] [g6g-it] iter=1 strategy=SparseProjectedNewton f=0.0061842252566003796 grad_norm=0.71778671165819297
+[2026-09-23 14:04:16.898] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.751629838751736 descent_step_size=0.751629838751736 final_step_size=0.751629838751736)
+[2026-09-23 14:04:16.899] [polyfem] [debug] Min distance: 0.0018055858472977298
+[2026-09-23 14:04:16.899] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=1 f=0.00618423 Δf=6.52682e-05 ‖∇f‖=0.717787 ‖Δx‖=1.3595 Δx⋅∇f(x)=-0.00746051 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:16.938] [polyfem] [debug] [g6g-it] iter=2 strategy=SparseProjectedNewton f=0.002670702224142943 grad_norm=1.1387221305347854
+[2026-09-23 14:04:18.734] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.4752479599495416 descent_step_size=0.2376239799747708 final_step_size=0.2376239799747708)
+[2026-09-23 14:04:18.735] [polyfem] [debug] Min distance: 0.001824028473930272
+[2026-09-23 14:04:18.735] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=2 f=0.0026707 Δf=0.00351352 ‖∇f‖=1.13872 ‖Δx‖=0.567365 Δx⋅∇f(x)=-0.000836052 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:18.773] [polyfem] [debug] [g6g-it] iter=3 strategy=SparseProjectedNewton f=0.0024872954736169721 grad_norm=0.72548612902121667
+[2026-09-23 14:04:20.582] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.36786538676292224 descent_step_size=0.18393269338146112 final_step_size=0.18393269338146112)
+[2026-09-23 14:04:20.582] [polyfem] [debug] Min distance: 0.0018361620430272635
+[2026-09-23 14:04:20.583] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=3 f=0.0024873 Δf=0.000183407 ‖∇f‖=0.725486 ‖Δx‖=0.624496 Δx⋅∇f(x)=-0.00061245 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:20.621] [polyfem] [debug] [g6g-it] iter=4 strategy=SparseProjectedNewton f=0.0023710328180735997 grad_norm=0.22892473063982624
+[2026-09-23 14:04:22.451] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.25322773826604816 descent_step_size=0.12661386913302408 final_step_size=0.12661386913302408)
+[2026-09-23 14:04:22.451] [polyfem] [debug] Min distance: 0.001843778427960191
+[2026-09-23 14:04:22.451] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=4 f=0.00237103 Δf=0.000116263 ‖∇f‖=0.228925 ‖Δx‖=0.529857 Δx⋅∇f(x)=-0.000447683 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:22.499] [polyfem] [debug] [g6g-it] iter=5 strategy=SparseProjectedNewton f=0.0023169032537877624 grad_norm=0.19681531587548434
+[2026-09-23 14:04:24.735] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.16267508085154603 descent_step_size=0.020334385106443253 final_step_size=0.020334385106443253)
+[2026-09-23 14:04:24.735] [polyfem] [debug] Min distance: 0.0018448174264423696
+[2026-09-23 14:04:24.735] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=5 f=0.0023169 Δf=5.41296e-05 ‖∇f‖=0.196815 ‖Δx‖=0.486613 Δx⋅∇f(x)=-0.00037344 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:24.773] [polyfem] [debug] [g6g-it] iter=6 strategy=SparseProjectedNewton f=0.0023093533173327639 grad_norm=0.19254467864230687
+[2026-09-23 14:04:27.315] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.1479995086879473 descent_step_size=0.009249969292996707 final_step_size=0.009249969292996707)
+[2026-09-23 14:04:27.316] [polyfem] [debug] Min distance: 0.0018452793830285566
+[2026-09-23 14:04:27.316] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=6 f=0.00230935 Δf=7.54994e-06 ‖∇f‖=0.192545 ‖Δx‖=0.480428 Δx⋅∇f(x)=-0.000364612 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:27.355] [polyfem] [debug] [g6g-it] iter=7 strategy=SparseProjectedNewton f=0.0023082344513535441 grad_norm=0.20219730680134884
+[2026-09-23 14:04:29.380] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.6134209363000416 descent_step_size=0.1533552340750104 final_step_size=0.1533552340750104)
+[2026-09-23 14:04:29.380] [polyfem] [debug] Min distance: 0.001854471482709423
+[2026-09-23 14:04:29.380] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=7 f=0.00230823 Δf=1.11887e-06 ‖∇f‖=0.202197 ‖Δx‖=0.414082 Δx⋅∇f(x)=-0.000310022 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:29.419] [polyfem] [debug] [g6g-it] iter=8 strategy=SparseProjectedNewton f=0.0022627151445175214 grad_norm=0.16088869376780268
+[2026-09-23 14:04:31.860] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.5614123283293608 descent_step_size=0.03508827052058505 final_step_size=0.03508827052058505)
+[2026-09-23 14:04:31.860] [polyfem] [debug] Min distance: 0.001856616377832317
+[2026-09-23 14:04:31.860] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=8 f=0.00226272 Δf=4.55193e-05 ‖∇f‖=0.160889 ‖Δx‖=0.376544 Δx⋅∇f(x)=-0.000250435 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:31.898] [polyfem] [debug] [g6g-it] iter=9 strategy=SparseProjectedNewton f=0.0022557328229461586 grad_norm=0.16519336717961117
+[2026-09-23 14:04:33.680] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.579845787627324 descent_step_size=0.289922893813662 final_step_size=0.289922893813662)
+[2026-09-23 14:04:33.680] [polyfem] [debug] Min distance: 0.001664433929464735
+[2026-09-23 14:04:33.680] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=9 f=0.00225573 Δf=6.98232e-06 ‖∇f‖=0.165193 ‖Δx‖=0.381024 Δx⋅∇f(x)=-0.000248991 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:33.719] [polyfem] [debug] [g6g-it] iter=10 strategy=SparseProjectedNewton f=0.0022484358002328214 grad_norm=0.34265238741246284
+[2026-09-23 14:04:35.492] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.4378772777334099 descent_step_size=0.21893863886670495 final_step_size=0.21893863886670495)
+[2026-09-23 14:04:35.493] [polyfem] [debug] Min distance: 0.0016956679720759463
+[2026-09-23 14:04:35.493] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=10 f=0.00224844 Δf=7.29702e-06 ‖∇f‖=0.342652 ‖Δx‖=0.330789 Δx⋅∇f(x)=-0.000266687 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:35.530] [polyfem] [debug] [g6g-it] iter=11 strategy=SparseProjectedNewton f=0.0022377443286008226 grad_norm=0.41269956264759272
+[2026-09-23 14:04:37.331] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:04:37.331] [polyfem] [debug] Min distance: 0.0017719043335114105
+[2026-09-23 14:04:37.331] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=11 f=0.00223774 Δf=1.06915e-05 ‖∇f‖=0.4127 ‖Δx‖=0.337182 Δx⋅∇f(x)=-0.000378347 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:37.370] [polyfem] [debug] [g6g-it] iter=12 strategy=SparseProjectedNewton f=0.002082386222276363 grad_norm=0.2296502531147388
+[2026-09-23 14:04:38.921] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:38.922] [polyfem] [debug] Min distance: 0.0016092006212200488
+[2026-09-23 14:04:38.922] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=12 f=0.00208239 Δf=0.000155358 ‖∇f‖=0.22965 ‖Δx‖=0.19639 Δx⋅∇f(x)=-0.000252367 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:38.960] [polyfem] [debug] [g6g-it] iter=13 strategy=SparseProjectedNewton f=0.0020772650695197129 grad_norm=0.91809709888636726
+[2026-09-23 14:04:41.280] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.35498608333081094 descent_step_size=0.04437326041635137 final_step_size=0.04437326041635137)
+[2026-09-23 14:04:41.280] [polyfem] [debug] Min distance: 0.001618459661792149
+[2026-09-23 14:04:41.281] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=13 f=0.00207727 Δf=5.12115e-06 ‖∇f‖=0.918097 ‖Δx‖=0.0806145 Δx⋅∇f(x)=-0.000387366 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:41.319] [polyfem] [debug] [g6g-it] iter=14 strategy=SparseProjectedNewton f=0.0020615087443260922 grad_norm=0.87783222982954412
+[2026-09-23 14:04:42.914] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:42.915] [polyfem] [debug] Min distance: 0.0018368991224519326
+[2026-09-23 14:04:42.915] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=14 f=0.00206151 Δf=1.57563e-05 ‖∇f‖=0.877832 ‖Δx‖=0.0792789 Δx⋅∇f(x)=-0.000316687 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:42.953] [polyfem] [debug] [g6g-it] iter=15 strategy=SparseProjectedNewton f=0.0018746792312847882 grad_norm=0.2437769101334071
+[2026-09-23 14:04:44.536] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:44.537] [polyfem] [debug] Min distance: 0.001806762657181409
+[2026-09-23 14:04:44.537] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=15 f=0.00187468 Δf=0.00018683 ‖∇f‖=0.243777 ‖Δx‖=0.0732702 Δx⋅∇f(x)=-8.07852e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:44.575] [polyfem] [debug] [g6g-it] iter=16 strategy=SparseProjectedNewton f=0.0018328250171551132 grad_norm=0.2503894957596644
+[2026-09-23 14:04:46.445] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:04:46.446] [polyfem] [debug] Min distance: 0.0018566835598673368
+[2026-09-23 14:04:46.446] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=16 f=0.00183283 Δf=4.18542e-05 ‖∇f‖=0.250389 ‖Δx‖=0.1266 Δx⋅∇f(x)=-9.03009e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:46.491] [polyfem] [debug] [g6g-it] iter=17 strategy=SparseProjectedNewton f=0.0017940233243256289 grad_norm=0.13085079058761512
+[2026-09-23 14:04:48.315] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:04:48.316] [polyfem] [debug] Min distance: 0.0018284771041935665
+[2026-09-23 14:04:48.316] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=17 f=0.00179402 Δf=3.88017e-05 ‖∇f‖=0.130851 ‖Δx‖=0.180021 Δx⋅∇f(x)=-9.9453e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:48.355] [polyfem] [debug] [g6g-it] iter=18 strategy=SparseProjectedNewton f=0.0017589580458365766 grad_norm=0.13662158003671074
+[2026-09-23 14:04:49.943] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:49.944] [polyfem] [debug] Min distance: 0.0019195890310434289
+[2026-09-23 14:04:49.944] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=18 f=0.00175896 Δf=3.50653e-05 ‖∇f‖=0.136622 ‖Δx‖=0.200183 Δx⋅∇f(x)=-6.02394e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:49.984] [polyfem] [debug] [g6g-it] iter=19 strategy=SparseProjectedNewton f=0.0017239125847269803 grad_norm=0.29211278077343639
+[2026-09-23 14:04:52.263] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.039908948811853584 descent_step_size=0.004988618601481698 final_step_size=0.004988618601481698)
+[2026-09-23 14:04:52.264] [polyfem] [debug] Min distance: 0.0018764200678970807
+[2026-09-23 14:04:52.264] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=19 f=0.00172391 Δf=3.50455e-05 ‖∇f‖=0.292113 ‖Δx‖=1.01692 Δx⋅∇f(x)=-0.000628384 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:52.302] [polyfem] [debug] [g6g-it] iter=20 strategy=SparseProjectedNewton f=0.001723712155157217 grad_norm=0.29378849315158345
+[2026-09-23 14:04:53.877] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:04:53.877] [polyfem] [debug] Min distance: 0.0019554963291169903
+[2026-09-23 14:04:53.877] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=20 f=0.00172371 Δf=2.0043e-07 ‖∇f‖=0.293788 ‖Δx‖=0.127176 Δx⋅∇f(x)=-4.95557e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:53.916] [polyfem] [debug] [g6g-it] iter=21 strategy=SparseProjectedNewton f=0.0016920258643228056 grad_norm=0.069648588629674116
+[2026-09-23 14:04:56.418] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.03609028837869488 descent_step_size=0.00225564302366843 final_step_size=0.00225564302366843)
+[2026-09-23 14:04:56.418] [polyfem] [debug] Min distance: 0.001906948617357449
+[2026-09-23 14:04:56.418] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=21 f=0.00169203 Δf=3.16863e-05 ‖∇f‖=0.0696486 ‖Δx‖=1.11152 Δx⋅∇f(x)=-0.000710262 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:56.463] [polyfem] [debug] [g6g-it] iter=22 strategy=SparseProjectedNewton f=0.0016916847711028115 grad_norm=0.071763885213021045
+[2026-09-23 14:04:59.185] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.2597486735883532 descent_step_size=0.008117146049636037 final_step_size=0.008117146049636037)
+[2026-09-23 14:04:59.185] [polyfem] [debug] Min distance: 0.001907211914949822
+[2026-09-23 14:04:59.185] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=22 f=0.00169168 Δf=3.41093e-07 ‖∇f‖=0.0717639 ‖Δx‖=0.199493 Δx⋅∇f(x)=-8.83319e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:04:59.226] [polyfem] [debug] [g6g-it] iter=23 strategy=SparseProjectedNewton f=0.0016910993337325851 grad_norm=0.071352968853184817
+[2026-09-23 14:05:01.532] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.9609346284490172 descent_step_size=0.12011682855612715 final_step_size=0.12011682855612715)
+[2026-09-23 14:05:01.533] [polyfem] [debug] Min distance: 0.001911993544992829
+[2026-09-23 14:05:01.533] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=23 f=0.0016911 Δf=5.85437e-07 ‖∇f‖=0.071353 ‖Δx‖=0.161229 Δx⋅∇f(x)=-5.20595e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:01.572] [polyfem] [debug] [g6g-it] iter=24 strategy=SparseProjectedNewton f=0.0016850426897125439 grad_norm=0.062551974114623599
+[2026-09-23 14:05:04.121] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.9266675950822005 descent_step_size=0.05791672469263753 final_step_size=0.05791672469263753)
+[2026-09-23 14:05:04.122] [polyfem] [debug] Min distance: 0.001913945343421042
+[2026-09-23 14:05:04.122] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=24 f=0.00168504 Δf=6.05664e-06 ‖∇f‖=0.062552 ‖Δx‖=0.171886 Δx⋅∇f(x)=-6.27399e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:04.161] [polyfem] [debug] [g6g-it] iter=25 strategy=SparseProjectedNewton f=0.0016824874521831124 grad_norm=0.064072404547421108
+[2026-09-23 14:05:05.763] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:05.763] [polyfem] [debug] Min distance: 0.0019477770079884818
+[2026-09-23 14:05:05.763] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=25 f=0.00168249 Δf=2.55524e-06 ‖∇f‖=0.0640724 ‖Δx‖=0.128037 Δx⋅∇f(x)=-3.32129e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:05.802] [polyfem] [debug] [g6g-it] iter=26 strategy=SparseProjectedNewton f=0.0016576093602423917 grad_norm=0.031833990781984046
+[2026-09-23 14:05:07.609] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:05:07.609] [polyfem] [debug] Min distance: 0.0019104082630164725
+[2026-09-23 14:05:07.609] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=26 f=0.00165761 Δf=2.48781e-05 ‖∇f‖=0.031834 ‖Δx‖=0.180114 Δx⋅∇f(x)=-5.73963e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:07.647] [polyfem] [debug] [g6g-it] iter=27 strategy=SparseProjectedNewton f=0.0016436502889225824 grad_norm=0.40683544568239394
+[2026-09-23 14:05:09.261] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:09.261] [polyfem] [debug] Min distance: 0.0018129427408295875
+[2026-09-23 14:05:09.261] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=27 f=0.00164365 Δf=1.39591e-05 ‖∇f‖=0.406835 ‖Δx‖=0.277127 Δx⋅∇f(x)=-0.000101719 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:09.299] [polyfem] [debug] [g6g-it] iter=28 strategy=SparseProjectedNewton f=0.0015849018683868055 grad_norm=0.15473573572882368
+[2026-09-23 14:05:11.159] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.04747199154527704 descent_step_size=0.02373599577263852 final_step_size=0.02373599577263852)
+[2026-09-23 14:05:11.160] [polyfem] [debug] Min distance: 0.00177412311633299
+[2026-09-23 14:05:11.160] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=28 f=0.0015849 Δf=5.87484e-05 ‖∇f‖=0.154736 ‖Δx‖=1.36457 Δx⋅∇f(x)=-0.000797625 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:11.197] [polyfem] [debug] [g6g-it] iter=29 strategy=SparseProjectedNewton f=0.0015845551869613096 grad_norm=0.22331155907844863
+[2026-09-23 14:05:13.822] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.940756215904262 descent_step_size=0.11759452698803274 final_step_size=0.11759452698803274)
+[2026-09-23 14:05:13.822] [polyfem] [debug] Min distance: 0.0017877783162784653
+[2026-09-23 14:05:13.822] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=29 f=0.00158456 Δf=3.46681e-07 ‖∇f‖=0.223312 ‖Δx‖=0.0882747 Δx⋅∇f(x)=-6.57417e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:13.862] [polyfem] [debug] [g6g-it] iter=30 strategy=SparseProjectedNewton f=0.0015801610726345868 grad_norm=0.21258253131888236
+[2026-09-23 14:05:15.516] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:15.517] [polyfem] [debug] Min distance: 0.0018928263096026818
+[2026-09-23 14:05:15.517] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=30 f=0.00158016 Δf=4.39411e-06 ‖∇f‖=0.212583 ‖Δx‖=0.0949123 Δx⋅∇f(x)=-5.19242e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:15.557] [polyfem] [debug] [g6g-it] iter=31 strategy=SparseProjectedNewton f=0.0015689953552061795 grad_norm=0.69187159723037239
+[2026-09-23 14:05:17.377] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:17.377] [polyfem] [debug] Min distance: 0.001902265594342814
+[2026-09-23 14:05:17.377] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=31 f=0.001569 Δf=1.11657e-05 ‖∇f‖=0.691872 ‖Δx‖=0.1694 Δx⋅∇f(x)=-6.34491e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:17.428] [polyfem] [debug] [g6g-it] iter=32 strategy=SparseProjectedNewton f=0.0015271318857737171 grad_norm=0.1520093634708484
+[2026-09-23 14:05:21.420] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.03400289635228537 descent_step_size=0.0021251810220178358 final_step_size=0.0021251810220178358)
+[2026-09-23 14:05:21.421] [polyfem] [debug] Min distance: 0.0019023704435262366
+[2026-09-23 14:05:21.421] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=32 f=0.00152713 Δf=4.18635e-05 ‖∇f‖=0.152009 ‖Δx‖=1.22609 Δx⋅∇f(x)=-0.000631179 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:21.484] [polyfem] [debug] [g6g-it] iter=33 strategy=SparseProjectedNewton f=0.0015263295370788611 grad_norm=0.15162841539064517
+[2026-09-23 14:05:23.961] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:23.962] [polyfem] [debug] Min distance: 0.0018078967154494467
+[2026-09-23 14:05:23.962] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=33 f=0.00152633 Δf=8.02349e-07 ‖∇f‖=0.151628 ‖Δx‖=0.110533 Δx⋅∇f(x)=-2.54465e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:24.016] [polyfem] [debug] [g6g-it] iter=34 strategy=SparseProjectedNewton f=0.0015185658052174215 grad_norm=0.11983307622045794
+[2026-09-23 14:05:27.498] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.0314650710061577 descent_step_size=0.001966566937884856 final_step_size=0.001966566937884856)
+[2026-09-23 14:05:27.499] [polyfem] [debug] Min distance: 0.001808091729187549
+[2026-09-23 14:05:27.499] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=34 f=0.00151857 Δf=7.76373e-06 ‖∇f‖=0.119833 ‖Δx‖=1.37911 Δx⋅∇f(x)=-0.000680802 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:27.550] [polyfem] [debug] [g6g-it] iter=35 strategy=SparseProjectedNewton f=0.0015180596092962927 grad_norm=0.11994387183235573
+[2026-09-23 14:05:29.207] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:29.207] [polyfem] [debug] Min distance: 0.0019080625649617053
+[2026-09-23 14:05:29.207] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=35 f=0.00151806 Δf=5.06196e-07 ‖∇f‖=0.119944 ‖Δx‖=0.142386 Δx⋅∇f(x)=-5.32874e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:29.246] [polyfem] [debug] [g6g-it] iter=36 strategy=SparseProjectedNewton f=0.001483553053890881 grad_norm=0.037284891914054819
+[2026-09-23 14:05:31.854] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.028649792289564324 descent_step_size=0.0017906120180977703 final_step_size=0.0017906120180977703)
+[2026-09-23 14:05:31.855] [polyfem] [debug] Min distance: 0.0019081454456982166
+[2026-09-23 14:05:31.855] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=36 f=0.00148355 Δf=3.45066e-05 ‖∇f‖=0.0372849 ‖Δx‖=1.89745 Δx⋅∇f(x)=-0.000717613 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:31.894] [polyfem] [debug] [g6g-it] iter=37 strategy=SparseProjectedNewton f=0.0014828808934472712 grad_norm=0.037456910412266863
+[2026-09-23 14:05:34.599] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.060264321105726104 descent_step_size=0.0018832600345539408 final_step_size=0.0018832600345539408)
+[2026-09-23 14:05:34.599] [polyfem] [debug] Min distance: 0.0019082342118815756
+[2026-09-23 14:05:34.599] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=37 f=0.00148288 Δf=6.7216e-07 ‖∇f‖=0.0374569 ‖Δx‖=0.591008 Δx⋅∇f(x)=-0.000125135 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:34.640] [polyfem] [debug] [g6g-it] iter=38 strategy=SparseProjectedNewton f=0.0014826535703266136 grad_norm=0.037372713852100226
+[2026-09-23 14:05:37.575] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.38597020440253793 descent_step_size=0.006030784443789655 final_step_size=0.006030784443789655)
+[2026-09-23 14:05:37.575] [polyfem] [debug] Min distance: 0.001908518458590243
+[2026-09-23 14:05:37.575] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=38 f=0.00148265 Δf=2.27323e-07 ‖∇f‖=0.0373727 ‖Δx‖=0.166229 Δx⋅∇f(x)=-8.91851e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:37.616] [polyfem] [debug] [g6g-it] iter=39 strategy=SparseProjectedNewton f=0.0014823966629445267 grad_norm=0.041020002026108095
+[2026-09-23 14:05:39.922] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.125 final_step_size=0.125)
+[2026-09-23 14:05:39.923] [polyfem] [debug] Min distance: 0.0019105228352755336
+[2026-09-23 14:05:39.923] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=39 f=0.0014824 Δf=2.56907e-07 ‖∇f‖=0.04102 ‖Δx‖=0.16286 Δx⋅∇f(x)=-5.40882e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:39.961] [polyfem] [debug] [g6g-it] iter=40 strategy=SparseProjectedNewton f=0.0014772801923587334 grad_norm=0.05040669097776089
+[2026-09-23 14:05:41.994] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.25 final_step_size=0.25)
+[2026-09-23 14:05:41.995] [polyfem] [debug] Min distance: 0.0019226616371891905
+[2026-09-23 14:05:41.995] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=40 f=0.00147728 Δf=5.11647e-06 ‖∇f‖=0.0504067 ‖Δx‖=0.143914 Δx⋅∇f(x)=-3.42719e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:42.033] [polyfem] [debug] [g6g-it] iter=41 strategy=SparseProjectedNewton f=0.0014692676602560267 grad_norm=0.039202337400017738
+[2026-09-23 14:05:43.627] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:43.627] [polyfem] [debug] Min distance: 0.0019546578867702218
+[2026-09-23 14:05:43.627] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=41 f=0.00146927 Δf=8.01253e-06 ‖∇f‖=0.0392023 ‖Δx‖=0.154999 Δx⋅∇f(x)=-2.97617e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:43.666] [polyfem] [debug] [g6g-it] iter=42 strategy=SparseProjectedNewton f=0.0014454090641452546 grad_norm=0.014085259538194572
+[2026-09-23 14:05:46.225] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.033691629575847815 descent_step_size=0.0021057268484904884 final_step_size=0.0021057268484904884)
+[2026-09-23 14:05:46.225] [polyfem] [debug] Min distance: 0.0019397244372084065
+[2026-09-23 14:05:46.225] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=42 f=0.00144541 Δf=2.38586e-05 ‖∇f‖=0.0140853 ‖Δx‖=1.32946 Δx⋅∇f(x)=-0.000603313 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:46.264] [polyfem] [debug] [g6g-it] iter=43 strategy=SparseProjectedNewton f=0.0014444849800114739 grad_norm=0.012422297205699224
+[2026-09-23 14:05:48.978] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.7210350400507153 descent_step_size=0.022532345001584853 final_step_size=0.022532345001584853)
+[2026-09-23 14:05:48.978] [polyfem] [debug] Min distance: 0.0019400480371174126
+[2026-09-23 14:05:48.978] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=43 f=0.00144448 Δf=9.24084e-07 ‖∇f‖=0.0124223 ‖Δx‖=0.168048 Δx⋅∇f(x)=-4.75255e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:49.018] [polyfem] [debug] [g6g-it] iter=44 strategy=SparseProjectedNewton f=0.0014439687587002273 grad_norm=0.035534755651778584
+[2026-09-23 14:05:50.911] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 14:05:50.912] [polyfem] [debug] Min distance: 0.00189494848167628
+[2026-09-23 14:05:50.912] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=44 f=0.00144397 Δf=5.16221e-07 ‖∇f‖=0.0355348 ‖Δx‖=0.148634 Δx⋅∇f(x)=-3.33039e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:50.951] [polyfem] [debug] [g6g-it] iter=45 strategy=SparseProjectedNewton f=0.0014316345976306396 grad_norm=0.06013541788292797
+[2026-09-23 14:05:53.330] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.25 final_step_size=0.25)
+[2026-09-23 14:05:53.331] [polyfem] [debug] Min distance: 0.0018830185613081013
+[2026-09-23 14:05:53.331] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=45 f=0.00143163 Δf=1.23342e-05 ‖∇f‖=0.0601354 ‖Δx‖=0.21772 Δx⋅∇f(x)=-2.37464e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:53.376] [polyfem] [debug] [g6g-it] iter=46 strategy=SparseProjectedNewton f=0.0014285669365859098 grad_norm=0.066242522967338208
+[2026-09-23 14:05:55.249] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:05:55.250] [polyfem] [debug] Min distance: 0.001942572306624523
+[2026-09-23 14:05:55.250] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=46 f=0.00142857 Δf=3.06766e-06 ‖∇f‖=0.0662425 ‖Δx‖=0.0752206 Δx⋅∇f(x)=-1.63045e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:55.290] [polyfem] [debug] [g6g-it] iter=47 strategy=SparseProjectedNewton f=0.0014167619058293008 grad_norm=0.017493957799741857
+[2026-09-23 14:05:59.052] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.8687872790971589 descent_step_size=0.013574801235893108 final_step_size=0.013574801235893108)
+[2026-09-23 14:05:59.052] [polyfem] [debug] Min distance: 0.0019428709544977553
+[2026-09-23 14:05:59.053] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=47 f=0.00141676 Δf=1.1805e-05 ‖∇f‖=0.017494 ‖Δx‖=0.21188 Δx⋅∇f(x)=-4.54008e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:05:59.096] [polyfem] [debug] [g6g-it] iter=48 strategy=SparseProjectedNewton f=0.001416305365142994 grad_norm=0.025415422533755391
+[2026-09-23 14:06:02.024] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=0.125 final_step_size=0.125)
+[2026-09-23 14:06:02.024] [polyfem] [debug] Min distance: 0.0019099951365674573
+[2026-09-23 14:06:02.024] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=48 f=0.00141631 Δf=4.56541e-07 ‖∇f‖=0.0254154 ‖Δx‖=0.199378 Δx⋅∇f(x)=-2.34897e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:06:02.071] [polyfem] [debug] [g6g-it] iter=49 strategy=SparseProjectedNewton f=0.0014146139132459798 grad_norm=0.03205946702999922
+[2026-09-23 14:06:04.138] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 14:06:04.138] [polyfem] [debug] Min distance: 0.0019559756316139716
+[2026-09-23 14:06:04.138] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=49 f=0.00141461 Δf=1.69145e-06 ‖∇f‖=0.0320595 ‖Δx‖=0.151447 Δx⋅∇f(x)=-1.90655e-05 (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:06:04.186] [polyfem] [debug] [g6g-it] iter=50 strategy=SparseProjectedNewton f=0.0014004200927798165 grad_norm=0.0087495301359372998
+[2026-09-23 14:06:04.186] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 111.05s (iters=50 f=0.00140042 Δf=1.41938e-05 ‖∇f‖=0.00874953 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.54524e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 14:06:04.186] [polyfem] [debug] [[35mtiming[0m] f: 3.17e-01s, grad_f: 1.78e+00s, update_direction: 6.54e+01s, line_search: 4.35e+01s, constraint_set_update: 3.77e-01s
+[2026-09-23 14:06:04.186] [polyfem] [debug] [[35mtiming[0m][SparseProjectedNewton] assembly: 5.98e+01s; linear_solve: 5.50e+00s
+[2026-09-23 14:06:04.186] [polyfem] [debug] [[35mtiming[0m][Backtracking] constraint_set_update 3.45e+01s, checking_for_nan_inf 3.18e-01s, broad_phase_ccd 3.72e+00s, narrow_phase_ccd 1.98e+00s, classical_line_search 3.55e+01s
+phase 3 (substep 1, reduced): ok  newton 50  minimize 1  post_steps 51  energy 0.0014004200927798165  |grad| 0.00874953  status 4  wall 111.55 s  cpu 110.27 s
+final: phases 4/4  newton 104  post_steps 108  intersections none
+preview ring: latest seq 107, max |preview - final| 0
+time: begin+phases wall 224.14 s, cpu 222.48 s; process cpu 222.56 s; peak working set 139.7 MB
+sdf grid: voxel 0.01  bricks 218 (111616 voxels)  0.86 MB  distance queries 111616  winding queries 111616  fill 0.55 s
+[g6g] config forms=df ccd=accd_df audit=1 df_bits=48 bound_ub=2^-44
+[g6g] df-events similarity ops 33757594787 overflow 0 underflow_hi 2634223 underflow_lo 13914615 nan 0 inf 0
+[g6g] df-events curve-curvature ops 235212642 overflow 0 underflow_hi 12827 underflow_lo 89180 nan 0 inf 0
+[g6g] df-events curve-torsion ops 1353726862 overflow 0 underflow_hi 8907 underflow_lo 103272 nan 0 inf 0
+[g6g] df-events curve-target ops 82988947 overflow 0 underflow_hi 0 underflow_lo 0 nan 0 inf 0
+[g6g] df-events al-penalty ops 12122991 overflow 0 underflow_hi 0 underflow_lo 0 nan 0 inf 0
+[g6g] df-events al-lagrangian ops 12907309 overflow 0 underflow_hi 0 underflow_lo 0 nan 0 inf 0
+[g6g] df-events contact-barrier ops 134562285 overflow 0 underflow_hi 11020 underflow_lo 71511 nan 0 inf 0
+[g6g] df-events fit-sdf ops 16495019083 overflow 0 underflow_hi 5 underflow_lo 18 nan 0 inf 0
+[g6g] df-events accd-robust-df ops 2349601164 overflow 0 underflow_hi 4723016 underflow_lo 690958 nan 0 inf 0
+[g6g] ccd-used calls 104 queries 6016252 hits 627  accd 9.59 s  flags zero_start 0 interval 0 nocert 0 cap 0 static 0  collision-free checks 6
+[g6g] ccd-used step n 104  zero 0  max 1.000e+00  p99 1.047e+00  p50 7.244e-01  inf 0  nan 0
+[g6g] ccd-audit (Tight Inclusion, ms 0, tol 1e-6, on [0, step]) steps 104 queries 6016252 FLAGGED 0  3.10 s
+# exit 0  wall 224.34 s

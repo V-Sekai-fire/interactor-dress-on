@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"call_method","arguments":{"path":"/root/Main","method":"dress_on_run","args":["infer,rig"]}}}

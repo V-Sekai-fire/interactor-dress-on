@@ -1,0 +1,7 @@
+gate_rd_compute: rc=0 2 s
+RESULT: PASS
+gate_avbd: rc=0 6 s
+RESULT: PASS
+gate_runtime: rc=0 166 s
+SUMMARY: PASS=31 FAIL=5 INFO=27 DEFERRED=0 wall_s=163.2
+done

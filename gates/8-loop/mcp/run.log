@@ -1,0 +1,17 @@
+--- dress_on_stages
+event: message
+data: {"id":1.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"infer: infer.elf not found (not built or not imported) | curvenet: curvenet.elf not found (not built or not imported) | fit: fit.elf not found (not built or not imported) | drape: drape.elf has no drape_open() (built before cut-5)\"}","type":"text"}],"isError":false}}
+
+
+--- dress_on_run ["infer,rig"]
+event: message
+data: {"id":2.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"STARTED allow_fixture=infer,rig force_fixture= pen=scripted\"}","type":"text"}],"isError":false}}
+
+
+--- final dress_on_status: FAILED(AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))) FIXTURE:infer,rig t=2.2s
+--- dress_on_result
+event: message
+data: {"id":4.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"{\\n  \\\"fixtures\\\": [\\n    \\\"infer\\\",\\n    \\\"rig\\\"\\n  ],\\n  \\\"reason\\\": \\\"AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))\\\",\\n  \\\"records\\\": [\\n    {\\n      \\\"fixture\\\": true,\\n      \\\"frames\\\": 1,\\n      \\\"heap\\\": -1,\\n      \\\"ms\\\": 105,\\n      \\\"note\\\": \\\"FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f\\\",\\n      \\\"state\\\": \\\"INFER\\\",\\n      \\\"vm_ms\\\": 0.0\\n    },\\n    {\\n      \\\"fixture\\\": true,\\n      \\\"frames\\\": 1,\\n      \\\"heap\\\": -1,\\n      \\\"ms\\\": 11,\\n      \\\"note\\\": \\\"FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]\\\",\\n      \\\"state\\\": \\\"RIG\\\",\\n      \\\"vm_ms\\\": 0.0\\n    },\\n    {\\n      \\\"fixture\\\": false,\\n      \\\"frames\\\": 1,\\n      \\\"heap\\\": -1,\\n      \\\"ms\\\": 5,\\n      \\\"note\\\": \\\"FAILED curvenet missing (curvenet.elf not found (not built or not imported))\\\",\\n      \\\"state\\\": \\\"AUTHOR\\\",\\n      \\\"vm_ms\\\": 0.0\\n    }\\n  ],\\n  \\\"state\\\": \\\"FAILED\\\",\\n  \\\"wall_s\\\": 2.449\\n}\"}","type":"text"}],"isError":false}}
+
+
+MCP RESULT: PASS (pipeline: FAILED(AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))) FIXTURE:infer,rig t=2.2s)

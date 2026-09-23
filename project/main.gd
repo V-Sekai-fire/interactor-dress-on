@@ -1,178 +1,213 @@
-# The host side of interactor-dress-on. Owns the sandbox guests and exposes
-# plain methods that an MCP client can reach with call_method. The guest APIs
-# take typed buffers; wrapping here keeps those off the JSON wire. Stages are
-# separate ELFs in separate Sandbox nodes, composed here; meshes cross between
-# them as packed arrays.
+# The host root of interactor-dress-on (node "Main", so MCP reaches it at
+# /root/Main in main.tscn and in xr_main.tscn). A thin root (AGENTS.md rule
+# 6): one stage node per ELF, each owning its Sandbox (stages/sandbox_util.gd
+# makes them the way Gate 0F says), and the pipeline that composes them.
+#
+#   DressOn   stages/dress_on_stage.gd   dress_on.elf (Stage 1) + probes.elf (Gate 0F)
+#   Drape     stages/drape_stage.gd      drape.elf (Stage 2 AVBD jobs, Cut 5 drape)
+#   Curvenet  stages/curvenet_stage.gd   curvenet.elf (Cut 4)
+#   Fit       stages/fit_stage.gd        fit.elf (Cut 6)
+#   Infer     stages/infer_stage.gd      infer.elf (Cut 4b / 7); fixtures until then
+#   Pipeline  stages/pipeline.gd         the loop's state machine
+#
+# Every guest entry point keeps a no-argument wrapper here (rule 8), each a
+# one-line delegate to its stage, so MCP call_method needs no argument
+# marshalling and the Gate 1 / 2 / 0F / 0E drives keep working.
 extends Node
 
-var _sb = null     # dress_on.elf: the Stage 1 GPU-layer probes
-var _drape = null  # drape.elf: the AVBD solver, cpu and rd
+const DressOnStage := preload("res://stages/dress_on_stage.gd")
+const DrapeStage := preload("res://stages/drape_stage.gd")
+const CurvenetStage := preload("res://stages/curvenet_stage.gd")
+const FitStage := preload("res://stages/fit_stage.gd")
+const InferStage := preload("res://stages/infer_stage.gd")
+const Pipeline := preload("res://stages/pipeline.gd")
+
+var dress_on = null
+var drape = null
+var curvenet = null
+var fit = null
+var infer = null
+var pipeline = null
 
 func _ready() -> void:
-	_sb = ClassDB.instantiate("Sandbox")
-	if _sb == null:
-		push_error("Sandbox class not registered; is the godot_sandbox addon enabled?")
-		return
-	add_child(_sb)
-	# Every Array, RDUniform and returned Variant is scoped to one vmcall; the
-	# default cap (100) is hit by ~30 uniform sets. Stage 1 finding.
-	_sb.references_max = 65536
-	_sb.program = load("res://dress_on.elf")
-	print("[dress-on] sandbox loaded dress_on.elf")
-	_drape = ClassDB.instantiate("Sandbox")
-	add_child(_drape)
-	# The drape's uniform sets are kernels x colours per call.
-	_drape.references_max = 65536
-	_drape.program = load("res://drape.elf")
-	print("[dress-on] sandbox loaded drape.elf")
+	dress_on = _add(DressOnStage, "DressOn")
+	drape = _add(DrapeStage, "Drape")
+	curvenet = _add(CurvenetStage, "Curvenet")
+	fit = _add(FitStage, "Fit")
+	infer = _add(InferStage, "Infer")
+	pipeline = _add(Pipeline, "Pipeline")
+	pipeline.setup({"infer": infer, "curvenet": curvenet, "fit": fit, "drape": drape})
+	var world = get_node_or_null("World")
+	if world != null and world.has_method("attach"):
+		world.attach(self)
 
-func _bytes(path: String) -> PackedByteArray:
-	var f := FileAccess.open(path, FileAccess.READ)
-	if f == null:
-		return PackedByteArray()
-	var b := f.get_buffer(f.get_length())
-	f.close()
-	return b
+func _add(script: Script, n: String) -> Node:
+	var s: Node = script.new()
+	s.name = n
+	add_child(s)
+	return s
 
-# --- Stage 1: the GPU layer's own probes ------------------------------------
+# --- the loop (Cut 8) ------------------------------------------------------------------
+# dress_on_run starts the pipeline and returns at once; poll dress_on_status
+# until it reads DONE or FAILED(reason), then dress_on_result for the record.
+# allow_fixture: stages whose fixture may stand in (infer,rig by default: the
+# FoxGirl body and skeleton, labelled FIXTURE).
 
-func rd_open() -> String:
-	return str(_sb.vmcall("rd_open")) if _sb != null else "FAIL: no sandbox"
+func dress_on_run(allow_fixture: String = "infer,rig", pen: String = "scripted") -> String:
+	return pipeline.start({"allow_fixture": allow_fixture, "pen": pen})
 
-func rd_close() -> String:
-	return str(_sb.vmcall("rd_close")) if _sb != null else "FAIL: no sandbox"
+# Gate 8's control: the back seam is not drawn; must end FAILED(MESH: ...).
+func dress_on_run_drop_seam(allow_fixture: String = "infer,rig") -> String:
+	return pipeline.start({"allow_fixture": allow_fixture, "drop_seam": true})
 
-# Gate 0A's probe, now through rd_compute. Says whether the device was held
-# from an earlier call.
-func rd_probe() -> String:
-	if _sb == null:
-		return "FAIL: no sandbox"
-	var spirv := _bytes("res://probe.spv")
-	if spirv.is_empty():
-		return "FAIL: could not open probe.spv"
-	return str(_sb.vmcall("rd_probe", spirv))
+# Gate 8's control: CHECK sees one garment vertex pushed inside the body.
+func dress_on_run_push_vertex(allow_fixture: String = "infer,rig") -> String:
+	return pipeline.start({"allow_fixture": allow_fixture, "push_vertex": true})
 
-# n_submit compute lists of n_dispatch accumulate dispatches; the count must
-# equal the product. host_us is the whole vmcall, boundary included.
-func rd_bench(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> String:
-	if _sb == null:
-		return "FAIL: no sandbox"
-	var spirv := _bytes("res://accumulate.spv")
-	if spirv.is_empty():
-		return "FAIL: could not open accumulate.spv"
-	var t0 := Time.get_ticks_usec()
-	var r = _sb.vmcall("rd_bench", spirv, n_dispatch, n_submit, barrier)
-	var dt := Time.get_ticks_usec() - t0
-	return "nd=%d ns=%d barrier=%s host_us=%d %s" % [n_dispatch, n_submit, barrier, dt, str(r)]
+func dress_on_run_opts(opts: Dictionary = {}) -> String:
+	return pipeline.start(opts)
 
-func rd_last_step() -> String:
-	return str(_sb.vmcall("rd_last_step")) if _sb != null else "FAIL: no sandbox"
+func dress_on_status() -> String:
+	return pipeline.status()
 
-# --- Stage 2: the AVBD solver (drape.elf) --------------------------------------
-# The one-shot calls are cpu only (rule 4: a one-shot rd call would sync in its
-# submit's frame). On rd use the jobs below: avbd_job_start("fixture", "rd"),
-# avbd_job_start("bench_fwd", "rd"), then avbd_job_tick once per frame.
+func dress_on_result() -> String:
+	return JSON.stringify(pipeline.summary(), "  ")
 
-func avbd_fixture(backend: String = "cpu") -> String:
-	if _drape == null:
-		return "FAIL: no drape sandbox"
-	var t0 := Time.get_ticks_usec()
-	var r = _drape.vmcall("avbd_fixture", backend)
-	return "host_us=%d %s" % [Time.get_ticks_usec() - t0, str(r)]
+# pen = xr: end the authoring (the menu button or Enter do the same).
+func dress_on_author_done() -> String:
+	pipeline.pen_finish()
+	return "pen finished in %s" % pipeline.state
 
-func avbd_bench(backend: String = "cpu", nx: int = 32, ny: int = 32, substeps: int = 5, iters: int = 10) -> String:
-	if _drape == null:
-		return "FAIL: no drape sandbox"
-	var t0 := Time.get_ticks_usec()
-	var r = _drape.vmcall("avbd_bench", backend, nx, ny, substeps, iters)
-	var dt := Time.get_ticks_usec() - t0
-	return "host_us=%d ms/substep=%.2f %s" % [dt, dt / 1000.0 / substeps, str(r)]
+# Which stages have their ELF (and its API), and why not.
+func dress_on_stages() -> String:
+	var out := PackedStringArray()
+	for s in [infer, curvenet, fit, drape]:
+		var why: String = s.reason if not s.available() else ""
+		if s == drape and why == "":
+			why = drape.drape_api_missing()
+		out.append("%s: %s" % [s.stage_name, "ok" if why == "" else why])
+	return " | ".join(out)
 
-# Drop the job and free the drape's RenderingDevice and its permanent RID
-# slots; call before freeing the drape sandbox (BUSY while a submit is in flight).
-func drape_rd_close() -> String:
-	return str(_drape.vmcall("rd_close")) if _drape != null else "FAIL: no drape sandbox"
+# --- Stage 1: the GPU layer's own probes (dress_on.elf) ----------------------------------
 
-func drape_rd_last_step() -> String:
-	return str(_drape.vmcall("rd_last_step")) if _drape != null else "FAIL: no drape sandbox"
+func rd_open() -> String: return dress_on.rd_open()
+func rd_close() -> String: return dress_on.rd_close()
+func rd_probe() -> String: return dress_on.rd_probe()
+func rd_bench(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> String: return dress_on.rd_bench(n_dispatch, n_submit, barrier)
+func rd_last_step() -> String: return dress_on.rd_last_step()
 
-# Rule 4's guard: syncs that landed in their submit's process frame.
-func rd_rule4() -> String:
-	return str(_drape.vmcall("rd_rule4")) if _drape != null else "FAIL: no drape sandbox"
+# --- Stage 2: the AVBD solver (drape.elf) --------------------------------------------------
+# The one-shot calls are cpu only (rule 4); on rd use the jobs: avbd_job_start
+# then avbd_job_tick once per frame.
 
-# The guard's positive control: submits and syncs in one call.
-func rd_rule4_probe() -> String:
-	return str(_drape.vmcall("rd_rule4_probe")) if _drape != null else "FAIL: no drape sandbox"
+func avbd_fixture(backend: String = "cpu") -> String: return drape.avbd_fixture(backend)
+func avbd_bench(backend: String = "cpu", nx: int = 32, ny: int = 32, substeps: int = 5, iters: int = 10) -> String: return drape.avbd_bench(backend, nx, ny, substeps, iters)
+func drape_rd_close() -> String: return drape.drape_rd_close()
+func drape_rd_last_step() -> String: return drape.drape_rd_last_step()
+func rd_rule4() -> String: return drape.rd_rule4()
+func rd_rule4_probe() -> String: return drape.rd_rule4_probe()
+func avbd_job_start(name: String = "fixture", backend: String = "rd") -> String: return drape.avbd_job_start(name, backend)
+func avbd_job_tick() -> String: return drape.avbd_job_tick()
+func avbd_job_names() -> String: return drape.avbd_job_names()
 
-# --- Stage 2 gate jobs (drape.elf): one job at a time, one tick per frame ------
-# Rule 4: a job's GPU submit ends its tick, so the readback lands on a later
-# frame. Start a job, then call avbd_job_tick once per frame (the host clock
-# goes in with it) until it stops answering "RUNNING k/N". Names: see
-# avbd_job_names(). gate_avbd.gd drives the whole list.
+# --- Cut 5: the drape API (drape.elf from cut-5 on; FAIL with the reason before) ----------
 
-func avbd_job_start(name: String = "fixture", backend: String = "rd") -> String:
-	return str(_drape.vmcall("avbd_job_start", name, backend)) if _drape != null else "FAIL: no drape sandbox"
+func drape_open(backend: String = "auto") -> String: return drape.drape_open(backend)
+func drape_sphere_demo(backend: String = "auto") -> String: return drape.drape_sphere_demo(backend)
+func drape_scene_mesh(positions: PackedFloat32Array = PackedFloat32Array(), triangles: PackedInt32Array = PackedInt32Array(),
+		pins: PackedInt32Array = PackedInt32Array(), material: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return drape.drape_scene_mesh(positions, triangles, pins, material)
+func drape_primitive(kind: String = "clear", params: PackedFloat32Array = PackedFloat32Array()) -> String: return drape.drape_primitive(kind, params)
+func drape_config(key: String = "iters", value: float = 16.0) -> String: return drape.drape_config(key, value)
+func drape_forward(steps: int = 100) -> String: return drape.drape_forward(steps)
+func drape_target(kind: String = "trajectory", verts: PackedInt32Array = PackedInt32Array(),
+		positions: PackedFloat32Array = PackedFloat32Array(), frame: int = -1) -> String:
+	return drape.drape_target(kind, verts, positions, frame)
+func drape_backward(loss: String = "match_trajectory", mode: String = "unrolled") -> String: return drape.drape_backward(loss, mode)
+func drape_status() -> String: return drape.drape_status()
+func drape_result() -> String: return drape.drape_result()
+func drape_positions() -> PackedFloat32Array: return drape.drape_positions()
+func drape_frame(i: int = 0) -> PackedFloat32Array: return drape.drape_frame(i)
+func drape_faces() -> PackedInt32Array: return drape.drape_faces()
+func drape_job(name: String = "sphere_forward", backend: String = "auto", args: String = "") -> String: return drape.drape_job(name, backend, args)
+func drape_job_result() -> String: return drape.drape_job_result()
 
-func avbd_job_tick() -> String:
-	return str(_drape.vmcall("avbd_job_tick", Time.get_ticks_usec())) if _drape != null else "FAIL: no drape sandbox"
+# --- Cut 4: the curvenet stage (curvenet.elf) ---------------------------------------------
 
-func avbd_job_names() -> String:
-	return str(_drape.vmcall("avbd_job_names")) if _drape != null else "FAIL: no drape sandbox"
+func cn_reset() -> String: return curvenet.cn_reset()
+func cn_set_param(name: String = "snap_radius", value: float = 0.03) -> String: return curvenet.cn_set_param(name, value)
+func cn_set_body_sphere(radius: float = 0.5) -> String: return curvenet.cn_set_body_sphere(radius)
+func pen_demo_circle() -> String: return curvenet.pen_demo_circle()
+func pen_end(id: int = 1) -> String: return curvenet.pen_end(id)
+func patch_count() -> String: return curvenet.patch_count()
+func curvenet_checks() -> String: return curvenet.curvenet_checks()
+func curvenet_check(name: String = "pen_sphere") -> String: return curvenet.curvenet_check(name)
+func curvenet_build() -> String: return curvenet.curvenet_build()
+func mesh_build(target_edge_length: float = 0.02, weld_eps: float = 1e-5) -> String: return curvenet.mesh_build(target_edge_length, weld_eps)
+func mesh_array_mesh() -> ArrayMesh: return curvenet.mesh_array_mesh()
+func curvenet_extract_demo() -> String: return curvenet.curvenet_extract_demo()
 
-# --- Gate 0F: probes.elf, the sandbox runtime probes ---------------------------
-# Its own Sandbox, created on first use. gate_runtime.gd is the gate; these are
-# the no-argument wrappers (AGENTS.md rule 8), every argument defaulted.
+# --- Cut 6: the fit stage (fit.elf) -------------------------------------------------------
 
-var _probes = null
+func fit_fixture_foxgirl() -> String: return fit.fit_fixture_foxgirl()
+func fit_reset() -> String: return fit.fit_reset()
+func fit_begin() -> String: return fit.fit_begin()
+func fit_step() -> String: return fit.fit_step()
+func fit_run_all() -> String: return fit.fit_run_all()
+func fit_status() -> String: return fit.fit_status()
+func fit_check() -> String: return fit.fit_check()
+func fit_result() -> String: return fit.fit_result()
+func fit_result_vertices() -> Variant: return fit.fit_result_vertices()
+func fit_result_vertices_f64() -> Variant: return fit.fit_result_vertices_f64()
+func fit_preview() -> String: return fit.fit_preview()
+func fit_sdf() -> String: return fit.fit_sdf()
+func fit_probe_io() -> String: return fit.fit_probe_io()
+func fit_probe_ldlt() -> String: return fit.fit_probe_ldlt()
+func fit_probe_exceptions() -> String: return fit.fit_probe_exceptions()
+func fit_probe_io_paths() -> String: return fit.fit_probe_io_paths()
 
-func _pv(fn: String, args: Array = []) -> String:
-	if _probes == null:
-		_probes = ClassDB.instantiate("Sandbox")
-		if _probes == null:
-			return "FAIL: no sandbox"
-		add_child(_probes)
-		_probes.program = load("res://probes.elf")
-		_probes.references_max = 4096
-	return str(_probes.callv("vmcall", [fn] + args))
+# --- Gate 0F: probes.elf, the sandbox runtime probes ---------------------------------------
+# gate_runtime.gd is the gate; these are the no-argument wrappers, every
+# argument defaulted.
 
-func p_exceptions(do_throw: bool = true) -> String: return _pv("p_exceptions", [do_throw])
-func p_fenv() -> String: return _pv("p_fenv")
-func p_file(path: String = "res://project.godot") -> String: return _pv("p_file", [path])
-func p_threads() -> String: return _pv("p_threads")
-func p_spin(n: int = 1000000) -> String: return _pv("p_spin", [n])
-func p_alloc(mb: int = 64) -> String: return _pv("p_alloc", [mb])
-func echo_f(x: float = 0.1) -> String: return _pv("echo_f", [x])
-func echo_i(x: int = 9007199254740993) -> String: return _pv("echo_i", [x])
-func echo_b(x: bool = true) -> String: return _pv("echo_b", [x])
-func echo_s(s: String = "h\u00e9llo") -> String: return _pv("echo_s", [s])
-func echo_pf32() -> String: return _pv("echo_pf32", [PackedFloat32Array([0.1, -0.0, 1e-40])])
-func echo_pb() -> String: return _pv("echo_pb", [PackedByteArray(range(256))])
-func f_bits(x: float = 0.1) -> String: return _pv("f_bits", [x])
-func echo_var(v = 1.5) -> String: return _pv("echo_var", [v])
-func p_hold(mb: int = 64) -> String: return _pv("p_hold", [mb])
-func p_release() -> String: return _pv("p_release")
-func p_rd() -> String: return _pv("p_rd")
-func fib_start() -> String: return _pv("fib_start")
-func fib_pump() -> String: return _pv("fib_pump") # once per frame (rule 4)
-func sm_start() -> String: return _pv("sm_start")
-func sm_pump() -> String: return _pv("sm_pump")
-func big_buffer(bytes: int = 256 << 20, direct: bool = false) -> String: return _pv("big_buffer", [bytes, direct])
-func refs_setup() -> String: return _pv("refs_setup")
-func refs_run(n: int = 1000, aliased: bool = false) -> String: return _pv("refs_run", [n, aliased])
-func refs_usets(n: int = 16) -> String: return _pv("refs_usets", [n])
-func refs_setup_one(k: int = 0) -> String: return _pv("refs_setup_one", [k])
-func rid_hold(permanent: bool = true) -> String: return _pv("rid_hold", [permanent])
-func rid_use() -> String: return _pv("rid_use") # a later vmcall than rid_hold
-func set0_share(variant: String = "") -> String: return _pv("set0_share", [variant]) # "", "_stripped" or "_o1pp"
+func p_exceptions(do_throw: bool = true) -> String: return dress_on.pv("p_exceptions", [do_throw])
+func p_fenv() -> String: return dress_on.pv("p_fenv")
+func p_file(path: String = "res://project.godot") -> String: return dress_on.pv("p_file", [path])
+func p_threads() -> String: return dress_on.pv("p_threads")
+func p_spin(n: int = 1000000) -> String: return dress_on.pv("p_spin", [n])
+func p_alloc(mb: int = 64) -> String: return dress_on.pv("p_alloc", [mb])
+func echo_f(x: float = 0.1) -> String: return dress_on.pv("echo_f", [x])
+func echo_i(x: int = 9007199254740993) -> String: return dress_on.pv("echo_i", [x])
+func echo_b(x: bool = true) -> String: return dress_on.pv("echo_b", [x])
+func echo_s(s: String = "héllo") -> String: return dress_on.pv("echo_s", [s])
+func echo_pf32() -> String: return dress_on.pv("echo_pf32", [PackedFloat32Array([0.1, -0.0, 1e-40])])
+func echo_pb() -> String: return dress_on.pv("echo_pb", [PackedByteArray(range(256))])
+func f_bits(x: float = 0.1) -> String: return dress_on.pv("f_bits", [x])
+func echo_var(v = 1.5) -> String: return dress_on.pv("echo_var", [v])
+func p_hold(mb: int = 64) -> String: return dress_on.pv("p_hold", [mb])
+func p_release() -> String: return dress_on.pv("p_release")
+func p_rd() -> String: return dress_on.pv("p_rd")
+func fib_start() -> String: return dress_on.pv("fib_start")
+func fib_pump() -> String: return dress_on.pv("fib_pump") # once per frame (rule 4)
+func sm_start() -> String: return dress_on.pv("sm_start")
+func sm_pump() -> String: return dress_on.pv("sm_pump")
+func big_buffer(bytes: int = 256 << 20, direct: bool = false) -> String: return dress_on.pv("big_buffer", [bytes, direct])
+func refs_setup() -> String: return dress_on.pv("refs_setup")
+func refs_run(n: int = 1000, aliased: bool = false) -> String: return dress_on.pv("refs_run", [n, aliased])
+func refs_usets(n: int = 16) -> String: return dress_on.pv("refs_usets", [n])
+func refs_setup_one(k: int = 0) -> String: return dress_on.pv("refs_setup_one", [k])
+func rid_hold(permanent: bool = true) -> String: return dress_on.pv("rid_hold", [permanent])
+func rid_use() -> String: return dress_on.pv("rid_use") # a later vmcall than rid_hold
+func set0_share(variant: String = "") -> String: return dress_on.pv("set0_share", [variant]) # "", "_stripped" or "_o1pp"
 # mode: 0 aliased, 1 rw_only, 2 pingpong, 3 ro_then_rw, 4 rw_then_ro
-func inplace_run(mode: int = 0, rounds: int = 1000) -> String: return _pv("inplace_run", [mode, rounds])
-func p_rd_close() -> String: return _pv("p_rd_close")
-func p_list_end() -> String: return _pv("p_list_end")
+func inplace_run(mode: int = 0, rounds: int = 1000) -> String: return dress_on.pv("inplace_run", [mode, rounds])
+func p_rd_close() -> String: return dress_on.pv("p_rd_close")
+func p_list_end() -> String: return dress_on.pv("p_list_end")
 func f16_read() -> String:
 	var h := PackedByteArray()
 	h.resize(128)
 	for i in 64:
 		h.encode_u16(2 * i, 0x3C00 + i) # 1.0 upward
-	return _pv("f16_read", [h])
-func ggml_probe(n: int = 256) -> String: return _pv("ggml_probe", [n])
-func zfh_probe() -> String: return _pv("zfh_probe")
+	return dress_on.pv("f16_read", [h])
+func ggml_probe(n: int = 256) -> String: return dress_on.pv("ggml_probe", [n])
+func zfh_probe() -> String: return dress_on.pv("zfh_probe")

@@ -1,0 +1,38 @@
+{
+  "fixtures": [
+    "infer",
+    "rig"
+  ],
+  "reason": "AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))",
+  "records": [
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 112,
+      "note": "FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f",
+      "state": "INFER",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 11,
+      "note": "FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",
+      "state": "RIG",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": false,
+      "frames": 1,
+      "heap": -1,
+      "ms": 4,
+      "note": "FAILED curvenet missing (curvenet.elf not found (not built or not imported))",
+      "state": "AUTHOR",
+      "vm_ms": 0.0
+    }
+  ],
+  "state": "FAILED",
+  "wall_s": 0.135
+}

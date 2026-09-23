@@ -1,0 +1,250 @@
+# Stage 2 gate, 2026-09-23T05:21:12, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 4090
+idle frame period: 0.441 ms over 240 frames (vsync off, max_fps 0)
+job fixture cpu                ticks=    1 wall_ms=      0.7 vmcall_ms=      0.4  PASS fixture cpu: four_vertex_all_constraints max_abs_diff=0, 0 of 3 checks failed
+    PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429))
+    PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ)
+    PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2))
+job backward_smoke cpu         ticks=    1 wall_ms=      0.9 vmcall_ms=      0.7  PASS backward_smoke cpu: forward max_abs_diff=0, stepBackward rc=0, 0 of 12 gradient arrays non-finite or short
+      dPos          n=12 finite=yes: 0 0 0.148809582 0 0 0.029761903 0 0 0.178571418 0 0 0.0714285672
+      dSpringL      n=1 finite=yes: 0
+      dSpringK      n=1 finite=yes: 0
+      dAttachFixed  n=3 finite=yes: -0 -0 -0
+      dAttachK      n=1 finite=yes: 0
+      dAttachLam    n=3 finite=yes: 0 0 0
+      dTriK         n=1 finite=yes: -0.489795893
+      dTriLam0      n=3 finite=yes: 0 0 0.142857134
+      dTriLam1      n=3 finite=yes: 0 0 0.142857134
+      dBendN        n=1 finite=yes: 0
+      dBendK        n=1 finite=yes: -0.244897947
+      dBendLam      n=3 finite=yes: 0 0 -0.142857134
+      smoke dx_v0x=0
+      smoke dx_v0y=0
+      smoke dx_v0z=0.148809582
+      smoke dx_v1x=0
+      smoke dx_v1y=0
+      smoke dx_v1z=0.029761903
+      smoke dL_s0=0
+      smoke dk_s0=0
+      smoke danchor_x=-0
+      smoke danchor_y=-0
+      smoke danchor_z=-0
+      smoke dk_attach=0
+      smoke dk_tri=-0.489795893
+      smoke dl0_tri_x=0
+      smoke dl0_tri_y=0
+      smoke dl0_tri_z=0.142857134
+      smoke dn_bend=0
+      smoke dk_bend=-0.244897947
+job gradcheck cpu              ticks=    1 wall_ms=      0.9 vmcall_ms=      0.7  PASS gradcheck cpu: 5/5 match finite differences, L=32.966487
+    test_avbd_gradcheck: L = 32.966487 at the 4-vertex fixture
+      single step, dL/dx = x_out, central differences h=1e-3, tol rel 5e-2
+      dL/d restLen   analytic=0.370625019  fd=0.370400398  rel=0.000225  ok
+      dL/d k_spring  analytic=-0.178328186  fd=-0.178483765  rel=0.000156  ok
+      dL/d k_attach  analytic=3.46679688  fd=3.46727668  rel=0.000138  ok
+      dL/d k_tri     analytic=-6.08297062  fd=-6.08289174  rel=1.3e-05  ok
+      dL/d k_bend    analytic=-5.62508869  fd=-5.62573128  rel=0.000114  ok
+job stategrad cpu              ticks=    2 wall_ms=      6.1 vmcall_ms=      5.6  PASS stategrad cpu: positions 12/12 ok, predicted 12/12 ok, falsifiability 9/12 rejected
+    test_avbd_stategrad: positions and predicted checked SEPARATELY, h=1e-3, rel<0.05 vs max(1,|fd|)
+      falsifiability: doubled predictedGrad -> 9 of 12 rejected (good, the check has teeth)
+      bisect of d L / d positions by constraint family:
+        inertia only   0 of 12 disagree
+        attachment     0 of 12 disagree
+        spring         0 of 12 disagree
+        triangle       0 of 12 disagree
+        bending        0 of 12 disagree
+      d L / d positions  vs readPositionsGrad
+        i           analytic               fd         rel
+        0         1.28229499       1.28248663    0.000149  ok
+        1         1.92123449       1.92121291    1.12e-05  ok
+        2         1.09885204        1.0998398    0.000898  ok
+        3         0.90406251      0.904106341    4.38e-05  ok
+        4         1.02841806       1.02798125    0.000425  ok
+        5        0.301020414      0.301039648    1.92e-05  ok
+        6       -0.103544995     -0.103514964       3e-05  ok
+        7      -0.0266439915     -0.026817901    0.000174  ok
+        8        0.774872303      0.773123325     0.00175  ok
+        9         0.79468751      0.794634964    5.25e-05  ok
+        10       0.165497541      0.165568899    7.14e-05  ok
+        11      -0.190051019     -0.190019611    3.14e-05  ok
+        -> 0 of 12 disagree
+      d L / d predicted  vs readPredictedGrad
+        i           analytic               fd         rel
+        0             0.4375      0.437494382    5.62e-06  ok
+        1         1.22448981       1.22461996    0.000106  ok
+        2        0.979591846      0.979593798    1.95e-06  ok
+        3        0.960000038       0.95987319    0.000127  ok
+        4                0.5      0.499993548    6.45e-06  ok
+        5                 -0                0           0  ok
+        6                 -0                0           0  ok
+        7            0.78125      0.780820847    0.000429  ok
+        8               1.25       1.24931335     0.00055  ok
+        9                  2       1.99985504    7.25e-05  ok
+        10        1.77777779       1.77733101    0.000251  ok
+        11                -0                0           0  ok
+        -> 0 of 12 disagree
+job gradcheck_duals cpu        ticks=    1 wall_ms=      2.6 vmcall_ms=      2.4  PASS gradcheck_duals cpu: snapshot 12/12 ok vs fd; no-snapshot control INERT, bit-identical (the backward kernels never read the duals: negative result)
+      d L / d positions after warm-up duals: snapshot arm, live-dual arm, fd (h=1e-3); rel vs max(1,|fd|)
+        i           snapshot       live duals               fd    rel snap    rel live
+        0         1.26570249       1.26570249       1.26553803     0.00013     0.00013
+        1         1.98456335       1.98456335       1.98483753    0.000138    0.000138
+        2         1.54304552       1.54304552       1.54219309    0.000553    0.000553
+        3        0.890821099      0.890821099      0.890835158    1.41e-05    1.41e-05
+        4         1.04716599       1.04716599       1.04783836    0.000642    0.000642
+        5        0.450578868      0.450578868      0.450459504    0.000119    0.000119
+        6       -0.120949015     -0.120949015      -0.12091955    2.95e-05    2.95e-05
+        7       0.0554902554     0.0554902554      0.055023914    0.000466    0.000466
+        8         1.06817865       1.06817865       1.06759272    0.000549    0.000549
+        9        0.770932198      0.770932198      0.770905476    2.67e-05    2.67e-05
+        10       0.184675694      0.184675694      0.184382865    0.000293    0.000293
+        11      -0.271851778     -0.271851778     -0.271649704    0.000202    0.000202
+      snapshot arm 0 of 12 disagree; live-dual arm 0 of 12 disagree (max |snap - live| = 0)
+      duals live in the forward: L(x_out) with warm duals 47.5201946 vs cold fixture 32.966487
+job self_collision cpu         ticks=    1 wall_ms=      1.1 vmcall_ms=      0.6  PASS self_collision cpu: 4 of 4 cases exact
+      PASS four_vertex r=0.05 K=4   pairs=2 expected=2 hash=4fd51986a7e59503 first: (0,1) (2,3)
+      PASS kcap_cluster 6 verts K=3 pairs=6 expected=6 hash=8966e364a513bfa3 first: (0,1) (0,2) (0,3) (1,2) (1,3) (2,3)
+      PASS panel 8x8 r=0.08 K=8     pairs=112 expected=112 hash=6a85798fccec1743 first: (0,1) (0,8) (1,2) (1,9) (2,3) (2,10)
+      PASS panel 8x8 r=0.07 K=8     pairs=0 expected=0 hash=14650fb0739d0383 first:
+job bench_fwd cpu              ticks=   37 wall_ms=   1160.5 vmcall_ms=   1144.6  PASS bench_fwd cpu: every size finite
+      bench_fwd cpu  8x8  nv=64 colors=4 substeps=10 iters=10 ms/substep=    7.08 finite=yes ymin=0.9865
+      bench_fwd cpu 16x16 nv=256 colors=4 substeps=10 iters=10 ms/substep=   29.34 finite=yes ymin=0.9972
+      bench_fwd cpu 32x32 nv=1024 colors=4 substeps=10 iters=10 ms/substep=   77.68 finite=yes ymin=0.9999
+job bench_bwd cpu              ticks=   37 wall_ms=   1070.0 vmcall_ms=   1058.0  PASS bench_bwd cpu: every size finite
+      bench_bwd cpu  8x8  nv=64 colors=4 substeps=10 iters=10 ms/substep=    4.03 finite=yes ymin=0.9865
+      bench_bwd cpu 16x16 nv=256 colors=4 substeps=10 iters=10 ms/substep=   20.03 finite=yes ymin=0.9972
+      bench_bwd cpu 32x32 nv=1024 colors=4 substeps=10 iters=10 ms/substep=   81.33 finite=yes ymin=0.9999
+job fixture rd                 ticks=    4 wall_ms=     36.0 vmcall_ms=     34.3  PASS fixture rd: four_vertex_all_constraints max_abs_diff=2.38419e-07, 0 of 3 checks failed
+    PASS four_vertex_all_constraints (max_abs_diff=2.38419e-07 v0=(0.875,2.14286,1.71429))
+    PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ)
+    PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2))
+job backward_smoke rd          ticks=    3 wall_ms=      8.2 vmcall_ms=      7.2  PASS backward_smoke rd: forward max_abs_diff=2.38419e-07, stepBackward rc=0, 0 of 12 gradient arrays non-finite or short
+      dPos          n=12 finite=yes: 0 0 0.148809582 0 0 0.0297618955 0 0 0.178571418 0 0 0.0714285672
+      dSpringL      n=1 finite=yes: -0
+      dSpringK      n=1 finite=yes: 0
+      dAttachFixed  n=3 finite=yes: 0 0 0
+      dAttachK      n=1 finite=yes: 0
+      dAttachLam    n=3 finite=yes: -0 -0 -0
+      dTriK         n=1 finite=yes: -0.489795893
+      dTriLam0      n=3 finite=yes: 0 0 0.142857134
+      dTriLam1      n=3 finite=yes: 0 0 0.142857134
+      dBendN        n=1 finite=yes: -0
+      dBendK        n=1 finite=yes: -0.244897947
+      dBendLam      n=3 finite=yes: 0 0 -0.142857134
+      smoke dx_v0x=0
+      smoke dx_v0y=0
+      smoke dx_v0z=0.148809582
+      smoke dx_v1x=0
+      smoke dx_v1y=0
+      smoke dx_v1z=0.0297618955
+      smoke dL_s0=-0
+      smoke dk_s0=0
+      smoke danchor_x=0
+      smoke danchor_y=0
+      smoke danchor_z=0
+      smoke dk_attach=0
+      smoke dk_tri=-0.489795893
+      smoke dl0_tri_x=0
+      smoke dl0_tri_y=0
+      smoke dl0_tri_z=0.142857134
+      smoke dn_bend=-0
+      smoke dk_bend=-0.244897947
+job gradcheck rd               ticks=   13 wall_ms=     22.5 vmcall_ms=     18.8  PASS gradcheck rd: 5/5 match finite differences, L=32.9664864
+    test_avbd_gradcheck: L = 32.9664864 at the 4-vertex fixture
+      single step, dL/dx = x_out, central differences h=1e-3, tol rel 5e-2
+      dL/d restLen   analytic=0.370624989  fd=0.370400398  rel=0.000225  ok
+      dL/d k_spring  analytic=-0.178328171  fd=-0.17877008  rel=0.000442  ok
+      dL/d k_attach  analytic=3.46679688  fd=3.46690416  rel=3.09e-05  ok
+      dL/d k_tri     analytic=-6.08297062  fd=-6.08214668  rel=0.000135  ok
+      dL/d k_bend    analytic=-5.62508821  fd=-5.62573128  rel=0.000114  ok
+job stategrad rd               ticks=  181 wall_ms=    216.3 vmcall_ms=    169.9  PASS stategrad rd: positions 12/12 ok, predicted 12/12 ok, falsifiability 9/12 rejected
+    test_avbd_stategrad: positions and predicted checked SEPARATELY, h=1e-3, rel<0.05 vs max(1,|fd|)
+      falsifiability: doubled predictedGrad -> 9 of 12 rejected (good, the check has teeth)
+      bisect of d L / d positions by constraint family:
+        inertia only   0 of 12 disagree
+        attachment     0 of 12 disagree
+        spring         0 of 12 disagree
+        triangle       0 of 12 disagree
+        bending        0 of 12 disagree
+      d L / d positions  vs readPositionsGrad
+        i           analytic               fd         rel
+        0         1.28229499       1.28246056    0.000129  ok
+        1         1.92123449       1.92095458    0.000146  ok
+        2         1.09885204        1.0998398    0.000898  ok
+        3         0.90406251      0.904106341    4.38e-05  ok
+        4         1.02841806       1.02800817    0.000399  ok
+        5        0.301020414      0.301039648    1.92e-05  ok
+        6       -0.103545003     -0.103514964       3e-05  ok
+        7      -0.0266439915    -0.0262417078    0.000402  ok
+        8        0.774872303      0.773123325     0.00175  ok
+        9         0.79468751      0.794634964    5.25e-05  ok
+        10       0.165497422      0.166145092    0.000648  ok
+        11      -0.190051019     -0.190019611    3.14e-05  ok
+        -> 0 of 12 disagree
+      d L / d predicted  vs readPredictedGrad
+        i           analytic               fd         rel
+        0             0.4375      0.437546507    4.65e-05  ok
+        1         1.22448981       1.22461996    0.000106  ok
+        2        0.979591846      0.979593798    1.95e-06  ok
+        3        0.960000038       0.95987319    0.000127  ok
+        4                0.5      0.499993548    6.45e-06  ok
+        5                  0                0           0  ok
+        6                  0                0           0  ok
+        7            0.78125      0.780820847    0.000429  ok
+        8               1.25       1.24931335     0.00055  ok
+        9                  2       1.99985504    7.25e-05  ok
+        10        1.77777767       1.77733101    0.000251  ok
+        11                 0                0           0  ok
+        -> 0 of 12 disagree
+job gradcheck_duals rd         ticks=   53 wall_ms=     57.0 vmcall_ms=     45.7  PASS gradcheck_duals rd: snapshot 12/12 ok vs fd; no-snapshot control INERT, bit-identical (the backward kernels never read the duals: negative result)
+      d L / d positions after warm-up duals: snapshot arm, live-dual arm, fd (h=1e-3); rel vs max(1,|fd|)
+        i           snapshot       live duals               fd    rel snap    rel live
+        0         1.26570249       1.26570249       1.26563387    5.42e-05    5.42e-05
+        1         1.98456335       1.98456335         1.984888    0.000164    0.000164
+        2          1.5430454        1.5430454       1.54250783    0.000349    0.000349
+        3        0.890821099      0.890821099      0.890835159    1.41e-05    1.41e-05
+        4         1.04716587       1.04716587       1.04745203    0.000273    0.000273
+        5        0.450578868      0.450578868      0.450452681    0.000126    0.000126
+        6       -0.120949022     -0.120949022     -0.120941153    7.87e-06    7.87e-06
+        7       0.0554902554     0.0554902554     0.0562270057    0.000737    0.000737
+        8         1.06817865       1.06817865       1.06781836    0.000337    0.000337
+        9        0.770932198      0.770932198      0.770905475    2.67e-05    2.67e-05
+        10       0.184675813      0.184675813      0.184961582    0.000286    0.000286
+        11      -0.271851748     -0.271851748     -0.271642984    0.000209    0.000209
+      snapshot arm 0 of 12 disagree; live-dual arm 0 of 12 disagree (max |snap - live| = 0)
+      duals live in the forward: L(x_out) with warm duals 47.5201958 vs cold fixture 32.966487
+job self_collision rd          ticks=    5 wall_ms=      3.1 vmcall_ms=      2.2  PASS self_collision rd: 4 of 4 cases exact
+      PASS four_vertex r=0.05 K=4   pairs=2 expected=2 hash=4fd51986a7e59503 first: (0,1) (2,3)
+      PASS kcap_cluster 6 verts K=3 pairs=6 expected=6 hash=8966e364a513bfa3 first: (0,1) (0,2) (0,3) (1,2) (1,3) (2,3)
+      PASS panel 8x8 r=0.08 K=8     pairs=112 expected=112 hash=6a85798fccec1743 first: (0,1) (0,8) (1,2) (1,9) (2,3) (2,10)
+      PASS panel 8x8 r=0.07 K=8     pairs=0 expected=0 hash=14650fb0739d0383 first:
+job bench_fwd rd               ticks=   49 wall_ms=    202.0 vmcall_ms=    189.3  PASS bench_fwd rd: every size finite
+      bench_fwd rd  8x8  nv=64 colors=4 substeps=10 iters=10 ms/substep=    3.12 finite=yes ymin=0.9865
+      bench_fwd rd 16x16 nv=256 colors=4 substeps=10 iters=10 ms/substep=    3.17 finite=yes ymin=0.9972
+      bench_fwd rd 32x32 nv=1024 colors=4 substeps=10 iters=10 ms/substep=    3.31 finite=yes ymin=0.9999
+      bench_fwd rd 64x64 nv=4096 colors=4 substeps=10 iters=10 ms/substep=    4.47 finite=yes ymin=1.0000
+job bench_bwd rd               ticks=   49 wall_ms=    252.7 vmcall_ms=    237.3  PASS bench_bwd rd: every size finite
+      bench_bwd rd  8x8  nv=64 colors=4 substeps=10 iters=10 ms/substep=    3.49 finite=yes ymin=0.9865
+      bench_bwd rd 16x16 nv=256 colors=4 substeps=10 iters=10 ms/substep=    3.56 finite=yes ymin=0.9972
+      bench_bwd rd 32x32 nv=1024 colors=4 substeps=10 iters=10 ms/substep=    5.14 finite=yes ymin=0.9999
+      bench_bwd rd 64x64 nv=4096 colors=4 substeps=10 iters=10 ms/substep=    5.95 finite=yes ymin=1.0000
+job two_vertex_bwd both        ticks=    4 wall_ms=      7.9 vmcall_ms=      6.8  PASS two_vertex_bwd cpu-vs-rd: 0 floats disagree over 2 arms (max |cpu-rd| = 2.98023e-08)
+      step+stepBackward          floats=29 disagree=0 max|cpu-rd|=0
+        dPos[v0] cpu=(0.333333373, 0.128260911, 0.128260911) rd=(0.333333373, 0.128260911, 0.128260911)
+      runWithBackward(3,duals)   floats=29 disagree=0 max|cpu-rd|=2.98023e-08
+        dPos[v0] cpu=(0.333333373, 0.169679224, 0.169679224) rd=(0.333333373, 0.169679224, 0.169679224)
+job two_vertex_bwd_nopad both  ticks=    4 wall_ms=      7.8 vmcall_ms=      6.8  PASS two_vertex_bwd_nopad cpu-vs-rd(pad->0): race REPRODUCED (5 floats disagree over 2 arms, max |cpu-rd| = 0.909091)
+      step+stepBackward          floats=29 disagree=3 max|cpu-rd|=0.909091 dPos[0] cpu=0.333333373 rd=1.20289862; dPos[1] cpu=0.128260911 rd=1.03735185; dPos[2] cpu=0.128260911 rd=1.03735185;
+        dPos[v0] cpu=(0.333333373, 0.128260911, 0.128260911) rd=(1.20289862, 1.03735185, 1.03735185)
+      runWithBackward(3,duals)   floats=29 disagree=2 max|cpu-rd|=0.909091 dPos[0] cpu=0.333333373 rd=1.2028985; dPos[1] cpu=0.169679224 rd=1.07877004;
+        dPos[v0] cpu=(0.333333373, 0.169679224, 0.169679224) rd=(1.2028985, 1.07877004, 0.169679224)
+--- checks
+PASS gradcheck cpu vs native analytic: 5/5 compared, worst rel 1.04e-6 (limit 1e-4): restLen 5.13e-8, k_spring 1.04e-6, k_attach 9.00e-7, k_tri 1.02e-7, k_bend 2.33e-7
+PASS gradcheck rd vs native analytic: 5/5 compared, worst rel 9.59e-7 (limit 1e-4): restLen 2.97e-8, k_spring 9.59e-7, k_attach 9.00e-7, k_tri 1.02e-7, k_bend 3.18e-7
+PASS backward_smoke cpu vs native (%.3g, rel 5e-3): 18/18 compared, 0 disagree
+PASS backward_smoke rd vs native (%.3g, rel 5e-3): 18/18 compared, 0 disagree
+info stategrad cpu vs native (24 rows, rel vs max(1,|native|)): analytic worst 3.89e-6, fd worst 5.76e-4
+info stategrad rd vs native (24 rows, rel vs max(1,|native|)): analytic worst 3.89e-6, fd worst 2.68e-6
+PASS self_collision cpu and rd pair sets identical (4 cases, hashes 4fd51986a7e59503, 8966e364a513bfa3, 6a85798fccec1743, 14650fb0739d0383)
+PASS rd_rule4 after every job: same_frame_syncs=0 syncs=339 submits=339 (want same_frame_syncs=0 with syncs>0)
+PASS rd_rule4_probe (positive control, submit+sync in one call): PASS same_frame_syncs 0 -> 1; counter now 1
+PASS rd_close: CLOSED device=freed permanent_slots=0
+RESULT: PASS

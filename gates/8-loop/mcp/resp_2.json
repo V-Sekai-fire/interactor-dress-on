@@ -1,0 +1,3 @@
+event: message
+data: {"id":2.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"STARTED allow_fixture=infer,rig force_fixture= pen=scripted\"}","type":"text"}],"isError":false}}
+

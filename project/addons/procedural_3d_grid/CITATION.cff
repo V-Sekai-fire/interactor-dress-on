@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "procedural_3d_grid, xr-grid's meshing pen (copied into project/addons)"
+abstract: >-
+  addons/procedural_3d_grid from vendor/xr-grid (transport-xr-grid, the
+  org's fork of V-Sekai.xr-grid; see vendor/xr-grid/CITATION.cff), copied
+  byte for byte by tools/sync_xr_pen.sh so project/xr_main.tscn can use its
+  SketchTool, SimpleSketch and hand.gd. No local adaptations: Gate 8 checks
+  diff -r against vendor/xr-grid is empty (this file excepted). The pen
+  bridge (project/xr/pen_bridge.gd) reads SketchTool.active and the tool's
+  position and forwards pen_begin / pen_point / pen_end to curvenet.elf,
+  which leaves strokes.gd (its just_pressed is always false) unused.
+  Copied from this repo's commit d39059e815b663f5e38aaac4f6c3e043f2f184b9 of vendor/xr-grid.
+authors:
+  - family-names: Lee
+    given-names: "K. S. Ernest (iFire)"
+  - alias: celyk
+repository-code: "https://github.com/V-Sekai-fire/transport-xr-grid"
+commit: d39059e815b663f5e38aaac4f6c3e043f2f184b9
+license: MIT

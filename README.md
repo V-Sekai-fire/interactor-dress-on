@@ -33,6 +33,7 @@ evidence.
 |---|---|---|
 | [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; the old "bimodal submit+sync" was godot-sandbox's 32-slot method-name cache colliding by string address (fixed in `rd_compute`, Cut A) |
 | [2](gates/2-avbd/) | AVBD in the guest: Lean → Slang → `cpp` (`AvbdCpu`) and `spirv` (`AvbdRd`), one driver | **PASS** — forward, duals, backward (gradcheck 5/5, stategrad 12/12 + 12/12, within 1.04e-6 of native) and self-collision exact on both; rd from 256 vertices (frame-driven, 3.2–4.8 ms/substep to 4096 vertices) |
+| [8](gates/8-loop/) | The loop: body → rig → pen → curvenet → mesh → fit → check → drape, `project/stages/` composed by `pipeline.gd` | **NOT YET END TO END** — harness, fixtures (FoxGirl) and controls in; stops at AUTHOR until cut-4/6/5 merge; the pre-merge run found cut-4 patching the ring caps, not the panels |
 
 The standing rules are in [AGENTS.md](AGENTS.md).
 

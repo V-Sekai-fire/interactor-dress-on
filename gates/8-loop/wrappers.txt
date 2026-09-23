@@ -1,0 +1,19 @@
+node path: /root/Main
+PASS wrappers: 49 old + 51 new on /root/Main, missing []
+PASS rd_open -> ok
+PASS rd_probe -> PASS: GPU compute reached from the guest (device held from an earlier vmcall)
+PASS rd_bench -> nd=1 ns=1 barrier=true host_us=1397 OK value=1 expected=1 setup_us=658 loop_us=392 read_us=241 us_per_dispatch=392.0 us_per_submit=392.0 | bind_pipe=5 bind_set=4 dispatch=884763268 barrier=0 submit=370
+PASS rd_close -> closed
+PASS avbd_fixture -> host_us=470 PASS cpu: PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+PASS avbd_job_names -> fixture backward_smoke gradcheck stategrad gradcheck_duals self_collision bench_fwd bench_bwd two_vertex_bwd two_vertex_bwd_nopad
+PASS rd_rule4 -> same_frame_syncs=0 syncs=0 submits=0
+PASS p_fenv -> set_up=0 get_up=3(FE_UPWARD=3) set_dn=0 get_dn=2(FE_DOWNWARD=2) up=3fd5555555555555 dn=3fd5555555555555 nearest=3fd5555555555555 upf=3eaaaaab dnf=3eaaaaab double_differs=no float_differs=no
+PASS echo_i -> 9007199254740993
+PASS p_exceptions -> caught runtime_error: negative input -7 rethrow_sum=84
+PASS dress_on_stages -> infer: infer.elf not found (not built or not imported) | curvenet: curvenet.elf not found (not built or not imported) | fit: fit.elf not found (not built or not imported) | drape: drape.elf has no drape_open() (built before cut-5)
+PASS drape_status -> IDLE no session
+PASS drape_open -> FAIL: drape.elf has no drape_open() (built before cut-5)
+PASS cn_reset -> FAIL: no curvenet sandbox (curvenet.elf not found (not built or not imported))
+PASS fit_status -> FAIL: no fit sandbox (fit.elf not found (not built or not imported))
+PASS dress_on_status -> IDLE t=0.0s
+RESULT: PASS

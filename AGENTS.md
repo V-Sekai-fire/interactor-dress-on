@@ -126,6 +126,13 @@ our own, no host DLL. The GPU is reachable only through Godot's
   (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
   Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
   `lake update LeanSlang` (only that package; the other revs must not move).
+- Godot imports every `.obj` under `res://` as a mesh and fails on line-only
+  ones (skeletons). Data OBJs live under a `.gdignore`d directory
+  (`project/fixtures/`) and are read as text (`util/obj_io.gd`).
+- Make a stage's Sandbox with `stages/sandbox_util.gd` (memory_max,
+  references_max, execution_timeout before `program=`; a missing ELF or
+  entry point is a reason, not an error). In XR the root viewport reads back
+  black: screenshot a SubViewport on the same World3D.
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 

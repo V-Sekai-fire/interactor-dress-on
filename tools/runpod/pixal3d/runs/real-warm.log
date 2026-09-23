@@ -1,0 +1,8 @@
+run: docker run --rm --name pixal3d-rp-real-warm-1790176537 -p 127.0.0.1:18080:8000 --gpus device=0 -v C:/interactor-dress-on/models:/runpod-volume/models:ro pixal3d-runpod:dev python -u handler.py --rp_serve_api --rp_api_host 0.0.0.0 --rp_api_port 8000
+worker up 255.0 s after docker run (model load included)
+health {'status': 'ok', 'ready': True, 'stub': False} in 0.02 s
+predict #1 198.8 s, request 1.99 MB, response 4.83 MB, state b64 4.32 MB, server {'wall_s': 198.77918049999425, 'request_bytes': 1986941, 'response_bytes': 4829957, 'state_b64_bytes': 4321048, 'views': 4, 'seconds': 198.60722000000032, 'vram_peak_mib': 13231.2421875, 'camera_params': {'camera_angle_x': 0.727087439923348, 'distance': 1.3142191171646118, 'mesh_scale': 1.0}}
+predict #2 86.0 s, request 1.99 MB, response 4.80 MB, state b64 4.30 MB, server {'wall_s': 86.0232926000026, 'request_bytes': 1986941, 'response_bytes': 4797345, 'state_b64_bytes': 4300708, 'views': 4, 'seconds': 85.88449459699996, 'vram_peak_mib': 13471.66845703125, 'camera_params': {'camera_angle_x': 0.7270886374880153, 'distance': 1.3142167329788208, 'mesh_scale': 1.0}}
+extract 45.3 s, request 4.30 MB, response 58.96 MB (glb b64 24.27 MB, USD layer b64 34.70 MB), server {'wall_s': 45.30195310000272, 'request_bytes': 4300752, 'response_bytes': 58964866, 'glb_b64_bytes': 24267596, 'layer_b64_bytes': 34697096, 'seconds': 42.12516283800005, 'vram_peak_mib': 6405.185546875}
+USD {'bytes': 26022821, 'upAxis': 'Y', 'metersPerUnit': 1.0, 'meshes': 1, 'points': 201046, 'faces': 206938, 'normals': True}
+PASS real-warm in 592.8 s; nvidia-smi {'gpu': 'NVIDIA GeForce RTX 3090', 'peak': 15213, 'before': 33}

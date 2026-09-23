@@ -1,0 +1,7 @@
+run: docker run --rm --name pixal3d-rp-stub-1790175983 -p 127.0.0.1:18080:8000 -e WEFTSPUN_STUB=1 pixal3d-runpod:dev python -u handler.py --rp_serve_api --rp_api_host 0.0.0.0 --rp_api_port 8000
+worker up 5.1 s after docker run (model load included)
+health {'status': 'ok', 'ready': True, 'stub': True} in 0.01 s
+predict 0.0 s, request 1.99 MB, response 0.00 MB, state b64 0.00 MB, server {'wall_s': 0.0443230999953812, 'request_bytes': 1986941, 'response_bytes': 546, 'state_b64_bytes': 12, 'views': 4, 'seconds': None, 'vram_peak_mib': None, 'camera_params': None}
+extract 2.2 s, request 0.00 MB, response 0.00 MB (glb b64 0.00 MB, USD layer b64 0.00 MB), server {'wall_s': 2.1868889999968815, 'request_bytes': 56, 'response_bytes': 530, 'glb_b64_bytes': 12, 'layer_b64_bytes': 404, 'seconds': None, 'vram_peak_mib': None}
+USD {'bytes': 303, 'upAxis': 'Y', 'metersPerUnit': 1.0, 'meshes': 0, 'points': 0, 'faces': 0, 'normals': True}
+PASS stub in 8.6 s; nvidia-smi None

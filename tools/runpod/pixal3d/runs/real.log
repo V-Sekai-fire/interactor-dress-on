@@ -1,0 +1,7 @@
+run: docker run --rm --name pixal3d-rp-real-1790176046 -p 127.0.0.1:18080:8000 --gpus device=0 -v C:/interactor-dress-on/models:/runpod-volume/models:ro pixal3d-runpod:dev python -u handler.py --rp_serve_api --rp_api_host 0.0.0.0 --rp_api_port 8000
+worker up 198.8 s after docker run (model load included)
+health {'status': 'ok', 'ready': True, 'stub': False} in 0.01 s
+predict 187.5 s, request 1.99 MB, response 4.91 MB, state b64 4.41 MB, server {'wall_s': 187.52840450000076, 'request_bytes': 1986941, 'response_bytes': 4911213, 'state_b64_bytes': 4408212, 'views': 4, 'seconds': 187.38555330099985, 'vram_peak_mib': 13231.4169921875, 'camera_params': {'camera_angle_x': 0.7270885854199977, 'distance': 1.3142168521881104, 'mesh_scale': 1.0}}
+extract 43.0 s, request 4.41 MB, response 59.21 MB (glb b64 24.31 MB, USD layer b64 34.90 MB), server {'wall_s': 43.01878420000139, 'request_bytes': 4408256, 'response_bytes': 59207353, 'glb_b64_bytes': 24305756, 'layer_b64_bytes': 34901424, 'seconds': 40.45737718600003, 'vram_peak_mib': 6321.87890625}
+USD {'bytes': 26176067, 'upAxis': 'Y', 'metersPerUnit': 1.0, 'meshes': 1, 'points': 202134, 'faces': 208950, 'normals': True}
+PASS real in 436.1 s; nvidia-smi {'gpu': 'NVIDIA GeForce RTX 3090', 'peak': 14967, 'before': 33}

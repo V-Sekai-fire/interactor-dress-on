@@ -1,0 +1,64 @@
+{
+  "mode": "real-warm",
+  "tag": "pixal3d-runpod:dev",
+  "gpu": "0",
+  "cold_start_s": 254.97527399999672,
+  "health": {
+    "status": "ok",
+    "ready": true,
+    "stub": false
+  },
+  "predict": {
+    "wall_s": 198.77918049999425,
+    "request_bytes": 1986941,
+    "response_bytes": 4829957,
+    "state_b64_bytes": 4321048,
+    "views": 4,
+    "seconds": 198.60722000000032,
+    "vram_peak_mib": 13231.2421875,
+    "camera_params": {
+      "camera_angle_x": 0.727087439923348,
+      "distance": 1.3142191171646118,
+      "mesh_scale": 1.0
+    }
+  },
+  "predict_2": {
+    "wall_s": 86.0232926000026,
+    "request_bytes": 1986941,
+    "response_bytes": 4797345,
+    "state_b64_bytes": 4300708,
+    "views": 4,
+    "seconds": 85.88449459699996,
+    "vram_peak_mib": 13471.66845703125,
+    "camera_params": {
+      "camera_angle_x": 0.7270886374880153,
+      "distance": 1.3142167329788208,
+      "mesh_scale": 1.0
+    }
+  },
+  "extract": {
+    "wall_s": 45.30195310000272,
+    "request_bytes": 4300752,
+    "response_bytes": 58964866,
+    "glb_b64_bytes": 24267596,
+    "layer_b64_bytes": 34697096,
+    "seconds": 42.12516283800005,
+    "vram_peak_mib": 6405.185546875
+  },
+  "usd": {
+    "bytes": 26022821,
+    "upAxis": "Y",
+    "metersPerUnit": 1.0,
+    "meshes": 1,
+    "points": 201046,
+    "faces": 206938,
+    "normals": true
+  },
+  "nvidia_smi_used_mib": {
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "peak": 15213,
+    "before": 33
+  },
+  "total_wall_s": 592.7807834999985,
+  "pass": true
+}

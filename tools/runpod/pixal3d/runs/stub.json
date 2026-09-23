@@ -1,0 +1,41 @@
+{
+  "mode": "stub",
+  "tag": "pixal3d-runpod:dev",
+  "gpu": null,
+  "cold_start_s": 5.063905399998475,
+  "health": {
+    "status": "ok",
+    "ready": true,
+    "stub": true
+  },
+  "predict": {
+    "wall_s": 0.0443230999953812,
+    "request_bytes": 1986941,
+    "response_bytes": 546,
+    "state_b64_bytes": 12,
+    "views": 4,
+    "seconds": null,
+    "vram_peak_mib": null,
+    "camera_params": null
+  },
+  "extract": {
+    "wall_s": 2.1868889999968815,
+    "request_bytes": 56,
+    "response_bytes": 530,
+    "glb_b64_bytes": 12,
+    "layer_b64_bytes": 404,
+    "seconds": null,
+    "vram_peak_mib": null
+  },
+  "usd": {
+    "bytes": 303,
+    "upAxis": "Y",
+    "metersPerUnit": 1.0,
+    "meshes": 0,
+    "points": 0,
+    "faces": 0,
+    "normals": true
+  },
+  "total_wall_s": 8.633991499998956,
+  "pass": true
+}

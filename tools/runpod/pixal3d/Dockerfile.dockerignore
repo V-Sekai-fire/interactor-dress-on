@@ -1,0 +1,13 @@
+# BuildKit reads <Dockerfile>.dockerignore beside the Dockerfile. The Dockerfile COPYs
+# named files only, so this just keeps the context small (a desk checkout also holds
+# src/, .pixi/ and the gitignored models/).
+*
+!tools/services/svc_common.py
+!tools/services/pixal3d/pixi.toml
+!tools/services/pixal3d/pixi.lock
+!tools/services/pixal3d/fetch.py
+!tools/services/pixal3d/serve.py
+!tools/services/pixal3d/smoke.py
+!tools/services/pixal3d/patches/
+!tools/models/manifest.tsv
+!tools/runpod/pixal3d/handler.py

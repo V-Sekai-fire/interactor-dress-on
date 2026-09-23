@@ -1,0 +1,37 @@
+[pixal3d-worker] starting /app/tools/services/pixal3d/serve.py on http://127.0.0.1:18000, CUDA_VISIBLE_DEVICES=0, MODELS_DIR=/runpod-volume/models
+INFO:     Started server process [18]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52126 - "GET /health HTTP/1.1" 200 OK
+[pixal3d-worker] server ready in 1.1 s: {'status': 'ok', 'ready': True, 'stub': True}
+--- Starting Serverless Worker |  Version 1.12.0 ---
+INFO   | Starting API server.
+DEBUG  | Not deployed on Runpod serverless, pings will not be sent.
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO   | test-f0f20251-54f4-4f81-be09-ab24842f27c2 | Started.
+INFO:     127.0.0.1:52140 - "GET /health HTTP/1.1" 200 OK
+[pixal3d-worker] health -> HTTP 200 in 0.0 s
+DEBUG  | test-f0f20251-54f4-4f81-be09-ab24842f27c2 | Handler output: {'status': 'ok', 'ready': True, 'stub': True}
+DEBUG  | test-f0f20251-54f4-4f81-be09-ab24842f27c2 | run_job return: {'output': {'status': 'ok', 'ready': True, 'stub': True}}
+INFO   | test-4a8f339c-03ac-429e-8da7-496e45aeae1e | Started.
+INFO:     127.0.0.1:52150 - "POST /predict HTTP/1.1" 200 OK
+[pixal3d-worker] predict -> HTTP 200 in 0.0 s
+DEBUG  | test-4a8f339c-03ac-429e-8da7-496e45aeae1e | Handler output: {'state': 'c3R1YnN0YXRl', 'views': ['iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='], 'cameras': [], 'seed': 42, 'stub': True}
+DEBUG  | test-4a8f339c-03ac-429e-8da7-496e45aeae1e | run_job return: {'output': {'state': 'c3R1YnN0YXRl', 'views': ['iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='], 'cameras': [], 'seed': 42, 'stub': True}}
+INFO   | test-2315ca6d-6f44-40f3-9c55-e567307f00a8 | Started.
+INFO:     127.0.0.1:52160 - "POST /extract HTTP/1.1" 200 OK
+[pixal3d-worker] extract -> HTTP 200 in 2.2 s
+DEBUG  | test-2315ca6d-6f44-40f3-9c55-e567307f00a8 | Handler output: {'glb': 'Z2xURgJzdHVi', 'layer': 'I3VzZGEgMS4wCigKICAgIGRlZmF1bHRQcmltID0gIkFzc2V0IgogICAgbWV0ZXJzUGVyVW5pdCA9IDEKICAgIHVwQXhpcyA9ICJZIgopCgpkZWYgWGZvcm0gIkFzc2V0Igp7CiAgICBkZWYgWGZvcm0gIkdlb21ldHJ5IgogICAgewogICAgICAgIGN1c3RvbSBhc3NldCB3ZWZ0c3B1bjpzb3VyY2VBc3NldCA9IEBvdXRwdXQuZ2xiQAogICAgICAgIGN1c3RvbSB0b2tlbiB3ZWZ0c3B1bjpzb3VyY2VGb3JtYXQgPSAiZ2x0ZiIKICAgICAgICBjdXN0b20gdG9rZW4gd2VmdHNwdW46c3RhZ2UgPSAiaW1hZ2VfdG9fbWVzaCIKICAgIH0KfQoK', 'stub': True}
+DEBUG  | test-2315ca6d-6f44-40f3-9c55-e567307f00a8 | run_job return: {'output': {'glb': 'Z2xURgJzdHVi', 'layer': 'I3VzZGEgMS4wCigKICAgIGRlZmF1bHRQcmltID0gIkFzc2V0IgogICAgbWV0ZXJzUGVyVW5pdCA9IDEKICAgIHVwQXhpcyA9ICJZIgopCgpkZWYgWGZvcm0gIkFzc2V0Igp7CiAgICBkZWYgWGZvcm0gIkdlb21ldHJ5IgogICAgewogICAgICAgIGN1c3RvbSBhc3NldCB3ZWZ0c3B1bjpzb3VyY2VBc3NldCA9IEBvdXRwdXQuZ2xiQAogICAgICAgIGN1c3RvbSB0b2tlbiB3ZWZ0c3B1bjpzb3VyY2VGb3JtYXQgPSAiZ2x0ZiIKICAgICAgICBjdXN0b20gdG9rZW4gd2VmdHNwdW46c3RhZ2UgPSAiaW1hZ2VfdG9fbWVzaCIKICAgIH0KfQoK', 'stub': True}}
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1]
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18]

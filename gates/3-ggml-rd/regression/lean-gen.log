@@ -1,7 +1,5 @@
-# AVBD_EMIT=1 BUILD_DIR=build bash kernels/avbd/gen.sh   (2026-09-23T06:52:17Z)
+# AVBD_EMIT=1 BUILD_DIR=build bash kernels/avbd/gen.sh   (2026-09-23T07:53:50Z)
 == emitting Slang from Lean at lean ==
-✔ [101/103] Built EmitShaders (1.0s)
-✔ [103/103] Built emit_shaders:exe (652ms)
 == 25 kernels into slang/ ==
 == slangc -target cpp ==
 warning[E40100]: entry point 'main' has been renamed to 'main_0'
@@ -34,7 +32,7 @@ warning[E40100]: entry point 'main' has been renamed to 'main_0'
 wrote kernels/avbd/AvbdKernelTable.inc: 25 kernels, 184 bindings
 == embedding SPIR-V ==
 embedded 25 kernels, 105432 bytes -> build/avbd_kernels.inc
-# exit 0  wall 24 s
+# exit 0  wall 22 s
 # git diff --stat HEAD -- kernels/avbd (content; must be empty):
 
 # git status --porcelain kernels/avbd (stat only; LF over CRLF shows here):

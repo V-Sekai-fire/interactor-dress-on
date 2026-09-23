@@ -1,0 +1,5 @@
+# Control kernels (lean/Ggml, Ggml.controls): deliberately off the fixed
+# layout, for gates only. gen.sh compiles each like a kernel, requires the
+# layout check to REFUSE it, and embeds them apart (build/ggml_controls.inc,
+# namespace ggml_controls), linked by ggml_test.elf only.
+ctl_add_f32_rosrc

@@ -7,17 +7,21 @@ table, so a backend can look a kernel up by the same name the binding table
 uses. Precedent: modules/cassie/spv_to_header.py.
 
     python kernels/embed_spv.py kernels/avbd guest/avbd_kernels.inc
+    python kernels/embed_spv.py --namespace ggml_kernels build/spv-ggml build/ggml_kernels.inc
+
+--namespace names the C++ namespace (default avbd_kernels), so two stages'
+tables can be included in one translation unit.
 """
 
+import argparse
 import pathlib
-import sys
 
 
 def ident(name):
     return "".join(c if c.isalnum() else "_" for c in name)
 
 
-def emit(src_dir, out_path):
+def emit(src_dir, out_path, namespace="avbd_kernels"):
     src_dir = pathlib.Path(src_dir)
     files = sorted(src_dir.glob("*.spv"))
     if not files:
@@ -28,7 +32,7 @@ def emit(src_dir, out_path):
         "#include <cstddef>",
         "#include <cstdint>",
         "",
-        "namespace avbd_kernels {",
+        "namespace %s {" % namespace,
         "",
     ]
     for f in files:
@@ -63,7 +67,7 @@ def emit(src_dir, out_path):
     lines.append("\treturn nullptr;")
     lines.append("}")
     lines.append("")
-    lines.append("} // namespace avbd_kernels")
+    lines.append("} // namespace %s" % namespace)
     lines.append("")
     pathlib.Path(out_path).write_text("\n".join(lines), encoding="utf-8", newline="\n")
     total = sum(f.stat().st_size for f in files)
@@ -71,6 +75,9 @@ def emit(src_dir, out_path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit(__doc__)
-    emit(sys.argv[1], sys.argv[2])
+    ap = argparse.ArgumentParser(usage=__doc__)
+    ap.add_argument("--namespace", default="avbd_kernels")
+    ap.add_argument("src_dir")
+    ap.add_argument("out_path")
+    a = ap.parse_args()
+    emit(a.src_dir, a.out_path, a.namespace)

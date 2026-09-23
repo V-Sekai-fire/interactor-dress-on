@@ -1,0 +1,6 @@
+# The ggml-rd kernels, by their Lean/Slang names (lean/Ggml, `lake exe
+# emit_ggml`), one per line; the lead merges this list. A kernel's id
+# (params word 0) is its index among these lines in the generated
+# GgmlKernelTable.inc, so ids are per build, never stored.
+add_f32
+mul_f32

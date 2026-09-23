@@ -25,6 +25,22 @@ detects 336, misses 0, 20 no-ops) pass on the merged tree. Per-family
 detail is in the sections below; their own evidence folders (`ops/k1k5`,
 `ops-k3k4`, `ops-k7`, `ops/fa-serial`) keep their runs.
 
+**G3.graph PASS, G3.cost measured** (`graph/results.txt`, section
+[G3.graph and G3.cost](#g3graph-and-g3cost-the-apps-own-graphs)): the
+apps' own graph builders (skin-tokens-ggml, pixal3d-ggml, copied into
+`guest/ggml_test/app_graphs/`) on random weights: a Qwen3 decoder layer
+(f16) at rel-L2 2.1e-4 from the in-guest ggml-cpu, a sparse-conv level
+(f16) at 2.8e-4, a 4096 x 1536 DiT block (bf16) at @DIT_NAT@ (limit 1e-3),
+all from ggml-cpu's own rounding of activations to the weight type: with
+the weights widened to f32 the three read 9.2e-6, 4.7e-7 and @DIT_F32@ (limit
+1e-4). Barrier elision is bit-identical to a barrier after every dispatch on
+all three; dropping one barrier elision placed changed the output in 17 of
+39, 16 of 48 and @DIT_DROP@ runs (the rest are races that did not happen, see
+finding 3 there). A skin-tokens decode step (28 layers) costs 10.6 ms of
+ggml-rd host time (4.98 us per node, 8.4 per dispatch), 9.2 ms of GPU and
+one frame; a Pixal3D flow forward (30 blocks) 16.9 ms of host time
+(5.4 us per node) and 1.32 s of GPU, one frame.
+
 **ADD and MUL** (the first reference run, before the families):
 ggml's own `test-backend-ops -o ADD,MUL -b RD0`, run inside the guest
 (`ggml_test.elf`) against the in-guest ggml-cpu, reports **100/100 tests
@@ -68,12 +84,14 @@ kernels/ggml/gen.sh --update                 # re-emit the kernels from lean/ af
 | rule 8 | `main.gd`'s wrappers, as MCP calls them | **PASS** | `ops/wrappers.txt` (`project/probe_ggml_wrappers.gd`): `ggml_attach`, the chain/files/alias presets and a short fault run through `ggml_ops_start`, each pumped by `main.gd`'s own `_process`; a second `ggml_pump` in the start frame does not pump again; `ggml_rd_close` ends at `permanent_slots=0`, rule-4 counter 0 over 23 submits. |
 | control | headless, no RenderingDevice | **PASS** | `no RD device`, `Testing 1 devices`, no RD0 case run, 0.5 s. Without `--xr-mode off` the headless process hangs after OpenXR fails to start and never runs the script: twice, killed at 900 s and at 300 s (`ops/run-headless-xr-default-hung.log` is the second). AGENTS.md's `--xr-mode off` holds for headless runs too. |
 | regression | Stage 1, Stage 2, Gate 0F, Gate 4 and lean on the rebuilt ELFs | **PASS** | `regression/`: see below. |
+| G3.graph | the apps' graphs, RD vs in-guest ggml-cpu | **PASS** | Qwen3 layer 2.10e-4 (f16) / 9.2e-6 (f32 arm); sparse-conv level 2.75e-4 / 4.7e-7; DiT block @DIT_NAT@ (bf16) / @DIT_F32@; elision bit-identical to barrier-all and to itself on all three; the dropped-barrier control detected in 17/39, 16/48, @DIT_DROP@ runs. |
+| G3.cost | host us per node, dispatches, frames, GPU per graph | **measured** | decode step: 2135 nodes, 1265 dispatches, 1123 barriers, 1 frame, 10.6 ms host (4.98 us/node), 9.2 ms GPU; flow forward: 3107 nodes, 2115 dispatches, 1903 barriers, 1 frame, 16.9 ms host (5.43 us/node), 1.32 s GPU. |
+| rule 8 | `main.gd`'s G3 presets | **PASS** | `graph/wrappers.txt` (`project/probe_ggml_wrappers_graph.gd`): `ggml_graph_qwen`, `ggml_cost_decode`, `ggml_cost_dit`, `ggml_graph_sconv`, `ggml_graph_dit` (8^3 tokens) each RESULT: PASS through `main.gd`'s own pump; rule 4 at 0, `permanent_slots=0`. |
 
-Not in this cut: G3.graph (a Qwen3 layer, a DiT block, elision vs
-barrier-all bit-identity on real graphs) and G3.cost. The in-guest
-reference dominates the time: ops_main is 125-164 s of vmcalls over 101
-frames (five runs on a shared machine), most of it ggml-cpu at rv64gc on
-the 16.7M-element cases.
+The in-guest reference dominates the time: ops_main is 125-164 s of
+vmcalls over 101 frames (five runs on a shared machine), most of it
+ggml-cpu at rv64gc on the 16.7M-element cases; G3.graph's DiT block
+reference is @DIT_CPU_TOTAL@.
 
 ## What this cut found (and fixed)
 
@@ -405,6 +423,153 @@ vulkan --xr-mode off ++ --ops=IM2COL,CONV_3D --fault-ops=IM2COL,CONV_3D
 ops into its own folder; with none, the gate runs as before, with `OPS`
 now `ADD,MUL,IM2COL,CONV_3D`).
 
+## G3.graph and G3.cost: the apps' own graphs
+
+**Result: G3.graph PASS on all three graphs, G3.cost measured.**
+`graph/results.txt` (2026-09-23, RTX 4090, `project/gate_ggml_graph.gd`):
+the graphs are built by the apps' own builder functions, copied into
+`guest/ggml_test/app_graphs/` (skin-tokens-ggml `src/qwen.cpp` @097a0cc,
+pixal3d-ggml `trellis2.cpp` @1c22f5e; `CITATION.cff` names each function and
+the adaptations), on random weights, in `ggml_test.elf`:
+
+| graph (builder) | shape, weights | nodes / dispatches | barriers: elided / all | rel-L2, native weights (limit 1e-3) | rel-L2, f32 arm (limit 1e-4) | elision vs barrier-all, repeat | dropped-barrier control | in-guest reference |
+|---|---|---|---|---|---|---|---|---|
+| Qwen3 decoder layer (`decode_layer`) | skin-tokens: hidden 896, 16/8 heads, 128, MLP 2048; 2 beams, KV cache past 514; f16 | 76 / 45 | 39 / 44 | **2.10e-4** (layer out 6.7e-5, new K/V cache rows 2.0-2.1e-4) | **9.2e-6** | bit-identical, bit-identical | 17 of 39 detected | 1.0 s + 0.8 s |
+| sparse-conv level (`shape_dec_run`, level 1) | C 256 (prev 512, next 128), 2 ConvNeXt blocks + child head + up part A, L = 632 shell voxels (6200 of 17064 neighbour slots real); f16 | 789 / 571 | 359 / 570 | **2.75e-4** (subdiv, h1; x 1.7e-4) | **4.7e-7** | bit-identical, bit-identical | 16 of 48 detected | 214 s + 120 s |
+| DiT block (`trellis2_ss_flow_forward`'s block + Pixal3D's `proj_linear`) | 4096 tokens x 1536, 12 heads, MLP 8192, cross-attention over 5 global tokens, proj [1024, 4096]; bf16 | @DIT_NODES@ | @DIT_BARRIERS@ | **@DIT_NAT@** | **@DIT_F32@** | bit-identical, bit-identical | @DIT_DROP@ detected | @DIT_CPU@ |
+
+Every arm is built by the builder from scratch on its backend (ggml's
+gallocr allocates it, as the apps do), and every leaf is filled from a seed of
+its name, so both backends get the same bytes: weights uniform within
+PyTorch `nn.Linear`'s 1/sqrt(fan_in), norm gains in [0.8, 1.2], inputs in
+[-1, 1], the RoPE tables, neighbour indices and masks computed as the apps
+compute them. rel-L2 is ||rd - cpu|| / ||cpu|| over each output; the table
+gives the worst output. Per graph:
+
+- **native arm**: the weights in the model's type (f16; bf16 for the DiT, the
+  type of the chibifire Pixal3D GGUFs); ggml-rd against the in-guest ggml-cpu
+  (rv64gc, one thread, one node per pump: the CPU backend's abort callback
+  yields COOP, so no reference vmcall runs a whole graph).
+- **f32 arm**: the same weight values (rounded through f16/bf16) stored as
+  f32, the f32 kernels on both sides.
+- **elision**: on the native RD net, a run with elision, one with
+  `GGML_RD_BARRIER_ALL=1` and a second elision run are compared bit for bit,
+  every output. Before every RD run the graph's compute buffers (gallocr's)
+  are cleared to 0, so a dispatch that races its producer reads zeros, not
+  the previous run's identical result.
+- **control** (`GGML_RD_DROP_BARRIER=<k>`, new in `rd_graph.cpp`): the k-th
+  barrier elision places is recorded as placed (the hazard segments reset)
+  but left out of the compute list. One run per barrier (at most 48, spread
+  over the graph), each compared bit for bit with the barrier-all run; a
+  run that differs has detected its dropped barrier.
+
+What G3.graph found:
+
+1. **The native-weight gap is ggml-cpu's rounding, not ggml-rd's.** ggml-cpu
+   converts a matmul's activations (src1) to the weight's `vec_dot_type`
+   (f16, bf16) before the dot product; ggml-rd widens the weights on load
+   and keeps the activations f32 (K6). The arms separate the two: ggml-rd's
+   native-weight outputs sit as close to ggml-cpu's f32 arm (Qwen 9.2e-6,
+   sparse 4.7e-7, DiT @DIT_X@) as ggml-rd's own f32 arm does (the same
+   figures to four digits in every output), and ggml-cpu's native arm is as
+   far from its own f32 arm (2.09e-4, 2.75e-4, @DIT_CC@) as ggml-rd is from
+   it. For bf16 that rounding (8 significant bits) alone is @DIT_CC@ of the
+   block's output, @DIT_BRANCH@ of its residual branch (output minus input):
+   the 1e-3 limit is a limit on the reference here, and it holds with
+   @DIT_MARGIN@ to spare. At 216 and 512 tokens (dev runs and rule 8) the
+   same comparison read 9.31e-4 and 9.31e-4.
+2. **Barrier elision is exact on the apps' graphs, and saves little.** Every
+   output of every graph is bit-identical with and without elision, and two
+   elision runs are bit-identical (the kernels are deterministic: no atomics,
+   fixed reduction orders). The apps' graphs are chains: elision drops 5 of
+   44 barriers in the Qwen layer, 211 of 570 in the sparse level (the 27
+   independent get_rows/mask/mul_mat gathers of a conv), @DIT_SAVED@ in the
+   DiT block.
+3. **A dropped barrier is a race; the comparison catches it when it
+   happens, and it does not always happen.** 17 of 39 (Qwen), 16 of 48
+   (sparse), @DIT_DROP@ (DiT) single dropped barriers changed the output.
+   The ones that did not are of three kinds, all visible in
+   `run-graph_*.log`: the guarded write stores what the buffer already held
+   (the KV-cache CPY writes the same row into a persistent leaf every run,
+   so the CONCATs that read it see the right bytes either way: all 6 CONCAT
+   drops in the Qwen layer); a write-after-read hazard (gallocr reuses a
+   buffer; the later writer only corrupts a reader it overtakes); and a
+   short producer that finishes before its consumer is scheduled (in the
+   sparse level only the barriers before the accumulating ADDs, 15 of 17,
+   show, never the ones before the mask MUL or the MUL_MAT). The same drop
+   is detected in one run and not in another (Qwen: 19 of 39 in a dev run,
+   17 here). So a missing barrier cannot be tested for by running; it is
+   prevented by construction (elision places one on every byte-range
+   RAW/WAR/WAW overlap, and barrier-all is the reference it must match).
+   The detected ones changed the output by rel-L2 8.2e-3 or more in the
+   Qwen and sparse runs, but a DiT dev run had one at 6.8e-4, under the 1e-3
+   tolerance: bit-identity, not a tolerance, is the check that catches them.
+
+**G3.cost** (`graph/run-cost_*.log`, RD only, the same run): the graph as
+the app builds it every call (a context, the graph, a gallocr, the inputs,
+`ggml_backend_graph_compute`, the output read), 5 (decode) or 3 (DiT) timed
+calls after a cold one, then one call profiled per dispatch. Host
+microseconds are the host's clock (`rdc::host_usec`, `Time.get_ticks_usec`
+through a name-cache slot no recording name uses: 0.12 us per reading), GPU
+time is RenderingDevice timestamps around the compute list, frames are the
+pump's WAIT_GPU + COOP yields from building the graph to reading its output.
+Medians:
+
+| | skin-tokens decode step | Pixal3D flow forward |
+|---|---|---|
+| graph | `qwen_graph_evaluator::decode`: embedding rows, 28 decode layers, norm, logits [33036 x 2]; 2 beams, past 514; f16 | `trellis2_ss_flow_forward` with Pixal3D's proj: stem, t-embedder, 30 blocks, head; 4096 tokens; bf16 blocks |
+| nodes / dispatches / barriers per graph | 2135 / 1265 / 1123 | 3107 / 2115 / 1903 |
+| frames per graph | **1** (cold: 4, the pipelines and uniform sets COOP) | **1** (cold: 4) |
+| ggml-rd host time, graph_compute entry to submit | **10.6 ms** (cold 29.0): pack 3.7, prepare 0.3, params upload 0.06, record 3.6, submit 3.0 | **16.9 ms** (cold 37.4): pack 5.2, prepare 0.4, upload 0.1, record 5.9, submit 5.1 |
+| per node / per dispatch | **4.98 us / 8.41 us** | **5.43 us / 7.97 us** |
+| the app's graph build + gallocr (guest) | 7.4 ms + 5.7 ms | 10.5 ms + 9.7 ms |
+| GPU time | **9.2 ms** (steady; 97-100 ms on the first steps while the GPU clocks up, 15.7 ms in a dev run on the shared GPU) | **1.32 s** (1.84 s in a dev run) |
+| whole call (vsync off) | 33.7 ms | 1.36 s |
+
+Per dispatch (the profiled call, `kernel=` rows in the logs), packing is
+1.9-3.9 us (FLASH_ATTN_EXT 5.9) and recording (pipeline and set binds, the
+barrier, the dispatch: host calls into RenderingDevice) 2.7-3.3 us, the same
+for every kernel; Godot's `submit` adds 2.3-2.4 us per dispatch (its render
+graph). What that means for the apps:
+
+- **The decode step is host-bound and latency-bound, not GPU-bound.** Of
+  33.7 ms, 24 ms is guest CPU work (the app's graph build and allocation,
+  13 ms; ggml-rd's pack/record/submit, 10.6 ms) and 9.2 ms is the GPU, whose
+  1265 dispatches are 1123 barrier-separated steps of about 8 us each (the
+  vec matmuls are 4-10 us, K6). A skin-tokens run's 383 decode steps are
+  then about 13 s. The obvious next steps are the app's: build the decode
+  graph once and reuse it (llama.cpp's graph reuse), which removes 13 ms per
+  step; ggml-rd's recording could then be cached as well (the params table
+  changes only in the positions).
+- **The flow forward is GPU-bound**: 1.32 s of GPU against 37 ms of host
+  work. It is 13.1 TFLOP (10.05 in the token-wise matmuls, 335 GFLOP a
+  block; 3.09 in the 4096 x 4096 self-attention, 103 GFLOP a block), so
+  about 10 TFLOP/s overall, the rate K6's tiled bf16 matmul reaches on its
+  own; the per-kernel split is not measured here (the timestamps bracket
+  the whole list). pixal3d-ggml's sparse-structure sampler (12 Euler steps
+  by default, CFG inside part of the interval) is 12-24 forwards: 16-32 s of
+  GPU at this rate. K6's and K8's next steps (wider register blocks, f16
+  loads, float4 groupshared rows) are the levers.
+- **One frame per graph** (rule 4): the submit's frame ends at the WAIT_GPU
+  that ggml's `ggml_backend_graph_compute` (compute, then synchronize)
+  yields, and the next frame's sync blocks for the rest of the GPU time
+  (`wait_us`: 9.4 ms and 1.32 s).
+
+Run it:
+```
+godot --path project --script gate_ggml_graph.gd --rendering-driver vulkan --xr-mode off   # graph/results.txt
+godot --path project --script probe_ggml_wrappers_graph.gd --rendering-driver vulkan --xr-mode off   # graph/wrappers.txt (rule 8)
+```
+User arguments after `++`: `runs=graph_qwen,cost_decode` (only those),
+`--dit=dit:8` (the DiT block at 8^3 tokens), `--out=<folder>`, `--wall=<s>`.
+The in-guest reference is the cost: ggml-cpu at rv64gc runs 0.08 GFLOP/s
+(bf16, f16 weights) to 0.13 GFLOP/s (f32), so the DiT block's two reference
+arms (about 440 GFLOP each) take @DIT_CPU_TOTAL@, and the gate runs them
+last. The gate's Sandbox has `memory_max` 3600 MB (the DiT reference holds
+its weights, gallocr's buffer and ggml-cpu's work buffer) and
+`execution_timeout` 4000000 (one reference node, the MLP's 103 GFLOP matmul,
+is one vmcall of about @DIT_MLP_S@ s).
+
 ## How ggml-rd works
 
 - **One params table, no push constants.** Every dispatch of a graph owns a
@@ -471,9 +636,12 @@ guest/ggml-rd/ops/mul_mat.cpp           MUL_MAT: vec (ne11 <= 4) or tiled, r2/r3
                                         (ops/im2col.cpp, ops/conv3d.cpp: K7)
 guest/pump/, guest/fiber/               the pump protocol on Gate 0F's fiber
 guest/ggml_test/                        ggml_test.elf: test-backend-ops and the probes on the pump
-                                        (probe_conv.cpp: K7's timed census shapes)
+                                        (probe_conv.cpp: K7's timed census shapes;
+                                        probe_graph.cpp: G3.graph and G3.cost)
+guest/ggml_test/app_graphs/             the apps' graph builders, copied (CITATION.cff)
 project/infer_host.gd                   the host side of the pump
 project/gate_ggml_rd.gd                 this gate (OPS lists the ops under test)
+project/gate_ggml_graph.gd              G3.graph and G3.cost (graph/)
 tests/ggml_rd_kernels/                  L2: main.cpp, l2.h, cases/<family>.cpp, build.sh
 ```
 
@@ -637,6 +805,25 @@ were):
 | Gate 4 | `gate_curvenet.gd`, `probe_curvenet_wrappers.gd` | **PASS** | `regression/4-curvenet-*`: guest vs native identical in 9/9 checks (verdicts, integers, float signatures), a repeat byte-identical, 0 `Eigen::` in 13,547 symbols, rule 8 23/23 wrappers; curvenet.elf is rebuilt with this cut's CMake. |
 | lean | `gates/lean/verify.sh` | **PASS** | `regression/lean-*`: the tree builds clean, the 24 AVBD kernels re-emit with 0 DIFF, and the numthreads control gives exactly 1 DIFF (vbd_init). |
 
+G3.graph and G3.cost changed three shared pieces, and every ELF was rebuilt:
+`rd_compute` gained `rdc::host_usec()` (Time.get_ticks_usec, its method name
+placed in the host name-cache slot of `create_local_rendering_device`, which
+no recording calls; the 32 RenderingDevice names keep their 32 slots, as
+every run's stats line says), `rd_graph.cpp` gained `GGML_RD_DROP_BARRIER`
+and `GGML_RD_PROFILE` (neither set by default; at profile level 0 no clock
+is read), and the pump counts its yields. Re-run on the rebuilt ELFs
+(`graph/regression/`):
+
+| gate | runner | verdict | numbers |
+|---|---|---|---|
+| G3.ops subset | `gate_ggml_rd.gd ++ --ops=ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT` | **PASS** | `graph/regression/ops/results.txt`: every probe (chain, independent, files, alias rw and its ro control, perf, mm_perf, census) PASS; 425/425 OK, the same 425 barrier-all, fault controls 54/54 ADD and 129/129 data-movement FAIL; rule 4 at 0. |
+| Stage 1 | `gate_rd_compute.gd` | **PASS** | `graph/regression/1-rd-compute.log`: the held-device probe passes, every barriered count exact, the no-barrier arm still wrong in 4 of 7. |
+| Gate 0F | `gate_runtime.gd` | **PASS** | `graph/regression/0f-runtime-results.txt`: `SUMMARY: PASS=34 FAIL=5 INFO=27` in 134 s, the five FAILs probe 3's, as committed. |
+| rule 8 | `probe_ggml_wrappers_graph.gd` | **PASS** | `graph/wrappers.txt`. |
+
+Stage 2, Gate 4 and the lean gate were not re-run for this change: they
+link `rd_compute` but call none of what changed.
+
 ## Differences from the plan text
 
 - The plan's set 0 has read-only sources (b1-b3); they are read-write
@@ -646,6 +833,15 @@ were):
 - Weights are uploaded through `ggml_backend_rd_tensor_upload` and an
   upload hook, which the pump serves as UPLOAD; the plan named the request
   only.
+- G3.graph's DiT block is Pixal3D's (TRELLIS.2's block with ProjectAttention's
+  `proj_linear` added, cross-attention over 5 global tokens), built by
+  pixal3d-ggml's TRELLIS.2 builder plus that one line; the sparse-conv level
+  is one whole shape-decoder level (four convs: the child head's conv2, two
+  ConvNeXt blocks' and the up-block's conv1; 108 gathers), not a single
+  conv.
+  "A dropped barrier is detected" became a sweep over every barrier (up to
+  48), because a single drop is a race that may not happen (finding 3 of
+  G3.graph).
 
 ## Files
 
@@ -659,3 +855,9 @@ were):
   `kernels/l2.log`, `kernels/l2-control.log`.
 - `ops/wrappers.txt` (`project/probe_ggml_wrappers.gd`): rule 8.
 - `regression/`: the earlier gates' results on this cut's ELFs.
+- `graph/results.txt` (G3.graph and G3.cost, streamed; last line RESULT),
+  `graph/run.log`, `graph/run-<name>.log` (each probe's output: every
+  comparison, every dropped barrier, the per-kernel cost tables),
+  `graph/wrappers.txt` (rule 8), `graph/regression/` (this change's
+  regression: the rule-8 run's log, a G3.ops subset with every probe and
+  control, Stage 1, Gate 0F).

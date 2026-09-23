@@ -537,6 +537,22 @@ std::string ggml_backend_rd_last_error(void) {
 	return ctx().last_error;
 }
 
+void ggml_backend_rd_set_profile(int level) {
+	ctx().profile_level = level;
+}
+
+const ggml_rd_profile &ggml_backend_rd_last_profile(void) {
+	return ctx().profile;
+}
+
+const char *ggml_backend_rd_kernel_name(int kernel) {
+	return kernel >= 0 && kernel < int(sizeof kKernels / sizeof kKernels[0]) ? kKernels[kernel].name : "?";
+}
+
+std::string ggml_backend_rd_last_dropped(void) {
+	return ctx().last_dropped;
+}
+
 void ggml_backend_rd_release(void) {
 	if (device_ok()) {
 		ensure_idle();

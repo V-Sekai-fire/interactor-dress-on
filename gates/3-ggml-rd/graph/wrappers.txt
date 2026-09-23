@@ -1,0 +1,25 @@
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+ggml_graph_qwen -> STARTED probe graph
+  status: DONE frames=135 pumps=135 vm_ms=4826.2 waits=44 coops=90 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE graph qwen SUMMARY weights=f16 rel_l2(rd_f16,cpu_f16)=2.097e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=9.161e-06 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=9.161e-06 rel_l2(cpu_f16,cpu_f32)=2.091e-04 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=17/39 detected dispatches=45 barriers=39/44 wall_s=4.9
+  RESULT: PASS (graph qwen)
+ggml_cost_decode -> STARTED probe cost
+  status: DONE frames=13 pumps=13 vm_ms=4191.2 waits=7 coops=5 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE cost decode SUMMARY steps=5 nodes=2135 dispatches/graph=1265 barriers/graph=1123 frames/graph=1 (cold 5) host_us=10344 (cold 35140; pack 3699 prepare 282 upload 62 record 3709 submit 2617) host_us/node=4.84 host_us/dispatch=8.18 build_us=7436 alloc_us=5797 wait_us=9409 read_us=401 step_us=33422 gpu_ms=9.13
+  RESULT: PASS (cost decode:5)
+ggml_cost_dit -> STARTED probe cost
+  status: DONE frames=9 pumps=9 vm_ms=8954.7 waits=5 coops=3 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE cost dit SUMMARY steps=3 nodes=3107 dispatches/graph=2115 barriers/graph=1903 frames/graph=1 (cold 4) host_us=16461 (cold 198782; pack 5329 prepare 438 upload 105 record 6007 submit 4619) host_us/node=5.30 host_us/dispatch=7.78 build_us=10819 alloc_us=9718 wait_us=1319900 read_us=347 step_us=1357823 gpu_ms=1318.08
+  RESULT: PASS (cost dit:3)
+ggml_graph_sconv -> STARTED probe graph
+  status: DONE frames=1196 pumps=1196 vm_ms=340491.2 waits=53 coops=1142 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE graph sconv SUMMARY weights=f16 rel_l2(rd_f16,cpu_f16)=2.754e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.715e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=4.715e-07 rel_l2(cpu_f16,cpu_f32)=2.754e-04 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=17/48 detected dispatches=571 barriers=359/570 wall_s=341.0 L=632 neighbours=6200/17064
+  RESULT: PASS (graph sconv)
+ggml_graph_dit -> STARTED probe graph
+  status: DONE frames=186 pumps=186 vm_ms=913016.8 waits=53 coops=132 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE graph dit SUMMARY weights=bf16 rel_l2(rd_bf16,cpu_bf16)=9.311e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.507e-05 (<=1e-4: yes) info rel_l2(rd_bf16,cpu_f32)=4.507e-05 rel_l2(cpu_bf16,cpu_f32)=9.319e-04 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=9/48 detected dispatches=70 barriers=62/69 wall_s=913.1
+  RESULT: PASS (graph dit:8)
+rule4: rule4_same_frame_syncs=0
+close: CLOSED permanent_slots=0
+wall_s=1273.2
+RESULT: PASS

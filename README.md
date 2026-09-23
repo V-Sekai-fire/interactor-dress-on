@@ -33,6 +33,7 @@ evidence.
 |---|---|---|
 | [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; the old "bimodal submit+sync" was godot-sandbox's 32-slot method-name cache colliding by string address (fixed in `rd_compute`, Cut A) |
 | [2](gates/2-avbd/) | AVBD in the guest: Lean → Slang → `cpp` (`AvbdCpu`) and `spirv` (`AvbdRd`), one driver | **PASS** — forward, duals, backward (gradcheck 5/5, stategrad 12/12 + 12/12, within 1.04e-6 of native) and self-collision exact on both; rd from 256 vertices (frame-driven, 3.2–4.8 ms/substep to 4096 vertices) |
+| [3](gates/3-ggml-rd/) | ggml-rd: ggml over RenderingDevice, every kernel Lean → Slang (`guest/ggml-rd`, gated in `ggml_test.elf`) | **PASS** — G3.ops: test-backend-ops 1700/1700 on the 22 census ops vs the in-guest ggml-cpu, fault and headless controls fail as they must; G3.graph: the apps' own builders (Qwen3 decode layer f16, sparse-conv level f16, 4096 × 1536 DiT block bf16) at rel-L2 2.1e-4 / 2.8e-4 / @DIT_NAT@ (ggml-cpu's activation rounding; f32 arms ≤ @DIT_F32MAX@), barrier elision bit-identical to barrier-all; G3.cost: ~5 µs host per node, one frame per graph, decode step 10.6 ms host + 9.2 ms GPU, flow forward 17 ms host + 1.32 s GPU |
 
 The standing rules are in [AGENTS.md](AGENTS.md).
 

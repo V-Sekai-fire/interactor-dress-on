@@ -136,7 +136,20 @@ struct NameTable {
 			}
 			slot[i] = host_slot(reinterpret_cast<uintptr_t>(at[i]));
 		}
+		// Time.get_ticks_usec for host_usec(): every slot is taken, so it
+		// shares the slot of create_local_rendering_device, which a guest
+		// that adopts the host's device never calls (and open() calls once).
+		clock_at = kClockName;
+		for (size_t off = cursor; off + sizeof kClockName <= sizeof(pool); ++off) {
+			if (host_slot(reinterpret_cast<uintptr_t>(pool + off)) == slot[N_CREATE_LOCAL_DEVICE]) {
+				std::memcpy(pool + off, kClockName, sizeof kClockName);
+				clock_at = pool + off;
+				break;
+			}
+		}
 	}
+	static constexpr char kClockName[] = "get_ticks_usec";
+	const char *clock_at = nullptr;
 };
 
 const NameTable &names() {
@@ -150,6 +163,12 @@ std::string_view nm(Name n) {
 }
 
 } // namespace
+
+int64_t host_usec() {
+	static Object time("Time");
+	const NameTable &t = names();
+	return int64_t(time.call(std::string_view(t.clock_at, sizeof NameTable::kClockName - 1)));
+}
 
 std::string name_slots() {
 	const NameTable &t = names();

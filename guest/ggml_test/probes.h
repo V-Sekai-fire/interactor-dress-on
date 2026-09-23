@@ -49,6 +49,12 @@
 //   conv_perf <shape|all>  (probe_conv.cpp) the census' hottest IM2COL and
 //                    CONV_3D shapes: host-timed graphs of 1 and 9 copies,
 //                    and 4096 sampled outputs against a reference.
+//   graph <qwen|dit|sconv>  (probe_graph.cpp) G3.graph: the apps' own graph
+//                    builders on random weights, ggml-rd vs the in-guest
+//                    ggml-cpu; barrier elision vs barrier-all bit for bit; the
+//                    dropped-barrier control.
+//   cost <decode|dit>  (probe_graph.cpp) G3.cost: host us per graph and per
+//                    node, dispatches, barriers and frames per graph, GPU time.
 //   fa_perf <lq,lk,reps>  FLASH_ATTN_EXT at a census shape (D = 128, 12
 //                    heads, f32, no mask): a one-node graph computed reps
 //                    times, one submit and one WAIT_GPU each (the host times

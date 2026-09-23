@@ -31,8 +31,11 @@ void body(Fiber &, void *) {
 	s.job(s.arg);
 }
 
+int64_t g_yields[ERROR + 1] = {};
+
 void request(int64_t kind) {
 	State &s = S();
+	++g_yields[kind];
 	s.kind = kind;
 	s.inside = false;
 	s.fiber->yield(); // the host's next pump() lands here
@@ -92,6 +95,10 @@ bool running() {
 
 int64_t last_kind() {
 	return S().kind;
+}
+
+int64_t yields(int64_t kind) {
+	return kind >= 0 && kind <= ERROR ? g_yields[kind] : 0;
 }
 
 const std::string &last_text() {

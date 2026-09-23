@@ -65,6 +65,9 @@ Variant step(const PackedArray<uint8_t> &in);
 bool running();
 // The last request's kind (DONE or ERROR once finished).
 int64_t last_kind();
+// Requests yielded since the process started, by kind (index = Kind). A
+// WAIT_GPU or COOP ends the host's frame, so their sum counts frames.
+int64_t yields(int64_t kind);
 const std::string &last_text();
 
 // --- inside the job -------------------------------------------------------------

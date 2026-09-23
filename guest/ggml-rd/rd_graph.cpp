@@ -15,6 +15,12 @@
 //      dispatches inside one list, AGENTS.md facts; GGML_RD_BARRIER_ALL=1
 //      puts one after every dispatch);
 //   6. submit, mark pending, return. Nothing waits here.
+//
+// Controls and measurement (Gate 3): GGML_RD_FAULT moves a source of every
+// n-th dispatch; GGML_RD_DROP_BARRIER=<k> records the k-th barrier elision
+// places as if it were there (the segments reset) but leaves it out of the
+// list; GGML_RD_PROFILE=<1|2> reads the host clock around the phases (and,
+// at 2, around each dispatch's packing and recording).
 #include "rd_internal.h"
 
 #include <cstdlib>
@@ -99,6 +105,15 @@ ggml_status graph_compute(ggml_cgraph *g) {
 
 	const bool barrier_all = env_int("GGML_RD_BARRIER_ALL") != 0;
 	const int fault = env_int("GGML_RD_FAULT");
+	const int drop_barrier = env_int("GGML_RD_DROP_BARRIER");
+	const char *pe = std::getenv("GGML_RD_PROFILE");
+	const int prof = pe != nullptr ? std::atoi(pe) : c.profile_level;
+	ggml_rd_profile &pf = c.profile;
+	pf = ggml_rd_profile{};
+	pf.level = prof;
+	c.last_dropped.clear();
+	auto clock = [prof]() -> int64_t { return prof > 0 ? rdc::host_usec() : 0; };
+	const int64_t t_entry = clock();
 
 	static std::vector<uint32_t> table;
 	static std::vector<Dispatch> ds;
@@ -111,6 +126,7 @@ ggml_status graph_compute(ggml_cgraph *g) {
 			++skipped;
 			continue;
 		}
+		const int64_t t_node0 = prof > 1 ? rdc::host_usec() : 0;
 		const OpEntry *e = find_op(node);
 		if (e == nullptr) {
 			return fail_graph("no packer accepts " + node_desc(node));
@@ -147,6 +163,13 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		if (!e->pack(p) || p.kernel < 0 || p.groups[0] == 0 || p.groups[1] == 0 || p.groups[2] == 0) {
 			return fail_graph(std::string("packer ") + e->name + " refused " + node_desc(node));
 		}
+		if (prof > 1) {
+			ggml_rd_profile_dispatch pd;
+			pd.node = node;
+			pd.kernel = p.kernel;
+			pd.pack_us = t_node0;
+			pf.per_dispatch.push_back(pd);
+		}
 		w[W_KERNEL] = uint32_t(p.kernel);
 		dp.kernel = p.kernel;
 		std::memcpy(dp.groups, p.groups, sizeof dp.groups);
@@ -158,7 +181,11 @@ ggml_status graph_compute(ggml_cgraph *g) {
 			++c.st.faults;
 		}
 		ds.push_back(dp);
+		if (prof > 1) {
+			pf.per_dispatch.back().pack_us = rdc::host_usec() - pf.per_dispatch.back().pack_us;
+		}
 	}
+	const int64_t t_packed = clock();
 
 	c.st.graphs++;
 	c.st.nodes += g->n_nodes;
@@ -167,7 +194,12 @@ ggml_status graph_compute(ggml_cgraph *g) {
 	c.st.last_skipped = skipped;
 	c.st.last_dispatches = int64_t(ds.size());
 	c.st.last_barriers = 0;
+	pf.nodes = g->n_nodes;
+	pf.skipped = skipped;
+	pf.dispatches = int64_t(ds.size());
+	pf.us_pack = t_packed - t_entry;
 	if (ds.empty()) {
+		pf.us_total = clock() - t_entry;
 		return GGML_STATUS_SUCCESS;
 	}
 
@@ -193,17 +225,20 @@ ggml_status graph_compute(ggml_cgraph *g) {
 			return fail_graph("set 0 for " + node_desc(dp.node) + ": " + c.last_error);
 		}
 	}
+	const int64_t t_prepared = clock();
 	// A COOP yield above ended a frame, but nothing was submitted, so the
 	// device is still idle here.
 	if (!d.buffer_update(params, 0, size_t(n) * kSlotBytes, table.data())) {
 		return fail_graph("params upload: " + d.error());
 	}
 	c.st.params_bytes += int64_t(n) * kSlotBytes;
+	const int64_t t_uploaded = clock();
 
 	std::vector<Range> seg_reads, seg_writes;
 	seg_reads.reserve(16);
 	seg_writes.reserve(16);
 	int64_t barriers = 0;
+	int64_t placed = 0; // barriers elision placed, dropped one included
 	int bound_kernel = -1;
 	int64_t bound_set0 = 0;
 	const bool ts = c.timestamps || env_int("GGML_RD_TIMESTAMPS") != 0;
@@ -212,6 +247,7 @@ ggml_status graph_compute(ggml_cgraph *g) {
 	}
 	d.list_begin();
 	for (uint32_t i = 0; i < n; ++i) {
+		const int64_t t_rec0 = prof > 1 ? rdc::host_usec() : 0;
 		const Dispatch &dp = ds[i];
 		bool hazard = barrier_all && i > 0;
 		for (int r = 0; r < dp.nreads && !hazard; ++r) {
@@ -221,10 +257,20 @@ ggml_status graph_compute(ggml_cgraph *g) {
 			hazard = overlaps(seg_writes, dp.write) || overlaps(seg_reads, dp.write); // WAW, WAR
 		}
 		if (hazard) {
-			d.barrier(); // Godot re-binds the pipeline and sets after it
-			++barriers;
+			++placed;
+			if (drop_barrier > 0 && placed == drop_barrier && !barrier_all) {
+				// The control: this barrier is required (a hazard), and is left out.
+				c.last_dropped = "barrier " + std::to_string(placed) + " before dispatch " + std::to_string(i) +
+						" " + node_desc(dp.node);
+			} else {
+				d.barrier(); // Godot re-binds the pipeline and sets after it
+				++barriers;
+			}
 			seg_reads.clear();
 			seg_writes.clear();
+			if (prof > 1) {
+				pf.per_dispatch[i].barrier = true;
+			}
 		}
 		for (int r = 0; r < dp.nreads; ++r) {
 			seg_reads.push_back(dp.reads[r]);
@@ -240,14 +286,25 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		}
 		d.bind_uniform_set(slot_set(i), SET_SLOT);
 		d.dispatch(dp.groups[0], dp.groups[1], dp.groups[2]);
+		if (prof > 1) {
+			pf.per_dispatch[i].record_us = rdc::host_usec() - t_rec0;
+		}
 	}
 	d.list_end();
+	const int64_t t_recorded = clock();
 	if (ts) {
 		d.capture_timestamp("ggml_rd_graph_end");
 		c.ts_armed = true;
 	}
 	d.submit();
 	c.pending = true;
+	const int64_t t_submitted = clock();
+	pf.barriers = barriers;
+	pf.us_prepare = t_prepared - t_packed;
+	pf.us_upload = t_uploaded - t_prepared;
+	pf.us_record = t_recorded - t_uploaded;
+	pf.us_submit = t_submitted - t_recorded;
+	pf.us_total = t_submitted - t_entry;
 
 	c.st.dispatches += n;
 	c.st.barriers += barriers;

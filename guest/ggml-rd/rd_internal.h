@@ -49,6 +49,9 @@ struct Ctx {
 	int64_t last_gpu_ns = -1;
 	Stats st;
 	std::string last_error;
+	int profile_level = 0; // ggml_backend_rd_set_profile
+	ggml_rd_profile profile; // the last graph's
+	std::string last_dropped; // GGML_RD_DROP_BARRIER: the dispatch after the dropped barrier
 };
 
 Ctx &ctx();

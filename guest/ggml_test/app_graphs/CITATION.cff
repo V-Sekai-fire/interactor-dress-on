@@ -1,0 +1,62 @@
+cff-version: 1.2.0
+message: If you use this code, cite the two ggml applications its graph builders are copied from.
+title: skin-tokens-ggml and pixal3d-ggml graph builders (copied for Gate 3)
+abstract: >-
+  The ggml graph builders Gate 3 (G3.graph, G3.cost) runs on random weights,
+  copied function by function so the gate builds the apps' own op sequences
+  without vendoring either app. From skin-tokens-ggml src/qwen.cpp: linear,
+  rms, repeat_kv, repeat_kv_batched, qwen_graph_evaluator::cache_view and
+  ::decode_layer, and the graph part of ::decode (embedding rows, the decoder
+  layers, the final norm, the logits). From pixal3d-ggml trellis2.cpp:
+  sdpa_auto (the flash-attention path), timestep_embedding, rope_tables and
+  the graph of trellis2_ss_flow_forward (the stem, the shared modulation, the
+  block body with its lin/modulate/rope/qk_norm lambdas, the head), and
+  build_neighbor_indices and one level of shape_dec_run's graph (the child
+  head, the ConvNeXt blocks and the up-block's part A, each submanifold 3^3
+  conv as 27 x get_rows + mask mul + mul_mat).
+
+
+  Adapted: the model lookups (weights_.tensor, m->tensors) are a name ->
+  tensor function; decode_layer and decode take the KV caches and weights as
+  parameters instead of evaluator members, and decode builds only the graph
+  (allocation, inputs and readback are the caller's); the flow's lambdas are
+  members of one struct shared by block() and forward(); sdpa_auto always
+  takes the flash-attention path (the app's TRELLIS2_SDPA_EXACT switch is
+  dropped); the DiT block gains Pixal3D's one change to TRELLIS.2's
+  cross-attention, ProjectAttention's proj_linear(proj) added to the
+  cross-attention output (V-Sekai-fire/Pixal3D cdbb2bb,
+  pixal3d/modules/attention/proj_attention.py); the sparse level names its
+  child-head up-block by this level's block count. Op sequences, shapes,
+  epsilons and scales are the apps'.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: rms80
+  - name: VAST-AI-Research contributors (SkinTokens, TokenRig)
+repository-code: https://github.com/V-Sekai-fire/skin-tokens-ggml
+commit: 097a0cc469f49650cbf87e83914ad7d93ce94e50
+license:
+  - Apache-2.0
+  - MIT
+references:
+  - type: software
+    title: skin-tokens-ggml (src/qwen.cpp)
+    authors:
+      - name: V-Sekai-fire
+    repository-code: https://github.com/V-Sekai-fire/skin-tokens-ggml
+    commit: 097a0cc469f49650cbf87e83914ad7d93ce94e50
+    license: Apache-2.0
+  - type: software
+    title: pixal3d-ggml (trellis2.cpp)
+    authors:
+      - name: rms80
+      - name: V-Sekai-fire
+    repository-code: https://github.com/V-Sekai-fire/pixal3d-ggml
+    commit: 1c22f5e98c90e8cf00d12e99547c8d524421f532
+    license: MIT
+  - type: software
+    title: Pixal3D (proj_attention.py, the ProjectAttention cross-attention)
+    authors:
+      - name: TencentARC
+    repository-code: https://github.com/V-Sekai-fire/Pixal3D
+    commit: cdbb2bb

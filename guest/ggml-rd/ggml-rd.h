@@ -23,13 +23,18 @@
 // Environment (read on every graph): GGML_RD_BARRIER_ALL=1 puts a barrier
 // after every dispatch; GGML_RD_FAULT=<n> corrupts the params of every n-th
 // dispatch (a source offset +1 element), the control that shows a wrong
-// kernel result is caught.
+// kernel result is caught; GGML_RD_DROP_BARRIER=<k> leaves out the k-th
+// barrier (1-based) that elision places in each graph, the control that
+// shows a missing barrier is caught (Gate 3 G3.graph); GGML_RD_PROFILE=<1|2>
+// times graph_compute on the host clock (ggml_backend_rd_last_profile).
 #pragma once
 
 #include <api.hpp>
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
+#include <vector>
 
 #include "ggml-backend.h"
 
@@ -97,6 +102,35 @@ void ggml_backend_rd_last_graph(int64_t *dispatches, int64_t *barriers);
 void ggml_backend_rd_set_timestamps(bool on);
 int64_t ggml_backend_rd_last_gpu_ns(void);
 std::string ggml_backend_rd_last_error(void);
+
+// Host-clock profile of the last graph_compute (rdc::host_usec, one host call
+// per reading; the guest clock is not a clock). Level 1 times the phases (7
+// readings per graph); level 2 also each dispatch's packing and its
+// recording (bind, set, barrier, dispatch: 3 more readings per dispatch).
+// Level 0 (the default) reads the clock not at all. GGML_RD_PROFILE=<level>
+// overrides the level set here. Measurement only (Gate 3 G3.cost).
+struct ggml_rd_profile_dispatch {
+	const ggml_tensor *node = nullptr;
+	int kernel = -1;
+	bool barrier = false; // a barrier was recorded before it
+	int64_t pack_us = 0, record_us = 0;
+};
+struct ggml_rd_profile {
+	int level = 0;
+	int64_t nodes = 0, dispatches = 0, barriers = 0, skipped = 0;
+	// pack: every node packed; prepare: pipelines, slot sets and set-0 sets
+	// (and any COOP yields they took); upload: the params table; record: the
+	// compute list; submit: submit(). total: graph_compute from entry to return.
+	int64_t us_pack = 0, us_prepare = 0, us_upload = 0, us_record = 0, us_submit = 0, us_total = 0;
+	std::vector<ggml_rd_profile_dispatch> per_dispatch; // level 2
+};
+void ggml_backend_rd_set_profile(int level);
+const ggml_rd_profile &ggml_backend_rd_last_profile(void);
+// The kernel a dispatch ran, by the id in ggml_rd_profile_dispatch.
+const char *ggml_backend_rd_kernel_name(int kernel);
+// Under GGML_RD_DROP_BARRIER=<k>: the dispatch the dropped barrier preceded
+// in the last graph ("" if the graph had fewer than k barriers).
+std::string ggml_backend_rd_last_dropped(void);
 
 // Free every pipeline, shader, uniform set and the params and slot buffers
 // (the ggml buffers are their owners' to free first).

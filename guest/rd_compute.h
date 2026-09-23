@@ -58,6 +58,12 @@ struct Binding {
 // slot of their own (rd_compute.cpp explains the cache). Evidence for gates.
 std::string name_slots();
 
+// The host's clock, Time.get_ticks_usec() (a host call; the guest clock is
+// not a clock, AGENTS.md). Its method name sits in the name cache slot of
+// create_local_rendering_device, a name the recording loop never calls, so
+// timing a recording does not evict the names it times.
+int64_t host_usec();
+
 class Device {
 public:
 	// Create a local RenderingDevice through RenderingServer. Requires a real

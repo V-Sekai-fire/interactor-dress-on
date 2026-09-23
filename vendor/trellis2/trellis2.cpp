@@ -15,6 +15,8 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <cctype>
+#include <iterator>
 #include <fstream>
 #include <limits>
 #include <cstdlib>
@@ -199,6 +201,14 @@ struct trellis2_ss_flow_model {
 
     // name -> tensor (into ctx); built once at load for O(1) graph wiring later.
     std::unordered_map<std::string, ggml_tensor *> tensors;
+
+    // Pixal3D proj conditioning (trellis2_ss_flow_set_proj).
+    trellis2_proj_camera            proj_cam;
+    std::vector<std::vector<float>> proj_maps;      // token-major [h*w][c]
+    std::vector<std::array<int, 3>> proj_dims;      // h, w, c
+    bool proj_off       = false;                    // negative CFG branch
+    int  dbg_max_blocks = 0;
+    bool dbg_proj_zero  = false;
 };
 
 namespace {
@@ -255,6 +265,157 @@ const char * kv_str(const gguf_context * g, const char * key, const char * def) 
     return id < 0 ? def : gguf_get_val_str(g, id);
 }
 
+// ── Aero-Ex GGUFs (ComfyUI-GGUF layout, general.architecture = "flux") ──────
+// The Pixal3D-GGUF flows carry torch-key names, no trellis2.* hparams and
+// ComfyUI's reshapes. aeroex_adapt() turns one into what the graph code
+// expects, before the weights are allocated:
+//   - hparams come from the ckpt's sidecar .json ("args"), not the GGUF;
+//   - "blocks.N.cross_attn.cross_attn_block.X" -> "blocks.N.cross_attn.X"
+//     (proj_linear keeps "blocks.N.cross_attn.proj_linear");
+//   - comfy.gguf.orig_shape.<name> restores the torch shape (same bytes);
+//   - "rope_phases" (a complex buffer stored as lossy F16) is ignored: the
+//     graph recomputes the phases from the hparams (rope_tables);
+//   - the q/k RMS-norm gammas (elementwise, F16 on disk) are widened to F32.
+//     BF16/F16 matmul weights stay as they are (ggml-cpu and ggml-vulkan both
+//     have bf16 x f32 mul_mat).
+std::string read_text_file(const std::string & path) {
+    std::ifstream f(path, std::ios::binary);
+    if (!f) return std::string();
+    return std::string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+}
+
+// First `"key": scalar` in a JSON text (no nesting awareness; the ckpt jsons
+// are flat "args" objects). Strings are returned without quotes.
+bool json_scalar(const std::string & j, const char * key, std::string & val) {
+    const std::string pat = std::string("\"") + key + "\"";
+    size_t p = j.find(pat);
+    if (p == std::string::npos) return false;
+    p = j.find(':', p + pat.size());
+    if (p == std::string::npos) return false;
+    ++p;
+    while (p < j.size() && std::isspace((unsigned char) j[p])) ++p;
+    if (p < j.size() && j[p] == '"') {
+        const size_t e = j.find('"', p + 1);
+        if (e == std::string::npos) return false;
+        val = j.substr(p + 1, e - p - 1);
+        return true;
+    }
+    size_t e = p;
+    while (e < j.size() && j[e] != ',' && j[e] != '}' && j[e] != ']' && j[e] != '\n' && j[e] != '\r') ++e;
+    val = j.substr(p, e - p);
+    while (!val.empty() && std::isspace((unsigned char) val.back())) val.pop_back();
+    return true;
+}
+double json_num(const std::string & j, const char * key, double def) {
+    std::string v;
+    return json_scalar(j, key, v) ? std::atof(v.c_str()) : def;
+}
+bool json_bool(const std::string & j, const char * key, bool def) {
+    std::string v;
+    return json_scalar(j, key, v) ? (v == "true") : def;
+}
+std::string json_str(const std::string & j, const char * key, const char * def) {
+    std::string v;
+    return json_scalar(j, key, v) ? v : std::string(def);
+}
+
+std::string sidecar_json_path(const std::string & gguf_path) {
+    const size_t dot = gguf_path.rfind('.');
+    return (dot == std::string::npos ? gguf_path : gguf_path.substr(0, dot)) + ".json";
+}
+
+// by_index[i] = the ctx tensor of GGUF tensor i (taken before any rename);
+// widened[t] = the on-disk type of a tensor whose ctx type was changed to F32.
+struct weight_plan {
+    std::vector<ggml_tensor *> by_index;
+    std::unordered_map<const ggml_tensor *, ggml_type> widened;
+};
+
+void plan_identity(gguf_context * g, ggml_context * ctx, weight_plan & wp) {
+    const int64_t nt = gguf_get_n_tensors(g);
+    wp.by_index.resize((size_t) nt);
+    for (int64_t i = 0; i < nt; ++i) wp.by_index[(size_t) i] = ggml_get_tensor(ctx, gguf_get_tensor_name(g, i));
+}
+
+void set_contiguous_strides(ggml_tensor * t) {
+    t->nb[0] = ggml_type_size(t->type);
+    t->nb[1] = t->nb[0] * (t->ne[0] / ggml_blck_size(t->type));
+    for (int d = 2; d < GGML_MAX_DIMS; ++d) t->nb[d] = t->nb[d - 1] * t->ne[d - 1];
+}
+
+// Rename, reshape and widen an Aero-Ex GGUF's tensors in ctx (no data yet).
+void aeroex_adapt(gguf_context * g, ggml_context * ctx, weight_plan & wp) {
+    plan_identity(g, ctx, wp);
+    for (ggml_tensor * t : wp.by_index) {
+        if (!t) continue;
+        const std::string name = t->name;
+        // comfy.gguf.orig_shape.<name>: torch order; ggml ne is reversed.
+        const std::string key = "comfy.gguf.orig_shape." + name;
+        const int64_t id = gguf_find_key(g, key.c_str());
+        if (id >= 0 && gguf_get_arr_type(g, id) == GGUF_TYPE_INT32) {
+            const size_t nd = gguf_get_arr_n(g, id);
+            const int32_t * dims = (const int32_t *) gguf_get_arr_data(g, id);
+            int64_t ne[GGML_MAX_DIMS] = {1, 1, 1, 1};
+            int64_t n = 1;
+            for (size_t d = 0; d < nd && d < GGML_MAX_DIMS; ++d) {
+                ne[d] = dims[nd - 1 - d];
+                n *= ne[d];
+            }
+            if (n == ggml_nelements(t)) {
+                for (int d = 0; d < GGML_MAX_DIMS; ++d) t->ne[d] = ne[d];
+                set_contiguous_strides(t);
+            }
+        }
+        // Elementwise operands go to F32 (ggml_mul wants f32 on both sides).
+        const bool gamma = name.size() > 6 && name.compare(name.size() - 6, 6, ".gamma") == 0;
+        if (gamma && t->type != GGML_TYPE_F32) {
+            wp.widened[t] = t->type;
+            t->type = GGML_TYPE_F32;
+            set_contiguous_strides(t);
+        }
+        // Torch-key name -> trellis2.cpp name.
+        const std::string from = ".cross_attn.cross_attn_block.";
+        const size_t p = name.find(from);
+        if (p != std::string::npos) {
+            const std::string to = name.substr(0, p) + ".cross_attn." + name.substr(p + from.size());
+            ggml_set_name(t, to.c_str());
+        }
+    }
+}
+
+// Stream the payloads from the file into the allocated tensors, widening the
+// planned ones. Replaces the per-loader read loops for the flow models.
+bool load_planned_weights(gguf_context * g, const weight_plan & wp, const std::string & path,
+                          std::string * error) {
+    std::ifstream fin(path, std::ios::binary);
+    if (!fin) { set_error(error, "cannot reopen file for weight data: " + path); return false; }
+    const size_t data_off = gguf_get_data_offset(g);
+    std::vector<uint8_t> buf;
+    std::vector<float> wide;
+    for (size_t i = 0; i < wp.by_index.size(); ++i) {
+        ggml_tensor * t = wp.by_index[i];
+        if (!t) continue;
+        auto it = wp.widened.find(t);
+        const ggml_type src = it == wp.widened.end() ? t->type : it->second;
+        const size_t nb = (size_t) ggml_nelements(t) / ggml_blck_size(src) * ggml_type_size(src);
+        const size_t off = data_off + gguf_get_tensor_offset(g, (int64_t) i);
+        buf.resize(nb);
+        fin.seekg((std::streamoff) off, std::ios::beg);
+        if (!fin.read(reinterpret_cast<char *>(buf.data()), (std::streamsize) nb)) {
+            set_error(error, std::string("failed reading weight '") + gguf_get_tensor_name(g, (int64_t) i) + "' from file");
+            return false;
+        }
+        if (src != t->type) {
+            wide.resize((size_t) ggml_nelements(t));
+            ggml_get_type_traits(src)->to_float(buf.data(), wide.data(), ggml_nelements(t));
+            ggml_backend_tensor_set(t, wide.data(), 0, wide.size() * sizeof(float));
+        } else {
+            ggml_backend_tensor_set(t, buf.data(), 0, nb);
+        }
+    }
+    return true;
+}
+
 } // namespace
 
 size_t trellis2_gpu_free_vram(void) {
@@ -286,14 +447,46 @@ trellis2_ss_flow_load(const std::string & path, bool load_tensors, std::string *
 
     // Sanity-check the architecture tag.
     const char * arch = kv_str(m->gguf, "general.architecture", "");
-    if (std::strcmp(arch, "trellis2-ss-flow") != 0) {
+    weight_plan wp;
+    if (std::strcmp(arch, "flux") == 0) {
+        // Aero-Ex Pixal3D GGUF: hparams from the ckpt json next to it.
+        const std::string jp = sidecar_json_path(path);
+        const std::string j  = read_text_file(jp);
+        if (j.empty()) {
+            set_error(error, "arch 'flux' needs the ckpt json next to the GGUF: " + jp);
+            trellis2_ss_flow_free(m);
+            return nullptr;
+        }
+        trellis2_ss_flow_hparams & hp = m->hp;
+        hp.resolution        = (int32_t) json_num(j, "resolution", 0);
+        hp.in_channels       = (int32_t) json_num(j, "in_channels", 0);
+        hp.out_channels      = (int32_t) json_num(j, "out_channels", 0);
+        hp.model_channels    = (int32_t) json_num(j, "model_channels", 0);
+        hp.cond_channels     = (int32_t) json_num(j, "cond_channels", 0);
+        hp.num_blocks        = (int32_t) json_num(j, "num_blocks", 0);
+        hp.num_heads         = (int32_t) json_num(j, "num_heads", 0);
+        hp.mlp_ratio         = (float)   json_num(j, "mlp_ratio", 4.0);
+        hp.share_mod         = json_bool(j, "share_mod", false) ? 1 : 0;
+        hp.qk_rms_norm       = json_bool(j, "qk_rms_norm", false) ? 1 : 0;
+        hp.qk_rms_norm_cross = json_bool(j, "qk_rms_norm_cross", false) ? 1 : 0;
+        hp.rope_freq_min     = 1.0f;       // RotaryPositionEmbedder defaults
+        hp.rope_freq_base    = 10000.0f;
+        hp.file_type         = 2;          // bf16 blocks (GGUF file_type 32)
+        std::snprintf(hp.pe_mode, sizeof(hp.pe_mode), "%s", json_str(j, "pe_mode", "ape").c_str());
+        hp.image_attn_proj   = json_str(j, "image_attn_mode", "cross") == "proj" ? 1 : 0;
+        hp.proj_in_channels  = (int32_t) json_num(j, "proj_in_channels", hp.cond_channels);
+        aeroex_adapt(m->gguf, m->ctx, wp);
+    } else if (std::strcmp(arch, "trellis2-ss-flow") != 0) {
         set_error(error, std::string("unexpected architecture '") + arch +
-                         "' (expected 'trellis2-ss-flow')");
+                         "' (expected 'trellis2-ss-flow' or Aero-Ex 'flux')");
         trellis2_ss_flow_free(m);
         return nullptr;
+    } else {
+        plan_identity(m->gguf, m->ctx, wp);
     }
 
     trellis2_ss_flow_hparams & hp = m->hp;
+    if (std::strcmp(arch, "flux") != 0) {
     const char * P = "trellis2.ss_flow.";
     auto K = [&](const char * suffix) { return std::string(P) + suffix; };
 
@@ -313,11 +506,18 @@ trellis2_ss_flow_load(const std::string & path, bool load_tensors, std::string *
     hp.file_type         = (int32_t) kv_u32 (m->gguf, "general.file_type", 0);
     std::snprintf(hp.pe_mode, sizeof(hp.pe_mode), "%s",
                   kv_str(m->gguf, K("pe_mode").c_str(), "rope"));
+    }
 
-    // Build name -> tensor map.
+    // Build name -> tensor map (after any Aero-Ex rename).
     for (ggml_tensor * t = ggml_get_first_tensor(m->ctx); t != nullptr;
          t = ggml_get_next_tensor(m->ctx, t)) {
         m->tensors[t->name] = t;
+    }
+    // proj mode can also be read off the tensors (census sec. 5).
+    auto pl = m->tensors.find("blocks.0.cross_attn.proj_linear.weight");
+    if (pl != m->tensors.end()) {
+        hp.image_attn_proj  = 1;
+        hp.proj_in_channels = (int32_t) pl->second->ne[0];
     }
 
     if (load_tensors) {
@@ -330,29 +530,9 @@ trellis2_ss_flow_load(const std::string & path, bool load_tensors, std::string *
             trellis2_ss_flow_free(m);
             return nullptr;
         }
-
-        std::ifstream fin(path, std::ios::binary);
-        if (!fin) {
-            set_error(error, "cannot reopen file for weight data: " + path);
+        if (!load_planned_weights(m->gguf, wp, path, error)) {
             trellis2_ss_flow_free(m);
             return nullptr;
-        }
-        const size_t data_off = gguf_get_data_offset(m->gguf);
-        const int64_t nt = gguf_get_n_tensors(m->gguf);
-        std::vector<uint8_t> buf;
-        for (int64_t i = 0; i < nt; ++i) {
-            const char * name = gguf_get_tensor_name(m->gguf, i);
-            ggml_tensor * t = m->tensors[name];
-            const size_t nb  = ggml_nbytes(t);
-            const size_t off = data_off + gguf_get_tensor_offset(m->gguf, i);
-            buf.resize(nb);
-            fin.seekg((std::streamoff) off, std::ios::beg);
-            if (!fin.read(reinterpret_cast<char *>(buf.data()), (std::streamsize) nb)) {
-                set_error(error, std::string("failed reading weight '") + name + "' from file");
-                trellis2_ss_flow_free(m);
-                return nullptr;
-            }
-            ggml_backend_tensor_set(t, buf.data(), 0, nb);
         }
         m->has_data = true;
     }
@@ -401,6 +581,77 @@ bool trellis2_ss_flow_get_tensor_info(const trellis2_ss_flow_model * m,
 bool trellis2_ss_flow_has_tensor(const trellis2_ss_flow_model * m,
                                  const std::string & name) {
     return m && m->tensors.find(name) != m->tensors.end();
+}
+
+/*****************************************************************************
+** Pixal3D proj conditioning: camera, tap table, feature maps
+*****************************************************************************/
+
+float trellis2_proj_distance(float fov, float mesh_scale, int image_size, int extend_pixel) {
+    // inference.py distance_from_fov with grid point (-1,0,0) -> pixel column
+    // -extend_pixel: d = f_px * (1/(2s)) / (R/2 + extend_pixel).
+    const double f_px = (16.0 / std::tan((double) fov / 2.0)) * image_size / 32.0;
+    return (float) (f_px * (1.0 / (2.0 * mesh_scale)) / (image_size / 2.0 + extend_pixel));
+}
+
+void trellis2_proj_taps(const trellis2_proj_camera & cam, int G,
+                        const int32_t * coords, int n, int fh, int fw,
+                        int32_t * idx, float * wt) {
+    // gates/3-ggml-rd/census/proj_attention.md sec. 2 (checked against the
+    // upstream ProjGrid + grid_sample by check_proj_gather.py).
+    const double R = cam.image_size, s = cam.mesh_scale, d = cam.distance;
+    const double f = R / (2.0 * std::tan((double) cam.fov / 2.0));
+    auto lin = [&](int i) -> double {                 // torch.linspace(-1, 1, G), f32
+        return G > 1 ? (double) (float) (-1.0 + 2.0 * i / (G - 1)) : -1.0;
+    };
+    for (int p = 0; p < n; ++p) {
+        int ci, cj, ck;
+        if (coords) { ci = coords[3 * p]; cj = coords[3 * p + 1]; ck = coords[3 * p + 2]; }
+        else        { ci = p / (G * G); cj = (p / G) % G; ck = p % G; }
+        const double X = lin(ci) / (2 * s), Y = lin(cj) / (2 * s), Z = lin(ck) / (2 * s);
+        const double depth = d - Z;
+        const double u = R / 2 + f * X / (depth + 1e-8);
+        const double v = R / 2 - f * Y / (depth + 1e-8);
+        double ix = (u + 0.5) * fw / R - 0.5, iy = (v + 0.5) * fh / R - 0.5;
+        ix = std::min(std::max(ix, 0.0), (double) (fw - 1));
+        iy = std::min(std::max(iy, 0.0), (double) (fh - 1));
+        const int x0 = (int) std::floor(ix), y0 = (int) std::floor(iy);
+        const int x1 = std::min(x0 + 1, fw - 1), y1 = std::min(y0 + 1, fh - 1);
+        const double wx = ix - x0, wy = iy - y0;
+        idx[0 * n + p] = y0 * fw + x0; wt[0 * n + p] = (float) ((1 - wx) * (1 - wy));
+        idx[1 * n + p] = y0 * fw + x1; wt[1 * n + p] = (float) (wx * (1 - wy));
+        idx[2 * n + p] = y1 * fw + x0; wt[2 * n + p] = (float) ((1 - wx) * wy);
+        idx[3 * n + p] = y1 * fw + x1; wt[3 * n + p] = (float) (wx * wy);
+    }
+}
+
+bool trellis2_ss_flow_set_proj(trellis2_ss_flow_model * m, const trellis2_proj_camera & cam,
+                               const trellis2_proj_fmap * maps, int n_maps, std::string * error) {
+    if (!m) { set_error(error, "null model"); return false; }
+    m->proj_maps.clear();
+    m->proj_dims.clear();
+    if (n_maps <= 0) return true;
+    if (!m->hp.image_attn_proj) { set_error(error, "model is not in proj mode"); return false; }
+    int csum = 0;
+    for (int i = 0; i < n_maps; ++i) csum += maps[i].c;
+    if (csum != m->hp.proj_in_channels) {
+        set_error(error, "proj maps carry " + std::to_string(csum) + " channels, model wants " +
+                         std::to_string(m->hp.proj_in_channels));
+        return false;
+    }
+    m->proj_cam = cam;
+    for (int i = 0; i < n_maps; ++i) {
+        const size_t cnt = (size_t) maps[i].h * maps[i].w * maps[i].c;
+        m->proj_maps.emplace_back(maps[i].data, maps[i].data + cnt);
+        m->proj_dims.push_back({ maps[i].h, maps[i].w, maps[i].c });
+    }
+    return true;
+}
+
+void trellis2_ss_flow_debug(trellis2_ss_flow_model * m, int max_blocks, bool proj_zero) {
+    if (!m) return;
+    m->dbg_max_blocks = max_blocks;
+    m->dbg_proj_zero  = proj_zero;
 }
 
 /*****************************************************************************
@@ -552,6 +803,41 @@ bool trellis2_ss_flow_forward(trellis2_ss_flow_model * m,
         if (b) y = ggml_add(ctx, y, b);
         return y;
     };
+
+    // ── Pixal3D proj: gather the fmaps at the voxels' projections ────────────
+    // proj[:, n] = sum_k w_k[n] * F[:, idx_k[n]]  (4 GET_ROWS + MUL + ADD per
+    // map, CONCAT over maps -> [P, N]); the tap table is built on the host.
+    const bool proj_mode = hp.image_attn_proj != 0;
+    const bool proj_on   = proj_mode && !m->proj_off && !m->dbg_proj_zero && !m->proj_maps.empty();
+    if (proj_mode && !m->proj_off && !m->dbg_proj_zero && m->proj_maps.empty()) {
+        set_error(error, "proj-mode model: call trellis2_ss_flow_set_proj first");
+        ggml_free(ctx);
+        return false;
+    }
+    struct proj_leaf { ggml_tensor * F; ggml_tensor * idx[4]; ggml_tensor * w[4]; };
+    std::vector<proj_leaf> pleaves;
+    ggml_tensor * proj = nullptr;                                    // [P, N]
+    if (proj_on) {
+        for (size_t i = 0; i < m->proj_maps.size(); ++i) {
+            const auto & dm = m->proj_dims[i];
+            proj_leaf L;
+            L.F = ggml_new_tensor_2d(ctx, GGML_TYPE_F32, dm[2], (int64_t) dm[0] * dm[1]);
+            ggml_set_input(L.F);
+            ggml_tensor * g = nullptr;
+            for (int k = 0; k < 4; ++k) {
+                L.idx[k] = ggml_new_tensor_1d(ctx, GGML_TYPE_I32, N);
+                L.w[k]   = ggml_new_tensor_2d(ctx, GGML_TYPE_F32, 1, N);
+                ggml_set_input(L.idx[k]);
+                ggml_set_input(L.w[k]);
+                ggml_tensor * tap = ggml_mul(ctx, ggml_get_rows(ctx, L.F, L.idx[k]), L.w[k]);
+                g = g ? ggml_add(ctx, g, tap) : tap;
+            }
+            proj = proj ? ggml_concat(ctx, proj, g, 0) : g;
+            pleaves.push_back(L);
+        }
+    }
+    const int n_blocks = (m->dbg_max_blocks > 0 && m->dbg_max_blocks < hp.num_blocks)
+                       ? m->dbg_max_blocks : hp.num_blocks;
     // h * (1 + scale) + shift, broadcasting the [C] vectors over tokens.
     auto modulate = [&](ggml_tensor * h, ggml_tensor * scale, ggml_tensor * shift) {
         return ggml_add(ctx, ggml_add(ctx, ggml_mul(ctx, h, scale), h), shift);
@@ -590,7 +876,7 @@ bool trellis2_ss_flow_forward(trellis2_ss_flow_model * m,
 
     ggml_tensor * cond_h = cnd;                                   // [ctx_ch, Lkv]
 
-    for (int b = 0; b < hp.num_blocks; ++b) {
+    for (int b = 0; b < n_blocks; ++b) {
         const std::string blk = "blocks." + std::to_string(b);
         ggml_tensor * mods = ggml_add(ctx, W(blk + ".modulation"), tmod); // [6C]
         auto chunk = [&](int idx) {
@@ -620,6 +906,10 @@ bool trellis2_ss_flow_forward(trellis2_ss_flow_model * m,
         ggml_tensor * cv = ggml_reshape_3d(ctx, ggml_cont(ctx, ggml_view_2d(ctx, kv, C, Lkv, kv->nb[1], (size_t)C*es)), hd, H, Lkv);
         ck = qk_norm(ck, blk + ".cross_attn.k_rms_norm.gamma");
         ggml_tensor * ca = lin(sdpa(cq, ck, cv), blk + ".cross_attn.to_out");
+        if (proj_mode) {   // ProjectAttention: proj_linear(proj) + CrossAttn(h, global)
+            ca = ggml_add(ctx, ca, proj ? lin(proj, blk + ".cross_attn.proj_linear")
+                                        : W(blk + ".cross_attn.proj_linear.bias"));
+        }
         h = ggml_add(ctx, h, ca);
 
         // feed-forward (norm3 affine-free, modulated; GELU-tanh)
@@ -664,6 +954,19 @@ bool trellis2_ss_flow_forward(trellis2_ss_flow_model * m,
     ggml_backend_tensor_set(cos_t, cosv.data(), 0, cosv.size() * es);
     ggml_backend_tensor_set(sin_t, sinv.data(), 0, sinv.size() * es);
     ggml_backend_tensor_set(cnd,   cond,        0, (size_t) cond_channels * Lkv * es);
+    if (proj_on) {
+        std::vector<int32_t> idx((size_t) 4 * N);
+        std::vector<float>   wt((size_t) 4 * N);
+        for (size_t i = 0; i < pleaves.size(); ++i) {
+            const auto & dm = m->proj_dims[i];
+            trellis2_proj_taps(m->proj_cam, R, nullptr, N, dm[0], dm[1], idx.data(), wt.data());
+            ggml_backend_tensor_set(pleaves[i].F, m->proj_maps[i].data(), 0, m->proj_maps[i].size() * es);
+            for (int k = 0; k < 4; ++k) {
+                ggml_backend_tensor_set(pleaves[i].idx[k], idx.data() + (size_t) k * N, 0, (size_t) N * sizeof(int32_t));
+                ggml_backend_tensor_set(pleaves[i].w[k],   wt.data()  + (size_t) k * N, 0, (size_t) N * es);
+            }
+        }
+    }
     auto t_upload = t_now();
 
     const ggml_status st = ggml_backend_graph_compute(backend, gf);
@@ -765,8 +1068,12 @@ bool trellis2_ss_flow_sample(trellis2_ss_flow_model * m,
     if (P.preview) x0_view.resize(n);
 
     auto fwd = [&](double t, const float * c, std::vector<float> & dst) -> bool {
-        return trellis2_ss_flow_forward(m, x_t.data(), (float) (1000.0 * t),
-                                        c, cond_tokens, cond_channels, dst.data(), error);
+        // Pixal3D negative branch: {global: 0, proj: 0} -> proj_linear = bias.
+        m->proj_off = (c == zero_cond.data());
+        const bool ok = trellis2_ss_flow_forward(m, x_t.data(), (float) (1000.0 * t),
+                                                 c, cond_tokens, cond_channels, dst.data(), error);
+        m->proj_off = false;
+        return ok;
     };
 
     for (int i = 0; i < P.steps; ++i) {

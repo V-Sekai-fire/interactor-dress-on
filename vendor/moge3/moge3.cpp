@@ -113,12 +113,18 @@ moge3_model * moge3_load(const std::string & path, int n_threads, std::string * 
     for (ggml_tensor * x = ggml_get_first_tensor(m->ctx); x; x = ggml_get_next_tensor(m->ctx, x))
         m->t[x->name] = x;
 
-    m->backend = ggml_backend_cpu_init();
     if (n_threads <= 0) {
         n_threads = 8;
         if (const char * e = std::getenv("MOGE3_N_THREADS")) { const int v = std::atoi(e); if (v > 0) n_threads = v; }
     }
-    ggml_backend_cpu_set_n_threads(m->backend, n_threads);
+    // ggml-vulkan (the host GPU) unless IDO_GGML_BACKEND=cpu or no GPU device
+    // is registered.
+    const char * be = std::getenv("IDO_GGML_BACKEND");
+    if (!(be && std::strcmp(be, "cpu") == 0)) m->backend = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_GPU, nullptr);
+    if (!m->backend) {
+        m->backend = ggml_backend_cpu_init();
+        ggml_backend_cpu_set_n_threads(m->backend, n_threads);
+    }
     m->buf = ggml_backend_alloc_ctx_tensors(m->ctx, m->backend);
     if (!m->buf) { set_error(error, "weight allocation failed"); moge3_free(m); return nullptr; }
 
@@ -301,7 +307,14 @@ struct Graph {
     }
     void output(ggml_tensor * x) { ggml_set_output(x); ggml_build_forward_expand(gf, x); }
     bool run(ggml_backend_t be, std::string * error) {
-        alloc = ggml_gallocr_new(ggml_backend_cpu_buffer_type());
+        for (int i = 0; i < ggml_graph_n_nodes(gf); ++i) {
+            ggml_tensor * n = ggml_graph_node(gf, i);
+            if (!ggml_backend_supports_op(be, n)) {
+                set_error(error, std::string(ggml_backend_name(be)) + " does not support " + ggml_op_desc(n));
+                return false;
+            }
+        }
+        alloc = ggml_gallocr_new(ggml_backend_get_default_buffer_type(be));
         if (!ggml_gallocr_alloc_graph(alloc, gf)) { set_error(error, "ggml_gallocr_alloc_graph failed"); return false; }
         return true;
     }
@@ -623,4 +636,29 @@ bool moge3_fov(moge3_model * m, const uint8_t * rgb, int W, int H,
         taps->fov_mask = std::move(msk);
     }
     return true;
+}
+
+const char * moge3_backend_name(const moge3_model * m) { return m && m->backend ? ggml_backend_name(m->backend) : ""; }
+
+// ── C API ──
+namespace { thread_local std::string g_moge3_err; }
+
+extern "C" {
+moge3_model * moge3_open(const char * gguf_path, int n_threads) {
+    std::string err;
+    moge3_model * m = moge3_load(gguf_path ? gguf_path : "", n_threads, &err);
+    if (!m) g_moge3_err = err;
+    return m;
+}
+void moge3_close(moge3_model * m) { moge3_free(m); }
+const char * moge3_last_error(void) { return g_moge3_err.c_str(); }
+double moge3_fov_radians(moge3_model * m, const uint8_t * rgb, int size) {
+    moge3_fov_result r;
+    std::string err;
+    if (!m || !rgb || !moge3_fov(m, rgb, size, size, r, nullptr, &err)) {
+        g_moge3_err = m ? err : "moge3_fov_radians: no model";
+        return -1.0;
+    }
+    return r.camera_angle_x;
+}
 }

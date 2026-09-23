@@ -104,3 +104,26 @@ std::vector<int32_t> window_table(int hk, int ks = 9);   // [hk*hk*ks*ks]
 std::vector<int32_t> block_perm(int T, int d);           // slot -> raster pixel
 
 }  // namespace naf
+
+// ── C API (what the Stage 7 host GDExtension calls) ────────────────────────
+// One handle = one model on ggml-vulkan (IDO_GGML_BACKEND=cpu forces ggml-cpu).
+// Output is raster, channels-last: pixel (y, x) of the out_res x out_res map is
+// out[((y - y0) * out_res + x) * C + c]. A full 1024^2 x 1024 map is 4 GiB, so
+// naf_rows evaluates a band of rows; naf_upsample is the one-shot form.
+extern "C" {
+typedef struct naf_handle naf_handle;
+naf_handle * naf_open(const char * gguf_path, int n_threads);   // NULL: see naf_last_error
+void         naf_close(naf_handle * h);
+const char * naf_last_error(void);
+const char * naf_backend_name(const naf_handle * h);
+// image: [3, S, S] float in [0,1] (NCHW); S % 16 == 0. Runs the encoder.
+int naf_set_image(naf_handle * h, const float * image, int S);
+// dino_lr: DINOv3 patch tokens [hk*hk][C] row-major (after the layer norm);
+// out_res divides S, hk divides out_res. Runs prepare.
+int naf_set_tokens(naf_handle * h, const float * dino_lr, int hk, int C, int out_res);
+// rows [y0, y1) of the output into out ([(y1-y0) * out_res * C] floats).
+int naf_rows(naf_handle * h, int y0, int y1, float * out);
+// set_image + set_tokens + rows [0, out_res).
+int naf_upsample(naf_handle * h, const float * dino_lr, int hk, int C, const float * image, int S,
+                 int out_res, float * out);
+}

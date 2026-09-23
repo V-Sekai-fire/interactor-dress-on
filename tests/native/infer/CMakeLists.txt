@@ -198,3 +198,11 @@ add_executable(skintokens-guestcfg-test skintokens_guestcfg_test.cpp)
 target_link_libraries(skintokens-guestcfg-test PRIVATE skintokens_guestcfg)
 add_test(NAME skintokens-guestcfg COMMAND skintokens-guestcfg-test "${IDO_MODELS_DIR}/SkinTokens-GGUF/F16")
 set_tests_properties(skintokens-guestcfg PROPERTIES LABELS "skintokens;model" SKIP_RETURN_CODE 77)
+
+# ── Stage 7 auxiliary networks (label model) ──
+include(naf.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/pixal3d.cmake)
+include(moge3.cmake)
+
+# BiRefNet (Pixal3D background removal): ggml-vulkan + a ggml-cpu sampler op
+include(${CMAKE_CURRENT_SOURCE_DIR}/birefnet.cmake)

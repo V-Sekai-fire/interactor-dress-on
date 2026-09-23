@@ -22,4 +22,4 @@ add_test(NAME naf_shape_512
 add_test(NAME naf_1024
   COMMAND test_naf ${IDO_NAF_GGUF} ${IDO_NAF_ORACLE} shape_1024,tex_1024 ${IDO_INFER_THREADS})
 set_tests_properties(naf_shape_512 naf_1024 PROPERTIES
-  LABELS "naf;model" SKIP_RETURN_CODE 77 TIMEOUT 3600)
+  LABELS "naf;model" SKIP_RETURN_CODE 77)

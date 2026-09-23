@@ -113,8 +113,45 @@ struct trellis2_ss_flow_hparams {
     char    pe_mode[16]    = {0};   // "rope" or "ape"
     int32_t file_type      = 0;     // 0=f32, 1=f16, 2=bf16
 
+    // Pixal3D (image_attn_mode = "proj"; Aero-Ex GGUFs, arch 'flux'): the
+    // cross-attention attends to 5 global tokens (CLS + 4 registers) and each
+    // block adds proj_linear(proj) per token, proj being DINO patch features
+    // bilinearly gathered at the voxel's projection (see trellis2_proj_*).
+    int32_t image_attn_proj   = 0;  // bool
+    int32_t proj_in_channels  = 0;  // 1024 (lr only) or 2048 (lr + NAF hr)
+
     int32_t head_dim() const { return num_heads ? model_channels / num_heads : 0; }
 };
+
+// ── Pixal3D proj conditioning (ProjGrid + sample_features, closed form) ─────
+// Camera of the front view Pixal3D assumes: fov (camera_angle_x, rad),
+// distance d, mesh_scale s, and the DINO input size R the fmap came from.
+// Defaults are the pipeline's (no MoGe estimate). trellis2_proj_distance()
+// gives inference.py's d for a fov (extend_pixel = 0).
+struct trellis2_proj_camera {
+    float fov        = 0.8575560450553894f;
+    float distance   = 2.0f;
+    float mesh_scale = 1.0f;
+    int   image_size = 512;
+};
+TRELLIS2_API float trellis2_proj_distance(float fov, float mesh_scale, int image_size,
+                                          int extend_pixel = 0);
+
+// One feature map, token-major [h*w][c] (row-major h, w), e.g. the DINO patch
+// tokens cond.data + 5*C at 512 px (32x32x1024), or a NAF-upsampled map.
+struct trellis2_proj_fmap {
+    const float * data = nullptr;
+    int h = 0, w = 0, c = 0;
+};
+
+// Bilinear tap table (grid_sample, align_corners=False, border padding) for
+// grid points (x,y,z) = linspace(-1,1,G)[i,j,k]. coords == nullptr: all G^3
+// points in (i,j,k) row-major order (dense SS flow); else n triples (sparse
+// SLAT voxels, same (i,j,k) meaning). idx/wt receive 4*n entries, tap-major
+// (idx[k*n + p]) as rows of the [c, h*w] fmap.
+TRELLIS2_API void trellis2_proj_taps(const trellis2_proj_camera & cam, int G,
+                                     const int32_t * coords, int n, int fh, int fw,
+                                     int32_t * idx, float * wt);
 
 // Opaque handle to a loaded SS-flow model (weights + metadata).
 struct trellis2_ss_flow_model;
@@ -209,6 +246,21 @@ trellis2_ss_flow_forward(trellis2_ss_flow_model * m,
                          const float * x, float t,
                          const float * cond, int cond_tokens, int cond_channels,
                          float * out, std::string * error = nullptr);
+
+// Pixal3D proj mode: set the feature maps (1 = lr DINO, 2 = lr + NAF hr, in
+// that channel order) and the camera the forward/sampler gather `proj` with.
+// The maps are copied. The positive CFG branch uses them; the negative branch
+// uses proj = 0 (proj_linear reduces to its bias). n_maps = 0 clears.
+// Errors if the model is not in proj mode or the channel sum != proj_in.
+TRELLIS2_API bool
+trellis2_ss_flow_set_proj(trellis2_ss_flow_model * m, const trellis2_proj_camera & cam,
+                          const trellis2_proj_fmap * maps, int n_maps,
+                          std::string * error = nullptr);
+
+// Test hook: run only the first n blocks (0 = all) in trellis2_ss_flow_forward;
+// proj_zero forces the negative-branch proj (bias only). For the one-block oracle.
+TRELLIS2_API void trellis2_ss_flow_debug(trellis2_ss_flow_model * m, int max_blocks,
+                                         bool proj_zero);
 
 // Run the full flow-Euler sampling loop (classifier-free guidance with interval
 // + rescale) to produce the stage-1 sparse-structure latent z_s.

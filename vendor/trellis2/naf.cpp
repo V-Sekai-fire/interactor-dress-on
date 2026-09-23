@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <functional>
@@ -21,6 +22,32 @@ namespace {
 
 void set_err(std::string * err, const std::string & s) {
     if (err) *err = s;
+}
+
+// ggml-vulkan (the host GPU) unless IDO_GGML_BACKEND=cpu or no GPU device is
+// registered; ggml-cpu then runs n_threads threads.
+ggml_backend * pick_backend(int n_threads) {
+    const char * e = std::getenv("IDO_GGML_BACKEND");
+    ggml_backend * b = nullptr;
+    if (!(e && std::strcmp(e, "cpu") == 0)) b = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_GPU, nullptr);
+    if (!b) {
+        b = ggml_backend_cpu_init();
+        ggml_backend_cpu_set_n_threads(b, n_threads);
+    }
+    return b;
+}
+
+// Every node must run on the one backend: name the first that cannot.
+bool check_ops(ggml_backend * be, ggml_cgraph * gf, std::string * err) {
+    for (int i = 0; i < ggml_graph_n_nodes(gf); ++i) {
+        ggml_tensor * n = ggml_graph_node(gf, i);
+        if (!ggml_backend_supports_op(be, n)) {
+            set_err(err, std::string("naf: ") + ggml_backend_name(be) + " does not support " + ggml_op_desc(n) +
+                             " (" + n->name + ")");
+            return false;
+        }
+    }
+    return true;
 }
 
 // One step = one small graph on the model's backend: build, allocate with the
@@ -60,6 +87,7 @@ struct step {
             set_err(err, "naf: ggml_gallocr_alloc_graph failed");
             return false;
         }
+        if (!check_ops(m->backend, gf, err)) return false;
         for (auto & u : uploads) ggml_backend_tensor_set(u.first, u.second, 0, ggml_nbytes(u.first));
         if (ggml_backend_graph_compute(m->backend, gf) != GGML_STATUS_SUCCESS) {
             set_err(err, "naf: graph compute failed");
@@ -194,9 +222,8 @@ model * load(const std::string & path, int n_threads, std::string * err) {
         return nullptr;
     }
 
-    m->backend = ggml_backend_cpu_init();
     m->n_threads = n_threads > 0 ? n_threads : 1;
-    ggml_backend_cpu_set_n_threads(m->backend, m->n_threads);
+    m->backend = pick_backend(m->n_threads);
     m->buf = ggml_backend_alloc_ctx_tensors(m->ctx, m->backend);
     if (!m->buf) {
         set_err(err, "naf: weight buffer allocation failed");
@@ -438,3 +465,86 @@ bool read_keys(const run * r, float * out) {
 }
 
 }  // namespace naf
+
+// ── C API ──────────────────────────────────────────────────────────────────
+struct naf_handle {
+    naf::model * m = nullptr;
+    naf::encoded * e = nullptr;
+    naf::run * r = nullptr;
+};
+
+namespace {
+thread_local std::string g_naf_err;
+int naf_fail(const std::string & s) { g_naf_err = s; return 0; }
+}  // namespace
+
+extern "C" {
+
+naf_handle * naf_open(const char * gguf_path, int n_threads) {
+    std::string err;
+    naf::model * m = naf::load(gguf_path ? gguf_path : "", n_threads, &err);
+    if (!m) { g_naf_err = err; return nullptr; }
+    naf_handle * h = new naf_handle();
+    h->m = m;
+    return h;
+}
+
+void naf_close(naf_handle * h) {
+    if (!h) return;
+    naf::free_run(h->r);
+    naf::free_encoded(h->e);
+    naf::free_model(h->m);
+    delete h;
+}
+
+const char * naf_last_error(void) { return g_naf_err.c_str(); }
+
+const char * naf_backend_name(const naf_handle * h) {
+    return h && h->m && h->m->backend ? ggml_backend_name(h->m->backend) : "";
+}
+
+int naf_set_image(naf_handle * h, const float * image, int S) {
+    if (!h || !image || S <= 0 || S % 16) return naf_fail("naf_set_image: need image and S % 16 == 0");
+    naf::free_run(h->r); h->r = nullptr;
+    naf::free_encoded(h->e); h->e = nullptr;
+    std::string err;
+    h->e = naf::encode(h->m, image, S, &err);
+    return h->e ? 1 : naf_fail(err);
+}
+
+int naf_set_tokens(naf_handle * h, const float * dino_lr, int hk, int C, int out_res) {
+    if (!h || !h->e || !dino_lr) return naf_fail("naf_set_tokens: call naf_set_image first");
+    naf::free_run(h->r); h->r = nullptr;
+    std::string err;
+    h->r = naf::prepare(h->m, h->e, out_res, dino_lr, hk, C, &err);
+    return h->r ? 1 : naf_fail(err);
+}
+
+int naf_rows(naf_handle * h, int y0, int y1, float * out) {
+    if (!h || !h->r || !out) return naf_fail("naf_rows: call naf_set_tokens first");
+    naf::run * r = h->r;
+    const int T = r->T, d = r->d, hk = r->hk, C = r->C;
+    if (y0 < 0 || y1 > T || y0 >= y1) return naf_fail("naf_rows: bad row range");
+    std::vector<float> blk((size_t) hk * d * d * C);
+    std::string err;
+    for (int bi = y0 / d; bi * d < y1; ++bi) {
+        if (!naf::attend(h->m, r, bi * hk, (bi + 1) * hk, blk.data(), &err)) return naf_fail(err);
+        for (int a = 0; a < d; ++a) {
+            const int y = bi * d + a;
+            if (y < y0 || y >= y1) continue;
+            float * row = out + (size_t) (y - y0) * T * C;
+            for (int bj = 0; bj < hk; ++bj)
+                for (int b = 0; b < d; ++b)
+                    std::memcpy(row + ((size_t) bj * d + b) * C, blk.data() + (((size_t) bj * d + a) * d + b) * C,
+                                sizeof(float) * C);
+        }
+    }
+    return 1;
+}
+
+int naf_upsample(naf_handle * h, const float * dino_lr, int hk, int C, const float * image, int S,
+                 int out_res, float * out) {
+    return naf_set_image(h, image, S) && naf_set_tokens(h, dino_lr, hk, C, out_res) && naf_rows(h, 0, out_res, out);
+}
+
+}  // extern "C"

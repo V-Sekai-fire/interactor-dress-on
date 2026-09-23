@@ -1,4 +1,4 @@
-// G7.moge3 -- MoGe-3 camera FoV on ggml-cpu vs the CPU-torch fp32 oracle
+// G7.moge3 -- MoGe-3 camera FoV on ggml-vulkan (IDO_GGML_BACKEND=cpu: ggml-cpu) vs the CPU-torch fp32 oracle
 // (gates/7-pixal3d/aux-models/moge3_ref.py, its .npy outputs).
 //
 //   MOGE3_GGUF    GGUF from tools/models/convert_moge3_to_gguf.py
@@ -12,6 +12,7 @@
 // than the tolerance (the gate can see a wrong input). Exit 77 = no assets.
 #include "moge3.h"
 
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -104,6 +105,7 @@ int main() {
     std::string err;
     moge3_model * m = moge3_load(gguf, 0, &err);
     if (!m) { std::printf("FAIL: load: %s\n", err.c_str()); return 1; }
+    std::printf("backend %s\n", moge3_backend_name(m));
 
     moge3_taps taps;
     moge3_fov_result r;
@@ -159,12 +161,15 @@ int main() {
                     const int sy = mode ? H - 1 - y : y, sx = mode ? x : W - 1 - x;
                     std::memcpy(&flip[((size_t) y * W + x) * 3], &src[((size_t) sy * W + sx) * 3], 3);
                 }
-            moge3_fov_result rc;
-            if (!moge3_fov(m, flip.data(), W, H, rc, nullptr, &err)) { std::printf("FAIL: control: %s\n", err.c_str()); return 1; }
-            const double d = deg(std::fabs(rc.camera_angle_x - ang_ref));
+            // through the C API (moge3_fov_radians), as the GDExtension calls it
+            const auto tc = std::chrono::steady_clock::now();
+            const double ang = W == H ? moge3_fov_radians(m, flip.data(), W) : -1.0;
+            const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - tc).count();
+            if (ang < 0) { std::printf("FAIL: control: %s\n", moge3_last_error()); return 1; }
+            const double d = deg(std::fabs(ang - ang_ref));
             const bool seen = d > tol_deg;
-            std::printf("CONTROL %s flip: camera_angle_x %.4f deg, |d| vs oracle %.4f deg -> %s\n",
-                        mode ? "vertical" : "horizontal", deg(rc.camera_angle_x), d,
+            std::printf("CONTROL %s flip (C API, %.0f ms): camera_angle_x %.4f deg, |d| vs oracle %.4f deg -> %s\n",
+                        mode ? "vertical" : "horizontal", ms, deg(ang), d,
                         seen ? "detected (gate would fail)" : "NOT detected");
             pass = pass && seen;
         }

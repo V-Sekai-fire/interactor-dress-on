@@ -47,3 +47,16 @@ struct moge3_taps {
 // rgb: S x S x 3 uint8 (row-major HWC). Only square inputs (Pixal3D's case).
 bool moge3_fov(moge3_model * m, const uint8_t * rgb, int width, int height,
                moge3_fov_result & out, moge3_taps * taps, std::string * error);
+
+const char * moge3_backend_name(const moge3_model * m);
+
+// ── C API (what the Stage 7 host GDExtension calls) ──
+// ggml-vulkan unless IDO_GGML_BACKEND=cpu. rgb: size x size x 3 uint8 (HWC),
+// Pixal3D's preprocessed square image. Returns camera_angle_x in radians, or
+// < 0 on error (moge3_last_error).
+extern "C" {
+moge3_model * moge3_open(const char * gguf_path, int n_threads);
+void          moge3_close(moge3_model * m);
+const char *  moge3_last_error(void);
+double        moge3_fov_radians(moge3_model * m, const uint8_t * rgb, int size);
+}

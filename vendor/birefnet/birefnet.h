@@ -11,12 +11,13 @@
 // tables (row H*W of the source is a zero row = padding) followed by
 // MUL_MAT, banded over output rows so no column buffer exceeds a budget.
 //
-// Two ops are outside the RD backend's op set. Here, on the host, they are
-// ggml custom ops (ggml_custom_4d / ggml_map_custom1) with exact C++ bodies;
-// they are the HOST STAND-IN for Lean kernel K11 that Cut 3's ggml-rd
-// backend must add (spec: birefnet.md section K11):
+// Backend (AGENTS.md Stage 7 exception: host-native GDExtension): the graph
+// runs on ggml-vulkan through a ggml_backend_sched with ggml-cpu behind it.
+// ReLU is ggml's unary RELU (on Vulkan). The deformable-conv sampler has no
+// ggml-vulkan equivalent, so it is a ggml custom op (ggml_custom_4d) with
+// the exact torchvision body; the scheduler places it on the host CPU
+// (multi-threaded) and copies its inputs/outputs across:
 //   birefnet_bilinear_sample_zeros  (torchvision deform_conv2d sampler)
-//   birefnet_relu                   (y = max(x, 0))
 #pragma once
 
 #include <cstddef>
@@ -34,6 +35,18 @@ struct birefnet_load_params {
     // at load. With f16 weights ggml-cpu's MUL_MAT rounds the activations to
     // f16 too; the f32 upcast reproduces the fp32 torch reference.
     bool keep_f16 = false;
+    // Run the graph on the first ggml GPU device (ggml-vulkan) with ggml-cpu
+    // for the sampler; false = ggml-cpu only.
+    bool gpu = true;
+};
+
+struct birefnet_stats {
+    double total_ms = 0;      // sched alloc + upload + compute
+    double compute_ms = 0;    // ggml_backend_sched_graph_compute
+    double sampler_ms = 0;    // CPU sampler custom op, wall (thread 0), summed
+    int    sampler_calls = 0;
+    int    n_splits = 0;
+    int    n_nodes = 0;
 };
 
 struct birefnet_run_params {
@@ -49,6 +62,7 @@ struct birefnet_run_params {
     // dec_block4..1_in/_out, deform_sq_k7_{offset,mask,out},
     // deform_d1_k3_{offset,mask,out}). Values come back NCHW (C, H, W).
     std::vector<std::string> taps;
+    birefnet_stats * stats = nullptr;
 };
 
 struct birefnet_tap {
@@ -66,6 +80,20 @@ bool birefnet_forward(birefnet_model * m, const float * x, int S, float * logits
                       const birefnet_run_params & rp,
                       std::map<std::string, birefnet_tap> * taps, std::string * error);
 
+// Pixal3D's BiRefNet step (rembg/BiRefNet.py __call__): rgb (h, w, 3) u8
+// interleaved -- the image AFTER Pixal3D's max-side-1024 LANCZOS downscale --
+// -> PIL BILINEAR resize to 1024^2 -> ImageNet normalize -> forward ->
+// sigmoid. alpha1024 (optional): 1024*1024 f32 in [0,1]. alpha_u8
+// (optional): mul(255).byte() truncation, then PIL BICUBIC back to w x h.
+bool birefnet_alpha(birefnet_model * m, const uint8_t * rgb, int w, int h,
+                    std::vector<float> * alpha1024, std::vector<uint8_t> * alpha_u8,
+                    const birefnet_run_params & rp, std::string * error);
+
+// PIL-compatible 8-bit separable resample (Image.resize; filter 1 =
+// BILINEAR, 3 = BICUBIC), interleaved ch channels. Exposed for the gate.
+void birefnet_pil_resize(const uint8_t * in, int w, int h, int ch, int ow, int oh,
+                         int filter, std::vector<uint8_t> & out);
+
 // One modulated deformable conv (torchvision.ops.deform_conv2d, groups 1,
 // stride 1, dilation 1, pad k/2, no bias) from given offset and mask, through
 // the same graph code the model uses. x (C,H,W), offset (2K,H,W), mask
@@ -74,7 +102,7 @@ bool birefnet_deform_conv(const float * x, const float * offset, const float * m
                           const float * weight, int C, int H, int W, int Cout, int k,
                           float * out, int n_threads, size_t band_bytes, std::string * error);
 
-// The two ops, for graph code and tests.
+// The sampler op (and ReLU = ggml_relu), for graph code and tests.
 //   X ne [C, W, H] f32 contiguous (token-major image), P ne [2, N] f32
 //   (P[0,n] = y, P[1,n] = x, pixel units)  ->  Y ne [C, N] f32.
 ggml_tensor * birefnet_bilinear_sample_zeros(ggml_context * ctx, ggml_tensor * X, ggml_tensor * P);

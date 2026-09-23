@@ -17,6 +17,8 @@
 // Exit 0 pass, 1 fail, 77 skipped (no GGUF / oracle).
 #include "naf.h"
 
+#include "ggml-backend.h"
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -232,6 +234,31 @@ int main(int argc, char ** argv) {
                     ei.rel(), en.rel(), t_enc, t_enc == 0 ? " (shared)" : "", t_prep, t_att, hk, t_cmp, ok ? "PASS" : "FAIL");
         std::fflush(stdout);
         naf::free_run(r);
+
+        // C API (naf_open/set_image/set_tokens/rows), once, on a band that
+        // straddles block rows: raster HWC rows vs the oracle.
+        if (&k == &want[0]) {
+            naf_handle * h = naf_open(gguf.c_str(), threads);
+            std::vector<float> im = img.all<float>();
+            const int y0 = d + d / 2, y1 = std::min(T, y0 + 2 * d + 3);
+            std::vector<float> band((size_t) (y1 - y0) * T * C), refrow((size_t) T);
+            const double tc = now_s();
+            const bool c_ok = h && naf_set_image(h, im.data(), S) && naf_set_tokens(h, tokens.data(), hk, C, T) &&
+                              naf_rows(h, y0, y1, band.data());
+            const double tcs = now_s() - tc;
+            l2 ec;
+            for (int c = 0; c_ok && c < C; ++c)
+                for (int y = y0; y < y1; ++y) {
+                    hr.read((long long) c * T * T + (long long) y * T, T, refrow.data());
+                    for (int x = 0; x < T; ++x) ec.add(band[((size_t) (y - y0) * T + x) * C + c], refrow[x]);
+                }
+            const bool capi = c_ok && ec.rel() <= 1e-4;
+            pass = pass && capi;
+            std::printf("[%s] C API rows [%d, %d): rel-L2 %.3e, %.2f s (encode + prepare + rows) | %s%s
+", k.name, y0, y1,
+                        ec.rel(), tcs, capi ? "PASS" : "FAIL", c_ok ? "" : naf_last_error());
+            naf_close(h);
+        }
     }
     naf::free_encoded(enc);
     naf::free_model(m);

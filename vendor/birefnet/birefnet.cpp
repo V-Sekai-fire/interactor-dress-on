@@ -10,6 +10,7 @@
 #include "gguf.h"
 
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
@@ -32,10 +33,12 @@ double now_ms() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HOST STAND-IN for Lean kernel K11 (birefnet.md section K11). Cut 3's ggml-rd
-// backend must provide these two ops from Lean -> Slang; until then the host
-// runs these exact C++ bodies as ggml custom ops.
+// The deformable sampler: no ggml-vulkan equivalent, so a ggml custom op with
+// the exact torchvision body; ggml_backend_sched runs it on the host CPU.
 // ─────────────────────────────────────────────────────────────────────────────
+
+std::atomic<int64_t> g_bsz_ns{0};
+std::atomic<int>     g_bsz_calls{0};
 
 // bilinear_sample_zeros: transcription of torchvision
 // ops/cpu/deform_conv2d_kernel.cpp::bilinear_interpolate (scalar_t = float).
@@ -52,6 +55,7 @@ void bsz_op(ggml_tensor * dst, int ith, int nth, void * /*userdata*/) {
     const char  * pd = (const char *) P->data;
     float * yd = (float *) dst->data;
     const float fH = (float) H, fW = (float) W;
+    const auto t_start = std::chrono::steady_clock::now();
     const int64_t per = (N + nth - 1) / nth;
     const int64_t n0 = per * ith, n1 = std::min<int64_t>(N, n0 + per);
     for (int64_t n = n0; n < n1; ++n) {
@@ -83,17 +87,13 @@ void bsz_op(ggml_tensor * dst, int ith, int nth, void * /*userdata*/) {
             out[c] = w1 * v1 + w2 * v2 + w3 * v3 + w4 * v4;
         }
     }
+    if (ith == 0) {
+        g_bsz_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        std::chrono::steady_clock::now() - t_start).count();
+        ++g_bsz_calls;
+    }
 }
 
-// relu: y = max(x, 0), elementwise f32 (contiguous).
-void relu_op(ggml_tensor * dst, const ggml_tensor * a, int ith, int nth, void * /*userdata*/) {
-    const int64_t n = ggml_nelements(dst);
-    const int64_t per = (n + nth - 1) / nth;
-    const int64_t i0 = per * ith, i1 = std::min<int64_t>(n, i0 + per);
-    const float * s = (const float *) a->data;
-    float * d = (float *) dst->data;
-    for (int64_t i = i0; i < i1; ++i) d[i] = s[i] > 0.0f ? s[i] : 0.0f;
-}
 #if defined(__clang__)
 #pragma clang fp contract(on)
 #endif
@@ -109,8 +109,7 @@ ggml_tensor * birefnet_bilinear_sample_zeros(ggml_context * ctx, ggml_tensor * X
 }
 
 ggml_tensor * birefnet_relu(ggml_context * ctx, ggml_tensor * x) {
-    GGML_ASSERT(x->type == GGML_TYPE_F32 && ggml_is_contiguous(x));
-    return ggml_map_custom1(ctx, x, relu_op, GGML_N_TASKS_MAX, nullptr);
+    return ggml_relu(ctx, x);   // ggml unary RELU (ggml-vulkan has it)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -118,7 +117,8 @@ ggml_tensor * birefnet_relu(ggml_context * ctx, ggml_tensor * x) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 struct birefnet_model {
-    ggml_backend_t        backend = nullptr;
+    ggml_backend_t        backend = nullptr;   // weights live here (GPU, or CPU)
+    ggml_backend_t        cpu = nullptr;       // the sampler (== backend when !gpu)
     ggml_context        * wctx = nullptr;   // weights
     ggml_backend_buffer_t wbuf = nullptr;
     ggml_context        * cctx = nullptr;   // derived constants
@@ -139,6 +139,7 @@ void birefnet_free(birefnet_model * m) {
     if (m->cbuf) ggml_backend_buffer_free(m->cbuf);
     if (m->wctx) ggml_free(m->wctx);
     if (m->cctx) ggml_free(m->cctx);
+    if (m->cpu && m->cpu != m->backend) ggml_backend_free(m->cpu);
     if (m->backend) ggml_backend_free(m->backend);
     delete m;
 }
@@ -194,7 +195,9 @@ birefnet_model * birefnet_load(const std::string & path, const birefnet_load_par
         ggml_set_name(d, name);
         m->w[name] = d;
     }
-    m->backend = ggml_backend_cpu_init();
+    m->cpu = ggml_backend_cpu_init();
+    m->backend = lp.gpu ? ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_GPU, nullptr) : m->cpu;
+    if (!m->backend) { m->backend = m->cpu; birefnet_free(m); return fail("no ggml GPU device (ggml-vulkan)"); }
     m->wbuf = ggml_backend_alloc_ctx_tensors(m->wctx, m->backend);
     if (!m->wbuf) { birefnet_free(m); return fail("weight alloc failed"); }
 
@@ -767,28 +770,45 @@ void tm_to_nchw(const float * s, int C, int HW, float * d) {
     for (int i = 0; i < HW; ++i) for (int c = 0; c < C; ++c) d[(size_t) c * HW + i] = s[(size_t) i * C + c];
 }
 
-bool run(ggml_backend_t be, ggml_cgraph * gf, G & g, const std::function<void()> & read, std::string * err,
-         const char * tag) {
+// be = the main backend (GPU or CPU); cpu = ggml-cpu for the sampler. With
+// be != cpu a ggml_backend_sched splits the graph: every op the GPU supports
+// runs there, the sampler custom op on the CPU, with copies between.
+bool run(ggml_backend_t be, ggml_backend_t cpu, size_t graph_size, ggml_cgraph * gf, G & g,
+         const std::function<void()> & read, std::string * err, const char * tag, birefnet_stats * stats) {
     const double t0 = now_ms();
-    ggml_gallocr_t al = ggml_gallocr_new(ggml_backend_get_default_buffer_type(be));
-    if (!ggml_gallocr_alloc_graph(al, gf)) {
-        ggml_gallocr_free(al);
-        set_err(err, "ggml_gallocr_alloc_graph failed");
+    ggml_backend_t bes[2] = { be, cpu };
+    const int nbe = be == cpu ? 1 : 2;
+    ggml_backend_sched_t sched = ggml_backend_sched_new(bes, nullptr, nbe, graph_size, false, false);
+    if (!ggml_backend_sched_alloc_graph(sched, gf)) {
+        ggml_backend_sched_free(sched);
+        set_err(err, "ggml_backend_sched_alloc_graph failed");
         return false;
     }
     const double t1 = now_ms();
     for (auto & h : g.host) ggml_backend_tensor_set(h.first, h.second.data(), 0, h.second.size());
     const double t2 = now_ms();
-    const ggml_status st = ggml_backend_graph_compute(be, gf);
+    const int64_t ns0 = g_bsz_ns.load();
+    const int c0 = g_bsz_calls.load();
+    const ggml_status st = ggml_backend_sched_graph_compute(sched, gf);
+    ggml_backend_sched_synchronize(sched);
     const double t3 = now_ms();
     if (st == GGML_STATUS_SUCCESS) read();
     size_t host_bytes = 0;
     for (auto & h : g.host) host_bytes += h.second.size();
-    std::fprintf(stderr, "[birefnet %s] nodes %d, compute buffer %.1f MiB, host tables %.1f MiB; "
-                 "alloc %.0f ms, upload %.0f ms, compute %.0f ms\n",
-                 tag, ggml_graph_n_nodes(gf), ggml_gallocr_get_buffer_size(al, 0) / 1048576.0,
-                 host_bytes / 1048576.0, t1 - t0, t2 - t1, t3 - t2);
-    ggml_gallocr_free(al);
+    const double smp = (g_bsz_ns.load() - ns0) / 1e6;
+    const int ncall = g_bsz_calls.load() - c0;
+    std::fprintf(stderr, "[birefnet %s] nodes %d, splits %d, buffers %s %.1f MiB + CPU %.1f MiB, host tables %.1f MiB; "
+                 "alloc %.0f ms, upload %.0f ms, compute %.0f ms (CPU sampler %.0f ms in %d calls)\n",
+                 tag, ggml_graph_n_nodes(gf), ggml_backend_sched_get_n_splits(sched),
+                 ggml_backend_name(be), ggml_backend_sched_get_buffer_size(sched, be) / 1048576.0,
+                 nbe == 2 ? ggml_backend_sched_get_buffer_size(sched, cpu) / 1048576.0 : 0.0,
+                 host_bytes / 1048576.0, t1 - t0, t2 - t1, t3 - t2, smp, ncall);
+    if (stats) {
+        stats->total_ms = t3 - t0; stats->compute_ms = t3 - t2; stats->sampler_ms = smp;
+        stats->sampler_calls = ncall; stats->n_splits = ggml_backend_sched_get_n_splits(sched);
+        stats->n_nodes = ggml_graph_n_nodes(gf);
+    }
+    ggml_backend_sched_free(sched);
     if (st != GGML_STATUS_SUCCESS) { set_err(err, "graph compute failed"); return false; }
     return true;
 }
@@ -799,7 +819,7 @@ bool birefnet_forward(birefnet_model * m, const float * x, int S, float * logits
                       const birefnet_run_params & rp,
                       std::map<std::string, birefnet_tap> * taps, std::string * error) {
     if (S != m->input_size) { set_err(error, "input size must be " + std::to_string(m->input_size)); return false; }
-    ggml_backend_cpu_set_n_threads(m->backend, rp.n_threads);
+    ggml_backend_cpu_set_n_threads(m->cpu, rp.n_threads);
     const size_t n_graph = 65536;
     ggml_init_params ip = { n_graph * ggml_tensor_overhead() * 2 + ggml_graph_overhead_custom(n_graph, false),
                             nullptr, true };
@@ -821,7 +841,7 @@ bool birefnet_forward(birefnet_model * m, const float * x, int S, float * logits
     ggml_build_forward_expand(gf, out.t);
     for (auto & t : g.taps) ggml_build_forward_expand(gf, t.second.t);
 
-    bool ok = run(m->backend, gf, g, [&]() {
+    bool ok = run(m->backend, m->cpu, n_graph, gf, g, [&]() {
         ggml_backend_tensor_get(out.t, logits, 0, (size_t) S * S * sizeof(float));
         if (taps) {
             std::vector<float> tmp;
@@ -836,7 +856,7 @@ bool birefnet_forward(birefnet_model * m, const float * x, int S, float * logits
                 tm_to_nchw(tmp.data(), a.C, HW, t.data.data());
             }
         }
-    }, error, rp.zero_offsets ? "forward zero-offsets" : "forward");
+    }, error, rp.zero_offsets ? "forward zero-offsets" : "forward", rp.stats);
     ggml_free(g.ctx);
     return ok;
 }
@@ -866,12 +886,116 @@ bool birefnet_deform_conv(const float * x, const float * offset, const float * m
     ggml_set_output(y);
     ggml_cgraph * gf = ggml_new_graph(g.ctx);
     ggml_build_forward_expand(gf, y);
-    bool ok = run(be, gf, g, [&]() {
+    bool ok = run(be, be, GGML_DEFAULT_GRAPH_SIZE, gf, g, [&]() {
         std::vector<float> tmp((size_t) Cout * HW);
         ggml_backend_tensor_get(y, tmp.data(), 0, tmp.size() * sizeof(float));
         tm_to_nchw(tmp.data(), Cout, HW, out);
-    }, error, "deform_conv");
+    }, error, "deform_conv", nullptr);
     ggml_free(g.ctx);
     ggml_backend_free(be);
     return ok;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pixal3D pre/post (rembg/BiRefNet.py): PIL resample, ImageNet normalize
+// ─────────────────────────────────────────────────────────────────────────────
+namespace {
+
+constexpr int PIL_PREC = 32 - 8 - 2;   // Pillow Resample.c PRECISION_BITS
+
+double pil_filter(int f, double x) {
+    if (x < 0.0) x = -x;
+    if (f == 1) return x < 1.0 ? 1.0 - x : 0.0;               // bilinear
+    const double a = -0.5;                                     // bicubic
+    if (x < 1.0) return ((a + 2.0) * x - (a + 3.0)) * x * x + 1.0;
+    if (x < 2.0) return (((x - 5.0) * x + 8.0) * x - 4.0) * a;
+    return 0.0;
+}
+
+// Pillow precompute_coeffs + normalize_coeffs_8bpc for one axis.
+void pil_axis(int f, int in, int out, std::vector<int> & b, std::vector<int32_t> & kk, int & ks) {
+    const double support0 = f == 1 ? 1.0 : 2.0;
+    const double scale = (double) in / (double) out;
+    const double fs = scale < 1.0 ? 1.0 : scale;
+    const double support = support0 * fs;
+    ks = (int) std::ceil(support) * 2 + 1;
+    std::vector<double> k((size_t) ks);
+    b.assign((size_t) out * 2, 0);
+    kk.assign((size_t) out * ks, 0);
+    for (int xx = 0; xx < out; ++xx) {
+        const double center = ((double) xx + 0.5) * scale, ss = 1.0 / fs;
+        int xmin = (int) (center - support + 0.5); if (xmin < 0) xmin = 0;
+        int xmax = (int) (center + support + 0.5); if (xmax > in) xmax = in;
+        xmax -= xmin;
+        double ww = 0.0;
+        for (int x = 0; x < xmax; ++x) { k[x] = pil_filter(f, ((double) (x + xmin) - center + 0.5) * ss); ww += k[x]; }
+        for (int x = 0; x < xmax; ++x) {
+            const double w = (ww != 0.0 ? k[x] / ww : k[x]) * (double) (1 << PIL_PREC);
+            kk[(size_t) xx * ks + x] = (int32_t) (w < 0 ? w - 0.5 : w + 0.5);
+        }
+        b[(size_t) xx * 2] = xmin; b[(size_t) xx * 2 + 1] = xmax;
+    }
+}
+
+inline uint8_t pil_clip8(int64_t v) {
+    if (v >= ((int64_t) 1 << PIL_PREC << 8)) return 255;
+    if (v <= 0) return 0;
+    return (uint8_t) (v >> PIL_PREC);
+}
+
+} // namespace
+
+void birefnet_pil_resize(const uint8_t * in, int w, int h, int ch, int ow, int oh, int filter,
+                         std::vector<uint8_t> & out) {
+    std::vector<int> b; std::vector<int32_t> kk; int ks = 0;
+    std::vector<uint8_t> tmp;
+    const uint8_t * src = in;
+    if (ow != w) {   // Pillow skips a pass whose size is unchanged
+        tmp.resize((size_t) h * ow * ch);
+        pil_axis(filter, w, ow, b, kk, ks);
+        for (int y = 0; y < h; ++y)
+            for (int xx = 0; xx < ow; ++xx)
+                for (int c = 0; c < ch; ++c) {
+                    int64_t ss = (int64_t) 1 << (PIL_PREC - 1);
+                    for (int x = 0; x < b[2 * xx + 1]; ++x)
+                        ss += (int64_t) in[((size_t) y * w + x + b[2 * xx]) * ch + c] * kk[(size_t) xx * ks + x];
+                    tmp[((size_t) y * ow + xx) * ch + c] = pil_clip8(ss);
+                }
+        src = tmp.data();
+    }
+    out.resize((size_t) oh * ow * ch);
+    if (oh == h) { std::memcpy(out.data(), src, out.size()); return; }
+    pil_axis(filter, h, oh, b, kk, ks);
+    for (int yy = 0; yy < oh; ++yy)
+        for (int xx = 0; xx < ow; ++xx)
+            for (int c = 0; c < ch; ++c) {
+                int64_t ss = (int64_t) 1 << (PIL_PREC - 1);
+                for (int y = 0; y < b[2 * yy + 1]; ++y)
+                    ss += (int64_t) src[((size_t) (y + b[2 * yy]) * ow + xx) * ch + c] * kk[(size_t) yy * ks + y];
+                out[((size_t) yy * ow + xx) * ch + c] = pil_clip8(ss);
+            }
+}
+
+bool birefnet_alpha(birefnet_model * m, const uint8_t * rgb, int w, int h,
+                    std::vector<float> * alpha1024, std::vector<uint8_t> * alpha_u8,
+                    const birefnet_run_params & rp, std::string * error) {
+    const int S = m->input_size;
+    std::vector<uint8_t> r;
+    birefnet_pil_resize(rgb, w, h, 3, S, S, 1, r);
+    static const float mean[3] = { 0.485f, 0.456f, 0.406f }, stdv[3] = { 0.229f, 0.224f, 0.225f };
+    std::vector<float> x((size_t) 3 * S * S);
+    for (int c = 0; c < 3; ++c)
+        for (size_t i = 0; i < (size_t) S * S; ++i)
+            x[(size_t) c * S * S + i] = ((float) r[i * 3 + c] / 255.0f - mean[c]) / stdv[c];
+    std::vector<float> lg((size_t) S * S);
+    if (!birefnet_forward(m, x.data(), S, lg.data(), rp, nullptr, error)) return false;
+    std::vector<float> a(lg.size());
+    for (size_t i = 0; i < lg.size(); ++i) a[i] = 1.0f / (1.0f + std::exp(-lg[i]));
+    if (alpha_u8) {
+        std::vector<uint8_t> a8(a.size());
+        for (size_t i = 0; i < a.size(); ++i) a8[i] = (uint8_t) (a[i] * 255.0f);   // .mul(255).byte()
+        birefnet_pil_resize(a8.data(), S, S, 1, w, h, 3, *alpha_u8);
+    }
+    if (alpha1024) alpha1024->swap(a);
+    return true;
 }

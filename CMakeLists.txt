@@ -117,6 +117,9 @@ else()
 	message(STATUS "probes.elf: no ggml at GGML_SRC=${GGML_SRC}; probe 15 reports SKIP")
 endif()
 
+# Gate 0G: usd_probe.elf, OpenUSD 26.05 reading a stage from bytes (gates/0g-openusd).
+include(cmake/usd_probe.cmake)
+
 # The fit stage (Cut 6): cloth-fit's garment solve (PolyFEM) with the
 # Lean SDF sampler. Last, because it sets directory-wide guest numerics for
 # the targets it creates. DRESS_ON_WITH_FIT=OFF (build.sh BUILD_FIT=0) skips it.

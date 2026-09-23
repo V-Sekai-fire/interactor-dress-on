@@ -284,3 +284,22 @@ func f16_read() -> String:
 	return dress_on.pv("f16_read", [h])
 func ggml_probe(n: int = 256) -> String: return dress_on.pv("ggml_probe", [n])
 func zfh_probe() -> String: return dress_on.pv("zfh_probe")
+
+# --- Gate 0G: usd_probe.elf, OpenUSD reading a stage from bytes (gates/0g-openusd) ---
+# A probe, not a pipeline stage: its Sandbox is made on first use.
+const USD_SAMPLE := "res://../gates/0g-openusd/inputs/skel_quad.usda"
+var _usd_sb = null
+
+func _usd_call(fn: String, args: Array = []) -> String:
+	if _usd_sb == null:
+		var r: Dictionary = preload("res://stages/sandbox_util.gd").make_sandbox(self, "res://usd_probe.elf", 1024)
+		if r.sandbox == null:
+			return "FAIL: " + str(r.reason)
+		_usd_sb = r.sandbox
+	return str(_usd_sb.callv("vmcall", [fn] + args))
+
+func usd_init() -> String: return _usd_call("usd_init")
+# path_mode 0: USDA through SdfLayer::ImportFromString; 1: the in-memory resolver.
+func usd_load(path: String = USD_SAMPLE, path_mode: int = 0) -> String:
+	var bytes := FileAccess.get_file_as_bytes(ProjectSettings.globalize_path(path))
+	return _usd_call("usd_load", [bytes, path_mode])

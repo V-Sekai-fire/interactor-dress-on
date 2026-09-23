@@ -1,0 +1,34 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    upAxis = "Y"
+    metersPerUnit = 1
+)
+
+def SkelRoot "Root"
+{
+    def Skeleton "Skel"
+    {
+        uniform token[] joints = ["hip", "hip/knee"]
+        uniform matrix4d[] bindTransforms = [((1,0,0,0),(0,1,0,0),(0,0,1,0),(0,0,0,1)), ((1,0,0,0),(0,1,0,0),(0,0,1,0),(0,1,0,1))]
+        uniform matrix4d[] restTransforms = [((1,0,0,0),(0,1,0,0),(0,0,1,0),(0,0,0,1)), ((1,0,0,0),(0,1,0,0),(0,0,1,0),(0,1,0,1))]
+    }
+
+    def Mesh "Panel" (
+        prepend apiSchemas = ["SkelBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4]
+        int[] faceVertexIndices = [0, 1, 4, 3, 1, 2, 5, 4]
+        point3f[] points = [(-1, 0, 0), (0, 0, 0), (1, 0, 0), (-1, 2, 0), (0, 2, 0), (1, 2, 0)]
+        int[] primvars:skel:jointIndices = [0, 0, 0, 1, 1, 1] (
+            elementSize = 1
+            interpolation = "vertex"
+        )
+        float[] primvars:skel:jointWeights = [1, 1, 1, 1, 1, 1] (
+            elementSize = 1
+            interpolation = "vertex"
+        )
+        rel skel:skeleton = </Root/Skel>
+    }
+}

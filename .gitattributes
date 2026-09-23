@@ -7,3 +7,5 @@ guest/fit/specs/*.json text eol=lf
 
 # slangc writes CRLF on Windows; the committed emits are LF.
 kernels/fit/cpp/*.cpp text eol=lf
+# Gate 0G inputs are compared byte for byte against native-control.log.
+gates/0g-openusd/inputs/** -text

@@ -1,0 +1,24 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T02:14:41
+args: --gate=loop --out=../gates/8-loop/probe-no-boundary.txt --wallclock=300 --mcp-port=8798 --gate=pen --no-boundary --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              105 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1593 ms  vm    1489.1 ms  heap 3.5 MiB  frames 7  strokes 6 cycles 4 openings 0 patches 4 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH              1764 ms  vm    1748.4 ms  heap 3.6 MiB  frames 2875  FAILED not a skirt tube: 2593 triangles, 1 components, 3 boundary loops (want >0, 1, 2)
+=> FAILED MESH: not a skirt tube: 2593 triangles, 1 components, 3 boundary loops (want >0, 1, 2)
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED MESH: not a skirt tube: 2593 triangles, 1 components, 3 boundary loops (want >0, 1, 2)
+FAIL cycles: cycles=4 (want 2)
+FAIL openings: openings=0 (want 2: the waist and the hem)
+FAIL patches: patches=4 (want 2: the front and back panels)
+INFO curvenet: curves=6 knots=4 degrees=[3, 3, 3, 3] edges=6 (4 knots of degree 3 have 6 edges)
+FAIL mesh: 1332 v 2593 f, 3 loops, 1 components
+PASS screenshot: probe-no-boundary.png (1152x648)
+wall 4.8 s, frames 2894
+RESULT: FAIL
+drape rd_close: CLOSED device=none permanent_slots=0

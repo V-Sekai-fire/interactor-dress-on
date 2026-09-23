@@ -9,6 +9,10 @@
 # is_zero_approx(pressed) inside `if not is_zero_approx(pressed)`, always
 # false, so it never starts a stroke. The authoring ends on the menu button
 # of either controller, Enter on a keyboard, or Main.dress_on_author_done().
+# Boundary mode (the edge of an opening: a skirt's waist and hem) toggles on
+# a thumbstick click on either controller (A/B/X/Y are xr-grid's own debug
+# save/load in hand.gd) or the B key; a stroke takes the mode
+# it began in (curvenet captures it at pen_begin).
 #
 # pen = "scripted": the pipeline's strokes (xr/pen_source_scripted.gd, handed
 # over by its strokes_ready signal) are replayed one stroke per frame through
@@ -29,6 +33,8 @@ var _next_stroke := 0
 var _replay: Array = []
 var _sketch = null
 var strokes_sent := 0
+var boundary_mode := false
+var _by_prev := false
 
 func attach(p) -> void:
 	pipeline = p
@@ -64,7 +70,7 @@ func _replay_one() -> void:
 	var pts: PackedVector3Array = st.points
 	var k := _next_stroke
 	_next_stroke += 1
-	pipeline.pen_event("begin", k, pts[0], 0.5)
+	pipeline.pen_event("begin", k, pts[0], 0.5, bool(st.get("boundary", false)))
 	for i in range(1, pts.size()):
 		pipeline.pen_event("point", k, pts[i], 0.5)
 	pipeline.pen_event("end", k)
@@ -91,7 +97,7 @@ func _forward_tools() -> void:
 		if active and not was:
 			_stroke_of[path] = _next_stroke
 			_next_stroke += 1
-			pipeline.pen_event("begin", _stroke_of[path], p, pressure)
+			pipeline.pen_event("begin", _stroke_of[path], p, pressure, boundary_mode)
 		elif active and was:
 			pipeline.pen_event("point", _stroke_of[path], p, pressure)
 		elif was and not active:
@@ -100,6 +106,16 @@ func _forward_tools() -> void:
 		_prev[path] = active
 	if Input.is_action_just_pressed("ui_accept"):
 		finish()
+	var by := Input.is_physical_key_pressed(KEY_B)
+	for path in tools:
+		var t = get_node_or_null(path)
+		var hand = t.get_parent() if t != null else null
+		if hand is XRController3D and hand.is_button_pressed("primary_click"):
+			by = true
+	if by and not _by_prev:
+		boundary_mode = not boundary_mode
+		print("pen: boundary mode %s" % ("on" if boundary_mode else "off"))
+	_by_prev = by
 	for path in tools:
 		var t = get_node_or_null(path)
 		var hand = t.get_parent() if t != null else null

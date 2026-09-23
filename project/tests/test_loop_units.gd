@@ -141,6 +141,18 @@ func _pen() -> void:
 	for s in a.strokes:
 		names.append(s.name)
 	_ok("6 strokes, none closed", a.strokes.size() == 6, str(names))
+	# The rings are boundary strokes (their cycles are openings), the seams not;
+	# the begin event carries the mark to curvenet's pen mode.
+	var marks := []
+	for s in a.strokes:
+		marks.append("%s=%s" % [s.name, str(s.boundary)])
+	var ring_marked: bool = a.strokes.all(func(s): return bool(s.boundary) == (str(s.name).begins_with("waist")
+			or str(s.name).begins_with("hem")))
+	var begins: Array = a.events.filter(func(e): return e.kind == "begin")
+	_ok("rings are boundary strokes, seams are not", ring_marked and begins.size() == 6
+			and begins.all(func(e): return e.boundary == a.strokes[e.stroke].boundary), ", ".join(marks))
+	var nb := PenSource.make(body.v, sk.v, {"no_boundary": true})
+	_ok("control: no_boundary marks no stroke", nb.strokes.all(func(s): return not s.boundary))
 	# Endpoints: the 4 knots, each shared by exactly 3 stroke ends.
 	var ends := {}
 	for s in a.strokes:

@@ -24,11 +24,20 @@
 #                          the full skirt's 2 (the seam is what closes them)
 #   --push-vertex          control: must end FAILED(CHECK: INTERSECTS ...)
 #   --drape-steps=N --mesh-edge=m --drape-backend=cpu|rd|auto --drape-scale=s
+#   --drape-body=mesh|capsules|none  the drape's body collider (default mesh)
 #   --no-capsules          drape with no body collider (a control for the drape)
+#   --no-boundary          the rings are ordinary strokes (not curvenet boundary
+#                          strokes): their caps are patched too (a probe, not a
+#                          gate control)
+#   --fit-incremental-steps=N --fit-max-iterations=N
+#                          the fit budget (defaults 1 and -1); -1 keeps
+#                          fit_config.json's (2; AL 50 / Newton 5000). A cap
+#                          below the config's makes the reduced solve throw
 #   --fit-from=<obj>       with fit as a fixture: these vertices are the fit
 #                          (every run that fits writes <out>.fitted.obj)
 #
-# PASS (loop): pen copy == vendor/xr-grid; 2 cycles and 2 patches; the mesh
+# PASS (loop): pen copy == vendor/xr-grid; 2 cycles, 2 openings (the waist and
+# hem rings, drawn as boundary strokes) and 2 patches; the mesh
 # is one tube (2 boundary loops); fit ran to done; fit_check_intersections
 # "OK none" (and its pushed-vertex control INTERSECTS); drape ran N steps
 # and every position is finite; the screenshot was written.
@@ -174,8 +183,16 @@ func _opts() -> Dictionary:
 		o.drape_scale = float(_arg("drape-scale"))
 	if _args.has("no-capsules"):
 		o.drape_capsules = false
+	if _args.has("drape-body"):
+		o.drape_body = _arg("drape-body")
 	if _args.has("fit-from"):
 		o.fit_from = _arg("fit-from")
+	if _args.has("no-boundary"):
+		o.no_boundary = true
+	if _args.has("fit-incremental-steps"):
+		o.fit_incremental_steps = int(_arg("fit-incremental-steps"))
+	if _args.has("fit-max-iterations"):
+		o.fit_max_iterations = int(_arg("fit-max-iterations"))
 	if _arg("gate", "loop") == "pen":
 		o.stop_after = "MESH"
 	return o
@@ -308,7 +325,8 @@ func _evaluate() -> void:
 			unmeasured.append("cycles/patches (curvenet FIXTURE)")
 		elif not c.is_empty():
 			check.call("cycles", c.get("cycles") == 2, "cycles=%s (want 2)" % str(c.get("cycles")))
-			check.call("patches", c.get("patches") == 2, "patches=%s (want 2)" % str(c.get("patches")))
+			check.call("openings", c.get("openings") == 2, "openings=%s (want 2: the waist and the hem)" % str(c.get("openings")))
+			check.call("patches", c.get("patches") == 2, "patches=%s (want 2: the front and back panels)" % str(c.get("patches")))
 			var degs: Array = c.get("knot_degrees", [])
 			lines.append("INFO curvenet: curves=%s knots=%s degrees=%s edges=%s (4 knots of degree 3 have 6 edges)" % [
 					str(c.get("curves")), str(c.get("knots")), str(degs), str(c.get("edges"))])

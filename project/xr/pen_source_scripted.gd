@@ -20,9 +20,15 @@
 # alone leave it 2.5 cm inside), since fit_begin refuses a garment that starts
 # intersecting the body.
 #
+# The rings are boundary strokes (curvenet's "boundary" pen mode, captured at
+# pen_begin; the begin event carries it): a cycle made only of them is an
+# opening, the waist or the hem, and gets no patch. Without the mark the two
+# rings' caps are surfaced too (4 patches), since the network alone cannot
+# tell a cap from an opening (gates/4-curvenet/README.md, skirt (b)).
+#
 # The sketch graph this should give: 4 knots (waist/hem x front/back), each of
 # degree 3 (two half-rings and a seam), 6 edges by the handshake lemma (4 x 3 /
-# 2), and 2 cycles (the front and the back panel), so 2 patches. The Cut 8
+# 2), and 2 cycles (the front and the back panel) plus 2 openings, so 2 patches. The Cut 8
 # task text says "8 curves"; 4 knots of degree 3 cannot have 8 edges, so the
 # gate records the curvenet's own count and checks it against the knots.
 extends RefCounted
@@ -34,7 +40,9 @@ const HAND_CUT := 0.6
 
 # body_v: PackedFloat32Array xyz; joints: 45 floats in the 15-joint layout.
 # opts: half_samples (24), seam_samples (12), pressure (0.5), drop_seam
-# (false: the back seam is not drawn, the Gate 8 control), closed_rings.
+# (false: the back seam is not drawn, the Gate 8 control), closed_rings,
+# no_boundary (false: the rings are drawn as ordinary strokes, so their caps
+# are surfaced too; a control).
 static func make(body_v: PackedFloat32Array, joints: PackedFloat32Array, opts: Dictionary = {}) -> Dictionary:
 	if joints.size() != 45:
 		return {"error": "want 15 joints (45 floats), got %d floats" % joints.size()}
@@ -61,25 +69,27 @@ static func make(body_v: PackedFloat32Array, joints: PackedFloat32Array, opts: D
 	var ns: int = opts.get("seam_samples", 12)
 	var pressure: float = opts.get("pressure", 0.5)
 	var strokes := []
+	var ring_mark: bool = not opts.get("no_boundary", false)
 	var wf := _at(waist, PI / 2)
 	var wb := _at(waist, -PI / 2)
 	var hf := _at(hem, PI / 2)
 	var hb := _at(hem, -PI / 2)
 	if opts.get("closed_rings", false):
-		strokes.append({"name": "waist", "points": _arc(waist, PI / 2, PI / 2 - TAU, 2 * nh)})
-		strokes.append({"name": "hem", "points": _arc(hem, PI / 2, PI / 2 - TAU, 2 * nh)})
+		strokes.append({"name": "waist", "boundary": ring_mark, "points": _arc(waist, PI / 2, PI / 2 - TAU, 2 * nh)})
+		strokes.append({"name": "hem", "boundary": ring_mark, "points": _arc(hem, PI / 2, PI / 2 - TAU, 2 * nh)})
 	else:
-		strokes.append({"name": "waist_left", "points": _arc(waist, PI / 2, -PI / 2, nh)})
-		strokes.append({"name": "waist_right", "points": _arc(waist, PI / 2, 3 * PI / 2, nh)})
-		strokes.append({"name": "hem_left", "points": _arc(hem, PI / 2, -PI / 2, nh)})
-		strokes.append({"name": "hem_right", "points": _arc(hem, PI / 2, 3 * PI / 2, nh)})
-	strokes.append({"name": "seam_front", "points": _line(wf, hf, ns)})
+		strokes.append({"name": "waist_left", "boundary": ring_mark, "points": _arc(waist, PI / 2, -PI / 2, nh)})
+		strokes.append({"name": "waist_right", "boundary": ring_mark, "points": _arc(waist, PI / 2, 3 * PI / 2, nh)})
+		strokes.append({"name": "hem_left", "boundary": ring_mark, "points": _arc(hem, PI / 2, -PI / 2, nh)})
+		strokes.append({"name": "hem_right", "boundary": ring_mark, "points": _arc(hem, PI / 2, 3 * PI / 2, nh)})
+	strokes.append({"name": "seam_front", "boundary": false, "points": _line(wf, hf, ns)})
 	if not opts.get("drop_seam", false):
-		strokes.append({"name": "seam_back", "points": _line(wb, hb, ns)})
+		strokes.append({"name": "seam_back", "boundary": false, "points": _line(wb, hb, ns)})
 	var events := []
 	for k in strokes.size():
 		var pts: PackedVector3Array = strokes[k].points
-		events.append({"kind": "begin", "stroke": k, "pos": pts[0], "pressure": pressure})
+		events.append({"kind": "begin", "stroke": k, "pos": pts[0], "pressure": pressure,
+				"boundary": strokes[k].boundary})
 		for i in range(1, pts.size()):
 			events.append({"kind": "point", "stroke": k, "pos": pts[i], "pressure": pressure})
 		events.append({"kind": "end", "stroke": k})
@@ -91,7 +101,7 @@ static func make(body_v: PackedFloat32Array, joints: PackedFloat32Array, opts: D
 		"min_clearance": _clearance(body_v, waist, hem, wrists),
 		"clearance_before_grow": c0,
 		"grow": grow,
-		"expected": {"cycles": 2, "patches": 2, "knots": 4, "knot_degree": 3, "edges": 6,
+		"expected": {"cycles": 2, "openings": 2, "patches": 2, "knots": 4, "knot_degree": 3, "edges": 6,
 				"mesh_loops": 2, "mesh_components": 1},
 		"error": "",
 	}

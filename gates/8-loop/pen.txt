@@ -1,0 +1,24 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T02:14:09
+args: --gate=loop --out=../gates/8-loop/pen.txt --wallclock=300 --mcp-port=8796 --gate=pen --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER               81 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 10 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1166 ms  vm    1061.6 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               606 ms  vm     597.7 ms  heap 3.1 MiB  frames 1174  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS pipeline: DONE 
+PASS cycles: cycles=2 (want 2)
+PASS openings: openings=2 (want 2: the waist and the hem)
+PASS patches: patches=2 (want 2: the front and back panels)
+INFO curvenet: curves=6 knots=4 degrees=[3, 3, 3, 3] edges=6 (4 knots of degree 3 have 6 edges)
+PASS mesh: 932 v 1728 f, 2 loops, 1 components
+PASS screenshot: pen.png (1152x648)
+wall 3.0 s, frames 1193
+RESULT: PASS FIXTURE:infer,rig
+drape rd_close: CLOSED device=none permanent_slots=0

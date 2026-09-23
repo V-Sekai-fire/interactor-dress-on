@@ -1,0 +1,43 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T02:57:17
+args: --gate=loop --out=../gates/8-loop/probe-drape-mesh.txt --wallclock=600 --mcp-port=8796 --allow-fixture=infer,rig --force-fixture=fit --fit-from=C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-8/gates/8-loop/flat.fitted.obj --drape-body=mesh
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8796/mcp
+[dress-on] xr_main: flat
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture=fit pen=scripted
+STATE INFER               79 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1204 ms  vm    1147.9 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               619 ms  vm     610.8 ms  heap 3.1 MiB  frames 1608  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN            9 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fit: vertices from flat.fitted.obj
+STATE FIT_READ             2 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fit
+STATE CHECK                0 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE check skipped
+STATE DRAPE              371 ms  vm     353.2 ms  heap 2.7 MiB  frames 1  QUEUED forward 100 on rd | body mesh, 64 pins, scale 10.0
+STATE DRAPE_COLLECT     1943 ms  vm    1789.3 ms  heap 29.5 MiB  frames 301  IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892036 friction_events=64583 projections=31494 self_pushes=454 wall_ms=1939.2 ms/step=19.392 | 932 finite vertices after RUNNING 399/400
+=> DONE 
+FIXTURE: infer,rig,fit
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS pipeline: DONE 
+PASS cycles: cycles=2 (want 2)
+PASS openings: openings=2 (want 2: the waist and the hem)
+PASS patches: patches=2 (want 2: the front and back panels)
+INFO curvenet: curves=6 knots=4 degrees=[3, 3, 3, 3] edges=6 (4 knots of degree 3 have 6 edges)
+PASS mesh: 932 v 1728 f, 2 loops, 1 components
+PASS drape: 100 steps queued, { "status": "IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892036 friction_events=64583 projections=31494 self_pushes=454 wall_ms=1939.2 ms/step=19.392", "last_running": "RUNNING 399/400", "ticks": 301, "vertices": 932, "finite": true }
+PASS screenshot: probe-drape-mesh.png (1152x648)
+NOT MEASURED: fit done + intersections (fit FIXTURE)
+wall 5.4 s, frames 1932
+RESULT: INCOMPLETE
+drape rd_close: CLOSED device=freed permanent_slots=0
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

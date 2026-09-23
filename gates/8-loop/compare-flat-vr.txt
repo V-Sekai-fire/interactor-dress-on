@@ -1,0 +1,39 @@
+PASS terminal state: ('DONE', '')
+PASS state sequence: ['INFER', 'RIG', 'AUTHOR', 'MESH', 'FIT_BEGIN', 'FIT_RUN', 'FIT_READ', 'CHECK', 'DRAPE', 'DRAPE_COLLECT']
+PASS counts.strokes: 6
+PASS counts.cycles: 2
+PASS counts.openings: 2
+PASS counts.patches: 2
+PASS counts.curves: 6
+PASS counts.knots: 4
+PASS counts.knot_degrees: [3, 3, 3, 3]
+PASS counts.edges: 6
+PASS counts.nodes: 4
+PASS mesh.vertices: 932
+PASS mesh.triangles: 1728
+PASS mesh.loops: 2
+PASS mesh.components: 1
+PASS mesh_build: ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0
+PASS pins: {'count': 64, 'loop': 0, 'mean_y': 0.954453530721366}
+PASS fit_config: "incremental_steps": 2 -> 1
+PASS fit_begin: host_ms=* OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+PASS fit phases: ['host_ms=* OK phase 0 (substep 0, AL): newton 144 minimize 3 post_steps 147 energy 0.0078436545577110252 |grad| 0.539816 status 4 io_attempts 0 instructions=* heap_used=* heap_free=* chunks=*', 'host_ms=* OK phase 1 (substep 0, reduced): newton 109 minimize 1 post_steps 110 energy 0.011207282055103298 |grad| 0.00696386 status 4 io_attempts 0 instructions=* heap_used=* heap_free=* chunks=*']
+PASS check: OK none
+PASS check_control: OK INTERSECTS edge (5357,5936) face (3074,3548,2588)
+PASS drape.vertices: 932
+PASS drape.finite: True
+PASS drape.steps: 100
+INFO drape status: IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892027 friction_events=64586 projections=31494 self_pushes=455 wall_ms=2149.5 ms/step=21.495 | IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892027 friction_events=64586 projections=31494 self_pushes=455 wall_ms=4505.5 ms/step=45.055
+PASS fitted vertices: 932, max |a-b| = 0 (limit 1e-6)
+INFO INFER               100 ms        1 frames |       122 ms        1 frames
+INFO RIG                  10 ms        1 frames |        51 ms        1 frames
+INFO AUTHOR             1151 ms        7 frames |      1266 ms        7 frames
+INFO MESH                626 ms     1626 frames |       663 ms       44 frames
+INFO FIT_BEGIN          2441 ms     6331 frames |      2646 ms      175 frames
+INFO FIT_RUN         1393079 ms  3260154 frames |   1394224 ms    92168 frames
+INFO FIT_READ              3 ms        1 frames |        16 ms        1 frames
+INFO CHECK               964 ms        1 frames |       882 ms        1 frames
+INFO DRAPE               466 ms        1 frames |       449 ms        1 frames
+INFO DRAPE_COLLECT      2153 ms      301 frames |      4510 ms      301 frames
+INFO wall 1401.0 s | 1404.9 s
+RESULT: PASS

@@ -78,6 +78,16 @@ func dress_on_author_done() -> String:
 	pipeline.pen_finish()
 	return "pen finished in %s" % pipeline.state
 
+# The XR pen's boundary mode (xr/pen_bridge.gd): strokes begun while it is on
+# are the edges of openings (a skirt's waist and hem), whose cycles get no
+# patch. The thumbstick click toggles it in the headset.
+func dress_on_pen_boundary(on: bool = true) -> String:
+	var bridge = get_node_or_null("World/PenBridge")
+	if bridge == null:
+		return "FAIL: no World/PenBridge (xr_main.tscn only)"
+	bridge.boundary_mode = on
+	return "pen boundary mode %s" % ("on" if on else "off")
+
 # Which stages have their ELF (and its API), and why not.
 func dress_on_stages() -> String:
 	var out := PackedStringArray()

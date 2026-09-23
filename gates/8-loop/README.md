@@ -1,18 +1,21 @@
 # Gate 8 — join the loop
 
-**Result: FAIL at MESH on main's curvenet.elf (not yet end to end).** This
-branch is now Cut 8 on main at 8d59e6a (Stages 1, 2, 4, 5, 6 and Gate 0F
-merged). With `--allow-fixture=infer,rig` the loop gets through INFER, RIG
-and AUTHOR (the scripted pen in curvenet.elf: 2 cycles, 2 patches) and
-**fails at MESH**: the two patches are the waist and hem caps, not the front
-and back panels, so the mesh is 2 components (`rebased-infer-rig.*`). That is
-the cut-4 blocker found before the merge (below), unchanged in main's
-curvenet. Past it, the rest of the loop works on main's ELFs: fit.elf fitted
-the LCL skirt to FoxGirl in the loop in two runs, 2446 s and 2714 s (208
-Newton iterations and the same final energy to the last digit; CHECK `OK
-none`, control `INTERSECTS`), and main's drape.elf drapes that fit 100 finite
-steps on rd at 38.8 ms/step (`rebased-drape-from-fit.*`, INCOMPLETE because
-curvenet and fit are fixtures there).
+**Result: PASS FIXTURE:infer,rig, flat and VR, and over MCP.** Cut 8 on
+main 8d59e6a with cut-4-tube (curvenet: the skirt's panels, not its caps) and
+cut-5-fix (drape: the bending kernels' |s| = 0 guard, the body mesh collider)
+merged, every ELF rebuilt. With FoxGirl's body and skeleton as fixtures, the
+scripted pen draws the skirt, curvenet gives **2 cycles, 2 openings (waist,
+hem), 2 panel patches** and one welded tube (932 vertices, 1728 triangles, 2
+boundary loops, Euler 0); fit.elf fits it in **1393 s** (2 phases, 253
+Newton), `fit_check_intersections` answers **`OK none`** (its pushed-vertex
+control `INTERSECTS`); drape.elf drapes it **100 finite steps on rd**
+(`auto`) against the body's own triangles, 21.5 ms/step (`flat.*`). The VR
+run on OXRSys (per-process `XR_RUNTIME_JSON`) has the same state sequence,
+every integer equal and the fitted vertices equal to 0 (`vr.*`,
+`compare-flat-vr.txt`); the MCP drive ends `DONE FIXTURE:infer,rig`
+(`mcp/`). Controls: `--drop-seam` ends `FAILED(MESH)` with 0 cycles,
+`--push-vertex` ends `FAILED(CHECK: INTERSECTS ...)`. What still stands in:
+infer and rig (Cut 7 and Cut 4b).
 
 ## Design
 
@@ -52,32 +55,45 @@ IDLE → INFER → RIG → AUTHOR → MESH → FIT_BEGIN → FIT_RUN → FIT_REA
   (names first, else the bone graph; identity for FoxGirl). Labelled FIXTURE.
 - **AUTHOR**: pen events (`xr/pen_bridge.gd`, from SketchTool or replayed from
   `xr/pen_source_scripted.gd`) → curvenet `pen_begin / pen_point / pen_end`,
-  up to 64 events and one stroke end per frame; then `curvenet_build`.
+  up to 64 events and one stroke end per frame; then `curvenet_build`. A
+  begin event carries the stroke's **boundary** mark, set as curvenet's
+  `boundary` pen mode just before `pen_begin` (cut-4-tube, Cassie adaptation
+  7): a cycle made only of boundary strokes is an opening and gets no patch.
+  The scripted rings are boundary strokes, the seams are not; in the headset
+  the thumbstick click (or B, or `dress_on_pen_boundary`) toggles the mode.
 - **MESH**: `mesh_build(0.03, 1e-5)` on curvenet's worker thread; the mesh must
-  be one tube: 1 component, 2 boundary loops.
+  be one tube: 1 component, 2 boundary loops. 0.03 m gives 932 vertices, under
+  the plan's ≤ ~1000 for the Stage 8 garment.
 - **FIT_BEGIN / FIT_RUN / FIT_READ**: body, skeletons (the authored garment's
   source skeleton is the body's own), garment, `fixtures/foxgirl/fit_config.json`
-  (cut-6's foxgirl oracle setup without paths); `fit_begin` and then one
-  `fit_step` per job on the worker thread, `fit_status` read between jobs,
-  until it says `done`; then `fit_result_vertices`.
+  (cut-6's foxgirl oracle setup without paths) with `incremental_steps` 2 → 1
+  (the fit budget, below; `fit_config` in the summary names every edit);
+  `fit_begin` and then one `fit_step` per job on the worker thread,
+  `fit_status` read between jobs, until it says `done`; then
+  `fit_result_vertices`.
 - **CHECK**: `fit_check_intersections` must answer `OK none`. Its control
   runs every time beside it: the garment vertex nearest the pelvis moved onto
   the pelvis joint must answer `INTERSECTS`.
 - **DRAPE / DRAPE_COLLECT**: `drape_scene_mesh` with the fitted garment, pinned
-  on its waist loop (the boundary loop with the highest mean y). Cut-5's drape
-  has primitives only (sphere, plane, capsule), **so the body is approximated
-  by 14 capsules along the skeleton's bones** (radius = the median distance of
-  the body vertices nearest each bone, less the capsule's own contact offset).
-  DiffCloth's capsule has a fixed 0.1-unit contact offset, so the drape runs
-  in a frame scaled by 5 (1 m = 5 units, gravity −49; the offset is 2 cm)
-  and the result is scaled back. At 10 the rd backend gives NaN on the first
-  step for the fitted skirt (below). 100 steps are queued; `drape_tick` runs once per frame; the
+  on its waist loop (the boundary loop with the highest mean y; 64 pins). The
+  body is **drape.elf's triangle-mesh collider** (`drape_primitive_mesh`,
+  cut-5-fix: FoxGirl's 10171 triangles, skin 0.1, band 0.1, depth 1.0 drape
+  units): over 30 steps on the LCL skirt it left 0 vertices inside the body
+  against the 14 skeleton capsules' 186 (`gates/5-drape/skirt/README.md`).
+  `--drape-body=capsules` keeps the capsules (radius = the median distance of
+  the body vertices nearest each bone, less DiffCloth's 0.1-unit contact
+  offset), `none` drapes with no body. The drape runs in a frame scaled by
+  **10** (1 m = 10 units, gravity −98; the offset is 1 cm) and the result is
+  scaled back. Cut 8 ran at 5 while rd went NaN at 10 on the fitted skirt;
+  cut-5-fix found one near-flat bending hinge whose |s| rounds to exactly 0
+  under the GPU's FMA and guarded it in the Lean kernels, so the loop is back
+  at 10. 100 steps are queued; `drape_tick` runs once per frame; the
   positions must all be finite.
 - **Controls.** `--drop-seam` leaves the back seam out (5 strokes). It must
   end `FAILED(MESH: ...)` **and** the curvenet must report fewer cycles than
   the full skirt's 2 (`counts.cycles`, measured, 0 <= cycles < 2): the seam is
   what closes the front and back panels, so that is the failure the control
-  is for; a MESH failure for any other reason (the ring caps below, say) does
+  is for; a MESH failure for any other reason (the ring caps of `--no-boundary`, say) does
   not pass it. `--push-vertex` must end `FAILED(CHECK: INTERSECTS ...)`.
 
 Every state records its host-timed duration, its stage's vmcall time and
@@ -124,8 +140,9 @@ distance of body vertices within 2 cm of the ring's height (hands left out)
 rings passes 2.5 cm *inside* the hips, and `fit_begin` refuses a garment that
 starts intersecting the body, so both rings are grown by the deficit
 (3.5 cm) to 0.205 m and 0.231 m; the cone then clears the body by 1 cm.
-The graph should have 4 knots of degree 3, 6 edges, 2 cycles (front and back
-panel), 2 patches. The Cut 8 task text says "8 curves": 4 knots of degree 3
+The rings are drawn as boundary strokes. The graph should have 4 knots of
+degree 3, 6 edges, 2 cycles (front and back panel), 2 openings (the rings),
+2 patches. The Cut 8 task text says "8 curves": 4 knots of degree 3
 have 6 edges (handshake lemma), so the gate records the curvenet's count as
 INFO and checks cycles, patches and the mesh.
 
@@ -154,8 +171,16 @@ XR_RUNTIME_JSON="$PWD/tools/oxrsys/build/windows/runtime/oxrsys-runtime.json" \
 ```
 
 The VR run must equal the flat run: same STATE sequence, same counts
-(cycles, patches, mesh vertices / triangles / loops), same CHECK answer, drape
-finite (compare `results.json` with `results-vr.json`). `--quit-after` never
+(cycles, openings, patches, mesh vertices / triangles / loops), same fit and
+CHECK answers, drape finite, and the fitted vertices equal to 1e-6:
+
+```
+python gates/8-loop/compare_runs.py flat vr      # compares flat.json/.fitted.obj with vr's
+```
+
+The gate is a SceneTree script that instantiates `xr_main.tscn`, so it runs
+with `--script gate_loop.gd`; `godot ... res://xr_main.tscn -- --gate=loop`
+alone plays the scene without the gate (the scene does not read `--gate`). `--quit-after` never
 fires under `--xr-mode on`; the gate quits on its own wall clock, and a
 watchdog thread kills the process 60 s after it if the frame loop has stalled.
 
@@ -168,39 +193,108 @@ gates/8-loop/mcp_run.sh                       # ALLOW=infer,rig by default
 ```
 
 No-ELF tests: `tests/test_loop_units.gd` (skeleton15, the scripted pen,
-mesh_topo; 32 checks), `tests/probe_main_wrappers.gd` (every old and new
+mesh_topo; 34 checks), `tests/probe_main_wrappers.gd` (every old and new
 wrapper on `/root/Main`, and a source audit that every `ADD_API_FUNCTION` /
 `add_sandbox_api_function` in `guest/**/main.cpp` has one, through
 `tests/wrapper_audit.gd`), `tests/parse_check.gd`. `run_regress.sh` re-runs
 Gates 1, 2, 4 (and Gate 4's wrapper smoke) and 0F on this tree.
 
-## What runs today (this branch: main 8d59e6a + Cut 8)
+## What runs today (cut-8 = main 8d59e6a + Cut 8 + cut-4-tube + cut-5-fix)
+
+Every ELF rebuilt here (`build.sh`, `GGML_SRC` = the org's ggml): dress_on,
+probes, drape and fit are byte-identical to the merged branches' builds;
+curvenet.elf differs from cut-4-tube's only in the build path strings
+(55 `__FILE__` paths one character shorter). Runs on an RTX 4090 / 16
+threads; the three long runs (flat, VR, MCP) ran at the same time, each
+fit on its own worker thread.
 
 | run | result | file |
 |---|---|---|
-| parse check: 29 scripts and scenes (the stages, main's gate scripts, the tests) | **PASS** | `parse_check.txt` |
-| units (skeleton15 identity + 3 permuted rigs + a permuted named 20-joint rig + 2 refusals; pen deterministic, 4 knots of degree 3, clearance; tube loops) | **PASS** 32/32 | `units.txt` |
-| rule 8, source audit: 113 guest entry points (dress_on 8, probes 36, curvenet 23, drape 29, fit 17) each reached from a `/root/Main` wrapper with every argument defaulted (117 wrappers); controls: `p_memalign`'s delegate deleted → exactly `dress_on:p_memalign` missing; `rd_calls`' defaults stripped → exactly its 2 parameters | **PASS** | `wrappers.txt` |
-| rule 8, runtime: 49 old (279b31b) + 73 main (8d59e6a's, plus `rd_bench_quiet`, `rd_calls`, `rd_set_probe`, `drape_tick`, `drape_job_tick`, which had none) + 8 Cut 8 wrappers callable with no argument; Gate 6's 4 properties forwarded; 23 called | **PASS** | `wrappers.txt` |
-| Gate 1 `gate_rd_compute.gd` | **PASS** | `regress/gate_rd_compute.log` |
-| Gate 2 `gate_avbd.gd` | **PASS** | `regress/gate_avbd.results.txt` |
-| Gate 4 `gate_curvenet.gd` (check 7 now audits the delegates into `stages/curvenet_stage.gd`) and `probe_curvenet_wrappers.gd` (17 calls) | **PASS** | `regress/gate_curvenet.results.txt`, `regress/probe_curvenet_wrappers.log` |
-| Gate 0F `gate_runtime.gd` | **PASS=33 FAIL=5 INFO=27** (main's 31 + probe 17's two memalign lines; the 5 FAIL are the no-filesystem negative) | `regress/gate_runtime.results.txt` |
-| Gate 8 flat, `--allow-fixture=infer,rig` | **FAIL**: `FAILED(MESH: not a skirt tube: 843 triangles, 2 components, 2 boundary loops)`; cycles 2, patches 2 (the caps), knots 5 of degrees [3, 3, 2, 3, 1]; AUTHOR 1.27 s, MESH 0.11 s | `rebased-infer-rig.*`, `rebased-pen.*` (`--gate=pen`, the same) |
-| Gate 8 control `--drop-seam` | **FAIL**, correctly: it ends FAILED(MESH) but with **cycles 2** (the caps again), not fewer than the full skirt's; the old check (any FAILED(MESH)) would have passed it | `rebased-control-drop-seam.*` |
-| Gate 8 `--force-fixture=curvenet,fit --fit-from=integration/fitdrape3.fitted.obj` | **INCOMPLETE** (DONE; drape 100 finite steps on rd, 38.8 ms/step, 119,924 friction events, 12,797 projections, as before the merge; cycles, fit and intersections not measured) | `rebased-drape-from-fit.*` |
-| pen copy == vendor/xr-grid | **PASS** 32 files | every `rebased-*.txt` |
+| parse check: 29 scripts and scenes | **PASS** | `parse_check.txt` |
+| units (skeleton15; the scripted pen, now with its boundary marks and the `no_boundary` control; mesh_topo) | **PASS** 34/34 | `units.txt` |
+| rule 8, source audit: **114** guest entry points (dress_on 8, probes 36, curvenet 23, drape **30** with `drape_primitive_mesh`, fit 17) reached from 118 `/root/Main` wrappers, every argument defaulted; controls as before | **PASS** | `wrappers.txt` |
+| rule 8, runtime: 49 + 73 + 8 wrappers callable with no argument | **PASS** | `wrappers.txt` |
+| Gate 1 / Gate 2 / Gate 4 (10/10 checks, guest = native, `skirt_tube` included) / Gate 4 wrapper smoke (17 calls) / Gate 0F (PASS=33 FAIL=5 INFO=27, the 5 FAIL the no-filesystem negative) | **PASS** | `regress/` |
+| `--gate=pen` (the authoring half) | **PASS FIXTURE:infer,rig**: cycles 2, openings 2, patches 2, 4 knots of degree 3, 6 curves; 932 v 1728 f, 2 loops, 1 component | `pen.*` |
+| **Gate 8 flat** | **PASS FIXTURE:infer,rig** (every criterion below) | `flat.*` |
+| **Gate 8 VR** (OXRSys Runtime 1.2.0, `XR_RUNTIME_JSON` on the process) | **PASS FIXTURE:infer,rig**; equal to flat: 26/26 items, fitted vertices max \|Δ\| = 0; the process segfaults in Godot's OpenXR teardown **after** writing RESULT (rc 139, as before the merge) | `vr.*`, `compare-flat-vr.txt` |
+| **MCP drive** (`mcp_run.sh`: `dress_on_stages`, `dress_on_run ["infer,rig"]`, `dress_on_status` polled, `dress_on_result`) | **MCP RESULT: PASS**, pipeline `DONE FIXTURE:infer,rig t=1411.4s`; the result has cycles 2, openings 2, `OK none`, drape finite, body mesh | `mcp/` |
+| control `--drop-seam` | **PASS (control drop-seam) FIXTURE:infer,rig**: `FAILED(MESH: ... 0 triangles ...)`, cycles 0, openings 2, patches 0 | `control-drop-seam.*` |
+| control `--push-vertex` | **PASS (control push-vertex) FIXTURE:infer,rig**: the same fit, then `FAILED(CHECK: INTERSECTS edge (5357,5936) face (3074,3548,2588))` | `control-push-vertex.*` |
+| probe `--no-boundary` (rings as ordinary strokes) | FAIL, as it should: cycles 4, openings 0, patches 4 (two are caps), the mesh 3 loops | `probe-no-boundary.*` |
+| pen copy == vendor/xr-grid | **PASS** 32 files | every run |
 
-Not re-run on the rebased tree: the full fit in the loop (~45 min; the runs
-below are on cut-6's fit.elf, whose sources main merged), the VR run and the
-MCP drive. Before the rebase (279b31b + Cut 8, no curvenet/fit/drape API on
-the branch) they gave: VR on OXRSys the same STATE sequence as flat
-(`FAILED(AUTHOR: curvenet missing)`), OpenXR `OXRSys Runtime 1.2.0`, and a
-segfault on exit (rc 139) in Godot's OpenXR teardown after RESULT is written
-(`today-vr-infer-rig.*`); the MCP chain PASS (`mcp/`); every stage a fixture
-INCOMPLETE (`today-all-fixtures.*`).
+The flat run's criteria, from `flat.txt`:
 
-## Pre-merge integration (before the rebase)
+| criterion | measured |
+|---|---|
+| cycles / openings / patches | 2 / 2 / 2 (the front and back panels) |
+| curvenet | 6 curves, 4 knots of degrees [3, 3, 3, 3], 6 edges, 4 nodes |
+| mesh | 932 v, 1728 f, 2 loops, 1 component, Euler 0 |
+| fit | done: 2 phases, 253 Newton, energy 0.011207282055103298, io_attempts 0 |
+| intersections | `OK none`; control (the vertex nearest the pelvis moved onto it) `OK INTERSECTS` |
+| drape | 100 of 100 rd steps, 932 finite vertices, ymin 5.892 units (0.589 m), 64,586 friction events, 31,494 projections, 455 self pushes |
+| screenshot | `flat.png` 1152×648 |
+
+Times and heap per state (host-timed; heap = the stage sandbox's
+`get_heap_usage` when the state ends):
+
+| state | flat ms | VR ms | vmcall ms (flat) | heap |
+|---|---|---|---|---|
+| INFER (FIXTURE) | 100 | 122 | 0 | — |
+| RIG (FIXTURE) | 10 | 51 | 0 | — |
+| AUTHOR (6 strokes) | 1151 | 1266 | 1098 | curvenet 2.9 MiB |
+| MESH | 626 | 663 | 618 | curvenet 3.1 MiB |
+| FIT_BEGIN | 2441 | 2646 | 2438 | fit 8.3 MiB |
+| FIT_RUN | **1,393,079** | 1,394,224 | 1,393,073 | fit 51.6 MiB |
+| FIT_READ | 3 | 16 | 0.1 | fit 51.6 MiB |
+| CHECK (+ control) | 964 | 882 | 963 | fit 51.6 MiB |
+| DRAPE (setup) | 466 | 449 | 447 | drape 2.7 MiB |
+| DRAPE_COLLECT (100 steps) | 2153 (21.5 ms/step) | 4510 (45.1 ms/step) | 1976 | drape 29.5 MiB |
+| wall | 1401 s | 1405 s | | |
+
+The main thread kept rendering during the fit: 3,260,154 frames flat
+(~2340 frames/s, vsync off) and 92,168 in VR (~66 frames/s, the XR frame
+loop).
+
+## The fit budget, measured
+
+The plan extrapolated the Stage 8 garment at "≤ ~1,000 vertices, ~60
+Newton (incremental_steps 1, both solves capped at 30) ≈ 4–5 min". Measured
+on the 932-vertex authored skirt:
+
+| config | phase 0 (AL) | phase 1 (reduced) | fit | verdict |
+|---|---|---|---|---|
+| incremental_steps 1, both caps 30 (`flat-cap30.*`) | 983 s, 150 Newton in **5** minimizes, 8.59e11 instructions | 117 s, then **throws** at its 30-iteration limit (`[SparseNewton] Reached iteration limit`) | FAIL at FIT_RUN | the caps cost more than they save |
+| incremental_steps 1, the config's caps (AL 50, Newton 5000) (`flat.*`, the default) | 1013 s, 144 Newton in 3 minimizes, 8.19e11 instructions (781k units of 2^20) | 380 s, 109 Newton, 4.07e11 instructions | **1393 s, 253 Newton**, done | PASS |
+
+Why the caps backfire: at 30 the augmented Lagrangian's first minimize stops
+short of its constraint, so the AL raises its weight and minimizes again (5
+times, 150 Newton, against 3 and 144 at 50); and polysolve's reduced solve
+treats its iteration limit as an error unless `allow_out_of_iterations` is
+set, which cut-6's config does not. So the loop keeps the config's caps and
+takes only `incremental_steps` 1 (2 phases instead of 4). The fit is 23 min,
+not 4–5: the ~60 Newton figure assumed each solve converges inside its cap,
+and it does not (253 Newton at ~5.5 s each on 932 vertices, against ~11.8 s
+each for the 2682-vertex LCL skirt). The largest phase is 781k units, 3.2×
+under the fit Sandbox's `execution_timeout` of 2,500,000; the heap peaks at
+51.6 MiB of the 2048 MiB Sandbox. Levers not tried here: a coarser mesh
+(`--mesh-edge=0.04`), `allow_out_of_iterations` with a cap on the reduced
+solve, and a looser AL tolerance.
+
+The capsule body gives the same PASS (`flat-capsules.*`, `vr-capsules.*`,
+equal to each other: `compare-flat-vr-capsules.txt`), but the draped skirt
+sinks into the thighs (`flat-capsules.png`); the body mesh keeps it outside
+(`flat.png`; `probe-drape-mesh.*` and `probe-drape-capsules.*` drape the
+saved fit both ways in 1.9 s: ymin 5.892 against 5.698). Observed, not
+measured by the gate: a small notch at each end of the front seam in the
+screenshots.
+
+## History: the pre-merge integration (before the rebase)
+
+Kept for the record; the two blockers found here (curvenet's caps and
+knots, the rd NaN at scale 10) are fixed by cut-4-tube and cut-5-fix. The
+`rebased-*` and `today-*` files are the runs before those merges.
 
 A scratch copy of this project with the ELFs built in the cut-4, cut-5 and
 cut-6 worktrees at 22:22 (curvenet.elf md5 4a87bda0, drape.elf 7fdde27a,
@@ -252,20 +346,10 @@ fit.elf a4a13ca1; cut-4 at be47a124 with its uncommitted work, now
 
 | stage | waiting on | then |
 |---|---|---|
-| AUTHOR, MESH | **curvenet (Cut 4 follow-up)**: the two findings above (no caps from ring cycles; stroke ends merge into shared knots) | 2 panels → one tube, 2 loops; the drop-seam control then has its fewer cycles |
-| FIT_*, CHECK | nothing on main (fit.elf is built by build.sh, not committed); a ~500-vertex authored skirt should fit well inside the 41–45 min of the 2682-vertex LCL skirt | fit done, `OK none`, control INTERSECTS (seen in the loop) |
-| DRAPE | the rd NaN at scale 10 (Cut 5's to look at); a mesh collider would replace the capsules | 100 finite steps (seen on main's drape.elf at scale 5) |
 | INFER, RIG | Cut 7 (Pixal3D) and Cut 4b (skin-tokens) | the FIXTURE label goes |
-
-The merge: main's `main.gd` (cut-4, cut-5 and cut-6 wrappers on the old
-single-file root) gave way to this branch's thin root, and every wrapper
-there moved into its stage file with its body unchanged, main.gd keeping a
-same-named delegate with the same defaults (curvenet's pipeline calls became
-`pen_begin_at` / `pen_point_at` so the scripted-pen wrappers keep their MCP
-shape; the fit stage took over `fit_configure(_with)`, `foxgirl_arrays`, the
-config overrides and the probes; the drape stage `drape_optimize`,
-`drape_job_data`, `lbfgsb_load_oracle` and the rest). `util/mesh_wire.gd` and
-`util/obj_io.gd` were byte-identical on both sides.
+| FIT_* | a faster fit (23 min for 932 vertices; levers above) | the loop inside an authoring session |
+| VR exit | Godot's OpenXR teardown segfaults after RESULT (rc 139) | a clean exit code |
+| a real headset | the manual checklist below | hand-drawn strokes in the loop |
 
 ## Manual headset checklist
 
@@ -278,13 +362,16 @@ config overrides and the probes; the drape stage `drape_optimize`,
    the status reads `AUTHOR`.
 5. Hold a trigger to draw: a yellow (left) or blue (right) ribbon follows the
    controller; each press is one stroke.
-6. Draw the waist ring as two halves (front to back on each side), the hem
-   ring the same, then a front and a back seam, each ending on the ring
-   points.
+6. Click a thumbstick (or press B, or MCP `dress_on_pen_boundary [true]`);
+   the log says `pen: boundary mode on`. Draw the waist ring as two halves
+   (front to back on each side) and the hem ring the same: these are the
+   openings. Click again (`boundary mode off`) and draw a front and a back
+   seam, each ending on the ring points. A ring drawn with the mode off gets
+   a cap patch (the `--no-boundary` probe: 4 patches, 3 loops).
 7. Press a menu button (or `dress_on_author_done`) to end the authoring.
-8. The status moves through MESH, FIT_* (minutes; the main thread keeps
-   rendering), CHECK, DRAPE; the garment turns blue (mesh), green (fit),
-   magenta (drape).
+8. The status moves through MESH, FIT_* (~23 min for a ~900-vertex skirt;
+   the headset keeps rendering), CHECK, DRAPE; the garment turns blue
+   (mesh), green (fit), magenta (drape).
 9. `dress_on_result` has the per-state record. A/B buttons are xr-grid's own
    debug save/load of the stroke mesh (they write `res://test_save.mesh`);
    avoid them.

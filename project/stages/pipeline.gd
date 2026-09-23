@@ -13,8 +13,8 @@
 #         control is run beside it every time
 # DRAPE   drape.elf: the fitted garment as a drape_scene_mesh, pinned on its
 #         waist loop (the boundary loop with the highest mean y), the body as
-#         capsules from the skeleton (cut-5's drape has primitives only: a
-#         sphere, a plane, a capsule; no mesh collider), N forward steps
+#         drape.elf's triangle-mesh collider (or, drape_body = capsules, 14
+#         capsules along the skeleton), N forward steps
 # DRAPE_COLLECT  drape_tick runs from the drape stage's _process; positions
 #         are read once it is IDLE and must all be finite
 #
@@ -71,15 +71,30 @@ const DEFAULTS := {
 	"drop_seam": false,       # control: the back seam is not drawn -> FAILED(MESH)
 	"push_vertex": false,     # control: CHECK uses a garment with one vertex pushed inside -> INTERSECTS
 	"closed_rings": false,
+	"no_boundary": false,     # control: the rings are ordinary strokes, so their caps are patched too
 	"mesh_edge": 0.03,        # curvenet mesh_build target_edge_length (m); 0 = no remesh
 	"weld_eps": 1e-5,
+	# The fit budget (plan, "Measured budgets"): a <= ~1000-vertex garment
+	# (mesh_edge 0.03 gives 932 vertices) and incremental_steps 1, so 2 phases.
+	# The plan's "both solves capped at 30" was measured and is not used: at 30
+	# the AL phase's first minimize stops short of its constraint, so the AL
+	# runs 5 minimizes (150 Newton, 983 s), and the reduced solve throws at its
+	# limit (polysolve without allow_out_of_iterations). -1 keeps
+	# fixtures/foxgirl/fit_config.json's value (2; AL 50 and Newton 5000, the
+	# cut-6 oracle setup).
+	"fit_incremental_steps": 1,
+	"fit_max_iterations": -1,
 	"drape_steps": 100,
 	"drape_backend": "auto",
-	"drape_scale": 5.0,       # body metres -> drape units: cut-5's capsule has DiffCloth's fixed 0.1-unit
-	                          # contact offset (2 cm at 5); at 10 the rd backend gives NaN on step 1 for
-	                          # the fitted LCL skirt (cpu stays finite), at 5 and below it is finite
+	"drape_scale": 10.0,      # body metres -> drape units: cut-5's capsule has DiffCloth's fixed 0.1-unit
+	                          # contact offset (1 cm at 10). Cut 8 ran at 5 while rd went NaN at 10 on
+	                          # the fitted LCL skirt; cut-5-fix's |s| = 0 guard in the bending kernels
+	                          # fixed that (Gate 5 G10), so the loop is back at 10
 	"drape_mu": 0.3,
 	"drape_capsules": true,   # false: no body collider at all (a control for the drape itself)
+	"drape_body": "mesh",     # mesh: the body's triangles as drape.elf's mesh collider (cut-5-fix; 0 skirt
+	                          # vertices inside after 30 steps against the capsules' 186); capsules: 14
+	                          # along the skeleton; none
 	"fit_from": "",           # with fit as a fixture: an OBJ whose vertices are the fitted garment (a saved fit)
 	"stop_after": "",         # "MESH" for --gate=pen
 }
@@ -123,8 +138,11 @@ func start(o: Dictionary = {}) -> String:
 			",".join(opts.force_fixture), opts.pen]
 
 # Pen events from a bridge (body-local). kind: begin | point | end.
-func pen_event(kind: String, stroke: int, pos: Vector3 = Vector3.ZERO, pressure: float = 0.5) -> void:
-	pen_queue.append({"kind": kind, "stroke": stroke, "pos": pos, "pressure": pressure})
+# boundary (begin only): the stroke is the edge of an opening (curvenet's
+# boundary pen mode; a cycle made only of such strokes gets no patch).
+func pen_event(kind: String, stroke: int, pos: Vector3 = Vector3.ZERO, pressure: float = 0.5,
+		boundary: bool = false) -> void:
+	pen_queue.append({"kind": kind, "stroke": stroke, "pos": pos, "pressure": pressure, "boundary": boundary})
 
 func pen_finish() -> void:
 	pen_finished = true
@@ -145,8 +163,8 @@ func status() -> String:
 func summary() -> Dictionary:
 	var d := {"state": state, "reason": reason, "fixtures": fixtures, "records": records,
 			"wall_s": (Time.get_ticks_msec() - _run_t0) / 1000.0}
-	for k in ["counts", "rings", "min_clearance", "mesh", "fit_begin", "fit_phases", "check", "check_control",
-			"drape", "drape_input", "drape_setup", "capsules", "pins"]:
+	for k in ["counts", "rings", "min_clearance", "mesh", "fit_config", "fit_begin", "fit_phases", "check", "check_control",
+			"drape", "drape_input", "drape_setup", "drape_body", "capsules", "pins"]:
 		if data.has(k):
 			d[k] = data[k]
 	return d
@@ -283,7 +301,8 @@ func _author(first: bool) -> void:
 			data.counts = {"fixture": true}
 			_goto("MESH", g.source)
 			return
-		var src := PenSource.make(data.body_v, data.joints, {"drop_seam": opts.drop_seam, "closed_rings": opts.closed_rings})
+		var src := PenSource.make(data.body_v, data.joints, {"drop_seam": opts.drop_seam, "closed_rings": opts.closed_rings,
+				"no_boundary": opts.no_boundary})
 		if src.error != "":
 			_fail("pen source: " + src.error)
 			return
@@ -310,6 +329,10 @@ func _author(first: bool) -> void:
 		n += 1
 		match e.kind:
 			"begin":
+				var bm: String = curvenet.set_param("boundary", 1.0 if e.get("boundary", false) else 0.0)
+				if bm.begins_with("FAIL"):
+					_fail("set_param boundary: " + bm)
+					return
 				var id: int = curvenet.pen_begin_at(e.pos, e.pressure)
 				if id < 0:
 					_fail("pen_begin refused stroke %d at %s" % [e.stroke, str(e.pos)])
@@ -340,6 +363,7 @@ func _author(first: bool) -> void:
 	data.counts = {
 		"strokes": data.pen_ends.size(),
 		"cycles": _kv(last, "cycles"),
+		"openings": _kv(last, "openings"),
 		"edges": _kv(last, "edges"),
 		"nodes": _kv(last, "nodes"),
 		"patches": patches,
@@ -351,8 +375,8 @@ func _author(first: bool) -> void:
 		"last_pen_end": last,
 		"curvenet_build": cb,
 	}
-	_goto("MESH", "strokes %d cycles %d patches %d curves %d knots %d degrees %s" % [data.pen_ends.size(),
-			data.counts.cycles, patches, data.counts.curves, data.counts.knots, str(degrees)])
+	_goto("MESH", "strokes %d cycles %d openings %d patches %d curves %d knots %d degrees %s" % [data.pen_ends.size(),
+			data.counts.cycles, data.counts.openings, patches, data.counts.curves, data.counts.knots, str(degrees)])
 
 func _mesh(first: bool) -> void:
 	if data.has("garment"): # the curvenet fixture
@@ -420,6 +444,12 @@ func _fit_begin(first: bool) -> void:
 		if cfg.is_empty():
 			_fail("fixtures/foxgirl/fit_config.json unreadable")
 			return
+		var fc := _fit_budget(cfg)
+		if fc.has("error"):
+			_fail(fc.error)
+			return
+		cfg = fc.text
+		data.fit_config = fc.note
 		var e: String = fit.setup(data.body_v, data.body_f, g.source_joints, data.joints, data.bones, g.vertices,
 				g.triangles, g.nofit, cfg)
 		if e != "":
@@ -539,7 +569,11 @@ func _drape() -> void:
 		drape.drape_open(opts.drape_backend),
 		drape.drape_primitive("clear", PackedFloat32Array()),
 	]
-	for c in (data.capsules if opts.drape_capsules else []):
+	var body: String = str(opts.drape_body) if opts.drape_capsules else "none"
+	if body == "mesh":
+		steps.append(drape.drape_primitive_mesh(_scaled(data.body_v, s), data.body_f,
+				PackedFloat32Array([0.1, opts.drape_mu, 0.1, 1.0])))
+	for c in (data.capsules if body == "capsules" else []):
 		var b: Vector3 = c.bottom * s
 		var ax: Vector3 = c.axis
 		steps.append(drape.drape_primitive("capsule", PackedFloat32Array([b.x, b.y, b.z, ax.x, ax.y, ax.z,
@@ -555,7 +589,9 @@ func _drape() -> void:
 	if not q.begins_with("QUEUED"):
 		_fail(q)
 		return
-	_goto("DRAPE_COLLECT", "%s | %d capsules, %d pins, scale %.1f" % [q, data.capsules.size(), pins.size(), s])
+	data.drape_body = body
+	_goto("DRAPE_COLLECT", "%s | body %s%s, %d pins, scale %.1f" % [q, body,
+			" (%d capsules)" % data.capsules.size() if body == "capsules" else "", pins.size(), s])
 
 func _drape_collect() -> void:
 	var st: String = drape.drape_status()
@@ -581,8 +617,8 @@ func _drape_collect() -> void:
 # Capsules along the skeleton's bones. Each body vertex goes to its nearest
 # bone; a bone's radius is the median distance of its vertices, less the
 # capsule's own contact offset (0.1 drape units, DiffCloth's Capsule), so the
-# contact surface sits near the median skin. An approximation of the body:
-# cut-5's drape has no mesh collider.
+# contact surface sits near the median skin. An approximation of the body,
+# used with drape_body = "capsules" (the default is the body mesh collider).
 func _capsules(body_v: PackedFloat32Array, joints: PackedFloat32Array, bones: PackedInt32Array) -> Array:
 	var segs := []
 	for b in range(0, bones.size() - 1, 2):
@@ -619,6 +655,32 @@ func _capsules(body_v: PackedFloat32Array, joints: PackedFloat32Array, bones: Pa
 	return out
 
 # --- helpers ---------------------------------------------------------------------------------
+
+# The fit budget as text edits on the setup JSON: a GDScript JSON round trip
+# would turn 2 into 2.0, which the spec's integer fields refuse. Each edit
+# must match exactly one literal, so a changed fixture fails loudly instead of
+# fitting with the wrong budget. The CCD's max_iterations (200) is left alone.
+func _fit_budget(cfg: String) -> Dictionary:
+	var edits := []
+	var inc: int = int(opts.get("fit_incremental_steps", -1))
+	var cap: int = int(opts.get("fit_max_iterations", -1))
+	if inc > 0:
+		edits.append([r'("incremental_steps"\s*:\s*)\d+', str(inc)])
+	if cap > 0:
+		# augmented_lagrangian.nonlinear.max_iterations, then solver.nonlinear.max_iterations
+		edits.append([r'("grad_norm"\s*:\s*1,\s*"max_iterations"\s*:\s*)\d+', str(cap)])
+		edits.append([r'("min_step_size"\s*:\s*[0-9.e+-]+\s*[}],\s*"max_iterations"\s*:\s*)\d+', str(cap)])
+	var notes := []
+	for e in edits:
+		var re := RegEx.new()
+		re.compile(e[0])
+		var hits := re.search_all(cfg)
+		if hits.size() != 1:
+			return {"error": "fit budget: %d matches for /%s/ in fit_config.json (want 1)" % [hits.size(), e[0]]}
+		var hit := hits[0].get_string().replace("\n", " ").replace("\r", "").replace("\t", "")
+		notes.append("%s -> %s" % [" ".join(hit.split(" ", false)), e[1]])
+		cfg = re.sub(cfg, "${1}" + str(e[1]))
+	return {"text": cfg, "note": "; ".join(notes) if not notes.is_empty() else "fit_config.json as is"}
 
 # cloth-fit's normalisation (fit_driver.cpp, optimize.cpp:1349-1369): the
 # source skeleton centred and scaled to the target's bounding-box size, then

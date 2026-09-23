@@ -15,6 +15,8 @@ PASS fixture body is 1.7 m tall, feet on y=0: [P: (-0.513313, 0.0, -0.167375), S
 PASS scripted pen made: waist 0.20470779959939 | hem 0.23053572897694
 PASS deterministic: 132 events
 PASS 6 strokes, none closed: ["waist_left", "waist_right", "hem_left", "hem_right", "seam_front", "seam_back"]
+PASS rings are boundary strokes, seams are not: waist_left=true, waist_right=true, hem_left=true, hem_right=true, seam_front=false, seam_back=false
+PASS control: no_boundary marks no stroke
 PASS stroke waist_left open
 PASS stroke waist_right open
 PASS stroke hem_left open
@@ -32,5 +34,5 @@ PASS open tube: 2 boundary loops of 16: [16, 16]
 PASS open tube: the top loop is highest: mean y 1.0000
 PASS open tube: one component
 PASS control: two tubes -> two components, four loops
-32 checks, 0 failed
+34 checks, 0 failed
 RESULT: PASS

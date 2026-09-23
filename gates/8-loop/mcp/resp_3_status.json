@@ -1,1 +1,1 @@
-{"final_status": "FAILED(AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))) FIXTURE:infer,rig t=2.2s"}
+{"final_status": "DONE FIXTURE:infer,rig t=1411.4s"}

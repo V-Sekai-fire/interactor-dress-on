@@ -9,6 +9,11 @@ if(CMAKE_C_COMPILER_TARGET AND NOT CMAKE_ASM_COMPILER_TARGET)
 endif()
 enable_language(ASM)
 
+# __FILE__ (ggml's asserts) and debug info name sources relative to the
+# checkout, so a committed ELF names neither the machine nor the worktree
+# it was built in, and two checkouts build the same strings.
+add_compile_options("-ffile-prefix-map=${CMAKE_SOURCE_DIR}/=")
+
 # The guest ELF. It builds against the vendored godot-sandbox guest API and
 # nothing else; the riscv64 sysroot comes in through the toolchain file that
 # build.sh passes. If this file ever needs another dependency to *link*, the
@@ -80,6 +85,13 @@ foreach(opt GGML_NATIVE GGML_BACKEND_DL BUILD_SHARED_LIBS GGML_OPENMP GGML_LLAMA
 	set(${opt} OFF CACHE BOOL "" FORCE)
 endforeach()
 add_subdirectory(vendor/ggml ggml EXCLUDE_FROM_ALL)
+# ggml stamps ggml_commit() with `git rev-parse HEAD` of the enclosing repo,
+# which here is this one (vendor/ggml is a subtree): the wrong project, and a
+# committed ELF that changes with every commit. Stamp the vendored pin.
+get_target_property(_ggml_defs ggml-base COMPILE_DEFINITIONS)
+list(FILTER _ggml_defs EXCLUDE REGEX "^GGML_COMMIT=")
+list(APPEND _ggml_defs "GGML_COMMIT=\"04b55bba\"")
+set_target_properties(ggml-base PROPERTIES COMPILE_DEFINITIONS "${_ggml_defs}")
 # clang predefines __riscv_v_intrinsic for every riscv64 target, V or not,
 # and ggml-cpu keys its RVV paths on that macro alone; at rv64gc they then
 # fail on vfloat32m8_t. Undefine it so the scalar paths are compiled (Gate 0F

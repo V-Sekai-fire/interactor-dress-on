@@ -86,6 +86,12 @@ state fails loudly, never a silent fixture.
     (`infer_host.gd`, `GGML_CPU_TIMEOUT_UNITS`). Chaining resumable
     sub-5-minute jobs is allowed but frowned upon: a last resort, documented
     in the gate's README.
+11. **A rotation is a 3x3 matrix, or its 6D truncation** (the first two
+    rows, re-orthonormalised); never Euler angles or quaternions: in the
+    guest (`similarity.h`'s Umeyama output stays the matrix), in attachment
+    targets, in GDScript (no `Basis.from_euler`, no `Quaternion`) and in
+    analysis scripts (fit a rotation as a matrix; an angle from the trace is
+    a readable summary only). (User, 2026-09-23.)
 
 ## Facts that cost time (do not relearn)
 

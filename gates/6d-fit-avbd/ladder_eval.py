@@ -49,6 +49,40 @@ def stats(d):
     return "mean %.2f p50 %.2f p95 %.2f max %.2f" % (d.mean(), np.median(d), np.percentile(d, 95), d.max())
 
 
+def kabsch(src, dst):
+    """The best rigid transform src -> dst (rotation as a 3x3 matrix, Kabsch /
+    Umeyama with the scale fixed at 1): R, t with dst ~ src @ R.T + t."""
+    cs, ct = src.mean(0), dst.mean(0)
+    a, b = src - cs, dst - ct
+    U, _, Vt = np.linalg.svd(b.T @ a)
+    d = np.ones(3)
+    if np.linalg.det(U) * np.linalg.det(Vt) < 0:
+        d[2] = -1.0
+    R = U @ np.diag(d) @ Vt
+    return R, ct - R @ cs
+
+
+def rot_y(src, dst):
+    """The best rotation about y (+ translation) src -> dst, as the 3x3
+    matrix built from the least-squares 2x2 [[c, s], [-s, c]] in the x-z
+    plane (c, s normalised from the sums, never an angle)."""
+    cs, ct = src.mean(0), dst.mean(0)
+    a, b = src - cs, dst - ct
+    c = (a[:, 0] * b[:, 0] + a[:, 2] * b[:, 2]).sum()
+    s = (a[:, 2] * b[:, 0] - a[:, 0] * b[:, 2]).sum()
+    n = np.hypot(c, s)
+    c, s = c / n, s / n
+    R = np.array([[c, 0.0, s], [0.0, 1.0, 0.0], [-s, 0.0, c]])
+    return R, ct - R @ cs
+
+
+def rot_summary(R):
+    """The rotation's 6D truncation (its first two rows) and, as a readable
+    summary only, the angle from the trace."""
+    ang = np.degrees(np.arccos(np.clip((np.trace(R) - 1.0) / 2.0, -1.0, 1.0)))
+    return "rows [%s] [%s] angle %.1f deg" % (" ".join("%.4f" % x for x in R[0]), " ".join("%.4f" % x for x in R[1]), ang)
+
+
 def main():
     av, af = load_obj(sys.argv[1])
     rv, rf = load_obj(sys.argv[2])
@@ -78,6 +112,14 @@ def main():
             os.path.basename(g), len(gv), "==" if same_tris else "!=", stats(dv), stats(ds), ds2.mean(),
             np.percentile(ds2, 95), stats(dg), stats(dg / (1000.0 * h)), int((sg < 0).sum()), gv[:, 1].min(),
             gv[:, 1].max()), flush=True)
+        # What the per-vertex distance is made of: the residual after the
+        # best rotation about y, and after the best rigid transform.
+        Ry, ty = rot_y(gv, rv)
+        dy = np.linalg.norm(gv @ Ry.T + ty - rv, axis=1) * 1000.0
+        Rk, tk = kabsch(gv, rv)
+        dk = np.linalg.norm(gv @ Rk.T + tk - rv, axis=1) * 1000.0
+        print("    after the best rotation about y (%s): to REF %s mm | after the best rigid transform (%s): %s mm" % (
+            rot_summary(Ry), stats(dy), rot_summary(Rk), stats(dk)), flush=True)
 
 
 if __name__ == "__main__":

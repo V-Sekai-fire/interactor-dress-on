@@ -169,6 +169,50 @@ surface (the panels' parameterisation), which the per-vertex distance
 counts and the surface distance does not. The fit is judged on the
 surface (`PASS_SURF_MEAN_MM` 15, `PASS_SURF_P95_MM` 30).
 
+## Vertex-to-vertex agreement: what the 46 mm is made of (`ladder-eval-rigid.txt`)
+
+The user asked for per-vertex agreement (mean ≤ 30 mm, p95 ≤ 60) within the
+same time. `ladder_eval.py` now also fits the best rotation about y and the
+best rigid transform (Kabsch, a 3x3 matrix; the rotation reported as its
+first two rows and, as a summary, the angle from the trace) from each
+result to the PolyFEM fit and prints the residual after each:
+
+| garment | per vertex raw | after the best rotation about y | after the best rigid transform |
+|---|---|---|---|
+| the authored skirt (tube control) | 119.3 / 186.7 | 16.3 deg: 80.2 / 130.1 | 17.2 deg: 78.8 / 130.6 |
+| PolyFEM without psd (`gates/8-loop/flat.fitted.obj`) | 3.7 / 5.8 | 1.1 deg: 2.2 / 3.9 | 2.2 / 4.0 |
+| **the pick `f60-i32-s300`** | 46.1 / 75.6 | **13.3 deg: 28.2 / 58.0** | 13.5 deg: 27.6 / 57.4 |
+| `f60-i16-s300` | 46.7 / 76.0 | 13.3 deg: 28.5 / 58.3 | 27.9 / 57.6 |
+| `f20-i32-s300` | 50.5 / 78.4 | 13.3 deg: 29.7 / 56.6 | 28.9 / 56.1 |
+| `f180-i32-s300` | 46.5 / 78.2 | 13.6 deg: 29.1 / 61.8 | 28.4 / 61.7 |
+| no similarity update (control) | 85.7 / 131.0 | 13.2 deg: 54.0 / 98.8 | 52.6 / 96.4 |
+
+(mm, mean / p95.) So the per-vertex distance is **a rotation about the
+vertical axis plus a residual just under the bar**: removing the 13.3 deg
+takes the pick to 28.2 / 58.0. The rotation is not ours: **PolyFEM turned
+the whole skirt 16.3 deg about y** relative to the authored mesh, the same
+at every height band (−15.9..−16.9 deg per 10 cm band), and its two runs
+agree on it (psd and no-psd fits 1.1 deg apart, 3.7 mm per vertex), while
+the avbd fit keeps the authored azimuth (0.1..0.7 deg per band). The inputs
+have no axis to derive it from: FoxGirl's hip joints lie on the x axis to
+0.0 deg (skeleton.obj joints 9 and 12: z equal to 0.0001), the body's
+horizontal principal axis between y 0.6 and 1.0 is at 0.1 deg, and the
+retarget is the identity (the authored garment's skeleton is the body's).
+A tube on a left-right symmetric body has its azimuth as a soft mode of the
+fit energy; PolyFEM's Newton path from the skeleton-collapsed start avatar
+lands 16 deg from where the quasi-static AVBD path lands. Hard-coding that
+angle into the retarget would be fitting the answer key, not a mechanism,
+and holding the waist's azimuth (a rotational anchor) would hold it at the
+authored 0 deg, where the avbd fit already is; a per-panel or per-ring
+similarity would act on the 28 mm residual, not on the 18 mm the rotation
+carries. **Result on this bar: not met, and not reachable inside the time by
+any rung: 46 mm mean / 76 p95, of which 18 mm is a 13 deg azimuth that
+PolyFEM's own solve introduces and 28 / 58 is tangential sliding of the
+panels' parameterisation (the surfaces are 7 mm apart).** What would reach
+it: reproducing cloth-fit's phase 0 (the garment fitted to the avatar
+collapsed onto its skeleton and inflated, alpha 0 → 1), the one thing in
+its pipeline that can turn a symmetric tube, which is a cut of its own.
+
 ## Negative results (kept: `pass1/` .. `pass7/`)
 
 Each pass is the full gate output of an earlier design; the numbers are what
@@ -306,4 +350,5 @@ there).
 | `wrappers.txt` | `tests/probe_main_wrappers.gd` |
 | `drape-quick.txt` | `gate_drape.gd -- only=G4,G8 quick` (the drape regression) |
 | `pass1/` .. `pass7/` | the negative passes above, complete (`pass6/resume-f20.*`: the rung the killed run stopped at, rerun alone: PASS) |
-| `ladder_eval.py` | the shape / gap statistics |
+| `ladder_eval.py` | the shape / gap statistics, and the rotation / rigid residuals |
+| `ladder-eval-rigid.txt` | its output for the tube, PolyFEM's no-psd run, the pick and three rungs |

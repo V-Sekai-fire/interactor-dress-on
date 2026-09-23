@@ -1,0 +1,13 @@
+14:32:06 apt rc=0
+14:32:06 gpu NVIDIA RTX 4000 Ada Generation, 565.57.01, 20475 MiB
+14:32:06 cpu 48 x Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz
+14:32:06 nvidia_icd.json written by this script (the toolkit mounted libGLX_nvidia.so.0 but no ICD file)
+14:32:07 V0 vulkaninfo, no display, NVIDIA ICD rc=0 	deviceName = NVIDIA RTX 4000 Ada Generation;
+14:32:09 godot 4.7.2.stable.official.ed1daf0bf
+14:32:35 import rc=0
+14:32:36 V1 headless control rc=1 open:  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+14:32:39 V2 vulkaninfo on Xvfb rc=0 	deviceName = NVIDIA RTX 4000 Ada Generation;
+14:32:49 v2-nvidia rc=0 Using Device #0: NVIDIA - NVIDIA RTX 4000 Ada Generation 
+14:33:23 v3-lavapipe rc=0 Using Device #0: Unknown - llvmpipe (LLVM 15.0.7, 256 bits) 
+14:33:33 V4 loop rc=1 10 s RESULT: FAIL
+14:33:33 DONE

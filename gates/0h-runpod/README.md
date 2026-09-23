@@ -1,0 +1,58 @@
+# Gate 0H — the loop on a RunPod GPU worker (stock Godot, Linux, no display)
+
+**Question.** Serverless for the whole flow (user, 2026-09-23) needs the loop's
+Godot half — the guest ELFs driving RenderingDevice compute — on a RunPod
+Linux GPU worker. `--headless` hands back a null RenderingDevice (AGENTS.md), and
+a worker has no display. Does stock Godot 4.7.2 + the godot_sandbox addon get a
+Vulkan RenderingDevice on the worker's NVIDIA GPU, and does the loop run there?
+
+**How.** `run_pod.py` starts a plain `ubuntu:22.04` pod (community cloud, one
+GPU from a cheap list) with `NVIDIA_DRIVER_CAPABILITIES=all`, copies this
+repo's `project/` (plus the gitignored `fit.elf`), `gates/2-avbd` and
+`vendor/xr-grid` at HEAD, runs `remote.sh` over ssh, brings the logs back into
+`runN/` and
+terminates the pod in every branch. `remote.sh` installs Xvfb, the Vulkan
+loader and Mesa, downloads the official Godot 4.7.2 Linux build, imports, and:
+
+| variant | what | expect |
+|---|---|---|
+| V0 | `vulkaninfo`, no display, NVIDIA ICD | the NVIDIA device is there |
+| V1 | `godot --headless` Gate 1 (control) | FAIL: no RenderingDevice |
+| V2 | Xvfb + NVIDIA ICD, Gate 1 (`gate_rd_compute.gd`) | PASS on the NVIDIA adapter |
+| V3 | Xvfb + lavapipe, Gate 1 (control) | tells "GPU path blocked" from "RD never works here" |
+| V4 | Xvfb + NVIDIA, Gate 8 (`gate_loop.gd`, FIXTURE:infer,rig) | the loop, end to end |
+
+## Run 1 (2026-09-23 14:30 UTC) — RD PASS, loop FAIL
+
+Pod: NVIDIA RTX 4000 Ada Generation (20 GB, driver 565.57.01), 48 × Xeon
+E5-2650 v4 @ 2.20 GHz, community cloud, $0.20/h; 182 s from create to
+terminate, about $0.01. Logs: `run1/`.
+
+| variant | result |
+|---|---|
+| V0 | PASS: `deviceName = NVIDIA RTX 4000 Ada Generation` with no display |
+| V1 | FAIL as it should: `FAIL at create_local_rendering_device: not an Object` |
+| V2 | **PASS**: Gate 1 rc 0, `Using Device #0: NVIDIA - NVIDIA RTX 4000 Ada Generation` |
+| V3 | PASS on `llvmpipe (LLVM 15.0.7, 256 bits)`: RenderingDevice works on CPU Vulkan too |
+| V4 | **FAIL** in 8 s: `FAILED MESH: mesh_build: <null>` — curvenet.elf faulted with `Too many arena chunks (data: fa0)` in `pen_end`/`curvenet_build` |
+
+**Answer to the question: yes.** Stock Godot gets a Vulkan RenderingDevice on
+the worker's NVIDIA GPU through an Xvfb display; the guest's rd_compute gate
+passes on it. The container toolkit granted the NVIDIA Vulkan driver with
+`NVIDIA_DRIVER_CAPABILITIES=all`; `/etc/vulkan/icd.d` was a read-only mount, so
+a missing ICD file is written under `/tmp` and named with `VK_ICD_FILENAMES`.
+
+**Why V4 failed (two findings, both fixed for run 2):**
+
+1. The addon's default `allocations_max` is 4000 live guest heap chunks
+   (`MAX_HEAP_ALLOCS`, `fa0`). The Linux build ran out inside curvenet on the
+   loop's skirt; the Windows build of the same ELF passes Gate 4 and Gate 8 at
+   that default. `stages/curvenet_stage.gd` now sets 1,000,000, as
+   `fit_stage.gd` sets its own (Gate 4 re-run on the desk: PASS, results
+   unchanged).
+2. On Linux and macOS the addon looks up a faulting line with `addr2line`
+   inside the `ghcr.io/libriscv/cpp_compiler` Docker container on every guest
+   fault, ignoring `sandbox/toolchain/docker_enabled`: three failed
+   `docker pull`/`docker run` cycles for one fault. Patched in the org fork
+   (V-Sekai-fire/godot-sandbox PR #4: the lookup honours the setting), and
+   `project.godot` sets `toolchain/docker_enabled=false`.

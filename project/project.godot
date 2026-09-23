@@ -11,6 +11,12 @@ McpRuntime="*res://addons/vsekai_godot_mcp/mcp_runtime.gd"
 [editor_plugins]
 enabled=PackedStringArray("res://addons/godot_sandbox/plugin.cfg", "res://addons/vsekai_godot_mcp/plugin.cfg")
 
+[sandbox]
+
+; No Docker: a guest fault on Linux/macOS otherwise pulls and starts the addon's
+; C++ compiler container to print a source line (Gate 0H; godot-sandbox PR #4).
+toolchain/docker_enabled=false
+
 [xr]
 openxr/enabled=true
 shaders/enabled=true

@@ -1,0 +1,433 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Started the engine as `root`/superuser. This is a security risk, and subsystems like audio may not work correctly.
+Set the environment variable `GODOT_SILENCE_ROOT_WARNING` to 1 to silence this warning.
+     at: setup2 (main/main.cpp:3581)
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+WARNING: res://addons/godot_sandbox/downloader.tscn:3 - ext_resource, invalid UID: uid://dyk2fnsixyben - using text path instead: res://addons/godot_sandbox/downloader.gd
+     at: load (scene/resources/resource_format_text.cpp:501)
+CMake not installed: ["sh: 1: cmake: not found\n"]
+Make not installed: ["sh: 1: make: not found\n"]
+Git not installed: ["sh: 1: git: not found\n"]
+Zig not installed: ["sh: 1: zig: not found\n"]
+[godot_mcp] MCP streamable-HTTP on http://127.0.0.1:8788/mcp
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (62 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | Sandbox_AddonsGodotSandboxGdscript[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | SimpleSketch[39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | SketchTool[39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | BoolTimer[39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | WorldGrab[39m[0m
+[  19% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | MCPCommands[39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | MCPCommandBuffer[39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | MCPHttpServer[39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | MCPProtocol[39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | Sandbox_Curvenet[39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | Sandbox_Drape[39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | Sandbox_DressOn[39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | Sandbox_Fit[39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | Sandbox_Probes[39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (9 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Build.svg[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | CPPScript.svg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | ELFScript.svg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | JSScript.svg[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | RustScript.svg[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | SafeGDScript.svg[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | Sandbox.svg[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | TSScript.svg[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | ZigScript.svg[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (9 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | Build.svg[39m[0m
+[  10% ] [90m[1mreimport[22m | CPPScript.svg[39m[0m
+[  20% ] [90m[1mreimport[22m | ELFScript.svg[39m[0m
+[  30% ] [90m[1mreimport[22m | JSScript.svg[39m[0m
+[  40% ] [90m[1mreimport[22m | RustScript.svg[39m[0m
+[  50% ] [90m[1mreimport[22m | SafeGDScript.svg[39m[0m
+[  60% ] [90m[1mreimport[22m | Sandbox.svg[39m[0m
+[  70% ] [90m[1mreimport[22m | TSScript.svg[39m[0m
+[  80% ] [90m[1mreimport[22m | ZigScript.svg[39m[0m
+[  90% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (9 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 1 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 2 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 3 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 4 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+ERROR: Index p_idx = 5 is out of bounds (items.size() = 1).
+   at: set_item_icon (scene/gui/popup_menu.cpp:2225)
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[godot_mcp] bridge stopped
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

@@ -1,20 +1,17 @@
 #include "FitForm.hpp"
 
-#include <openvdb/openvdb.h>
-#include <openvdb/math/Vec3.h>
-#include <openvdb/tools/SignedFloodFill.h>
-#include <openvdb/tools/MeshToVolume.h>
-#include <openvdb/tools/VolumeToMesh.h>
-
-#include <polyfem/io/OBJWriter.hpp>
-#include <polyfem/io/OBJData.hpp>
 #include <polyfem/utils/MaybeParallelFor.hpp>
 #include <polyfem/utils/Timer.hpp>
 #include <polyfem/utils/Logger.hpp>
 
 #include <ipc/utils/eigen_ext.hpp>
 
-using namespace openvdb;
+#include <igl/Timer.h>
+
+#include <algorithm>
+#include <array>
+#include <vector>
+
 using namespace polyfem::utils;
 
 namespace {
@@ -111,22 +108,12 @@ namespace {
 namespace polyfem::solver
 {
     template <int n_refs>
-    FitForm<n_refs>::FitForm(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F, const Eigen::MatrixXd &surface_v, const Eigen::MatrixXi &surface_f, const double voxel_size, const std::vector<int> &not_fit_faces, const std::string out_dir) : V_(V), F_(F), voxel_size_(voxel_size), totalP(std::vector<openvdb::tools::HessType<double>>(F_.rows() * n_loc_samples, openvdb::tools::HessType<double>(0.)))
+    FitForm<n_refs>::FitForm(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F, const Eigen::MatrixXd &surface_v, const Eigen::MatrixXi &surface_f, const double voxel_size, const std::vector<int> &not_fit_faces, const std::string &) : V_(V), F_(F), voxel_size_(voxel_size), totalP(std::vector<SdfHess>(F_.rows() * n_loc_samples))
     {
-        math::Transform::Ptr xform = math::Transform::createLinearTransform(voxel_size);
-
-        std::vector<Vec3s> points;
-        std::vector<Vec3I> triangles;
-        std::vector<Vec4I> quads;
-
-        points.reserve(surface_v.rows());
-        for (int i = 0; i < surface_v.rows(); i++)
-            points.push_back(Vec3s(surface_v(i, 0), surface_v(i, 1), surface_v(i, 2)));
-
-        for (int i = 0; i < surface_f.rows(); i++)
-            triangles.push_back(Vec3I(surface_f(i, 0), surface_f(i, 1), surface_f(i, 2)));
-
-        grid = tools::meshToSignedDistanceField<DoubleGrid>(*xform, points, triangles, quads, 150, 1);
+        // The avatar's SDF: a lazily filled brick grid in place of
+        // meshToSignedDistanceField(xform, Vec3s points, tris, {}, 150, 1).
+        // Shared across the FitForm rebuilt every substep on the same avatar.
+        grid = SdfGrid::cached(surface_v, surface_f, voxel_size);
 
         // build upsampling scheme on the garment mesh
         {
@@ -143,100 +130,7 @@ namespace polyfem::solver
             }
         }
 
-        // Create basic OBJData for fit faces debugging
-        OBJData fit_faces_data;
-        fit_faces_data.V.resize(V.rows());
-        for (int i = 0; i < V.rows(); ++i)
-        {
-            fit_faces_data.V[i] = {V(i, 0), V(i, 1), V(i, 2)};
-        }
-
-        // Add only the fit faces
-        Eigen::MatrixXi fit_faces = F(fit_faces_ids, Eigen::all);
-        fit_faces_data.F.resize(fit_faces.rows());
-        for (int i = 0; i < fit_faces.rows(); ++i)
-        {
-            fit_faces_data.F[i] = {fit_faces(i, 0), fit_faces(i, 1), fit_faces(i, 2)};
-        }
-
-        // Create default object and group
-        OBJObject fit_obj;
-        fit_obj.name = "fit_faces";
-        OBJGroup fit_group;
-        fit_group.name = "default";
-        for (int i = 0; i < fit_faces_data.F.size(); ++i)
-        {
-            fit_group.face_indices.push_back(i);
-        }
-        fit_obj.groups.push_back(fit_group);
-        fit_faces_data.objects.push_back(fit_obj);
-
-        // Set face mappings
-        fit_faces_data.face_to_object.resize(fit_faces_data.F.size(), 0);
-        fit_faces_data.face_to_group.resize(fit_faces_data.F.size(), 0);
-
-        io::OBJWriter::write_with_groups(out_dir + "/fit-faces-debug.obj", fit_faces_data);
-
-        // {
-            initial_distance.setZero(F_.rows() * n_loc_samples);
-        //     typename DoubleGrid::ConstAccessor acc = grid->getConstAccessor();
-        //     for (int f = 0; f < F_.rows(); f++) {
-        //         const Eigen::Matrix3d M = V_({F_(f, 0),F_(f, 1),F_(f, 2)}, Eigen::all);
-        //         Eigen::Matrix<double, n_loc_samples, 3> samples = P * M;
-        //         for (int i = 0; i < P.rows(); i++) {
-        //             math::Vec3<double> p(samples(i, 0), samples(i, 1), samples(i, 2));
-        //             initial_distance(f * n_loc_samples + i) = tools::SplineSampler::sample(acc, grid->transformPtr()->worldToIndex(p));
-        //         }
-        //     }
-        // }
-
-        // export SDF as a triangle mesh
-        {
-            tools::volumeToMesh(*grid, points, quads, 0.);
-            Eigen::MatrixXd outpoints(points.size(), 3);
-            Eigen::MatrixXi outtriangles(2 * quads.size(), 3);
-            for (int i = 0; i < points.size(); i++)
-            {
-                outpoints.row(i) << points[i](0), points[i](1), points[i](2);
-            }
-            for (int i = 0; i < quads.size(); i++)
-            {
-                outtriangles.row(2 * i) << quads[i](0), quads[i](1), quads[i](2);
-                outtriangles.row(2 * i + 1) << quads[i](0), quads[i](2), quads[i](3);
-            }
-
-			// Create basic OBJData for SDF mesh
-			OBJData sdf_data;
-			sdf_data.V.resize(outpoints.rows());
-			for (int i = 0; i < outpoints.rows(); ++i)
-			{
-				sdf_data.V[i] = {outpoints(i, 0), outpoints(i, 1), outpoints(i, 2)};
-			}
-
-			sdf_data.F.resize(outtriangles.rows());
-			for (int i = 0; i < outtriangles.rows(); ++i)
-			{
-				sdf_data.F[i] = {outtriangles(i, 0), outtriangles(i, 1), outtriangles(i, 2)};
-			}
-
-			// Create default object and group
-			OBJObject sdf_obj;
-			sdf_obj.name = "sdf";
-			OBJGroup sdf_group;
-			sdf_group.name = "default";
-			for (int i = 0; i < sdf_data.F.size(); ++i)
-			{
-				sdf_group.face_indices.push_back(i);
-			}
-			sdf_obj.groups.push_back(sdf_group);
-			sdf_data.objects.push_back(sdf_obj);
-
-			// Set face mappings
-			sdf_data.face_to_object.resize(sdf_data.F.size(), 0);
-			sdf_data.face_to_group.resize(sdf_data.F.size(), 0);
-
-			io::OBJWriter::write_with_groups(out_dir + "/sdf.obj", sdf_data);
-        }
+        initial_distance.setZero(F_.rows() * n_loc_samples);
     }
 
     template <int n_refs>
@@ -245,8 +139,6 @@ namespace polyfem::solver
         const Eigen::MatrixXd V = unflatten(x, 3) + V_;
 
         double val = 0;
-        double max_dist = 0;
-        typename DoubleGrid::ConstAccessor acc = grid->getConstAccessor();
         for (int f : fit_faces_ids) {
             const double area = (V_.row(F_(f, 1)) - V_.row(F_(f, 0))).template head<3>().cross((V_.row(F_(f, 2)) - V_.row(F_(f, 0))).template head<3>()).norm() / 2;
             for (int i = 0; i < P.rows(); i++) {
@@ -302,19 +194,37 @@ namespace polyfem::solver
 
         const Eigen::MatrixXd V = unflatten(new_x, 3) + V_;
 
-        maybe_parallel_for(fit_faces_ids.size(), [&](int start, int end, int thread_id) {
-            typename DoubleGrid::ConstAccessor acc = grid->getConstAccessor();
-            for (int f_aux = start; f_aux < end; f_aux++) {
-                int f = fit_faces_ids[f_aux];
-                const Eigen::Matrix3d M = V({F_(f, 0),F_(f, 1),F_(f, 2)}, Eigen::all);
-                Eigen::Matrix<double, n_loc_samples, 3> samples = P * M;
-                const double area = (V_.row(F_(f, 1)) - V_.row(F_(f, 0))).template head<3>().cross((V_.row(F_(f, 2)) - V_.row(F_(f, 0))).template head<3>()).norm() / 2;
-                for (int i = 0; i < P.rows(); i++) {
-                    math::Vec3<double> p(samples(i, 0), samples(i, 1), samples(i, 2));
-                    totalP[f * n_loc_samples + i] = tools::SplineSampler::sampleHessian(acc, grid->transformPtr()->worldToIndex(p));
-                    auto &tmp = totalP[f * n_loc_samples + i];
-                    tmp.g = tmp.g / voxel_size_;
-                    tmp.h = tmp.h * (1. / voxel_size_ / voxel_size_);
+        // Gather each sample's 4^3 stencil from the brick grid, then evaluate
+        // the spline kernel over the batch (SdfSpline.hpp). Chunks bound the
+        // stencil buffer: 1024 samples = 512 KiB.
+        constexpr int chunk_faces = 1024 / n_loc_samples;
+        maybe_parallel_for((fit_faces_ids.size() + chunk_faces - 1) / chunk_faces, [&](int start, int end, int thread_id) {
+            std::vector<double> stencil(sdf_spline::kStencil * chunk_faces * n_loc_samples);
+            std::vector<double> uvw(3 * chunk_faces * n_loc_samples);
+            std::vector<double> out(sdf_spline::kOut * chunk_faces * n_loc_samples);
+            for (int c = start; c < end; c++) {
+                const int f_begin = c * chunk_faces;
+                const int f_end = std::min<int>(f_begin + chunk_faces, fit_faces_ids.size());
+                std::size_t n = 0;
+                for (int f_aux = f_begin; f_aux < f_end; f_aux++) {
+                    int f = fit_faces_ids[f_aux];
+                    const Eigen::Matrix3d M = V({F_(f, 0),F_(f, 1),F_(f, 2)}, Eigen::all);
+                    Eigen::Matrix<double, n_loc_samples, 3> samples = P * M;
+                    for (int i = 0; i < P.rows(); i++, n++) {
+                        const double p[3] = {samples(i, 0), samples(i, 1), samples(i, 2)};
+                        grid->sample_point(p, &stencil[sdf_spline::kStencil * n], &uvw[3 * n]);
+                    }
+                }
+                sdf_spline::hessian_batch(stencil.data(), uvw.data(), out.data(), n);
+                n = 0;
+                for (int f_aux = f_begin; f_aux < f_end; f_aux++) {
+                    int f = fit_faces_ids[f_aux];
+                    for (int i = 0; i < P.rows(); i++, n++) {
+                        auto &tmp = totalP[f * n_loc_samples + i];
+                        tmp = sdf_spline::unpack(&out[sdf_spline::kOut * n]);
+                        tmp.g = tmp.g / voxel_size_;
+                        tmp.h = tmp.h * (1. / voxel_size_ / voxel_size_);
+                    }
                 }
             }
         });
@@ -331,7 +241,8 @@ namespace polyfem::solver
 
         const Eigen::MatrixXd V = unflatten(x, 3) + V_;
 
-        auto storage = create_thread_storage(LocalThreadSparseMatStorage(long(1e7), hessian.rows(), hessian.cols()));
+        // One 9x9 block per fit face.
+        auto storage = create_thread_storage(LocalThreadSparseMatStorage(long(fit_faces_ids.size()) * 81, hessian.rows(), hessian.cols()));
 
         igl::Timer timer;
         timer.start();
@@ -479,269 +390,4 @@ namespace polyfem::solver
     }
 
     template class FitForm<4>;
-
-
-    template <int n_refs>
-    SDFCollisionForm<n_refs>::SDFCollisionForm(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F, const Eigen::MatrixXd &surface_v, const Eigen::MatrixXi &surface_f, const double voxel_size, const double separation_dist) : V_(V), F_(F), voxel_size_(voxel_size), totalP(std::vector<openvdb::tools::HessType<double>>(F_.rows() * n_loc_samples, openvdb::tools::HessType<double>(0.))), separation_dist_(separation_dist)
-    {
-        math::Transform::Ptr xform = math::Transform::createLinearTransform(voxel_size);
-
-        std::vector<Vec3s> points;
-        std::vector<Vec3I> triangles;
-        std::vector<Vec4I> quads;
-
-        points.reserve(surface_v.rows());
-        for (int i = 0; i < surface_v.rows(); i++)
-            points.push_back(Vec3s(surface_v(i, 0), surface_v(i, 1), surface_v(i, 2)));
-
-        for (int i = 0; i < surface_f.rows(); i++)
-            triangles.push_back(Vec3I(surface_f(i, 0), surface_f(i, 1), surface_f(i, 2)));
-
-        grid = tools::meshToSignedDistanceField<DoubleGrid>(*xform, points, triangles, quads, 150, 1);
-
-        // build upsampling scheme on the garment mesh
-        {
-            Eigen::Matrix<double, n_loc_samples, 4> tmp = upsample_standard<n_refs>();
-            P = tmp.template leftCols<3>();
-            weights = tmp.col(3);
-        }
-    }
-
-    template <int n_refs>
-    double SDFCollisionForm<n_refs>::value_unweighted(const Eigen::VectorXd &x) const
-    {
-        const Eigen::MatrixXd V = unflatten(x, 3) + V_;
-
-        double val = 0;
-        double max_dist = 0;
-        typename DoubleGrid::ConstAccessor acc = grid->getConstAccessor();
-        for (int f = 0; f < F_.rows(); f++) {
-            const double area = (V_.row(F_(f, 1)) - V_.row(F_(f, 0))).template head<3>().cross((V_.row(F_(f, 2)) - V_.row(F_(f, 0))).template head<3>()).norm() / 2;
-            for (int i = 0; i < P.rows(); i++) {
-                const double tmp = totalP[f * n_loc_samples + i].x;
-
-                if (std::isnan(tmp))
-                    log_and_throw_error("Invalid sdf values!");
-
-                if (tmp < separation_dist_)
-                    val += area * weights(i) * pow(separation_dist_-tmp, power);
-            }
-        }
-
-        return val;
-    }
-
-    template <int n_refs>
-    void SDFCollisionForm<n_refs>::first_derivative_unweighted(const Eigen::VectorXd &x, Eigen::VectorXd &gradv) const
-    {
-        POLYFEM_SCOPED_TIMER("fit gradient");
-        const Eigen::MatrixXd V = unflatten(x, 3) + V_;
-
-        Eigen::MatrixXd g = Eigen::MatrixXd::Zero(V.rows(), V.cols());
-
-        auto storage = create_thread_storage(LocalThreadMatStorage(g.rows(), g.cols()));
-
-        maybe_parallel_for(F_.rows(), [&](int start, int end, int thread_id) {
-            LocalThreadMatStorage &local_storage = get_local_thread_storage(storage, thread_id);
-            for (int f = start; f < end; f++) {
-                const double area = (V_.row(F_(f, 1)) - V_.row(F_(f, 0))).template head<3>().cross((V_.row(F_(f, 2)) - V_.row(F_(f, 0))).template head<3>()).norm() / 2;
-                for (int i = 0; i < P.rows(); i++) {
-                    const auto &tmp = totalP[f * n_loc_samples + i];
-
-                    if (tmp.x < separation_dist_)
-                        for (int d = 0; d < 3; d++)
-                            local_storage.mat(F_.row(f), d) -= (pow(separation_dist_-tmp.x, power-1) * power * area * weights(i) * tmp.g(d)) * P.row(i);
-                }
-            }
-        });
-
-		// Serially merge local storages
-		for (const LocalThreadMatStorage &local_storage : storage)
-			g += local_storage.mat;
-
-        gradv = flatten(g);
-    }
-
-    template <int n_refs>
-    void SDFCollisionForm<n_refs>::solution_changed(const Eigen::VectorXd &new_x)
-    {
-        POLYFEM_SCOPED_TIMER("sample SDF");
-
-        const Eigen::MatrixXd V = unflatten(new_x, 3) + V_;
-
-        maybe_parallel_for(F_.rows(), [&](int start, int end, int thread_id) {
-            typename DoubleGrid::ConstAccessor acc = grid->getConstAccessor();
-            for (int f = start; f < end; f++) {
-                const Eigen::Matrix3d M = V({F_(f, 0),F_(f, 1),F_(f, 2)}, Eigen::all);
-                Eigen::Matrix<double, n_loc_samples, 3> samples = P * M;
-                const double area = (V_.row(F_(f, 1)) - V_.row(F_(f, 0))).template head<3>().cross((V_.row(F_(f, 2)) - V_.row(F_(f, 0))).template head<3>()).norm() / 2;
-                for (int i = 0; i < P.rows(); i++) {
-                    math::Vec3<double> p(samples(i, 0), samples(i, 1), samples(i, 2));
-                    totalP[f * n_loc_samples + i] = tools::SplineSampler::sampleHessian(acc, grid->transformPtr()->worldToIndex(p));
-                    auto &tmp = totalP[f * n_loc_samples + i];
-                    tmp.g = tmp.g / voxel_size_;
-                    tmp.h = tmp.h * (1. / voxel_size_ / voxel_size_);
-                }
-            }
-        });
-    }
-
-    template <int n_refs>
-    void SDFCollisionForm<n_refs>::second_derivative_unweighted(const Eigen::VectorXd &x, StiffnessMatrix &hessian) const
-    {
-        POLYFEM_SCOPED_TIMER("sdf collision hessian");
-        hessian.setZero();
-        hessian.resize(x.size(), x.size());
-        if (!use_spline)
-            return;
-
-        const Eigen::MatrixXd V = unflatten(x, 3) + V_;
-
-        auto storage = create_thread_storage(LocalThreadSparseMatStorage(long(1e7), hessian.rows(), hessian.cols()));
-
-        igl::Timer timer;
-        timer.start();
-        maybe_parallel_for(F_.rows(), [&](int start, int end, int thread_id) {
-            LocalThreadSparseMatStorage &local_storage = get_local_thread_storage(storage, thread_id);
-            Eigen::Matrix<double, 9, 9> local_hess;
-            for (int f = start; f < end; f++) {
-                const double area = (V_.row(F_(f, 1)) - V_.row(F_(f, 0))).template head<3>().cross((V_.row(F_(f, 2)) - V_.row(F_(f, 0))).template head<3>()).norm() / 2;
-                local_hess.setZero();
-                for (int i = 0; i < P.rows(); i++) {
-                    const auto &tmp = totalP[f * n_loc_samples + i];
-
-                    if (tmp.x >= separation_dist_)
-                        continue;
-
-                    Eigen::Vector3d g;
-                    g << tmp.g(0), tmp.g(1), tmp.g(2);
-                    Eigen::Matrix3d h;
-                    h << tmp.h(0, 0), tmp.h(0, 1), tmp.h(0, 2),
-                        tmp.h(1, 0), tmp.h(1, 1), tmp.h(1, 2),
-                        tmp.h(2, 0), tmp.h(2, 1), tmp.h(2, 2);
-                    h *= -pow(separation_dist_-tmp.x, power-1) * power;
-                    h += g * g.transpose() * (pow(separation_dist_-tmp.x, power-2) * power * (power-1));
-                    h *= area * weights(i);
-
-                    for (int d = 0; d < 3; d++)
-                        for (int k = 0; k < 3; k++)
-                            for (int s = 0; s < 3; s++)
-                                for (int l = 0; l < 3; l++)
-                                    local_hess(s * 3 + d, l * 3 + k) += P(i, s) * P(i, l) * h(d, k);
-                }
-                for (int d = 0; d < 3; d++)
-                    for (int k = 0; k < 3; k++)
-                        for (int s = 0; s < 3; s++)
-                            for (int l = 0; l < 3; l++)
-                                local_storage.cache->add_value(f, F_(f, s) * 3 + d, F_(f, l) * 3 + k, local_hess(s * 3 + d, l * 3 + k));
-            }
-        });
-
-        timer.stop();
-        logger().trace("done separate assembly {}s...", timer.getElapsedTime());
-
-        // Assemble the hessian matrix by concatenating the tuples in each local storage
-
-        // Collect thread storages
-        std::vector<LocalThreadSparseMatStorage *> storages(storage.size());
-        long int index = 0;
-        for (auto &local_storage : storage)
-        {
-            storages[index++] = &local_storage;
-        }
-
-        timer.start();
-        maybe_parallel_for(storages.size(), [&](int i) {
-            storages[i]->cache->prune();
-        });
-        timer.stop();
-        logger().trace("done pruning triplets {}s...", timer.getElapsedTime());
-
-        // Prepares for parallel concatenation
-        std::vector<long int> offsets(storage.size());
-
-        index = 0;
-        long int triplet_count = 0;
-        for (auto &local_storage : storage)
-        {
-            offsets[index++] = triplet_count;
-            triplet_count += local_storage.cache->triplet_count();
-        }
-
-        std::vector<Eigen::Triplet<double>> triplets;
-
-        assert(storages.size() >= 1);
-        if (storages[0]->cache->is_dense())
-        {
-            timer.start();
-            // Serially merge local storages
-            Eigen::MatrixXd tmp(hessian);
-            for (const LocalThreadSparseMatStorage &local_storage : storage)
-                tmp += dynamic_cast<const DenseMatrixCache &>(*local_storage.cache).mat();
-            hessian = tmp.sparseView();
-            hessian.makeCompressed();
-            timer.stop();
-
-            logger().trace("Serial assembly time: {}s...", timer.getElapsedTime());
-        }
-        else if (triplet_count >= triplets.max_size())
-        {
-            // Serial fallback version in case the vector of triplets cannot be allocated
-
-            logger().error("Cannot allocate space for triplets, switching to serial assembly.");
-
-            timer.start();
-            // Serially merge local storages
-            for (LocalThreadSparseMatStorage &local_storage : storage)
-                hessian += local_storage.cache->get_matrix(false); // will also prune
-            hessian.makeCompressed();
-            timer.stop();
-
-            logger().trace("Serial assembly time: {}s...", timer.getElapsedTime());
-        }
-        else
-        {
-            timer.start();
-            triplets.resize(triplet_count);
-            timer.stop();
-
-            logger().trace("done allocate triplets {}s...", timer.getElapsedTime());
-            logger().trace("Triplets Count: {}", triplet_count);
-
-            timer.start();
-            // Parallel copy into triplets
-            maybe_parallel_for(storages.size(), [&](int i) {
-                const SparseMatrixCache &cache = dynamic_cast<const SparseMatrixCache &>(*storages[i]->cache);
-                long int offset = offsets[i];
-
-                std::copy(cache.entries().begin(), cache.entries().end(), triplets.begin() + offset);
-                offset += cache.entries().size();
-
-                if (cache.mat().nonZeros() > 0)
-                {
-                    long int count = 0;
-                    for (int k = 0; k < cache.mat().outerSize(); ++k)
-                    {
-                        for (Eigen::SparseMatrix<double>::InnerIterator it(cache.mat(), k); it; ++it)
-                        {
-                            assert(count < cache.mat().nonZeros());
-                            triplets[offset + count++] = Eigen::Triplet<double>(it.row(), it.col(), it.value());
-                        }
-                    }
-                }
-            });
-
-            timer.stop();
-            logger().trace("done concatenate triplets {}s...", timer.getElapsedTime());
-
-            timer.start();
-            // Sort and assemble
-            hessian.setFromTriplets(triplets.begin(), triplets.end());
-            timer.stop();
-
-            logger().trace("done setFromTriplets assembly {}s...", timer.getElapsedTime());
-        }
-    }
-
-    template class SDFCollisionForm<4>;
 }

@@ -20,10 +20,38 @@ abstract: >-
   nlohmann_json v3.11.2 (via polysolve), oneTBB v2021.9.0; the native
   build takes the first five from the V-Sekai-fire forks in
   tools/forks.tsv through CPM_<pkg>_SOURCE (tools/forks/fetch.sh) without
-  editing the recipes. Adapted here: nothing yet; no file under
-  vendor/cloth-fit differs from d2bd59a6 except this one. The fit.elf
-  patches (POLYFEM_THREADING=NONE, OpenVDB replaced by a brick-grid SDF,
-  embedded specs, no file I/O) will be listed here as they land.
+  editing the recipes.
+  OpenVDB replaced for fit.elf (Cut 6): (1) CMakeLists.txt no longer
+  includes the openvdb recipe or links openvdb (cmake/recipes/openvdb.cmake
+  stays, unused); the upstream oracle builds from the squash commit
+  812ceb26 (tools/native/build_upstream.sh), not from this tree. (2) New
+  src/polyfem/solver/forms/garment_forms/SdfGrid.{hpp,cpp}: the avatar SDF
+  FitForm built with meshToSignedDistanceField(xform, Vec3s points, tris,
+  {}, 150, 1), as a lazily filled brick grid; voxel (i,j,k) at world
+  (i,j,k)*h, value clamp(sd, -h, 150h), sd the exact igl::AABB distance to
+  the float-rounded avatar signed by igl::fast_winding_number (inside if
+  w > 0.5); 8^3 bricks in an unordered_map, filled whole on first touch,
+  each value a pure function of the voxel index; SdfGrid::cached() shares
+  one grid per (avatar hash, voxel size) across the FitForm rebuilt every
+  substep. (3) New garment_forms/SdfSpline.{hpp,cpp}: the call site of the
+  Lean-emitted tricubic B-spline kernel (lean/Fit/SdfSplineHessian.lean ->
+  kernels/fit/cpp/sdf_spline_hessian_emit.cpp) that replaces the openvdb
+  fork's SplineSampler::sampleHessian; the CMake option FIT_KERNELS_PENDING
+  (default ON; FIT_KERNELS_DIR and FIT_SLANG_PRELUDE_DIR when OFF) keeps
+  the emit out until it lands, and the sampler throws meanwhile; no
+  hand-written sampler is linked. (4) FitForm.{hpp,cpp}: the openvdb grid,
+  accessor and HessType give way to SdfGrid and SdfHess; solution_changed
+  gathers stencils and calls the kernel in batches of 1024 samples, then
+  scales g/h and h/h^2 as before; the debug writes (fit-faces-debug.obj,
+  and sdf.obj from volumeToMesh) are gone and out_dir, now unused,
+  defaults to ""; the Hessian reserves fit_faces_ids.size()*81 triplets
+  instead of 1e7; SDFCollisionForm (unused) is deleted. (5)
+  tests/test_garment.cpp drops its SDFCollisionForm case and defines
+  _USE_MATH_DEFINES for the M_PI the OpenVDB headers used to bring in.
+  Checked by Gate 6a (gates/6-fit/sdf) against OpenVDB on the foxgirl
+  oracle.
+  The other fit.elf patches (POLYFEM_THREADING=NONE, embedded specs, no
+  file I/O) will be listed here as they land.
 type: software
 authors:
   - name: Zizhou Huang

@@ -1,8 +1,13 @@
 # tools/native — the upstream cloth-fit oracle for Cut 6
 
-Builds `vendor/cloth-fit`'s `PolyFEM_bin` natively on the Windows desk
+Builds upstream cloth-fit's `PolyFEM_bin` natively on the Windows desk
 (llvm-mingw 20260826, pixi for cmake/ninja/boost/tbb headers), unmodified,
-plus `tools/fit/openvdb_dump` against the same configure. `fit.elf` is judged
+plus `tools/fit/openvdb_dump` against the same configure. The source is
+`vendor/cloth-fit` as vendored, exported by `git archive` from the subtree's
+squash commit 812ceb26 into `CF_SRC` (default `C:/b/cf-src-d2bd59a6`): the
+working `vendor/cloth-fit` carries the `fit.elf` adaptations (OpenVDB replaced
+by a brick-grid SDF; its `CITATION.cff` lists them) and no longer builds
+`openvdb_dump`. `fit.elf` is judged
 against this build: guest vs a native same-code build to 1e-6, native vs this
 upstream binary by Hausdorff within 1 voxel (plan, Cut 6).
 

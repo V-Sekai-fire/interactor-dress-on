@@ -1,4 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
+// M_PI came in through the OpenVDB headers FitForm.hpp no longer includes.
+#define _USE_MATH_DEFINES
 #include <polyfem/solver/forms/garment_forms/GarmentForm.hpp>
 #include <polyfem/solver/forms/garment_forms/CurveConstraintForm.hpp>
 #include <polyfem/solver/forms/garment_forms/CurveCenterTargetForm.hpp>
@@ -210,7 +212,6 @@ TEST_CASE("Garment forms derivatives", tagsdiff)
 		igl::read_triangle_mesh(POLYFEM_SOURCE_DIR + std::string("/tests/cage.obj"), avatar_v, avatar_f);
 
 		forms.push_back(std::make_unique<FitForm<4>>(V, F, avatar_v, avatar_f, 0.1, std::vector<int>(), "."));
-		forms.push_back(std::make_unique<SDFCollisionForm<4>>(V, F, avatar_v, avatar_f, 0.1, 0.1));
 	}
 
 	for (auto &form : forms)

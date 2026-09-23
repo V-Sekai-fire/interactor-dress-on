@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
-# Build upstream cloth-fit's PolyFEM_bin natively from vendor/cloth-fit
-# (llvm-mingw, pixi deps), the Cut 6 oracle, plus tools/fit/openvdb_dump
-# against the same configure (added by openvdb_dump_hook.cmake as a deferred
-# target; PolyFEM_bin and the vendored sources are untouched).
+# Build upstream cloth-fit's PolyFEM_bin natively (llvm-mingw, pixi deps), the
+# Cut 6 oracle, plus tools/fit/openvdb_dump against the same configure (added
+# by openvdb_dump_hook.cmake as a deferred target; PolyFEM_bin and the sources
+# are untouched).
+#
+# The source is upstream as vendored, not the working vendor/cloth-fit: that
+# tree carries the fit.elf adaptations (OpenVDB replaced, see its
+# CITATION.cff), so the oracle is exported from the subtree's squash commit
+# 812ceb26 ("Squashed 'vendor/cloth-fit/' content from commit d2bd59a6") into
+# CF_SRC with git archive.
 #
 # Run from anywhere:
 #   pixi run --manifest-path tools/native/pixi.toml bash tools/native/build_upstream.sh [targets...]
@@ -15,6 +21,9 @@
 #                      (default <repo>/.cpm-cache-native)
 #   LLVM_MINGW         toolchain (default ~/llvm-mingw/llvm-mingw-20260826-ucrt-x86_64)
 #   CF_CONFIGURE_ONLY  1: stop after the CMake configure
+#   CF_SRC             upstream source dir (default C:/b/cf-src-d2bd59a6);
+#                      exported from CF_UPSTREAM_REV if it has no CMakeLists.txt
+#   CF_UPSTREAM_REV    subtree squash commit (default 812ceb26)
 #
 # The five packages with V-Sekai-fire forks (tools/forks.tsv) come from
 # .forks/<name> via CPM_<pkg>_SOURCE, fetched first by tools/forks/fetch.sh at
@@ -24,7 +33,12 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd -W 2>/dev/null || pwd)"
 ROOT="$(cd "$HERE/../.." && pwd -W 2>/dev/null || pwd)"
-SRC="$ROOT/vendor/cloth-fit"
+SRC="${CF_SRC:-C:/b/cf-src-d2bd59a6}"
+UPSTREAM_REV="${CF_UPSTREAM_REV:-812ceb26893dcd94970342e5edd5f6ff242d0b26}"
+if [ ! -f "$SRC/CMakeLists.txt" ]; then
+  mkdir -p "$SRC"
+  git -C "$ROOT" archive "$UPSTREAM_REV" | tar -x -C "$SRC"
+fi
 BUILD="${CF_BUILD:-$ROOT/build-native}"
 FORKS="${FORKS_DIR:-$ROOT/.forks}"
 LLVM_MINGW="${LLVM_MINGW:-$(cygpath -m "$HOME")/llvm-mingw/llvm-mingw-20260826-ucrt-x86_64}"

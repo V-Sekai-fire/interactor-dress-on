@@ -205,9 +205,24 @@ if(WIN32)
     target_link_libraries(polyfem PUBLIC Eigen3::Eigen)
 endif()
 
-# openvdb library
-include(openvdb)
-target_link_libraries(polyfem PUBLIC openvdb)
+# OpenVDB is not linked: FitForm samples a lazily filled brick-grid SDF
+# (garment_forms/SdfGrid) through a Lean-emitted spline kernel
+# (garment_forms/SdfSpline). Until lean/Fit/SdfSplineHessian.lean is emitted,
+# FIT_KERNELS_PENDING stays ON and the sampler throws when called.
+option(FIT_KERNELS_PENDING "The Lean SDF spline kernel has not been emitted yet" ON)
+set(FIT_KERNELS_DIR "" CACHE PATH "Directory holding sdf_spline_hessian_emit.cpp (kernels/fit/cpp)")
+set(FIT_SLANG_PRELUDE_DIR "" CACHE PATH "Directory holding slang-cpp-prelude.h (guest/avbd/slang-rt)")
+if(FIT_KERNELS_PENDING)
+    target_compile_definitions(polyfem PRIVATE FIT_KERNELS_PENDING)
+else()
+    if(NOT EXISTS "${FIT_KERNELS_DIR}/sdf_spline_hessian_emit.cpp")
+        message(FATAL_ERROR "FIT_KERNELS_PENDING=OFF needs FIT_KERNELS_DIR with sdf_spline_hessian_emit.cpp")
+    endif()
+    if(NOT EXISTS "${FIT_SLANG_PRELUDE_DIR}/slang-cpp-prelude.h")
+        message(FATAL_ERROR "FIT_KERNELS_PENDING=OFF needs FIT_SLANG_PRELUDE_DIR with slang-cpp-prelude.h")
+    endif()
+    target_include_directories(polyfem PRIVATE "${FIT_KERNELS_DIR}" "${FIT_SLANG_PRELUDE_DIR}")
+endif()
 
 # polysolve
 include(polysolve)

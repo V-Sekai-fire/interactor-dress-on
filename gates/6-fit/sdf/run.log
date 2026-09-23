@@ -1,0 +1,51 @@
+== build gate6a (-DFIT_KERNELS_PENDING) ==
+== points (fit) ==
+garment verts 2682 faces 5220, no-fit faces 3819, faces sampled 1401, samples 21015
+== openvdb_dump (fit) ==
+8e49d9bc6ab26ecb33d0368f7358b0db5dca0ec9e8c5383ac1a39827e3b6e77d *C:/b/g6a/points_fit.txt
+64be2c74d35c6502284c0f0723a3c49357d9a9cc15742e991e7aff31a7fe7b0b *C:/b/g6a/vdb_fit.jsonl
+== points (all) ==
+garment verts 2682 faces 5220, no-fit faces 3819, faces sampled 5220, samples 78300
+== openvdb_dump (all) ==
+bb6c58bbc9c40e8c68545c8fbb3d40672601eea5562fc01afef8d8dbe03ebf09 *C:/b/g6a/points_all.txt
+e1c75b51232ab606b582c99e1ca92cebca7f198b89a8cd1228a21a0c4cbd6408 *C:/b/g6a/vdb_all.jsonl
+== gate6a (fit) ==
+[fit] OpenVDB grid: 46523937 active voxels, 97637 leaves, 413824624 bytes, built in 8.11 s (openvdb_dump, TBB)
+[fit] 21015 samples read, 0 with a sampler error in the dump
+PASS [fit] a.index: p*(1/h), floor, uvw bitwise equal to OpenVDB worldToIndex at 21015/21015 samples
+PASS [fit] a.sampler: reference vs SplineSampler::sampleHessian on OpenVDB stencils: max 0 ULP (x 0, g 0, h 0), 21015/21015 bitwise
+INFO [fit] a.kernel: pending (FIT_KERNELS_PENDING; lean/Fit/SdfSplineHessian.lean not emitted), reference only
+INFO [fit] grid: setup (AABB + winding BVH) 0.058 s; 136 bricks (69632 voxels), 561896 bytes (0.56 MB); 69632 distance + 69632 winding queries; fill 0.436 s; sampling pass 0.479 s (22.80 us/sample)
+INFO [fit] voxels: 19794 distinct stencil voxels, 18292 with |v_vdb|<5 voxels: |dv|<=0.25 voxel 99.4041% (p50 1.003e-05 p99 0.1002 max 0.9987 voxel), sign agreement (all) 99.9495%
+PASS [fit] b.pure: brick value == value recomputed alone, bitwise, at 19794/19794 voxels
+[fit] b: samples 21015, |v_vdb|<5 voxels 20942; |dv|<=0.25 voxel 100.0000% (p50 7.631e-05 p99 0.02672 max 0.05836 voxel); sign 100.0000% (all samples 100.0000%); angle<=10deg 100.0000% of 20942 (p50 0.013 p95 0.814 max 3.04 deg, 0 zero-gradient skipped)
+PASS [fit] b.value: 100.0000% within 0.25 voxel (>= 99%)
+PASS [fit] b.sign: 100.0000% sign agreement (>= 99.5%)
+PASS [fit] b.gradient: 100.0000% within 10 deg (>= 95%)
+PASS [fit] b.order: reverse-order fill, bitwise equal samples 21015/21015
+PASS [fit] cache: cached(V,F,h) twice -> one grid; (V,F,2h) -> another; back to h -> rebuilt (one entry kept)
+[fit] c (shift +0.5 voxel x): samples 21015, |v_vdb|<5 voxels 20942; |dv|<=0.25 voxel 58.6190% (p50 0.2155 p99 0.4862 max 0.5106 voxel); sign 99.4079% (all samples 99.4099%); angle<=10deg 99.8233% of 20942 (p50 0.859 p95 4.27 max 16.1 deg, 0 zero-gradient skipped)
+PASS [fit] c.control: shifted grid fails (b): value 58.6190% (>= 99%: FAIL), sign 99.4079% (FAIL), gradient 99.8233% (pass)
+[fit] SUMMARY PASS=9 FAIL=0
+== gate6a (all) ==
+[all] OpenVDB grid: 46523937 active voxels, 97637 leaves, 413824624 bytes, built in 9.80 s (openvdb_dump, TBB)
+[all] 78300 samples read, 0 with a sampler error in the dump
+PASS [all] a.index: p*(1/h), floor, uvw bitwise equal to OpenVDB worldToIndex at 78300/78300 samples
+PASS [all] a.sampler: reference vs SplineSampler::sampleHessian on OpenVDB stencils: max 0 ULP (x 0, g 0, h 0), 78300/78300 bitwise
+INFO [all] a.kernel: pending (FIT_KERNELS_PENDING; lean/Fit/SdfSplineHessian.lean not emitted), reference only
+INFO [all] grid: setup (AABB + winding BVH) 0.039 s; 671 bricks (343552 voxels), 2770896 bytes (2.77 MB); 343552 distance + 343552 winding queries; fill 1.573 s; sampling pass 1.722 s (22.00 us/sample)
+INFO [all] voxels: 119499 distinct stencil voxels, 36734 with |v_vdb|<5 voxels: |dv|<=0.25 voxel 99.6978% (p50 1.006e-05 p99 0.05579 max 0.9987 voxel), sign agreement (all) 99.9908%
+PASS [all] b.pure: brick value == value recomputed alone, bitwise, at 119499/119499 voxels
+[all] b: samples 78300, |v_vdb|<5 voxels 31738; |dv|<=0.25 voxel 100.0000% (p50 3.003e-05 p99 0.02796 max 0.08437 voxel); sign 100.0000% (all samples 100.0000%); angle<=10deg 100.0000% of 31738 (p50 0.00548 p95 0.772 max 5.08 deg, 0 zero-gradient skipped)
+PASS [all] b.value: 100.0000% within 0.25 voxel (>= 99%)
+PASS [all] b.sign: 100.0000% sign agreement (>= 99.5%)
+PASS [all] b.gradient: 100.0000% within 10 deg (>= 95%)
+PASS [all] b.order: reverse-order fill, bitwise equal samples 78300/78300
+PASS [all] cache: cached(V,F,h) twice -> one grid; (V,F,2h) -> another; back to h -> rebuilt (one entry kept)
+[all] c (shift +0.5 voxel x): samples 78300, |v_vdb|<5 voxels 31738; |dv|<=0.25 voxel 55.9834% (p50 0.2214 p99 0.4978 max 0.5106 voxel); sign 99.3509% (all samples 99.7369%); angle<=10deg 99.2501% of 31738 (p50 0.809 p95 5.37 max 17.6 deg, 0 zero-gradient skipped)
+PASS [all] c.control: shifted grid fails (b): value 55.9834% (>= 99%: FAIL), sign 99.3509% (FAIL), gradient 99.2501% (pass)
+[all] SUMMARY PASS=9 FAIL=0
+
+real	1m45.646s
+user	0m1.150s
+sys	0m1.349s

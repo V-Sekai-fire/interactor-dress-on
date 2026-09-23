@@ -10,7 +10,37 @@ abstract: >-
   topology (CSR, colouring) is shared with AvbdRd through avbd_topology, the
   driver is templated over the backend, and run()/sync()/numColors() give
   AvbdCpu the same surface as AvbdRd. The kernels themselves are not vendored;
-  kernels/avbd/gen.sh regenerates them from cloth-dynamics/lean.
+  kernels/avbd/gen.sh regenerates them from cloth-dynamics lean (vendored as
+  lean/ in the next commit).
+
+
+  Ported from cloth-dynamics src/code/slang_solver/AvbdSolverVk.cpp (see
+  references; line numbers at that commit) into avbd_cpu_backward.cpp,
+  avbd_rd_backward.cpp and avbd_rd.cpp. The reverse-mode stepBackward
+  (ensureBackwardBuffers 1450-1523, stepBackward 1525-1649, the read*Grad
+  accessors 1651-1723): the kernel sequence and bindings are kept, the
+  force backwards see the pre-step positions (1552); adapted, the host
+  prologue deltaX = positions - positionsPre (1530-1545) and the host
+  epilogue vPosGrad += vPosInit + vOut (1636-1647) run as the Lean-emitted
+  saxpby kernel on both backends, and runWithBackward records the forward
+  iterations and the backward in one submit. The self-collision scan
+  (SelfCollisionScanParams 807-810, uploadSelfCollisionRadii and
+  detectSelfCollisions 1377-1411): adapted, detectSelfCollisions is split
+  into submitSelfCollisionScan and collectSelfCollisions so the readback
+  lands on a later frame (AGENTS.md rule 4); AvbdRd keeps no one-call form.
+  The ragged-tail padding (rationale 23-32, roundUp/capacityFor 62-63, the
+  per-colour vertPerm padding 905-916, index padding to the dummy vertex with
+  zero stiffness 1028-1031 and at every capacityFor allocation 969-1193):
+  kept on AvbdRd, which pads every vertex and constraint buffer to
+  roundUp(n+1, 64) with pad indices at vertex nV and identity rows in
+  hScratch; adapted, setPadFillForTest repoints the padding at a real vertex
+  for the negative control. The pre-step snapshot (1241-1247, positions only
+  upstream): adapted, AvbdRd copies positions with buffer_copy on the GPU,
+  and both backends also snapshot the triangle and bending duals
+  (lambda0/lambda1/lambda) before each step and bind the copies in the
+  backward (setLambdaSnapshotForTest binds the live duals for the control).
+  The two AL backward kernels never read the duals, so this changes no
+  output today; it keeps the binding right if a kernel starts to.
 type: software
 authors:
   - name: V-Sekai-fire
@@ -20,3 +50,10 @@ commit: a8d11c5
 license:
   - Apache-2.0
   - MIT
+references:
+  - type: software
+    title: cloth-dynamics (AvbdSolverVk.cpp, the Vulkan AVBD solver and its backward)
+    authors:
+      - name: V-Sekai
+    repository-code: https://github.com/v-sekai/TOOL_cloth_dynamics
+    commit: e361584c6e52a1b6f2635b93a8dff80eafc00052

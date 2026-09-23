@@ -93,7 +93,14 @@ void AvbdCpu::setupMesh(uint32_t nVerts, const float *positions, const float *pr
 	for (uint32_t i = 0; i < nVerts; ++i) {
 		vertPerm_[i] = i;
 	}
+	identPerm_ = vertPerm_;
 	colorOffsets_ = { 0u, nVerts };
+	// A new mesh invalidates the last step and the self-collision setup.
+	positionsPre_.clear();
+	backwardReady_ = false;
+	radii_.clear();
+	neighbors_.clear();
+	selfK_ = 0;
 	meshReady_ = true;
 }
 
@@ -137,6 +144,8 @@ void AvbdCpu::uploadTriangles(uint32_t nTri, const uint32_t *triIdx, const float
 	triGamma_.assign(stiffness, stiffness + nTri);
 	triLambda0_.assign(3 * nTri, 0.0f);
 	triLambda1_.assign(3 * nTri, 0.0f);
+	triLambda0Pre_ = triLambda0_;
+	triLambda1Pre_ = triLambda1_;
 	triGrad_.assign(3 * 3 * nTri, 0.0f);
 	triHess_.assign(3 * nTri, 0.0f);
 	avbd::build_csr(nVerts_, nTri, 3, triIdx, vTriOff_, vTriIdx_, vTriRole_);
@@ -151,6 +160,7 @@ void AvbdCpu::uploadBendings(uint32_t nBend, const uint32_t *bendIdx, const floa
 	bendStiff_.assign(stiffness, stiffness + nBend);
 	bendGamma_.assign(stiffness, stiffness + nBend);
 	bendLambda_.assign(3 * nBend, 0.0f);
+	bendLambdaPre_ = bendLambda_;
 	bendGrad_.assign(3 * 4 * nBend, 0.0f);
 	bendHess_.assign(4 * nBend, 0.0f);
 	avbd::build_csr(nVerts_, nBend, 4, bendIdx, vBendOff_, vBendIdx_, vBendRole_);
@@ -189,6 +199,12 @@ int AvbdCpu::step() {
 	if (!meshReady_) {
 		return -1;
 	}
+	// The backward pass differentiates this step: keep the positions and
+	// duals its force kernels see (the dual updates run after it).
+	positionsPre_ = positions_;
+	triLambda0Pre_ = triLambda0_;
+	triLambda1Pre_ = triLambda1_;
+	bendLambdaPre_ = bendLambda_;
 	const uint32_t numColors = static_cast<uint32_t>(colorOffsets_.size()) - 1;
 	for (uint32_t k = 0; k < numColors; ++k) {
 		const uint32_t offset = colorOffsets_[k];

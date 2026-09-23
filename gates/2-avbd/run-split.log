@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+fixture cpu host_us=     412  PASS cpu: PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+fixture rd  host_us=  908657  PASS rd: PASS four_vertex_all_constraints (max_abs_diff=2.38419e-07 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+bench cpu          8x8   host_us=    25363  ms/substep=     5.07  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+bench rd           8x8   host_us=   206647  ms/substep=    41.33  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+bench rd-batched   8x8   host_us=    79782  ms/substep=    15.96  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+bench cpu         16x16  host_us=   108287  ms/substep=    21.66  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+bench rd          16x16  host_us=   202378  ms/substep=    40.48  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+bench rd-batched  16x16  host_us=    75903  ms/substep=    15.18  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+bench cpu         32x32  host_us=   478212  ms/substep=    95.64  cpu nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+bench rd          32x32  host_us=   250272  ms/substep=    50.05  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+bench rd-batched  32x32  host_us=   106405  ms/substep=    21.28  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+bench rd          64x64  host_us=   304475  ms/substep=    60.90  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+bench rd-batched  64x64  host_us=   173453  ms/substep=    34.69  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+rd_rule4: same_frame_syncs=223 syncs=223 submits=223
+RESULT: PASS
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

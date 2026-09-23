@@ -73,6 +73,13 @@ of magnitude. Batching pays per *dispatch* (each is four calls), not per call.
   design rule "state machines and queues, not waits" means no stage syncs in
   the frame it submits, which makes this a latency, not a stall — but it
   stays on the risk list until it is understood.
+  **Explained in Cut A** (`gates/2-avbd/README.md`, `perf-bisect.log`):
+  godot-sandbox caches an Object call's method name in a 32-slot
+  direct-mapped cache keyed by the guest address of the name string; when
+  `compute_list_end` and `sync` share a slot each call re-resolves through
+  ClassDB (~2.4 ms). It is set by the link layout, so it varied between
+  builds, not processes. `rd_compute` now places every method name in its
+  own slot.
 - **The guest clock is not a clock.** `std::chrono::steady_clock::now()`
   inside the guest jumps between two time bases ~1000 s apart within one
   call (`setup_us=-1047969145`). Every number above is from the host's

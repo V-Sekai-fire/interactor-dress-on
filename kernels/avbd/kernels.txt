@@ -1,5 +1,6 @@
-# The 24 AVBD kernels, by their Lean/Slang module names. Order is the order
-# the forward step dispatches them, then dual updates, self-collision, backward.
+# The 25 AVBD kernels, by their Lean/Slang module names. Order is the order
+# the forward step dispatches them, then dual updates, self-collision, backward,
+# and saxpby (the backward prologue and epilogue on the GPU).
 vbd_init
 spring_force
 vbd_gather_spring
@@ -24,3 +25,4 @@ spring_force_backward
 triangle_membrane_force_al_backward
 triangle_bending_force_al_backward
 vbd_init_backward
+saxpby

@@ -11,14 +11,17 @@
 
 namespace {
 
-// The forward and dual kernels this backend dispatches. The self-collision
-// scan and the backward pass are in the table and the embedded SPIR-V too;
-// they are wired in the next cut, after the fixture passes on this one.
+// Every kernel this backend dispatches: forward, duals, self-collision,
+// backward and saxpby (avbd_rd_backward.cpp).
 const char *const kForwardKernels[] = {
 	"vbd_init", "spring_force", "vbd_gather_spring", "attachment_force_al", "vbd_gather_attachment",
 	"triangle_membrane_force_al", "vbd_gather_triangle", "triangle_bending_force_al",
 	"vbd_gather_bending", "vbd_solve_apply", "attachment_dual_update",
-	"triangle_membrane_dual_update", "triangle_bending_dual_update",
+	"triangle_membrane_dual_update", "triangle_bending_dual_update", "self_collision_scan",
+	"vbd_solve_apply_backward", "vbd_gather_spring_backward", "vbd_gather_attachment_backward",
+	"vbd_gather_triangle_backward", "vbd_gather_bending_backward", "attachment_force_al_backward",
+	"spring_force_backward", "triangle_membrane_force_al_backward", "triangle_bending_force_al_backward",
+	"vbd_init_backward", "saxpby",
 };
 
 const cloth::avbd_table::KernelDesc *table_find(const char *name) {
@@ -61,7 +64,16 @@ AvbdRd::~AvbdRd() {
 		&at_vert_, &at_fixed_, &at_k_, &at_lambda_, &at_gamma_, &at_gradV_, &at_hess_, &at_off_, &at_idx_,
 		&tri_idx_, &tri_k_, &tri_l0_, &tri_l1_, &tri_gamma_, &tri_grad_, &tri_hess_, &tri_invuv_, &tri_off_,
 		&tri_idxc_, &tri_role_, &bd_idx_, &bd_w_, &bd_n_, &bd_k_, &bd_lambda_, &bd_gamma_, &bd_grad_, &bd_hess_,
-		&bd_off_, &bd_idxc_, &bd_role_, &dualAttachParams_, &dualTriParams_, &dualBendParams_ };
+		&bd_off_, &bd_idxc_, &bd_role_, &dualAttachParams_, &dualTriParams_, &dualBendParams_,
+		&positionsPre_, &tri_l0Pre_, &tri_l1Pre_, &bd_lambdaPre_,
+		&vOut_, &vG_, &vH_, &deltaX_, &vPosGrad_, &vPosInit_, &vPred_, &vMass_, &hJunk_, &vPosSum_, &vPosGradOut_,
+		&vSpringGradA_, &vSpringHess_, &vSpringPd_, &vSpringRest_, &vSpringStiff_,
+		&vAttachGradV_, &vAttachHess_, &vAttachFixed_, &vAttachStiff_, &vAttachLambda_,
+		&vTriGrad_, &vTriHess_, &vTriP_, &vTriStiff_, &vTriL0_, &vTriL1_,
+		&vBendGrad_, &vBendHess_, &vBendP_, &vBendN_, &vBendStiff_, &vBendLambda_,
+		&scatterParams_, &initBwdParams_, &sxDeltaParams_, &sxSumParams_, &sxOutParams_,
+		&radii_, &neighbors_, &selfParams_ };
+	invalidate_sets();
 	for (Buf *b : all) {
 		free_buf(*b);
 	}
@@ -132,6 +144,32 @@ AvbdRd::Buf AvbdRd::make_v3(const float *xyz, uint32_t n) {
 	return make_f32(pad_v3(xyz, n));
 }
 
+AvbdRd::Buf AvbdRd::make_f32_cap(const float *v, uint32_t n, uint32_t cap) {
+	std::vector<float> out(cap, 0.0f);
+	for (uint32_t i = 0; i < n; ++i) {
+		out[i] = v[i];
+	}
+	return make_f32(out);
+}
+
+AvbdRd::Buf AvbdRd::make_u32_cap(const uint32_t *v, uint32_t n, uint32_t cap, uint32_t fill) {
+	std::vector<uint32_t> out(cap, fill);
+	for (uint32_t i = 0; i < n; ++i) {
+		out[i] = v[i];
+	}
+	return make_u32(out);
+}
+
+AvbdRd::Buf AvbdRd::make_v3_cap(const float *xyz, uint32_t n, uint32_t cap) {
+	std::vector<float> out(size_t(4) * cap, 0.0f);
+	for (uint32_t i = 0; i < n; ++i) {
+		out[4 * i + 0] = xyz[3 * i + 0];
+		out[4 * i + 1] = xyz[3 * i + 1];
+		out[4 * i + 2] = xyz[3 * i + 2];
+	}
+	return make_f32(out);
+}
+
 AvbdRd::Buf AvbdRd::make_zero(size_t bytes) {
 	Buf b;
 	if (bytes == 0) {
@@ -171,8 +209,16 @@ void AvbdRd::free_buf(Buf &b) {
 }
 
 void AvbdRd::invalidate_sets() {
-	// Sets are owned by their buffers on the Godot side (freed with them);
-	// the cache only forgets them here.
+	// A set whose buffer was freed went with it on the Godot side; one whose
+	// buffers all live is freed here. Either way its permanent RID slot is
+	// released (rd_compute.h).
+	for (auto &kv : sets_) {
+		if (d_.uniform_set_valid(kv.second)) {
+			d_.free_rid(kv.second);
+		} else {
+			d_.forget(kv.second);
+		}
+	}
 	sets_.clear();
 }
 
@@ -191,16 +237,37 @@ void AvbdRd::setupMesh(uint32_t nVerts, const float *positions, const float *pre
 	free_buf(gScratch_);
 	free_buf(hScratch_);
 	free_buf(vertPerm_b_);
-	positions_ = make_v3(positions, nVerts);
-	predicted_ = make_v3(predicted, nVerts);
-	mass_ = make_f32(std::vector<float>(mass, mass + nVerts));
-	gScratch_ = make_zero(size_t(16) * nVerts);
-	hScratch_ = make_zero(size_t(24) * nVerts);
+	// Vertex buffers hold cap_for(nV) rows: row nV is the dummy vertex the
+	// index padding points at, and every ragged-tail lane of a vertex
+	// dispatch lands inside the buffer. The pad rows of hScratch are the
+	// identity, so the 3x3 solve of the backward stays finite there.
+	const uint32_t vcap = cap_for(nVerts);
+	positions_ = make_v3_cap(positions, nVerts, vcap);
+	predicted_ = make_v3_cap(predicted, nVerts, vcap);
+	mass_ = make_f32_cap(mass, nVerts, vcap);
+	gScratch_ = make_zero(size_t(16) * vcap);
+	{
+		std::vector<float> h(size_t(6) * vcap, 0.0f);
+		for (uint32_t i = nVerts; i < vcap; ++i) {
+			h[6 * i + 0] = 1.0f;
+			h[6 * i + 3] = 1.0f;
+			h[6 * i + 5] = 1.0f;
+		}
+		hScratch_ = make_f32(h);
+	}
 	vertPerm_.resize(nVerts);
 	for (uint32_t i = 0; i < nVerts; ++i) {
 		vertPerm_[i] = i;
 	}
 	vertPerm_b_ = make_u32(vertPerm_);
+	free_buf(positionsPre_);
+	positionsPre_ = make_v3_cap(positions, nVerts, vcap);
+	backwardReady_ = false;
+	hasStep_ = false;
+	free_buf(radii_);
+	free_buf(neighbors_);
+	free_buf(selfParams_);
+	selfK_ = 0;
 	colorOffsets_ = { 0u, nVerts };
 	meshReady_ = positions_.valid() && predicted_.valid() && mass_.valid() && gScratch_.valid() &&
 			hScratch_.valid() && vertPerm_b_.valid();
@@ -214,6 +281,7 @@ void AvbdRd::uploadSprings(uint32_t nSprings, const uint32_t *p1Idx, const uint3
 		sync();
 	}
 	nSprings_ = nSprings;
+	backwardReady_ = false;
 	springP1_.assign(p1Idx, p1Idx + nSprings);
 	springP2_.assign(p2Idx, p2Idx + nSprings);
 	Buf *old[] = { &sp_p1_, &sp_p2_, &sp_rest_, &sp_k_, &sp_gradA_, &sp_hess_, &sp_off_, &sp_idx_, &sp_role_ };
@@ -224,12 +292,14 @@ void AvbdRd::uploadSprings(uint32_t nSprings, const uint32_t *p1Idx, const uint3
 		invalidate_sets();
 		return;
 	}
-	sp_p1_ = make_u32(springP1_);
-	sp_p2_ = make_u32(springP2_);
-	sp_rest_ = make_f32(std::vector<float>(restLen, restLen + nSprings));
-	sp_k_ = make_f32(std::vector<float>(stiffness, stiffness + nSprings));
-	sp_gradA_ = make_zero(size_t(16) * nSprings);
-	sp_hess_ = make_zero(size_t(24) * nSprings);
+	// Padded springs join the dummy vertex to itself with zero stiffness.
+	const uint32_t ccap = cap_for(nSprings);
+	sp_p1_ = make_u32_cap(p1Idx, nSprings, ccap, pad_index());
+	sp_p2_ = make_u32_cap(p2Idx, nSprings, ccap, pad_index());
+	sp_rest_ = make_f32_cap(restLen, nSprings, ccap);
+	sp_k_ = make_f32_cap(stiffness, nSprings, ccap);
+	sp_gradA_ = make_zero(size_t(16) * ccap);
+	sp_hess_ = make_zero(size_t(24) * ccap);
 	std::vector<uint32_t> ends(2 * nSprings);
 	for (uint32_t i = 0; i < nSprings; ++i) {
 		ends[2 * i] = p1Idx[i];
@@ -254,22 +324,26 @@ void AvbdRd::uploadAttachments(uint32_t nAttach, const uint32_t *vertIdx,
 		free_buf(*b);
 	}
 	paramsReady_ = false; // the dual params carry the count
+	backwardReady_ = false;
 	if (nAttach == 0) {
 		attachGamma_.clear();
 		invalidate_sets();
 		return;
 	}
-	at_vert_ = make_u32(std::vector<uint32_t>(vertIdx, vertIdx + nAttach));
-	at_fixed_ = make_v3(fixedPos, nAttach);
-	at_k_ = make_f32(std::vector<float>(stiffness, stiffness + nAttach));
+	// The padded lanes of attachment_force_al_backward write
+	// v_positions[vertIdx[c]]: the dummy vertex, never a real one.
+	const uint32_t ccap = cap_for(nAttach);
+	at_vert_ = make_u32_cap(vertIdx, nAttach, ccap, pad_index());
+	at_fixed_ = make_v3_cap(fixedPos, nAttach, ccap);
+	at_k_ = make_f32_cap(stiffness, nAttach, ccap);
 	attachGamma_.assign(stiffness, stiffness + nAttach);
 	for (float &g : attachGamma_) {
 		g *= gammaScale_;
 	}
-	at_gamma_ = make_f32(attachGamma_);
-	at_lambda_ = make_zero(size_t(16) * nAttach);
-	at_gradV_ = make_zero(size_t(16) * nAttach);
-	at_hess_ = make_zero(size_t(4) * nAttach);
+	at_gamma_ = make_f32_cap(attachGamma_.data(), nAttach, ccap);
+	at_lambda_ = make_zero(size_t(16) * ccap);
+	at_gradV_ = make_zero(size_t(16) * ccap);
+	at_hess_ = make_zero(size_t(4) * ccap);
 	std::vector<uint32_t> off, idx, roleUnused;
 	avbd::build_csr(nVerts_, nAttach, 1, vertIdx, off, idx, roleUnused);
 	at_off_ = make_u32(off);
@@ -283,9 +357,10 @@ void AvbdRd::uploadTriangles(uint32_t nTri, const uint32_t *triIdx, const float 
 		sync();
 	}
 	nTri_ = nTri;
+	backwardReady_ = false;
 	triIdx_.assign(triIdx, triIdx + 3 * nTri);
 	Buf *old[] = { &tri_idx_, &tri_k_, &tri_l0_, &tri_l1_, &tri_gamma_, &tri_grad_, &tri_hess_, &tri_invuv_,
-		&tri_off_, &tri_idxc_, &tri_role_ };
+		&tri_off_, &tri_idxc_, &tri_role_, &tri_l0Pre_, &tri_l1Pre_ };
 	for (Buf *b : old) {
 		free_buf(*b);
 	}
@@ -295,18 +370,21 @@ void AvbdRd::uploadTriangles(uint32_t nTri, const uint32_t *triIdx, const float 
 		invalidate_sets();
 		return;
 	}
-	tri_idx_ = make_u32(triIdx_);
-	tri_k_ = make_f32(std::vector<float>(stiffness, stiffness + nTri));
+	const uint32_t ccap = cap_for(nTri);
+	tri_idx_ = make_u32_cap(triIdx, 3 * nTri, 3 * ccap, pad_index());
+	tri_k_ = make_f32_cap(stiffness, nTri, ccap);
 	triGamma_.assign(stiffness, stiffness + nTri);
 	for (float &g : triGamma_) {
 		g *= gammaScale_;
 	}
-	tri_gamma_ = make_f32(triGamma_);
-	tri_l0_ = make_zero(size_t(16) * nTri);
-	tri_l1_ = make_zero(size_t(16) * nTri);
-	tri_grad_ = make_zero(size_t(16) * 3 * nTri);
-	tri_hess_ = make_zero(size_t(4) * 3 * nTri);
-	tri_invuv_ = make_f32(std::vector<float>(invUV, invUV + 4 * nTri));
+	tri_gamma_ = make_f32_cap(triGamma_.data(), nTri, ccap);
+	tri_l0_ = make_zero(size_t(16) * ccap);
+	tri_l1_ = make_zero(size_t(16) * ccap);
+	tri_l0Pre_ = make_zero(size_t(16) * ccap);
+	tri_l1Pre_ = make_zero(size_t(16) * ccap);
+	tri_grad_ = make_zero(size_t(16) * 3 * ccap);
+	tri_hess_ = make_zero(size_t(4) * 3 * ccap);
+	tri_invuv_ = make_f32_cap(invUV, 4 * nTri, 4 * ccap);
 	std::vector<uint32_t> off, idx, role;
 	avbd::build_csr(nVerts_, nTri, 3, triIdx, off, idx, role);
 	tri_off_ = make_u32(off);
@@ -321,9 +399,10 @@ void AvbdRd::uploadBendings(uint32_t nBend, const uint32_t *bendIdx, const float
 		sync();
 	}
 	nBend_ = nBend;
+	backwardReady_ = false;
 	bendIdx_.assign(bendIdx, bendIdx + 4 * nBend);
 	Buf *old[] = { &bd_idx_, &bd_w_, &bd_n_, &bd_k_, &bd_lambda_, &bd_gamma_, &bd_grad_, &bd_hess_, &bd_off_,
-		&bd_idxc_, &bd_role_ };
+		&bd_idxc_, &bd_role_, &bd_lambdaPre_ };
 	for (Buf *b : old) {
 		free_buf(*b);
 	}
@@ -333,18 +412,20 @@ void AvbdRd::uploadBendings(uint32_t nBend, const uint32_t *bendIdx, const float
 		invalidate_sets();
 		return;
 	}
-	bd_idx_ = make_u32(bendIdx_);
-	bd_w_ = make_f32(std::vector<float>(weight, weight + 4 * nBend));
-	bd_n_ = make_f32(std::vector<float>(nTarget, nTarget + nBend));
-	bd_k_ = make_f32(std::vector<float>(stiffness, stiffness + nBend));
+	const uint32_t ccap = cap_for(nBend);
+	bd_idx_ = make_u32_cap(bendIdx, 4 * nBend, 4 * ccap, pad_index());
+	bd_w_ = make_f32_cap(weight, 4 * nBend, 4 * ccap);
+	bd_n_ = make_f32_cap(nTarget, nBend, ccap);
+	bd_k_ = make_f32_cap(stiffness, nBend, ccap);
 	bendGamma_.assign(stiffness, stiffness + nBend);
 	for (float &g : bendGamma_) {
 		g *= gammaScale_;
 	}
-	bd_gamma_ = make_f32(bendGamma_);
-	bd_lambda_ = make_zero(size_t(16) * nBend);
-	bd_grad_ = make_zero(size_t(16) * 4 * nBend);
-	bd_hess_ = make_zero(size_t(4) * 4 * nBend);
+	bd_gamma_ = make_f32_cap(bendGamma_.data(), nBend, ccap);
+	bd_lambda_ = make_zero(size_t(16) * ccap);
+	bd_lambdaPre_ = make_zero(size_t(16) * ccap);
+	bd_grad_ = make_zero(size_t(16) * 4 * ccap);
+	bd_hess_ = make_zero(size_t(4) * 4 * ccap);
 	std::vector<uint32_t> off, idx, role;
 	avbd::build_csr(nVerts_, nBend, 4, bendIdx, off, idx, role);
 	bd_off_ = make_u32(off);
@@ -482,6 +563,16 @@ void AvbdRd::ensure_params() {
 				rid = dualTriParams_.rid;
 			} else if (std::strcmp(kernel, "triangle_bending_dual_update") == 0) {
 				rid = dualBendParams_.rid;
+			} else if (std::strcmp(kernel, "self_collision_scan") == 0) {
+				rid = selfParams_.rid;
+			} else if (std::strcmp(kernel, "vbd_init_backward") == 0) {
+				rid = initBwdParams_.rid;
+			} else if (std::strcmp(kernel, "saxpby") == 0) {
+				rid = color == kSaxDelta ? sxDeltaParams_.rid
+						: color == kSaxSum ? sxSumParams_.rid
+										   : sxOutParams_.rid;
+			} else if (color == kScatterColor) {
+				rid = scatterParams_.rid;
 			} else {
 				rid = colorParams_[color].rid;
 			}
@@ -520,6 +611,30 @@ bool AvbdRd::dispatch(const char *kernel, int color, uint32_t threads, const Bin
 	d_.bind_uniform_set(set);
 	d_.dispatch(rdc::Device::groups_for(threads, kernels_[kernel].desc->threadgroup[0]));
 	return true;
+}
+
+bool AvbdRd::dispatch_scatter(const char *kernel, uint32_t threads, const Binds &binds) {
+	// The scatter binds cotangent buffers under the gather's binding names;
+	// its uniform set is cached apart from the forward one under colour -2.
+	return dispatch(kernel, kScatterColor, threads, binds);
+}
+
+void AvbdRd::snapshot_pre_step() {
+	// buffer_copy is a transfer command: never inside a compute list, and
+	// recorded before one the graph orders it ahead. The duals change only in
+	// a dual update, so they are copied only when one ran since the last copy.
+	d_.buffer_copy(positions_.rid, positionsPre_.rid, positions_.bytes);
+	if (lambdasDirty_) {
+		if (nTri_) {
+			d_.buffer_copy(tri_l0_.rid, tri_l0Pre_.rid, tri_l0_.bytes);
+			d_.buffer_copy(tri_l1_.rid, tri_l1Pre_.rid, tri_l1_.bytes);
+		}
+		if (nBend_) {
+			d_.buffer_copy(bd_lambda_.rid, bd_lambdaPre_.rid, bd_lambda_.bytes);
+		}
+		lambdasDirty_ = false;
+	}
+	hasStep_ = true;
 }
 
 // --- recording --------------------------------------------------------------
@@ -600,6 +715,7 @@ void AvbdRd::record_iteration() {
 }
 
 void AvbdRd::record_duals() {
+	mark_lambdas_dirty();
 	if (nAttach_) {
 		dispatch("attachment_dual_update", -1, nAttach_,
 				{ { "positions", &positions_ }, { "vertIdx", &at_vert_ }, { "fixedPos", &at_fixed_ },
@@ -620,15 +736,24 @@ void AvbdRd::record_duals() {
 	d_.barrier();
 }
 
-bool AvbdRd::begin_record() {
+bool AvbdRd::prologue() {
 	if (!ok_ || !meshReady_) {
 		return false;
 	}
 	ensure_params();
+	// A submit from an earlier tick: the caller let a frame pass (rule 4),
+	// so this wait is for work already done. rd_rule4 counts it otherwise.
 	if (pending_) {
 		sync();
 	}
 	err_.clear();
+	return true;
+}
+
+bool AvbdRd::begin_record() {
+	if (!prologue()) {
+		return false;
+	}
 	d_.list_begin();
 	return true;
 }
@@ -640,10 +765,10 @@ void AvbdRd::end_record_and_submit() {
 }
 
 int AvbdRd::step() {
-	if (!begin_record()) {
+	if (!prologue()) {
 		return -1;
 	}
-	record_iteration();
+	record_run(1, false);
 	end_record_and_submit();
 	return err_.empty() ? 0 : -1;
 }
@@ -669,6 +794,7 @@ int AvbdRd::stepDualMembrane() {
 	if (!begin_record()) {
 		return -1;
 	}
+	mark_lambdas_dirty();
 	dispatch("triangle_membrane_dual_update", -1, nTri_,
 			{ { "positions", &positions_ }, { "idx", &tri_idx_ }, { "gamma", &tri_gamma_ },
 					{ "lambda0", &tri_l0_ }, { "lambda1", &tri_l1_ }, { "inv_deltaUV", &tri_invuv_ } });
@@ -683,6 +809,7 @@ int AvbdRd::stepDualBending() {
 	if (!begin_record()) {
 		return -1;
 	}
+	mark_lambdas_dirty();
 	dispatch("triangle_bending_dual_update", -1, nBend_,
 			{ { "positions", &positions_ }, { "idx", &bd_idx_ }, { "weight", &bd_w_ }, { "nTarget", &bd_n_ },
 					{ "gamma", &bd_gamma_ }, { "lambda", &bd_lambda_ } });
@@ -694,17 +821,34 @@ int AvbdRd::run(int iters, bool duals) {
 	if (iters < 1) {
 		return meshReady_ ? 0 : -1;
 	}
-	if (!begin_record()) {
+	if (!prologue()) {
 		return -1;
 	}
-	for (int it = 0; it < iters; ++it) {
-		record_iteration();
-		if (duals) {
-			record_duals();
-		}
-	}
+	record_run(iters, duals);
 	end_record_and_submit();
 	return err_.empty() ? 0 : -1;
+}
+
+void AvbdRd::record_run(int iters, bool duals) {
+	// Iterations 1..n-1 in one list, the pre-step snapshot for the last one
+	// (a transfer, so between lists), then the last iteration: one graph,
+	// one submit. The backward pass differentiates the last iteration.
+	if (iters > 1) {
+		d_.list_begin();
+		for (int it = 0; it + 1 < iters; ++it) {
+			record_iteration();
+			if (duals) {
+				record_duals();
+			}
+		}
+		d_.list_end();
+	}
+	snapshot_pre_step();
+	d_.list_begin();
+	record_iteration();
+	if (duals) {
+		record_duals();
+	}
 }
 
 void AvbdRd::sync() {

@@ -2,9 +2,9 @@
 //
 // Every ADD_API_FUNCTION here is reachable from GDScript as
 // Sandbox.vmcall(name, ...), and project/main.gd wraps each one so an MCP
-// client can reach it with no argument marshalling. Stage 1 exposes the GPU
-// layer's own probes; later stages add the pen, curvenet, dress-on and drape
-// entry points beside them.
+// client can reach it with no argument marshalling. It exposes the GPU
+// layer's own Stage 1 probes. Each later stage is its own ELF in its own
+// Sandbox node (AGENTS.md rule 6): the drape is guest/drape/main.cpp.
 
 #include <api.hpp>
 
@@ -14,11 +14,6 @@
 #include <vector>
 
 #include "rd_compute.h"
-#include "avbd_fixture.h"
-#include "avbd/avbd_cpu.h"
-#include "avbd/avbd_rd.h"
-#include "avbd/avbd_sim.h"
-#include "avbd/cloth_grid.h"
 
 // The one device, held across vmcalls. rd_probe reports whether it found it
 // already open, which is the Stage 1 proof that a guest static can keep the
@@ -381,88 +376,7 @@ static Variant rd_set_probe(PackedByteArray spirv) {
 	return text("ok " + std::to_string(g_probe_spirv.size()) + " bytes");
 }
 
-// --- Stage 2: the AVBD solver, both backends -------------------------------
-
-// The oracle (guest/avbd_fixture.cpp) on the CPU path or the GPU path.
-static Variant avbd_fixture(String backend_s) {
-	const std::string backend = backend_s.utf8();
-	if (backend == "cpu") {
-		return text(avbd_fixture_cpu());
-	}
-	if (backend == "rd") {
-		if (!g_dev.open()) {
-			return text(g_dev.error());
-		}
-		return text(avbd_fixture_rd(g_dev));
-	}
-	return text("FAIL: backend must be cpu or rd");
-}
-
-// A pinned nx-by-ny panel dropped under gravity for `substeps` substeps of
-// `iters` outer iterations each, on one backend. Returns the final state's
-// finiteness and lowest point; the host times the whole call. `batched`
-// records all iterations of a substep in one compute list (AvbdRd::run);
-// otherwise one submit per iteration, as AvbdCpu's loop shape would do.
-template <class Solver>
-static std::string bench_on(Solver &solver, int nx, int ny, int substeps, int iters, bool batched) {
-	ClothSimT<Solver> sim(solver);
-	sim.setup(build_cloth_mesh(uint32_t(nx), uint32_t(ny), 1.0f, 1.0f, 1.0f, 0.5f));
-	sim.solver.buildColoring();
-	sim.iters = iters;
-	for (int s = 0; s < substeps; ++s) {
-		if (batched) {
-			const uint32_t nV = sim.mesh.nVerts();
-			for (uint32_t i = 0; i < nV; ++i) {
-				sim.predicted[3 * i + 0] = sim.pos[3 * i + 0] + ClothSimT<Solver>::H * sim.vel[3 * i + 0];
-				sim.predicted[3 * i + 1] = sim.pos[3 * i + 1] + ClothSimT<Solver>::H * sim.vel[3 * i + 1] +
-						ClothSimT<Solver>::H * ClothSimT<Solver>::H * ClothSimT<Solver>::GRAVITY_Y;
-				sim.predicted[3 * i + 2] = sim.pos[3 * i + 2] + ClothSimT<Solver>::H * sim.vel[3 * i + 2];
-			}
-			sim.solver.updateState(sim.pos.data(), sim.predicted.data());
-			sim.solver.run(iters, false);
-			std::vector<float> np;
-			sim.solver.readPositions(np);
-			for (uint32_t i = 0; i < 3 * nV; ++i) {
-				sim.vel[i] = (np[i] - sim.pos[i]) / ClothSimT<Solver>::H * sim.damp;
-			}
-			sim.pos = np;
-		} else {
-			sim.step();
-		}
-	}
-	float ymin = 1e30f;
-	for (uint32_t i = 0; i < sim.mesh.nVerts(); ++i) {
-		ymin = ymin < sim.pos[3 * i + 1] ? ymin : sim.pos[3 * i + 1];
-	}
-	char b[160];
-	std::snprintf(b, sizeof b, "nv=%u colors=%u substeps=%d iters=%d finite=%s ymin=%.4f",
-			sim.mesh.nVerts(), unsigned(sim.solver.numColors()), substeps, iters, sim.finite() ? "yes" : "NO", ymin);
-	return b;
-}
-
-static Variant avbd_bench(String backend_s, int nx, int ny, int substeps, int iters) {
-	const std::string backend = backend_s.utf8();
-	if (nx < 2 || ny < 2 || substeps < 1 || iters < 1) {
-		return text("FAIL: nx, ny >= 2 and substeps, iters >= 1");
-	}
-	if (backend == "cpu") {
-		AvbdCpu s;
-		return text("cpu " + bench_on(s, nx, ny, substeps, iters, false));
-	}
-	if (backend == "rd" || backend == "rd-batched") {
-		if (!g_dev.open()) {
-			return text(g_dev.error());
-		}
-		AvbdRd s(g_dev);
-		if (!s.ok()) {
-			return text("FAIL rd: " + s.error());
-		}
-		return text(backend + " " + bench_on(s, nx, ny, substeps, iters, backend == "rd-batched"));
-	}
-	return text("FAIL: backend must be cpu, rd or rd-batched");
-}
-
-// Where did it get to? Named steps, not booleans.
+// Where did it get to? Named steps, not booleans (gate_rd_compute.gd).
 static Variant rd_last_step() {
 	return text(g_dev.step());
 }
@@ -479,9 +393,6 @@ int main() {
 	ADD_API_FUNCTION(rd_set_probe, "String", "PackedByteArray spirv", "Keep the probe kernel bytes for rd_calls");
 	ADD_API_FUNCTION(rd_calls, "String", "String kind, int n",
 			"Repeat one call kind n times (ticks|limit|clock|bind|barrier|dispatch|submit|buffer|shader|shader-pba|pipeline|uset|readback|instantiate); time it on the host");
-	ADD_API_FUNCTION(avbd_fixture, "String", "String backend", "The AVBD oracle on cpu or rd");
-	ADD_API_FUNCTION(avbd_bench, "String", "String backend, int nx, int ny, int substeps, int iters",
-			"Drop a pinned nx-by-ny panel on cpu, rd or rd-batched; the host times it");
 	ADD_API_FUNCTION(rd_last_step, "String", "", "The last RenderingDevice step attempted");
 	halt();
 }

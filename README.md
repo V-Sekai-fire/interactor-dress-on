@@ -31,8 +31,8 @@ evidence.
 
 | stage | what | result |
 |---|---|---|
-| [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; `submit+sync` bimodal per process (open) |
-| [2](gates/2-avbd/) | AVBD in the guest: Lean → Slang → `cpp` (`AvbdCpu`) and `spirv` (`AvbdRd`), one driver | **PASS (forward + duals)** — oracle exact on both; crossover ≈100 vertices, GPU 10× at 1024; backward + self-collision next |
+| [1](gates/1-rd-compute/) | `rd_compute`, the one GPU layer (`guest/rd_compute.{h,cpp}`, a static lib) | **PASS** — device held across vmcalls; barriers mandatory (the graph does not order same-buffer dispatches); 6–13 µs per in-list call; the old "bimodal submit+sync" was godot-sandbox's 32-slot method-name cache colliding by string address (fixed in `rd_compute`, Cut A) |
+| [2](gates/2-avbd/) | AVBD in the guest: Lean → Slang → `cpp` (`AvbdCpu`) and `spirv` (`AvbdRd`), one driver | **PASS** — forward, duals, backward (gradcheck 5/5, stategrad 12/12 + 12/12, within 1.04e-6 of native) and self-collision exact on both; rd from 256 vertices (frame-driven, 3.2–4.8 ms/substep to 4096 vertices) |
 
 The standing rules are in [AGENTS.md](AGENTS.md).
 
@@ -65,6 +65,6 @@ kernels/   .slang sources and their .spv (probe, accumulate; AVBD's to come)
 project/   the stock-Godot project: main.gd composes the Sandbox nodes,
            gate_*.gd / probe_*.gd / control_*.gd are the runnable evidence
 gates/     0A–0E and the stage records, with their logs
-tools/     OpenXR-Simulator (gitignored; see gates/0d-openxr/)
+tools/     OXRSys runtime + Qt simulator, Windows port (gitignored; tools/oxrsys/scripts/windows_build.ps1)
 build.sh   riscv64 cross-build of every ELF into project/
 ```

@@ -1,0 +1,52 @@
+# 2026-09-23T00:23:58Z C:/cloth-dynamics-standalone/src/code/slang_solver/build/test_avbd_stategrad.exe C:/interactor-dress-on/build/spv
+# exe sha256 604d890e5dfe9e513e0f0164661b183afcd813bfe6b894150746a65afb3b3943
+# standalone HEAD e361584
+# spv set sha256 cc3bbb08cad0e86b4007320ec51d61ddbae47d65d77377fcbc5d81a9aaa2fc44 (24 files)
+[avbd-vk] device: NVIDIA GeForce RTX 4090 (Vulkan 1.4)
+test_avbd_stategrad: positions and predicted checked SEPARATELY
+  (never aliased, so neither accessor can hide behind the other)
+
+  falsifiability: doubled predictedGrad -> 9 of 12 rejected (good, the check has teeth)
+
+  bisect of d L / d positions by constraint family:
+    inertia only   0 of 12 disagree
+    attachment     0 of 12 disagree
+    spring         0 of 12 disagree
+    triangle       0 of 12 disagree
+    bending        0 of 12 disagree
+
+  d L / d positions  vs readPositionsGrad
+    i         analytic             fd         rel  
+    0          1.28229        1.28246    0.000129  ok
+    1          1.92123        1.92095    0.000146  ok
+    2          1.09885        1.09984    0.000898  ok
+    3         0.904063       0.904106    4.38e-05  ok
+    4          1.02842        1.02801    0.000399  ok
+    5          0.30102        0.30104    1.92e-05  ok
+    6        -0.103545      -0.103515       3e-05  ok
+    7        -0.026644     -0.0262417    0.000402  ok
+    8         0.774872       0.773123     0.00175  ok
+    9         0.794688       0.794635    5.25e-05  ok
+    10        0.165497       0.166145    0.000648  ok
+    11       -0.190051       -0.19002    3.14e-05  ok
+    -> 0 of 12 disagree
+
+  d L / d predicted  vs readPredictedGrad
+    i         analytic             fd         rel  
+    0           0.4375       0.437547    4.65e-05  ok
+    1          1.22449        1.22462    0.000106  ok
+    2         0.979592       0.979594    1.95e-06  ok
+    3             0.96       0.959873    0.000127  ok
+    4              0.5       0.499994    6.45e-06  ok
+    5                0              0           0  ok
+    6                0              0           0  ok
+    7          0.78125       0.780821    0.000429  ok
+    8             1.25        1.24931     0.00055  ok
+    9                2        1.99986    7.25e-05  ok
+    10         1.77778        1.77733    0.000251  ok
+    11               0              0           0  ok
+    -> 0 of 12 disagree
+
+test_avbd_stategrad: BOTH accessors correct; a multi-step break
+is then in composition, not in the per-step state gradients.
+# exit 0

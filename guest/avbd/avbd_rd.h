@@ -19,13 +19,23 @@
 //    one colour, whose outputs are disjoint;
 //  - step() records and SUBMITS but does not wait. sync() waits; readbacks
 //    sync if a submit is pending. run(iters) records many iterations in one
-//    list, which is where the per-submit cost is amortised.
+//    list, which is where the per-submit cost is amortised. The backward
+//    pass and the self-collision scan submit the same way (AGENTS.md rule 4):
+//    the caller reads back on a later tick, when pending() is known done;
+//  - ragged tails are padded as upstream's AvbdSolverVk does: every vertex
+//    and constraint buffer holds cap_for(n) = roundUp(n + 1, 64) elements,
+//    index buffers are padded with the dummy vertex nV and stiffnesses with
+//    0, and hScratch's pad rows are the identity, so the kernels without a
+//    `lane >= count` guard (the force kernels and most of the backward) read
+//    and write only dummy slots past n. vertPerm is not padded: every kernel
+//    that reads it is guarded.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 #pragma once
 
 #include <cstdint>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "../rd_compute.h"
@@ -67,8 +77,54 @@ public:
 	int run(int iters, bool duals);
 	// Wait for the pending submit, if any.
 	void sync();
+	// A submit is in flight: sync (or any readback) waits for it.
+	bool pending() const { return pending_; }
 
 	void readPositions(std::vector<float> &out);
+
+	// Reverse-mode adjoint of the last recorded iteration
+	// (avbd_rd_backward.cpp); accessors laid out as cloth::AvbdSolver's.
+	int stepBackward(const float *v_positions_loss);
+	// run(iters, duals) and stepBackward(v) recorded into one graph and ONE
+	// submit; the backward differentiates the last iteration.
+	int runWithBackward(int iters, bool duals, const float *v_positions_loss);
+	void readPositionsGrad(std::vector<float> &out);
+	void readMassGrad(std::vector<float> &out);
+	void readPredictedGrad(std::vector<float> &out);
+	void readSpringGrad(std::vector<float> &restLen_grad, std::vector<float> &stiff_grad);
+	void readAttachGrad(std::vector<float> &fixedPos_grad, std::vector<float> &stiff_grad,
+			std::vector<float> &lambda_grad);
+	void readTriGrad(std::vector<float> &stiff_grad, std::vector<float> &lambda0_grad,
+			std::vector<float> &lambda1_grad);
+	void readBendGrad(std::vector<float> &nTarget_grad, std::vector<float> &stiff_grad,
+			std::vector<float> &lambda_grad);
+
+	// Self-collision scan (avbd_rd_backward.cpp).
+	// submitSelfCollisionScan submits and returns; collectSelfCollisions
+	// reads the pairs (syncing if still pending: call it on a later tick).
+	// There is deliberately no one-call detectSelfCollisions here (AvbdCpu
+	// has one): on the GPU it would sync in its submit's frame (rule 4).
+	void uploadSelfCollisionRadii(const float *radii, uint32_t maxNeighborsPerVert);
+	int submitSelfCollisionScan();
+	int collectSelfCollisions(std::vector<std::pair<uint32_t, uint32_t>> &out_pairs);
+
+	// The index every index buffer's padding points at; by default the dummy
+	// vertex nV. 0 points the ragged-tail lanes at a real vertex, which
+	// reproduces the race the padding exists to prevent (the negative
+	// control). Applies to uploads made after the call.
+	void setPadFillForTest(uint32_t fill) {
+		padOverride_ = true;
+		padFill_ = fill;
+	}
+
+	// Test hook for gradcheck_duals' negative control: false makes the
+	// backward bind the live duals instead of the pre-step copies, which is
+	// wrong once a dual update has run after the step.
+	void setLambdaSnapshotForTest(bool use) {
+		useLambdaSnapshot_ = use;
+		invalidate_sets();
+	}
+
 	uint32_t nVerts() const { return nVerts_; }
 	bool ready() const { return meshReady_; }
 	uint32_t numColors() const { return uint32_t(colorOffsets_.size()) - 1; }
@@ -87,12 +143,22 @@ private:
 	// A binding-name -> buffer list for one kernel; the mirror of avbd_cpu's
 	// `gp.X_0.data = ...` lines.
 	using Binds = std::vector<std::pair<const char *, const Buf *>>;
+	// Colour indices that select a params block in set_for other than a
+	// colour's own: the whole-mesh scatter, and the three saxpby uses.
+	static constexpr int kScatterColor = -2;
+	static constexpr int kSaxDelta = -10, kSaxSum = -11, kSaxOut = -12;
 
 	bool load_kernels();
 	Buf make_f32(const std::vector<float> &v);
 	Buf make_u32(const std::vector<uint32_t> &v);
 	Buf make_v3(const float *xyz, uint32_t n); // padded to 16 bytes
 	Buf make_zero(size_t bytes);
+	// Padded to `cap` elements: zeros, or `fill` for index buffers.
+	Buf make_f32_cap(const float *v, uint32_t n, uint32_t cap);
+	Buf make_u32_cap(const uint32_t *v, uint32_t n, uint32_t cap, uint32_t fill);
+	Buf make_v3_cap(const float *xyz, uint32_t n, uint32_t cap);
+	static uint32_t cap_for(uint32_t n) { return ((n + 1 + 63) / 64) * 64; }
+	uint32_t pad_index() const { return padOverride_ ? padFill_ : nVerts_; }
 	void update_v3(Buf &b, const float *xyz, uint32_t n);
 	void update_f32(Buf &b, const std::vector<float> &v);
 	void free_buf(Buf &b);
@@ -104,6 +170,23 @@ private:
 	void record_duals();
 	bool begin_record();
 	void end_record_and_submit();
+	// Checks, params, waits out a previous tick's submit. False if not set up.
+	bool prologue();
+	// Iterations 1..n-1 in one list, the pre-step snapshot, then the last
+	// iteration in a list left open for the caller to end or extend.
+	void record_run(int iters, bool duals);
+	// The backward's transfers (cotangent upload, clears): before any list.
+	bool prepare_backward(const float *v_positions_loss);
+	// The backward's dispatches, into the open list.
+	void record_backward();
+	// Forward gather kernels used as scatters in the backward pass: a
+	// whole-mesh params block and cotangent buffers in place of gradients.
+	bool dispatch_scatter(const char *kernel, uint32_t threads, const Binds &binds);
+	void snapshot_pre_step();
+	void mark_lambdas_dirty() { lambdasDirty_ = true; }
+	bool ensure_backward_buffers();
+	std::vector<float> read_v3(const Buf &b, uint32_t n);
+	std::vector<float> read_f32(const Buf &b, uint32_t n);
 
 	rdc::Device &d_;
 	bool ok_ = false;
@@ -118,6 +201,8 @@ private:
 	bool meshReady_ = false;
 	bool pending_ = false;
 	bool paramsReady_ = false;
+	bool padOverride_ = false;
+	uint32_t padFill_ = 0;
 
 	// CPU-side topology and the arrays that seed the GPU buffers.
 	std::vector<uint32_t> vertPerm_, colorOffsets_{ 0u, 0u };
@@ -135,4 +220,24 @@ private:
 	// for the dual updates {beta, penaltyMax, count}.
 	std::vector<Buf> initParams_, colorParams_;
 	Buf dualAttachParams_, dualTriParams_, dualBendParams_;
+
+	// Backward: the pre-step positions and duals (copied before the last
+	// recorded iteration; the duals only when a dual update ran since the
+	// last copy) and every cotangent, plus the whole-mesh scatter params, the
+	// init-backward params and the three saxpby params (deltaX = x - xPre;
+	// sum = vPosInit + vOut; out = vPosGrad + sum).
+	bool backwardReady_ = false;
+	bool hasStep_ = false;
+	bool lambdasDirty_ = false;
+	bool useLambdaSnapshot_ = true;
+	Buf positionsPre_, tri_l0Pre_, tri_l1Pre_, bd_lambdaPre_;
+	Buf vOut_, vG_, vH_, deltaX_, vPosGrad_, vPosInit_, vPred_, vMass_, hJunk_, vPosSum_, vPosGradOut_;
+	Buf vSpringGradA_, vSpringHess_, vSpringPd_, vSpringRest_, vSpringStiff_;
+	Buf vAttachGradV_, vAttachHess_, vAttachFixed_, vAttachStiff_, vAttachLambda_;
+	Buf vTriGrad_, vTriHess_, vTriP_, vTriStiff_, vTriL0_, vTriL1_;
+	Buf vBendGrad_, vBendHess_, vBendP_, vBendN_, vBendStiff_, vBendLambda_;
+	Buf scatterParams_, initBwdParams_, sxDeltaParams_, sxSumParams_, sxOutParams_;
+	// Self-collision.
+	Buf radii_, neighbors_, selfParams_;
+	uint32_t selfK_ = 0;
 };

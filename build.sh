@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Build the guest ELF for the RISC-V sandbox and drop it into project/.
+# Build the guest ELFs (one per stage: dress_on, drape) for the RISC-V
+# sandbox and drop them into project/.
 #
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
@@ -57,4 +58,4 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		-DCMAKE_BUILD_TYPE=Release
 fi
 cmake --build "$BUILD"
-ls -la "$HERE/project/dress_on.elf"
+ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf"

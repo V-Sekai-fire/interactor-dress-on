@@ -1,0 +1,17 @@
+# 2026-09-23T00:23:54Z C:/cloth-dynamics-standalone/src/code/slang_solver/build/test_avbd_solver.exe C:/interactor-dress-on/build/spv
+# exe sha256 fca734ca2dc57c15cded0ae8df12bd2e6f3988e5e82ae6ee3a2db72d5c0aebbc
+# standalone HEAD e361584
+# spv set sha256 cc3bbb08cad0e86b4007320ec51d61ddbae47d65d77377fcbc5d81a9aaa2fc44 (24 files)
+[avbd-vk] device: NVIDIA GeForce RTX 4090 (Vulkan 1.4)
+test_avbd_solver: forward OK (full AVBD step on 4 verts: 1 spring 1 attach 1 tri 1 bend, max_abs_diff=2.38419e-07)
+  v0 pos: (0.875, 2.14286, 1.71429) — expected (7/8, 15/7, 12/7)
+  v1 pos: (2.4, 1, 0) — expected (12/5, 1, 0)
+  v2 pos: (0, 3.125, 5) — expected (0, 25/8, 5)
+  v3 pos: (3, 2.66667, 0) — expected (3, 8/3, 0)
+test_avbd_solver: backward OK (stepBackward + read accessors)
+  ∂L/∂x      : v0=(0, 0, 0.149)  v1=(0, 0, 0.0298)
+  ∂L/∂L (s0) : -0     ∂L/∂k (s0)  : 0
+  ∂L/∂anchor : (0, 0, 0)  ∂L/∂k_attach: 0
+  ∂L/∂k_tri  : -0.49     ∂L/∂λ0_tri  : (0, 0, 0.143)
+  ∂L/∂n_bend : -0     ∂L/∂k_bend  : -0.245
+# exit 0

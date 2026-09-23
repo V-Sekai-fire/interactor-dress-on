@@ -1,0 +1,455 @@
+# Stage 2 rd performance bisect, 2026-09-22/23, Godot 4.7.2, RTX 4090
+#
+# Every ELF below was loaded into its own Sandbox in ONE Godot process
+# (scratch runner perf_ab.gd, references_max 4096, JIT on) and timed on the
+# host around the vmcall. 'probe' = dress_on rd_bench_quiet(accumulate.spv,
+# 64 dispatches + barriers, 1 submit+sync), 3 calls, host us each. 'bench' =
+# drape avbd_bench <backend> NxN, 5 substeps x 10 iterations, one-shot
+# (the pre-rule-4 entry point, still present in these builds), ms/substep.
+# 'calls <kind>' = rd_calls: 1000 calls of ONE kind in a loop (32 for
+# submit = begin/end/submit/sync).
+#
+# ELFs (scratchpad/perf/):
+#   head            git show HEAD:project/dress_on.elf (fdf18e1), probe + bench
+#   now_*           the working tree before the fix (method names as literals)
+#   prefix_*        = now, rebuilt from the frozen snapshot (variant.py prefix)
+#   noperm_*        prefix, RIDs NOT made permanent, no ECALL_VSTORE_GLOBAL (candidate a)
+#   noframe_*       prefix, no Engine.get_process_frames at submit/sync (candidate b)
+#   forced_*        the fix, but compute_list_dispatch deliberately placed in
+#                   compute_list_bind_compute_pipeline's host name-cache slot
+#   fixed_*         the fix: every RenderingDevice method name copied to a
+#                   static pool at an address with a host name-cache slot of its own
+# Candidates (c) padding, (d) buffer_clear/saxpby, (e) CMake add_stage_elf vs
+# add_sandbox_program and (f) references_max are identical across prefix,
+# noperm, noframe, forced and fixed (same sources, same CMakeLists, same
+# runner), so the 60-100x between prefix and fixed is not theirs.
+
+## variant.py (the build variants)
+# Build-variant patcher for the perf bisect. Operates on a scratch source tree.
+# usage: variant.py <srcdir> <variant>
+#   prefix     : rd_compute as it was before the fix (literals at link-time addresses)
+#   noperm     : prefix + no make_permanent/vstore_global (candidate a)
+#   noframe    : prefix + no Engine.get_process_frames at submit/sync (candidate b)
+#   fixed      : the fix as in the repo (no change)
+#   forced     : fix, but compute_list_dispatch forced into compute_list_bind_compute_pipeline's slot
+import re, sys, os
+src, var = sys.argv[1], sys.argv[2]
+rc = os.path.join(src, "guest", "rd_compute.cpp")
+s = open(rc).read()
+
+def to_prefix(s):
+    names = re.search(r'const char \*const kNameText\[N_COUNT\] = \{(.*?)\};', s, re.S).group(1)
+    texts = re.findall(r'"([^"]+)"', names)
+    enums = re.search(r'enum Name : int \{(.*?)N_COUNT', s, re.S).group(1)
+    ids = [e.strip().rstrip(',') for e in enums.split('\n') if e.strip()]
+    for i, t in zip(ids, texts):
+        s = s.replace('nm(%s)' % i, '"%s"' % t)
+    a = s.index('// --- method names at addresses')
+    b = s.index('// RID::RID(const Variant&)')
+    s = s[:a] + 'std::string name_slots() { return "literals (pre-fix)"; }\n\n' + s[b:]
+    return s
+
+if var in ("prefix", "noperm", "noframe"):
+    s = to_prefix(s)
+if var == "noperm":
+    s = s.replace('\tVariant p = v;\n\tp.make_permanent();\n\t::RID r = as_rid(p);', '\t::RID r = as_rid(v);')
+    s = s.replace('\tVariant held(rid);\n\tVariant nil;\n\tsys_vstore_global(&held, &nil);', '\t(void)rid;')
+if var == "noframe":
+    s = s.replace('\tsubmit_frame_ = process_frame();\n', '')
+    s = s.replace('\tif (process_frame() == submit_frame_) {\n\t\t++same_frame_syncs_;\n\t}\n', '')
+if var == "forced":
+    old = '''				const unsigned s = host_slot(reinterpret_cast<uintptr_t>(pool + off));
+				if (!used[s]) {'''
+    new = '''				const unsigned s = host_slot(reinterpret_cast<uintptr_t>(pool + off));
+				const bool want = i == N_DISPATCH ? s == host_slot(reinterpret_cast<uintptr_t>(at[N_BIND_PIPELINE])) : !used[s];
+				if (want) {'''
+    assert old in s
+    s = s.replace(old, new)
+open(rc, "w").write(s)
+print("variant", var, "applied")
+
+## Host name-cache slots of the method-name literals, slot = ((addr * 2654435761) >> 8) & 31
+## (slots.py over .rodata; for fixed/forced the literals listed are unused, the pool is in .bss)
+== head.elf
+  collisions: slot 5: set_binding, limit_get; slot 7: compute_list_dispatch, compute_pipeline_create; slot 18: compute_list_bind_uniform_set, storage_buffer_create; slot 28: free_rid, add_id
+== now_dress_on.elf
+  collisions: slot 9: buffer_get_data, limit_get; slot 10: compute_list_bind_compute_pipeline, compute_list_dispatch; slot 17: uniform_buffer_create, set_stage_bytecode; slot 19: get_process_frames, set_uniform_type; slot 20: compute_list_begin, compute_list_add_barrier, buffer_update; slot 23: sync, add_id; slot 28: submit, uniform_set_create, compute_pipeline_create
+== now_drape.elf
+  collisions: slot 2: submit, uniform_buffer_create; slot 8: buffer_get_data, limit_get; slot 11: compute_list_dispatch, uniform_set_is_valid; slot 13: shader_create_from_spirv, set_uniform_type; slot 15: compute_list_bind_compute_pipeline, compute_list_add_barrier, buffer_clear; slot 31: uniform_set_create, set_binding
+== prefix_dress_on.elf
+  collisions: slot 9: buffer_get_data, limit_get; slot 10: compute_list_bind_compute_pipeline, compute_list_dispatch; slot 16: buffer_clear, free_rid; slot 17: uniform_buffer_create, set_stage_bytecode; slot 19: get_process_frames, set_uniform_type; slot 20: compute_list_begin, compute_list_add_barrier, buffer_update; slot 23: compute_list_end, sync, add_id; slot 28: submit, uniform_set_create, compute_pipeline_create
+== prefix_drape.elf
+  collisions: slot 2: submit, uniform_buffer_create; slot 8: buffer_get_data, limit_get; slot 11: compute_list_dispatch, uniform_set_is_valid; slot 13: shader_create_from_spirv, set_uniform_type; slot 15: compute_list_bind_compute_pipeline, compute_list_add_barrier, buffer_clear; slot 17: free_rid, set_stage_bytecode; slot 27: get_process_frames, add_id; slot 31: uniform_set_create, set_binding
+
+## Run A: all variants, one process, 2 rounds (ab7.log)
+head loaded jit=true jit_enabled=true bt=false has_jit=true
+now_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+now_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+prefix_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+prefix_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+noperm_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+noperm_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+noframe_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+noframe_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+forced_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+forced_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+fixed_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+fixed_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+r0 head           probe nd=64 host_us=[28552, 10890, 8615] calls_made=5
+r0 head           empty vmcall us=0.50
+r0 head           calls limit  us_per_call=    2.15
+r0 head           calls bind   us_per_call=   11.20
+r0 head           calls dispatch us_per_call=    8.63
+r0 head           calls barrier us_per_call=    7.41
+r0 head           calls submit us_per_call=   87.53
+r0 head           bench rd-batched  8x8  ms_per_substep=    6.90  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 head           bench rd          8x8  ms_per_substep=    6.68  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 head           bench cpu         8x8  ms_per_substep=    3.81  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 head           bench rd-batched 32x32 ms_per_substep=    8.02  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 head           bench rd         32x32 ms_per_substep=    8.60  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 head           bench rd-batched 64x64 ms_per_substep=   15.49  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 head           bench rd         64x64 ms_per_substep=   17.53  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 now_dress_on   probe nd=64 host_us=[179654, 154334, 151389] calls_made=5
+r0 now_dress_on   empty vmcall us=0.45
+r0 now_dress_on   calls limit  us_per_call=    1.44
+r0 now_dress_on   calls bind   us_per_call=    9.03
+r0 now_dress_on   calls dispatch us_per_call=    8.28
+r0 now_dress_on   calls barrier us_per_call=    9.31
+r0 now_dress_on   calls submit us_per_call=   92.25
+r0 now_drape      bench rd-batched  8x8  ms_per_substep=  521.88  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 now_drape      bench rd          8x8  ms_per_substep=  484.77  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 now_drape      bench cpu         8x8  ms_per_substep=    3.68  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 now_drape      bench rd-batched 32x32 ms_per_substep=  498.74  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 now_drape      bench rd         32x32 ms_per_substep=  490.69  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 now_drape      bench rd-batched 64x64 ms_per_substep=  493.04  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 now_drape      bench rd         64x64 ms_per_substep=  500.68  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 prefix_dress_on probe nd=64 host_us=[166887, 159755, 154385] calls_made=5
+r0 prefix_dress_on empty vmcall us=0.46
+r0 prefix_dress_on calls limit  us_per_call=    1.50
+r0 prefix_dress_on calls bind   us_per_call=   10.04
+r0 prefix_dress_on calls dispatch us_per_call=    9.26
+r0 prefix_dress_on calls barrier us_per_call=   10.84
+r0 prefix_dress_on calls submit us_per_call= 2391.50
+r0 prefix_drape   bench rd-batched  8x8  ms_per_substep=  534.09  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 prefix_drape   bench rd          8x8  ms_per_substep=  481.47  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 prefix_drape   bench cpu         8x8  ms_per_substep=    3.68  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 prefix_drape   bench rd-batched 32x32 ms_per_substep=  483.29  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 prefix_drape   bench rd         32x32 ms_per_substep=  489.66  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 prefix_drape   bench rd-batched 64x64 ms_per_substep=  517.42  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 prefix_drape   bench rd         64x64 ms_per_substep=  518.77  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 noperm_dress_on probe nd=64 host_us=[201370, 186215, 159704] calls_made=5
+r0 noperm_dress_on empty vmcall us=0.49
+r0 noperm_dress_on calls limit  us_per_call=    1.54
+r0 noperm_dress_on calls bind   us_per_call=   10.26
+r0 noperm_dress_on calls dispatch us_per_call=   10.45
+r0 noperm_dress_on calls barrier us_per_call=   10.93
+r0 noperm_dress_on calls submit us_per_call= 2399.69
+r0 noperm_drape   bench rd-batched  8x8  ms_per_substep=  532.77  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 noperm_drape   bench rd          8x8  ms_per_substep=  499.86  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 noperm_drape   bench cpu         8x8  ms_per_substep=    3.75  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 noperm_drape   bench rd-batched 32x32 ms_per_substep=  507.72  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 noperm_drape   bench rd         32x32 ms_per_substep=  526.45  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 noperm_drape   bench rd-batched 64x64 ms_per_substep=  502.93  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 noperm_drape   bench rd         64x64 ms_per_substep=  525.98  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 noframe_dress_on probe nd=64 host_us=[189837, 159078, 158095] calls_made=5
+r0 noframe_dress_on empty vmcall us=0.44
+r0 noframe_dress_on calls limit  us_per_call=    1.42
+r0 noframe_dress_on calls bind   us_per_call=    9.98
+r0 noframe_dress_on calls dispatch us_per_call=    8.59
+r0 noframe_dress_on calls barrier us_per_call=    9.99
+r0 noframe_dress_on calls submit us_per_call= 2458.63
+r0 noframe_drape  bench rd-batched  8x8  ms_per_substep=  538.30  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 noframe_drape  bench rd          8x8  ms_per_substep=  515.85  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 noframe_drape  bench cpu         8x8  ms_per_substep=    4.01  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 noframe_drape  bench rd-batched 32x32 ms_per_substep=  499.70  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 noframe_drape  bench rd         32x32 ms_per_substep=  496.19  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 noframe_drape  bench rd-batched 64x64 ms_per_substep=  507.65  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 noframe_drape  bench rd         64x64 ms_per_substep=  509.97  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 forced_dress_on probe nd=64 host_us=[166964, 148270, 153514] calls_made=5
+r0 forced_dress_on empty vmcall us=0.44
+r0 forced_dress_on calls limit  us_per_call=    1.41
+r0 forced_dress_on calls bind   us_per_call=    2.20
+r0 forced_dress_on calls dispatch us_per_call=    3.37
+r0 forced_dress_on calls barrier us_per_call=    2.68
+r0 forced_dress_on calls submit us_per_call=   62.16
+r0 forced_drape   bench rd-batched  8x8  ms_per_substep=  848.76  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 forced_drape   bench rd          8x8  ms_per_substep=  769.21  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 forced_drape   bench cpu         8x8  ms_per_substep=    3.63  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 forced_drape   bench rd-batched 32x32 ms_per_substep=  848.60  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 forced_drape   bench rd         32x32 ms_per_substep=  816.69  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 forced_drape   bench rd-batched 64x64 ms_per_substep=  821.12  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 forced_drape   bench rd         64x64 ms_per_substep=  836.19  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 fixed_dress_on probe nd=64 host_us=[22730, 1274, 1153] calls_made=5
+r0 fixed_dress_on empty vmcall us=0.53
+r0 fixed_dress_on calls limit  us_per_call=    1.80
+r0 fixed_dress_on calls bind   us_per_call=    1.07
+r0 fixed_dress_on calls dispatch us_per_call=    1.46
+r0 fixed_dress_on calls barrier us_per_call=    1.16
+r0 fixed_dress_on calls submit us_per_call=   61.72
+r0 fixed_drape    bench rd-batched  8x8  ms_per_substep=   56.29  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 fixed_drape    bench rd          8x8  ms_per_substep=    5.54  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 fixed_drape    bench cpu         8x8  ms_per_substep=    3.82  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 fixed_drape    bench rd-batched 32x32 ms_per_substep=    6.91  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 fixed_drape    bench rd         32x32 ms_per_substep=    7.97  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 fixed_drape    bench rd-batched 64x64 ms_per_substep=   14.56  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 fixed_drape    bench rd         64x64 ms_per_substep=   15.79  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 head           probe nd=64 host_us=[9288, 7713, 7790] calls_made=122
+r1 head           empty vmcall us=0.46
+r1 head           calls limit  us_per_call=    1.47
+r1 head           calls bind   us_per_call=    6.76
+r1 head           calls dispatch us_per_call=    8.69
+r1 head           calls barrier us_per_call=    7.50
+r1 head           calls submit us_per_call=   66.47
+r1 head           bench rd-batched  8x8  ms_per_substep=    5.17  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 head           bench rd          8x8  ms_per_substep=    6.29  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 head           bench cpu         8x8  ms_per_substep=    3.71  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 head           bench rd-batched 32x32 ms_per_substep=    7.73  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 head           bench rd         32x32 ms_per_substep=    8.21  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 head           bench rd-batched 64x64 ms_per_substep=   15.68  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 head           bench rd         64x64 ms_per_substep=   16.20  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 now_dress_on   probe nd=64 host_us=[163373, 163693, 166484] calls_made=115
+r1 now_dress_on   empty vmcall us=0.44
+r1 now_dress_on   calls limit  us_per_call=    1.62
+r1 now_dress_on   calls bind   us_per_call=    9.06
+r1 now_dress_on   calls dispatch us_per_call=    9.14
+r1 now_dress_on   calls barrier us_per_call=    9.63
+r1 now_dress_on   calls submit us_per_call=  142.06
+r1 now_drape      bench rd-batched  8x8  ms_per_substep=  530.01  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 now_drape      bench rd          8x8  ms_per_substep=  521.96  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 now_drape      bench cpu         8x8  ms_per_substep=    3.61  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 now_drape      bench rd-batched 32x32 ms_per_substep=  508.56  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 now_drape      bench rd         32x32 ms_per_substep=  702.19  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 now_drape      bench rd-batched 64x64 ms_per_substep=  517.47  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 now_drape      bench rd         64x64 ms_per_substep=  519.54  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 prefix_dress_on probe nd=64 host_us=[162811, 158714, 156637] calls_made=115
+r1 prefix_dress_on empty vmcall us=0.44
+r1 prefix_dress_on calls limit  us_per_call=    1.44
+r1 prefix_dress_on calls bind   us_per_call=   11.44
+r1 prefix_dress_on calls dispatch us_per_call=   11.44
+r1 prefix_dress_on calls barrier us_per_call=   10.50
+r1 prefix_dress_on calls submit us_per_call= 2616.94
+r1 prefix_drape   bench rd-batched  8x8  ms_per_substep=  490.82  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 prefix_drape   bench rd          8x8  ms_per_substep=  501.39  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 prefix_drape   bench cpu         8x8  ms_per_substep=    4.44  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 prefix_drape   bench rd-batched 32x32 ms_per_substep=  509.09  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 prefix_drape   bench rd         32x32 ms_per_substep=  491.79  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 prefix_drape   bench rd-batched 64x64 ms_per_substep=  501.11  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 prefix_drape   bench rd         64x64 ms_per_substep=  496.96  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 noperm_dress_on probe nd=64 host_us=[156080, 160378, 170705] calls_made=115
+r1 noperm_dress_on empty vmcall us=0.75
+r1 noperm_dress_on calls limit  us_per_call=    3.11
+r1 noperm_dress_on calls bind   us_per_call=   17.77
+r1 noperm_dress_on calls dispatch us_per_call=   16.29
+r1 noperm_dress_on calls barrier us_per_call=   16.27
+r1 noperm_dress_on calls submit us_per_call= 2818.53
+r1 noperm_drape   bench rd-batched  8x8  ms_per_substep=  495.06  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 noperm_drape   bench rd          8x8  ms_per_substep=  498.01  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 noperm_drape   bench cpu         8x8  ms_per_substep=    3.86  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 noperm_drape   bench rd-batched 32x32 ms_per_substep=  509.83  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 noperm_drape   bench rd         32x32 ms_per_substep=  511.70  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 noperm_drape   bench rd-batched 64x64 ms_per_substep=  512.81  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 noperm_drape   bench rd         64x64 ms_per_substep=  532.24  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 noframe_dress_on probe nd=64 host_us=[169899, 166935, 168153] calls_made=115
+r1 noframe_dress_on empty vmcall us=0.43
+r1 noframe_dress_on calls limit  us_per_call=    1.39
+r1 noframe_dress_on calls bind   us_per_call=   10.32
+r1 noframe_dress_on calls dispatch us_per_call=   11.28
+r1 noframe_dress_on calls barrier us_per_call=   10.46
+r1 noframe_dress_on calls submit us_per_call= 2746.84
+r1 noframe_drape  bench rd-batched  8x8  ms_per_substep=  621.69  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 noframe_drape  bench rd          8x8  ms_per_substep=  538.79  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 noframe_drape  bench cpu         8x8  ms_per_substep=    3.95  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 noframe_drape  bench rd-batched 32x32 ms_per_substep=  511.66  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 noframe_drape  bench rd         32x32 ms_per_substep=  517.58  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 noframe_drape  bench rd-batched 64x64 ms_per_substep=  515.63  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 noframe_drape  bench rd         64x64 ms_per_substep=  528.05  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 forced_dress_on probe nd=64 host_us=[150671, 151494, 151970] calls_made=115
+r1 forced_dress_on empty vmcall us=0.56
+r1 forced_dress_on calls limit  us_per_call=    0.25
+r1 forced_dress_on calls bind   us_per_call=    4.07
+r1 forced_dress_on calls dispatch us_per_call=    4.10
+r1 forced_dress_on calls barrier us_per_call=    3.21
+r1 forced_dress_on calls submit us_per_call=  184.72
+r1 forced_drape   bench rd-batched  8x8  ms_per_substep=  767.34  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 forced_drape   bench rd          8x8  ms_per_substep=  777.99  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 forced_drape   bench cpu         8x8  ms_per_substep=    3.59  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 forced_drape   bench rd-batched 32x32 ms_per_substep=  768.85  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 forced_drape   bench rd         32x32 ms_per_substep=  758.26  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 forced_drape   bench rd-batched 64x64 ms_per_substep=  783.98  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 forced_drape   bench rd         64x64 ms_per_substep=  780.57  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 fixed_dress_on probe nd=64 host_us=[2065, 1495, 1859] calls_made=115
+r1 fixed_dress_on empty vmcall us=0.41
+r1 fixed_dress_on calls limit  us_per_call=    0.28
+r1 fixed_dress_on calls bind   us_per_call=    1.41
+r1 fixed_dress_on calls dispatch us_per_call=    2.37
+r1 fixed_dress_on calls barrier us_per_call=    1.14
+r1 fixed_dress_on calls submit us_per_call=  174.50
+r1 fixed_drape    bench rd-batched  8x8  ms_per_substep=    7.43  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 fixed_drape    bench rd          8x8  ms_per_substep=   10.89  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 fixed_drape    bench cpu         8x8  ms_per_substep=    3.62  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 fixed_drape    bench rd-batched 32x32 ms_per_substep=   11.64  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 fixed_drape    bench rd         32x32 ms_per_substep=   17.13  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 fixed_drape    bench rd-batched 64x64 ms_per_substep=   21.26  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 fixed_drape    bench rd         64x64 ms_per_substep=   21.34  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+DONE
+
+## Run B: fixed vs head, one process, 4 rounds, fixed loaded first (ab8.log)
+fixed_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+fixed_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+head loaded jit=true jit_enabled=true bt=false has_jit=true
+r0 fixed_dress_on probe nd=64 host_us=[23307, 974, 686] calls_made=5
+r0 fixed_dress_on empty vmcall us=0.42
+r0 fixed_dress_on calls limit  us_per_call=    1.61
+r0 fixed_dress_on calls bind   us_per_call=    0.97
+r0 fixed_dress_on calls dispatch us_per_call=    1.59
+r0 fixed_dress_on calls barrier us_per_call=    1.47
+r0 fixed_dress_on calls submit us_per_call=   61.66
+r0 fixed_drape    bench rd-batched  8x8  ms_per_substep=   53.95  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 fixed_drape    bench rd          8x8  ms_per_substep=    6.35  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 fixed_drape    bench cpu         8x8  ms_per_substep=    4.78  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 fixed_drape    bench rd-batched 16x16 ms_per_substep=    4.61  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r0 fixed_drape    bench rd         16x16 ms_per_substep=    5.40  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r0 fixed_drape    bench cpu        16x16 ms_per_substep=   17.20  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r0 fixed_drape    bench rd-batched 32x32 ms_per_substep=    6.53  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 fixed_drape    bench rd         32x32 ms_per_substep=    7.33  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 fixed_drape    bench rd-batched 64x64 ms_per_substep=   14.41  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 fixed_drape    bench rd         64x64 ms_per_substep=   15.39  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 head           probe nd=64 host_us=[21780, 7745, 7318] calls_made=5
+r0 head           empty vmcall us=0.46
+r0 head           calls limit  us_per_call=    1.42
+r0 head           calls bind   us_per_call=    6.88
+r0 head           calls dispatch us_per_call=    7.36
+r0 head           calls barrier us_per_call=    7.63
+r0 head           calls submit us_per_call=   59.41
+r0 head           bench rd-batched  8x8  ms_per_substep=    6.29  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 head           bench rd          8x8  ms_per_substep=    6.27  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 head           bench cpu         8x8  ms_per_substep=    3.69  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r0 head           bench rd-batched 16x16 ms_per_substep=    5.61  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r0 head           bench rd         16x16 ms_per_substep=    6.48  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r0 head           bench cpu        16x16 ms_per_substep=   16.32  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r0 head           bench rd-batched 32x32 ms_per_substep=    7.75  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 head           bench rd         32x32 ms_per_substep=    8.32  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r0 head           bench rd-batched 64x64 ms_per_substep=   15.49  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r0 head           bench rd         64x64 ms_per_substep=   15.79  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 fixed_dress_on probe nd=64 host_us=[1314, 685, 655] calls_made=115
+r1 fixed_dress_on empty vmcall us=0.43
+r1 fixed_dress_on calls limit  us_per_call=    0.26
+r1 fixed_dress_on calls bind   us_per_call=    0.83
+r1 fixed_dress_on calls dispatch us_per_call=    1.25
+r1 fixed_dress_on calls barrier us_per_call=    1.10
+r1 fixed_dress_on calls submit us_per_call=   69.25
+r1 fixed_drape    bench rd-batched  8x8  ms_per_substep=    4.16  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 fixed_drape    bench rd          8x8  ms_per_substep=    4.80  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 fixed_drape    bench cpu         8x8  ms_per_substep=    3.72  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 fixed_drape    bench rd-batched 16x16 ms_per_substep=    4.52  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r1 fixed_drape    bench rd         16x16 ms_per_substep=    5.38  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r1 fixed_drape    bench cpu        16x16 ms_per_substep=   17.49  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r1 fixed_drape    bench rd-batched 32x32 ms_per_substep=    6.36  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 fixed_drape    bench rd         32x32 ms_per_substep=    7.13  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 fixed_drape    bench rd-batched 64x64 ms_per_substep=   14.70  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 fixed_drape    bench rd         64x64 ms_per_substep=   15.32  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 head           probe nd=64 host_us=[9782, 8045, 8580] calls_made=125
+r1 head           empty vmcall us=0.47
+r1 head           calls limit  us_per_call=    2.06
+r1 head           calls bind   us_per_call=    6.72
+r1 head           calls dispatch us_per_call=    7.89
+r1 head           calls barrier us_per_call=    9.80
+r1 head           calls submit us_per_call=   61.72
+r1 head           bench rd-batched  8x8  ms_per_substep=    5.23  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 head           bench rd          8x8  ms_per_substep=    5.99  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 head           bench cpu         8x8  ms_per_substep=    3.67  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r1 head           bench rd-batched 16x16 ms_per_substep=    5.75  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r1 head           bench rd         16x16 ms_per_substep=    6.45  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r1 head           bench cpu        16x16 ms_per_substep=   16.44  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r1 head           bench rd-batched 32x32 ms_per_substep=    7.76  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 head           bench rd         32x32 ms_per_substep=    8.20  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r1 head           bench rd-batched 64x64 ms_per_substep=   15.06  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r1 head           bench rd         64x64 ms_per_substep=   15.90  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r2 fixed_dress_on probe nd=64 host_us=[1236, 720, 631] calls_made=225
+r2 fixed_dress_on empty vmcall us=0.46
+r2 fixed_dress_on calls limit  us_per_call=    0.27
+r2 fixed_dress_on calls bind   us_per_call=    0.90
+r2 fixed_dress_on calls dispatch us_per_call=    1.70
+r2 fixed_dress_on calls barrier us_per_call=    1.45
+r2 fixed_dress_on calls submit us_per_call=   67.34
+r2 fixed_drape    bench rd-batched  8x8  ms_per_substep=    4.15  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r2 fixed_drape    bench rd          8x8  ms_per_substep=    5.03  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r2 fixed_drape    bench cpu         8x8  ms_per_substep=    3.83  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r2 fixed_drape    bench rd-batched 16x16 ms_per_substep=    4.49  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r2 fixed_drape    bench rd         16x16 ms_per_substep=    5.41  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r2 fixed_drape    bench cpu        16x16 ms_per_substep=   16.64  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r2 fixed_drape    bench rd-batched 32x32 ms_per_substep=    6.29  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r2 fixed_drape    bench rd         32x32 ms_per_substep=    7.18  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r2 fixed_drape    bench rd-batched 64x64 ms_per_substep=   14.64  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r2 fixed_drape    bench rd         64x64 ms_per_substep=   16.34  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r2 head           probe nd=64 host_us=[8508, 8579, 7858] calls_made=245
+r2 head           empty vmcall us=0.45
+r2 head           calls limit  us_per_call=    1.41
+r2 head           calls bind   us_per_call=    7.59
+r2 head           calls dispatch us_per_call=    7.24
+r2 head           calls barrier us_per_call=    6.80
+r2 head           calls submit us_per_call=   97.78
+r2 head           bench rd-batched  8x8  ms_per_substep=    5.02  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r2 head           bench rd          8x8  ms_per_substep=    6.00  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r2 head           bench cpu         8x8  ms_per_substep=    3.67  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r2 head           bench rd-batched 16x16 ms_per_substep=    5.65  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r2 head           bench rd         16x16 ms_per_substep=    6.42  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r2 head           bench cpu        16x16 ms_per_substep=   16.85  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r2 head           bench rd-batched 32x32 ms_per_substep=    7.87  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r2 head           bench rd         32x32 ms_per_substep=    8.82  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r2 head           bench rd-batched 64x64 ms_per_substep=   16.04  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r2 head           bench rd         64x64 ms_per_substep=   16.97  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r3 fixed_dress_on probe nd=64 host_us=[1548, 1345, 1067] calls_made=335
+r3 fixed_dress_on empty vmcall us=0.72
+r3 fixed_dress_on calls limit  us_per_call=    0.35
+r3 fixed_dress_on calls bind   us_per_call=    1.13
+r3 fixed_dress_on calls dispatch us_per_call=    1.54
+r3 fixed_dress_on calls barrier us_per_call=    1.31
+r3 fixed_dress_on calls submit us_per_call=   73.72
+r3 fixed_drape    bench rd-batched  8x8  ms_per_substep=    4.51  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r3 fixed_drape    bench rd          8x8  ms_per_substep=    5.56  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r3 fixed_drape    bench cpu         8x8  ms_per_substep=    3.70  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r3 fixed_drape    bench rd-batched 16x16 ms_per_substep=    5.13  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r3 fixed_drape    bench rd         16x16 ms_per_substep=    6.28  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r3 fixed_drape    bench cpu        16x16 ms_per_substep=   16.82  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r3 fixed_drape    bench rd-batched 32x32 ms_per_substep=    6.90  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r3 fixed_drape    bench rd         32x32 ms_per_substep=    8.53  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r3 fixed_drape    bench rd-batched 64x64 ms_per_substep=   15.27  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r3 fixed_drape    bench rd         64x64 ms_per_substep=   18.07  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r3 head           probe nd=64 host_us=[8811, 8217, 7959] calls_made=365
+r3 head           empty vmcall us=0.55
+r3 head           calls limit  us_per_call=    1.47
+r3 head           calls bind   us_per_call=    7.38
+r3 head           calls dispatch us_per_call=    7.56
+r3 head           calls barrier us_per_call=    8.18
+r3 head           calls submit us_per_call=   85.13
+r3 head           bench rd-batched  8x8  ms_per_substep=    6.18  rd-batched nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r3 head           bench rd          8x8  ms_per_substep=    6.78  rd nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r3 head           bench cpu         8x8  ms_per_substep=    3.68  cpu nv=64 colors=4 substeps=5 iters=10 finite=yes ymin=0.9963
+r3 head           bench rd-batched 16x16 ms_per_substep=    7.22  rd-batched nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r3 head           bench rd         16x16 ms_per_substep=    7.38  rd nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r3 head           bench cpu        16x16 ms_per_substep=   16.39  cpu nv=256 colors=4 substeps=5 iters=10 finite=yes ymin=0.9988
+r3 head           bench rd-batched 32x32 ms_per_substep=    8.64  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r3 head           bench rd         32x32 ms_per_substep=    9.85  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+r3 head           bench rd-batched 64x64 ms_per_substep=   16.29  rd-batched nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+r3 head           bench rd         64x64 ms_per_substep=   18.09  rd nv=4096 colors=4 substeps=5 iters=10 finite=yes ymin=1.0000
+DONE
+
+## Run C: per-call host trace of the pre-fix ELFs (ab5.log; instr.py wraps every
+## rd_compute call in a host-clock timer). The hot loop's calls cost milliseconds
+## each; which call pays depends on which pair shares a slot in that build.
+tr_dress_on loaded jit=true jit_enabled=true bt=false has_jit=true
+tr_drape loaded jit=true jit_enabled=true bt=false has_jit=true
+r0 tr_dress_on    probe nd=64 host_us=[930070, 976123, 940181] calls_made=6
+   trace probe: ClassDB::instantiate(RDShaderSPIRV) n=3 us=24670 avg=8223.3 max=10287; RDUniform n=3 us=27865 avg=9288.3 max=10246; buffer_get_data n=3 us=3355 avg=1118.3 max=2329; compute_list_add_barrier n=189 us=857072 avg=4534.8 max=11978; compute_list_begin n=3 us=17229 avg=5743.0 max=8893; compute_list_bind_compute_pipeline n=192 us=893312 avg=4652.7 max=12756; compute_list_bind_uniform_set n=192 us=6011 avg=31.3 max=4301; compute_list_dispatch n=192 us=890679 avg=4639.0 max=13449; compute_list_end n=3 us=25032 avg=8344.0 max=10974; compute_pipeline_create n=3 us=7757 avg=2585.7 max=7661; free_rid n=12 us=28054 avg=2337.8 max=9781; make_permanent n=12 us=97 avg=8.1 max=25; process_frame n=6 us=1653 avg=275.5 max=1635; set_stage_bytecode n=3 us=24524 avg=8174.7 max=10222; shader_create_from_spirv n=3 us=23678 avg=7892.7 max=10203; storage_buffer_create n=3 us=5578 avg=1859.3 max=5242; submit n=3 us=12486 avg=4162.0 max=10879; sync n=3 us=21955 avg=7318.3 max=10172; uniform_set_create n=3 us=20673 avg=6891.0 max=7850; 
+r0 tr_dress_on    empty vmcall us=0.80
+r0 tr_dress_on    calls limit  us_per_call=    9.18
+r0 tr_dress_on    calls bind   us_per_call=   43.50
+r0 tr_dress_on    calls dispatch us_per_call=   53.81
+r0 tr_dress_on    calls barrier us_per_call=   33.37
+r0 tr_dress_on    calls submit us_per_call= 8835.50
+r0 tr_drape       bench rd-batched 32x32 ms_per_substep= 1776.35  rd-batched nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+   trace bench: ClassDB::instantiate(RDShaderSPIRV) n=25 us=58525 avg=2341.0 max=5354; RDUniform n=23 us=29628 avg=1288.2 max=8351; buffer_copy n=5 us=5182 avg=1036.4 max=5128; buffer_get_data n=5 us=34457 avg=6891.4 max=9075; buffer_update n=11 us=4429 avg=402.6 max=4197; compute_list_add_barrier n=1000 us=21413 avg=21.4 max=2705; compute_list_begin n=10 us=5260 avg=526.0 max=5210; compute_list_bind_compute_pipeline n=1600 us=14870 avg=9.3 max=2996; compute_list_bind_uniform_set n=1600 us=8073541 avg=5046.0 max=15533; compute_list_dispatch n=1600 us=103479 avg=64.7 max=8526; compute_list_end n=10 us=18519 avg=1851.9 max=4641; compute_pipeline_create n=25 us=6692 avg=267.7 max=2713; create_local_rendering_device n=1 us=251045 avg=251045.0 max=251045; free_rid n=125 us=8223 avg=65.8 max=7756; make_permanent n=125 us=404 avg=3.2 max=17; process_frame n=10 us=1218 avg=121.8 max=1178; set_stage_bytecode n=25 us=57982 avg=2319.3 max=5316; shader_create_from_spirv n=25 us=19215 avg=768.6 max=3372; storage_buffer_create n=41 us=13435 avg=327.7 max=6150; submit n=5 us=18143 avg=3628.6 max=11519; sync n=5 us=8120 avg=1624.0 max=2536; uniform_buffer_create n=11 us=7772 avg=706.5 max=7648; uniform_set_create n=23 us=5789 avg=251.7 max=3578; uniform_set_is_valid n=23 us=7363 avg=320.1 max=7324; 
+r0 tr_drape       bench rd         32x32 ms_per_substep= 1178.65  rd nv=1024 colors=4 substeps=5 iters=10 finite=yes ymin=0.9999
+   trace bench: ClassDB::instantiate(RDShaderSPIRV) n=25 us=62973 avg=2518.9 max=11697; RDUniform n=23 us=24666 avg=1072.4 max=2375; buffer_copy n=50 us=580 avg=11.6 max=27; buffer_get_data n=5 us=12766 avg=2553.2 max=2807; buffer_update n=11 us=169 avg=15.4 max=42; compute_list_add_barrier n=1000 us=11802 avg=11.8 max=76; compute_list_begin n=50 us=169 avg=3.4 max=8; compute_list_bind_compute_pipeline n=1600 us=9320 avg=5.8 max=155; compute_list_bind_uniform_set n=1600 us=5468082 avg=3417.6 max=11640; compute_list_dispatch n=1600 us=105702 avg=66.1 max=6827; compute_list_end n=50 us=11267 avg=225.3 max=3160; compute_pipeline_create n=25 us=1133 avg=45.3 max=115; free_rid n=125 us=3677 avg=29.4 max=3364; make_permanent n=125 us=331 avg=2.6 max=16; process_frame n=100 us=265 avg=2.6 max=16; set_stage_bytecode n=25 us=62432 avg=2497.3 max=11663; shader_create_from_spirv n=25 us=19074 avg=763.0 max=7310; storage_buffer_create n=41 us=1429 avg=34.9 max=325; submit n=50 us=20234 avg=404.7 max=2150; sync n=50 us=28633 avg=572.7 max=2274; uniform_buffer_create n=11 us=145 avg=13.2 max=60; uniform_set_create n=23 us=1801 avg=78.3 max=225; uniform_set_is_valid n=23 us=34 avg=1.5 max=9; 
+DONE

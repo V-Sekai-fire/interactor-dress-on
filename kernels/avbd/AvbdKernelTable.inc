@@ -278,6 +278,13 @@ static const BindingDesc kBindings_vbd_init_backward[] = {
 	{ "params", 8, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, true },
 };
 
+static const BindingDesc kBindings_saxpby[] = {
+	{ "params", 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, true },
+	{ "x", 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, true },
+	{ "y", 2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, true },
+	{ "dst", 3, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, false },
+};
+
 static const KernelDesc kKernels[] = {
 	{ "vbd_init", "main", { 64, 1, 1 }, kBindings_vbd_init, 7, 0 },
 	{ "spring_force", "main", { 64, 1, 1 }, kBindings_spring_force, 7, -1 },
@@ -303,6 +310,7 @@ static const KernelDesc kKernels[] = {
 	{ "triangle_membrane_force_al_backward", "main", { 64, 1, 1 }, kBindings_triangle_membrane_force_al_backward, 12, -1 },
 	{ "triangle_bending_force_al_backward", "main", { 64, 1, 1 }, kBindings_triangle_bending_force_al_backward, 12, -1 },
 	{ "vbd_init_backward", "main", { 64, 1, 1 }, kBindings_vbd_init_backward, 9, 8 },
+	{ "saxpby", "main", { 256, 1, 1 }, kBindings_saxpby, 4, 0 },
 };
 
 static const uint32_t kNumKernels = sizeof(kKernels) / sizeof(kKernels[0]);

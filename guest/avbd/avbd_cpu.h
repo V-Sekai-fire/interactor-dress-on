@@ -3,6 +3,7 @@
 #define AVBD_CPU_H
 
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 class AvbdCpu {
@@ -48,7 +49,55 @@ public:
 		return 0;
 	}
 	void sync() {}
+	// Nothing is ever in flight on the CPU; AvbdRd's is true between a submit
+	// and the sync of a later tick (AGENTS.md rule 4).
+	bool pending() const { return false; }
 	uint32_t numColors() const { return uint32_t(colorOffsets_.size()) - 1; }
+
+	// Reverse-mode adjoint of the last step() (avbd_cpu_backward.cpp).
+	// `v_positions_loss` is dL/dx_out, length 3*nVerts. Then the read*Grad
+	// accessors, laid out as cloth::AvbdSolver's.
+	int stepBackward(const float *v_positions_loss);
+	// run(iters, duals) then stepBackward(vOut): the backward pass
+	// differentiates the last iteration. One submit on AvbdRd.
+	int runWithBackward(int iters, bool duals, const float *v_positions_loss) {
+		if (run(iters, duals) != 0) {
+			return -1;
+		}
+		return stepBackward(v_positions_loss);
+	}
+	void readPositionsGrad(std::vector<float> &out) const;
+	void readMassGrad(std::vector<float> &out) const;
+	void readPredictedGrad(std::vector<float> &out) const;
+	void readSpringGrad(std::vector<float> &restLen_grad, std::vector<float> &stiff_grad) const;
+	void readAttachGrad(std::vector<float> &fixedPos_grad, std::vector<float> &stiff_grad,
+			std::vector<float> &lambda_grad) const;
+	void readTriGrad(std::vector<float> &stiff_grad, std::vector<float> &lambda0_grad,
+			std::vector<float> &lambda1_grad) const;
+	void readBendGrad(std::vector<float> &nTarget_grad, std::vector<float> &stiff_grad,
+			std::vector<float> &lambda_grad) const;
+
+	// Self-collision scan: per-vertex radii, at most K neighbours recorded per
+	// vertex; pairs come back once, lower index first.
+	// submitSelfCollisionScan runs the scan (on AvbdRd: submits it);
+	// collectSelfCollisions reads the pairs back (on AvbdRd: on a later tick).
+	// detectSelfCollisions is the two in one call (CPU only: AvbdRd has none,
+	// since on the GPU it would sync in its submit's frame, rule 4).
+	void uploadSelfCollisionRadii(const float *radii, uint32_t maxNeighborsPerVert);
+	int submitSelfCollisionScan();
+	int collectSelfCollisions(std::vector<std::pair<uint32_t, uint32_t>> &out_pairs);
+	int detectSelfCollisions(std::vector<std::pair<uint32_t, uint32_t>> &out_pairs) {
+		if (submitSelfCollisionScan() != 0) {
+			out_pairs.clear();
+			return -1;
+		}
+		return collectSelfCollisions(out_pairs);
+	}
+
+	// Test hook for gradcheck_duals' negative control: false makes the
+	// backward bind the live duals instead of the pre-step copies, which is
+	// wrong once a dual update has run after the step.
+	void setLambdaSnapshotForTest(bool use) { useLambdaSnapshot_ = use; }
 
 	void restrictToOwned(uint32_t nOwned);
 	void setPositions(const float *positions);
@@ -84,6 +133,23 @@ private:
 	std::vector<float> bendWeight_, bendNTarget_, bendStiff_, bendLambda_, bendGamma_;
 	std::vector<float> bendGrad_, bendHess_;
 	std::vector<uint32_t> vBendOff_, vBendIdx_, vBendRole_;
+
+	// Backward state: the pre-step positions and duals (the last step's
+	// force kernels saw these), the identity permutation the scatter runs
+	// over (vertPerm_ is shorter after restrictToOwned), and every cotangent.
+	bool backwardReady_ = false;
+	bool useLambdaSnapshot_ = true;
+	std::vector<float> positionsPre_, triLambda0Pre_, triLambda1Pre_, bendLambdaPre_;
+	std::vector<uint32_t> identPerm_;
+	std::vector<float> vOut_, vG_, vH_, deltaX_, vPosGrad_, vPosInit_, vPosSum_, vPred_, vMass_, hJunk_;
+	std::vector<float> vSpringGradA_, vSpringHess_, vSpringPd_, vSpringRest_, vSpringStiff_;
+	std::vector<float> vAttachGradV_, vAttachHess_, vAttachFixed_, vAttachStiff_, vAttachLambda_;
+	std::vector<float> vTriGrad_, vTriHess_, vTriP_, vTriStiff_, vTriL0_, vTriL1_;
+	std::vector<float> vBendGrad_, vBendHess_, vBendP_, vBendN_, vBendStiff_, vBendLambda_;
+	// Self-collision.
+	std::vector<float> radii_;
+	std::vector<uint32_t> neighbors_;
+	uint32_t selfK_ = 0;
 };
 
 #endif

@@ -70,12 +70,24 @@ our own, no host DLL. The GPU is reachable only through Godot's
   buffers; every buffer is created with contents (zeros if none).
 - A guest static can hold the RenderingDevice across vmcalls (handle = engine
   instance id in unrestricted mode); RefCounted helpers are per-call only.
+- An RID (any handle a host call returns) is a per-vmcall scoped Variant: the
+  guest holds an index into that call's Variant table, which names something
+  else in the next call. Anything kept across vmcalls must be made permanent
+  (`Variant::make_permanent`, as `rdc::Device` does); permanent slots are
+  min(references_max + guest globals, 65534) and must be freed (`ECALL_VSTORE_GLOBAL`, `Device::forget`).
 - The guest clock is not a clock (it jumps between time bases). Time on the
   host, around the vmcall.
 - `Sandbox.references_max` defaults to 100; ~30 uniform sets in one call trip
   it. Host scripts set 4096 (or more).
-- `submit+sync` from the guest is bimodal per process (~70 µs or ~2.4 ms,
-  empty list, unexplained). Rule 4 makes it a latency, not a stall.
+- godot-sandbox caches an Object call's method name in a 32-slot direct-mapped
+  cache keyed by the guest ADDRESS of the name string; two hot names in one
+  slot evict each other and each call re-resolves (~2-5 ms). It is decided
+  by the link layout, so it moves between builds, not processes: the old
+  "bimodal submit+sync" (~70 µs or ~2.4 ms) reproduces as 62-174 µs vs
+  2.4-2.8 ms per submit with `compute_list_end` and `sync` in one slot, and
+  it was the 50-86x rd regression of Cut A (`gates/2-avbd/perf-bisect.log`).
+  Call RenderingDevice only through `rdc::Device`, whose method names sit at
+  addresses with a slot each.
 - Cross-compile: `build.sh` (riscv64 clang from scoop, lld, the org's
   `riscv64-sysroot` via `RISCV64_SYSROOT`). First Godot run after adding an
   ELF: `godot --path project --headless --import`.

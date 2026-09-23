@@ -20,7 +20,6 @@
 #include <vector>
 
 #include "avbd/avbd_cpu.h"
-#include "avbd/avbd_rd.h"
 
 namespace {
 
@@ -136,12 +135,4 @@ std::string run_all(Solver &s, const char *backend) {
 std::string avbd_fixture_cpu() {
 	AvbdCpu s;
 	return run_all(s, "cpu");
-}
-
-std::string avbd_fixture_rd(rdc::Device &dev) {
-	AvbdRd s(dev);
-	if (!s.ok()) {
-		return "FAIL rd: " + s.error();
-	}
-	return run_all(s, "rd");
 }

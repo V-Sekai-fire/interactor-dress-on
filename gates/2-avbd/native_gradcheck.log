@@ -1,0 +1,20 @@
+# 2026-09-23T00:23:56Z C:/cloth-dynamics-standalone/src/code/slang_solver/build/test_avbd_gradcheck.exe C:/interactor-dress-on/build/spv
+# exe sha256 342c44e98d677a5c6b3fa4fab6d6c84b2bd64ecfe13cc7dc9b78aec95e779f43
+# standalone HEAD e361584
+# spv set sha256 cc3bbb08cad0e86b4007320ec51d61ddbae47d65d77377fcbc5d81a9aaa2fc44 (24 files)
+[avbd-vk] device: NVIDIA GeForce RTX 4090 (Vulkan 1.4)
+test_avbd_gradcheck: L = 32.9664864 at the 4-vertex fixture
+  single step, dL/dx = x_out, central differences
+
+  dL/d restLen     analytic=    0.370625  fd=      0.3704  rel= 0.000225  ok
+  dL/d k_spring    analytic=   -0.178328  fd=    -0.17877  rel= 0.000442  ok
+  dL/d k_attach    analytic=      3.4668  fd=      3.4669  rel= 3.09e-05  ok
+  dL/d k_tri       analytic=    -6.08297  fd=    -6.08215  rel= 0.000135  ok
+  dL/d k_bend      analytic=    -5.62509  fd=    -5.62573  rel= 0.000114  ok
+
+
+test_avbd_gradcheck: OK -- all 5 match finite differences.
+The per-step adjoint is correct, and since the epilogue's missing
+direct path was restored test_avbd_chaincheck holds to 32 steps,
+so composition is sound too.
+# exit 0

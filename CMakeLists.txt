@@ -25,17 +25,29 @@ target_link_libraries(rd_compute PUBLIC sandbox_api)
 add_library(avbd STATIC
 	guest/avbd/avbd_topology.cpp
 	guest/avbd/avbd_cpu.cpp
+	guest/avbd/avbd_cpu_backward.cpp
 	guest/avbd/avbd_rd.cpp
+	guest/avbd/avbd_rd_backward.cpp
 	guest/avbd/cloth_grid.cpp
 )
 target_include_directories(avbd PUBLIC guest guest/avbd kernels/avbd/cpp guest/avbd/slang-rt ${CMAKE_BINARY_DIR})
 target_link_libraries(avbd PUBLIC rd_compute)
 
-add_sandbox_program(dress_on guest/main.cpp guest/avbd_fixture.cpp)
-target_link_libraries(dress_on PRIVATE avbd rd_compute -lm -lstdc++)
+# One ELF per stage (AGENTS.md rule 6), each installed beside the .gd files
+# as project/<name>.elf, which is what the host's Sandbox nodes load.
+function(add_stage_elf name)
+	add_sandbox_program(${name} ${ARGN})
+	target_link_libraries(${name} PRIVATE rd_compute -lm -lstdc++)
+	add_custom_command(TARGET ${name} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${name}> ${CMAKE_SOURCE_DIR}/project/${name}.elf
+		COMMENT "Installing ${name}.elf into project/"
+	)
+endfunction()
 
-# The project loads res://dress_on.elf; keep it beside the .gd files.
-add_custom_command(TARGET dress_on POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dress_on> ${CMAKE_SOURCE_DIR}/project/dress_on.elf
-	COMMENT "Installing dress_on.elf into project/"
-)
+# Stage 1: the GPU layer's own probes.
+add_stage_elf(dress_on guest/main.cpp)
+
+# Stage 2: the drape -- the AVBD solver on both backends, its oracle and bench.
+add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp)
+target_include_directories(drape PRIVATE guest guest/drape)
+target_link_libraries(drape PRIVATE avbd)

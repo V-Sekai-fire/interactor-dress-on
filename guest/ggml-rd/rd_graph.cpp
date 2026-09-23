@@ -64,9 +64,12 @@ bool rd_offset(const ggml_tensor *t, void *, uint64_t *off) {
 	return true;
 }
 
+// Widened to whole 4-byte words: kernels address uint words, and a 16-bit
+// destination's read-modify-write (lean/Ggml/SlangCodegen/Move.lean) stores
+// the neighbouring half of its first and last word too.
 Range range_of(const ggml_tensor *t, const Buffer *b) {
 	const uint64_t lo = byte_offset(t, b);
-	return Range{ b->rid.index, lo, lo + ggml_nbytes(t) };
+	return Range{ b->rid.index, lo & ~uint64_t(3), (lo + ggml_nbytes(t) + 3) & ~uint64_t(3) };
 }
 
 std::string node_desc(const ggml_tensor *n) {

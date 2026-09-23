@@ -49,4 +49,8 @@ target_include_directories(ggml_rd_l2 PRIVATE
 	${ROOT}/kernels/ggml/cpp
 	${ROOT}/guest/avbd/slang-rt
 )
+# An index past the memory block reads/writes element 0 instead of faulting
+# (as a GPU's robust buffer access would not fault): the swap-nb control moves
+# addresses of the large cases past the 256 MiB block.
+target_compile_definitions(ggml_rd_l2 PRIVATE SLANG_ENABLE_BOUND_ZERO_INDEX)
 target_link_libraries(ggml_rd_l2 PRIVATE ggml ggml-cpu ggml-base -static)

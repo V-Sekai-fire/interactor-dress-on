@@ -58,14 +58,17 @@ def handler(job):
     inp = job.get("input") or {}
     allow = str(inp.get("allow_fixture", "infer,rig"))
     wall = int(inp.get("wallclock", 3000))
-    icd = _nvidia_icd()
+    # A preset VK_ICD_FILENAMES wins (the desk test runs Mesa's dzn over WSL2's D3D12 on the
+    # RTX cards, tools/runpod/loop/wsl-test); on RunPod the NVIDIA driver's own ICD is used.
+    icd = os.environ.get("VK_ICD_FILENAMES") or _nvidia_icd()
     if icd is None:
         return {"error": "no NVIDIA Vulkan driver in the container (NVIDIA_DRIVER_CAPABILITIES must include graphics)"}
     work = Path(tempfile.mkdtemp(prefix="loop-"))
     out = work / "loop.txt"
     env = dict(os.environ, DISPLAY=_display(), VK_ICD_FILENAMES=icd)
+    gpu_index = os.environ.get("DRESS_ON_GPU_INDEX")  # Godot's device order, when a worker has several
     cmd = [GODOT, "--path", PROJECT, "--rendering-driver", "vulkan", "--xr-mode", "off", "--audio-driver", "Dummy",
-           "--script", "gate_loop.gd", "--", "--gate=loop", f"--out={out}", f"--wallclock={wall}",
+           *(["--gpu-index", gpu_index] if gpu_index else []), "--script", "gate_loop.gd", "--", "--gate=loop", f"--out={out}", f"--wallclock={wall}",
            f"--allow-fixture={allow}"]
     t0 = time.time()
     with open(work / "godot.log", "w") as log:

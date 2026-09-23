@@ -7953,7 +7953,7 @@ void _main_0(void* _S52, void* entryPointParams_0, void* globalParams_1)
 
 
 
-    float _S101 = - (U32_asfloat((872415232U)));
+    float _S101 = - (U32_asfloat((629145600U)));
 
 #line 568
     if((a_hi_0 + a_lo_0) <= _S101)

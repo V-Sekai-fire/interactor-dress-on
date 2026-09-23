@@ -341,8 +341,8 @@ void main(uint3 tid : SV_DispatchThreadID) {
       }
     }
   }
-  if ((fpp < asfloat(872415232u))) {
-    dtm = ((-fp) / asfloat(872415232u));
+  if ((fpp < asfloat(629145600u))) {
+    dtm = ((-fp) / asfloat(629145600u));
   }
   if ((crossed == 0u)) {
     dtm = max(dtm, 0.000000);

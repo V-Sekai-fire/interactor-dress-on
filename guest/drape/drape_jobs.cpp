@@ -16,6 +16,7 @@
 #include "avbd/avbd_cpu.h"
 #include "avbd/avbd_rd.h"
 #include "drape_sim.h"
+#include "inverse_jobs.h"
 #include "lbfgsb_jobs.h"
 
 namespace {
@@ -55,11 +56,15 @@ struct DBackend<AvbdRd> {
 	}
 };
 
-// Per-step statistics a forward can collect (the native [avbd-step] line's
-// |dx|_max is max |x_avbd - x| over components).
+// Per-step statistics a forward can collect, computed as the native
+// [avbd-step] line computes them (Simulation.cpp:1497-1545, all float):
+// |dx| = |x_avbd - x|, pred = |s_blend - x|, drift = |x_avbd - s_blend| per
+// component; the mean accumulates in float and divides by 3.0f nV.
 struct StepStat {
 	size_t step = 0;
-	double dxMax = 0.0;
+	float dxMax = 0.0f, dxMean = 0.0f, predMax = 0.0f, driftMax = 0.0f;
+	uint32_t driftVert = 0;
+	int driftAxis = 0;
 	size_t fric = 0, pred = 0, proj = 0, pushes = 0, pairs = 0;
 };
 
@@ -219,19 +224,32 @@ protected:
 const std::set<size_t> kStatSteps = { 1, 2, 3, 4, 5, 10, 20, 50, 100, 200, 350 };
 
 template <class S>
-void collect_stats(DrapeSessionT<S> &s, std::vector<StepStat> &out) {
+void collect_stats(DrapeSessionT<S> &s, std::vector<StepStat> &out, bool all = false) {
 	DrapeSessionT<S> *sp = &s;
 	std::vector<StepStat> *op = &out;
-	s.onStep = [sp, op](const DrapeStepRecord &r, const std::vector<float> &xPrev) {
+	s.onStep = [sp, op, all](const DrapeStepRecord &r, const std::vector<float> &xPrev) {
 		const size_t k = sp->sim->steps();
-		if (!kStatSteps.count(k)) {
+		if (!all && !kStatSteps.count(k)) {
 			return;
 		}
 		StepStat st;
 		st.step = k;
-		for (size_t b = 0; b < r.xAvbd.size() && b < xPrev.size(); ++b) {
-			st.dxMax = std::max(st.dxMax, double(std::fabs(r.xAvbd[b] - xPrev[b])));
+		const size_t nb = std::min(std::min(r.xAvbd.size(), xPrev.size()), r.sBlend.size());
+		for (size_t b = 0; b < nb; ++b) {
+			const float ax = r.xAvbd[b];
+			const float dx = std::fabs(ax - xPrev[b]);
+			const float dp = std::fabs(r.sBlend[b] - xPrev[b]);
+			const float dd = std::fabs(ax - r.sBlend[b]);
+			if (dx > st.dxMax) st.dxMax = dx;
+			if (dp > st.predMax) st.predMax = dp;
+			if (dd > st.driftMax) {
+				st.driftMax = dd;
+				st.driftVert = uint32_t(b / 3);
+				st.driftAxis = int(b % 3);
+			}
+			st.dxMean += dx;
 		}
+		st.dxMean /= (3.0f * float(nb / 3));
 		st.fric = r.fric.size();
 		st.pred = r.pred.size();
 		st.proj = r.projHits;
@@ -242,14 +260,16 @@ void collect_stats(DrapeSessionT<S> &s, std::vector<StepStat> &out) {
 }
 
 std::string stat_line(const StepStat &st) {
-	return fmt("step %4zu |dx|_max=%.9g friction_blends=%zu friction_events=%zu projections=%zu self_pairs=%zu "
-			   "self_pushes=%zu",
-			st.step, st.dxMax, st.pred, st.fric, st.proj, st.pairs, st.pushes);
+	return fmt("step %4zu |dx|_max=%.9g |dx|_mean=%.9g pred_max=%.9g drift_max=%.9g drift@v%u.%c friction_blends=%zu "
+			   "friction_events=%zu projections=%zu self_pairs=%zu self_pushes=%zu",
+			st.step, double(st.dxMax), double(st.dxMean), double(st.predMax), double(st.driftMax), st.driftVert,
+			"xyz"[st.driftAxis], st.pred, st.fric, st.proj, st.pairs, st.pushes);
 }
 
 // --- sphere_forward: the rotating-sphere demo forward ------------------------------
 //
-// keys: steps (100), mu (0.539770: the native iter0's mu), any DrapeConfig key.
+// keys: steps (100), mu (kNativeSphereMu0: the native iter0's mu, 0.539770 as
+// printed), stats=all (every step's line), any DrapeConfig key.
 
 template <class S>
 class SphereForwardJob : public DJob<S> {
@@ -257,8 +277,8 @@ public:
 	bool build(const Args &a, std::string &err) override {
 		steps_ = int(a.num("steps", 100));
 		DrapeConfig cfg;
-		cfg.mu = 0.539770;
-		if (!a.applyConfig(cfg, { "steps" }, err)) {
+		cfg.mu = kNativeSphereMu0;
+		if (!a.applyConfig(cfg, { "steps", "stats" }, err)) {
 			return false;
 		}
 		cfg_ = cfg;
@@ -266,7 +286,7 @@ public:
 			c = cfg_;
 			scene_sphere_demo(sc, c);
 		});
-		collect_stats(*this->sess_, stats_);
+		collect_stats(*this->sess_, stats_, a.str("stats", "") == "all");
 		this->q.push([this]() {
 			this->say(this->sess_->config().dump());
 			this->say(this->sess_->scene().describe());
@@ -292,7 +312,7 @@ private:
 
 // --- sphere_backward: native dL/dmu against backwardLog ---------------------------
 //
-// keys: target (0.3: the ground truth), mus (0.539770,0.01: LBFGS iter0 and
+// keys: target (0.3: the ground truth), mus (kNativeSphereMu0,0.01: LBFGS iter0 and
 // iter1), mode (native), steps (350), any DrapeConfig key.
 
 template <class S>
@@ -309,7 +329,7 @@ public:
 		}
 		cfg.mu = target;
 		cfg_ = cfg;
-		for (const std::string &m : a.list("mus", "0.539770,0.01")) {
+		for (const std::string &m : a.list("mus", "0.5397701956236457,0.01")) {
 			mus_.push_back(std::atof(m.c_str()));
 		}
 		auto *s = this->sess_.get();
@@ -355,7 +375,7 @@ public:
 						per += fmt(" %.6g", g.muPerStep[k]);
 					}
 				}
-				this->say(fmt("RESULT mu=%.6f loss=%.9g dL/dmu=%.9g", mu, g.loss, dmu));
+				this->say(fmt("RESULT mu=%.6f mu_exact=%.16g loss=%.9g dL/dmu=%.9g", mu, mu, g.loss, dmu));
 				if (!per.empty()) {
 					this->say(fmt("  per-step dL/dmu (step N, N-1, ...):%s; summed once (no double carry) %.9g",
 							per.c_str(), once));
@@ -650,6 +670,10 @@ std::unique_ptr<jobs::Job> make_drape_job(const std::string &name, const std::st
 		// see gates/5-drape/lbfgsb for the per-iteration cost on each backend).
 		return make_lbfgsb_job(name, backend == "auto" ? "cpu" : backend, args, dev, err);
 	}
+	if (name == "inverse_min") {
+		// G3: 4 vertices, so auto is cpu (rule 5).
+		return make_inverse_job(backend == "auto" ? "cpu" : backend, args, dev, err);
+	}
 	Args a(args);
 	std::string b = backend;
 	if (b == "auto") {
@@ -673,7 +697,8 @@ std::unique_ptr<jobs::Job> make_drape_job(const std::string &name, const std::st
 }
 
 const char *drape_job_names() {
-	return "sphere_forward sphere_backward sim_gradcheck bench_drape lbfgsb_components lbfgsb_problems";
+	return "sphere_forward sphere_backward sim_gradcheck bench_drape inverse_min lbfgsb_components lbfgsb_problems "
+	       "lbfgsb_replay lbfgsb_bench";
 }
 
 DrapeSession *drape_job_session(jobs::Job *job) {

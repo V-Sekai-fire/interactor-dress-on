@@ -177,7 +177,7 @@ private def sweep : List St :=
               [ setv "iu" (brk (ordAt (v "bb"))), setv "dt" (v "iu" - v "il") ] ] ] ]
 
 private def lastStep : List St :=
-  [ if_ (lt (v "fpp") fltEps) [ setv "dtm" (-(v "fp") / fltEps) ]
+  [ if_ (lt (v "fpp") dblEps) [ setv "dtm" (-(v "fp") / dblEps) ]
   , if_ (eq (v "crossed") (u 0))
       [ setv "dtm" (fmax (v "dtm") (fl 0.0))
       -- Float guard: with no coordinate left moving (every breakpoint
@@ -580,8 +580,8 @@ void main(uint3 tid : SV_DispatchThreadID) {
       }
     }
   }
-  if ((fpp < asfloat(872415232u))) {
-    dtm = ((-fp) / asfloat(872415232u));
+  if ((fpp < asfloat(629145600u))) {
+    dtm = ((-fp) / asfloat(629145600u));
   }
   if ((crossed == 0u)) {
     dtm = max(dtm, 0.000000);

@@ -291,10 +291,10 @@ private def fallbacks : List St :=
   , for_ "k" (u 0) (v "nfree") [ set (vy (v "k")) (clampK vy (v "k")) ]
   , assignDrt vy ]
   ++ dgStmts ++
-  [ if_ (le (v "dg") (-fltEps))
+  [ if_ (le (v "dg") (-dblEps))
       [ setAt "iset" (u 5) (u 3) ]
       ([ assignDrt (clampK yfb) ] ++ dgStmts ++
-       [ if_ (le (v "dg") (-fltEps))
+       [ if_ (le (v "dg") (-dblEps))
            [ setAt "iset" (u 5) (u 4) ]
            [ assignDrt yfb, setAt "iset" (u 5) (u 5) ] ]) ]
 
@@ -913,7 +913,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     df_acc(a_hi, a_lo, drt[i], g[i]);
   }
   dg = (a_hi + a_lo);
-  if ((dg <= (-asfloat(872415232u)))) {
+  if ((dg <= (-asfloat(629145600u)))) {
     iset[5u] = 3u;
   } else {
     for (uint k = 0u; k < nfree; ++k) {
@@ -925,7 +925,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
       df_acc(a_hi, a_lo, drt[i], g[i]);
     }
     dg = (a_hi + a_lo);
-    if ((dg <= (-asfloat(872415232u)))) {
+    if ((dg <= (-asfloat(629145600u)))) {
       iset[5u] = 4u;
     } else {
       for (uint k = 0u; k < nfree; ++k) {

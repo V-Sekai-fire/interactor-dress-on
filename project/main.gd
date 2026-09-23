@@ -144,7 +144,7 @@ func _dv(name: String, args: Array = []) -> String:
 		return "FAIL: no drape sandbox"
 	return str(_drape.callv("vmcall", [name] + args))
 
-# backend: cpu | rd | auto (rd from 256 vertices).
+# backend: cpu | rd | auto (rd from 160 vertices at 90 fps: Gate 5 G9).
 func drape_open(backend: String = "auto") -> String:
 	return _dv("drape_open", [backend])
 
@@ -200,7 +200,8 @@ func drape_frame(i: int = 0) -> PackedFloat32Array:
 func drape_faces() -> PackedInt32Array:
 	return _drape.vmcall("drape_faces") if _drape != null else PackedInt32Array()
 
-# Gate 5 drape jobs: sphere_forward, sphere_backward, sim_gradcheck, bench_drape.
+# Gate 5 jobs: sphere_forward, sphere_backward, sim_gradcheck, bench_drape,
+# inverse_min, lbfgsb_components, lbfgsb_problems, lbfgsb_replay, lbfgsb_bench.
 func drape_job(name: String = "sphere_forward", backend: String = "auto", args: String = "") -> String:
 	var r := _dv("drape_job_start", [name, backend, args])
 	_drape_job_on = r.begins_with("STARTED")
@@ -235,11 +236,13 @@ func drape_optimize_result() -> String:
 func drape_job_data(key: String = "clear", text: String = "") -> String:
 	return _dv("drape_job_data", [key, text])
 
-# The Gate 5 L-BFGS-B oracle (gates/5-drape/oracle) into drape.elf, for the
-# jobs lbfgsb_components and lbfgsb_problems.
+# The Gate 5 oracle (gates/5-drape/oracle) into drape.elf, for the jobs
+# lbfgsb_components, lbfgsb_problems and inverse_min.
 func lbfgsb_load_oracle() -> String:
 	var root := ProjectSettings.globalize_path("res://../gates/5-drape/oracle/")
 	var r := drape_job_data("clear", "")
+	for f in ["k_tri", "k_bend_density"]:
+		r = drape_job_data("invmin_" + f, FileAccess.get_file_as_string(root + "inverse_min/case_" + f + ".txt"))
 	for sub in [["components", ""], ["problems", "prob_"], ["traces", "trace_"]]:
 		var d := DirAccess.open(root + sub[0])
 		if d == null:

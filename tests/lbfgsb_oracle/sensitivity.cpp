@@ -68,7 +68,8 @@ static double fr(double v) { return std::isinf(v) ? v : double(float(v)); }
 int main(int argc, char **argv) {
 	const std::string dir = argc > 1 ? argv[1] : ".";
 	const char *probs[] = { "rosen_n2", "rosen_n10", "rosen_n100", "rosenbox_upstream_n25", "boxqp_n1000" };
-	std::printf("# LBFGSpp (double) from float32-rounded x0/lb/ub vs the trace (exact inputs)\n");
+	std::printf("# LBFGSpp (double) from float32-rounded x0/lb/ub vs the trace (exact inputs). Arm inputs: that\n"
+			"# only. Arm interface: also f and g evaluated at float32 x, g returned as float32 (the guest view).\n");
 	for (const char *pn : probs) {
 		const std::string pt = slurp(dir + "/problems/" + pn + ".txt");
 		const std::vector<double> lb0 = field(pt, "lb"), ub0 = field(pt, "ub"), x00 = field(pt, "x0");
@@ -141,18 +142,36 @@ int main(int argc, char **argv) {
 					ub[i] = fr(ub0[i]);
 					x[i] = fr(x00[i]);
 				}
-				LBFGSpp::LBFGSBSolver<double> solver(prm);
-				double fx = 0.0;
-				int it = -1;
-				try {
-					it = solver.minimize(fg, x, fx, lb, ub);
-				} catch (const std::exception &e) {
-					std::printf("%-32s exception %s\n", tn.c_str(), e.what());
-					continue;
+				// Arm 2 (the float32 interface): also evaluate f and g at x
+				// rounded to float32 and hand g back rounded to float32, which
+				// is what the in-guest objective sees (readX, setGradient); the
+				// solver's own arithmetic stays LBFGSpp's double.
+				const std::function<double(const Vec &, Vec &)> fgF = [&fg, n](const Vec &xx, Vec &g) {
+					Vec xf(n);
+					for (int i = 0; i < n; i++) {
+						xf[i] = double(float(xx[i]));
+					}
+					const double f = fg(xf, g);
+					for (int i = 0; i < n; i++) {
+						g[i] = double(float(g[i]));
+					}
+					return f;
+				};
+				for (int arm = 0; arm < 2; ++arm) {
+					Vec xa = x;
+					LBFGSpp::LBFGSBSolver<double> solver(prm);
+					double fx = 0.0;
+					int it = -1;
+					try {
+						it = solver.minimize(arm == 0 ? fg : fgF, xa, fx, lb, ub);
+					} catch (const std::exception &e) {
+						std::printf("%-32s exception %s\n", tn.c_str(), e.what());
+						continue;
+					}
+					const double err = std::fabs(fx - fref), tol = 1e-6 * (1.0 + std::fabs(fref));
+					std::printf("%-32s %-9s iters %d/%d f %.9g/%.9g err %.1e (%s 1e-6 abs+rel)\n", tn.c_str(),
+							arm == 0 ? "inputs" : "interface", it, kref, fx, fref, err, err <= tol ? "within" : "OUTSIDE");
 				}
-				const double err = std::fabs(fx - fref), tol = 1e-6 * (1.0 + std::fabs(fref));
-				std::printf("%-32s iters %d/%d f %.9g/%.9g err %.1e (%s 1e-6 abs+rel)\n", tn.c_str(), it, kref, fx, fref,
-						err, err <= tol ? "within" : "OUTSIDE");
 			}
 		}
 	}

@@ -565,7 +565,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     df_acc(a_hi, a_lo, drt[i], g[i]);
   }
   dg = (a_hi + a_lo);
-  if ((dg <= (-asfloat(872415232u)))) {
+  if ((dg <= (-asfloat(629145600u)))) {
     iset[5u] = 3u;
   } else {
     for (uint k = 0u; k < nfree; ++k) {
@@ -577,7 +577,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
       df_acc(a_hi, a_lo, drt[i], g[i]);
     }
     dg = (a_hi + a_lo);
-    if ((dg <= (-asfloat(872415232u)))) {
+    if ((dg <= (-asfloat(629145600u)))) {
       iset[5u] = 4u;
     } else {
       for (uint k = 0u; k < nfree; ++k) {

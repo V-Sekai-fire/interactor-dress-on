@@ -68,7 +68,25 @@ abstract: >-
   vec_rd. Adapted: float32 vectors with double scalars; x_lo and grad_lo
   are copies (XLO/GLO) instead of swaps; a non-positive pivot in lb_compact's
   Cholesky resets the BFGS memory, as LBFGSpp does on a pathological
-  direction; g.d at a trial point is a device dot.
+  direction; g.d at a trial point is a device dot; a trial point is clamped
+  to the box (in float32 a bound-limited step can land one ulp past the
+  bound, where LBFGSpp's double lands on it).
+
+
+  inverse_min.h: cloth-dynamics' test_avbd_inverse_min.cpp (src/code/
+  slang_solver, 4 vertices, 4 chained steps, the k_tri case and the
+  (k_bend, density) case, their synthetic targets, starts and clamps, the
+  zero-gradient falsifiability arm) as a staged objective over AvbdCpu or
+  AvbdRd. Adapted: the two cases share one upload (density 1 in the first
+  gives upstream's masses bit for bit); the parameters are driven by the
+  in-guest L-BFGS-B instead of upstream's backtracking gradient descent, and
+  checked against LBFGSpp on the same objective compiled for the host
+  (tests/inverse_min_oracle).
+
+
+  kNativeSphereMu0 (drape_scene.h): the sphere demo's seed-1 initial mu as
+  OptimizeHelper::getRandomParam draws it (OptimizeHelper.cpp:338-345,
+  471-481; srand(1), Eigen's setRandom on the UCRT rand()).
 type: software
 authors:
   - name: V-Sekai-fire

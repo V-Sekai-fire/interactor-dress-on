@@ -6091,7 +6091,7 @@ void _main_0(void* _S6, void* entryPointParams_0, void* globalParams_1)
     }
 
 #line 344
-    float _S44 = (U32_asfloat((872415232U)));
+    float _S44 = (U32_asfloat((629145600U)));
 
 #line 344
     if(fpp_1 < _S44)

@@ -1,0 +1,7 @@
+k_tri gradient: LBFGSpp iterations 6 evaluations 7 x 1.99999894 f 6.70130618e-13 err 1.06e-06 (converged)
+k_tri zero-gradient: LBFGSpp iterations 1 evaluations 1 x 0.5 f 1.6511418 err 1.5 (converged)
+k_tri upstream gradient descent: x 2 0 err 0
+k_bend_density gradient: LBFGSpp iterations 13 evaluations 14 x 1.50000418 1.2499993 f 2.83686963e-12 err 4.18e-06 (converged)
+k_bend_density zero-gradient: LBFGSpp iterations 1 evaluations 1 x 0.400000006 2.5 f 2.09721837 err 1.25 (converged)
+k_bend_density upstream gradient descent: x 1.4999994 1.25000024 err 5.96e-07
+ORACLE: LBFGSpp meets both G3 criteria

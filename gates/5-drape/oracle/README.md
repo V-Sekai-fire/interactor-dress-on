@@ -133,3 +133,22 @@ U <c> i…     # active at ub: x_i ≥ ub_i − 1e-9·max(1,|ub_i|)
 | rosen_n100 | 12 / 10 | 43 / 43 | 118.811118 | 1/1 |
 | rosenbox_upstream_n25 | 10 / 10 | 13 / 13 | 360.283586 | 22/1 |
 | boxqp_n1000 | 5 / 5 | 11 / 11 | −1932.98535 | 250/250 (xstar err 8.3e-5 / 7.8e-5) |
+
+## `inverse_min/case_<name>.txt` (G3, 2 files)
+
+Made by `tests/inverse_min_oracle/build.sh` (`oracle.cpp`), not by `gen.cpp`:
+LBFGSpp 0.3.0 (the same clone) on cloth-dynamics' `test_avbd_inverse_min`
+objective, compiled for the host from the guest's own sources
+(`guest/drape/inverse_min.h` over `guest/avbd/avbd_cpu*.cpp`, llvm-mingw
+clang++ -O2 -ffp-contract=off). One file per case: `k_tri` (truth 2, start
+0.5, lb 0.05) and `k_bend_density` (truth (1.5, 1.25), start (0.4, 2.5), lb
+0.02 each). Keys: `param` (LBFGSpp's defaults with m 10, max_linesearch 20,
+max_iterations 100), `truth`, `start`, `lb`, `target` (the host AvbdCpu's
+rollout at the truth), one `eval` line per objective evaluation (x, f, g),
+then `niter`, `nfev`, `status`, `f_final`, `x`, `err` (|x - truth|_inf), the
+same with a `zero_` prefix for the zero-gradient arm, and `gd_x` / `gd_err`
+(upstream's own backtracking gradient descent on this objective, for
+information). `oracle.log` is the run's summary: LBFGSpp recovers both
+cases (6 iterations, err 1.1e-6; 13 iterations, err 4.2e-6), its
+zero-gradient arm stays put (err 1.5 and 1.25), and upstream's descent
+reaches err 0 and 6e-7.

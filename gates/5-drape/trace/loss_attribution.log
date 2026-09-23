@@ -1,0 +1,8 @@
+L(ours mu 0.01, ours mu 0.3)          = 1.64972504
+L(native iter1 mu 0.01, ours mu 0.3)  = 1.65180863   (native's own: 1.65198194)
+frame 100: max |ours(0.01) - native iter1| = 5.03e-06
+frame 121: max |ours(0.01) - native iter1| = 0.0017
+frame 122: max |ours(0.01) - native iter1| = 0.00294
+frame 150: max |ours(0.01) - native iter1| = 0.00832
+frame 200: max |ours(0.01) - native iter1| = 0.0668
+frame 350: max |ours(0.01) - native iter1| = 0.272

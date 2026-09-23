@@ -24,6 +24,17 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 #pragma once
 
+// The native sphere demo's initial mu, exactly. `tool_cloth_dynamics -demo
+// sphere -seed 1` draws it in OptimizeHelper::getRandomParam: srand(1); the
+// first rand() (41) is only logged as the "seed"; parameterFromRandSeed then
+// calls VecXd::setRandom(), whose one coefficient is Eigen's
+// -1 + 2 rand()/RAND_MAX with the second rand() (18467 of 32767, the UCRT
+// LCG), mapped to lb + (x/2 + 1/2)(ub - lb) on [0.01, 0.95]. The logs print
+// it as 0.539770; the difference (1.96e-7) matters: the sphere demo is
+// chaotic after its self-collision onset, and a 7e-9 change of mu moves the
+// loss at 350 steps by 9% (gates/5-drape/README.md).
+constexpr double kNativeSphereMu0 = 0.5397701956236457;
+
 #include <cstdint>
 #include <string>
 #include <vector>

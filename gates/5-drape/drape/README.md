@@ -1,5 +1,7 @@
 # Gate 5, Task D: the drape simulation and its backward, in drape.elf
 
+> **Superseded by the integrated Gate 5, [`../README.md`](../README.md)** (`project/gate_drape.gd`, `../results.txt`). This directory keeps the Task D run of 2026-09-23 as it was. Since then: the sphere demo runs at native's exact initial mu (0.5397701956236457, not the printed 0.539770), two L-BFGS-B guards use LBFGSpp's double epsilon, and trial points are clamped to the box.
+
 **Result: FAIL, on one criterion.** G4 passes. G6 passes. G5 passes at μ 0.01,
 and misses its 5e-2 tolerance at μ 0.539770 (7.9%) and μ 0.375146 (5.1%). The
 flat control shows why. The same port on the other backend moves dL/dμ by

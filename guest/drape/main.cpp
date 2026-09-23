@@ -164,7 +164,7 @@ static Variant avbd_job_names_api() {
 
 // --- the drape API: one session, advanced one host frame per drape_tick --------
 //
-// drape_open picks the backend (cpu, rd, or auto: rd from 256 vertices, rule
+// drape_open picks the backend (cpu, rd, or auto: rd from 160 vertices, rule
 // 5); a scene call uploads; drape_config sets a knob (a material/topology
 // knob re-uploads, and so rewinds, on the next drape_queue_forward);
 // drape_queue_forward / drape_queue_backward queue stages which drape_tick
@@ -238,6 +238,9 @@ static Variant drape_open(String backend_s) {
 	drop_session();
 	g_want = b;
 	g_scene_set = false;
+	if (b == "auto") {
+		return text("OPENED auto (rd from " + std::to_string(kDrapeAutoRdVerts) + " vertices)");
+	}
 	return text("OPENED " + b);
 }
 
@@ -855,7 +858,7 @@ int main() {
 	ADD_API_FUNCTION(avbd_job_tick, "String", "int host_us",
 			"Advance the job one frame (host clock in us); RUNNING k/N, then PASS or FAIL");
 	add_sandbox_api_function("avbd_job_names", avbd_job_names_api, "String", "", "The job names");
-	ADD_API_FUNCTION(drape_open, "String", "String backend", "Pick the drape backend: cpu, rd or auto (rd from 256 vertices)");
+	ADD_API_FUNCTION(drape_open, "String", "String backend", "Pick the drape backend: cpu, rd or auto (rd from 160 vertices)");
 	ADD_API_FUNCTION(drape_scene_sphere_demo, "String", "", "Load DiffCloth's rotating-sphere demo (25x25, sphere r 2)");
 	ADD_API_FUNCTION(drape_scene_mesh, "String",
 			"PackedFloat32Array positions, PackedInt32Array triangles, PackedInt32Array pins, PackedFloat32Array material",

@@ -72,6 +72,13 @@ def fabs (a : E) : E := .call "abs" [a]
 def fltMax : E := bits 2139095039
 /-- FLT_EPSILON = 2^-23. -/
 def fltEps : E := bits 872415232
+/-- DBL_EPSILON = 2^-52, exact in float32 (0x25800000): LBFGSpp's
+`numeric_limits<double>::epsilon()` where it is an ABSOLUTE guard (the
+Cauchy step's fpp, the subspace fallbacks' g.d). As a guard against a
+value being numerically zero it must keep LBFGSpp's scale: FLT_EPSILON there
+fired on the sphere demo's first iteration (|g| 1.2e-5, fpp = g.g 1.4e-10),
+shrank the Cauchy step 8000 times and left xcp = x. -/
+def dblEps : E := bits 629145600
 /-- 1e30 (0x7149F2CA): a bound at or beyond this magnitude is absent. -/
 def unbounded : E := bits 1900671690
 

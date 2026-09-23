@@ -1,0 +1,30 @@
+# inverse_min k_tri: LBFGSpp 0.3.0 LBFGSBSolver<double> (MoreThuente) on the host-compiled AvbdCpu
+# objective (guest/drape/inverse_min.h); tests/inverse_min_oracle/oracle.cpp
+case k_tri
+n 1
+param m 10 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 1e-10 max_iterations 100 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
+truth 1 2
+start 1 0.5
+lb 1 0.0500000007
+target 12 0.481719762 1.96627915 2.47044706 1.67803574 1.429703 1.15345955 0.186300695 3.24526477 7.29604149 2.91450882 2.0864203 -0.794269145
+eval 1 x 0.5 f 1.6511418 g -3.62839079
+eval 2 x 1.5 f 0.109578053 g -0.474920332
+eval 3 x 1.65060246 f 0.0509763887 g -0.307632446
+eval 4 x 1.92755139 f 0.00202044143 g -0.0563395098
+eval 5 x 1.98964286 f 4.05908414e-05 g -0.00784920994
+eval 6 x 1.99969375 f 3.5446992e-08 g -0.000231317841
+eval 7 x 1.99999893 f 6.70130618e-13 g -9.5323486e-07
+niter 6
+nfev 7
+status converged
+f_final 6.70130618e-13
+x 1 1.99999894
+err 1.06494338e-06
+zero_niter 1
+zero_nfev 1
+zero_status converged
+zero_f_final 1.6511418
+zero_x 1 0.5
+zero_err 1.5
+gd_x 1 2
+gd_err 0

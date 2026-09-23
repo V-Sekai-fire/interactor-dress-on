@@ -373,6 +373,12 @@ Lbfgsb::Status Lbfgsb::trial() {
 		lo_ = LO_BUF;
 	}
 	ops.push_back(saxpby(X, D, XP, float(step_), 1.0f, true));
+	// In double, LBFGSpp's step_max puts a bound-limited trial exactly on the
+	// bound; in float32, xp + step*d can land one ulp past it (mu 0.00999999
+	// against lb 0.01 in the sphere demo's first trial), and the objective
+	// would be evaluated outside the box. Clamp the trial to the box: a no-op
+	// for every interior coordinate.
+	ops.push_back(box_project(X));
 	return submit(P_TRIAL, ops);
 }
 

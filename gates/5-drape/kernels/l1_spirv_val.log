@@ -8,5 +8,5 @@ lb_multi_dot valid 4592 bytes caps: Shader  NoContraction: 24
 lb_pg_inf valid 3072 bytes caps: Shader  NoContraction: 2
 lb_ring_store valid 1980 bytes caps: Shader  NoContraction: 0
 lb_step_max valid 3988 bytes caps: Shader  NoContraction: 5
-lb_subspace valid 101252 bytes caps: Shader  NoContraction: 244
+lb_subspace valid 101268 bytes caps: Shader  NoContraction: 244
 saxpby valid 1668 bytes caps: Shader  NoContraction: 1

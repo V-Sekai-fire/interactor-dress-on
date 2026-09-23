@@ -103,6 +103,21 @@ step when no coordinate is left moving, and fixture 00's vecc error drops to
 8.9e-8. Keeping fp and fpp in double did not help: the error is in p, not
 in fp.
 
+Later, in the integrated gate (G7, `../README.md`): two absolute guards
+that LBFGSpp writes with `numeric_limits<double>::epsilon()` had been
+emitted with FLT_EPSILON. They are the Cauchy step's "fpp is numerically
+zero" guard (`lb_cauchy`) and the subspace fallbacks' descent test
+g.d <= -eps (`lb_subspace`). On the sphere demo the first gradient is about
+1.2e-5, so fpp = g.g is 1.4e-10. That is below FLT_EPSILON (1.2e-7), so the
+guard fired, divided by 1.2e-7 instead of by fpp, and shrank the Cauchy step
+8000 times. The step, 1.5e-8, is under half an ulp of mu = 0.54, so xcp = x,
+d = 0, and the driver stopped with "the moving direction does not decrease
+the objective". Both guards now use `dblEps` (2^-52, exact in float32), which
+is LBFGSpp's own threshold. The 20 fixtures are unchanged (identical
+`l2_fixtures.log` and `l2_control.log`); only `lb_cauchy` and `lb_subspace`
+re-emitted (2 lines each), and `l1_spirv_val.log` was regenerated.
+`lb_compact`'s curvature test s.y > eps y.y stays relative, with FLT_EPSILON.
+
 ## Reproduce
 
 ```

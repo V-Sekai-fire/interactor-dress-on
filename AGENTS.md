@@ -47,9 +47,10 @@ our own, no host DLL. The GPU is reachable only through Godot's
 8. **Every guest entry point gets a no-argument wrapper in `project/main.gd`**
    so MCP `call_method` needs no argument marshalling (Gate 0E).
 9. **Do not touch the user's machine config.** OpenXR runtime is selected per
-   process with `XR_RUNTIME_JSON` (OpenXR-Simulator at
-   `tools/openxr-simulator/openxr_simulator.abs.json`); the system default and
-   SteamVR's settings are not ours to flip.
+   process with `XR_RUNTIME_JSON` (OXRSys, Windows port, at
+   `tools/oxrsys/build/windows/runtime/oxrsys-runtime.json`; its Qt simulator
+   shows the stream); the system default and SteamVR's settings are not ours to
+   flip.
 
 ## Facts that cost time (do not relearn)
 

@@ -209,11 +209,13 @@ private:
 		a[3 * i + 2] = float(p.z);
 	}
 
-	void begin() {
+	// The step's predictor and friction blend from the current (x, v):
+	// r.s, r.sBlend and r.pred (step 1 and 2 of the header). No solver call.
+public:
+	void predict(DrapeStepRecord &r) const {
 		const uint32_t nV = scene.nV;
 		const double h = cfg.h, h2 = h * h;
-		cur_ = DrapeStepRecord();
-		cur_.s.resize(3 * size_t(nV));
+		r.s.resize(3 * size_t(nV));
 		std::vector<double> sb(3 * size_t(nV));
 		for (uint32_t i = 0; i < nV; ++i) {
 			const double minv = 1.0 / scene.massD[i];
@@ -221,10 +223,10 @@ private:
 				const size_t b = 3 * size_t(i) + k;
 				const float fext = float(cfg.gravity[k] * scene.massD[i] + cfg.wind[k]);
 				const double xd = double(x[b]), vd = double(v[b]);
-				cur_.s[b] = xd + h * vd;
-				cur_.s[b] += h2 * minv * double(fext);
+				r.s[b] = xd + h * vd;
+				r.s[b] += h2 * minv * double(fext);
 				if (cfg.damp == 1.0f) {
-					sb[b] = cur_.s[b];
+					sb[b] = r.s[b];
 				} else {
 					sb[b] = xd + h * double(cfg.damp) * vd;
 					sb[b] += h2 * minv * double(fext);
@@ -254,14 +256,20 @@ private:
 					sb[3 * i] = xi.x + dsNew.x;
 					sb[3 * i + 1] = xi.y + dsNew.y;
 					sb[3 * i + 2] = xi.z + dsNew.z;
-					cur_.pred.push_back({ i, p, n, dsT, muc });
+					r.pred.push_back({ i, p, n, dsT, muc });
 				}
 			}
 		}
-		cur_.sBlend.resize(3 * size_t(nV));
+		r.sBlend.resize(3 * size_t(nV));
 		for (size_t b = 0; b < sb.size(); ++b) {
-			cur_.sBlend[b] = float(sb[b]);
+			r.sBlend[b] = float(sb[b]);
 		}
+	}
+
+private:
+	void begin() {
+		cur_ = DrapeStepRecord();
+		predict(cur_);
 		solver.updateState(x.data(), cur_.sBlend.data());
 		if (scene.nAttach() > 0) {
 			solver.updateAttachmentFixedPos(scene.attachFixed.data());

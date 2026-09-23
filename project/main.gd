@@ -375,6 +375,12 @@ func drape_scene_mesh(positions: PackedFloat32Array = PackedFloat32Array(), tria
 func drape_primitive(kind: String = "clear", params: PackedFloat32Array = PackedFloat32Array()) -> String:
 	return _dv("drape_primitive", [kind, params])
 
+# A triangle-mesh body collider (positions in drape units, like the capsules);
+# params [skin, mu, band, depth], any prefix (0.1, 0.3, 0.1, 1.0).
+func drape_primitive_mesh(positions: PackedFloat32Array = PackedFloat32Array(), triangles: PackedInt32Array = PackedInt32Array(),
+		params: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return _dv("drape_primitive_mesh", [positions, triangles, params])
+
 func drape_config(key: String = "iters", value: float = 16.0) -> String:
 	return _dv("drape_config", [key, value])
 

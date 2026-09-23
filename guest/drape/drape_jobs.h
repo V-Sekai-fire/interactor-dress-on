@@ -1,5 +1,8 @@
 // drape_jobs -- the drape session behind the drape_* API, and the Gate 5
-// drape jobs (sphere_forward, sphere_backward, sim_gradcheck, bench_drape).
+// drape jobs (sphere_forward, sphere_backward, sim_gradcheck, bench_drape,
+// and G10's mesh_parity and mesh_bisect: a host mesh from drape_job_data on
+// cpu and rd side by side, and where inside step 1 rd leaves cpu, kernel by
+// kernel).
 //
 // A session is one backend's solver, a DrapeSimT over it, a target and the
 // last result. Every operation is queued as stages on a jobs::StageQueue and

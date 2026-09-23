@@ -1,0 +1,44 @@
+# Gate 5 drape.elf, 2026-09-23T08:59:23, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 4090 only G10
+sandbox memory_max = 512
+sandbox execution_timeout = 8000
+oracle handed to the guest: 47 files (20 components, 5 problems, 20 traces, 2 inverse_min): DATA invmin_k_bend_density 1961 bytes, 47 keys
+G10 scene handed to the guest: DATA body_obj 340622 bytes, 51 keys
+job mesh_bisect rd scale=10                            ticks=     3 wall_ms=    223.2  FAIL mesh_bisect mesh x10: first non-finite rd buffer at iteration 1 colour 0 after init+forces: bendGrad
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    [drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0 colours cpu 9 rd 9
+    iteration  1: non-finite floats cpu 0 rd 216 (first rd v264); max|cpu - rd| 4.77e-07 at v463
+    iteration 1 colour 0 after init+forces      : triGrad 1.2e-05; bendGrad non-finite cpu 0 rd 12 (first rd row 9772); bendGrad 6.1e-08; gScratch non-finite cpu 0 rd 213 (first rd row 264); gScratch 0.00014;
+      bendGrad row 9772 = bending 2443: nTarget 1.65900894e-06 k 0.000479145296; v274 w=2.25989437 rd(2.14215755 6.84740829 -0.731058121) cpu(2.14215755 6.84740829 -0.731058121) v2575 w=5.04274893 rd(2.03971624 7.2909503 -0.87708056) cpu(2.03971624 7.2909503 -0.87708056) v1673 w=-3.71447849 rd(2.06092691 7.37199402 -0.772039831) cpu(2.06092691 7.37199402 -0.772039831) v1766 w=-3.58816504 rd(2.08227825 6.92770243 -0.89385128) cpu(2.08227825 6.92770243 -0.89385128)
+      |s| on rd's positions: 1.65901e-06 (double), 5.74188e-06 (float, sequential); on cpu's positions 5.74188e-06 (float)
+      bendings with 1e-6 < nTarget < 1e-4: 34 of 7758
+FAIL G10 mesh_bisect rd: FAIL mesh_bisect mesh x10: first non-finite rd buffer at iteration 1 colour 0 after init+forces: bendGrad
+job mesh_parity rd scale=10 caps=1 steps=5 tol=1e-4    ticks=    22 wall_ms=   6226.0  FAIL mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=NO, max|x_cpu - x_rd| over 5 steps = 0 (tol 0.0001)
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    [drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=14 | prim0 capsule c=(-0.00113,9.52752,-0.27279) a=(0.001915,0.993744,0.111665) r=0.735514 len=0.948843 mu=0.300000 | prim1 capsule c=(0.00069,10.4704,-0.16683) a=(0.00064,0.999598,0.028341) r=1.30746 len=2.95858 mu=0.300000 | prim2 capsule c=(0.00069,10.4704,-0.16683) a=(0.403473,0.914979,0.004754) r=0.387118 len=2.46696 mu=0.300000 | prim3 capsule c=(2.35667,11.1417,-0.13297) a=(-0.651094,0.758923,-0.01059) r=0.218986 len=2.08976 mu=0.300000 | prim4 capsule c=(3.79585,9.62856,-0.12785) a=(-0.689178,0.724588,-0.002454) r=0.939653 len=2.08825 mu=0.300000 | prim5 capsule c=(0.00069,10.4704,-0.16683) a=(-0.384708,0.923027,0.004631) r=0.385177 len=2.44397 mu=0.300000 | prim6 capsule c=(-2.31501,11.142,-0.13296) a=(0.655567,0.755061,-0.010752) r=0.213236 len=2.09816 mu=0.300000 | prim7 capsule c=(-3.7479,9.63851,-0.12553) a=(0.689893,0.723903,-0.003575) r=0.936992 len=2.07697 mu=0.300000 | prim8 capsule c=(0.97131,8.81631,-0.27191) a=(-0.807161,0.59033,-0.000731) r=0.836788 len=1.20476 mu=0.300000 | prim9 capsule c=(1.33821,5.2492,-0.29837) a=(-0.102312,0.994725,0.00738) r=0.710793 len=3.58603 mu=0.300000 | prim10 capsule c=(1.75327,0.33546,-0.38551) a=(-0.084157,0.996296,0.017668) r=0.399795 len=4.93201 mu=0.300000 | prim11 capsule c=(-0.98774,8.81613,-0.27102) a=(0.811129,0.584866,-0.001452) r=0.793421 len=1.21634 mu=0.300000 | prim12 capsule c=(-1.35558,5.24924,-0.29774) a=(0.102581,0.994697,0.00745) r=0.703622 len=3.5859 mu=0.300000 | prim13 capsule c=(-1.76781,0.33617,-0.38489) a=(0.083596,0.996343,0.017675) r=0.396954 len=4.93111 mu=0.300000
+    FAIL forward rd steps=5 (+5 of 5) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=357.2 ms/step=71.435
+    DONE forward cpu steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=3206 projections=837 self_pushes=172 wall_ms=5847.8 ms/step=1169.570
+    step 1: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 2: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 3: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 4: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 5: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+FAIL G10 mesh_parity rd: FAIL mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=NO, max|x_cpu - x_rd| over 5 steps = 0 (tol 0.0001)
+job mesh_parity rd scale=10 body=1 steps=5 tol=1e-4    ticks=    22 wall_ms=  32373.0  FAIL mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=NO, max|x_cpu - x_rd| over 5 steps = 0 (tol 0.0001)
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    [drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+    FAIL forward rd steps=5 (+5 of 5) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=24003.3 ms/step=4800.661
+    DONE forward cpu steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=4396 projections=2153 self_pushes=71 wall_ms=5703.9 ms/step=1140.777
+    step 1: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 2: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 3: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 4: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    step 5: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+    inside the body (signed distance < 0): start 0 (deepest 0), after 5 steps cpu 0 (0) rd 0 (0); collider mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+FAIL G10 mesh_parity rd: FAIL mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=NO, max|x_cpu - x_rd| over 5 steps = 0 (tol 0.0001)
+--- checks
+PASS G8 rd_rule4 after every job: same_frame_syncs=0 syncs=22 submits=22 (want same_frame_syncs=0 with syncs>0)
+PASS G8 rd_rule4_probe (positive control): PASS same_frame_syncs 0 -> 1; counter now 1
+PASS G8 llvm-nm -C project/drape.elf: 9502 symbols, 0 matching Eigen, 0 matching LBFGSpp (rc 0)
+PASS G8 rd_close: CLOSED device=freed permanent_slots=0
+SUMMARY G10 FAIL(3)
+RESULT: FAIL

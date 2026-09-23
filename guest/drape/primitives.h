@@ -1,4 +1,5 @@
-// primitives -- the collision primitives of the drape: Sphere, Plane, Capsule.
+// primitives -- the collision primitives of the drape: Sphere, Plane, Capsule,
+// and Mesh (a triangle-mesh body, body_mesh.h; not in upstream).
 //
 // Ports of DiffCloth's Primitive.cpp (cloth-dynamics-standalone e361584):
 // Sphere::isInContact (241-275, COLLISION_EPSILON 0.1), Plane::isInContact
@@ -18,8 +19,11 @@
 #pragma once
 
 #include <cmath>
+#include <memory>
 #include <string>
 #include <vector>
+
+struct BodyMesh;
 
 struct v3d {
 	double x = 0.0, y = 0.0, z = 0.0;
@@ -92,7 +96,7 @@ struct m3d {
 	}
 };
 
-enum class PrimKind { Sphere, Plane, Capsule };
+enum class PrimKind { Sphere, Plane, Capsule, Mesh };
 
 struct Primitive {
 	PrimKind kind = PrimKind::Sphere;
@@ -110,6 +114,11 @@ struct Primitive {
 	// upperRight x upperLeft, the half-thickness below it, the bounding radius.
 	v3d upperLeft, upperRight, lowerLeft, lowerRight, planeNormal;
 	double planeNormalNorm = 1.0, thickness = 5.0, boundaryRadius = 0.0;
+	// Mesh: the body (shared, immutable), the skin its contact surface sits
+	// out along the normal (the capsule's +0.1), the contact band (the
+	// capsule's delta 0.1), and how deep inside a point is still pushed out.
+	std::shared_ptr<const BodyMesh> body;
+	double skin = 0.1, band = 0.1, depth = 1.0;
 
 	// Upstream's isInContact(center, pos, velocity, normal, dist, v_out):
 	// the signed distance (negative inside), the outward normal, and the
@@ -131,3 +140,7 @@ Primitive make_sphere(const v3d &center, double radius, double mu);
 Primitive make_plane(const v3d &center, const v3d &upperLeft, const v3d &upperRight, double mu);
 // A capsule from its bottom-cap centre along `axis` (normalised here).
 Primitive make_capsule(const v3d &bottom, const v3d &axis, double radius, double length, double mu);
+// A triangle-mesh body (body_mesh.h): contact where the signed distance to
+// the surface, less `skin`, is below `band`; points deeper than `depth`
+// inside are not seen.
+Primitive make_mesh_collider(std::shared_ptr<const BodyMesh> body, double skin, double band, double depth, double mu);

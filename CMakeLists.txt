@@ -64,7 +64,7 @@ add_stage_elf(dress_on guest/main.cpp)
 
 # Stage 2: the drape -- the AVBD solver on both backends, its oracle and bench.
 add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp
-	guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp
+	guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp guest/drape/body_mesh.cpp
 	guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/lbfgsb_jobs.cpp guest/drape/vec_cpu.cpp
 	guest/drape/vec_rd.cpp guest/drape/inverse_jobs.cpp)
 # The drape driver ports DiffCloth arithmetic that ran on x86-64 without FMA;

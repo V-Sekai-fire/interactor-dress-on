@@ -75,7 +75,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     float sz = (((w0 * p0.z) + (w1 * p1.z)) + ((w2 * p2.z) + (w3 * p3.z)));
     float len2 = (((sx * sx) + (sy * sy)) + (sz * sz));
     float len = sqrt(len2);
-    float scale = (n_c / len);
+    float scale = ((len > 0.000000) ? (n_c / len) : 1.000000);
     float om = (1.000000 - scale);
     float ex = (sx * om);
     float ey = (sy * om);
@@ -84,7 +84,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     float AdotE = (((Ax * ex) + (Ay * ey)) + (Az * ez));
     float AdotS = (((Ax * sx) + (Ay * sy)) + (Az * sz));
     float len3 = (len * len2);
-    float factor = ((k * (n_c * AdotS)) / len3);
+    float factor = ((len > 0.000000) ? ((k * (n_c * AdotS)) / len3) : 0.000000);
     float kom = (k * om);
     float tx = ((kom * Ax) + (factor * sx));
     float ty = ((kom * Ay) + (factor * sy));
@@ -105,7 +105,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     vly = Ay;
     vlz = Az;
     vk = (AdotE + HW);
-    vn = (0.000000 - ((k * AdotS) / len));
+    vn = ((len > 0.000000) ? (0.000000 - ((k * AdotS) / len)) : 0.000000);
   }
   v_p[base] = float3(vpx0, vpy0, vpz0);
   v_p[(base + 1u)] = float3(vpx1, vpy1, vpz1);

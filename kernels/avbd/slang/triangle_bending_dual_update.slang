@@ -48,7 +48,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     float sy = (((w0 * p0.y) + (w1 * p1.y)) + ((w2 * p2.y) + (w3 * p3.y)));
     float sz = (((w0 * p0.z) + (w1 * p1.z)) + ((w2 * p2.z) + (w3 * p3.z)));
     float len = sqrt((((sx * sx) + (sy * sy)) + (sz * sz)));
-    float scale = (n_c / len);
+    float scale = ((len > 0.000000) ? (n_c / len) : 1.000000);
     float om = (1.000000 - scale);
     ex = (sx * om);
     ey = (sy * om);

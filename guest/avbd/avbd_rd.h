@@ -125,6 +125,20 @@ public:
 		invalidate_sets();
 	}
 
+	// Test hooks for the per-kernel bisection (drape job mesh_bisect): with a
+	// stop set, the LAST iteration of run() records colours before `color`
+	// whole and colour `color` up to `stage` (0 init and the four force
+	// kernels, 1-4 the spring/attachment/triangle/bending gathers, 5 the
+	// solve), and no dual update after it; -1 records whole iterations.
+	// readDebugForTest reads a buffer by the kernels' name (positions,
+	// gScratch, hScratch, attachGradV, attachHess, triGrad, triHess, bendGrad,
+	// bendHess), float3 rows compacted to xyz.
+	void setDebugStopForTest(int color, int stage) {
+		dbgColor_ = color;
+		dbgStage_ = stage;
+	}
+	std::vector<float> readDebugForTest(const std::string &name);
+
 	uint32_t nVerts() const { return nVerts_; }
 	bool ready() const { return meshReady_; }
 	uint32_t numColors() const { return uint32_t(colorOffsets_.size()) - 1; }
@@ -166,7 +180,8 @@ private:
 	void ensure_params();
 	::RID set_for(const char *kernel, int color, const Binds &binds);
 	bool dispatch(const char *kernel, int color, uint32_t threads, const Binds &binds);
-	void record_iteration();
+	// `last`: the debug stop applies (setDebugStopForTest).
+	void record_iteration(bool last = false);
 	void record_duals();
 	bool begin_record();
 	void end_record_and_submit();
@@ -203,6 +218,7 @@ private:
 	bool paramsReady_ = false;
 	bool padOverride_ = false;
 	uint32_t padFill_ = 0;
+	int dbgColor_ = -1, dbgStage_ = -1;
 
 	// CPU-side topology and the arrays that seed the GPU buffers.
 	std::vector<uint32_t> vertPerm_, colorOffsets_{ 0u, 0u };

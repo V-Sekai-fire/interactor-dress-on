@@ -83,7 +83,7 @@ our own, no host DLL. The GPU is reachable only through Godot's
 
 ## Conventions
 
-- Commit messages: plain prose, what and why, the numbers. **No Claude
+- Commit messages: plain prose, five whys, the numbers. **No Claude
   annotations** — no `Co-Authored-By`/`Claude-Session` trailers, no
   assistant attributions in files.
 - Plan of record: `~/.claude/plans/declarative-soaring-cake.md` (the user's

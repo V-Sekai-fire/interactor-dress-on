@@ -193,6 +193,10 @@ func _opts() -> Dictionary:
 		o.fit_incremental_steps = int(_arg("fit-incremental-steps"))
 	if _args.has("fit-max-iterations"):
 		o.fit_max_iterations = int(_arg("fit-max-iterations"))
+	if _arg("fit-grad-norm") != "":
+		o.fit_grad_norm = float(_arg("fit-grad-norm")) # the reduced solve's stop (pipeline.gd fit_grad_norm)
+	if _arg("fit-force-psd") != "":
+		o.fit_force_psd = _arg("fit-force-psd") in ["1", "true", "on"]
 	if _arg("gate", "loop") == "pen":
 		o.stop_after = "MESH"
 	return o

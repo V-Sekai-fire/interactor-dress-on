@@ -44,6 +44,12 @@ public:
 	virtual void setPrims(const std::vector<Primitive> &prims) = 0;
 	virtual void rewind() = 0;
 	virtual void enqueueForward(jobs::StageQueue &q, int steps) = 0;
+	// The fit phase (Cut 6d): up to maxSteps steps with gravity off and no
+	// velocity carried (damp 0, quasi-static), the scene's fit attachments
+	// refreshed (DrapeSimT fit mode); stops early once the largest vertex
+	// move of a refresh cycle's last step is under tol. Gravity and damp
+	// are restored after it. Needs a fit set (scene_fit_set).
+	virtual void enqueueFit(jobs::StageQueue &q, int maxSteps, double tol) = 0;
 	virtual void enqueueBackward(jobs::StageQueue &q, DrapeLoss loss, DrapeMode mode) = 0;
 	virtual DrapeTarget &target() = 0;
 	// The recorded frames as a MATCH_TRAJECTORY target.
@@ -222,6 +228,129 @@ public:
 				  "self_pushes=%zu wall_ms=%.1f ms/step=%.3f%s%s",
 				okFlag ? "DONE" : "FAIL", backend(), sim->steps(), done, fwdAsked, fin ? "yes" : "NO", ymin, fric, proj,
 				pushes, wall_ms, done ? wall_ms / double(done) : 0.0, sim->failed ? " error=" : "",
+				sim->failed ? sim->err.c_str() : "");
+	}
+
+	// --- the fit phase (Cut 6d) ---
+	double fitTol = 0.0;
+	double fitGravity[3] = { 0.0, 0.0, 0.0 };
+	float fitDamp = 1.0f;
+	bool fitConverged = false;
+	int fitStepsDone = 0, settleDone = 0;
+
+	void enqueueFit(jobs::StageQueue &q, int maxSteps, double tol) override {
+		jobs::StageQueue *qp = &q;
+		q.push([this, qp, maxSteps, tol]() {
+			if (!sim) {
+				res = "FAIL fit: no scene";
+				okFlag = false;
+				return;
+			}
+			if (sim->scene.nFit == 0) {
+				res = "FAIL fit: no fit set (drape_fit_set first)";
+				okFlag = false;
+				return;
+			}
+			for (int k = 0; k < 3; ++k) {
+				fitGravity[k] = sim->cfg.gravity[k];
+				sim->cfg.gravity[k] = 0.0;
+			}
+			fitDamp = sim->cfg.damp;
+			sim->cfg.damp = 0.0f;
+			sim->fitActive = true;
+			sim->fitSettling = false;
+			sim->fitSteps = 0;
+			fitStepsDone = 0;
+			settleDone = 0;
+			sim->fitRefreshed = 0;
+			sim->fitMisses = 0;
+			sim->fitRest0 = sim->scene.rest;
+			sim->fitSim = Similarity();
+			sim->fitRestUpdates = 0;
+			fitTol = tol;
+			fitConverged = false;
+			fwdRemaining = maxSteps;
+			fwdAsked = maxSteps;
+			fwdFrom = sim->steps();
+			t0 = now();
+			xPrev = sim->x;
+			fitStage(*qp);
+		});
+	}
+
+	void fitStage(jobs::StageQueue &q) {
+		if (fwdRemaining > 0 && !sim->failed) {
+			if (sim->advance()) {
+				--fwdRemaining;
+				if (onStep) {
+					onStep(sim->recs.back(), xPrev);
+				}
+				xPrev = sim->x;
+				if (sim->fitSettling) {
+					++settleDone;
+				} else {
+					++fitStepsDone;
+					// The stop test on the last step of a refresh cycle only: the
+					// step after a refresh moves toward new targets.
+					const uint32_t r = uint32_t(std::max(1, sim->scene.fitRefresh));
+					if (sim->fitSteps % r == 0 && sim->lastMaxDisp < fitTol) {
+						fitConverged = true;
+					}
+				}
+			}
+		}
+		const bool fitOver = sim->failed || fitConverged || fwdRemaining <= 0;
+		if (fitOver && !sim->fitSettling && !sim->failed && sim->scene.fitSettle > 0) {
+			// The settle: the fit pull off, targets frozen, the pins, the
+			// anchor and the collider on.
+			sim->fitSettling = true;
+			sim->setFitPull(false);
+			fwdRemaining = sim->scene.fitSettle;
+		}
+		if (fwdRemaining > 0 && !sim->failed) {
+			jobs::StageQueue *qp = &q;
+			q.next([this, qp]() { fitStage(*qp); });
+			return;
+		}
+		if (sim->fitSettling) {
+			sim->setFitPull(true);
+			sim->fitSettling = false;
+		}
+		finishFit();
+	}
+
+	void finishFit() {
+		const double wall_ms = double(now() - t0) / 1000.0;
+		const size_t done = sim->steps() - fwdFrom;
+		for (int k = 0; k < 3; ++k) {
+			sim->cfg.gravity[k] = fitGravity[k];
+		}
+		sim->cfg.damp = fitDamp;
+		sim->fitActive = false;
+		size_t proj = 0, pushes = 0;
+		for (size_t k = fwdFrom; k < sim->steps(); ++k) {
+			proj += sim->recs[k].projHits;
+			pushes += sim->recs[k].pushes.size();
+		}
+		const bool fin = sim->finite();
+		okFlag = !sim->failed && fin && done > 0;
+		float ymin = INFINITY, ymax = -INFINITY;
+		for (uint32_t i = 0; i < sim->scene.nV; ++i) {
+			ymin = std::min(ymin, sim->x[3 * i + 1]);
+			ymax = std::max(ymax, sim->x[3 * i + 1]);
+		}
+		res = drape_fmt("%s fit %s steps=%zu (+%zu of %d, settle %d of %d) converged=%s max_disp=%.3g tol=%g refreshed=%u "
+				  "misses=%u dist_min=%.4f dist_mean=%.4f gap=%g kFit=%g fit=%u pins=%u iters=%d h=%.6g similarity=%d "
+				  "rest_every=%d rest_updates=%u anchor=%zu anchor_k=%g anchor_shift=%.4f sim_s=%.4f sim_rot_deg=%.3f y=%.4f..%.4f "
+				  "finite=%s projections=%zu self_pushes=%zu wall_ms=%.1f ms/step=%.3f%s%s",
+				okFlag ? "DONE" : "FAIL", backend(), sim->steps(), size_t(fitStepsDone), fwdAsked, settleDone,
+				sim->scene.fitSettle, fitConverged ? "yes" : "no",
+				sim->lastMaxDisp, fitTol, sim->fitRefreshed, sim->fitMisses, sim->lastFitDistMin, sim->lastFitDistMean,
+				sim->scene.fitGap, sim->scene.fitK, sim->scene.nFit, sim->scene.nPin(), sim->cfg.iters, sim->cfg.h,
+				int(sim->scene.fitSimilarity), sim->scene.fitRestEvery, sim->fitRestUpdates, sim->scene.fitAnchor.size(),
+				sim->scene.anchorK, sim->lastAnchorShift,
+				sim->fitSim.s, sim->fitSim.angle() * 57.29577951308232, ymin, ymax, fin ? "yes" : "NO", proj, pushes,
+				wall_ms, done ? wall_ms / double(done) : 0.0, sim->failed ? " error=" : "",
 				sim->failed ? sim->err.c_str() : "");
 	}
 

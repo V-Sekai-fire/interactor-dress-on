@@ -372,6 +372,89 @@ static Variant drape_queue_forward(int steps) {
 	return text("QUEUED forward " + std::to_string(steps) + " on " + g_sess->backend());
 }
 
+// Cut 6d, the fit mode. The fit set of the loaded scene_mesh scene: one fit
+// attachment per listed vertex (the loop lists every garment vertex not in
+// its nofit set), pulling it toward the mesh collider's nearest surface point
+// (+ gap along the outward normal, 0 in the loop) at kFit times the vertex's
+// lumped area; params [kFit, gap, refresh, similarity, restEvery, settle,
+// kAnchor], any prefix (600, 0, 1, 0, 4, 0, 100); similarity != 0 re-fits
+// the rest shape every restEvery steps (drape_scene.h fitSimilarity) about
+// the centroid of `anchor` (the waist loop, whose centre is held at its
+// source position by a second attachment per vertex at kAnchor; empty = no
+// hold, the garment's own centroid); settle = steps with the pull off after
+// the fit. Re-uploads (the attachments change) on the next queue.
+static Variant drape_fit_set(PackedInt32Array verts_a, PackedFloat32Array params_a, PackedInt32Array anchor_a) {
+	free_parked_sessions();
+	if (!g_scene_set || g_scene.name != "mesh") {
+		return text("FAIL: no scene_mesh scene (drape_scene_mesh first)");
+	}
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	const std::vector<float> p = params_a.fetch();
+	double k = 600.0, gap = 0.0;
+	int refresh = 1;
+	if (p.size() > 0) {
+		k = p[0];
+	}
+	if (p.size() > 1) {
+		gap = p[1];
+	}
+	if (p.size() > 2) {
+		refresh = int(p[2]);
+	}
+	const bool similarity = p.size() > 3 && p[3] != 0.0f;
+	const int restEvery = p.size() > 4 ? int(p[4]) : 4;
+	const int settle = p.size() > 5 ? int(p[5]) : 0;
+	const double kAnchor = p.size() > 6 ? p[6] : 100.0;
+	std::string err;
+	if (!scene_fit_set(g_scene, verts_a.fetch(), k, gap, refresh, similarity, anchor_a.fetch(), restEvery, settle, kAnchor,
+				err)) {
+		return text("FAIL: " + err);
+	}
+	g_dirty = true;
+	double amin = INFINITY, amax = 0.0, asum = 0.0;
+	for (uint32_t a = g_scene.nPin(); a < g_scene.nAttach(); ++a) {
+		const double av = g_scene.vertArea[g_scene.attachVert[a]];
+		amin = std::min(amin, av);
+		amax = std::max(amax, av);
+		asum += av;
+	}
+	return text(drape_fmt("FIT SET fit=%u pins=%u kFit=%g gap=%g refresh=%d similarity=%d rest_every=%d settle=%d anchor=%u "
+			  "kAnchor=%g vertex_area min=%.4g mean=%.4g max=%.4g (k per vertex = kFit x area; re-uploads on the next queue)",
+			g_scene.nFit, g_scene.nPin(), k, gap, refresh, int(similarity), restEvery, settle, g_scene.nAnchorAtt, kAnchor,
+			g_scene.nFit ? amin : 0.0, g_scene.nFit ? asum / g_scene.nFit : 0.0, amax));
+}
+
+// Queue the fit phase: up to max_steps steps with gravity off and damp 0,
+// the fit targets refreshed every `refresh` steps from the mesh collider,
+// stopping once the largest vertex move of a refresh cycle's last step is
+// under tol (drape units). drape_tick runs it; drape_positions has the result.
+static Variant drape_queue_fit(int max_steps, double tol) {
+	free_parked_sessions();
+	if (!g_sess || !g_scene_set) {
+		return text("FAIL: no scene (drape_scene_mesh)");
+	}
+	if (max_steps < 1 || !(tol >= 0.0)) {
+		return text("FAIL: max_steps >= 1 and tol >= 0");
+	}
+	if (g_scene.nFit == 0) {
+		return text("FAIL: no fit set (drape_fit_set first)");
+	}
+	if (g_dirty) {
+		if (session_busy()) {
+			return text("BUSY: a changed knob needs a re-upload; tick the queue empty first");
+		}
+		const std::string r = load_scene();
+		if (r.rfind("FAIL", 0) == 0) {
+			return text(r);
+		}
+	}
+	g_sess->enqueueFit(g_q, max_steps, tol);
+	g_opt_last = false;
+	return text("QUEUED fit " + std::to_string(max_steps) + " on " + g_sess->backend());
+}
+
 // kind: trajectory (the recorded frames become the MATCH_TRAJECTORY target)
 // | points (verts, pos = 3 per vert, frame -1 = last) | clear.
 static Variant drape_set_target(String kind_s, PackedInt32Array verts_a, PackedFloat32Array pos_a, int frame) {
@@ -890,6 +973,10 @@ int main() {
 			"Add a triangle-mesh body collider; params = [skin, mu, band, depth]");
 	ADD_API_FUNCTION(drape_config, "String", "String key, double value", "Set a DrapeConfig knob; returns the config line");
 	ADD_API_FUNCTION(drape_queue_forward, "String", "int steps", "Queue steps (0 rewinds to the initial state)");
+	ADD_API_FUNCTION(drape_fit_set, "String", "PackedInt32Array verts, PackedFloat32Array params, PackedInt32Array anchor",
+			"The fit set: vertices pulled to the body collider's surface at kFit x vertex area; params = [kFit, gap, refresh, similarity, restEvery, settle, kAnchor]; anchor = the loop whose centre is held at its source position");
+	ADD_API_FUNCTION(drape_queue_fit, "String", "int max_steps, double tol",
+			"Queue the fit phase (gravity off, targets refreshed) until the largest move per step is under tol");
 	ADD_API_FUNCTION(drape_set_target, "String", "String kind, PackedInt32Array verts, PackedFloat32Array positions, int frame",
 			"Target: trajectory (the recorded frames) | points | clear");
 	ADD_API_FUNCTION(drape_queue_backward, "String", "String loss, String mode",

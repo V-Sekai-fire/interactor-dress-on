@@ -66,6 +66,16 @@ public:
 	void setPenaltyRamp(float beta, float penaltyMax);
 	void updateState(const float *positions, const float *predicted);
 	void updateAttachmentFixedPos(const float *fixedPos);
+	// The rest-shape update (Cut 6d's similarity fit): new rest metrics,
+	// stiffnesses and radii on the SAME topology, written into the existing
+	// buffers (buffer_update). No RID is created and no uniform set is rebuilt:
+	// a re-upload costs ~300 permanent RID slots (buffers + kernels x colours
+	// sets), and the sandbox's permanent table filled after ~600 of them
+	// (Gate 6d pass 3). The duals keep their values; gamma follows k.
+	void updateTriangleRest(const float *invUV, const float *stiffness);
+	void updateBendingRest(const float *weight, const float *nTarget, const float *stiffness);
+	void updateAttachmentStiffness(const float *stiffness);
+	void updateSelfCollisionRadii(const float *radii);
 
 	// One outer iteration: record every colour, submit, return. -1 if not set up.
 	int step();

@@ -12,6 +12,7 @@ if [ "${SAN:-0}" = 1 ]; then FLAGS="$FLAGS -fsanitize=address,undefined -fno-omi
 "$CXX" $FLAGS \
 	-I"$ROOT/guest/drape" -I"$ROOT/guest" -I"$ROOT/guest/avbd" -I"$ROOT/kernels/avbd/cpp" -I"$ROOT/guest/avbd/slang-rt" \
 	"$HERE/drape_host.cpp" "$ROOT/guest/jobs.cpp" "$ROOT/guest/drape/drape_scene.cpp" "$ROOT/guest/drape/primitives.cpp" \
+	"$ROOT/guest/drape/body_mesh.cpp" \
 	"$ROOT/guest/avbd/avbd_cpu.cpp" "$ROOT/guest/avbd/avbd_cpu_backward.cpp" "$ROOT/guest/avbd/avbd_topology.cpp" \
 	-o "$OUT/drape_host"
 echo "$OUT/drape_host"

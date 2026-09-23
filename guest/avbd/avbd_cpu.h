@@ -21,6 +21,12 @@ public:
 
 	void buildColoring();
 
+	// The rest-shape update on the same topology (the rd solver's twins).
+	void updateTriangleRest(const float *invUV, const float *stiffness);
+	void updateBendingRest(const float *weight, const float *nTarget, const float *stiffness);
+	void updateAttachmentStiffness(const float *stiffness);
+	void updateSelfCollisionRadii(const float *radii);
+
 	void setGammaScale(float scale);
 	// AVBD Eq. 16 penalty ramp for the dual updates; beta = 0 (default) is
 	// the fixed-gamma behaviour.
@@ -165,6 +171,7 @@ private:
 	std::vector<float> vBendGrad_, vBendHess_, vBendP_, vBendN_, vBendStiff_, vBendLambda_;
 	// Self-collision.
 	std::vector<float> radii_;
+	float gammaScale_ = 1.0f; // the product of setGammaScale calls (the update paths re-derive gamma from k)
 	std::vector<uint32_t> neighbors_;
 	uint32_t selfK_ = 0;
 };

@@ -482,6 +482,52 @@ void AvbdRd::updateAttachmentFixedPos(const float *fixedPos) {
 	update_v3(at_fixed_, fixedPos, nAttach_);
 }
 
+void AvbdRd::updateTriangleRest(const float *invUV, const float *stiffness) {
+	if (nTri_ == 0 || !tri_invuv_.valid()) {
+		return;
+	}
+	update_f32(tri_invuv_, std::vector<float>(invUV, invUV + 4 * size_t(nTri_)));
+	update_f32(tri_k_, std::vector<float>(stiffness, stiffness + nTri_));
+	triGamma_.assign(stiffness, stiffness + nTri_);
+	for (float &g : triGamma_) {
+		g *= gammaScale_;
+	}
+	update_f32(tri_gamma_, triGamma_);
+}
+
+void AvbdRd::updateBendingRest(const float *weight, const float *nTarget, const float *stiffness) {
+	if (nBend_ == 0 || !bd_w_.valid()) {
+		return;
+	}
+	update_f32(bd_w_, std::vector<float>(weight, weight + 4 * size_t(nBend_)));
+	update_f32(bd_n_, std::vector<float>(nTarget, nTarget + nBend_));
+	update_f32(bd_k_, std::vector<float>(stiffness, stiffness + nBend_));
+	bendGamma_.assign(stiffness, stiffness + nBend_);
+	for (float &g : bendGamma_) {
+		g *= gammaScale_;
+	}
+	update_f32(bd_gamma_, bendGamma_);
+}
+
+void AvbdRd::updateAttachmentStiffness(const float *stiffness) {
+	if (nAttach_ == 0 || !at_k_.valid()) {
+		return;
+	}
+	update_f32(at_k_, std::vector<float>(stiffness, stiffness + nAttach_));
+	attachGamma_.assign(stiffness, stiffness + nAttach_);
+	for (float &g : attachGamma_) {
+		g *= gammaScale_;
+	}
+	update_f32(at_gamma_, attachGamma_);
+}
+
+void AvbdRd::updateSelfCollisionRadii(const float *radii) {
+	if (!meshReady_ || !radii_.valid()) {
+		return;
+	}
+	update_f32(radii_, std::vector<float>(radii, radii + nVerts_));
+}
+
 // --- params and uniform sets ------------------------------------------------
 
 void AvbdRd::ensure_params() {

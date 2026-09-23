@@ -144,3 +144,11 @@ Primitive make_capsule(const v3d &bottom, const v3d &axis, double radius, double
 // the surface, less `skin`, is below `band`; points deeper than `depth`
 // inside are not seen.
 Primitive make_mesh_collider(std::shared_ptr<const BodyMesh> body, double skin, double band, double depth, double mu);
+
+// The fit target of `pos` against a mesh collider (Cut 6d, the drape's fit
+// mode): the body's surface point nearest `pos`, moved `gap` out along the
+// outward normal there (the pseudo-normal's side decides in or out, so a
+// point inside the body is sent outside). `signedDist` is the surface
+// distance, negative inside. False when the primitive is not a mesh or no
+// triangle lies within `reach`.
+bool mesh_fit_target(const Primitive &pr, const v3d &pos, double gap, double reach, v3d &target, double &signedDist);

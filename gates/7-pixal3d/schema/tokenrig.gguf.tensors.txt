@@ -1,0 +1,347 @@
+# file: models/SkinTokens-GGUF/F16/tokenrig.gguf
+# bytes: 948562656
+# kv_count: 13  tensor_count: 311
+## KV metadata (key, type, value)
+GGUF.version	UINT32 = 3
+GGUF.tensor_count	UINT64 = 311
+GGUF.kv_count	UINT64 = 10
+general.architecture	STRING = skintokens
+general.name	STRING = SkinTokens TokenRig
+general.alignment	UINT32 = 32
+general.file_type	UINT32 = 1
+skintokens.format_version	UINT32 = 1
+skintokens.component	STRING = tokenrig
+skintokens.upstream_revision	STRING = 273b691d35989d71cd17ff2895fdc735097b92d1
+skintokens.tokenrig_sha256	STRING = 31950785d46879cf795dea54657061f405d3bff81f37803a956cc26060ac7a2f
+skintokens.skin_vae_sha256	STRING = df8ddf56dd002984c19d6d18a4d6b1d44e0a17ddf5d91766f2c7befcecfa8782
+skintokens.config_json	STRING = {"skin_vae":{"add_num":false,"export_diff":true,"log_grad_norm":false,"loss_config":{"bce_loss":1.0,"dice_loss":1.0,"iou_001":0,"iou_010":0,"iou_100":0,"mask_accu_001":0,"mask_accu_005":0,"mask_accu_010":0,"mask_accu_050":0,"skin_l1_loss":0,"skin_non_zero_smooth_l1_loss":1.0,"skin_smooth_l1_loss":1.0,"skin_zero_smooth_l1_loss":2.0,"utilization":0},"model_config":{"model":{"FSQ_dict":{"dim":512,"levels":[8,8,8,8,8]},"cond_channels":3,"embed_frequency":8,"embed_include_pi":true,"embedding_type":"frequency","in_channels":4,"is_learned_queries":true,"latent_channels":512,"num_attention_heads":12,"num_layers_decoder":10,"num_layers_encoder":2,"use_pmpe":true,"width_decoder":768,"width_encoder":768},"sample":{"compress_tokens":32,"cond_tokens":384,"sample_tokens":32}},"optimizer_config":{"__target__":"muon","hidden_lr":0.001,"hidden_weight_decay":0.01,"nonhidden_betas":[0.9,0.9],"nonhidden_lr":0.0002,"nonhidden_weight_decay":0.01},"output_dir":"tmp_vae","predict":true,"save_name":"res","scheduler_config":{"epochs":800,"hidden_div_factor":2.0,"hidden_final_div_factor":100.0,"hidden_max_lr":0.001,"hidden_pct_start":0.01,"nonhidden_div_factor":2.0,"nonhidden_final_div_factor":100.0,"nonhidden_max_lr":0.0002,"nonhidden_pct_start":0.01,"steps_per_epoch":1250},"steps_per_epoch":1250,"tokenizer_config":null,"transform_config":{"order":{"skeleton_path":{"mixamo":"./configs/skeleton/mixamo.yaml","vroid":"./configs/skeleton/vroid.yaml"}},"predict_transform":{"augments":[{"__target__":"affine","normalize_into":[-1.0,1.0]},{"__target__":"normalize"}],"order":{"skeleton_path":{"mixamo":"./configs/skeleton/mixamo.yaml","vroid":"./configs/skeleton/vroid.yaml"}},"sampler":{"__target__":"mix","all_skeleton":true,"max_distance":0.1,"num_samples":54000,"num_skin_samples":32768,"num_vertex_samples":16384,"rate_distance":0.1},"vertex_groups":[{"__target__":"skin"}]},"random_pose_angle":30.0,"train_transform":{"augments":[{"__target__":"collapse","p":0.5,"rate":0.5},{"__target__":"drop_part","... (len 7507)
+## tensors (name, type, ne=ggml order, torch=reversed, n_bytes)
+llm.out.w	F16	ne=[896, 33036]	torch=[33036, 896]	59200512
+llm.tok.w	F32	ne=[896, 33036]	torch=[33036, 896]	118401024
+llm.l.0.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.0.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.0.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.0.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.0.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.0.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.0.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.0.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.0.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.0.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.0.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.1.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.1.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.1.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.1.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.1.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.1.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.1.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.1.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.1.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.1.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.1.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.10.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.10.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.10.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.10.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.10.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.10.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.10.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.10.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.10.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.10.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.10.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.11.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.11.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.11.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.11.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.11.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.11.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.11.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.11.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.11.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.11.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.11.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.12.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.12.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.12.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.12.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.12.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.12.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.12.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.12.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.12.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.12.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.12.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.13.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.13.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.13.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.13.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.13.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.13.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.13.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.13.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.13.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.13.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.13.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.14.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.14.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.14.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.14.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.14.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.14.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.14.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.14.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.14.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.14.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.14.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.15.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.15.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.15.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.15.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.15.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.15.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.15.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.15.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.15.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.15.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.15.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.16.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.16.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.16.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.16.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.16.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.16.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.16.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.16.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.16.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.16.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.16.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.17.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.17.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.17.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.17.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.17.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.17.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.17.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.17.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.17.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.17.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.17.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.18.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.18.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.18.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.18.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.18.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.18.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.18.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.18.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.18.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.18.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.18.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.19.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.19.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.19.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.19.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.19.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.19.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.19.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.19.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.19.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.19.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.19.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.2.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.2.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.2.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.2.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.2.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.2.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.2.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.2.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.2.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.2.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.2.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.20.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.20.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.20.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.20.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.20.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.20.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.20.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.20.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.20.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.20.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.20.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.21.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.21.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.21.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.21.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.21.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.21.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.21.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.21.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.21.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.21.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.21.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.22.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.22.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.22.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.22.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.22.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.22.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.22.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.22.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.22.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.22.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.22.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.23.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.23.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.23.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.23.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.23.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.23.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.23.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.23.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.23.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.23.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.23.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.24.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.24.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.24.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.24.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.24.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.24.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.24.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.24.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.24.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.24.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.24.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.25.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.25.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.25.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.25.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.25.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.25.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.25.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.25.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.25.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.25.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.25.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.26.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.26.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.26.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.26.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.26.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.26.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.26.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.26.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.26.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.26.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.26.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.27.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.27.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.27.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.27.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.27.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.27.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.27.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.27.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.27.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.27.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.27.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.3.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.3.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.3.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.3.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.3.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.3.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.3.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.3.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.3.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.3.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.3.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.4.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.4.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.4.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.4.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.4.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.4.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.4.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.4.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.4.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.4.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.4.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.5.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.5.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.5.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.5.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.5.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.5.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.5.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.5.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.5.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.5.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.5.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.6.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.6.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.6.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.6.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.6.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.6.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.6.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.6.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.6.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.6.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.6.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.7.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.7.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.7.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.7.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.7.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.7.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.7.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.7.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.7.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.7.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.7.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.8.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.8.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.8.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.8.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.8.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.8.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.8.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.8.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.8.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.8.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.8.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.9.an.w	F32	ne=[896]	torch=[896]	3584
+llm.l.9.mlp.d.w	F16	ne=[3072, 896]	torch=[896, 3072]	5505024
+llm.l.9.mlp.g.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.9.mlp.u.w	F16	ne=[896, 3072]	torch=[3072, 896]	5505024
+llm.l.9.fn.w	F32	ne=[896]	torch=[896]	3584
+llm.l.9.attn.k_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.9.attn.k.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.l.9.attn.o.w	F16	ne=[2048, 896]	torch=[896, 2048]	3670016
+llm.l.9.attn.q_norm.w	F32	ne=[128]	torch=[128]	512
+llm.l.9.attn.q.w	F16	ne=[896, 2048]	torch=[2048, 896]	3670016
+llm.l.9.attn.v.w	F16	ne=[896, 1024]	torch=[1024, 896]	1835008
+llm.norm.w	F32	ne=[896]	torch=[896]	3584
+## type counts (type, tensors, bytes)
+F16	197	829903872
+F32	114	118633984
+## name patterns (block index collapsed to #)
+llm.l.#.an.w	28
+llm.l.#.attn.k.w	28
+llm.l.#.attn.k_norm.w	28
+llm.l.#.attn.o.w	28
+llm.l.#.attn.q.w	28
+llm.l.#.attn.q_norm.w	28
+llm.l.#.attn.v.w	28
+llm.l.#.fn.w	28
+llm.l.#.mlp.d.w	28
+llm.l.#.mlp.g.w	28
+llm.l.#.mlp.u.w	28
+llm.norm.w	1
+llm.out.w	1
+llm.tok.w	1

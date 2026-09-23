@@ -4,3 +4,6 @@ build*/
 *.lib
 .cpm-cache/
 tools/openxr-simulator/
+tools/oxrsys/
+/models/
+/.venv-convert/

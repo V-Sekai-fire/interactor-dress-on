@@ -1,0 +1,740 @@
+# source: TencentARC/Pixal3D@b0cb2e1b794cab9aa0ac38a95d794a4d9337437f/ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors (header only, HTTP range)
+# header_bytes: 77520  tensor_count: 701
+## __metadata__
+(none)
+## tensors (name, dtype, shape, n_bytes)
+adaLN_modulation.1.bias	F32	[9216]	36864
+adaLN_modulation.1.weight	F32	[9216, 1536]	56623104
+blocks.0.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.0.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.0.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.0.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.0.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.0.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.0.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.0.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.0.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.0.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.0.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.0.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.0.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.0.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.0.modulation	F32	[9216]	36864
+blocks.0.norm2.bias	F32	[1536]	6144
+blocks.0.norm2.weight	F32	[1536]	6144
+blocks.0.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.0.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.0.self_attn.to_out.bias	F32	[1536]	6144
+blocks.0.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.0.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.0.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.1.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.1.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.1.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.1.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.1.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.1.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.1.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.1.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.1.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.1.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.1.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.1.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.1.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.1.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.1.modulation	F32	[9216]	36864
+blocks.1.norm2.bias	F32	[1536]	6144
+blocks.1.norm2.weight	F32	[1536]	6144
+blocks.1.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.1.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.1.self_attn.to_out.bias	F32	[1536]	6144
+blocks.1.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.1.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.1.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.10.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.10.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.10.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.10.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.10.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.10.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.10.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.10.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.10.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.10.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.10.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.10.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.10.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.10.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.10.modulation	F32	[9216]	36864
+blocks.10.norm2.bias	F32	[1536]	6144
+blocks.10.norm2.weight	F32	[1536]	6144
+blocks.10.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.10.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.10.self_attn.to_out.bias	F32	[1536]	6144
+blocks.10.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.10.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.10.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.11.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.11.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.11.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.11.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.11.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.11.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.11.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.11.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.11.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.11.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.11.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.11.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.11.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.11.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.11.modulation	F32	[9216]	36864
+blocks.11.norm2.bias	F32	[1536]	6144
+blocks.11.norm2.weight	F32	[1536]	6144
+blocks.11.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.11.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.11.self_attn.to_out.bias	F32	[1536]	6144
+blocks.11.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.11.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.11.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.12.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.12.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.12.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.12.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.12.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.12.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.12.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.12.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.12.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.12.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.12.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.12.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.12.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.12.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.12.modulation	F32	[9216]	36864
+blocks.12.norm2.bias	F32	[1536]	6144
+blocks.12.norm2.weight	F32	[1536]	6144
+blocks.12.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.12.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.12.self_attn.to_out.bias	F32	[1536]	6144
+blocks.12.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.12.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.12.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.13.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.13.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.13.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.13.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.13.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.13.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.13.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.13.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.13.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.13.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.13.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.13.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.13.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.13.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.13.modulation	F32	[9216]	36864
+blocks.13.norm2.bias	F32	[1536]	6144
+blocks.13.norm2.weight	F32	[1536]	6144
+blocks.13.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.13.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.13.self_attn.to_out.bias	F32	[1536]	6144
+blocks.13.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.13.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.13.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.14.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.14.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.14.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.14.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.14.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.14.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.14.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.14.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.14.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.14.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.14.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.14.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.14.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.14.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.14.modulation	F32	[9216]	36864
+blocks.14.norm2.bias	F32	[1536]	6144
+blocks.14.norm2.weight	F32	[1536]	6144
+blocks.14.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.14.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.14.self_attn.to_out.bias	F32	[1536]	6144
+blocks.14.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.14.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.14.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.15.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.15.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.15.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.15.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.15.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.15.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.15.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.15.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.15.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.15.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.15.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.15.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.15.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.15.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.15.modulation	F32	[9216]	36864
+blocks.15.norm2.bias	F32	[1536]	6144
+blocks.15.norm2.weight	F32	[1536]	6144
+blocks.15.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.15.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.15.self_attn.to_out.bias	F32	[1536]	6144
+blocks.15.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.15.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.15.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.16.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.16.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.16.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.16.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.16.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.16.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.16.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.16.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.16.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.16.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.16.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.16.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.16.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.16.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.16.modulation	F32	[9216]	36864
+blocks.16.norm2.bias	F32	[1536]	6144
+blocks.16.norm2.weight	F32	[1536]	6144
+blocks.16.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.16.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.16.self_attn.to_out.bias	F32	[1536]	6144
+blocks.16.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.16.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.16.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.17.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.17.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.17.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.17.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.17.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.17.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.17.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.17.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.17.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.17.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.17.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.17.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.17.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.17.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.17.modulation	F32	[9216]	36864
+blocks.17.norm2.bias	F32	[1536]	6144
+blocks.17.norm2.weight	F32	[1536]	6144
+blocks.17.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.17.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.17.self_attn.to_out.bias	F32	[1536]	6144
+blocks.17.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.17.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.17.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.18.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.18.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.18.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.18.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.18.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.18.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.18.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.18.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.18.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.18.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.18.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.18.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.18.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.18.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.18.modulation	F32	[9216]	36864
+blocks.18.norm2.bias	F32	[1536]	6144
+blocks.18.norm2.weight	F32	[1536]	6144
+blocks.18.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.18.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.18.self_attn.to_out.bias	F32	[1536]	6144
+blocks.18.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.18.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.18.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.19.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.19.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.19.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.19.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.19.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.19.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.19.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.19.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.19.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.19.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.19.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.19.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.19.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.19.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.19.modulation	F32	[9216]	36864
+blocks.19.norm2.bias	F32	[1536]	6144
+blocks.19.norm2.weight	F32	[1536]	6144
+blocks.19.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.19.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.19.self_attn.to_out.bias	F32	[1536]	6144
+blocks.19.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.19.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.19.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.2.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.2.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.2.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.2.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.2.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.2.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.2.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.2.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.2.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.2.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.2.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.2.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.2.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.2.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.2.modulation	F32	[9216]	36864
+blocks.2.norm2.bias	F32	[1536]	6144
+blocks.2.norm2.weight	F32	[1536]	6144
+blocks.2.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.2.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.2.self_attn.to_out.bias	F32	[1536]	6144
+blocks.2.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.2.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.2.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.20.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.20.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.20.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.20.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.20.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.20.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.20.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.20.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.20.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.20.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.20.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.20.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.20.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.20.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.20.modulation	F32	[9216]	36864
+blocks.20.norm2.bias	F32	[1536]	6144
+blocks.20.norm2.weight	F32	[1536]	6144
+blocks.20.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.20.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.20.self_attn.to_out.bias	F32	[1536]	6144
+blocks.20.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.20.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.20.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.21.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.21.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.21.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.21.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.21.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.21.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.21.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.21.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.21.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.21.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.21.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.21.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.21.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.21.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.21.modulation	F32	[9216]	36864
+blocks.21.norm2.bias	F32	[1536]	6144
+blocks.21.norm2.weight	F32	[1536]	6144
+blocks.21.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.21.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.21.self_attn.to_out.bias	F32	[1536]	6144
+blocks.21.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.21.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.21.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.22.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.22.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.22.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.22.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.22.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.22.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.22.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.22.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.22.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.22.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.22.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.22.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.22.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.22.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.22.modulation	F32	[9216]	36864
+blocks.22.norm2.bias	F32	[1536]	6144
+blocks.22.norm2.weight	F32	[1536]	6144
+blocks.22.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.22.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.22.self_attn.to_out.bias	F32	[1536]	6144
+blocks.22.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.22.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.22.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.23.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.23.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.23.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.23.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.23.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.23.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.23.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.23.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.23.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.23.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.23.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.23.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.23.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.23.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.23.modulation	F32	[9216]	36864
+blocks.23.norm2.bias	F32	[1536]	6144
+blocks.23.norm2.weight	F32	[1536]	6144
+blocks.23.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.23.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.23.self_attn.to_out.bias	F32	[1536]	6144
+blocks.23.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.23.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.23.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.24.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.24.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.24.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.24.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.24.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.24.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.24.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.24.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.24.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.24.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.24.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.24.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.24.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.24.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.24.modulation	F32	[9216]	36864
+blocks.24.norm2.bias	F32	[1536]	6144
+blocks.24.norm2.weight	F32	[1536]	6144
+blocks.24.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.24.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.24.self_attn.to_out.bias	F32	[1536]	6144
+blocks.24.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.24.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.24.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.25.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.25.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.25.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.25.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.25.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.25.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.25.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.25.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.25.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.25.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.25.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.25.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.25.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.25.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.25.modulation	F32	[9216]	36864
+blocks.25.norm2.bias	F32	[1536]	6144
+blocks.25.norm2.weight	F32	[1536]	6144
+blocks.25.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.25.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.25.self_attn.to_out.bias	F32	[1536]	6144
+blocks.25.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.25.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.25.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.26.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.26.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.26.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.26.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.26.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.26.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.26.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.26.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.26.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.26.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.26.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.26.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.26.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.26.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.26.modulation	F32	[9216]	36864
+blocks.26.norm2.bias	F32	[1536]	6144
+blocks.26.norm2.weight	F32	[1536]	6144
+blocks.26.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.26.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.26.self_attn.to_out.bias	F32	[1536]	6144
+blocks.26.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.26.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.26.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.27.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.27.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.27.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.27.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.27.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.27.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.27.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.27.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.27.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.27.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.27.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.27.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.27.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.27.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.27.modulation	F32	[9216]	36864
+blocks.27.norm2.bias	F32	[1536]	6144
+blocks.27.norm2.weight	F32	[1536]	6144
+blocks.27.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.27.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.27.self_attn.to_out.bias	F32	[1536]	6144
+blocks.27.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.27.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.27.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.28.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.28.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.28.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.28.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.28.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.28.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.28.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.28.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.28.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.28.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.28.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.28.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.28.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.28.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.28.modulation	F32	[9216]	36864
+blocks.28.norm2.bias	F32	[1536]	6144
+blocks.28.norm2.weight	F32	[1536]	6144
+blocks.28.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.28.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.28.self_attn.to_out.bias	F32	[1536]	6144
+blocks.28.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.28.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.28.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.29.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.29.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.29.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.29.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.29.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.29.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.29.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.29.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.29.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.29.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.29.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.29.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.29.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.29.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.29.modulation	F32	[9216]	36864
+blocks.29.norm2.bias	F32	[1536]	6144
+blocks.29.norm2.weight	F32	[1536]	6144
+blocks.29.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.29.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.29.self_attn.to_out.bias	F32	[1536]	6144
+blocks.29.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.29.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.29.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.3.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.3.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.3.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.3.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.3.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.3.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.3.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.3.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.3.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.3.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.3.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.3.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.3.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.3.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.3.modulation	F32	[9216]	36864
+blocks.3.norm2.bias	F32	[1536]	6144
+blocks.3.norm2.weight	F32	[1536]	6144
+blocks.3.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.3.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.3.self_attn.to_out.bias	F32	[1536]	6144
+blocks.3.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.3.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.3.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.4.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.4.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.4.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.4.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.4.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.4.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.4.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.4.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.4.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.4.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.4.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.4.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.4.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.4.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.4.modulation	F32	[9216]	36864
+blocks.4.norm2.bias	F32	[1536]	6144
+blocks.4.norm2.weight	F32	[1536]	6144
+blocks.4.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.4.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.4.self_attn.to_out.bias	F32	[1536]	6144
+blocks.4.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.4.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.4.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.5.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.5.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.5.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.5.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.5.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.5.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.5.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.5.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.5.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.5.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.5.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.5.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.5.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.5.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.5.modulation	F32	[9216]	36864
+blocks.5.norm2.bias	F32	[1536]	6144
+blocks.5.norm2.weight	F32	[1536]	6144
+blocks.5.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.5.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.5.self_attn.to_out.bias	F32	[1536]	6144
+blocks.5.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.5.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.5.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.6.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.6.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.6.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.6.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.6.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.6.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.6.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.6.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.6.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.6.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.6.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.6.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.6.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.6.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.6.modulation	F32	[9216]	36864
+blocks.6.norm2.bias	F32	[1536]	6144
+blocks.6.norm2.weight	F32	[1536]	6144
+blocks.6.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.6.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.6.self_attn.to_out.bias	F32	[1536]	6144
+blocks.6.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.6.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.6.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.7.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.7.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.7.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.7.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.7.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.7.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.7.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.7.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.7.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.7.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.7.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.7.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.7.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.7.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.7.modulation	F32	[9216]	36864
+blocks.7.norm2.bias	F32	[1536]	6144
+blocks.7.norm2.weight	F32	[1536]	6144
+blocks.7.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.7.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.7.self_attn.to_out.bias	F32	[1536]	6144
+blocks.7.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.7.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.7.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.8.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.8.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.8.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.8.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.8.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.8.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.8.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.8.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.8.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.8.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.8.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.8.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.8.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.8.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.8.modulation	F32	[9216]	36864
+blocks.8.norm2.bias	F32	[1536]	6144
+blocks.8.norm2.weight	F32	[1536]	6144
+blocks.8.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.8.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.8.self_attn.to_out.bias	F32	[1536]	6144
+blocks.8.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.8.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.8.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+blocks.9.cross_attn.cross_attn_block.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.9.cross_attn.cross_attn_block.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.9.cross_attn.cross_attn_block.to_kv.bias	F32	[3072]	12288
+blocks.9.cross_attn.cross_attn_block.to_kv.weight	F32	[3072, 1024]	12582912
+blocks.9.cross_attn.cross_attn_block.to_out.bias	F32	[1536]	6144
+blocks.9.cross_attn.cross_attn_block.to_out.weight	F32	[1536, 1536]	9437184
+blocks.9.cross_attn.cross_attn_block.to_q.bias	F32	[1536]	6144
+blocks.9.cross_attn.cross_attn_block.to_q.weight	F32	[1536, 1536]	9437184
+blocks.9.cross_attn.proj_linear.bias	F32	[1536]	6144
+blocks.9.cross_attn.proj_linear.weight	F32	[1536, 1024]	6291456
+blocks.9.mlp.mlp.0.bias	F32	[8192]	32768
+blocks.9.mlp.mlp.0.weight	F32	[8192, 1536]	50331648
+blocks.9.mlp.mlp.2.bias	F32	[1536]	6144
+blocks.9.mlp.mlp.2.weight	F32	[1536, 8192]	50331648
+blocks.9.modulation	F32	[9216]	36864
+blocks.9.norm2.bias	F32	[1536]	6144
+blocks.9.norm2.weight	F32	[1536]	6144
+blocks.9.self_attn.k_rms_norm.gamma	F32	[12, 128]	6144
+blocks.9.self_attn.q_rms_norm.gamma	F32	[12, 128]	6144
+blocks.9.self_attn.to_out.bias	F32	[1536]	6144
+blocks.9.self_attn.to_out.weight	F32	[1536, 1536]	9437184
+blocks.9.self_attn.to_qkv.bias	F32	[4608]	18432
+blocks.9.self_attn.to_qkv.weight	F32	[4608, 1536]	28311552
+input_layer.bias	F32	[1536]	6144
+input_layer.weight	F32	[1536, 8]	49152
+out_layer.bias	F32	[8]	32
+out_layer.weight	F32	[8, 1536]	49152
+rope_phases	C64	[4096, 64]	2097152
+t_embedder.mlp.0.bias	F32	[1536]	6144
+t_embedder.mlp.0.weight	F32	[1536, 256]	1572864
+t_embedder.mlp.2.bias	F32	[1536]	6144
+t_embedder.mlp.2.weight	F32	[1536, 1536]	9437184
+## dtype counts (dtype, tensors, bytes)
+C64	1	2097152
+F32	700	5357647904
+## name patterns (block index collapsed to #)
+adaLN_modulation.#.bias	1
+adaLN_modulation.#.weight	1
+blocks.#.cross_attn.cross_attn_block.k_rms_norm.gamma	30
+blocks.#.cross_attn.cross_attn_block.q_rms_norm.gamma	30
+blocks.#.cross_attn.cross_attn_block.to_kv.bias	30
+blocks.#.cross_attn.cross_attn_block.to_kv.weight	30
+blocks.#.cross_attn.cross_attn_block.to_out.bias	30
+blocks.#.cross_attn.cross_attn_block.to_out.weight	30
+blocks.#.cross_attn.cross_attn_block.to_q.bias	30
+blocks.#.cross_attn.cross_attn_block.to_q.weight	30
+blocks.#.cross_attn.proj_linear.bias	30
+blocks.#.cross_attn.proj_linear.weight	30
+blocks.#.mlp.mlp.#.bias	60
+blocks.#.mlp.mlp.#.weight	60
+blocks.#.modulation	30
+blocks.#.norm2.bias	30
+blocks.#.norm2.weight	30
+blocks.#.self_attn.k_rms_norm.gamma	30
+blocks.#.self_attn.q_rms_norm.gamma	30
+blocks.#.self_attn.to_out.bias	30
+blocks.#.self_attn.to_out.weight	30
+blocks.#.self_attn.to_qkv.bias	30
+blocks.#.self_attn.to_qkv.weight	30
+input_layer.bias	1
+input_layer.weight	1
+out_layer.bias	1
+out_layer.weight	1
+rope_phases	1
+t_embedder.mlp.#.bias	2
+t_embedder.mlp.#.weight	2

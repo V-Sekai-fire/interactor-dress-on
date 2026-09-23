@@ -1,0 +1,105 @@
+# file: models/Pixal3D-GGUF/decoder/ss_dec_conv3d_16l8_fp16.safetensors
+# bytes: 147591972  header_bytes: 6552  tensor_count: 74
+## __metadata__
+(none)
+## tensors (name, dtype, shape, n_bytes)
+blocks.0.conv1.bias	F16	[512]	1024
+blocks.0.conv1.weight	F16	[512, 512, 3, 3, 3]	14155776
+blocks.0.conv2.bias	F16	[512]	1024
+blocks.0.conv2.weight	F16	[512, 512, 3, 3, 3]	14155776
+blocks.0.norm1.bias	F32	[512]	2048
+blocks.0.norm1.weight	F32	[512]	2048
+blocks.0.norm2.bias	F32	[512]	2048
+blocks.0.norm2.weight	F32	[512]	2048
+blocks.1.conv1.bias	F16	[512]	1024
+blocks.1.conv1.weight	F16	[512, 512, 3, 3, 3]	14155776
+blocks.1.conv2.bias	F16	[512]	1024
+blocks.1.conv2.weight	F16	[512, 512, 3, 3, 3]	14155776
+blocks.1.norm1.bias	F32	[512]	2048
+blocks.1.norm1.weight	F32	[512]	2048
+blocks.1.norm2.bias	F32	[512]	2048
+blocks.1.norm2.weight	F32	[512]	2048
+blocks.2.conv.bias	F16	[1024]	2048
+blocks.2.conv.weight	F16	[1024, 512, 3, 3, 3]	28311552
+blocks.3.conv1.bias	F16	[128]	256
+blocks.3.conv1.weight	F16	[128, 128, 3, 3, 3]	884736
+blocks.3.conv2.bias	F16	[128]	256
+blocks.3.conv2.weight	F16	[128, 128, 3, 3, 3]	884736
+blocks.3.norm1.bias	F32	[128]	512
+blocks.3.norm1.weight	F32	[128]	512
+blocks.3.norm2.bias	F32	[128]	512
+blocks.3.norm2.weight	F32	[128]	512
+blocks.4.conv1.bias	F16	[128]	256
+blocks.4.conv1.weight	F16	[128, 128, 3, 3, 3]	884736
+blocks.4.conv2.bias	F16	[128]	256
+blocks.4.conv2.weight	F16	[128, 128, 3, 3, 3]	884736
+blocks.4.norm1.bias	F32	[128]	512
+blocks.4.norm1.weight	F32	[128]	512
+blocks.4.norm2.bias	F32	[128]	512
+blocks.4.norm2.weight	F32	[128]	512
+blocks.5.conv.bias	F16	[256]	512
+blocks.5.conv.weight	F16	[256, 128, 3, 3, 3]	1769472
+blocks.6.conv1.bias	F16	[32]	64
+blocks.6.conv1.weight	F16	[32, 32, 3, 3, 3]	55296
+blocks.6.conv2.bias	F16	[32]	64
+blocks.6.conv2.weight	F16	[32, 32, 3, 3, 3]	55296
+blocks.6.norm1.bias	F32	[32]	128
+blocks.6.norm1.weight	F32	[32]	128
+blocks.6.norm2.bias	F32	[32]	128
+blocks.6.norm2.weight	F32	[32]	128
+blocks.7.conv1.bias	F16	[32]	64
+blocks.7.conv1.weight	F16	[32, 32, 3, 3, 3]	55296
+blocks.7.conv2.bias	F16	[32]	64
+blocks.7.conv2.weight	F16	[32, 32, 3, 3, 3]	55296
+blocks.7.norm1.bias	F32	[32]	128
+blocks.7.norm1.weight	F32	[32]	128
+blocks.7.norm2.bias	F32	[32]	128
+blocks.7.norm2.weight	F32	[32]	128
+input_layer.bias	F32	[512]	2048
+input_layer.weight	F32	[512, 8, 3, 3, 3]	442368
+middle_block.0.conv1.bias	F16	[512]	1024
+middle_block.0.conv1.weight	F16	[512, 512, 3, 3, 3]	14155776
+middle_block.0.conv2.bias	F16	[512]	1024
+middle_block.0.conv2.weight	F16	[512, 512, 3, 3, 3]	14155776
+middle_block.0.norm1.bias	F32	[512]	2048
+middle_block.0.norm1.weight	F32	[512]	2048
+middle_block.0.norm2.bias	F32	[512]	2048
+middle_block.0.norm2.weight	F32	[512]	2048
+middle_block.1.conv1.bias	F16	[512]	1024
+middle_block.1.conv1.weight	F16	[512, 512, 3, 3, 3]	14155776
+middle_block.1.conv2.bias	F16	[512]	1024
+middle_block.1.conv2.weight	F16	[512, 512, 3, 3, 3]	14155776
+middle_block.1.norm1.bias	F32	[512]	2048
+middle_block.1.norm1.weight	F32	[512]	2048
+middle_block.1.norm2.bias	F32	[512]	2048
+middle_block.1.norm2.weight	F32	[512]	2048
+out_layer.0.bias	F32	[32]	128
+out_layer.0.weight	F32	[32]	128
+out_layer.2.bias	F32	[1]	4
+out_layer.2.weight	F32	[1, 32, 3, 3, 3]	3456
+## dtype counts
+F16	36
+F32	38
+## name patterns (block index collapsed to #)
+blocks.#.conv.bias	2
+blocks.#.conv.weight	2
+blocks.#.conv1.bias	6
+blocks.#.conv1.weight	6
+blocks.#.conv2.bias	6
+blocks.#.conv2.weight	6
+blocks.#.norm1.bias	6
+blocks.#.norm1.weight	6
+blocks.#.norm2.bias	6
+blocks.#.norm2.weight	6
+input_layer.bias	1
+input_layer.weight	1
+middle_block.#.conv1.bias	2
+middle_block.#.conv1.weight	2
+middle_block.#.conv2.bias	2
+middle_block.#.conv2.weight	2
+middle_block.#.norm1.bias	2
+middle_block.#.norm1.weight	2
+middle_block.#.norm2.bias	2
+middle_block.#.norm2.weight	2
+out_layer.#.bias	2
+out_layer.#.weight	2

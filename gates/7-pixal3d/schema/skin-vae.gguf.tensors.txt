@@ -1,0 +1,365 @@
+# file: models/SkinTokens-GGUF/F16/skin-vae.gguf
+# bytes: 244014784
+# kv_count: 13  tensor_count: 252
+## KV metadata (key, type, value)
+GGUF.version	UINT32 = 3
+GGUF.tensor_count	UINT64 = 252
+GGUF.kv_count	UINT64 = 10
+general.architecture	STRING = skintokens
+general.name	STRING = SkinTokens TokenRig
+general.alignment	UINT32 = 32
+general.file_type	UINT32 = 1
+skintokens.format_version	UINT32 = 1
+skintokens.component	STRING = skin-vae
+skintokens.upstream_revision	STRING = 273b691d35989d71cd17ff2895fdc735097b92d1
+skintokens.tokenrig_sha256	STRING = 31950785d46879cf795dea54657061f405d3bff81f37803a956cc26060ac7a2f
+skintokens.skin_vae_sha256	STRING = df8ddf56dd002984c19d6d18a4d6b1d44e0a17ddf5d91766f2c7befcecfa8782
+skintokens.config_json	STRING = {"skin_vae":{"add_num":false,"export_diff":true,"log_grad_norm":false,"loss_config":{"bce_loss":1.0,"dice_loss":1.0,"iou_001":0,"iou_010":0,"iou_100":0,"mask_accu_001":0,"mask_accu_005":0,"mask_accu_010":0,"mask_accu_050":0,"skin_l1_loss":0,"skin_non_zero_smooth_l1_loss":1.0,"skin_smooth_l1_loss":1.0,"skin_zero_smooth_l1_loss":2.0,"utilization":0},"model_config":{"model":{"FSQ_dict":{"dim":512,"levels":[8,8,8,8,8]},"cond_channels":3,"embed_frequency":8,"embed_include_pi":true,"embedding_type":"frequency","in_channels":4,"is_learned_queries":true,"latent_channels":512,"num_attention_heads":12,"num_layers_decoder":10,"num_layers_encoder":2,"use_pmpe":true,"width_decoder":768,"width_encoder":768},"sample":{"compress_tokens":32,"cond_tokens":384,"sample_tokens":32}},"optimizer_config":{"__target__":"muon","hidden_lr":0.001,"hidden_weight_decay":0.01,"nonhidden_betas":[0.9,0.9],"nonhidden_lr":0.0002,"nonhidden_weight_decay":0.01},"output_dir":"tmp_vae","predict":true,"save_name":"res","scheduler_config":{"epochs":800,"hidden_div_factor":2.0,"hidden_final_div_factor":100.0,"hidden_max_lr":0.001,"hidden_pct_start":0.01,"nonhidden_div_factor":2.0,"nonhidden_final_div_factor":100.0,"nonhidden_max_lr":0.0002,"nonhidden_pct_start":0.01,"steps_per_epoch":1250},"steps_per_epoch":1250,"tokenizer_config":null,"transform_config":{"order":{"skeleton_path":{"mixamo":"./configs/skeleton/mixamo.yaml","vroid":"./configs/skeleton/vroid.yaml"}},"predict_transform":{"augments":[{"__target__":"affine","normalize_into":[-1.0,1.0]},{"__target__":"normalize"}],"order":{"skeleton_path":{"mixamo":"./configs/skeleton/mixamo.yaml","vroid":"./configs/skeleton/vroid.yaml"}},"sampler":{"__target__":"mix","all_skeleton":true,"max_distance":0.1,"num_samples":54000,"num_skin_samples":32768,"num_vertex_samples":16384,"rate_distance":0.1},"vertex_groups":[{"__target__":"skin"}]},"random_pose_angle":30.0,"train_transform":{"augments":[{"__target__":"collapse","p":0.5,"rate":0.5},{"__target__":"drop_part","... (len 7507)
+## tensors (name, type, ne=ggml order, torch=reversed, n_bytes)
+vae.FSQ.project_in.b	F32	ne=[5]	torch=[5]	20
+vae.FSQ.project_in.w	F32	ne=[512, 5]	torch=[5, 512]	10240
+vae.FSQ.project_out.b	F32	ne=[512]	torch=[512]	2048
+vae.FSQ.project_out.w	F32	ne=[5, 512]	torch=[512, 5]	10240
+vae.cond_encoder.blocks.0.attn2.norm_cross.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.attn2.norm_cross.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.attn2.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.0.attn2.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.attn2.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.0.attn2.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.0.attn2.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.0.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.cond_encoder.blocks.0.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.cond_encoder.blocks.0.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.cond_encoder.blocks.0.norm2.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.norm2.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.0.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.1.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.1.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.1.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.1.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.1.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.1.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.cond_encoder.blocks.1.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.cond_encoder.blocks.1.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.1.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.cond_encoder.blocks.1.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.1.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.1.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.1.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.2.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.2.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.2.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.2.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.2.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.cond_encoder.blocks.2.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.cond_encoder.blocks.2.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.cond_encoder.blocks.2.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.2.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.cond_encoder.blocks.2.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.2.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.2.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.blocks.2.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.norm_out.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.norm_out.w	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.proj_in.b	F32	ne=[768]	torch=[768]	3072
+vae.cond_encoder.proj_in.w	F16	ne=[54, 768]	torch=[768, 54]	82944
+vae.cond_quant.b	F32	ne=[512]	torch=[512]	2048
+vae.cond_quant.w	F16	ne=[768, 512]	torch=[512, 768]	786432
+vae.decoder.blocks.0.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.0.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.0.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.0.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.0.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.0.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.0.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.0.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.0.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.0.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.0.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.0.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.0.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.1.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.1.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.1.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.1.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.1.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.1.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.1.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.1.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.1.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.1.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.1.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.1.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.1.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.attn2.norm_cross.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.attn2.norm_cross.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.attn2.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.10.attn2.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.attn2.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.10.attn2.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.10.attn2.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.10.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.10.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.10.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.10.norm2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.norm2.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.10.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.2.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.2.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.2.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.2.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.2.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.2.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.2.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.2.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.2.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.2.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.2.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.2.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.2.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.3.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.3.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.3.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.3.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.3.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.3.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.3.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.3.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.3.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.3.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.3.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.3.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.3.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.4.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.4.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.4.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.4.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.4.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.4.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.4.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.4.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.4.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.4.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.4.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.4.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.4.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.5.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.5.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.5.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.5.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.5.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.5.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.5.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.5.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.5.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.5.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.5.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.5.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.5.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.6.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.6.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.6.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.6.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.6.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.6.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.6.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.6.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.6.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.6.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.6.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.6.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.6.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.7.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.7.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.7.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.7.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.7.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.7.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.7.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.7.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.7.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.7.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.7.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.7.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.7.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.8.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.8.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.8.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.8.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.8.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.8.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.8.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.8.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.8.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.8.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.8.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.8.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.8.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.9.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.9.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.9.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.9.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.9.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.decoder.blocks.9.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.decoder.blocks.9.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.decoder.blocks.9.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.9.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.decoder.blocks.9.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.9.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.9.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.blocks.9.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.norm_out.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.norm_out.w	F32	ne=[768]	torch=[768]	3072
+vae.decoder.proj_out.b	F32	ne=[1]	torch=[1]	4
+vae.decoder.proj_out.w	F16	ne=[768, 1]	torch=[1, 768]	1536
+vae.decoder.proj_query.b	F32	ne=[768]	torch=[768]	3072
+vae.decoder.proj_query.w	F32	ne=[54, 768]	torch=[768, 54]	165888
+vae.encoder.blocks.0.attn2.norm_cross.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.attn2.norm_cross.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.attn2.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.0.attn2.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.attn2.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.0.attn2.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.0.attn2.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.0.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.encoder.blocks.0.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.encoder.blocks.0.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.encoder.blocks.0.norm2.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.norm2.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.0.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.1.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.1.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.1.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.1.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.1.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.1.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.encoder.blocks.1.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.encoder.blocks.1.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.1.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.encoder.blocks.1.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.1.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.1.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.1.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.2.attn1.to_k.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.2.attn1.to_out.0.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.2.attn1.to_out.0.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.2.attn1.to_q.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.2.attn1.to_v.w	F16	ne=[768, 768]	torch=[768, 768]	1179648
+vae.encoder.blocks.2.ff.net.0.proj.b	F32	ne=[3072]	torch=[3072]	12288
+vae.encoder.blocks.2.ff.net.0.proj.w	F16	ne=[768, 3072]	torch=[3072, 768]	4718592
+vae.encoder.blocks.2.ff.net.2.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.2.ff.net.2.w	F16	ne=[3072, 768]	torch=[768, 3072]	4718592
+vae.encoder.blocks.2.norm1.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.2.norm1.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.2.norm3.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.blocks.2.norm3.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.learned_queries	F16	ne=[768, 32]	torch=[32, 768]	49152
+vae.encoder.norm_out.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.norm_out.w	F32	ne=[768]	torch=[768]	3072
+vae.encoder.proj_in.b	F32	ne=[768]	torch=[768]	3072
+vae.encoder.proj_in.w	F16	ne=[55, 768]	torch=[768, 55]	84480
+vae.post_quant.b	F32	ne=[768]	torch=[768]	3072
+vae.post_quant.w	F16	ne=[512, 768]	torch=[768, 512]	786432
+vae.quant.b	F32	ne=[512]	torch=[512]	2048
+vae.quant.w	F16	ne=[768, 512]	torch=[512, 768]	786432
+## type counts (type, tensors, bytes)
+F16	109	243225600
+F32	143	763928
+## name patterns (block index collapsed to #)
+vae.FSQ.project_in.b	1
+vae.FSQ.project_in.w	1
+vae.FSQ.project_out.b	1
+vae.FSQ.project_out.w	1
+vae.cond_encoder.blocks.#.attn1.to_k.w	2
+vae.cond_encoder.blocks.#.attn1.to_out.#.b	2
+vae.cond_encoder.blocks.#.attn1.to_out.#.w	2
+vae.cond_encoder.blocks.#.attn1.to_q.w	2
+vae.cond_encoder.blocks.#.attn1.to_v.w	2
+vae.cond_encoder.blocks.#.attn2.norm_cross.b	1
+vae.cond_encoder.blocks.#.attn2.norm_cross.w	1
+vae.cond_encoder.blocks.#.attn2.to_k.w	1
+vae.cond_encoder.blocks.#.attn2.to_out.#.b	1
+vae.cond_encoder.blocks.#.attn2.to_out.#.w	1
+vae.cond_encoder.blocks.#.attn2.to_q.w	1
+vae.cond_encoder.blocks.#.attn2.to_v.w	1
+vae.cond_encoder.blocks.#.ff.net.#.b	3
+vae.cond_encoder.blocks.#.ff.net.#.proj.b	3
+vae.cond_encoder.blocks.#.ff.net.#.proj.w	3
+vae.cond_encoder.blocks.#.ff.net.#.w	3
+vae.cond_encoder.blocks.#.norm1.b	2
+vae.cond_encoder.blocks.#.norm1.w	2
+vae.cond_encoder.blocks.#.norm2.b	1
+vae.cond_encoder.blocks.#.norm2.w	1
+vae.cond_encoder.blocks.#.norm3.b	3
+vae.cond_encoder.blocks.#.norm3.w	3
+vae.cond_encoder.norm_out.b	1
+vae.cond_encoder.norm_out.w	1
+vae.cond_encoder.proj_in.b	1
+vae.cond_encoder.proj_in.w	1
+vae.cond_quant.b	1
+vae.cond_quant.w	1
+vae.decoder.blocks.#.attn1.to_k.w	10
+vae.decoder.blocks.#.attn1.to_out.#.b	10
+vae.decoder.blocks.#.attn1.to_out.#.w	10
+vae.decoder.blocks.#.attn1.to_q.w	10
+vae.decoder.blocks.#.attn1.to_v.w	10
+vae.decoder.blocks.#.attn2.norm_cross.b	1
+vae.decoder.blocks.#.attn2.norm_cross.w	1
+vae.decoder.blocks.#.attn2.to_k.w	1
+vae.decoder.blocks.#.attn2.to_out.#.b	1
+vae.decoder.blocks.#.attn2.to_out.#.w	1
+vae.decoder.blocks.#.attn2.to_q.w	1
+vae.decoder.blocks.#.attn2.to_v.w	1
+vae.decoder.blocks.#.ff.net.#.b	11
+vae.decoder.blocks.#.ff.net.#.proj.b	11
+vae.decoder.blocks.#.ff.net.#.proj.w	11
+vae.decoder.blocks.#.ff.net.#.w	11
+vae.decoder.blocks.#.norm1.b	10
+vae.decoder.blocks.#.norm1.w	10
+vae.decoder.blocks.#.norm2.b	1
+vae.decoder.blocks.#.norm2.w	1
+vae.decoder.blocks.#.norm3.b	11
+vae.decoder.blocks.#.norm3.w	11
+vae.decoder.norm_out.b	1
+vae.decoder.norm_out.w	1
+vae.decoder.proj_out.b	1
+vae.decoder.proj_out.w	1
+vae.decoder.proj_query.b	1
+vae.decoder.proj_query.w	1
+vae.encoder.blocks.#.attn1.to_k.w	2
+vae.encoder.blocks.#.attn1.to_out.#.b	2
+vae.encoder.blocks.#.attn1.to_out.#.w	2
+vae.encoder.blocks.#.attn1.to_q.w	2
+vae.encoder.blocks.#.attn1.to_v.w	2
+vae.encoder.blocks.#.attn2.norm_cross.b	1
+vae.encoder.blocks.#.attn2.norm_cross.w	1
+vae.encoder.blocks.#.attn2.to_k.w	1
+vae.encoder.blocks.#.attn2.to_out.#.b	1
+vae.encoder.blocks.#.attn2.to_out.#.w	1
+vae.encoder.blocks.#.attn2.to_q.w	1
+vae.encoder.blocks.#.attn2.to_v.w	1
+vae.encoder.blocks.#.ff.net.#.b	3
+vae.encoder.blocks.#.ff.net.#.proj.b	3
+vae.encoder.blocks.#.ff.net.#.proj.w	3
+vae.encoder.blocks.#.ff.net.#.w	3
+vae.encoder.blocks.#.norm1.b	2
+vae.encoder.blocks.#.norm1.w	2
+vae.encoder.blocks.#.norm2.b	1
+vae.encoder.blocks.#.norm2.w	1
+vae.encoder.blocks.#.norm3.b	3
+vae.encoder.blocks.#.norm3.w	3
+vae.encoder.learned_queries	1
+vae.encoder.norm_out.b	1
+vae.encoder.norm_out.w	1
+vae.encoder.proj_in.b	1
+vae.encoder.proj_in.w	1
+vae.post_quant.b	1
+vae.post_quant.w	1
+vae.quant.b	1
+vae.quant.w	1

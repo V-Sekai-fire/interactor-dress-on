@@ -1,0 +1,745 @@
+# file: models/Pixal3D-GGUF/texture/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.gguf
+# bytes: 2775670368
+# kv_count: 6  tensor_count: 700
+## KV metadata (key, type, value)
+GGUF.version	UINT32 = 3
+GGUF.tensor_count	UINT64 = 700
+GGUF.kv_count	UINT64 = 3
+general.architecture	STRING = flux
+general.quantization_version	UINT32 = 2
+general.file_type	UINT32 = 32
+## tensors (name, type, ne=ggml order, torch=reversed, n_bytes)
+adaLN_modulation.1.bias	F32	ne=[9216]	torch=[9216]	36864
+adaLN_modulation.1.weight	F16	ne=[1536, 9216]	torch=[9216, 1536]	28311552
+blocks.0.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.0.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.0.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.0.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.0.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.1.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.1.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.1.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.1.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.1.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.10.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.10.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.10.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.10.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.10.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.11.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.11.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.11.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.11.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.11.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.12.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.12.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.12.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.12.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.12.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.13.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.13.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.13.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.13.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.13.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.14.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.14.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.14.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.14.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.14.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.15.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.15.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.15.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.15.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.15.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.16.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.16.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.16.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.16.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.16.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.17.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.17.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.17.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.17.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.17.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.18.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.18.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.18.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.18.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.18.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.19.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.19.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.19.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.19.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.19.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.2.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.2.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.2.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.2.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.2.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.20.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.20.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.20.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.20.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.20.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.21.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.21.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.21.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.21.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.21.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.22.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.22.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.22.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.22.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.22.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.23.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.23.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.23.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.23.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.23.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.24.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.24.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.24.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.24.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.24.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.25.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.25.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.25.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.25.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.25.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.26.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.26.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.26.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.26.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.26.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.27.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.27.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.27.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.27.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.27.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.28.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.28.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.28.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.28.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.28.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.29.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.29.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.29.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.29.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.29.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.3.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.3.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.3.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.3.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.3.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.4.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.4.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.4.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.4.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.4.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.5.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.5.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.5.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.5.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.5.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.6.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.6.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.6.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.6.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.6.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.7.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.7.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.7.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.7.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.7.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.8.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.8.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.8.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.8.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.8.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.9.cross_attn.cross_attn_block.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.9.cross_attn.cross_attn_block.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.9.modulation	F32	ne=[9216]	torch=[9216]	36864
+blocks.9.norm2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.norm2.weight	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.self_attn.k_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+blocks.9.self_attn.q_rms_norm.gamma	F16	ne=[128, 12]	torch=[12, 128]	3072
+input_layer.bias	F32	ne=[1536]	torch=[1536]	6144
+input_layer.weight	F16	ne=[64, 1536]	torch=[1536, 64]	196608
+out_layer.bias	F32	ne=[32]	torch=[32]	128
+out_layer.weight	F16	ne=[1536, 32]	torch=[32, 1536]	98304
+t_embedder.mlp.0.bias	F32	ne=[1536]	torch=[1536]	6144
+t_embedder.mlp.0.weight	F16	ne=[256, 1536]	torch=[1536, 256]	786432
+t_embedder.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+t_embedder.mlp.2.weight	F16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.0.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.0.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.0.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.0.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.0.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.0.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.0.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.0.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.0.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.0.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.0.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.0.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.1.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.1.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.1.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.1.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.1.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.1.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.1.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.1.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.1.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.1.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.1.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.1.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.10.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.10.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.10.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.10.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.10.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.10.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.10.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.10.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.10.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.10.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.10.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.10.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.11.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.11.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.11.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.11.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.11.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.11.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.11.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.11.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.11.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.11.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.11.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.11.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.12.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.12.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.12.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.12.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.12.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.12.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.12.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.12.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.12.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.12.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.12.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.12.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.13.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.13.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.13.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.13.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.13.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.13.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.13.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.13.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.13.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.13.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.13.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.13.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.14.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.14.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.14.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.14.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.14.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.14.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.14.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.14.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.14.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.14.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.14.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.14.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.15.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.15.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.15.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.15.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.15.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.15.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.15.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.15.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.15.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.15.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.15.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.15.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.16.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.16.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.16.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.16.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.16.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.16.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.16.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.16.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.16.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.16.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.16.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.16.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.17.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.17.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.17.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.17.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.17.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.17.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.17.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.17.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.17.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.17.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.17.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.17.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.18.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.18.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.18.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.18.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.18.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.18.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.18.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.18.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.18.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.18.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.18.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.18.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.19.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.19.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.19.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.19.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.19.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.19.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.19.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.19.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.19.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.19.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.19.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.19.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.2.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.2.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.2.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.2.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.2.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.2.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.2.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.2.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.2.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.2.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.2.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.2.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.20.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.20.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.20.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.20.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.20.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.20.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.20.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.20.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.20.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.20.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.20.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.20.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.21.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.21.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.21.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.21.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.21.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.21.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.21.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.21.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.21.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.21.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.21.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.21.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.22.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.22.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.22.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.22.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.22.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.22.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.22.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.22.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.22.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.22.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.22.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.22.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.23.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.23.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.23.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.23.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.23.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.23.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.23.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.23.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.23.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.23.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.23.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.23.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.24.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.24.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.24.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.24.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.24.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.24.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.24.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.24.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.24.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.24.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.24.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.24.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.25.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.25.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.25.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.25.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.25.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.25.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.25.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.25.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.25.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.25.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.25.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.25.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.26.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.26.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.26.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.26.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.26.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.26.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.26.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.26.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.26.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.26.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.26.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.26.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.27.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.27.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.27.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.27.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.27.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.27.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.27.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.27.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.27.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.27.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.27.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.27.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.28.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.28.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.28.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.28.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.28.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.28.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.28.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.28.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.28.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.28.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.28.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.28.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.29.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.29.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.29.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.29.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.29.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.29.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.29.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.29.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.29.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.29.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.29.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.29.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.3.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.3.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.3.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.3.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.3.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.3.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.3.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.3.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.3.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.3.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.3.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.3.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.4.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.4.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.4.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.4.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.4.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.4.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.4.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.4.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.4.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.4.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.4.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.4.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.5.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.5.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.5.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.5.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.5.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.5.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.5.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.5.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.5.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.5.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.5.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.5.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.6.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.6.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.6.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.6.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.6.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.6.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.6.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.6.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.6.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.6.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.6.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.6.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.7.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.7.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.7.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.7.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.7.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.7.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.7.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.7.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.7.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.7.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.7.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.7.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.8.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.8.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.8.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.8.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.8.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.8.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.8.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.8.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.8.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.8.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.8.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.8.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+blocks.9.cross_attn.cross_attn_block.to_kv.bias	F32	ne=[3072]	torch=[3072]	12288
+blocks.9.cross_attn.cross_attn_block.to_kv.weight	BF16	ne=[1024, 3072]	torch=[3072, 1024]	6291456
+blocks.9.cross_attn.cross_attn_block.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.cross_attn.cross_attn_block.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.9.cross_attn.cross_attn_block.to_q.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.cross_attn.cross_attn_block.to_q.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.9.cross_attn.proj_linear.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.cross_attn.proj_linear.weight	BF16	ne=[2048, 1536]	torch=[1536, 2048]	6291456
+blocks.9.mlp.mlp.0.bias	F32	ne=[8192]	torch=[8192]	32768
+blocks.9.mlp.mlp.0.weight	BF16	ne=[1536, 8192]	torch=[8192, 1536]	25165824
+blocks.9.mlp.mlp.2.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.mlp.mlp.2.weight	BF16	ne=[8192, 1536]	torch=[1536, 8192]	25165824
+blocks.9.self_attn.to_out.bias	F32	ne=[1536]	torch=[1536]	6144
+blocks.9.self_attn.to_out.weight	BF16	ne=[1536, 1536]	torch=[1536, 1536]	4718592
+blocks.9.self_attn.to_qkv.bias	F32	ne=[4608]	torch=[4608]	18432
+blocks.9.self_attn.to_qkv.weight	BF16	ne=[1536, 4608]	torch=[4608, 1536]	14155776
+## type counts (type, tensors, bytes)
+BF16	240	2736783360
+F16	125	34480128
+F32	335	4356224
+## name patterns (block index collapsed to #)
+adaLN_modulation.#.bias	1
+adaLN_modulation.#.weight	1
+blocks.#.cross_attn.cross_attn_block.k_rms_norm.gamma	30
+blocks.#.cross_attn.cross_attn_block.q_rms_norm.gamma	30
+blocks.#.cross_attn.cross_attn_block.to_kv.bias	30
+blocks.#.cross_attn.cross_attn_block.to_kv.weight	30
+blocks.#.cross_attn.cross_attn_block.to_out.bias	30
+blocks.#.cross_attn.cross_attn_block.to_out.weight	30
+blocks.#.cross_attn.cross_attn_block.to_q.bias	30
+blocks.#.cross_attn.cross_attn_block.to_q.weight	30
+blocks.#.cross_attn.proj_linear.bias	30
+blocks.#.cross_attn.proj_linear.weight	30
+blocks.#.mlp.mlp.#.bias	60
+blocks.#.mlp.mlp.#.weight	60
+blocks.#.modulation	30
+blocks.#.norm2.bias	30
+blocks.#.norm2.weight	30
+blocks.#.self_attn.k_rms_norm.gamma	30
+blocks.#.self_attn.q_rms_norm.gamma	30
+blocks.#.self_attn.to_out.bias	30
+blocks.#.self_attn.to_out.weight	30
+blocks.#.self_attn.to_qkv.bias	30
+blocks.#.self_attn.to_qkv.weight	30
+input_layer.bias	1
+input_layer.weight	1
+out_layer.bias	1
+out_layer.weight	1
+t_embedder.mlp.#.bias	2
+t_embedder.mlp.#.weight	2

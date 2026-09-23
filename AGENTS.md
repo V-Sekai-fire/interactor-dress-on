@@ -111,6 +111,13 @@ our own, no host DLL. The GPU is reachable only through Godot's
   `lake update LeanSlang` (only that package; the other revs must not move).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
+- In a guest, a `std::vector<std::vector<T>>` kept alive in a long-lived
+  record (a `std::vector` of records, across stages) corrupted libc state:
+  "Illegal opcode" at an `ecall` in memmove/memcpy/puts/fflush, garbage
+  syscall numbers. As a local it is fine, and ASan on the host is clean. Keep
+  long-lived guest data flat (gates/5-drape/drape/README.md). Godot's
+  `--gpu-index 1` is the RTX 4090 the native references ran on (device 0 is a
+  3090); the drape is bit-identical on both.
 
 ## Conventions
 

@@ -118,3 +118,100 @@ func avbd_job_tick() -> String:
 
 func avbd_job_names() -> String:
 	return str(_drape.vmcall("avbd_job_names")) if _drape != null else "FAIL: no drape sandbox"
+
+# --- Cut 5: the drape (drape.elf), DiffCloth's sphere demo and host meshes -----
+# One session, advanced one frame at a time by _process (rule 4). Every guest
+# entry point has a wrapper here with defaults, so MCP call_method needs no
+# argument marshalling (rule 8): drape_sphere_demo, drape_forward, then poll
+# drape_status; drape_backward after a drape_target.
+
+var _drape_status := "IDLE no session"
+var _drape_job_status := ""
+var _drape_job_on := false
+
+func _process(_delta: float) -> void:
+	if _drape == null:
+		return
+	if not _drape_status.begins_with("IDLE"):
+		_drape_status = str(_drape.vmcall("drape_tick", Time.get_ticks_usec()))
+	if _drape_job_on:
+		_drape_job_status = str(_drape.vmcall("drape_job_tick", Time.get_ticks_usec()))
+		if not _drape_job_status.begins_with("RUNNING"):
+			_drape_job_on = false
+
+func _dv(name: String, args: Array = []) -> String:
+	if _drape == null:
+		return "FAIL: no drape sandbox"
+	return str(_drape.callv("vmcall", [name] + args))
+
+# backend: cpu | rd | auto (rd from 256 vertices).
+func drape_open(backend: String = "auto") -> String:
+	return _dv("drape_open", [backend])
+
+func drape_sphere_demo(backend: String = "auto") -> String:
+	var o := drape_open(backend)
+	if not o.begins_with("OPENED"):
+		return o
+	return _dv("drape_scene_sphere_demo")
+
+func drape_scene_mesh(positions: PackedFloat32Array = PackedFloat32Array(), triangles: PackedInt32Array = PackedInt32Array(),
+		pins: PackedInt32Array = PackedInt32Array(), material: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return _dv("drape_scene_mesh", [positions, triangles, pins, material])
+
+# kind: sphere [c, r, mu] | plane [c, ul, ur, mu] | capsule [b, axis, r, len, mu] | clear.
+func drape_primitive(kind: String = "clear", params: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return _dv("drape_primitive", [kind, params])
+
+func drape_config(key: String = "iters", value: float = 16.0) -> String:
+	return _dv("drape_config", [key, value])
+
+# steps > 0 queues steps; 0 rewinds to the initial state.
+func drape_forward(steps: int = 100) -> String:
+	var r := _dv("drape_queue_forward", [steps])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+	return r
+
+# kind: trajectory (the recorded frames become the target) | points | clear.
+func drape_target(kind: String = "trajectory", verts: PackedInt32Array = PackedInt32Array(),
+		positions: PackedFloat32Array = PackedFloat32Array(), frame: int = -1) -> String:
+	return _dv("drape_set_target", [kind, verts, positions, frame])
+
+# loss: match_trajectory | target_points; mode: native | step | unrolled.
+func drape_backward(loss: String = "match_trajectory", mode: String = "unrolled") -> String:
+	var r := _dv("drape_queue_backward", [loss, mode])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+	return r
+
+# RUNNING k/N while the queue runs, then IDLE and the last result's first line.
+func drape_status() -> String:
+	return _drape_status
+
+func drape_result() -> String:
+	return _dv("drape_result")
+
+func drape_positions() -> PackedFloat32Array:
+	return _drape.vmcall("drape_positions") if _drape != null else PackedFloat32Array()
+
+func drape_frame(i: int = 0) -> PackedFloat32Array:
+	return _drape.vmcall("drape_frame", i) if _drape != null else PackedFloat32Array()
+
+func drape_faces() -> PackedInt32Array:
+	return _drape.vmcall("drape_faces") if _drape != null else PackedInt32Array()
+
+# Gate 5 drape jobs: sphere_forward, sphere_backward, sim_gradcheck, bench_drape.
+func drape_job(name: String = "sphere_forward", backend: String = "auto", args: String = "") -> String:
+	var r := _dv("drape_job_start", [name, backend, args])
+	_drape_job_on = r.begins_with("STARTED")
+	_drape_job_status = r
+	return r
+
+func drape_job_result() -> String:
+	return _drape_job_status
+
+func drape_job_frame(i: int = 0) -> PackedFloat32Array:
+	return _drape.vmcall("drape_job_frame", i) if _drape != null else PackedFloat32Array()
+
+func drape_job_names() -> String:
+	return _dv("drape_job_names")

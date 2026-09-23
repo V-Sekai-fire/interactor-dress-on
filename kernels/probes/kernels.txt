@@ -1,0 +1,7 @@
+# Gate 0F probe kernels, by their Lean/Slang module names.
+#   saxpby     cloth-dynamics/lean  Cloth.SlangCodegen.Saxpby   (lake exe emit_shaders)
+#   half_load  contract-lean-slang  emit-fp @e0e96da, LeanSlang.TestFp.halfLoadShader
+#              (native_decide-pinned fixture; re-emitted by `lake env lean --run` over
+#              an Emit script until Cut L brings the emitter tree into lean/)
+saxpby
+half_load

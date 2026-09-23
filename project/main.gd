@@ -118,3 +118,54 @@ func avbd_job_tick() -> String:
 
 func avbd_job_names() -> String:
 	return str(_drape.vmcall("avbd_job_names")) if _drape != null else "FAIL: no drape sandbox"
+
+# --- Gate 0F: probes.elf, the sandbox runtime probes ---------------------------
+# Its own Sandbox, created on first use. gate_runtime.gd is the gate; these are
+# the no-argument wrappers (AGENTS.md rule 8), every argument defaulted.
+
+var _probes = null
+
+func _pv(fn: String, args: Array = []) -> String:
+	if _probes == null:
+		_probes = ClassDB.instantiate("Sandbox")
+		if _probes == null:
+			return "FAIL: no sandbox"
+		add_child(_probes)
+		_probes.program = load("res://probes.elf")
+		_probes.references_max = 4096
+	return str(_probes.callv("vmcall", [fn] + args))
+
+func p_exceptions(do_throw: bool = true) -> String: return _pv("p_exceptions", [do_throw])
+func p_fenv() -> String: return _pv("p_fenv")
+func p_file(path: String = "res://project.godot") -> String: return _pv("p_file", [path])
+func p_threads() -> String: return _pv("p_threads")
+func p_spin(n: int = 1000000) -> String: return _pv("p_spin", [n])
+func p_alloc(mb: int = 64) -> String: return _pv("p_alloc", [mb])
+func echo_f(x: float = 0.1) -> String: return _pv("echo_f", [x])
+func echo_i(x: int = 9007199254740993) -> String: return _pv("echo_i", [x])
+func echo_b(x: bool = true) -> String: return _pv("echo_b", [x])
+func echo_s(s: String = "h\u00e9llo") -> String: return _pv("echo_s", [s])
+func echo_pf32() -> String: return _pv("echo_pf32", [PackedFloat32Array([0.1, -0.0, 1e-40])])
+func echo_pb() -> String: return _pv("echo_pb", [PackedByteArray(range(256))])
+func f_bits(x: float = 0.1) -> String: return _pv("f_bits", [x])
+func echo_var(v = 1.5) -> String: return _pv("echo_var", [v])
+func p_hold(mb: int = 64) -> String: return _pv("p_hold", [mb])
+func p_release() -> String: return _pv("p_release")
+func p_rd() -> String: return _pv("p_rd")
+func fib_start() -> String: return _pv("fib_start")
+func fib_pump() -> String: return _pv("fib_pump") # once per frame (rule 4)
+func sm_start() -> String: return _pv("sm_start")
+func sm_pump() -> String: return _pv("sm_pump")
+func big_buffer(bytes: int = 256 << 20, direct: bool = false) -> String: return _pv("big_buffer", [bytes, direct])
+func refs_setup() -> String: return _pv("refs_setup")
+func refs_run(n: int = 1000, aliased: bool = false) -> String: return _pv("refs_run", [n, aliased])
+func refs_usets(n: int = 16) -> String: return _pv("refs_usets", [n])
+func p_list_end() -> String: return _pv("p_list_end")
+func f16_read() -> String:
+	var h := PackedByteArray()
+	h.resize(128)
+	for i in 64:
+		h.encode_u16(2 * i, 0x3C00 + i) # 1.0 upward
+	return _pv("f16_read", [h])
+func ggml_probe(n: int = 256) -> String: return _pv("ggml_probe", [n])
+func zfh_probe() -> String: return _pv("zfh_probe")

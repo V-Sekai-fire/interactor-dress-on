@@ -51,6 +51,13 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh" --no-emit
 fi
 
+# The Gate 0F probe kernel (saxpby), same pattern; PROBES_EMIT=1 re-emits it.
+if [ "${PROBES_EMIT:-0}" = 1 ]; then
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/probes/gen.sh"
+else
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/probes/gen.sh" --no-emit
+fi
+
 if [ ! -f "$BUILD/build.ninja" ]; then
 	cmake -S "$HERE" -B "$BUILD" -G Ninja \
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
@@ -58,4 +65,4 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		-DCMAKE_BUILD_TYPE=Release
 fi
 cmake --build "$BUILD"
-ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf"
+ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/probes.elf"

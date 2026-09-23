@@ -97,7 +97,7 @@ fi
 # BUILD_TARGETS (space-separated) limits the build, e.g. to one A/B fit ELF.
 # shellcheck disable=SC2086
 cmake --build "$BUILD" ${BUILD_TARGETS:+--target $BUILD_TARGETS} -- -j "${BUILD_JOBS:-8}"
-ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf"
+ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf" "$HERE/project/rd_worker.elf"
 if [ "$WITH_FIT" = ON ]; then
 	ls -la "$HERE/project/${FIT_ELF:-fit}.elf"
 	sha256sum "$HERE/project/${FIT_ELF:-fit}.elf"

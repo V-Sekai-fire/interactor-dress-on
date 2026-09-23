@@ -1,10 +1,12 @@
-# dress_on_stage -- Stage 1's GPU-layer probes (dress_on.elf) and Gate 0F's
-# sandbox runtime probes (probes.elf, its own Sandbox, made on first use).
+# dress_on_stage -- Stage 1's GPU-layer probes (dress_on.elf), Gate 0F's
+# sandbox runtime probes (probes.elf) and Gate 6G.1's worker-thread round
+# trips (rd_worker.elf); the last two in Sandboxes of their own, made on first use.
 # Moved out of main.gd unchanged; main.gd keeps a delegate for every method so
 # /root/Main answers the same calls over MCP (rule 8).
 extends "res://stages/stage_base.gd"
 
 var _probes = null
+var _rdw = null
 
 func _ready() -> void:
 	stage_name = "dress_on"
@@ -96,3 +98,19 @@ func pv(fn: String, args: Array = []) -> String:
 		if _probes == null:
 			return "FAIL: no sandbox (%s)" % r.reason
 	return str(_probes.callv("vmcall", [fn] + args))
+
+# --- Gate 6G.1: rd_worker.elf (gates/6g-polyfem-gpu/g1-rd-worker) ----------------
+# Its own Sandbox, made on first use, called on the calling thread. Its device
+# is bound to the thread that opened it (Godot's render-thread guard), which
+# for these wrappers is the main thread; gate_rd_worker.gd runs the worker arms.
+
+func rw(fn: String, args: Array = []) -> String:
+	if _rdw == null:
+		var r := SandboxUtil.make_sandbox(self, "res://rd_worker.elf", 0, 4096, 4000000)
+		_rdw = r.sandbox
+		if _rdw == null:
+			return "FAIL: no sandbox (%s)" % r.reason
+	var v = _rdw.callv("vmcall", [fn] + args)
+	if typeof(v) == TYPE_PACKED_BYTE_ARRAY:
+		return "%d bytes" % v.size()
+	return str(v)

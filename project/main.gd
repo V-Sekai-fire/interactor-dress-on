@@ -3,7 +3,7 @@
 # 6): one stage node per ELF, each owning its Sandbox (stages/sandbox_util.gd
 # makes them the way Gate 0F says), and the pipeline that composes them.
 #
-#   DressOn   stages/dress_on_stage.gd   dress_on.elf (Stage 1) + probes.elf (Gate 0F)
+#   DressOn   stages/dress_on_stage.gd   dress_on.elf (Stage 1) + probes.elf (Gate 0F) + rd_worker.elf (6G.1)
 #   Drape     stages/drape_stage.gd      drape.elf (Stage 2 AVBD jobs, Cut 5 drape)
 #   Curvenet  stages/curvenet_stage.gd   curvenet.elf (Cut 4)
 #   Fit       stages/fit_stage.gd        fit.elf (Cut 6)
@@ -284,6 +284,20 @@ func f16_read() -> String:
 	return dress_on.pv("f16_read", [h])
 func ggml_probe(n: int = 256) -> String: return dress_on.pv("ggml_probe", [n])
 func zfh_probe() -> String: return dress_on.pv("zfh_probe")
+
+# --- Gate 6G.1: rd_worker.elf, GPU round trips for a worker Thread (gates/6g-polyfem-gpu) ---
+# gate_rd_worker.gd is the gate (its worker arms need a Thread); these run on
+# the calling thread. rw_round / rw_rounds sync inside their own vmcall, as
+# rd_bench does: probes, not a pattern. rw_submit then rw_collect a frame later
+# is the rule-4 round trip.
+func rw_open(n: int = 2796) -> String: return dress_on.rw("rw_open", [n])
+func rw_round(k: int = 10, mode: int = 0) -> String: return dress_on.rw("rw_round", [k, mode]) # mode 0 sync_get, 1 get, 2 sync
+func rw_rounds(k: int = 10, mode: int = 0, reps: int = 100) -> String: return dress_on.rw("rw_rounds", [k, mode, reps])
+func rw_submit(k: int = 10) -> String: return dress_on.rw("rw_submit", [k])
+func rw_collect() -> String: return dress_on.rw("rw_collect") # a frame after rw_submit (rule 4)
+func rw_stats() -> String: return dress_on.rw("rw_stats")
+func rw_close() -> String: return dress_on.rw("rw_close")
+func rw_spirv(name: String = "saxpby") -> String: return dress_on.rw("rw_spirv", [name]) # its size
 
 # --- Gate 0G: usd_probe.elf, OpenUSD reading a stage from bytes (gates/0g-openusd) ---
 # A probe, not a pipeline stage: its Sandbox is made on first use.

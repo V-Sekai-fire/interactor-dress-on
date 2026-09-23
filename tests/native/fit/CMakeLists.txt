@@ -226,9 +226,12 @@ add_custom_command(
     COMMENT "Embedding guest/fit/specs"
     VERBATIM)
 
-add_library(fit_driver STATIC "${REPO}/guest/fit/fit_driver.cpp" "${REPO}/guest/fit/fit_probes.cpp" "${EMBED_CPP}")
+add_library(fit_driver STATIC "${REPO}/guest/fit/fit_driver.cpp" "${REPO}/guest/fit/fit_probes.cpp"
+    "${REPO}/guest/fit/fit_sim_hessian.cpp" "${EMBED_CPP}")
 target_link_libraries(fit_driver PUBLIC polyfem_fit)
 target_include_directories(fit_driver PUBLIC "${REPO}/guest/fit")
+# fit_sim_hessian.cpp: the cpp twin of the cut 6g-C kernels (kernels/fit/cpp).
+target_include_directories(fit_driver PRIVATE "${FIT_KERNELS_DIR}" "${FIT_SLANG_PRELUDE_DIR}")
 add_dependencies(fit_driver check_specs)
 
 # ---------------------------------------------------------------------------

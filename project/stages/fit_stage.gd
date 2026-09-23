@@ -36,11 +36,19 @@ var fit_execution_timeout := 2500000
 # Top-level keys of the setup JSON replaced as text before fit_set_config
 # (key -> JSON literal), e.g. {"fit_weight": "0"} for Gate 6's fit-gap control.
 var fit_config_overrides := {}
+# Newton's force_psd_projection in both solves (stage A; the loop's default
+# through pipeline.gd), an insertion into solver.nonlinear.Newton: Gate 6 and
+# the 6g gates run the psd config this way.
+var fit_force_psd := false
 
 var _last := "" # the last worker call's answer
 
 func _ready() -> void:
 	stage_name = "fit"
+	# One worker Thread for the whole session: the GPU Hessian's
+	# RenderingDevice is bound to the thread that created it (Gate 6G.1), and
+	# it is created inside the first fit_step and used by every later one.
+	persistent_worker = true
 	_open()
 
 # allocations_max: the default 10000 live chunks is exhausted inside
@@ -136,6 +144,10 @@ func fit_configure_with(memory_mib: int = 2048, elf: String = "res://fit.elf", e
 	return fit_configure()
 
 func _apply_overrides(cfg_text: String) -> String:
+	if fit_force_psd:
+		var re := RegEx.new()
+		re.compile("(\"nonlinear\"\\s*:\\s*[{]\\s*\"Newton\"\\s*:\\s*[{])")
+		cfg_text = re.sub(cfg_text, "${1}\"force_psd_projection\": true, ")
 	for k in fit_config_overrides:
 		var re := RegEx.new()
 		re.compile("(\"%s\"\\s*:\\s*)[^,}\\n]+" % k)
@@ -223,6 +235,29 @@ func fit_status() -> String:
 # fixture has none, so the default clears them.
 func fit_set_skin_weights(weights: PackedFloat32Array = PackedFloat32Array()) -> String:
 	return _fit_now("fit_set_skin_weights", [weights])
+
+# Cut 6g-C: where SimilarityForm's Hessian is assembled. 0 the CPU path (the
+# flat control, bitwise the old fit), 1 the Lean kernels on the worker's
+# RenderingDevice (default), 2 their cpp twin on the guest CPU.
+func fit_set_gpu(mode: int = 1) -> String:
+	return _fit_now("fit_set_gpu", [mode])
+
+# Cut 6g-C: where the CCD broad phase runs. 0 the CPU path (ipc-toolkit's
+# BVH, the flat control), 1 the Lean kernels on the worker's device
+# (default), 2 the same audited by the CPU build after every line search.
+func fit_set_gpu_broad(mode: int = 1) -> String:
+	return _fit_now("fit_set_gpu_broad", [mode])
+
+# Gate C1's check, on the worker thread (poll fit_status for the report).
+func fit_gpu_check() -> String:
+	return _fit_start("fit_gpu_check")
+
+func fit_gpu_stats() -> String:
+	return _fit_now("fit_gpu_stats")
+
+# Frees the device, on the worker thread that owns it.
+func fit_gpu_close() -> String:
+	return _fit_start("fit_gpu_close")
 
 # Intersection check on the current state.
 func fit_check() -> String:

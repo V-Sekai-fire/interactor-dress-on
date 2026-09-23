@@ -136,13 +136,21 @@ add_library(fit_core STATIC
     "${FIT_REPO}/guest/fit/fit_driver.cpp"
     "${FIT_REPO}/guest/fit/fit_tools.cpp"
     "${FIT_REPO}/guest/fit/fit_probes.cpp"
+    "${FIT_REPO}/guest/fit/fit_sim_hessian.cpp"
     "${FIT_EMBED_CPP}")
 target_include_directories(fit_core PUBLIC "${FIT_REPO}/guest/fit")
+# fit_sim_hessian.cpp compiles the cpp twin of the cut 6g-C kernels
+# (kernels/fit/cpp, the second target of the one Slang source).
+target_include_directories(fit_core PRIVATE "${FIT_KERNELS_DIR}" "${FIT_SLANG_PRELUDE_DIR}")
 target_link_libraries(fit_core PUBLIC polyfem)
 
 # --- fit.elf --------------------------------------------------------------------------
-add_stage_elf(${FIT_ELF} guest/fit/main.cpp)
+# fit_gpu.cpp is the rd_compute side of the similarity Hessian (cut 6g-C):
+# kernels/fit/gen.sh embeds the SPIR-V into ${CMAKE_BINARY_DIR}/fit_kernels.inc
+# (build.sh runs it before configuring), as the AVBD and drape stages do.
+add_stage_elf(${FIT_ELF} guest/fit/main.cpp guest/fit/fit_gpu.cpp guest/fit/fit_broad_phase.cpp)
 target_link_libraries(${FIT_ELF} PRIVATE fit_core)
+target_include_directories(${FIT_ELF} PRIVATE "${CMAKE_BINARY_DIR}")
 target_compile_options(${FIT_ELF} PRIVATE -ffp-contract=off)
 # Every file open in the ELF is counted and refused with EACCES
 # (guest/fit/fit_tools.cpp): the guest has no filesystem (Gate 0F probe 3), and

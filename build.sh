@@ -91,6 +91,14 @@ if [ "$BUILD_FIT" = 0 ]; then WITH_FIT=OFF; else WITH_FIT=ON; fi
 if [ "$WITH_FIT" = ON ]; then
 	bash "$HERE/tools/fit/prepare_forks.sh"
 	export CPM_SOURCE_CACHE="${CPM_SOURCE_CACHE:-C:/b/cpm-native}"
+	# fit.elf's kernels (the SDF sampler's cpp emit, and cut 6g-C's three
+	# GPU kernels embedded into $BUILD/fit_kernels.inc). FIT_EMIT=1 re-emits
+	# them from lean/.
+	if [ "${FIT_EMIT:-0}" = 1 ]; then
+		BUILD_DIR="$BUILD" bash "$HERE/kernels/fit/gen.sh"
+	else
+		BUILD_DIR="$BUILD" bash "$HERE/kernels/fit/gen.sh" --no-emit
+	fi
 fi
 
 if [ ! -f "$BUILD/build.ninja" ]; then

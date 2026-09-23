@@ -14,11 +14,18 @@
 // The NL problem, AL solver and forms persist between the two calls.
 #pragma once
 
+#include <Eigen/Core>
+
 #include <array>
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
+
+namespace polyfem::solver {
+class SimilarityForm;
+class ContactForm;
+}
 
 namespace fit {
 
@@ -109,6 +116,19 @@ public:
 	int garment_vertex_count() const;
 
 	const Normalisation &normalisation() const { return norm_; }
+	// The SimilarityForm of this session (null before begin()): cut 6g-C
+	// attaches its GPU Hessian hook to it (guest/fit/fit_gpu.cpp).
+	std::shared_ptr<polyfem::solver::SimilarityForm> similarity_form() const;
+	// The ContactForm of this session (null before begin()) and what its
+	// broad phase needs: the collision mesh's vertices from
+	// avatar_vertex_count() on are the garment's, and self_collision() is
+	// cloth-fit's can_collide mode (contact.enabled).
+	std::shared_ptr<polyfem::solver::ContactForm> contact_form() const;
+	int avatar_vertex_count() const;
+	bool self_collision() const;
+	// The current solution in the forms' complete space (3 x collision
+	// vertices, avatar then garment): what a form's hook sees as x.
+	const Eigen::MatrixXd &solution() const;
 	const IntersectionReport &start_intersections() const { return start_ids_; }
 
 	// ipc::my_has_intersections on the current state: avatar at the target

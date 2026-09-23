@@ -7,6 +7,14 @@
 #   probes   6.0: exceptions, io (refused and counted), instret, ldlt, ldlt8k
 #            (host-timed, 5 calls), libm hashes, and the wire check (the arrays
 #            GDScript hands the guest vs fit_native --dump-inputs, bit for bit).
+#   gpucheck fixture -> fit_begin -> fit_gpu_check (cut 6g-C, gate C1: the Lean
+#            kernels against the CPU double path, the cpp twin, the flipped-
+#            sign control, the pattern) -> phase 0 -> fit_gpu_check again, on
+#            the worker Thread. --gpu=0|1|2 sets the assembly path for solve
+#            (0 the CPU control, 1 the device, 2 the twin), --psd inserts
+#            force_psd_projection (both solves, as the loop does); --broad=0|1|2
+#            sets the broad phase (0 the CPU control, 1 the device, 2 the
+#            device audited by the CPU build after every line search).
 #   solve    fixture -> fit_begin -> fit_step x --phases (default: all), each
 #            fit_step a vmcall on main.gd's worker Thread while this main
 #            thread keeps drawing frames; per phase: host ms, Newton, energy,
@@ -59,6 +67,8 @@ var _phase_count := 0
 var _phase_t0 := 0
 var _last_poll := 0
 var _native_phases: Array = []  # [newton, energy, wall_s] per phase
+var _gpu_checks := 0
+var _gpucheck_after_phase := false
 var _phase_rows: Array = []
 
 func _say(s: String) -> void:
@@ -119,6 +129,23 @@ func _process(_dt: float) -> bool:
 			_finish()
 		"solve":
 			_solve_begin()
+		"gpucheck":
+			_solve_begin()
+			if not _args.has("phases"):
+				_phases_want = 1
+			if _state == "step":
+				_state = "gpucheck_start"
+		"gpucheck_start":
+			var r: String = _m.fit_gpu_check()
+			if not r.begins_with("STARTED"):
+				_check("fit_gpu_check", false, r)
+				_finish()
+				return false
+			_phase_t0 = Time.get_ticks_msec()
+			_last_poll = _phase_t0
+			_state = "gpucheck_poll"
+		"gpucheck_poll":
+			_gpucheck_poll()
 		"step":
 			_phase_t0 = Time.get_ticks_msec()
 			_last_poll = _phase_t0
@@ -262,12 +289,20 @@ func _solve_begin() -> void:
 	_load_native_phases()
 	if _args.has("fitweight0"):
 		_m.fit_config_overrides = {"fit_weight": "0"}
+	_m.fit_force_psd = _args.has("psd")
 	var r: String = _m.fit_configure_with(int(_args.get("mem", "2048")), _args.get("elf", "res://fit.elf"),
 			int(_args.get("timeout", "-1")))
 	_check("fit_configure", r.begins_with("OK"), r)
 	if _rc != 0:
 		_finish()
 		return
+	if _args.has("gpu"):
+		r = _m.fit_set_gpu(int(_args.get("gpu", "1")))
+		_check("fit_set_gpu %s" % _args.get("gpu", "1"), r.begins_with("OK"), r)
+	if _args.has("broad"):
+		r = _m.fit_set_gpu_broad(int(_args.get("broad", "1")))
+		_check("fit_set_gpu_broad %s" % _args.get("broad", "1"), r.begins_with("OK"), r)
+	_say("     psd %s, gpu %s" % ["on" if _args.has("psd") else "off (config default)", _args.get("gpu", "guest default")])
 	# io positive control before begin: the counter sees refused opens.
 	r = _m.fit_probe_io()
 	_check("io positive control (before fit_begin)", r.begins_with("PASS"), r)
@@ -320,10 +355,49 @@ func _poll() -> void:
 	_say("ok   phase %d: host %.1f s, newton %d, energy %s, instructions %d (%.0f x 2^20), heap_used %.1f MiB%s" % [
 			k, host_ms / 1000.0, newton, energy_s, instr, instr / 1048576.0, heap, nat])
 	_say("     " + last.left(600))
+	# Cut 6g-C: the GPU Hessian's share of the phase (gpu_us over host_ms).
+	var gpu_us := last.get_slice("gpu_us ", 1).get_slice(" ", 0).to_int()
+	var gpu_n := last.get_slice("gpu_assemblies ", 1).get_slice(" ", 0).to_int()
+	if gpu_n > 0:
+		_say("     gpu: %d assemblies, %.1f ms each, %.2f%% of the phase, %.0f ms per Newton iteration" % [
+				gpu_n, gpu_us / 1000.0 / gpu_n, 100.0 * gpu_us / 1000.0 / maxf(host_ms, 1.0), host_ms / maxf(newton, 1)])
+	var bp_n := last.get_slice("bp_builds ", 1).get_slice(" ", 0).to_int()
+	if bp_n > 0:
+		var bp_us := last.get_slice("bp_us ", 1).get_slice(" ", 0).to_int()
+		var bp_cpu := last.get_slice("bp_cpu_us ", 1).get_slice(" ", 0).to_int()
+		_say("     broad phase: %d builds, %.1f ms each on the GPU path, %.2f%% of the phase%s; missed %s extra %s" % [
+				bp_n, bp_us / 1000.0 / bp_n, 100.0 * bp_us / 1000.0 / maxf(host_ms, 1.0),
+				(", %.1f ms each on the CPU (audit)" % (bp_cpu / 1000.0 / bp_n)) if bp_cpu > 0 else "",
+				last.get_slice("bp_missed ", 1).get_slice(" ", 0), last.get_slice("bp_extra ", 1).get_slice(" ", 0)])
+	if gpu_n > 0 or bp_n > 0:
+		_say("     " + _m.fit_gpu_stats().left(1200))
+	if _gpucheck_after_phase:
+		_gpucheck_after_phase = false
+		_state = "gpucheck_start"
+		return
 	if _phase_rows.size() < _phases_want:
 		_state = "step"
 		return
 	_solve_end()
+
+func _gpucheck_poll() -> void:
+	if Time.get_ticks_msec() - _last_poll < 500:
+		return
+	_last_poll = Time.get_ticks_msec()
+	var s: String = _m.fit_status()
+	if s.begins_with("BUSY"):
+		return
+	var last := s.get_slice("| last: ", 1)
+	var rep := last.get_slice(" ", 1) if last.begins_with("host_ms=") else last
+	for l in rep.split("\n", false):
+		_say("     " + l)
+	_check("fit_gpu_check (%s ms)" % last.get_slice("host_ms=", 1).get_slice(" ", 0), rep.find("PASS fit_gpu_check") >= 0, rep.get_slice("\n", rep.count("\n")))
+	_gpu_checks += 1
+	if _gpu_checks == 1 and _phases_want > 0:
+		_state = "step"
+		_gpucheck_after_phase = true
+		return
+	_finish()
 
 func _solve_end() -> void:
 	var tot_ms := 0

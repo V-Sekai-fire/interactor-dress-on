@@ -264,6 +264,16 @@ namespace polyfem::solver
 
 	void ContactForm::line_search_begin(const Eigen::VectorXd &x0, const Eigen::VectorXd &x1)
 	{
+		if (broad_phase_hook_)
+		{
+			const Eigen::MatrixXd V0 = compute_displaced_surface(x0);
+			const Eigen::MatrixXd V1 = compute_displaced_surface(x1);
+			if (broad_phase_hook_(collision_mesh_, V0, V1, dhat_ / 2, candidates_))
+			{
+				use_cached_candidates_ = true;
+				return;
+			}
+		}
 		candidates_.build(
 			collision_mesh_,
 			compute_displaced_surface(x0),

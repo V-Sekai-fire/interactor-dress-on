@@ -1,4 +1,11 @@
 import Fit.SdfSplineHessian
+import Fit.Df32
+import Fit.Hess12
+import Fit.SimilarityHessianBlock
+import Fit.ProjectPsd12
+import Fit.CsrGatherDf32
+import Fit.SweptAabb
+import Fit.BoxPair
 
 /-!
 # `Fit` — fit.elf's Lean-emitted kernels

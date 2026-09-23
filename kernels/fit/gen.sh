@@ -7,12 +7,15 @@
 #
 #   Lean (lean/, `lake exe emit_fit`)                      ->  slang/<k>.slang  (committed)
 #     slangc -target cpp    ->  cpp/<k>_emit.cpp                                 (committed)
-#     slangc -target spirv  ->  <build>/spv-fit/<k>.spv                          (validation only)
+#     slangc -target spirv  ->  <build>/spv-fit/<k>.spv                          (build artefact)
+#       ../embed_spv.py     ->  <build>/fit_kernels.inc                          (build artefact)
 #
-# The cpp emit is what fit.elf and fit_native compile (garment_forms/SdfSpline.cpp
-# includes it; FIT_KERNELS_DIR points here). fit.elf has no GPU path yet, so
-# the SPIR-V is only compiled, to prove the same Slang is a valid GPU kernel
-# (double needs SPIR-V Float64); nothing embeds it.
+# The cpp emits are what fit.elf and fit_native compile: the SDF sampler in
+# garment_forms/SdfSpline.cpp, the cut 6g-C kernels' twin in
+# guest/fit/fit_sim_hessian.cpp (FIT_KERNELS_DIR points here). The SPIR-V is
+# the GPU path of the same kernels (guest/fit/fit_gpu.cpp, namespace
+# fit_kernels); sdf_spline_hessian is embedded with them but has no rd
+# caller yet (double needs SPIR-V Float64).
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -56,9 +59,11 @@ echo "== slangc -target cpp =="
 for k in $KERNELS; do
 	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -o "cpp/${k}_emit.cpp" "slang/$k.slang" )
 done
-echo "== slangc -target spirv (validation only) =="
+echo "== slangc -target spirv =="
 for k in $KERNELS; do
 	"$SLANGC" -target spirv -profile sm_6_5 -stage compute -entry main \
 		-o "$SPV/$k.spv" "$HERE/slang/$k.slang"
 	echo "  $k.spv $(wc -c < "$SPV/$k.spv") bytes"
 done
+echo "== embedding SPIR-V =="
+python "$HERE/../embed_spv.py" --namespace fit_kernels "$SPV" "$BUILD/fit_kernels.inc"

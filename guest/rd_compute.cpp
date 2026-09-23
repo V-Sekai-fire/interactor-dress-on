@@ -551,7 +551,9 @@ void Device::submit() {
 
 void Device::sync() {
 	step_ = "sync";
-	if (process_frame() == submit_frame_) {
+	if (worker_) {
+		++worker_syncs_;
+	} else if (process_frame() == submit_frame_) {
 		++same_frame_syncs_;
 	}
 	++syncs_;

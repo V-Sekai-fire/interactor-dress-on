@@ -58,6 +58,17 @@ namespace polyfem::solver
 
 		std::string name() const override { return "contact"; }
 
+		// interactor-dress-on cut 6g-C: line_search_begin's candidate build
+		// can be handed to a hook (fit.elf's GPU broad phase, guest/fit/
+		// fit_broad_phase.cpp): the collision mesh, the displaced surface at
+		// both ends of the search, the inflation radius (dhat / 2) and the
+		// candidate set to fill. Returning false falls back to
+		// ipc::Candidates::build with broad_phase_method(), the CPU path,
+		// which stays bitwise what it was when no hook is set.
+		using BroadPhaseHook = std::function<bool(const ipc::CollisionMesh &, const Eigen::MatrixXd &, const Eigen::MatrixXd &, double, ipc::Candidates &)>;
+		void set_broad_phase_hook(BroadPhaseHook hook) { broad_phase_hook_ = std::move(hook); }
+		ipc::BroadPhaseMethod broad_phase_method() const { return broad_phase_method_; }
+
 		/// @brief Initialize the form
 		/// @param x Current solution
 		void init(const Eigen::VectorXd &x) override;
@@ -191,6 +202,8 @@ namespace polyfem::solver
 		ipc::Collisions collision_set_;
 		/// @brief Cached candidate set for the current solution
 		ipc::Candidates candidates_;
+
+		BroadPhaseHook broad_phase_hook_;
 
 		const ipc::BarrierPotential barrier_potential_;
 	};

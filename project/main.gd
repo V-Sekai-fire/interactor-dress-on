@@ -215,6 +215,11 @@ func fit_probe_heap() -> String: return fit.fit_probe_heap()
 func fit_push_control() -> String: return fit.fit_push_control()
 func fit_push_flat() -> String: return fit.fit_push_flat()
 func fit_set_skin_weights(weights: PackedFloat32Array = PackedFloat32Array()) -> String: return fit.fit_set_skin_weights(weights)
+func fit_set_gpu(mode: int = 1) -> String: return fit.fit_set_gpu(mode)
+func fit_set_gpu_broad(mode: int = 1) -> String: return fit.fit_set_gpu_broad(mode)
+func fit_gpu_check() -> String: return fit.fit_gpu_check()
+func fit_gpu_stats() -> String: return fit.fit_gpu_stats()
+func fit_gpu_close() -> String: return fit.fit_gpu_close()
 # A fresh fit Sandbox with the stage's fit_memory_mib / fit_elf / fit_execution_timeout.
 func fit_configure() -> String: return fit.fit_configure()
 func fit_configure_with(memory_mib: int = 2048, elf: String = "res://fit.elf", execution_timeout: int = -1) -> String:
@@ -226,6 +231,11 @@ var fit_config_overrides: Dictionary:
 		return fit.fit_config_overrides
 	set(value):
 		fit.fit_config_overrides = value
+var fit_force_psd: bool:
+	get:
+		return fit.fit_force_psd
+	set(value):
+		fit.fit_force_psd = value
 var fit_memory_mib: int:
 	get:
 		return fit.fit_memory_mib

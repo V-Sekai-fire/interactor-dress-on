@@ -907,9 +907,45 @@ namespace polyfem::solver
 		}
 	}
 
+	void SimilarityForm::hessian_blocks(const Eigen::VectorXd &x, bool project_psd, std::vector<double> &blocks) const
+	{
+		const Eigen::MatrixXd V = utils::unflatten(x, 3) + V_;
+
+		Eigen::Matrix<int, 3, 2> le;
+		le << 0, 1,
+			1, 2,
+			2, 0;
+		Eigen::Vector3i lv;
+		lv << 2, 0, 1;
+
+		blocks.clear();
+		for (int i = 0, k = 0; i < TT.rows(); i++)
+		{
+			Eigen::Matrix<double, 1, 18> tmp;
+			Eigen::Matrix<double, 12, 12> h;
+			for (int j = 0; j < TT.cols(); j++, k++)
+			{
+				if (TT(i, j) < 0)
+					continue;
+
+				tmp << V.row(F_(i, le(j, 0))), V.row(F_(i, le(j, 1))), V.row(F_(i, lv(j))), V.row(F_(TT(i, j), lv(TTi(i, j)))), orig_coeffs.row(k);
+				similarity_hessian(tmp(0), tmp(1), tmp(2), tmp(3), tmp(4), tmp(5), tmp(6), tmp(7), tmp(8), tmp(9), tmp(10), tmp(11), tmp(12), tmp(13), tmp(14), tmp(15), tmp(16), tmp(17), h.data());
+
+				if (project_psd)
+					h = ipc::project_to_psd(h);
+
+				for (int r = 0; r < 12; r++)
+					for (int c = 0; c < 12; c++)
+						blocks.push_back(h(r, c));
+			}
+		}
+	}
+
 	void SimilarityForm::second_derivative_unweighted(const Eigen::VectorXd &x, StiffnessMatrix &hessian) const
 	{
 		POLYFEM_SCOPED_TIMER("similarity hessian");
+		if (hessian_hook_ && hessian_hook_(x, is_project_to_psd(), hessian))
+			return;
 		const Eigen::MatrixXd V = utils::unflatten(x, 3) + V_;
 
 		Eigen::Matrix<int, 3, 2> le;

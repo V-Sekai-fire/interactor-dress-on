@@ -1,0 +1,95 @@
+== slangc -target cpp ==
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+== slangc -target spirv (+ reflection) ==
+== binding table ==
+wrote C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/kernels/avbd/AvbdKernelTable.inc: 25 kernels, 184 bindings
+== embedding SPIR-V ==
+embedded 25 kernels, 106032 bytes -> C:/b/ido6g/avbd_kernels.inc
+embedded 11 kernels, 15256 bytes -> C:/b/ido6g/probes_kernels.inc
+== slangc -target cpp (11) ==
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+== slangc -target spirv (+ reflection) (11) ==
+== binding table ==
+wrote C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/kernels/drape/DrapeKernelTable.inc: 11 kernels, 70 bindings
+== embedding SPIR-V ==
+embedded 11 kernels, 180440 bytes -> C:/b/ido6g/drape_kernels.inc
+== slangc -target cpp ==
+norm_f32: group-shared, no cpp (the host runs norm_f32_serial)
+rms_norm_f32: group-shared, no cpp (the host runs rms_norm_f32_serial)
+mean_f32: group-shared, no cpp (the host runs mean_f32_serial)
+soft_max_f32: group-shared, no cpp (the host runs soft_max_f32_serial)
+norm_f32_t64: group-shared, no cpp (the host runs norm_f32_t64_serial)
+rms_norm_f32_t64: group-shared, no cpp (the host runs rms_norm_f32_t64_serial)
+soft_max_f32_t64: group-shared, no cpp (the host runs soft_max_f32_t64_serial)
+flash_attn_ext_f32_d64: group-shared, no cpp (the host runs flash_attn_ext_f32_d64_serial)
+flash_attn_ext_f32_d128: group-shared, no cpp (the host runs flash_attn_ext_f32_d128_serial)
+flash_attn_ext_f16_d64: group-shared, no cpp (the host runs flash_attn_ext_f16_d64_serial)
+flash_attn_ext_f16_d128: group-shared, no cpp (the host runs flash_attn_ext_f16_d128_serial)
+== slangc -target spirv -O0 -preserve-params (+ reflection), spirv-val ==
+== fixed-layout check + kernel table ==
+wrote C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/kernels/ggml/GgmlKernelTable.inc: 67 kernels, all on the fixed layout
+== embedding SPIR-V ==
+embedded 67 kernels, 618480 bytes -> C:/b/ido6g/ggml_kernels.inc
+== controls: compiled alike, the layout check must refuse each ==
+control ctl_add_f32_rosrc: refused by the layout check, as it must be
+embedded 1 kernels, 4240 bytes -> C:/b/ido6g/ggml_controls.inc
+polysolve-guest: patch already applied at ee553dc6
+== slangc -target cpp ==
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+== slangc -target spirv ==
+  sdf_spline_hessian.spv 13788 bytes
+  similarity_hessian_block.spv 342768 bytes
+  project_psd12.spv 27516 bytes
+  csr_gather_df32.spv 3416 bytes
+== embedding SPIR-V ==
+embedded 4 kernels, 387488 bytes -> C:/b/ido6g/fit_kernels.inc
+[0/2] Re-checking globbed directories...
+[1/5] Building CXX object CMakeFiles/fit.dir/guest/fit/fit_gpu.cpp.o
+[2/5] Building CXX object CMakeFiles/fit_core.dir/guest/fit/fit_sim_hessian.cpp.o
+[3/5] Linking CXX static library libfit_core.a
+[4/5] Linking CXX executable fit; Installing fit.elf into project/
+-rw-r--r-- 1 ernest.lee 197121 4901824 Sep 23 14:21 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/curvenet.elf
+-rw-r--r-- 1 ernest.lee 197121 3570552 Sep 23 14:21 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/drape.elf
+-rw-r--r-- 1 ernest.lee 197121  922592 Sep 23 14:21 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/dress_on.elf
+-rw-r--r-- 1 ernest.lee 197121 6562248 Sep 23 14:21 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/ggml_test.elf
+-rw-r--r-- 1 ernest.lee 197121 3676552 Sep 23 14:21 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/probes.elf
+-rw-r--r-- 1 ernest.lee 197121 1102424 Sep 23 14:21 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/rd_worker.elf
+-rw-r--r-- 1 ernest.lee 197121 7534976 Sep 23 14:32 /tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/fit.elf
+d2b7055ea5c528e4106d10e6a9ee7f99dab2989cde71f4cc60dae7fde17b1000 */tmp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6g/project/fit.elf

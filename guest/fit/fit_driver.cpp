@@ -184,6 +184,9 @@ struct FitDriver::State {
 	std::vector<std::shared_ptr<Form>> persistent_forms;
 	std::vector<std::shared_ptr<Form>> persistent_full_forms;
 	std::shared_ptr<CurveSizeForm> curve_size_form;
+	std::shared_ptr<SimilarityForm> similarity_form;
+	std::shared_ptr<ContactForm> contact_form;
+	bool self_collision = false;
 
 	Eigen::MatrixXd sol;
 
@@ -342,6 +345,7 @@ bool FitDriver::begin(const FitInput &in, std::string *error) {
 
 		s.collision_mesh = ipc::CollisionMesh(s.collision_vertices, s.collision_edges, s.collision_triangles);
 		s.n_avatar_verts = int(g.nc_avatar_v.rows());
+		s.self_collision = self_collision;
 		const int n_avatar_verts = s.n_avatar_verts;
 		s.collision_mesh.can_collide = [n_avatar_verts, self_collision](size_t vi, size_t vj) {
 			if (self_collision)
@@ -366,6 +370,7 @@ bool FitDriver::begin(const FitInput &in, std::string *error) {
 		auto similarity_form = std::make_shared<SimilarityForm>(cv, garment_tris);
 		similarity_form->set_weight(args["similarity_penalty_weight"]);
 		s.persistent_forms.push_back(similarity_form);
+		s.similarity_form = similarity_form;
 
 		if (args["curvature_penalty_weight"] > 0) {
 			auto curvature_form = std::make_shared<CurveCurvatureForm>(cv, s.curves);
@@ -400,6 +405,7 @@ bool FitDriver::begin(const FitInput &in, std::string *error) {
 			contact_form->set_barrier_stiffness(args["solver"]["contact"]["barrier_stiffness"]);
 			contact_form->save_ccd_debug_meshes = false;
 			s.persistent_forms.push_back(contact_form);
+			s.contact_form = contact_form;
 		}
 		{
 			const auto tmp_curves = boundary_curves(g.garment.f);
@@ -572,6 +578,27 @@ bool FitDriver::run_phase(int phase, PhaseStats *st) {
 	s.nl_solver = polysolve::nonlinear::Solver::create(args["solver"]["nonlinear"], args["solver"]["linear"], 1., logger());
 	s.al_solver->solve_reduced(s.nl_solver, *s.nl_problem, s.sol);
 	return true;
+}
+
+std::shared_ptr<polyfem::solver::SimilarityForm> FitDriver::similarity_form() const {
+	return began_ ? s_->similarity_form : nullptr;
+}
+
+std::shared_ptr<polyfem::solver::ContactForm> FitDriver::contact_form() const {
+	return began_ ? s_->contact_form : nullptr;
+}
+
+int FitDriver::avatar_vertex_count() const {
+	return began_ ? s_->n_avatar_verts : 0;
+}
+
+bool FitDriver::self_collision() const {
+	return began_ ? s_->self_collision : false;
+}
+
+const Eigen::MatrixXd &FitDriver::solution() const {
+	static const Eigen::MatrixXd none;
+	return began_ ? s_->sol : none;
 }
 
 void FitDriver::garment_solve_frame(std::vector<double> *v) const {

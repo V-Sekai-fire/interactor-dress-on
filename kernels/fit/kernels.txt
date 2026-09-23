@@ -3,3 +3,17 @@
 # the brick-grid SDF (lean/Fit/SdfSplineHessian.lean), in place of OpenVDB's
 # SplineSampler::sampleHessian.
 sdf_spline_hessian
+
+# Cut 6g-C, stage 1: SimilarityForm's Hessian on the GPU in df32
+# (lean/Fit/{Df32,Hess12,SimilarityHessianBlock,ProjectPsd12,CsrGatherDf32}.lean):
+# the 12x12 block per hinge from the energy differentiated at emit time, the
+# PSD projection by Jacobi rotations, the fixed-pattern gather.
+similarity_hessian_block
+project_psd12
+csr_gather_df32
+
+# Cut 6g-C, stage 2: the broad phase (lean/Fit/{SweptAabb,BoxPair}.lean):
+# one box per primitive over the line search's two ends, then the
+# garment-involved pairs counted and written, two round trips per build.
+swept_aabb
+box_pair

@@ -14,7 +14,12 @@ spirv, validation only).
 open LeanSlang
 
 private def kernels : List (String × SlangShaderModule) :=
-  [ ("sdf_spline_hessian", Fit.SlangCodegen.SdfSplineHessian.shader) ]
+  [ ("sdf_spline_hessian", Fit.SlangCodegen.SdfSplineHessian.shader)
+  , ("similarity_hessian_block", Fit.SlangCodegen.SimilarityHessianBlock.shader)
+  , ("project_psd12", Fit.SlangCodegen.ProjectPsd12.shader)
+  , ("csr_gather_df32", Fit.SlangCodegen.CsrGatherDf32.shader)
+  , ("swept_aabb", Fit.SlangCodegen.SweptAabb.shader)
+  , ("box_pair", Fit.SlangCodegen.BoxPair.shader) ]
 
 def main (args : List String) : IO UInt32 := do
   let outDir := args.headD "."

@@ -178,6 +178,15 @@ public:
 	// process frame, sync() counts itself as same-frame when that frame has
 	// not advanced. A frame-driven host keeps same_frame_syncs() at 0.
 	int64_t same_frame_syncs() const { return same_frame_syncs_; }
+	// A device a worker Thread owns (Gate 6G.1: the fit's) syncs inside its
+	// vmcall while the main thread renders; every such sync lands in the
+	// same process frame it submitted in and would count as a rule-4 signal
+	// here although no frame waited. Marked a worker, the device counts
+	// them as worker_syncs() instead, and same_frame_syncs() stays the
+	// main-thread signal.
+	void set_worker(bool on) { worker_ = on; }
+	bool worker() const { return worker_; }
+	int64_t worker_syncs() const { return worker_syncs_; }
 	// Engine.get_process_frames(), through this class's method-name table.
 	int64_t process_frame();
 	int64_t syncs() const { return syncs_; }
@@ -220,6 +229,8 @@ private:
 	Object engine_{ uint64_t(0) };
 	int64_t submit_frame_ = -1;
 	int64_t same_frame_syncs_ = 0, syncs_ = 0, submits_ = 0;
+	int64_t worker_syncs_ = 0;
+	bool worker_ = false;
 	int64_t permanent_live_ = 0;
 	bool permanent_rids_ = true;
 	bool list_open_ = false;

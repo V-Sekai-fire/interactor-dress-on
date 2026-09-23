@@ -9,8 +9,17 @@
 #   start(fn, args)      a vmcall on the worker Thread; poll() until it is done
 #   poll()               {done: bool, result: Variant, host_ms: int}
 #
+# Two kinds of worker. By default every start() makes a Thread of its own and
+# it ends with the call. With persistent_worker set (the fit stage), one
+# Thread lives for the session and takes the calls from a queue: Gate 6G.1
+# found that a local RenderingDevice is bound to the OS thread that created
+# it, so a guest that keeps a device across vmcalls (fit.elf's GPU Hessian)
+# must see the same thread every time.
+#
 # Rule 4: nothing here waits. The pipeline advances from _process and reads a
-# worker result only once Thread.is_alive() is false.
+# worker result only once the call has ended (Thread.is_alive() false, or the
+# persistent worker's done flag); the persistent Thread is joined only at
+# _exit_tree, after it was told to quit.
 extends Node
 
 const SandboxUtil := preload("res://stages/sandbox_util.gd")
@@ -19,12 +28,22 @@ var sandbox = null
 var reason := ""        # why sandbox is null
 var stage_name := ""
 var vm_us := 0          # host-timed vmcall time since the last take_vm_us()
+var persistent_worker := false
 
 var _thread: Thread = null
 var _call := ""
 var _t0 := 0
 var _result = null
 var _result_ms := 0
+
+# The persistent worker: a job posted under _pmutex, woken by _psem.
+var _pthread: Thread = null
+var _psem := Semaphore.new()
+var _pmutex := Mutex.new()
+var _pjob := {}
+var _pdone := true
+var _pquit := false
+var _pout = null
 
 func open_sandbox(elf: String, mem_mb: int, refs: int, timeout_units: int, extra: Dictionary = {},
 		required: PackedStringArray = PackedStringArray()) -> bool:
@@ -43,6 +62,11 @@ func available() -> bool:
 	return sandbox != null
 
 func busy() -> bool:
+	if persistent_worker:
+		_pmutex.lock()
+		var b := not _pdone
+		_pmutex.unlock()
+		return b
 	return _thread != null and _thread.is_alive()
 
 func busy_text() -> String:
@@ -73,10 +97,21 @@ func start(fn: String, args: Array = []) -> String:
 	if busy():
 		return busy_text()
 	_reap()
-	_thread = Thread.new()
 	_call = fn
 	_t0 = Time.get_ticks_msec()
 	_result = null
+	if persistent_worker:
+		if _pthread == null:
+			_pthread = Thread.new()
+			_pthread.start(_ploop)
+		_pmutex.lock()
+		_pjob = {"fn": fn, "args": args}
+		_pdone = false
+		_pout = null
+		_pmutex.unlock()
+		_psem.post()
+		return "STARTED %s" % fn
+	_thread = Thread.new()
 	_thread.start(_worker.bind(fn, args))
 	return "STARTED %s" % fn
 
@@ -85,7 +120,35 @@ func _worker(fn: String, args: Array):
 	var r = sandbox.callv("vmcall", [fn] + args)
 	return [r, Time.get_ticks_usec() - t0]
 
+# The persistent worker's loop: one vmcall per posted job, until quit.
+func _ploop() -> void:
+	while true:
+		_psem.wait()
+		_pmutex.lock()
+		var quit := _pquit
+		var job: Dictionary = _pjob
+		_pmutex.unlock()
+		if quit:
+			return
+		var t0 := Time.get_ticks_usec()
+		var r = sandbox.callv("vmcall", [job.fn] + job.args)
+		var dt := Time.get_ticks_usec() - t0
+		_pmutex.lock()
+		_pout = [r, dt]
+		_pdone = true
+		_pmutex.unlock()
+
 func _reap() -> void:
+	if persistent_worker:
+		_pmutex.lock()
+		var out = _pout if _pdone else null
+		_pout = null
+		_pmutex.unlock()
+		if out != null:
+			_result = out[0]
+			_result_ms = int(out[1] / 1000)
+			vm_us += int(out[1])
+		return
 	if _thread != null and not _thread.is_alive():
 		var out = _thread.wait_to_finish()
 		_thread = null
@@ -105,3 +168,10 @@ func _exit_tree() -> void:
 	if _thread != null:
 		_thread.wait_to_finish()
 		_thread = null
+	if _pthread != null:
+		_pmutex.lock()
+		_pquit = true
+		_pmutex.unlock()
+		_psem.post()
+		_pthread.wait_to_finish()
+		_pthread = null

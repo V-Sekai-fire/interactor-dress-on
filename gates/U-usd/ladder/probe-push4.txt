@@ -1,0 +1,8 @@
+arm=push4 file=C:/b/gu-inputs/real-asset.usdz mem=320 sandbox=true
+bytes=11138085 init=ok plugins=8 resolvers=2 resources=11 errors=0 heap=1052576
+push 0+4194304 -> staged=4194304 heap=5246896
+push 4194304+4194304 -> staged=8388608 heap=9441200
+push 8388608+2749477 -> staged=11138085 heap=17829808
+push4: 370.9 ms heap=36211040 -> ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=11138085 instr=279262693
+count=1
+RESULT: DONE

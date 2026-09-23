@@ -1,0 +1,64 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate U (usd.elf), 2026-09-23T21:37:43, Godot 4.7.2-stable (official) rung memory_max=160
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: ARCH_CACHE_LINE_SIZE != Arch_ObtainCacheLineSize()
+
+ Function: Arch_ValidateAssumptions
+
+     File: C:/b/usd2605/pxr/base/arch/assumptions.cpp
+
+     Line: 140
+
+[dress-on] usd: sandbox loaded usd.elf
+load usd.elf: 435.8 ms; 31895272 bytes sha256=006d25338ef6 memory_max=160 execution_timeout=2000 allocations_max=1000000 heap=748048
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+PASS usd_init 13.0 ms heap=1052576: ok plugins=8 resolvers=2 resources=11 errors=0
+PASS real-t2048.usdz       466.5 ms heap= 45878704  guest: ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=14856491 instr=306461529
+[@Sandbox@3] Exception when calling:
+  _ZL12usd_materiali (0x53456c)
+Backtrace:
+-> [0] 0x0000000000549964 + 0x004: sys_vcreate
+-> [1] 0x0000000000548922 + 0x01c: _ZN11PackedArrayIhEC1EPKhm
+-> [-] 0x53456c + 0x0: _ZL12usd_materiali
+
+Exception: Out of memory  (data: 11b713)
+>>> [0x549968] 00000073 ecall
+>>> Machine registers:
+[PC	549968] [RA	0054893E] [SP	055D8A80] [GP	010C8350] [TP	052D9760] 
+[LR	FFFFFFFF] [TMP1	055D8BF8] [TMP2	00000000] [SR0	055D8AE0] [SR1	00000000] 
+[A0	055D8A88] [A1	0000001D] [A2	006D8563] [A3	09A431B0] [A4	00000002] 
+[A5	AAAAAAAB] [A6	00000000] [A7	00000205] [SR2	00000016] [SR3	00000000] 
+[SR4	00000004] [SR5	000B792A] [SR6	FFFFFFFF] [SR7	055D8C66] [SR8	055D8C60] 
+[SR9	055D8C00] [SR10	00600010] [SR11	055D8B20] [TMP3	00000000] [TMP4	0CCCCCCC] 
+[TMP5	055D8A88] [TMP6	0000006C] 
+
+PASS real-t2048.usdz: meshes=1 open 466.5 ms extract 34.1 ms heap 45878768
+PASS real-t2048.usdz mesh0=/Asset/Geometry/Mesh_0 points=198661 triangles=203652 cksum_points=094d4563e4491719 cksum_indices=e7bb8d3614e10ef8 material=0 sha_points=3f827bc8ee57 sha_indices=0da3e5080b03 normals=198661 uvs=198661 indexed=true
+PASS real-t2048.usdz mesh0: ArrayMesh 198661 vertices 610956 indices, aabb [P: (-0.329015, -0.391178, -0.280463), S: (0.664334, 0.879777, 0.679005)]
+     xform rows: [1.0000 0.0000 0.0000] [0.0000 1.0000 0.0000] [0.0000 0.0000 1.0000] origin [0.0000 0.0000 0.0000]
+FAIL real-t2048.usdz material0: <null>
+PASS real-t2048.usdz: usd_nodes -> Node3D with 1 MeshInstance3D (1 meshes)
+PASS real-t2048.usdz: closed, count=0 heap=1986432
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

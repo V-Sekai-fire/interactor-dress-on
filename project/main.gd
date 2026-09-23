@@ -9,6 +9,7 @@
 #   Fit       stages/fit_stage.gd        fit.elf (Cut 6)
 #   Infer     stages/infer_stage.gd      infer.elf (Cut 4b / 7); fixtures until then
 #   Ggml      stages/ggml_stage.gd       ggml_test.elf (Cut 3: ggml-rd, Gate 3), made on first use
+#   Usd       stages/usd_stage.gd        usd.elf (Cut U: a .usdz package -> mesh + material arrays)
 #   Pipeline  stages/pipeline.gd         the loop's state machine
 #
 # Every guest entry point keeps a no-argument wrapper here (rule 8), each a
@@ -22,6 +23,7 @@ const CurvenetStage := preload("res://stages/curvenet_stage.gd")
 const FitStage := preload("res://stages/fit_stage.gd")
 const InferStage := preload("res://stages/infer_stage.gd")
 const GgmlStage := preload("res://stages/ggml_stage.gd")
+const UsdStage := preload("res://stages/usd_stage.gd")
 const Pipeline := preload("res://stages/pipeline.gd")
 
 var dress_on = null
@@ -30,6 +32,7 @@ var curvenet = null
 var fit = null
 var infer = null
 var ggml = null
+var usd = null
 var pipeline = null
 
 func _ready() -> void:
@@ -39,6 +42,7 @@ func _ready() -> void:
 	fit = _add(FitStage, "Fit")
 	infer = _add(InferStage, "Infer")
 	ggml = _add(GgmlStage, "Ggml")
+	usd = _add(UsdStage, "Usd")
 	pipeline = _add(Pipeline, "Pipeline")
 	pipeline.setup({"infer": infer, "curvenet": curvenet, "fit": fit, "drape": drape})
 	var world = get_node_or_null("World")
@@ -356,6 +360,33 @@ func rw_stats() -> String: return dress_on.rw("rw_stats")
 func rw_close() -> String: return dress_on.rw("rw_close")
 func rw_spirv(name: String = "saxpby") -> String: return dress_on.rw("rw_spirv", [name]) # its size
 
+# --- Cut U: the usd stage (usd.elf) ----------------------------------------------------
+# One delegate per guest entry point (rule 8); big arrays answer as summary lines.
+
+func usd_init() -> String: return usd.usd_init()
+func usd_open(path: String = UsdStage.DEFAULT_PACKAGE) -> String: return usd.usd_open(path)
+func usd_push(path: String = UsdStage.DEFAULT_PACKAGE) -> String: return usd.usd_push(path)
+func usd_open_staged() -> String: return usd.usd_open_staged()
+func usd_close() -> String: return usd.usd_close()
+func usd_mesh_count() -> int: return usd.usd_mesh_count()
+func usd_material_count() -> int: return usd.usd_material_count()
+func usd_texture_count() -> int: return usd.usd_texture_count()
+func usd_mesh_info(i: int = 0) -> String: return usd.usd_mesh_info(i)
+func usd_mesh_points(i: int = 0) -> String: return usd.usd_mesh_points(i)
+func usd_mesh_points_slice(i: int = 0, from: int = 0, count_: int = 4) -> String: return usd.usd_mesh_points_slice(i, from, count_)
+func usd_mesh_normals(i: int = 0) -> String: return usd.usd_mesh_normals(i)
+func usd_mesh_normals_slice(i: int = 0, from: int = 0, count_: int = 4) -> String: return usd.usd_mesh_normals_slice(i, from, count_)
+func usd_mesh_uvs(i: int = 0) -> String: return usd.usd_mesh_uvs(i)
+func usd_mesh_uvs_slice(i: int = 0, from: int = 0, count_: int = 4) -> String: return usd.usd_mesh_uvs_slice(i, from, count_)
+func usd_mesh_indices(i: int = 0) -> String: return usd.usd_mesh_indices(i)
+func usd_mesh_indices_slice(i: int = 0, from: int = 0, count_: int = 4) -> String: return usd.usd_mesh_indices_slice(i, from, count_)
+func usd_mesh_transform(i: int = 0) -> String: return usd.usd_mesh_transform(i)
+func usd_material(i: int = 0) -> String: return usd.usd_material(i)
+func usd_texture_info(i: int = 0) -> String: return usd.usd_texture_info(i)
+func usd_texture(i: int = 0) -> String: return usd.usd_texture(i)
+func usd_texture_slice(i: int = 0, from: int = 0, count_: int = 16) -> String: return usd.usd_texture_slice(i, from, count_)
+func usd_scene() -> String: return usd.usd_scene()
+
 # --- Gate 0G: usd_probe.elf, OpenUSD reading a stage from bytes (gates/0g-openusd) ---
 # A probe, not a pipeline stage: its Sandbox is made on first use.
 const USD_SAMPLE := "res://../gates/0g-openusd/inputs/skel_quad.usda"
@@ -369,7 +400,7 @@ func _usd_call(fn: String, args: Array = []) -> String:
 		_usd_sb = r.sandbox
 	return str(_usd_sb.callv("vmcall", [fn] + args))
 
-func usd_init() -> String: return _usd_call("usd_init")
+func usd_probe_init() -> String: return _usd_call("usd_init")
 # path_mode 0: USDA through SdfLayer::ImportFromString; 1: the in-memory resolver.
 func usd_load(path: String = USD_SAMPLE, path_mode: int = 0) -> String:
 	var bytes := FileAccess.get_file_as_bytes(ProjectSettings.globalize_path(path))

@@ -1,0 +1,190 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate U (usd.elf), 2026-09-23T21:37:35, Godot 4.7.2-stable (official) rung memory_max=128
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: ARCH_CACHE_LINE_SIZE != Arch_ObtainCacheLineSize()
+
+ Function: Arch_ValidateAssumptions
+
+     File: C:/b/usd2605/pxr/base/arch/assumptions.cpp
+
+     Line: 140
+
+[dress-on] usd: sandbox loaded usd.elf
+load usd.elf: 444.0 ms; 31895272 bytes sha256=006d25338ef6 memory_max=128 execution_timeout=2000 allocations_max=1000000 heap=748048
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+PASS usd_init 14.1 ms heap=1052576: ok plugins=8 resolvers=2 resources=11 errors=0
+PASS real-t2048.usdz       490.3 ms heap= 45878384  guest: ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=14856491 instr=307021553
+[@Sandbox@3] Exception when calling:
+  _ZL21usd_mesh_points_sliceiii (0x533518)
+Backtrace:
+-> [0] 0x0000000000549964 + 0x004: sys_vcreate
+-> [1] 0x0000000000548A14 + 0x01e: _ZN11PackedArrayIfEC1EPKfm
+-> [-] 0x533518 + 0x0: _ZL21usd_mesh_points_sliceiii
+
+Exception: Out of memory  (data: 245c7c)
+>>> [0x549968] 00000073 ecall
+>>> Machine registers:
+[PC	549968] [RA	00548A32] [SP	055D8C20] [GP	010C8350] [TP	052D9760] 
+[LR	00000000] [TMP1	055D8BF8] [TMP2	00000000] [SR0	055D8CF0] [SR1	00030805] 
+[A0	055D8C28] [A1	00000020] [A2	0009180F] [A3	0876AC40] [A4	00000003] 
+[A5	00000000] [A6	00030805] [A7	00000205] [SR2	00027AA7] [SR3	0024603C] 
+[SR4	0008A1C0] [SR5	0003EB1E] [SR6	0004AAED] [SR7	0000001A] [SR8	00000012] 
+[SR9	0004AADA] [SR10	00000010] [SR11	000AB83D] [TMP3	00000000] [TMP4	0CCCCCCC] 
+[TMP5	055D8A88] [TMP6	0000006C] 
+
+WARNING: usd: usd_mesh_points_slice(0, 0, 198661) -> <null>
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _floats (res://stages/usd_stage.gd:141)
+       [1] mesh (res://stages/usd_stage.gd:187)
+       [2] document (res://stages/usd_stage.gd:215)
+       [3] _case (res://gate_usdz.gd:158)
+       [4] _process (res://gate_usdz.gd:284)
+[@Sandbox@3] Exception when calling:
+  _ZL22usd_mesh_normals_sliceiii (0x533888)
+Backtrace:
+-> [0] 0x0000000000549964 + 0x004: sys_vcreate
+-> [1] 0x0000000000548A14 + 0x01e: _ZN11PackedArrayIfEC1EPKfm
+-> [-] 0x533888 + 0x0: _ZL22usd_mesh_normals_sliceiii
+
+Exception: Out of memory  (data: 245c7c)
+>>> [0x549968] 00000073 ecall
+>>> Machine registers:
+[PC	549968] [RA	00548A32] [SP	055D8C20] [GP	010C8350] [TP	052D9760] 
+[LR	00000000] [TMP1	055D8BF8] [TMP2	00000000] [SR0	055D8CF0] [SR1	00030805] 
+[A0	055D8C28] [A1	00000020] [A2	0009180F] [A3	08B6AC40] [A4	00000003] 
+[A5	00000000] [A6	00030805] [A7	00000205] [SR2	00072BEA] [SR3	0024603C] 
+[SR4	0008A1C0] [SR5	0003EB1E] [SR6	0004AAED] [SR7	0000001A] [SR8	00000012] 
+[SR9	0004AADA] [SR10	00000010] [SR11	000AB83D] [TMP3	00000000] [TMP4	0CCCCCCC] 
+[TMP5	055D8A88] [TMP6	0000006C] 
+
+WARNING: usd: usd_mesh_normals_slice(0, 0, 198661) -> <null>
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _floats (res://stages/usd_stage.gd:141)
+       [1] mesh (res://stages/usd_stage.gd:189)
+       [2] document (res://stages/usd_stage.gd:215)
+       [3] _case (res://gate_usdz.gd:158)
+       [4] _process (res://gate_usdz.gd:284)
+[@Sandbox@3] Exception when calling:
+  _ZL18usd_mesh_uvs_sliceiii (0x533bf8)
+Backtrace:
+-> [0] 0x0000000000549964 + 0x004: sys_vcreate
+-> [1] 0x0000000000548A14 + 0x01e: _ZN11PackedArrayIfEC1EPKfm
+-> [-] 0x533bf8 + 0x0: _ZL18usd_mesh_uvs_sliceiii
+
+Exception: Out of memory  (data: 183c68)
+>>> [0x549968] 00000073 ecall
+>>> Machine registers:
+[PC	549968] [RA	00548A32] [SP	055D8C20] [GP	010C8350] [TP	052D9760] 
+[LR	00000000] [TMP1	055D8BF8] [TMP2	00000000] [SR0	055D8CF0] [SR1	00030805] 
+[A0	055D8C28] [A1	00000020] [A2	0006100A] [A3	0816AC40] [A4	00000002] 
+[A5	00000000] [A6	00030805] [A7	00000205] [SR2	0004AB08] [SR3	00184028] 
+[SR4	0008A1C0] [SR5	0003EB1E] [SR6	0004AAED] [SR7	0000001A] [SR8	00000012] 
+[SR9	0004AADA] [SR10	00000010] [SR11	000AB83D] [TMP3	00000000] [TMP4	0CCCCCCC] 
+[TMP5	055D8A88] [TMP6	0000006C] 
+
+WARNING: usd: usd_mesh_uvs_slice(0, 0, 198661) -> <null>
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _floats (res://stages/usd_stage.gd:141)
+       [1] mesh (res://stages/usd_stage.gd:190)
+       [2] document (res://stages/usd_stage.gd:215)
+       [3] _case (res://gate_usdz.gd:158)
+       [4] _process (res://gate_usdz.gd:284)
+[@Sandbox@3] Exception when calling:
+  _ZL22usd_mesh_indices_sliceiii (0x533f66)
+Backtrace:
+-> [0] 0x0000000000549964 + 0x004: sys_vcreate
+-> [1] 0x0000000000548972 + 0x01c: _ZN11PackedArrayIiEC1EPKim
+-> [-] 0x533f66 + 0x0: _ZL22usd_mesh_indices_sliceiii
+
+Exception: Out of memory  (data: 254670)
+>>> [0x549968] 00000073 ecall
+>>> Machine registers:
+[PC	549968] [RA	0054898E] [SP	055D8C20] [GP	010C8350] [TP	052D9760] 
+[LR	00000000] [TMP1	055D8BF8] [TMP2	00000000] [SR0	055D8CF0] [SR1	00031B84] 
+[A0	055D8C28] [A1	0000001E] [A2	0009528C] [A3	08F6AC40] [A4	00000000] 
+[A5	00031B84] [A6	00030805] [A7	00000205] [SR2	0008A1A9] [SR3	00254A30] 
+[SR4	0008A1C0] [SR5	0003EB1E] [SR6	0004AAED] [SR7	0000001A] [SR8	00000012] 
+[SR9	0004AADA] [SR10	00000010] [SR11	000AB83D] [TMP3	00000000] [TMP4	0CCCCCCC] 
+[TMP5	055D8A88] [TMP6	0000006C] 
+
+WARNING: usd: usd_mesh_indices_slice(0, 0, 203652) -> <null>
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ints (res://stages/usd_stage.gd:154)
+       [1] mesh (res://stages/usd_stage.gd:191)
+       [2] document (res://stages/usd_stage.gd:215)
+       [3] _case (res://gate_usdz.gd:158)
+       [4] _process (res://gate_usdz.gd:284)
+[@Sandbox@3] Exception when calling:
+  _ZL12usd_materiali (0x53456c)
+Backtrace:
+-> [0] 0x0000000000549964 + 0x004: sys_vcreate
+-> [1] 0x0000000000548922 + 0x01c: _ZN11PackedArrayIhEC1EPKhm
+-> [-] 0x53456c + 0x0: _ZL12usd_materiali
+
+Exception: Out of memory  (data: 6d7713)
+>>> [0x549968] 00000073 ecall
+>>> Machine registers:
+[PC	549968] [RA	0054893E] [SP	055D8A80] [GP	010C8350] [TP	052D9760] 
+[LR	FFFFFFFF] [TMP1	055D8BF8] [TMP2	00000000] [SR0	055D8AE0] [SR1	00000000] 
+[A0	055D8A88] [A1	0000001D] [A2	006D8563] [A3	09A431B0] [A4	00000002] 
+[A5	AAAAAAAB] [A6	00000000] [A7	00000205] [SR2	00000016] [SR3	00000000] 
+[SR4	00000004] [SR5	000B792A] [SR6	FFFFFFFF] [SR7	055D8C66] [SR8	055D8C60] 
+[SR9	055D8C00] [SR10	00600010] [SR11	055D8B20] [TMP3	00000000] [TMP4	0CCCCCCC] 
+[TMP5	055D8A88] [TMP6	0000006C] 
+
+PASS real-t2048.usdz: meshes=1 open 490.3 ms extract 126.0 ms heap 45878448
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _sha (res://gate_usdz.gd:74)
+       [1] _case (res://gate_usdz.gd:185)
+       [2] _process (res://gate_usdz.gd:284)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _sha (res://gate_usdz.gd:74)
+       [1] _case (res://gate_usdz.gd:186)
+       [2] _process (res://gate_usdz.gd:284)
+FAIL real-t2048.usdz mesh0=/Asset/Geometry/Mesh_0 points=198661 triangles=203652 cksum_points=094d4563e4491719 cksum_indices=e7bb8d3614e10ef8 material=0 sha_points=e3b0c44298fc sha_indices=e3b0c44298fc normals=0 uvs=0 indexed=true  | host:
+ERROR: Index p_idx = 0 is out of bounds (surfaces.size() = 0).
+   at: surface_get_array_len (scene/resources/mesh.cpp:1928)
+   GDScript backtrace (most recent call first):
+       [0] _case (res://gate_usdz.gd:198)
+       [1] _process (res://gate_usdz.gd:284)
+ERROR: Index p_idx = 0 is out of bounds (surfaces.size() = 0).
+   at: surface_get_array_index_len (scene/resources/mesh.cpp:1933)
+   GDScript backtrace (most recent call first):
+       [0] _case (res://gate_usdz.gd:198)
+       [1] _process (res://gate_usdz.gd:284)
+FAIL real-t2048.usdz mesh0: ArrayMesh -1 vertices -1 indices, aabb [P: (0.0, 0.0, 0.0), S: (0.0, 0.0, 0.0)]
+     xform rows: [1.0000 0.0000 0.0000] [0.0000 1.0000 0.0000] [0.0000 0.0000 1.0000] origin [0.0000 0.0000 0.0000]
+FAIL real-t2048.usdz material0: <null>
+FAIL real-t2048.usdz: usd_nodes -> Node3D with 0 MeshInstance3D (1 meshes)
+PASS real-t2048.usdz: closed, count=0 heap=1986112
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

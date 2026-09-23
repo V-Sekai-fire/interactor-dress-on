@@ -1,0 +1,12 @@
+# Gate U (usd.elf), 2026-09-23T21:37:35, Godot 4.7.2-stable (official) rung memory_max=128
+load usd.elf: 444.0 ms; 31895272 bytes sha256=006d25338ef6 memory_max=128 execution_timeout=2000 allocations_max=1000000 heap=748048
+PASS usd_init 14.1 ms heap=1052576: ok plugins=8 resolvers=2 resources=11 errors=0
+PASS real-t2048.usdz       490.3 ms heap= 45878384  guest: ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=14856491 instr=307021553
+PASS real-t2048.usdz: meshes=1 open 490.3 ms extract 126.0 ms heap 45878448
+FAIL real-t2048.usdz mesh0=/Asset/Geometry/Mesh_0 points=198661 triangles=203652 cksum_points=094d4563e4491719 cksum_indices=e7bb8d3614e10ef8 material=0 sha_points=e3b0c44298fc sha_indices=e3b0c44298fc normals=0 uvs=0 indexed=true  | host:
+FAIL real-t2048.usdz mesh0: ArrayMesh -1 vertices -1 indices, aabb [P: (0.0, 0.0, 0.0), S: (0.0, 0.0, 0.0)]
+     xform rows: [1.0000 0.0000 0.0000] [0.0000 1.0000 0.0000] [0.0000 0.0000 1.0000] origin [0.0000 0.0000 0.0000]
+FAIL real-t2048.usdz material0: <null>
+FAIL real-t2048.usdz: usd_nodes -> Node3D with 0 MeshInstance3D (1 meshes)
+PASS real-t2048.usdz: closed, count=0 heap=1986112
+RESULT: FAIL

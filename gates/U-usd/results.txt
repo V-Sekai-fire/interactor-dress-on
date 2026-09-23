@@ -1,0 +1,42 @@
+# Gate U (usd.elf), 2026-09-23T21:40:54, Godot 4.7.2-stable (official)
+load usd.elf: 468.2 ms; 31895272 bytes sha256=006d25338ef6 memory_max=320 execution_timeout=2000 allocations_max=1000000 heap=748048
+host control: host OpenUSD (0, 26, 8) (usd-core, Python 3.14.7)
+PASS real-asset.usdz: 11138085 bytes, as the host read
+PASS real-t2048.usdz: 14856491 bytes, as the host read
+PASS truncated-30.usdz: 3341425 bytes, as the host read
+PASS truncated-60.usdz: 6682851 bytes, as the host read
+PASS bare-asset.usdc: 6564022 bytes, as the host read
+PASS bare-asset.usda: 3079 bytes, as the host read
+PASS nomesh.usdz: 225 bytes, as the host read
+PASS garbage.bin: 1024 bytes, as the host read
+PASS stub-quad.usdz: 3586 bytes, as the host read
+PASS stub-text.usdz: 4031 bytes, as the host read
+PASS stub-unbound.usdz: 3828 bytes, as the host read
+PASS usd_init 13.6 ms heap=1052576: ok plugins=8 resolvers=2 resources=11 errors=0
+PASS real-asset.usdz       422.6 ms heap= 36210976  guest: ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=11138085 instr=280394353
+PASS real-asset.usdz: meshes=1 (host 1), materials=1 (host 1), textures=2 (host 2); open 422.6 ms (280394353 instr = 267 units), extract 9.6 ms, heap 36210976
+PASS real-asset.usdz mesh0=/Asset/Geometry/Mesh_0 points=185772 triangles=197448 cksum_points=3c84b8476ba70e4f cksum_indices=3c4235fd451f7284 material=0 sha_points=78bffd67a223 sha_indices=99f27970b73a normals=185772 uvs=185772 indexed=true
+PASS real-asset.usdz mesh0: ArrayMesh 185772 vertices 592344 indices, aabb [P: (-0.327871, -0.392128, -0.277286), S: (0.661918, 0.880311, 0.682285)]
+     xform rows: [1.0000 0.0000 0.0000] [0.0000 1.0000 0.0000] [0.0000 0.0000 1.0000] origin [0.0000 0.0000 0.0000]
+PASS real-asset.usdz texture 0 (textures/material0_base_color.png): 4203037 bytes, decodes to 1536x1536 4
+PASS real-asset.usdz texture 1 (textures/material0_metallic_roughness.png): 370482 bytes, decodes to 1536x1536 4
+     material0 /Asset/Materials/Material_0 shader=UsdPreviewSurface diffuse=[0.18000000715256, 0.18000000715256, 0.18000000715256] metallic=0.000 roughness=0.500 opacity=1.000 -> albedo_texture=true metallic_texture=true(ch 2) roughness_texture=true(ch 1)
+PASS real-asset.usdz textures as the host read: textures/material0_base_color.png:4203037:ded459c71050,textures/material0_metallic_roughness.png:370482:25e7191ae614
+PASS real-asset.usdz wiring as the host read: diffuseColor:textures/material0_base_color.png:rgb,metallic:textures/material0_metallic_roughness.png:b,roughness:textures/material0_metallic_roughness.png:g
+PASS real-asset.usdz: usd_nodes -> Node3D with 1 MeshInstance3D (1 meshes)
+PASS real-asset.usdz: closed, count=0 heap=1986112
+     (usd.elf reloaded in a fresh Sandbox: 982.6 ms)
+PASS real-t2048.usdz       463.7 ms heap= 45878320  guest: ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=14856491 instr=321305959
+PASS real-t2048.usdz: meshes=1 (host 1), materials=1 (host 1), textures=2 (host 2); open 463.7 ms (321305959 instr = 306 units), extract 10.0 ms, heap 45878320
+PASS real-t2048.usdz mesh0=/Asset/Geometry/Mesh_0 points=198661 triangles=203652 cksum_points=094d4563e4491719 cksum_indices=e7bb8d3614e10ef8 material=0 sha_points=3f827bc8ee57 sha_indices=0da3e5080b03 normals=198661 uvs=198661 indexed=true
+PASS real-t2048.usdz mesh0: ArrayMesh 198661 vertices 610956 indices, aabb [P: (-0.329015, -0.391178, -0.280463), S: (0.664334, 0.879777, 0.679005)]
+     xform rows: [1.0000 0.0000 0.0000] [0.0000 1.0000 0.0000] [0.0000 0.0000 1.0000] origin [0.0000 0.0000 0.0000]
+PASS real-t2048.usdz texture 0 (textures/material0_base_color.png): 7177571 bytes, decodes to 2048x2048 4
+PASS real-t2048.usdz texture 1 (textures/material0_metallic_roughness.png): 687966 bytes, decodes to 2048x2048 4
+     material0 /Asset/Materials/Material_0 shader=UsdPreviewSurface diffuse=[0.18000000715256, 0.18000000715256, 0.18000000715256] metallic=0.000 roughness=0.500 opacity=1.000 -> albedo_texture=true metallic_texture=true(ch 2) roughness_texture=true(ch 1)
+PASS real-t2048.usdz textures as the host read: textures/material0_base_color.png:7177571:922461db145c,textures/material0_metallic_roughness.png:687966:fd0e73a93643
+PASS real-t2048.usdz wiring as the host read: diffuseColor:textures/material0_base_color.png:rgb,metallic:textures/material0_metallic_roughness.png:b,roughness:textures/material0_metallic_roughness.png:g
+PASS real-t2048.usdz: usd_nodes -> Node3D with 1 MeshInstance3D (1 meshes)
+PASS real-t2048.usdz: closed, count=0 heap=1985984
+     (usd.elf reloaded in a fresh Sandbox: 996.3 ms)
+PASS truncated-30.usdz      31.2 ms heap=  1250256  guest: ERR: usdz open failed: unknown instr=34361071

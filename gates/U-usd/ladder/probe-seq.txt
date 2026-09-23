@@ -1,0 +1,7 @@
+arm=seq file=C:/b/gu-inputs/real-t2048.usdz mem=320 sandbox=true
+bytes=14856491 init=ok plugins=8 resolvers=2 resources=11 errors=0 heap=1052576
+seq garbage.bin: 1024 bytes open 12.6 ms heap=1251568 -> ERR: usda open failed: </mem/pkg1.usda> is not a valid usda ; meshes=0; close=ok heap=1251568 chunk_count=13273 allocation_counter=26446 deallocation_counter=13203
+seq stub-quad.usdz: 3586 bytes open 1701.1 ms heap=1990448 -> ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y m; meshes=1; close=ok heap=1985792 chunk_count=18805 allocation_counter=37637 deallocation_counter=19186
+seq: 1715.5 ms heap=1985792 -> seq done
+count=0
+RESULT: DONE

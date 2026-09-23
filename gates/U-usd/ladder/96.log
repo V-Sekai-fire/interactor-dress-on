@@ -1,0 +1,57 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate U (usd.elf), 2026-09-23T21:37:27, Godot 4.7.2-stable (official) rung memory_max=96
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: ARCH_CACHE_LINE_SIZE != Arch_ObtainCacheLineSize()
+
+ Function: Arch_ValidateAssumptions
+
+     File: C:/b/usd2605/pxr/base/arch/assumptions.cpp
+
+     Line: 140
+
+[dress-on] usd: sandbox loaded usd.elf
+load usd.elf: 436.6 ms; 31895272 bytes sha256=006d25338ef6 memory_max=96 execution_timeout=2000 allocations_max=1000000 heap=748048
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+PASS usd_init 13.1 ms heap=1052576: ok plugins=8 resolvers=2 resources=11 errors=0
+[@Sandbox@3] Exception when calling:
+  _ZL15usd_open_stagedv (0x53231c)
+Backtrace:
+-> [0] 0x0000000000547592 + 0x004: sandbox_native_memcpy
+-> [1] 0x000000000054762E + 0x04c: __wrap_memcpy
+-> [-] 0x53231c + 0x0: _ZL15usd_open_stagedv
+
+Exception: Out of memory  (data: 9000)
+>>> [0x547596] 00000073 ecall
+>>> Machine registers:
+[PC	547596] [RA	0054767A] [SP	055D8110] [GP	010C8350] [TP	052D9760] 
+[LR	06469C50] [TMP1	005374A4] [TMP2	0000000A] [SR0	006D8563] [SR1	0936AC40] 
+[A0	0936AC40] [A1	05D91690] [A2	006D8563] [A3	06469BF3] [A4	00000001] 
+[A5	00000083] [A6	05D91690] [A7	000001E5] [SR2	05D91690] [SR3	0936AC40] 
+[SR4	01000000] [SR5	00000000] [SR6	006D8563] [SR7	0936AC40] [SR8	0936AC40] 
+[SR9	00000000] [SR10	06469BF3] [SR11	00000083] [TMP3	00000000] [TMP4	00005D37] 
+[TMP5	04034B50] [TMP6	00000000] 
+
+FAIL real-t2048.usdz       540.8 ms heap= 65344256  guest: <null>
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

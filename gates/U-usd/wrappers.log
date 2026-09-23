@@ -1,3 +1,40 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: Unable to read /proc/self/exe to obtain executable path
+
+ Function: operator()
+
+     File: C:/b/usd2605/pxr/base/arch/systemInfo.cpp
+
+     Line: 109
+
+ ArchWarn: ARCH_CACHE_LINE_SIZE != Arch_ObtainCacheLineSize()
+
+ Function: Arch_ValidateAssumptions
+
+     File: C:/b/usd2605/pxr/base/arch/assumptions.cpp
+
+     Line: 140
+
+[dress-on] usd: sandbox loaded usd.elf
 node path: /root/Main
 PASS flat control: guest/main.cpp has 8 entry points
 PASS flat control: guest/probes/main.cpp has 37 entry points
@@ -44,3 +81,5 @@ PASS usd_open -> host_us=121834 ok layer=usdz prims=9 meshes=1 materials=1 textu
 PASS usd_mesh_info -> { "path": "/Asset/Geometry/Mesh_0", "name": "Mesh_0", "points": 4, "triangles": 2, "has_normals": true, "has_uvs": true, "indexed": true, "material": 0, "cksum_points": "87f6b26e7a627d43", "cksum_indices": "f624d74fecb64101", "xform": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
 PASS usd_close -> ok
 RESULT: PASS
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

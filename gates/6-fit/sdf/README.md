@@ -1,8 +1,8 @@
 # Gate 6a — the brick-grid SDF against OpenVDB
 
-**Result: PASS (9/9 checks on each of two point populations), control fails as
-it must. The Lean spline kernel is still pending, so check (a) covers the
-reference sampler only.**
+**Result: PASS (10/10 checks on each of two point populations), both controls
+fail as they must. The Lean spline kernel (a.kernel) is 0 ULP from OpenVDB's
+`sampleHessian` in all 13 outputs at all 99,315 samples.**
 
 `fit.elf` cannot carry OpenVDB. cloth-fit's `FitForm` used it for two things:
 an avatar SDF (`meshToSignedDistanceField(xform, Vec3s points, tris, {}, 150, 1)`,
@@ -14,8 +14,9 @@ a 414 MB narrow band) and the openvdb fork's tricubic B-spline
   distance to the float-rounded avatar, signed by `igl::fast_winding_number`
   (inside when w > 0.5). Grids are cached per (avatar hash, voxel size).
 - `SdfSpline`: the call site of the Lean kernel
-  `lean/Fit/SdfSplineHessian.lean → kernels/fit/cpp/sdf_spline_hessian_emit.cpp`.
-  It sits behind `FIT_KERNELS_PENDING` until the Lean source is on main.
+  `lean/Fit/SdfSplineHessian.lean → kernels/fit/cpp/sdf_spline_hessian_emit.cpp`
+  (`kernels/fit/gen.sh`). `FIT_KERNELS_PENDING` (default OFF) leaves it out
+  and makes the sampler throw.
 
 `vendor/cloth-fit/CITATION.cff` lists the changes. This gate asks two
 questions. Does the replacement reproduce what OpenVDB gave FitForm? And would
@@ -31,15 +32,18 @@ gates/6-fit/sdf/run.sh      # native, CPU only; ~2 min; writes C:/b/g6a
 
 1. It builds `gate6a.exe` (llvm-mingw 20260826, `-O2`, x86-64 baseline, no FMA)
    from `gate6a.cpp`, `spline_ref.h` and the vendored `SdfGrid.cpp` and
-   `SdfSpline.cpp`. libigl and json come from the `.forks/` org forks; Eigen
-   comes from the CPM cache.
+   `SdfSpline.cpp` over the committed emit. libigl and json come from the
+   `.forks/` org forks; Eigen comes from the CPM cache. With the kernel it
+   also builds and runs `lean_fixtures.exe` and builds the kernel control
+   (below).
 2. `make_points.py` makes the points: FitForm<4>'s 15 samples per face (the
    barycentrics of `upsample_standard<4>`) on the 1-thread oracle's final
    garment `C:/b/cf-up-out1/step_garment_252.obj`.
 3. `C:/b/cf-up/openvdb_dump.exe` dumps OpenVDB at those points. It rebuilds
    FitForm's grid from the oracle's normalised `target_avatar.obj`, with faces
    from the input `FoxGirl/avatar.obj`.
-4. `gate6a.exe` compares the two.
+4. `gate6a.exe` compares the two, then the kernel control runs on the same
+   dumps.
 
 ## Populations
 
@@ -59,7 +63,7 @@ of the skirt's 5,220 faces, which leaves 1,401 × 15 = 21,015 samples.
 |---|---|---|---|
 | a.index | p·(1/h), floor, uvw equal OpenVDB's `worldToIndex`, bit for bit | 21,015/21,015 | 78,300/78,300 |
 | a.sampler | reference on OpenVDB's own 4³ stencils vs `sampleHessian`, ≤ 1 ULP | **0 ULP**, all bitwise | **0 ULP**, all bitwise |
-| a.kernel | Lean emit vs reference, ≤ 1 ULP | pending | pending |
+| a.kernel | Lean emit on OpenVDB's stencils vs `sampleHessian`, all 13 outputs, **0 ULP**; and vs the reference | **0 ULP**, 21,015/21,015 bitwise | **0 ULP**, 78,300/78,300 bitwise |
 | b.value | \|dv\| ≤ 0.25 voxel for ≥ 99% of near samples | 100% (p99 0.027, max 0.058 voxel) | 100% (p99 0.028, max 0.084) |
 | b.sign | sign agreement ≥ 99.5% (near) | 100% | 100% |
 | b.gradient | angle ≤ 10° for ≥ 95% (near) | 100% (p95 0.81°, max 3.0°) | 100% (p95 0.77°, max 5.1°) |
@@ -67,6 +71,7 @@ of the skirt's 5,220 faces, which leaves 1,401 × 15 = 21,015 samples.
 | b.order | fresh grid filled in reverse point order gives the same samples, bit for bit | 21,015/21,015 | 78,300/78,300 |
 | cache | same (V,F,h) → one grid; a different h → another grid | pass | pass |
 | **c.control** | grid shifted +0.5 voxel in x must fail (b) | **fails**: value 58.6%, sign 99.41% | **fails**: value 56.0%, sign 99.35% |
+| **kernel control** | the emit with 2/3 as a float literal must fail a.kernel | **fails**: max 8.69e18 ULP, 0/21,015 bitwise | **fails**: max 8.71e18 ULP, 0/78,300 bitwise |
 
 Details:
 
@@ -78,9 +83,10 @@ Details:
 - **Control.** The shifted grid stays within 10° on gradients (99.8%, 99.3%),
   because a half-voxel shift barely turns the normals. The value and sign
   criteria are what reject it.
-- **What (a) shows.** Equal stencils give equal outputs, bit for bit. The
-  summation order of the spline sum (per-axis tables, then i, j, k ascending,
-  ((v·a)·b)·c) is the one the Lean kernel must reproduce.
+- **What (a) shows.** Equal stencils give equal outputs, bit for bit, from
+  OpenVDB, the reference and the Lean emit alike. The summation order of the
+  spline sum (per-axis tables, then i, j, k ascending, ((v·a)·b)·c) is the
+  one the Lean kernel reproduces.
 
 ## Cost (INFO lines, one thread)
 
@@ -97,10 +103,37 @@ For comparison, OpenVDB builds 46,523,937 active voxels (413,824,624 bytes) in
 These sizes match the plan's 2–12 MB estimate. The garment moves during a fit,
 so the brick count will grow over a run. Gate 6.P measures that.
 
+## The Lean kernel (a.kernel, `lean.log`)
+
+`lean/Fit/SdfSplineHessian.lean` (`Fit.SlangCodegen.SdfSplineHessian`, lean_lib
+`Fit`, `lake exe emit_fit`) builds the sampler as a LeanSlang module: three
+piecewise-cubic helpers and a `main` with `numthreads(64, 1, 1)`, one lane per
+sample, over `stencil`, `uvw`, `result` (double buffers) and a
+`ConstantBuffer<SdfSplineParams>` with `count`. `kernels/fit/gen.sh` writes
+`slang/` and `cpp/` (committed) and compiles SPIR-V to check it (13,788
+bytes; not embedded, fit.elf has no GPU path).
+
+- **Literals.** Every constant is a `double(...)` cast of an integer or of
+  0.5, 1.5, −0.5 (exact in float), and 2/3 is `double(2) / double(3)`.
+  slangc folds that to `0.66666666666666663`, the double nearest 2/3.
+- **Pins.** Five `native_decide` examples: the emitted text, the entry point
+  name, the bits of 2/3, and two fixtures. `model` in the module is the same
+  arithmetic on Lean's `Float`; its ten outputs on each fixture are pinned to
+  the bits `spline_ref.h` prints for it (`lean_fixtures.cpp`, run by
+  `run.sh`). The emit matches those bits too (0 of 20 differ). Fixture 1
+  puts u = 0 on the x axis, so the |x| = 1 and |x| = 2 branch edges run.
+- **Pin controls** (`lean_controls.lean`, in `lean.log`): the value summed
+  as v·(a·b·c) misses the pinned bits on both fixtures, and `spline` with a
+  float 2/3 differs at 64 of 64 points of a 1/64 grid on [0, 1).
+- **Kernel control** (`run.sh`, in `run.log`): the committed Slang with
+  `(double(2) / double(3))` replaced by `(2.0 / 3.0)` compiles to
+  `0.66666668653488159` and fails a.kernel on both populations, at up to
+  8.7e18 ULP (outputs of opposite sign), as the stand-in below predicted.
+
 ## Stand-in kernel: an ABI check, and a hazard for the Lean kernel (`standin.log`)
 
-The Lean kernel does not exist yet, so the non-pending path of `SdfSpline.cpp`
-was exercised with a stand-in:
+Before the Lean kernel existed, the non-pending path of `SdfSpline.cpp` was
+exercised with a stand-in:
 
 - A scratch-only Slang file, written by hand, compiled with `slangc -target cpp`
   into `FIT_KERNELS_DIR`.
@@ -118,13 +151,14 @@ What it showed:
    kernel check **fails**. The largest error, about 8.7e18 ULP, is the distance
    between two values of opposite sign.
 
-   The Lean emit must print double literals (`2.0l`). With them, 2/3 folds to
+   The Lean emit must use double constants. With them, 2/3 folds to
    0.66666666666666663 and the check passes. Check (a.kernel) catches this
-   mistake.
+   mistake, and `run.sh` now shows it doing so (kernel control).
 
 ## Evidence kept
 
-`run.log` (full run), `results.txt` (verdict lines), `standin.log`.
+`run.log` (full run, with the kernel), `results.txt` (verdict lines),
+`lean.log` (the Lean pins and their controls), `standin.log`.
 
 The points and dumps are not committed. They are regenerated by `run.sh` under
 `C:/b/g6a`:
@@ -139,10 +173,10 @@ records the build time.
 
 ## Not covered here
 
-- **The Lean kernel itself (a.kernel).** Once
-  `kernels/fit/cpp/sdf_spline_hessian_emit.cpp` exists, `run.sh` compiles it in
-  and checks it automatically.
-- **The full fit.** FitForm is now OpenVDB-free and compiles in the native
-  polyfem build (`POLYFEM_THREADING=NONE`). `SdfGrid.cpp` and `SdfSpline.cpp`
-  also cross-compile for rv64gc. But the solve needs the kernel: while
-  `FIT_KERNELS_PENDING` is set, `solution_changed` throws.
+- **The full fit.** `../README.md`: fit_native with `FIT_SDF_SAMPLER=kernel`
+  reproduces the reference-sampler foxgirl run bit for bit.
+- **The guest.** The kernel is checked natively (x86-64, no FMA). In the
+  guest, rv64gc has fused multiply-add, so fit.elf must build the emit with
+  `-ffp-contract=off` like fit_native's guest numerics; slangc folds each
+  term into one expression (`x + v * a * b * c`), which clang's default
+  contraction would fuse.

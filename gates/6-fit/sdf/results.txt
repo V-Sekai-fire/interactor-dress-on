@@ -1,7 +1,10 @@
+fixture0 = [0x3FD01273BF9B23E9, 0x3FF3C4E2E1B062D7, 0xBFFC9AD24B4E1D8C, 0x3FE4599A8C959322, 0x3FE3653EEF4CBF8E, 0xBFC40C2543331C9F, 0x3FE0E68369F47200, 0xBFF95FC5C73275D6, 0xBFC7BBE8146B37A1, 0xC000231768B8956F]
+fixture1 = [0xBFE27204F23077E4, 0x3FB10482692907DF, 0xBFF2999675EF9F9A, 0x3FCFA7B4F3687F38, 0x400F9A6B13E7ACC0, 0xBFCFC16462203504, 0x3FDC419E2CD95252, 0x3FE54F44CCF82DF7, 0xC00108E125C68255, 0x3FEDE96CCFB08941]
+PASS: Lean emit vs reference on both fixtures, 0 of 20 outputs differ
 PASS [fit] a.index: p*(1/h), floor, uvw bitwise equal to OpenVDB worldToIndex at 21015/21015 samples
 PASS [fit] a.sampler: reference vs SplineSampler::sampleHessian on OpenVDB stencils: max 0 ULP (x 0, g 0, h 0), 21015/21015 bitwise
-INFO [fit] a.kernel: pending (FIT_KERNELS_PENDING; lean/Fit/SdfSplineHessian.lean not emitted), reference only
-INFO [fit] grid: setup (AABB + winding BVH) 0.058 s; 136 bricks (69632 voxels), 561896 bytes (0.56 MB); 69632 distance + 69632 winding queries; fill 0.436 s; sampling pass 0.479 s (22.80 us/sample)
+PASS [fit] a.kernel: Lean emit vs SplineSampler::sampleHessian on OpenVDB stencils: max 0 ULP (x 0, g 0, h 0), 21015/21015 bitwise in all 13; vs reference max 0 ULP
+INFO [fit] grid: setup (AABB + winding BVH) 0.014 s; 136 bricks (69632 voxels), 561896 bytes (0.56 MB); 69632 distance + 69632 winding queries; fill 0.354 s; sampling pass 0.362 s (17.23 us/sample)
 INFO [fit] voxels: 19794 distinct stencil voxels, 18292 with |v_vdb|<5 voxels: |dv|<=0.25 voxel 99.4041% (p50 1.003e-05 p99 0.1002 max 0.9987 voxel), sign agreement (all) 99.9495%
 PASS [fit] b.pure: brick value == value recomputed alone, bitwise, at 19794/19794 voxels
 PASS [fit] b.value: 100.0000% within 0.25 voxel (>= 99%)
@@ -10,11 +13,11 @@ PASS [fit] b.gradient: 100.0000% within 10 deg (>= 95%)
 PASS [fit] b.order: reverse-order fill, bitwise equal samples 21015/21015
 PASS [fit] cache: cached(V,F,h) twice -> one grid; (V,F,2h) -> another; back to h -> rebuilt (one entry kept)
 PASS [fit] c.control: shifted grid fails (b): value 58.6190% (>= 99%: FAIL), sign 99.4079% (FAIL), gradient 99.8233% (pass)
-[fit] SUMMARY PASS=9 FAIL=0
+[fit] SUMMARY PASS=10 FAIL=0
 PASS [all] a.index: p*(1/h), floor, uvw bitwise equal to OpenVDB worldToIndex at 78300/78300 samples
 PASS [all] a.sampler: reference vs SplineSampler::sampleHessian on OpenVDB stencils: max 0 ULP (x 0, g 0, h 0), 78300/78300 bitwise
-INFO [all] a.kernel: pending (FIT_KERNELS_PENDING; lean/Fit/SdfSplineHessian.lean not emitted), reference only
-INFO [all] grid: setup (AABB + winding BVH) 0.039 s; 671 bricks (343552 voxels), 2770896 bytes (2.77 MB); 343552 distance + 343552 winding queries; fill 1.573 s; sampling pass 1.722 s (22.00 us/sample)
+PASS [all] a.kernel: Lean emit vs SplineSampler::sampleHessian on OpenVDB stencils: max 0 ULP (x 0, g 0, h 0), 78300/78300 bitwise in all 13; vs reference max 0 ULP
+INFO [all] grid: setup (AABB + winding BVH) 0.014 s; 671 bricks (343552 voxels), 2770896 bytes (2.77 MB); 343552 distance + 343552 winding queries; fill 1.180 s; sampling pass 1.211 s (15.47 us/sample)
 INFO [all] voxels: 119499 distinct stencil voxels, 36734 with |v_vdb|<5 voxels: |dv|<=0.25 voxel 99.6978% (p50 1.006e-05 p99 0.05579 max 0.9987 voxel), sign agreement (all) 99.9908%
 PASS [all] b.pure: brick value == value recomputed alone, bitwise, at 119499/119499 voxels
 PASS [all] b.value: 100.0000% within 0.25 voxel (>= 99%)
@@ -23,4 +26,10 @@ PASS [all] b.gradient: 100.0000% within 10 deg (>= 95%)
 PASS [all] b.order: reverse-order fill, bitwise equal samples 78300/78300
 PASS [all] cache: cached(V,F,h) twice -> one grid; (V,F,2h) -> another; back to h -> rebuilt (one entry kept)
 PASS [all] c.control: shifted grid fails (b): value 55.9834% (>= 99%: FAIL), sign 99.3509% (FAIL), gradient 99.2501% (pass)
-[all] SUMMARY PASS=9 FAIL=0
+[all] SUMMARY PASS=10 FAIL=0
+FAIL [fit-negk] a.kernel: Lean emit vs SplineSampler::sampleHessian on OpenVDB stencils: max 8694973136824696832 ULP (x 1612024256, g 187481571328, h 8694973136824696832), 0/21015 bitwise in all 13; vs reference max 8694973136824696832 ULP
+[fit-negk] SUMMARY PASS=9 FAIL=1
+PASS [fit] kernel control: the float-literal emit fails a.kernel
+FAIL [all-negk] a.kernel: Lean emit vs SplineSampler::sampleHessian on OpenVDB stencils: max 8709856126218272768 ULP (x 1612024256, g 187481571328, h 8709856126218272768), 0/78300 bitwise in all 13; vs reference max 8709856126218272768 ULP
+[all-negk] SUMMARY PASS=9 FAIL=1
+PASS [all] kernel control: the float-literal emit fails a.kernel

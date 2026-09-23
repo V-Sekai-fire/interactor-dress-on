@@ -11,8 +11,8 @@ namespace polyfem::solver::sdf_spline
 	void hessian_batch(const double *, const double *, double *, std::size_t)
 	{
 		throw std::runtime_error(
-			"SDF spline kernel pending: lean/Fit/SdfSplineHessian.lean has not been emitted to "
-			"kernels/fit/cpp/sdf_spline_hessian_emit.cpp; configure with -DFIT_KERNELS_PENDING=OFF once it has");
+			"SDF spline kernel left out: built with FIT_KERNELS_PENDING; configure with "
+			"-DFIT_KERNELS_PENDING=OFF (the default) to compile in kernels/fit/cpp/sdf_spline_hessian_emit.cpp");
 	}
 } // namespace polyfem::solver::sdf_spline
 
@@ -40,6 +40,8 @@ namespace polyfem::solver::sdf_spline
 
 	void hessian_batch(const double *stencil, const double *uvw, double *out, const std::size_t n)
 	{
+		k_sdf_spline::SdfSplineParams_0 prm{};
+		prm.count_0 = uint32_t(n);
 		k_sdf_spline::GlobalParams_0 gp{};
 		gp.stencil_0.data = const_cast<double *>(stencil);
 		gp.stencil_0.count = kStencil * n;
@@ -47,6 +49,7 @@ namespace polyfem::solver::sdf_spline
 		gp.uvw_0.count = 3 * n;
 		gp.result_0.data = out;
 		gp.result_0.count = kOut * n;
+		gp.params_0 = &prm;
 		for (std::size_t lane = 0; lane < n; ++lane)
 		{
 			ComputeThreadVaryingInput t{};

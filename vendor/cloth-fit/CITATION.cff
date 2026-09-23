@@ -37,11 +37,13 @@ abstract: >-
   garment_forms/SdfSpline.{hpp,cpp}: the call site of the
   Lean-emitted tricubic B-spline kernel (lean/Fit/SdfSplineHessian.lean ->
   kernels/fit/cpp/sdf_spline_hessian_emit.cpp) that replaces the openvdb
-  fork's SplineSampler::sampleHessian; the CMake option FIT_KERNELS_PENDING
-  (default ON; FIT_KERNELS_DIR and FIT_SLANG_PRELUDE_DIR when OFF) keeps
-  the emit out until it lands, and the sampler throws meanwhile; no
-  hand-written sampler is linked. (4) FitForm.{hpp,cpp}: the openvdb grid,
-  accessor and HessType give way to SdfGrid and SdfHess; solution_changed
+  fork's SplineSampler::sampleHessian, 0 ULP against it (Gate 6a); the
+  CMake option FIT_KERNELS_PENDING (default OFF; FIT_KERNELS_DIR and
+  FIT_SLANG_PRELUDE_DIR default to the repo's kernels/fit/cpp and
+  guest/avbd/slang-rt) leaves the emit out and makes the sampler throw, as
+  a negative control; no hand-written sampler is linked. (4)
+  FitForm.{hpp,cpp}: the openvdb grid, accessor and HessType give way to
+  SdfGrid and SdfHess; solution_changed
   gathers stencils and calls the kernel in batches of 1024 samples, then
   scales g/h and h/h^2 as before; the debug writes (fit-faces-debug.obj,
   and sdf.obj from volumeToMesh) are gone and out_dir, now unused,

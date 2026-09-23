@@ -3,3 +3,4 @@ fit-out-sdf64b: exit=0 cpu_s=103.203125 wall_s=104.0011054
 fit-out-sdf32: exit=0 cpu_s=107.765625 wall_s=108.3506482
 fit-out-upsdf64: exit=0 cpu_s=160.40625 wall_s=161.4116629
 fit-out-sdf64-fw0: exit=0 cpu_s=51.140625 wall_s=51.4237474
+fit-out-sdfk64: exit=0 cpu_s=101.61 wall_s=102 (FIT_SDF_SAMPLER=kernel, C:/b/fit-native-sdfk)

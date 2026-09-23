@@ -9,10 +9,11 @@
 // AGENTS.md rule 2: the kernel is lean/Fit/SdfSplineHessian.lean (double
 // scalar, lean-slang emit-fp) -> Slang -> `slangc -target cpp` ->
 // kernels/fit/cpp/sdf_spline_hessian_emit.cpp, included by SdfSpline.cpp.
-// No hand-written sampler is linked here. While the Lean kernel has not
-// landed, the build sets FIT_KERNELS_PENDING (CMake option, default ON) and
-// hessian_batch() throws; Gate 6a checks the sampler with a reference used
-// only by the native test (gates/6-fit/sdf/spline_ref.h).
+// No hand-written sampler is linked here. FIT_KERNELS_PENDING (CMake option,
+// default OFF) leaves the emit out and makes hessian_batch() throw; it is kept
+// as the negative control of the build. Gate 6a holds the emit to 0 ULP
+// against OpenVDB's sampleHessian and against a reference used only by the
+// native test (gates/6-fit/sdf/spline_ref.h).
 //
 // Kernel contract (what the emitted GlobalParams_0 must carry), one thread
 // per sample, dispatched n times through main_0_Thread with lane = sample:
@@ -21,6 +22,7 @@
 //   StructuredBuffer<double>   uvw;      // 3 per sample: index-space fraction
 //   RWStructuredBuffer<double> result;   // 10 per sample, index space:
 //                                        // x, gx, gy, gz, hxx, hxy, hxz, hyy, hyz, hzz
+//   ConstantBuffer<SdfSplineParams> params;  // count: samples (lanes >= count return)
 // Arithmetic and summation order are the fork's: basis/deriv tables per axis,
 // then for i, j, k ascending acc += ((data*a)*b)*c for each of the ten terms.
 // (`out` is a Slang keyword, hence `result`.)
@@ -43,11 +45,11 @@ namespace polyfem::solver
 		constexpr int kStencil = 64;
 		constexpr int kOut = 10;
 
-		/// False while FIT_KERNELS_PENDING (no emitted kernel compiled in).
+		/// False under FIT_KERNELS_PENDING (no emitted kernel compiled in).
 		bool kernel_available();
 
 		/// n samples: stencil[64 n], uvw[3 n] -> out[10 n] (layout above).
-		/// Throws std::runtime_error while the kernel is pending.
+		/// Throws std::runtime_error under FIT_KERNELS_PENDING.
 		void hessian_batch(const double *stencil, const double *uvw, double *out, std::size_t n);
 
 		/// Unpack one 10-wide record, mirroring the upper triangle.

@@ -8,7 +8,7 @@
 # Environment (all optional):
 #   FIT_BUILD         build dir (default C:/b/fit-native)
 #   FIT_SDF           openvdb (default, interim) | sdfgrid
-#   FIT_SDF_SAMPLER   sdfgrid only: reference (default until the Lean kernel) | kernel | pending
+#   FIT_SDF_SAMPLER   sdfgrid only: kernel (default, the Lean emit) | reference (control) | pending
 #   FIT_NUMERICS      guest (default) | upstream (the oracle's numerics, a control)
 #   CPM_SOURCE_CACHE  CPM cache for packages without an org fork (default C:/b/cpm-native)
 #   LLVM_MINGW        toolchain (default ~/llvm-mingw/llvm-mingw-20260826-ucrt-x86_64)
@@ -37,7 +37,7 @@ if [ ! -f "$BUILD/build.ninja" ]; then
   cmake -S "$HERE" -B "$BUILD" -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-    -DFIT_SDF="$FIT_SDF"     -DFIT_SDF_SAMPLER="${FIT_SDF_SAMPLER:-reference}" \
+    -DFIT_SDF="$FIT_SDF"     -DFIT_SDF_SAMPLER="${FIT_SDF_SAMPLER:-kernel}" \
     -DFIT_NUMERICS="${FIT_NUMERICS:-guest}" \
     -DCMAKE_PREFIX_PATH="$PREFIX/Library" \
     -DPython3_EXECUTABLE="$(cygpath -m "$(command -v python)")" \

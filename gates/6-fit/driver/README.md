@@ -78,8 +78,10 @@ surface, both directions):
   `C:/b/fit-native-sdf`). Phase 0 (fit form off) matches the OpenVDB guest
   f32 run exactly (41 Newton, energy 0.00033678666696946268); phase 1 stops
   with the sampler's "SDF spline kernel pending" error, reported through
-  `PhaseStats::error`, 0 file opens. With `FIT_SDF_SAMPLER=reference` (the
-  Gate 6a reference sampler, native only) it runs end to end: see
+  `PhaseStats::error`, 0 file opens (the sampler was then built pending, as
+  `FIT_SDF_SAMPLER=pending` still builds it). With `FIT_SDF_SAMPLER=reference`
+  (the Gate 6a reference sampler, native only) or `kernel` (the Lean emit,
+  now the default; bitwise the same run) it runs end to end: see
   `../README.md` for those runs and the Gate 6 criterion.
 
 ## Reproduce

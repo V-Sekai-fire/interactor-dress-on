@@ -24,8 +24,11 @@ Nothing on this page ran in the guest, in Godot, or on the GPU.
 - **Native SdfGrid vs upstream: pass under the criterion proposed below.** The
   plan's "Hausdorff ≤ 1 voxel" cannot be met. The solve is chaotic, and
   upstream misses that bound against itself by 5–8 voxels.
-- **Sampler: provisional.** This run uses the Gate 6a **reference** sampler.
-  The Lean kernel (`lean/Fit/SdfSplineHessian.lean`) has not been emitted yet.
+- **Sampler: pass.** The Lean kernel (`lean/Fit/SdfSplineHessian.lean`,
+  emitted to `kernels/fit/cpp`) is 0 ULP from OpenVDB's `sampleHessian`
+  (Gate 6a a.kernel), and the foxgirl run with it is bitwise the run with the
+  Gate 6a reference sampler: 177 Newton (24/36/50/67), energy
+  0.0014288103789395555, `garment_final.f64` sha256 ab9fb211…
 
 ## Gate 6a (from `sdf/README.md`)
 
@@ -35,6 +38,8 @@ The OpenVDB values come from `openvdb_dump`.
 | check | `fit` set: 21,015 samples | `all` set: 78,300 samples |
 |---|---|---|
 | reference sampler vs OpenVDB `sampleHessian`, on OpenVDB's own stencils | 0 ULP in all 13 outputs | 0 ULP |
+| Lean kernel vs OpenVDB `sampleHessian`, same stencils | 0 ULP in all 13 outputs | 0 ULP |
+| control: the kernel with 2/3 as a float literal | **fails**: 8.7e18 ULP | **fails** |
 | index map (p/h, floor, uvw) vs `worldToIndex` | bitwise | bitwise |
 | value within 0.25 voxel, near-surface samples | 100% (p99 0.027, max 0.058 voxel) | 100% (max 0.084) |
 | sign agreement | 100% | 100% |
@@ -46,7 +51,8 @@ The OpenVDB values come from `openvdb_dump`.
 **Setup:**
 
 - **Build:** `fit_native`, built as `FIT_SDF=sdfgrid FIT_SDF_SAMPLER=reference`
-  in `C:/b/fit-native-sdf`.
+  in `C:/b/fit-native-sdf`; the kernel run as `FIT_SDF_SAMPLER=kernel` in
+  `C:/b/fit-native-sdfk`.
 - **Guest numerics:** `-ffp-contract=off`, `EIGEN_DONT_VECTORIZE`,
   `POLYFEM_THREADING=NONE`, no filib.
 - **Inputs:** foxgirl_oracle.json at voxel h = 0.01. All distances are in voxels,
@@ -63,6 +69,7 @@ The OpenVDB values come from `openvdb_dump`.
 | upstream 16t | 250 (50/53/45/102) | 0.0012964 (−13.4%) | 11.63 / 5.99 / 8.24 | 1.776 / 3.872 | none | — |
 | upstream 16t repeat | 185 (50/21/34/80) | 0.0014293 (−4.6%) | 4.93 / 3.11 / 4.74 | 1.769 / 3.826 | none | — |
 | **native SdfGrid, f64 inputs** | 177 (24/36/50/67) | 0.0014288 (−4.6%) | **4.75 / 2.77 / 4.52** | 1.786 / 3.910 | none | 0 |
+| **native SdfGrid, f64, Lean kernel** | 177 (24/36/50/67) | 0.0014288 (bitwise the row above) | 4.75 / 2.77 / 4.52 | 1.786 / 3.910 | none | 0 |
 | **native SdfGrid, f32 inputs** (the wire) | 196 (41/37/11/107) | 0.0013414 (−10.4%) | **10.29 / 5.12 / 6.70** | 1.794 / 3.925 | none | 0 |
 | native OpenVDB, f64 (`driver/`) | 182 (24/49/50/59) | 0.0013918 (−7.1%) | 8.16 / 4.23 / 5.95 | 1.797 / 4.005 | none | 0 |
 | native OpenVDB, f32 (`driver/`) | 178 (41/35/21/81) | 0.0013171 (−12.0%) | 11.01 / 5.68 / 7.38 | 1.795 / 3.956 | none | 0 |
@@ -113,6 +120,13 @@ What the runs show:
     open.
 - **Deterministic.** Two f64 SdfGrid runs, at different load and from two
   builds of the harness, are bitwise identical (`garment_final.f64`).
+- **The sampler is the Lean kernel's.** The f64 run with
+  `FIT_SDF_SAMPLER=kernel` is bitwise the reference-sampler run:
+  `garment_final.f64` and `.obj` identical, `phases.tsv` identical but for
+  wall and CPU time (`run-sdf-kernel-f64.log`, `phases-sdf-kernel-f64.tsv`,
+  `compare.log`). The other rows were run with the reference sampler; since
+  the two samplers are bitwise equal on this path, they stand for the
+  kernel.
 - **No file I/O and no intersections.**
   - `io_attempts` is 0 inside the driver in every run.
   - The harness's own 7 opens before `begin` are counted, which shows the
@@ -127,6 +141,7 @@ What the runs show:
 | run | CPU s | peak working set | SDF grid |
 |---|---|---|---|
 | SdfGrid guest f64 | 103.0 | 214.5 MB | 207 bricks (105,984 voxels), 0.82 MB, 105,984 distance + 105,984 winding queries, 0.57 s fill |
+| SdfGrid guest f64, Lean kernel | 101.6 | 214.1 MB | the same grid, 0.54 s fill |
 | SdfGrid guest f32 | 107.6 | 177.8 MB | 223 bricks, 0.88 MB, 0.56 s fill |
 | OpenVDB guest f32 (`driver/`) | 124.6 | 911.9 MB | 46.5M active voxels, 414 MB |
 | upstream 1t `PolyFEM_bin` | 242 | 940 MB | as above, plus debug OBJ writes every step |
@@ -187,12 +202,6 @@ Native guest numerics are bitwise reproducible, so a fixed target exists.
 
 ## Open
 
-- **The Lean sampler.** Rerun this page with `FIT_SDF_SAMPLER=kernel` once
-  `lean/Fit/SdfSplineHessian.lean` is emitted.
-  - **Expected:** bitwise the same as the reference. Gate 6a already requires
-    0 ULP, and a hand-written stand-in through the same call site was 0 ULP
-    (`sdf/standin.log`).
-  - **Literals:** the emit needs double literals.
 - **Energy per form.** Split the final energy by form for the
   upstream-numerics SdfGrid control, to say which term holds the +62%.
 - **The same run in the guest.** fit.elf in the sandbox is Cut 6's next step:
@@ -203,7 +212,10 @@ Native guest numerics are bitwise reproducible, so a fixed target exists.
 Run from the repo root under `pixi run --manifest-path tools/native/pixi.toml`.
 
 ```sh
-FIT_BUILD=C:/b/fit-native-sdf FIT_SDF=sdfgrid bash tests/native/fit/build.sh          # FIT_SDF_SAMPLER=reference is the default
+FIT_BUILD=C:/b/fit-native-sdfk FIT_SDF=sdfgrid bash tests/native/fit/build.sh         # FIT_SDF_SAMPLER=kernel is the default
+FIT_BUILD=C:/b/fit-native-sdf FIT_SDF=sdfgrid FIT_SDF_SAMPLER=reference bash tests/native/fit/build.sh
+C:/b/fit-native-sdfk/fit_native.exe --out C:/b/fit-out-sdfk64 --io-probe --control-push --no-round
+cmp C:/b/fit-out-sdfk64/garment_final.f64 C:/b/fit-out-sdf64/garment_final.f64
 FIT_BUILD=C:/b/fit-native-up-sdf FIT_SDF=sdfgrid FIT_NUMERICS=upstream bash tests/native/fit/build.sh
 C:/b/fit-native-sdf/fit_native.exe --out C:/b/fit-out-sdf64 --io-probe --control-push --no-round
 C:/b/fit-native-sdf/fit_native.exe --out C:/b/fit-out-sdf32 --io-probe --control-push

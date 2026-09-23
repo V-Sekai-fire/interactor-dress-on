@@ -53,3 +53,7 @@ compare fit-out-sdf64-fw0/garment_final.obj vs cf-up-out16b/step_garment_188.obj
   per-vertex: max 6.91169 voxels (vertex 230), mean 3.18954, p99 6.46389  [max 6.911695e-02 m]
   hausdorff (vertex-sampled, point to surface): 5.5205 voxels (A->B 5.45829, B->A 5.5205)
 cmp fit-out-sdf64 fit-out-sdf64b garment_final.f64: identical (guest numerics + SdfGrid, run to run, different load)
+compare fit-out-sdfk64/garment_final.obj vs cf-up-out1/step_garment_252.obj: 2682 verts, voxel 0.01
+  per-vertex: max 4.74707 voxels (vertex 1329), mean 2.77192, p99 4.48315  [max 4.747065e-02 m]
+  hausdorff (vertex-sampled, point to surface): 4.51922 voxels (A->B 4.34909, B->A 4.51922)
+cmp fit-out-sdf64 fit-out-sdfk64 garment_final.f64: identical (FIT_SDF_SAMPLER=kernel, the Lean emit, vs =reference; sha256 ab9fb211ccb2ffcd7e176112ff09a6de7ee870d52e180325ec66fcc686e33504), garment_final.obj identical, phases.tsv identical in every column but wall/cpu

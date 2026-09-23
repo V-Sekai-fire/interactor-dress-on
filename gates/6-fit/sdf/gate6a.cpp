@@ -10,8 +10,9 @@
 // (a) sampler: the reference (spline_ref.h) on OpenVDB's own stencils and
 //     uvw reproduces sampleHessian to <= 1 ULP in all 13 outputs; our
 //     world->index (p * (1/h), floor, subtract) reproduces OpenVDB's bitwise.
-//     When the Lean emit is compiled in (FIT_KERNELS_PENDING unset), the kernel
-//     is held to the same bound against the reference.
+//     a.kernel: the Lean emit (compiled in unless FIT_KERNELS_PENDING) on the
+//     same stencils must be 0 ULP from sampleHessian in all 13 outputs, and
+//     bitwise equal to the reference in its 10.
 // (b) grid: our SdfGrid sampled at each point vs OpenVDB, over the samples
 //     with |v_vdb| < 5 voxels: |dv| <= 0.25 voxel for >= 99%, sign agreement
 //     >= 99.5%, gradient angle <= 10 deg for >= 95%.
@@ -339,18 +340,35 @@ int main(int argc, char **argv)
 				std::memcpy(&uv[3 * n], recs[n].uvw, sizeof recs[n].uvw);
 			}
 			sdf_spline::hessian_batch(st.data(), uv.data(), ko.data(), recs.size());
-			std::uint64_t mk = 0;
+			std::uint64_t mk = 0, mx = 0, mg = 0, mh = 0, mr = 0;
+			size_t kbit = 0;
 			for (size_t n = 0; n < recs.size(); n++)
 			{
+				const Rec &r = recs[n];
+				const double *k = &ko[10 * n];
+				const double hv[9] = {k[4], k[5], k[6], k[5], k[7], k[8], k[6], k[8], k[9]};
+				std::uint64_t ux = ulps(k[0], r.x), ug = 0, uh = 0;
+				for (int d = 0; d < 3; d++)
+					ug = std::max(ug, ulps(k[1 + d], r.g[d]));
+				for (int e = 0; e < 9; e++)
+					uh = std::max(uh, ulps(hv[e], r.h[e]));
+				mx = std::max(mx, ux);
+				mg = std::max(mg, ug);
+				mh = std::max(mh, uh);
+				mk = std::max({mk, ux, ug, uh});
+				kbit += (ux | ug | uh) == 0;
 				double o[10];
-				gate6a::spline_hessian_ref(recs[n].stencil, recs[n].uvw, o);
-				for (int k = 0; k < 10; k++)
-					mk = std::max(mk, ulps(o[k], ko[10 * n + k]));
+				gate6a::spline_hessian_ref(r.stencil, r.uvw, o);
+				for (int e = 0; e < 10; e++)
+					mr = std::max(mr, ulps(o[e], k[e]));
 			}
-			verdict(mk <= 1, "[" + label + "] a.kernel", fmt("Lean emit vs reference: max %llu ULP over %zu samples", (unsigned long long)mk, recs.size()));
+			verdict(mk == 0 && mr == 0, "[" + label + "] a.kernel",
+					fmt("Lean emit vs SplineSampler::sampleHessian on OpenVDB stencils: max %llu ULP (x %llu, g %llu, h %llu), %zu/%zu bitwise in all 13; vs reference max %llu ULP",
+						(unsigned long long)mk, (unsigned long long)mx, (unsigned long long)mg, (unsigned long long)mh,
+						kbit, recs.size(), (unsigned long long)mr));
 		}
 		else
-			out("INFO [%s] a.kernel: pending (FIT_KERNELS_PENDING; lean/Fit/SdfSplineHessian.lean not emitted), reference only\n", label.c_str());
+			out("INFO [%s] a.kernel: left out (built with FIT_KERNELS_PENDING), reference only\n", label.c_str());
 	}
 
 	// --- (b) our grid vs OpenVDB ------------------------------------------------

@@ -207,11 +207,12 @@ endif()
 
 # OpenVDB is not linked: FitForm samples a lazily filled brick-grid SDF
 # (garment_forms/SdfGrid) through a Lean-emitted spline kernel
-# (garment_forms/SdfSpline). Until lean/Fit/SdfSplineHessian.lean is emitted,
-# FIT_KERNELS_PENDING stays ON and the sampler throws when called.
-option(FIT_KERNELS_PENDING "The Lean SDF spline kernel has not been emitted yet" ON)
-set(FIT_KERNELS_DIR "" CACHE PATH "Directory holding sdf_spline_hessian_emit.cpp (kernels/fit/cpp)")
-set(FIT_SLANG_PRELUDE_DIR "" CACHE PATH "Directory holding slang-cpp-prelude.h (guest/avbd/slang-rt)")
+# (garment_forms/SdfSpline), lean/Fit/SdfSplineHessian.lean emitted to
+# kernels/fit/cpp by kernels/fit/gen.sh. FIT_KERNELS_PENDING=ON leaves it out
+# and the sampler throws when called (the negative control).
+option(FIT_KERNELS_PENDING "Leave the Lean SDF spline kernel out (the sampler throws)" OFF)
+set(FIT_KERNELS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../kernels/fit/cpp" CACHE PATH "Directory holding sdf_spline_hessian_emit.cpp (kernels/fit/cpp)")
+set(FIT_SLANG_PRELUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../guest/avbd/slang-rt" CACHE PATH "Directory holding slang-cpp-prelude.h (guest/avbd/slang-rt)")
 if(FIT_KERNELS_PENDING)
     target_compile_definitions(polyfem PRIVATE FIT_KERNELS_PENDING)
 else()

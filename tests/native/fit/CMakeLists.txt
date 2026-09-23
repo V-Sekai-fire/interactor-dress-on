@@ -11,15 +11,16 @@
 # FIT_SDF selects the FitForm:
 #   openvdb  FitForm as vendored at FIT_FITFORM_REV (the OpenVDB SDF the
 #            upstream oracle samples), extracted from git with its two debug
-#            OBJ writes guarded. Native only: an interim until the brick-grid
-#            SdfGrid FitForm (working tree) has its Lean kernel.
+#            OBJ writes guarded. Native only: the control that isolates the
+#            SDF swap (gates/6-fit/driver).
 #   sdfgrid  the working tree's FitForm + SdfGrid + SdfSpline (no OpenVDB).
 #            FIT_SDF_SAMPLER picks the spline sampler behind SdfSpline.hpp:
-#              kernel     SdfSpline.cpp over the Lean emit (needs FIT_KERNELS_DIR
-#                         and FIT_SLANG_PRELUDE_DIR)
+#              kernel     SdfSpline.cpp over the Lean emit (the default;
+#                         FIT_KERNELS_DIR defaults to kernels/fit/cpp and
+#                         FIT_SLANG_PRELUDE_DIR to guest/avbd/slang-rt)
 #              reference  sdf_spline_reference.cpp, the Gate 6a reference
 #                         (gates/6-fit/sdf/spline_ref.h); native only, the
-#                         default until the Lean kernel is emitted
+#                         control the kernel is held to bit for bit
 #              pending    SdfSpline.cpp with FIT_KERNELS_PENDING (throws)
 cmake_minimum_required(VERSION 3.25)
 
@@ -126,7 +127,7 @@ if(FIT_SDF STREQUAL "openvdb")
     endif()
     list(APPEND POLYFEM_FIT_SOURCES "${FITFORM_SUB}/FitForm.cpp")
 else()
-    set(FIT_SDF_SAMPLER "reference" CACHE STRING "kernel | reference (native only) | pending")
+    set(FIT_SDF_SAMPLER "kernel" CACHE STRING "kernel | reference (native only) | pending")
     set_property(CACHE FIT_SDF_SAMPLER PROPERTY STRINGS kernel reference pending)
     list(APPEND POLYFEM_FIT_SOURCES
         ${CF_SRC}/solver/forms/garment_forms/FitForm.cpp
@@ -146,8 +147,8 @@ if(FIT_SDF STREQUAL "openvdb")
     target_link_libraries(polyfem_fit PUBLIC openvdb)
 else()
     target_compile_definitions(polyfem_fit PUBLIC FIT_SDF_GRID)
-    set(FIT_KERNELS_DIR "" CACHE PATH "kernels/fit/cpp (sdf_spline_hessian_emit.cpp)")
-    set(FIT_SLANG_PRELUDE_DIR "" CACHE PATH "slang-cpp-prelude.h directory")
+    set(FIT_KERNELS_DIR "${REPO}/kernels/fit/cpp" CACHE PATH "kernels/fit/cpp (sdf_spline_hessian_emit.cpp)")
+    set(FIT_SLANG_PRELUDE_DIR "${REPO}/guest/avbd/slang-rt" CACHE PATH "slang-cpp-prelude.h directory")
     if(FIT_SDF_SAMPLER STREQUAL "kernel")
         if(NOT EXISTS "${FIT_KERNELS_DIR}/sdf_spline_hessian_emit.cpp")
             message(FATAL_ERROR "FIT_SDF_SAMPLER=kernel needs FIT_KERNELS_DIR with sdf_spline_hessian_emit.cpp")

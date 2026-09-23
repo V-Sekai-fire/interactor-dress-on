@@ -45,6 +45,7 @@
 #include "drape_config.h"
 #include "drape_scene.h"
 #include "primitives.h"
+#include "similarity.h"
 
 struct DrapePredContact {
 	uint32_t vert, prim;
@@ -101,6 +102,145 @@ public:
 	std::vector<DrapeStepRecord> recs;  // recs[k]: step k+1
 	std::string err;
 	bool failed = false;
+
+	// Fit mode (Cut 6d): while on, begin() refreshes the scene's fit
+	// attachments' targets from the first mesh collider every
+	// scene.fitRefresh steps (mesh_fit_target: nearest surface point + gap
+	// out along the normal; a vertex no collider answers for keeps its own
+	// position as its target, a zero force), and every step records the
+	// largest vertex move, the session's stop test. The step itself is the
+	// ordinary step: the same attachment kernels, contact and self-collision.
+	bool fitActive = false;
+	bool fitSettling = false;           // the settle: targets frozen, the fit pull off (the session sets it)
+	uint32_t fitSteps = 0;              // steps taken in fit mode (the refresh counter)
+	uint32_t fitRefreshed = 0, fitMisses = 0;
+	double lastMaxDisp = 0.0;           // max_i |x_i(after) - x_i(before)| of the last step
+	double lastFitDistMin = 0.0, lastFitDistMean = 0.0; // signed surface distance at the last refresh
+	// The similarity rest update (scene.fitSimilarity): the source garment
+	// (the rest at the fit's start) and the transform of the last refresh.
+	std::vector<float> fitRest0;
+	Similarity fitSim;
+	uint32_t fitRestUpdates = 0;
+
+	// rest = T(source) for the best similarity T of the source onto the
+	// current vertices; every rest-derived quantity is recomputed
+	// (scene_finish: the triangles' rest metric and area, the bendings'
+	// rest norm and areas, the vertex areas, the self-collision radii) and
+	// the material re-applied (kTri x area, kBend, kFit x area), then written
+	// into the solver's existing triangle, bending, radius and attachment
+	// buffers (the update* paths: the topology is the same, so no buffer or
+	// uniform set is remade; a re-upload cost ~300 permanent RID slots per
+	// refresh and filled the sandbox's table in pass 3 of Gate 6d). The
+	// masses keep the source's areas (they set only how far a quasi-static
+	// step moves). Nothing is pending between steps, so the writes never wait.
+	void refreshRest() {
+		if (fitRest0.size() != 3 * size_t(scene.nV)) {
+			return;
+		}
+		Similarity T;
+		v3d cs, ct;
+		for (uint32_t a : scene.fitAnchor) {
+			cs += v3d(fitRest0[3 * a], fitRest0[3 * a + 1], fitRest0[3 * a + 2]);
+			ct += at(x, a);
+		}
+		if (!scene.fitAnchor.empty()) {
+			cs = cs / double(scene.fitAnchor.size());
+			ct = ct / double(scene.fitAnchor.size());
+		}
+		if (!similarity_fit(fitRest0.data(), x.data(), scene.nV, T, scene.fitAnchor.empty() ? nullptr : &cs,
+					scene.fitAnchor.empty() ? nullptr : &ct)) {
+			return;
+		}
+		fitSim = T;
+		for (uint32_t i = 0; i < scene.nV; ++i) {
+			const v3d p = T.apply(v3d(fitRest0[3 * i], fitRest0[3 * i + 1], fitRest0[3 * i + 2]));
+			put(scene.rest, i, p);
+		}
+		scene_finish(scene);
+		scene.applyMaterial(cfg);
+		if (cfg.membrane && scene.nTri() > 0) {
+			solver.updateTriangleRest(scene.triInvUV.data(), scene.triK.data());
+		}
+		if (cfg.bending && scene.nBend() > 0) {
+			solver.updateBendingRest(scene.bendW.data(), scene.bendN.data(), scene.bendK.data());
+		}
+		std::vector<float> rad(scene.nV);
+		for (uint32_t i = 0; i < scene.nV; ++i) {
+			rad[i] = float(scene.radii[i]);
+		}
+		solver.updateSelfCollisionRadii(rad.data());
+		if (scene.nAttach() > 0) {
+			solver.updateAttachmentStiffness(scene.attachK.data());
+		}
+		++fitRestUpdates;
+	}
+
+	void refreshFitTargets() {
+		const Primitive *mesh = nullptr;
+		for (const Primitive &p : scene.prims) {
+			if (p.kind == PrimKind::Mesh) {
+				mesh = &p;
+				break;
+			}
+		}
+		const uint32_t base = scene.nPin();
+		double dmin = INFINITY, dsum = 0.0;
+		uint32_t hits = 0;
+		for (uint32_t j = 0; j < scene.nFit; ++j) {
+			const uint32_t a = base + j;
+			const v3d p = at(x, scene.attachVert[a]);
+			v3d t = p;
+			double sd = 0.0;
+			if (mesh && mesh_fit_target(*mesh, p, scene.fitGap, 1e3, t, sd)) {
+				dmin = std::min(dmin, sd);
+				dsum += sd;
+				++hits;
+			} else {
+				++fitMisses;
+			}
+			for (int k = 0; k < 3; ++k) {
+				scene.attachFixed[3 * a + k] = float(t[k]);
+			}
+		}
+		lastFitDistMin = hits ? dmin : 0.0;
+		lastFitDistMean = hits ? dsum / hits : 0.0;
+		// The anchor attachments: each target its vertex's own position plus
+		// the loop's centroid error, a uniform force on the loop.
+		if (scene.nAnchorAtt > 0 && fitRest0.size() == 3 * size_t(scene.nV)) {
+			const uint32_t base2 = base + scene.nFit;
+			v3d src, cur;
+			for (uint32_t j = 0; j < scene.nAnchorAtt; ++j) {
+				const uint32_t vtx = scene.attachVert[base2 + j];
+				src += v3d(fitRest0[3 * vtx], fitRest0[3 * vtx + 1], fitRest0[3 * vtx + 2]);
+				cur += at(x, vtx);
+			}
+			const v3d shift = (src - cur) / double(scene.nAnchorAtt);
+			for (uint32_t j = 0; j < scene.nAnchorAtt; ++j) {
+				const uint32_t vtx = scene.attachVert[base2 + j];
+				const v3d t = at(x, vtx) + shift;
+				for (int k = 0; k < 3; ++k) {
+					scene.attachFixed[3 * (base2 + j) + k] = float(t[k]);
+				}
+			}
+			lastAnchorShift = shift.norm();
+		}
+		++fitRefreshed;
+	}
+	double lastAnchorShift = 0.0; // |source centre - the anchor targets' centre| at the last refresh
+
+	// The settle's stiffness: the fit pull off, the pins and the anchor kept.
+	void setFitPull(bool on) {
+		if (scene.nAttach() == 0) {
+			return;
+		}
+		std::vector<float> k = scene.attachK;
+		if (!on) {
+			for (uint32_t a = scene.nPin(); a < scene.nPin() + scene.nFit; ++a) {
+				k[a] = 0.0f;
+			}
+		}
+		solver.updateAttachmentStiffness(k.data());
+	}
 
 	// Upload the scene and material; reset the state and the records.
 	bool setup() {
@@ -269,6 +409,12 @@ public:
 private:
 	void begin() {
 		cur_ = DrapeStepRecord();
+		if (fitActive && !fitSettling && scene.nFit > 0 && fitSteps % uint32_t(std::max(1, scene.fitRefresh)) == 0) {
+			if (scene.fitSimilarity && fitSteps > 0 && fitSteps % uint32_t(std::max(1, scene.fitRestEvery)) == 0) {
+				refreshRest();
+			}
+			refreshFitTargets();
+		}
 		predict(cur_);
 		solver.updateState(x.data(), cur_.sBlend.data());
 		if (scene.nAttach() > 0) {
@@ -387,6 +533,14 @@ private:
 	}
 
 	void finishStep() {
+		double md = 0.0;
+		for (uint32_t i = 0; i < scene.nV; ++i) {
+			md = std::max(md, (at(pos_, i) - at(x, i)).norm());
+		}
+		lastMaxDisp = md;
+		if (fitActive) {
+			++fitSteps;
+		}
 		cur_.x = pos_;
 		cur_.v = vel_;
 		x = pos_;

@@ -1,0 +1,4 @@
+align (N=5): max recovery error = 0.00000000
+align (N=2): max recovery error = 0.00000000
+rodrigues (N=1): error = 0.00000000
+OK

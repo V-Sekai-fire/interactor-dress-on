@@ -1,0 +1,7 @@
+avbd base rc=1 wall_s=29 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged
+avbd rot+30 rc=1 wall_s=29 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged
+avbd rot-30 rc=1 wall_s=27 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged
+avbd rad0.85 rc=1 wall_s=27 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged
+avbd rad1.15 rc=1 wall_s=27 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged
+avbd len0.85 rc=1 wall_s=27 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged
+avbd len1.15 rc=1 wall_s=27 DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged

@@ -173,6 +173,7 @@ void AvbdCpu::buildColoring() {
 }
 
 void AvbdCpu::setGammaScale(float scale) {
+	gammaScale_ *= scale;
 	for (float &g : attachGamma_) {
 		g *= scale;
 	}
@@ -182,6 +183,49 @@ void AvbdCpu::setGammaScale(float scale) {
 	for (float &g : bendGamma_) {
 		g *= scale;
 	}
+}
+
+void AvbdCpu::updateTriangleRest(const float *invUV, const float *stiffness) {
+	if (nTri_ == 0) {
+		return;
+	}
+	triInvUV_.assign(invUV, invUV + 4 * size_t(nTri_));
+	triStiff_.assign(stiffness, stiffness + nTri_);
+	triGamma_.assign(stiffness, stiffness + nTri_);
+	for (float &g : triGamma_) {
+		g *= gammaScale_;
+	}
+}
+
+void AvbdCpu::updateBendingRest(const float *weight, const float *nTarget, const float *stiffness) {
+	if (nBend_ == 0) {
+		return;
+	}
+	bendWeight_.assign(weight, weight + 4 * size_t(nBend_));
+	bendNTarget_.assign(nTarget, nTarget + nBend_);
+	bendStiff_.assign(stiffness, stiffness + nBend_);
+	bendGamma_.assign(stiffness, stiffness + nBend_);
+	for (float &g : bendGamma_) {
+		g *= gammaScale_;
+	}
+}
+
+void AvbdCpu::updateAttachmentStiffness(const float *stiffness) {
+	if (nAttach_ == 0) {
+		return;
+	}
+	attachStiff_.assign(stiffness, stiffness + nAttach_);
+	attachGamma_.assign(stiffness, stiffness + nAttach_);
+	for (float &g : attachGamma_) {
+		g *= gammaScale_;
+	}
+}
+
+void AvbdCpu::updateSelfCollisionRadii(const float *radii) {
+	if (!meshReady_ || radii_.size() != nVerts_) {
+		return;
+	}
+	radii_.assign(radii, radii + nVerts_);
 }
 
 void AvbdCpu::updateState(const float *positions, const float *predicted) {

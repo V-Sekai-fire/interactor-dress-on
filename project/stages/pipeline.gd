@@ -7,8 +7,14 @@
 # RIG     15-joint skeleton (infer.elf's rig; today FoxGirl's own, via skeleton15)
 # AUTHOR  pen events -> curvenet pen_begin/point/end, then curvenet_build
 # MESH    mesh_build on curvenet's worker thread -> garment + boundary loops
-# FIT_*   fit.elf: setup, fit_begin (worker), one fit_step per job (worker),
-#         status read between jobs, then the fitted vertices
+# FIT_*   fit_mode polyfem: fit.elf: setup, fit_begin (worker), one fit_step
+#         per job (worker), status read between jobs, then the fitted vertices
+#         fit_mode avbd (Cut 6d): the similarity retarget, then drape.elf's fit
+#         phase against the body mesh collider (drape_stage.gd FIT_AVBD: every
+#         garment vertex not in the nofit set pulled to the body surface + gap,
+#         gravity off, targets refreshed) ticked from the drape stage's
+#         _process; fit.elf is set up and begun on its worker meanwhile, for
+#         CHECK. Labelled FIT(avbd), not FIXTURE: the fit is measured
 # CHECK   fit_check_intersections must answer "OK none"; the inward-vertex
 #         control is run beside it every time
 # DRAPE   drape.elf: the fitted garment as a drape_scene_mesh, pinned on its
@@ -103,6 +109,8 @@ const DEFAULTS := {
 	                          # vertices inside after 30 steps against the capsules' 186); capsules: 14
 	                          # along the skeleton; none
 	"fit_from": "",           # with fit as a fixture: an OBJ whose vertices are the fitted garment (a saved fit)
+	"fit_mode": "polyfem",    # polyfem: fit.elf (cloth-fit, 627 s on the authored skirt) | avbd: drape.elf's fit
+	                          # phase with drape_stage.gd's FIT_AVBD (Cut 6d, gates/6d-fit-avbd), CHECK by fit.elf
 	"stop_after": "",         # "MESH" for --gate=pen
 }
 
@@ -140,9 +148,11 @@ func start(o: Dictionary = {}) -> String:
 	for s in [infer, curvenet, fit, drape]:
 		if s != null:
 			s.take_vm_us()
+	if not (str(opts.fit_mode) in ["polyfem", "avbd"]):
+		return "FAIL fit_mode must be polyfem or avbd, not %s" % str(opts.fit_mode)
 	_goto("INFER")
-	return "STARTED allow_fixture=%s force_fixture=%s pen=%s" % [",".join(opts.allow_fixture),
-			",".join(opts.force_fixture), opts.pen]
+	return "STARTED allow_fixture=%s force_fixture=%s pen=%s fit_mode=%s" % [",".join(opts.allow_fixture),
+			",".join(opts.force_fixture), opts.pen, opts.fit_mode]
 
 # Pen events from a bridge (body-local). kind: begin | point | end.
 # boundary (begin only): the stroke is the edge of an opening (curvenet's
@@ -170,8 +180,9 @@ func status() -> String:
 func summary() -> Dictionary:
 	var d := {"state": state, "reason": reason, "fixtures": fixtures, "records": records,
 			"wall_s": (Time.get_ticks_msec() - _run_t0) / 1000.0}
-	for k in ["counts", "rings", "min_clearance", "mesh", "fit_config", "fit_begin", "fit_phases", "check", "check_control",
-			"drape", "drape_input", "drape_setup", "drape_body", "capsules", "pins"]:
+	d["fit_mode"] = str(opts.get("fit_mode", "polyfem"))
+	for k in ["counts", "rings", "min_clearance", "mesh", "fit_config", "fit_begin", "fit_phases", "fit_avbd", "check",
+			"check_control", "drape", "drape_input", "drape_setup", "drape_body", "capsules", "pins"]:
 		if data.has(k):
 			d[k] = data[k]
 	return d
@@ -230,7 +241,8 @@ func _stage_for(s: String):
 	match s:
 		"INFER", "RIG": return infer
 		"AUTHOR", "MESH": return curvenet
-		"FIT_BEGIN", "FIT_RUN", "FIT_READ", "CHECK": return fit
+		"FIT_BEGIN", "FIT_RUN", "FIT_READ": return drape if _avbd() else fit
+		"CHECK": return fit
 		"DRAPE", "DRAPE_COLLECT": return drape
 	return null
 
@@ -458,11 +470,17 @@ func _mesh_done(g: Dictionary, note: String) -> void:
 
 # --- FIT --------------------------------------------------------------------------------------
 
+func _avbd() -> bool:
+	return str(opts.get("fit_mode", "polyfem")) == "avbd"
+
 func _fit_begin(first: bool) -> void:
 	var g: Dictionary = data.garment
 	if first:
 		var m := _mode("fit", fit, _missing(fit))
 		if m == "":
+			return
+		if _avbd():
+			_fit_begin_avbd(m)
 			return
 		if m == "fixture":
 			data.fit_fixture = true
@@ -477,24 +495,9 @@ func _fit_begin(first: bool) -> void:
 			data.fitted = _similarity_retarget(g.vertices, g.source_joints, data.joints)
 			_goto("FIT_READ", "FIXTURE fit: similarity from the garment skeleton to the body skeleton")
 			return
-		var cfg: String = infer.fit_config_text()
-		if cfg.is_empty():
-			_fail("fixtures/foxgirl/fit_config.json unreadable")
-			return
-		var fc := _fit_budget(cfg)
-		if fc.has("error"):
-			_fail(fc.error)
-			return
-		cfg = fc.text
-		data.fit_config = fc.note
-		var e: String = fit.setup(data.body_v, data.body_f, g.source_joints, data.joints, data.bones, g.vertices,
-				g.triangles, g.nofit, cfg)
+		var e := _fit_elf_begin()
 		if e != "":
 			_fail(e)
-			return
-		var r: String = fit.start_begin()
-		if not r.begins_with("STARTED"):
-			_fail(r)
 		return
 	var p: Dictionary = fit.poll()
 	if not p.done:
@@ -507,7 +510,109 @@ func _fit_begin(first: bool) -> void:
 	data.fit_phases = []
 	_goto("FIT_RUN", r)
 
+# fit.elf's problem handed over and fit_begin started on its worker: "" or
+# the failure. The polyfem fit's first step; with for_check (avbd mode) the
+# setup CHECK needs: fit_check_intersections wants the driver's normalisation
+# and collision mesh, and tests the garment against the avatar where the
+# current phase's alpha puts it (fit_driver.cpp check_intersections_with).
+# At phase 0 that is cloth-fit's start avatar, the body collapsed onto its
+# skeleton (shrink_normal_distance 0, optimize.cpp:1280), which no garment
+# can hit: the pushed-vertex control answers "none" against it. With
+# shrink_normal_distance 1e-6 the start avatar is the real body 1e-6 solve
+# units (0.65 um) inside its own skin, so the phase-0 check is the loop's
+# check without the 627 s of phases; the fit's own start-state refusal
+# then also sees the real body (the authored skirt clears it by 1 cm).
+func _fit_elf_begin(for_check: bool = false) -> String:
+	var g: Dictionary = data.garment
+	var cfg: String = infer.fit_config_text()
+	if cfg.is_empty():
+		return "fixtures/foxgirl/fit_config.json unreadable"
+	var fc := _fit_budget(cfg, for_check)
+	if fc.has("error"):
+		return fc.error
+	cfg = fc.text
+	data.fit_config = fc.note
+	var e: String = fit.setup(data.body_v, data.body_f, g.source_joints, data.joints, data.bones, g.vertices,
+			g.triangles, g.nofit, cfg)
+	if e != "":
+		return e
+	var r: String = fit.start_begin()
+	if not r.begins_with("STARTED"):
+		return r
+	return ""
+
+# FIT(avbd), Cut 6d. fit_mode: "real" runs fit.elf's begin on its worker for
+# CHECK; "fixture" (fit.elf missing and allowed, or forced) leaves CHECK
+# unmeasured. The fit itself is drape.elf's, so a missing drape fails the run.
+func _fit_begin_avbd(fit_elf_mode: String) -> void:
+	var g: Dictionary = data.garment
+	var miss := _missing(drape)
+	if miss == "":
+		miss = drape.fit_api_missing()
+	if miss != "":
+		_fail("fit_mode avbd: drape %s" % miss)
+		return
+	data.fit_check_fixture = fit_elf_mode == "fixture"
+	var start := _similarity_retarget(g.vertices, g.source_joints, data.joints)
+	var fit_verts := _fit_vertices(g.vertices.size() / 3, g.nofit)
+	var anchor := _waist_loop(start, g.triangles)
+	var p: Dictionary = drape.FIT_AVBD
+	var r: Dictionary = drape.fit_avbd_start(start, g.triangles, fit_verts, anchor, data.body_v, data.body_f, p,
+			opts.drape_scale, opts.drape_mu, opts.drape_backend)
+	for s in r.steps:
+		if str(s).begins_with("FAIL") or str(s).begins_with("BUSY"):
+			_fail("fit(avbd) setup: " + str(s))
+			return
+	if not str(r.queued).begins_with("QUEUED"):
+		_fail("fit(avbd): " + str(r.queued))
+		return
+	data.fit_avbd = {"setting": p, "setup": r.steps, "queued": r.queued, "fit_vertices": fit_verts.size(),
+			"nofit": g.nofit.size(), "anchor": anchor.size(), "retarget": "similarity from the garment skeleton to the body skeleton",
+			"scale": opts.drape_scale, "mu": opts.drape_mu}
+	var elf := "not run (fit FIXTURE)"
+	if fit_elf_mode == "real":
+		var e := _fit_elf_begin(true)
+		if e != "":
+			_fail("fit.elf for CHECK: " + e)
+			return
+		elf = "fit_begin STARTED on the worker (for CHECK)"
+	_goto("FIT_RUN", "FIT(avbd): %s | %d fit vertices (%d nofit), k %s gap %s iters %d steps <= %d tol %s refresh %d kBend %s | fit.elf %s" % [
+			r.queued, fit_verts.size(), g.nofit.size(), str(p.k), str(p.gap), p.iters, p.steps, str(p.tol), p.refresh,
+			str(p.kBend), elf])
+
+# The waist loop (the boundary loop with the highest mean y, the drape's pin
+# loop): the similarity rest update's anchor.
+static func _waist_loop(v: PackedFloat32Array, tris: PackedInt32Array) -> PackedInt32Array:
+	var loops := MeshTopo.boundary_loops(tris)
+	var wi := MeshTopo.highest_loop(v, loops)
+	return loops[wi] if wi >= 0 else PackedInt32Array()
+
+# Every garment vertex not in the nofit set (the loop's authored garment has
+# none; the LCL fixture lists 2005 of 2682).
+static func _fit_vertices(n: int, nofit: PackedInt32Array) -> PackedInt32Array:
+	var skip := {}
+	for i in nofit:
+		skip[i] = true
+	var out := PackedInt32Array()
+	for i in n:
+		if not skip.has(i):
+			out.append(i)
+	return out
+
 func _fit_run(first: bool) -> void:
+	if _avbd():
+		var st: String = drape.drape_status()
+		if st.begins_with("RUNNING"):
+			data.fit_avbd.last_running = st
+			return
+		if st.begins_with("FAIL") or st.find("DONE fit") < 0:
+			_fail("fit(avbd): " + st)
+			return
+		data.fit_avbd.result = st
+		data.fit_avbd.ticks = drape.ticks
+		data.fit_avbd.result_full = drape.drape_result().split("\n")[0]
+		_goto("FIT_READ", st)
+		return
 	if not first:
 		var p: Dictionary = fit.poll()
 		if not p.done:
@@ -530,7 +635,11 @@ func _fit_run(first: bool) -> void:
 		_fail(r2)
 
 func _fit_read() -> void:
-	if not data.get("fit_fixture", false):
+	if _avbd():
+		var pos: PackedFloat32Array = drape.drape_positions()
+		data.fitted = _scaled(pos, 1.0 / float(opts.drape_scale))
+		data.fit_avbd.restore = drape.fit_avbd_restore()
+	elif not data.get("fit_fixture", false):
 		var v = fit.result_vertices()
 		if typeof(v) != TYPE_PACKED_FLOAT32_ARRAY:
 			_fail("fit_result_vertices: " + str(v))
@@ -544,17 +653,37 @@ func _fit_read() -> void:
 		_fail("fitted garment has non-finite vertices")
 		return
 	garment_ready.emit(fv, data.garment.triangles, "fit")
-	_goto("CHECK", "FIXTURE fit" if data.get("fit_fixture", false) else "%d v" % (fv.size() / 3))
+	var note := "%d v" % (fv.size() / 3)
+	if data.get("fit_fixture", false):
+		note = "FIXTURE fit"
+	elif _avbd():
+		note = "FIT(avbd) %d v" % (fv.size() / 3)
+	_goto("CHECK", note)
 
 func _check() -> void:
-	if data.get("fit_fixture", false):
+	if data.get("fit_fixture", false) or data.get("fit_check_fixture", false):
 		data.check = "not run (fit FIXTURE: fit_check_intersections needs fit.elf)"
 		_goto("DRAPE", "FIXTURE check skipped")
 		return
+	var over := PackedFloat32Array() # the solver's own state (the polyfem fit)
+	if _avbd():
+		# fit.elf's begin, started in FIT_BEGIN on its worker: the check needs
+		# its normalisation and collision mesh. The avbd result goes as the
+		# override (the solver's own garment is the unfitted one).
+		if fit.busy():
+			return
+		if not data.has("fit_begin"):
+			var p: Dictionary = fit.poll()
+			var r0 := str(p.result)
+			data.fit_begin = "host_ms=%d %s" % [p.host_ms, r0]
+			if not r0.begins_with("OK begin"):
+				_fail("fit.elf begin for CHECK: " + r0)
+				return
+		over = data.fitted
 	var pushed := _push_vertex(data.fitted)
 	var ctrl: String = fit.check_intersections(pushed)
 	data.check_control = ctrl
-	var r: String = fit.check_intersections(pushed if opts.push_vertex else PackedFloat32Array())
+	var r: String = fit.check_intersections(pushed if opts.push_vertex else over)
 	data.check = r
 	if r.begins_with("OK none"):
 		_goto("DRAPE", "%s | control (one vertex pushed inside): %s" % [r, ctrl])
@@ -697,8 +826,11 @@ func _capsules(body_v: PackedFloat32Array, joints: PackedFloat32Array, bones: Pa
 # would turn 2 into 2.0, which the spec's integer fields refuse. Each edit
 # must match exactly one literal, so a changed fixture fails loudly instead of
 # fitting with the wrong budget. The CCD's max_iterations (200) is left alone.
-func _fit_budget(cfg: String) -> Dictionary:
+func _fit_budget(cfg: String, for_check: bool = false) -> Dictionary:
 	var edits := []
+	if for_check:
+		# The start avatar is the real body, not the collapse (_fit_elf_begin).
+		edits.append([r'^(\s*[{])', '"shrink_normal_distance": 1e-6, '])
 	var inc: int = int(opts.get("fit_incremental_steps", -1))
 	var cap: int = int(opts.get("fit_max_iterations", -1))
 	if inc > 0:

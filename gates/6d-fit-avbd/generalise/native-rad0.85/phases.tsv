@@ -1,0 +1,3 @@
+phase	substep	kind	ok	newton	minimize	post_steps	energy	grad_norm	status	wall_s	cpu_s
+0	0	AL	1	13	1	14	0.00046242147483672628	0.408648	4	4.909	4.875
+1	0	reduced	1	49	1	50	0.015828677779693538	0.00980816	4	12.814	12.766

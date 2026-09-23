@@ -58,6 +58,51 @@ struct DrapeScene {
 	std::vector<float> attachFixed;  // 3 per attachment
 	std::vector<double> radii;
 	std::vector<Primitive> prims;
+	// Fit attachments (Cut 6d, the drape's fit mode): the LAST nFit
+	// attachments (the pins come first) pull their vertex toward the mesh
+	// collider's nearest surface point (moved fitGap out along the normal;
+	// the loop uses 0, the collider's skin is the clearance) at stiffness
+	// fitK times the vertex's lumped area (applyMaterial) in place of
+	// kAttach; the sim refreshes their targets every fitRefresh steps while
+	// its fit mode is on (drape_sim.h). The same attachment kernels serve
+	// both kinds.
+	uint32_t nFit = 0;
+	double fitK = 0.0, fitGap = 0.0;
+	int fitRefresh = 1;
+	// With fitSimilarity the sim also re-fits the rest shape every refresh:
+	// the best similarity (Umeyama: rotation, uniform scale, translation) of
+	// the fit's source garment onto the current vertices becomes the rest,
+	// so the membrane pulls toward a uniformly scaled skirt and the fit pull
+	// sets the scale at the hips, cloth-fit's SimilarityForm with one global
+	// transform in place of one per element.
+	bool fitSimilarity = false;
+	// The anchor loop (the waist): each of its vertices gets a SECOND
+	// attachment after the fit set, at anchorK, whose target is refreshed
+	// every refresh to the vertex's own position plus the loop's centroid
+	// error (its source centroid minus its current centroid): a uniform
+	// force that holds the loop's centre and nothing else, so the ring still
+	// shrinks onto the body under its own soft fit pull. That is cloth-fit's
+	// curve_center_target (weight 1), which holds a boundary curve's centre
+	// on its bone while the curve shrinks (PolyFEM's waist: centre y 0.954 =
+	// the pelvis joint, radius 0.19 -> 0.135 m). Why not simpler: on the
+	// flaring hips every nearest-point target lies below its vertex and an
+	// unheld skirt ratchets down 3 cm (Gate 6d passes 4-5); a shift at the fit
+	// stiffness does not hold it (pass 5); pinning the ring's vertices onto
+	// the surface at kAttach places it but folds it, the nearest-point map
+	// of a circle onto the waist's cross-section not being injective (pass
+	// 6: self-intersections at the ring in every rung, the tube control
+	// included). The similarity rest update pivots on the loop (source
+	// centroid -> current centroid). Empty: no hold (8 cm low, pass 3).
+	std::vector<uint32_t> fitAnchor;
+	uint32_t nAnchorAtt = 0; // the anchor attachments, the LAST nAnchorAtt
+	double anchorK = 100.0;
+	// The rest update's cadence (steps; a multiple of fitRefresh: the targets
+	// are cheap BVH queries, the rest update rebuilds the scene) and the
+	// settle: steps run after the fit with the fit pull off (the anchor pins
+	// and the collider on, the targets frozen) so the membrane and the
+	// contact projection leave nothing through the skin before the check.
+	int fitRestEvery = 4;
+	int fitSettle = 0;
 
 	// From the material (applyMaterial).
 	std::vector<double> massD;
@@ -66,6 +111,7 @@ struct DrapeScene {
 	uint32_t nTri() const { return uint32_t(triArea.size()); }
 	uint32_t nBend() const { return uint32_t(bendN.size()); }
 	uint32_t nAttach() const { return uint32_t(attachVert.size()); }
+	uint32_t nPin() const { return nAttach() - nFit - nAnchorAtt; }
 
 	// Masses and stiffnesses from cfg.density, kTri, kBend, kAttach (and
 	// rawStiffness): what the solver uploads.
@@ -90,6 +136,13 @@ void scene_sphere_demo(DrapeScene &s, const DrapeConfig &cfg);
 // an attachment at its rest position). False with `err` on bad input.
 bool scene_mesh(DrapeScene &s, const std::vector<float> &pos, const std::vector<int32_t> &tris,
 		const std::vector<int32_t> &pins, std::string &err);
+
+// The fit set of a scene_mesh scene (Cut 6d): one fit attachment per listed
+// vertex (its rest position as the first target) after the pins, replacing
+// any earlier fit set; k, gap and refresh as DrapeScene documents them. A
+// new scene_mesh drops it. False with `err` on a bad index or refresh < 1.
+bool scene_fit_set(DrapeScene &s, const std::vector<int32_t> &verts, double k, double gap, int refresh, bool similarity,
+		const std::vector<int32_t> &anchor, int restEvery, int settle, double anchorK, std::string &err);
 
 // Finish a scene whose rest/x0/tri are set: triangles' material data, the
 // per-vertex area, bendings, radii (particleTriangleMap = triangles in order).

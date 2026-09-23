@@ -1,0 +1,19 @@
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T13:33:32
+args: --out=../gates/6d-fit-avbd/generalise/authored.txt --only=none --wallclock=120
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER               91 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1206 ms  vm    1141.7 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               622 ms  vm     612.7 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+fit.elf begin: STARTED on the worker
+
+
+The ladder (mm; toREF = per-vertex distance to the PolyFEM fit, surf = surface to surface both ways, gap = to the body; REF: gap ? / ? mm mean / p95, y ?..? m):
+rung                        kFit sim  kAnc settle iters steps ms/step  fit_s  pushes   s     y_min  y_max  toREF mean  p95    max   surf mean  p95    max   gap mean  p95    check
+PASS drape_stage.gd FIT_AVBD == rung f60-i32-s300
+wall 3.1 s, frames 858
+RESULT: PASS
+drape rd_close: CLOSED device=none permanent_slots=0

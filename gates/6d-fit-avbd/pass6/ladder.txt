@@ -1,0 +1,19 @@
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T12:02:00
+args: --out=../gates/6d-fit-avbd/ladder.txt
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER               88 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1163 ms  vm    1111.3 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               600 ms  vm     591.5 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+fit.elf begin: STARTED on the worker
+RUNG f0-i16-s100: kFit 0.0 gap 0.0 similarity 0.0 iters 16 steps<=100 tol 0.0005 refresh 1 restEvery 4 settle 0 kAnchor 0.0 h 0.00555555555556 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=0 gap=0 refresh=1 similarity=0 rest_every=4 settle=0 anchor=64 kAnchor=0 vertex_area min=0.006789 mean=0.06189 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 100 on rd
+  IDLE DONE fit rd steps=100 (+100 of 100, settle 0 of 0) converged=yes max_disp=8.61e-05 tol=0.0005 refreshed=100 misses=0 dist_min=0.1000 dist_mean=0.7637 gap=0 kFit=0 fit=932 pins=0 iters=16 h=0.00555556 similarity=0 rest_every=4 rest_updates=0 anchor=64 anchor_k=0 anchor_shift=0.0019 sim_s=1.0000 sim_rot_deg=0.000 y=5.2342..9.5320 finite=yes projections=2065 self_pushes=175 wall_ms=2464.4 ms/step=24.644 | host_ms 2827 vm_ms 2665 ticks 301 finite true heap 11.7 MiB
+fit.elf begin: host_ms=2051 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+  check: OK none | control (vertex 430 onto the pelvis): OK INTERSECTS edge (5558,5605) face (1136,1241,2588) | 847 ms
+RUNG f60-i32-s300-nosim: kFit 60.0 gap 0.0 similarity 0.0 iters 32 steps<=300 tol 0.0005 refresh 1 restEvery 4 settle 0 kAnchor 100.0 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=0 rest_every=4 settle=0 anchor=64 kAnchor=100 vertex_area min=0.006789 mean=0.06189 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00872 tol=0.0005 refreshed=300 misses=0 dist_min=0.0711 dist_mean=0.1546 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=0 rest_every=4 rest_updates=0 anchor=64 anchor_k=100 anchor_shift=0.0026 sim_s=1.0000 sim_rot_deg=0.000 y=5.3738..9.6180 finite=yes projections=126691 self_pushes=48035 wall_ms=15668.9 ms/step=52.230 | host_ms 15823 vm_ms 15256 ticks 901 finite true heap 80.0 MiB
+  check: OK none | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5334,5634) face (2254,2622,2624) | 950 ms
+RUNG f20-i32-s300: kFit 20.0 gap 0.0 similarity 1.0 iters 32 steps<=300 tol 0.0005 refresh 1 restEvery 4 settle 0 kAnchor 100.0 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=20 gap=0 refresh=1 similarity=1 rest_every=4 settle=0 anchor=64 kAnchor=100 vertex_area min=0.006789 mean=0.06189 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd

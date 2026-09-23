@@ -1,0 +1,79 @@
+{
+  "FIT_AVBD": {
+    "band": 0.1,
+    "depth": 1.0,
+    "gap": 0.0,
+    "h": 0.0166666666666667,
+    "iters": 32,
+    "k": 60.0,
+    "kAnchor": 100.0,
+    "kBend": 0.00001,
+    "refresh": 1,
+    "restEvery": 4,
+    "settle": 0,
+    "similarity": 1.0,
+    "skin": 0.1,
+    "steps": 300,
+    "tol": 0.0005
+  },
+  "chosen": "f60-i32-s300",
+  "fit_begin": "host_ms=2109 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0",
+  "ref": {
+    "gap_max": 66.19,
+    "gap_mean": 12.01,
+    "gap_p95": 35.07,
+    "y_max": 0.965,
+    "y_min": 0.661
+  },
+  "rows": [
+    {
+      "anchor_shift": 0.0103,
+      "check": "OK none",
+      "check_control": "OK INTERSECTS edge (5334,5634) face (2624,2803,2625)",
+      "check_ms": 837,
+      "converged": false,
+      "eval": {
+        "gap_max": 57.03,
+        "gap_mean": 14.91,
+        "gap_p95": 34.06,
+        "ref_max": 89.93,
+        "ref_mean": 50.48,
+        "ref_p95": 78.37,
+        "same_tris": true,
+        "y_max": 0.957,
+        "y_min": 0.634
+      },
+      "finite": true,
+      "host_ms": 13738,
+      "ms_per_step": 44.574,
+      "name": "f20-i32-s300",
+      "obj": "C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/ladder-f20-i32-s300.fitted.obj",
+      "ok": true,
+      "result": "IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.0026 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1491 gap=0 kFit=20 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0103 sim_s=0.7247 sim_rot_deg=2.596 y=6.3421..9.5746 finite=yes projections=79122 self_pushes=2467 wall_ms=13372.3 ms/step=44.574",
+      "screenshot": "ladder-f20-i32-s300.png (1152x648)",
+      "self_pushes": 2467.0,
+      "setting": {
+        "band": 0.1,
+        "depth": 1.0,
+        "gap": 0.0,
+        "h": 0.0166666666666667,
+        "iters": 32,
+        "k": 20.0,
+        "kAnchor": 100.0,
+        "kBend": 0.00001,
+        "refresh": 1,
+        "restEvery": 4,
+        "settle": 0,
+        "similarity": 1.0,
+        "skin": 0.1,
+        "steps": 300,
+        "tol": 0.0005
+      },
+      "sim_rot_deg": 2.596,
+      "sim_s": 0.7247,
+      "steps": 300.0,
+      "ticks": 901,
+      "vm_ms": 12887.179
+    }
+  ]
+}

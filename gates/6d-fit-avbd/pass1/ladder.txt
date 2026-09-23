@@ -1,0 +1,68 @@
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T11:09:27
+args: --out=../gates/6d-fit-avbd/ladder.txt
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER               91 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1202 ms  vm    1140.1 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               651 ms  vm     642.7 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+fit.elf begin: STARTED on the worker
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=20 (+20 of 100) converged=yes max_disp=0.000452 tol=0.0005 refreshed=5 misses=0 dist_min=0.1000 dist_mean=0.7641 gap=0.15 k=0 fit=932 pins=0 iters=16 finite=yes projections=517 self_pushes=68 wall_ms=498.7 ms/step=24.934 | host_ms 878 vm_ms 806 ticks 61 finite true heap 4.5 MiB
+fit.elf begin: host_ms=2373 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+  check: OK none | control (vertex 430 onto the pelvis): OK none | 1347 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=100 (+100 of 100) converged=no max_disp=0.00598 tol=0.0005 refreshed=25 misses=0 dist_min=0.1019 dist_mean=0.5462 gap=0.15 k=3 fit=932 pins=0 iters=16 finite=yes projections=254 self_pushes=377 wall_ms=2470.5 ms/step=24.705 | host_ms 2632 vm_ms 2463 ticks 301 finite true heap 11.7 MiB
+  check: OK none | control (vertex 789 onto the pelvis): OK none | 1340 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=100 (+100 of 100) converged=no max_disp=0.0105 tol=0.0005 refreshed=25 misses=0 dist_min=0.0921 dist_mean=0.3147 gap=0.15 k=10 fit=932 pins=0 iters=16 finite=yes projections=549 self_pushes=4586 wall_ms=2947.2 ms/step=29.472 | host_ms 3108 vm_ms 2935 ticks 301 finite true heap 13.9 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK none | 1363 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=100 (+100 of 100) converged=no max_disp=0.00562 tol=0.0005 refreshed=25 misses=0 dist_min=0.0932 dist_mean=0.1951 gap=0.15 k=30 fit=932 pins=0 iters=16 finite=yes projections=5057 self_pushes=20440 wall_ms=3010.6 ms/step=30.106 | host_ms 3171 vm_ms 2997 ticks 301 finite true heap 20.7 MiB
+  check: OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | 1330 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=100 (+100 of 100) converged=no max_disp=0.00392 tol=0.0005 refreshed=25 misses=0 dist_min=0.0851 dist_mean=0.1681 gap=0.15 k=100 fit=932 pins=0 iters=16 finite=yes projections=6470 self_pushes=63979 wall_ms=2927.4 ms/step=29.274 | host_ms 3087 vm_ms 2913 ticks 301 finite true heap 31.3 MiB
+  check: OK INTERSECTS edge (5648,5652) face (5305,5513,5657) | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5648,5652) face (5305,5513,5657) | 1354 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00188 tol=0.0005 refreshed=75 misses=0 dist_min=0.0910 dist_mean=0.2020 gap=0.15 k=10 fit=932 pins=0 iters=32 finite=yes projections=18942 self_pushes=29326 wall_ms=14068.4 ms/step=46.895 | host_ms 14228 vm_ms 13661 ticks 901 finite true heap 50.8 MiB
+  check: OK none | control (vertex 791 onto the pelvis): OK none | 1356 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00192 tol=0.0005 refreshed=75 misses=0 dist_min=0.0906 dist_mean=0.1740 gap=0.15 k=30 fit=932 pins=0 iters=32 finite=yes projections=31985 self_pushes=52181 wall_ms=12455.1 ms/step=41.517 | host_ms 12617 vm_ms 12050 ticks 901 finite true heap 76.6 MiB
+  check: OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | 1356 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00366 tol=0.0005 refreshed=75 misses=0 dist_min=0.0801 dist_mean=0.1626 gap=0.15 k=100 fit=932 pins=0 iters=32 finite=yes projections=17940 self_pushes=153522 wall_ms=12665.4 ms/step=42.218 | host_ms 12827 vm_ms 12279 ticks 901 finite true heap 89.6 MiB
+  check: OK INTERSECTS edge (5295,5916) face (5365,5750,5128) | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5295,5916) face (5365,5750,5128) | 1358 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00192 tol=0.0005 refreshed=75 misses=0 dist_min=0.0903 dist_mean=0.1740 gap=0.15 k=30 fit=932 pins=0 iters=64 finite=yes projections=31925 self_pushes=51968 wall_ms=21791.7 ms/step=72.639 | host_ms 21952 vm_ms 21386 ticks 901 finite true heap 76.6 MiB
+  check: OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | 1359 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00204 tol=0.0005 refreshed=75 misses=0 dist_min=0.0905 dist_mean=0.1740 gap=0.15 k=30 fit=932 pins=0 iters=32 finite=yes projections=31172 self_pushes=52704 wall_ms=12754.3 ms/step=42.514 | host_ms 12912 vm_ms 12342 ticks 901 finite true heap 76.5 MiB
+  check: OK none | control (vertex 506 onto the pelvis): OK none | 1357 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.0026 tol=0.0005 refreshed=75 misses=0 dist_min=0.0878 dist_mean=0.1460 gap=0.1 k=30 fit=932 pins=0 iters=32 finite=yes projections=99280 self_pushes=76121 wall_ms=12389.2 ms/step=41.297 | host_ms 12548 vm_ms 11984 ticks 901 finite true heap 81.5 MiB
+  check: OK INTERSECTS edge (5324,5877) face (5275,5328,5872) | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5324,5877) face (5275,5328,5872) | 1357 ms
+RUNG %s: k %g gap %g iters %d steps<=%d tol %g refresh %d kBend %g | %s
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00313 tol=0.0005 refreshed=75 misses=0 dist_min=0.0966 dist_mean=0.2148 gap=0.2 k=30 fit=932 pins=0 iters=32 finite=yes projections=3950 self_pushes=41450 wall_ms=12567.0 ms/step=41.890 | host_ms 12727 vm_ms 12164 ticks 901 finite true heap 52.2 MiB
+  check: OK INTERSECTS edge (5876,5877) face (5872,5328,5324) | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5876,5877) face (5872,5328,5324) | 1328 ms
+
+rung                    k    gap  iters steps  ms/step  host_ms  conv  check
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+FAIL drape_stage.gd FIT_AVBD is not the chosen rung k30-i32-s300: kBend: FIT_AVBD 0.001, k30-i32-s300 0.00001; k: FIT_AVBD 100.0, k30-i32-s300 30.0
+FAIL chosen rung k30-i32-s300: check OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control OK INTERSECTS edge (5527,5648) face (5513,5523,5652)
+INFO control rung k0-i16-s100 (no pull): IDLE DONE fit rd steps=20 (+20 of 100) converged=yes max_disp=0.000452 tol=0.0005 refreshed=5 misses=0 dist_min=0.1000 dist_mean=0.7641 gap=0.15 k=0 fit=932 pins=0 iters=16 finite=yes projections=517 self_pushes=68 wall_ms=498.7 ms/step=24.934
+wall 134.1 s, frames 11694
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0

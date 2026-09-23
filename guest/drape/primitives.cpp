@@ -120,6 +120,23 @@ bool mesh_query(const Primitive &pr, const v3d &pos, BodyMesh::Hit &h, v3d &norm
 
 } // namespace
 
+bool mesh_fit_target(const Primitive &pr, const v3d &pos, double gap, double reach, v3d &target, double &signedDist) {
+	if (pr.kind != PrimKind::Mesh || !pr.body) {
+		return false;
+	}
+	BodyMesh::Hit h;
+	if (!pr.body->closest(pos, reach * reach, h)) {
+		return false;
+	}
+	const v3d d = pos - h.point;
+	const double l = std::sqrt(h.dist2);
+	const double side = d.dot(h.pseudo) >= 0.0 ? 1.0 : -1.0;
+	const v3d n = l > 1e-12 ? d * (side / l) : h.pseudo;
+	target = h.point + n * gap;
+	signedDist = side * l;
+	return true;
+}
+
 bool Primitive::isInContact(const v3d &pos, const v3d &vel, v3d &normal, double &dist, v3d &v_out) const {
 	(void)vel;
 	switch (kind) {

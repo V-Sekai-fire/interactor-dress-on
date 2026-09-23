@@ -35,6 +35,11 @@
 #                          below the config's makes the reduced solve throw
 #   --fit-from=<obj>       with fit as a fixture: these vertices are the fit
 #                          (every run that fits writes <out>.fitted.obj)
+#   --fit-mode=polyfem|avbd
+#                          polyfem (default): fit.elf; avbd (Cut 6d): drape.elf's
+#                          fit phase with drape_stage.gd's FIT_AVBD (the one
+#                          setting Gate 6d's ladder picked; no knobs here),
+#                          then fit.elf's fit_check_intersections on the result
 #
 # PASS (loop): pen copy == vendor/xr-grid; 2 cycles, 2 openings (the waist and
 # hem rings, drawn as boundary strokes) and 2 patches; the mesh
@@ -197,6 +202,8 @@ func _opts() -> Dictionary:
 		o.fit_grad_norm = float(_arg("fit-grad-norm")) # the reduced solve's stop (pipeline.gd fit_grad_norm)
 	if _arg("fit-force-psd") != "":
 		o.fit_force_psd = _arg("fit-force-psd") in ["1", "true", "on"]
+	if _arg("fit-mode") != "":
+		o.fit_mode = _arg("fit-mode")
 	if _arg("gate", "loop") == "pen":
 		o.stop_after = "MESH"
 	return o
@@ -284,7 +291,8 @@ func _evaluate() -> void:
 		if fo != null:
 			var fv: PackedFloat32Array = p.data.fitted
 			var ft: PackedInt32Array = p.data.garment.triangles
-			fo.store_line("# fit.elf result (body space) of Gate 8 run %s" % _out_path.get_file())
+			fo.store_line("# %s fit result (body space) of Gate 8 run %s" % [str(p.opts.get("fit_mode", "polyfem")),
+					_out_path.get_file()])
 			for i in range(0, fv.size(), 3):
 				fo.store_line("v %.9f %.9f %.9f" % [fv[i], fv[i + 1], fv[i + 2]]) # GDScript has no %g
 			for i in range(0, ft.size(), 3):

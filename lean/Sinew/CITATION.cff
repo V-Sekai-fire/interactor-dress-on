@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: If you use this code, cite the sinew-mocap/solve tree it is a subtree of.
+title: sinew-mocap/solve core/spec, the Lean specification of the rotation fitter (vendored)
+abstract: >-
+  V-Sekai-fire/sinew at 36c926ead40c436b53258f7a897422587f774a17 (the
+  archived sinew-mocap/solve), the directory solve/core/spec split with
+  git subtree split (5 commits) and added here as a squashed subtree: the
+  Lean 4 specification of sinew's solver core, of which this tree uses
+  Sinew/Align.lean (rodrigues, ns30, regularize, valid9, jacobi9, kabsch,
+  finishAlign, align: a Kabsch-style rotation fit that Rodrigues-solves one
+  pair, Newton-Schulz-orthonormalises the covariance of two or more, and
+  falls back to a Jacobi-SVD Kabsch solve when valid9 rejects the fast
+  path), Sinew/Math.lean (V3, M3, quatToMat) and AlignTest.lean (the
+  oracle: a 120-degree rotation recovered at N=1, 2, 5). Anthropometry,
+  RigRest, EmitShaders and the SlangCodegen directory come with the split
+  and are not built here. Local adaptations: none; this CITATION.cff is the
+  only added file. The C port that the drape links is vendor/sinew-align
+  (V-Sekai-fire/interactor-gyre), which cites this specification as its
+  source. Rotations are row-major 3x3 matrices (AGENTS.md rule 11).
+authors:
+  - family-names: Lee
+    given-names: K. S. Ernest (iFire)
+repository-code: https://github.com/V-Sekai-fire/sinew
+commit: 36c926ead40c436b53258f7a897422587f774a17
+license: MIT

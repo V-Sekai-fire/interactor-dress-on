@@ -63,6 +63,7 @@ const CALLS := [["rd_open", ""], ["rd_probe", "PASS"], ["rd_bench", "nd=1 ns=1 b
 		["rd_close", ""], ["avbd_fixture", "host_us="], ["avbd_job_names", ""], ["rd_rule4", ""], ["p_fenv", ""],
 		["echo_i", "9007199254740993"], ["p_exceptions", "caught runtime_error"], ["p_memalign", ""],
 		["dress_on_stages", "infer:"], ["drape_status", "IDLE"], ["drape_open", ""], ["drape_job_names", "sphere_forward"],
+		["drape_sinew_align_test", "PASS"],
 		["cn_reset", ""], ["cn_get_param", "0.03"], ["check_names", ""], ["fit_status", ""],
 		["dress_on_status", "IDLE"], ["ggml_job_status", "IDLE"], ["ggml_rd_stats", "IDLE"]]
 

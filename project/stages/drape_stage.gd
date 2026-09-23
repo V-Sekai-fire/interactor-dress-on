@@ -9,10 +9,55 @@
 #
 # Rule 4: a forward is queued, then drape_tick runs once per frame from
 # _process (the host clock goes in with it) until it answers IDLE.
+#
+# Cut 6d: the fit mode. fit_avbd_start loads the garment against the body
+# mesh collider with a fit set (every vertex the loop lists, pulled toward
+# the body surface + gap by the attachment kernels) and queues drape.elf's
+# fit phase (gravity off, targets refreshed); the pipeline's FIT_* states in
+# fit_mode avbd run it with FIT_AVBD, the one setting Gate 6d's ladder picked.
 extends "res://stages/stage_base.gd"
 
 const DRAPE_API := ["drape_open", "drape_scene_mesh", "drape_primitive", "drape_config", "drape_queue_forward",
 		"drape_tick", "drape_positions", "drape_result"]
+const FIT_API := ["drape_fit_set", "drape_queue_fit"]
+
+# The avbd fit's setting: one rung of Gate 6d's ladder (gates/6d-fit-avbd/
+# README.md, "The ladder"), not a slider; gate_fit_avbd.gd FAILs if this is
+# not its CHOSEN rung. Drape units (1 m = 10 units, the loop's drape_scale):
+# the body collider's skin 0.1 (1 cm), band 0.1 and depth 1.0 as the drape's;
+# gap 0 = every fitted vertex is pulled to the body surface itself (cloth-fit's
+# fit term pulls to sdf = 0; the collider's skin is the clearance, as its
+# contact barrier is there); k = kFit, the pull per unit of vertex area
+# against the membrane's kTri 150 x area (600 is the cloth-fit calibration,
+# fit_weight 2 over similarity 1; 180 is x0.3 of it); iters = solver
+# iterations per step; steps = the fit phase's cap, tol = the largest vertex
+# move per step (units) that ends it early; refresh = steps between target
+# refreshes; similarity 1 = the rest shape is re-fitted every refresh as the
+# best similarity (rotation, uniform scale, translation) of the authored
+# garment onto the current vertices (drape_scene.h fitSimilarity: cloth-fit's
+# SimilarityForm with one global transform, so the skirt can shrink to the
+# hips as PolyFEM's does instead of buckling); kBend = the bending stiffness
+# during the fit (the drape's own 1e-5 is restored by the DRAPE state's fresh
+# scene). Why this rung: the ladder table's numbers (the README): the closest
+# to the PolyFEM fit (mean / p95 per-vertex distance) among the rungs whose
+# fit_check_intersections is OK none, within the loop's 45 s.
+const FIT_AVBD := {
+	"iters": 32,
+	"steps": 300,
+	"tol": 0.0005,
+	"k": 60.0,
+	"gap": 0.0,
+	"refresh": 1,
+	"similarity": 1.0,
+	"h": 1.0 / 60.0,
+	"restEvery": 4,
+	"settle": 0,
+	"kAnchor": 100.0,
+	"kBend": 0.00001,
+	"skin": 0.1,
+	"band": 0.1,
+	"depth": 1.0,
+}
 
 var _drape_status := "IDLE no session"
 var _drape_job_status := ""
@@ -33,6 +78,18 @@ func drape_api_missing() -> String:
 	for fn in DRAPE_API:
 		if not sandbox.has_function(fn):
 			return "drape.elf has no %s() (built before cut-5)" % fn
+	return ""
+
+# "" if this drape.elf has the Cut 6d fit mode, else why not.
+func fit_api_missing() -> String:
+	var m := drape_api_missing()
+	if m != "":
+		return m
+	if not sandbox.has_method("has_function"):
+		return ""
+	for fn in FIT_API:
+		if not sandbox.has_function(fn):
+			return "drape.elf has no %s() (built before cut-6d)" % fn
 	return ""
 
 func _process(_delta: float) -> void:
@@ -136,6 +193,67 @@ func drape_forward(steps: int = 100) -> String:
 		_drape_status = "RUNNING"
 		ticks = 0
 	return r
+
+# Cut 6d: the fit set of the loaded scene_mesh scene; params [kFit, gap,
+# refresh, similarity, restEvery, settle, kAnchor]; anchor = the loop whose
+# centre is held at its source position (the waist loop), the similarity's
+# pivot.
+func drape_fit_set(verts: PackedInt32Array = PackedInt32Array(), params: PackedFloat32Array = PackedFloat32Array(),
+		anchor: PackedInt32Array = PackedInt32Array()) -> String:
+	return _dv("drape_fit_set", [verts, params, anchor])
+
+# Queue the fit phase (gravity off, targets refreshed) for up to max_steps
+# steps, ending early when the largest vertex move per step is under tol.
+func drape_fit(max_steps: int = 300, tol: float = 0.0005) -> String:
+	var r := _dv("drape_queue_fit", [max_steps, tol])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+		ticks = 0
+	return r
+
+# The avbd fit of the loop (pipeline FIT_* in fit_mode avbd, and Gate 6d's
+# ladder): the garment (metres, body space) against the body mesh collider,
+# both scaled to drape units, a fit set of `fit_verts` anchored at `anchor`
+# (the waist loop, its centre held at its source position at kAnchor, the
+# similarity rest update's pivot), and the fit phase queued with the setting
+# p (FIT_AVBD's keys; scale and mu from the caller).
+# Returns {steps: [every setup answer], queued: String}; a FAIL/BUSY answer
+# in steps is the caller's failure. drape_status then reads RUNNING until the
+# phase ends; drape_positions (drape units) is the fitted garment.
+func fit_avbd_start(garment_v: PackedFloat32Array, tris: PackedInt32Array, fit_verts: PackedInt32Array,
+		anchor: PackedInt32Array, body_v: PackedFloat32Array, body_f: PackedInt32Array, p: Dictionary,
+		scale: float = 10.0, mu: float = 0.3, backend: String = "auto") -> Dictionary:
+	var steps := [
+		drape_open(backend),
+		drape_primitive("clear", PackedFloat32Array()),
+		drape_primitive_mesh(_scaled(body_v, scale), body_f,
+				PackedFloat32Array([float(p.skin), mu, float(p.band), float(p.depth)])),
+		drape_config("iters", float(p.iters)),
+		drape_config("kBend", float(p.kBend)),
+		drape_config("h", float(p.h)),
+		drape_config("gravityY", -9.8 * scale),
+		drape_scene_mesh(_scaled(garment_v, scale), tris, PackedInt32Array(), PackedFloat32Array()),
+		drape_fit_set(fit_verts, PackedFloat32Array([float(p.k), float(p.gap), float(p.refresh), float(p.similarity),
+				float(p.restEvery), float(p.settle), float(p.kAnchor)]), anchor),
+	]
+	var q := drape_fit(int(p.steps), float(p.tol))
+	return {"steps": steps, "queued": q}
+
+# AlignTest.lean's oracle through the vendored sinew_align, in the guest.
+func drape_sinew_align_test() -> String:
+	return _dv("drape_sinew_align_test")
+
+# The drape's own material after a fit (the DRAPE state loads a fresh scene,
+# which takes g_cfg as it stands): iters 16, kBend 1e-5 and h 1/180 back.
+func fit_avbd_restore() -> Array:
+	return [drape_config("iters", 16.0), drape_config("kBend", 0.00001), drape_config("h", 1.0 / 180.0)]
+
+static func _scaled(v: PackedFloat32Array, s: float) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.resize(v.size())
+	for i in v.size():
+		out[i] = v[i] * s
+	return out
 
 # kind: trajectory (the recorded frames become the target) | points | clear.
 func drape_target(kind: String = "trajectory", verts: PackedInt32Array = PackedInt32Array(),

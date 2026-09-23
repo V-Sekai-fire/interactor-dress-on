@@ -1,0 +1,116 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T11:43:48
+args: --out=../gates/6d-fit-avbd/ladder.txt
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+[dress-on] xr_main: flat
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER              143 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 17 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1180 ms  vm    1117.6 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               689 ms  vm     680.4 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+fit.elf begin: STARTED on the worker
+[2026-09-23 18:43:52.043] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+
+RUNG f0-i16-s100: kFit 0.0 gap 0.0 similarity 0.0 iters 16 steps<=100 tol 0.0005 refresh 1 h 0.00555555555556 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=0 gap=0 refresh=1 similarity=0 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 100 on rd
+  IDLE DONE fit rd steps=19 (+19 of 100) converged=yes max_disp=0.00049 tol=0.0005 refreshed=19 misses=0 dist_min=0.1000 dist_mean=0.7641 gap=0 kFit=0 fit=932 pins=0 iters=16 h=0.00555556 similarity=0 rest_updates=0 anchor=64 anchor_shift=0.1829 sim_s=1.0000 sim_rot_deg=0.000 y=5.2358..9.5318 finite=yes projections=495 self_pushes=67 wall_ms=493.5 ms/step=25.974 | host_ms 864 vm_ms 827 ticks 58 finite true heap 4.5 MiB
+[2026-09-23 18:43:53.550] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+
+[2026-09-23 18:56:07.990] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+
+[2026-09-23 18:44:10.751] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+
+[2026-09-25 09:49:01.010] [polyfem] [info] Shrunk avatar inward 0.0000 along its own normals, topology and UVs unchanged
+
+[2026-09-23 18:43:54.220] [polyfem] [debug] curve 0 has 3 bone intersections
+
+[2026-09-23 18:43:54.221] [polyfem] [debug] curve normal [-0.0009899578852720086, -0.9999984920647856, 0.0014268326952763088]
+
+[2026-09-23 18:43:54.221] [polyfem] [debug] CurveTargetForm set curve center to bone 17 - 18, direction is [-0.0009899578852720114, -0.9999984920647856, 0.0014268326952763045]
+
+[2026-09-23 18:43:54.222] [polyfem] [debug] curve 1 has 4 bone intersections
+
+[2026-09-23 18:43:54.223] [polyfem] [debug] curve normal [-0.0006489879810447076, -0.999991976055631, -0.003953054382985814]
+
+[2026-09-23 18:43:54.224] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.0006489879810447083, -0.999991976055631, -0.0039530543829858]
+
+fit.elf begin: host_ms=2187 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+  check: OK none | control (vertex 430 onto the pelvis): OK INTERSECTS edge (5558,5605) face (1136,1241,2588) | 849 ms
+RUNG f60-i16-s300-r1-h60-nosim: kFit 60.0 gap 0.0 similarity 0.0 iters 16 steps<=300 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=0 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.0183 tol=0.0005 refreshed=300 misses=0 dist_min=0.0789 dist_mean=0.1546 gap=0 kFit=60 fit=932 pins=0 iters=16 h=0.0166667 similarity=0 rest_updates=0 anchor=64 anchor_shift=0.0970 sim_s=1.0000 sim_rot_deg=0.000 y=5.3285..9.6557 finite=yes projections=125019 self_pushes=46011 wall_ms=9407.8 ms/step=31.359 | host_ms 9570 vm_ms 8947 ticks 901 finite true heap 80.2 MiB
+  check: OK INTERSECTS edge (5876,5877) face (5872,5328,5324) | control (vertex 501 onto the pelvis): OK INTERSECTS edge (5629,5633) face (2622,2881,2624) | 895 ms
+RUNG f6-i16-s300-r1-h60: kFit 6.0 gap 0.0 similarity 1.0 iters 16 steps<=300 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=6 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00231 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.2774 gap=0 kFit=6 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=299 anchor=64 anchor_shift=0.4694 sim_s=0.7671 sim_rot_deg=2.260 y=5.7715..9.1339 finite=yes projections=30196 self_pushes=467 wall_ms=17147.3 ms/step=57.158 | host_ms 17315 vm_ms 16702 ticks 901 finite true heap 42.1 MiB
+  check: OK none | control (vertex 212 onto the pelvis): OK INTERSECTS edge (5340,5638) face (2557,3081,3138) | 874 ms
+RUNG f20-i16-s300-r1-h60: kFit 20.0 gap 0.0 similarity 1.0 iters 16 steps<=300 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=20 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00145 tol=0.0005 refreshed=300 misses=0 dist_min=0.0988 dist_mean=0.1528 gap=0 kFit=20 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=299 anchor=64 anchor_shift=0.5771 sim_s=0.6902 sim_rot_deg=7.273 y=5.9913..9.0660 finite=yes projections=97090 self_pushes=981 wall_ms=17594.8 ms/step=58.649 | host_ms 17764 vm_ms 17116 ticks 901 finite true heap 67.2 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (3081,2557,2562) | 876 ms
+RUNG f60-i16-s300-r1-h60: kFit 60.0 gap 0.0 similarity 1.0 iters 16 steps<=300 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00113 tol=0.0005 refreshed=300 misses=0 dist_min=0.0972 dist_mean=0.1328 gap=0 kFit=60 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=299 anchor=64 anchor_shift=0.5047 sim_s=0.6821 sim_rot_deg=7.943 y=6.0672..9.1678 finite=yes projections=159365 self_pushes=1534 wall_ms=17400.4 ms/step=58.001 | host_ms 17567 vm_ms 16923 ticks 901 finite true heap 77.3 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (2555,1985,2557) | 852 ms
+RUNG f180-i16-s300-r1-h60: kFit 180.0 gap 0.0 similarity 1.0 iters 16 steps<=300 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=180 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.0026 tol=0.0005 refreshed=300 misses=0 dist_min=0.0939 dist_mean=0.1192 gap=0 kFit=180 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=299 anchor=64 anchor_shift=0.3482 sim_s=0.6827 sim_rot_deg=7.501 y=6.2126..9.3434 finite=yes projections=206945 self_pushes=2371 wall_ms=19938.0 ms/step=66.460 | host_ms 20108 vm_ms 19312 ticks 901 finite true heap 81.2 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (3142,2555,2588) | 887 ms
+RUNG f60-i32-s300-r1-h60: kFit 60.0 gap 0.0 similarity 1.0 iters 32 steps<=300 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00145 tol=0.0005 refreshed=300 misses=0 dist_min=0.0959 dist_mean=0.1322 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_updates=299 anchor=64 anchor_shift=0.5018 sim_s=0.6818 sim_rot_deg=8.083 y=6.0680..9.1753 finite=yes projections=164949 self_pushes=1674 wall_ms=23331.8 ms/step=77.773 | host_ms 23493 vm_ms 22796 ticks 901 finite true heap 78.1 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (2555,1985,2557) | 874 ms
+RUNG f60-i16-s300-r4-h60: kFit 60.0 gap 0.0 similarity 1.0 iters 16 steps<=300 tol 0.0005 refresh 4 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=4 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00101 tol=0.0005 refreshed=75 misses=0 dist_min=0.0971 dist_mean=0.1330 gap=0 kFit=60 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=74 anchor=64 anchor_shift=0.5158 sim_s=0.6821 sim_rot_deg=7.831 y=6.0589..9.1537 finite=yes projections=159241 self_pushes=1667 wall_ms=12098.2 ms/step=40.327 | host_ms 12295 vm_ms 11592 ticks 901 finite true heap 77.5 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (3138,2555,2557) | 888 ms
+RUNG f60-i16-s300-r1-h180: kFit 60.0 gap 0.0 similarity 1.0 iters 16 steps<=300 tol 0.0005 refresh 1 h 0.00555555555556 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00264 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.2470 gap=0 kFit=60 fit=932 pins=0 iters=16 h=0.00555556 similarity=1 rest_updates=299 anchor=64 anchor_shift=0.3139 sim_s=0.8112 sim_rot_deg=2.109 y=5.5790..9.2989 finite=yes projections=31877 self_pushes=2308 wall_ms=17954.5 ms/step=59.848 | host_ms 18125 vm_ms 17487 ticks 901 finite true heap 43.0 MiB
+  check: OK none | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5917,5919) face (2555,1979,2588) | 848 ms
+RUNG f60-i16-s600-r1-h60: kFit 60.0 gap 0.0 similarity 1.0 iters 16 steps<=600 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 600 on rd
+  IDLE DONE fit rd steps=600 (+600 of 600) converged=no max_disp=0.00377 tol=0.0005 refreshed=600 misses=0 dist_min=0.0980 dist_mean=0.1294 gap=0 kFit=60 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=599 anchor=64 anchor_shift=0.3744 sim_s=0.6817 sim_rot_deg=9.099 y=6.1935..9.3747 finite=yes projections=359857 self_pushes=2887 wall_ms=34529.6 ms/step=57.549 | host_ms 34689 vm_ms 33431 ticks 1801 finite true heap 157.7 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (2555,1979,2588) | 863 ms
+RUNG f20-i16-s600-r1-h60: kFit 20.0 gap 0.0 similarity 1.0 iters 16 steps<=600 tol 0.0005 refresh 1 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=20 gap=0 refresh=1 similarity=1 anchor=64 vertex_area min=0.006789 mean=0.0602 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 600 on rd
+  IDLE DONE fit rd steps=600 (+600 of 600) converged=no max_disp=0.000654 tol=0.0005 refreshed=600 misses=0 dist_min=0.0991 dist_mean=0.1466 gap=0 kFit=20 fit=932 pins=0 iters=16 h=0.0166667 similarity=1 rest_updates=599 anchor=64 anchor_shift=0.5117 sim_s=0.6834 sim_rot_deg=9.223 y=6.0634..9.1992 finite=yes projections=270917 self_pushes=2346 wall_ms=34906.5 ms/step=58.177 | host_ms 35081 vm_ms 33822 ticks 1801 finite true heap 147.5 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5131,5133) face (2555,1985,2557) | 871 ms
+
+ladder_eval.py: rc 0 in 29.6 s
+  voxel 0.0065462 m; REF flat-psd.fitted.obj: 932 v 1728 f
+  REF gap to body: mean 12.01 p50 8.40 p95 35.07 max 66.19 mm | mean 1.83 p50 1.28 p95 5.36 max 10.11 voxels | inside(hint) 0 | y 0.661..0.965
+  ladder-f0-i16-s100.fitted.obj: 932 v, triangles == REF | to REF: mean 119.32 p50 118.09 p95 186.46 max 217.68 mm | gap to body: mean 76.41 p50 69.40 p95 162.46 max 217.80 mm | mean 11.67 p50 10.60 p95 24.82 max 33.27 voxels | inside(hint) 0 | y 0.524..0.953
+  ladder-f60-i16-s300-r1-h60-nosim.fitted.obj: 932 v, triangles == REF | to REF: mean 87.29 p50 87.44 p95 133.91 max 158.54 mm | gap to body: mean 15.46 p50 10.00 p95 31.14 max 55.05 mm | mean 2.36 p50 1.53 p95 4.76 max 8.41 voxels | inside(hint) 0 | y 0.533..0.966
+  ladder-f6-i16-s300-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 85.54 p50 84.90 p95 111.49 max 120.95 mm | gap to body: mean 27.66 p50 19.40 p95 71.15 max 103.92 mm | mean 4.23 p50 2.96 p95 10.87 max 15.87 voxels | inside(hint) 0 | y 0.577..0.913
+  ladder-f20-i16-s300-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 77.54 p50 75.62 p95 98.04 max 103.55 mm | gap to body: mean 15.27 p50 10.00 p95 40.46 max 63.41 mm | mean 2.33 p50 1.53 p95 6.18 max 9.69 voxels | inside(hint) 0 | y 0.599..0.907
+  ladder-f60-i16-s300-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 70.62 p50 68.22 p95 94.70 max 105.84 mm | gap to body: mean 13.27 p50 10.00 p95 33.27 max 52.51 mm | mean 2.03 p50 1.53 p95 5.08 max 8.02 voxels | inside(hint) 0 | y 0.607..0.917
+  ladder-f180-i16-s300-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 60.33 p50 57.26 p95 88.63 max 103.97 mm | gap to body: mean 11.92 p50 10.00 p95 26.21 max 45.16 mm | mean 1.82 p50 1.53 p95 4.00 max 6.90 voxels | inside(hint) 0 | y 0.621..0.934
+  ladder-f60-i32-s300-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 70.26 p50 67.71 p95 94.72 max 105.75 mm | gap to body: mean 13.22 p50 10.00 p95 32.98 max 52.73 mm | mean 2.02 p50 1.53 p95 5.04 max 8.06 voxels | inside(hint) 0 | y 0.607..0.918
+  ladder-f60-i16-s300-r4-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 71.62 p50 69.32 p95 95.23 max 106.42 mm | gap to body: mean 13.30 p50 10.00 p95 33.32 max 52.41 mm | mean 2.03 p50 1.53 p95 5.09 max 8.01 voxels | inside(hint) 0 | y 0.606..0.915
+  ladder-f60-i16-s300-r1-h180.fitted.obj: 932 v, triangles == REF | to REF: mean 87.65 p50 90.73 p95 118.87 max 127.45 mm | gap to body: mean 24.64 p50 20.07 p95 57.84 max 84.17 mm | mean 3.76 p50 3.07 p95 8.83 max 12.86 voxels | inside(hint) 0 | y 0.558..0.930
+  ladder-f60-i16-s600-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 57.03 p50 53.66 p95 86.45 max 96.90 mm | gap to body: mean 12.94 p50 10.00 p95 30.61 max 53.82 mm | mean 1.98 p50 1.53 p95 4.68 max 8.22 voxels | inside(hint) 0 | y 0.619..0.937
+  ladder-f20-i16-s600-r1-h60.fitted.obj: 932 v, triangles == REF | to REF: mean 67.23 p50 64.53 p95 91.85 max 98.07 mm | gap to body: mean 14.66 p50 10.00 p95 39.10 max 58.64 mm | mean 2.24 p50 1.53 p95 5.97 max 8.96 voxels | inside(hint) 0 | y 0.606..0.920
+
+The ladder (mm; to REF = per-vertex distance to the PolyFEM fit, gap = to the body; REF: gap 12.01 / 35.07 mm mean / p95, y 0.661..0.965 m):
+rung                        kFit sim ref     h  iters steps ms/step  fit_s  pushes   s     y_min  y_max  toREF mean  p95    max   gap mean  p95    check
+f0-i16-s100                   0.0   0   1 0.0056    16    19    26.0    0.9      67  1.000  0.524  0.953    119.3  186.5  217.7    76.4  162.5   OK none
+f60-i16-s300-r1-h60-nosim    60.0   0   1 0.0167    16   300    31.4    9.6   46011  1.000  0.533  0.966     87.3  133.9  158.5    15.5   31.1   OK INTERSECTS edge (5876,5877) face (5872,5328,5
+f6-i16-s300-r1-h60            6.0   1   1 0.0167    16   300    57.2   17.3     467  0.767  0.577  0.913     85.5  111.5  121.0    27.7   71.2   OK none
+f20-i16-s300-r1-h60          20.0   1   1 0.0167    16   300    58.6   17.8     981  0.690  0.599  0.907     77.5   98.0  103.6    15.3   40.5   OK none
+f60-i16-s300-r1-h60          60.0   1   1 0.0167    16   300    58.0   17.6    1534  0.682  0.607  0.917     70.6   94.7  105.8    13.3   33.3   OK none
+f180-i16-s300-r1-h60        180.0   1   1 0.0167    16   300    66.5   20.1    2371  0.683  0.621  0.934     60.3   88.6  104.0    11.9   26.2   OK none
+f60-i32-s300-r1-h60          60.0   1   1 0.0167    32   300    77.8   23.5    1674  0.682  0.607  0.918     70.3   94.7  105.8    13.2   33.0   OK none
+f60-i16-s300-r4-h60          60.0   1   4 0.0167    16   300    40.3   12.3    1667  0.682  0.606  0.915     71.6   95.2  106.4    13.3   33.3   OK none
+f60-i16-s300-r1-h180         60.0   1   1 0.0056    16   300    59.8   18.1    2308  0.811  0.558  0.930     87.7  118.9  127.5    24.6   57.8   OK none
+f60-i16-s600-r1-h60          60.0   1   1 0.0167    16   600    57.5   34.7    2887  0.682  0.619  0.937     57.0   86.5   96.9    12.9   30.6   OK none
+f20-i16-s600-r1-h60          20.0   1   1 0.0167    16   600    58.2   35.1    2346  0.683  0.606  0.920     67.2   91.8   98.1    14.7   39.1   OK none
+PASS drape_stage.gd FIT_AVBD == rung f60-i16-s300-r1-h60
+PASS chosen rung f60-i16-s300-r1-h60: check OK none | control OK INTERSECTS edge (5131,5133) face (2555,1985,2557)
+FAIL chosen rung f60-i16-s300-r1-h60 vs the PolyFEM fit: mean 70.6 mm (want <= 30), p95 94.7 (want <= 60), max 105.8; y 0.607..0.917 (PolyFEM 0.661..0.965); similarity s 0.6821 rot 7.943 deg; triangles equal true
+PASS control no pull (the tube): 119.3 mm from the PolyFEM fit, the chosen rung 70.6 mm (want >= 1.5x)
+FAIL control no similarity rest update (the authored length held): 87.3 mm from the PolyFEM fit, the chosen rung 70.6 mm (want >= 1.5x)
+wall 251.2 s, frames 15370
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

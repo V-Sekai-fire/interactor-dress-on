@@ -25,8 +25,10 @@
 #include "body_mesh.h"
 #include "drape_jobs.h"
 #include "drape_scene.h"
+#include "drape_session.h"
 #include "jobs.h"
 #include "lbfgsb.h"
+#include "similarity.h" // brings sinew_align.h in, as extern "C"
 #include "lbfgsb_jobs.h"
 
 // This stage's device, held across vmcalls.
@@ -370,6 +372,89 @@ static Variant drape_queue_forward(int steps) {
 	g_sess->enqueueForward(g_q, steps);
 	g_opt_last = false;
 	return text("QUEUED forward " + std::to_string(steps) + " on " + g_sess->backend());
+}
+
+// Cut 6d, the fit mode. The fit set of the loaded scene_mesh scene: one fit
+// attachment per listed vertex (the loop lists every garment vertex not in
+// its nofit set), pulling it toward the mesh collider's nearest surface point
+// (+ gap along the outward normal, 0 in the loop) at kFit times the vertex's
+// lumped area; params [kFit, gap, refresh, similarity, restEvery, settle,
+// kAnchor], any prefix (600, 0, 1, 0, 4, 0, 100); similarity != 0 re-fits
+// the rest shape every restEvery steps (drape_scene.h fitSimilarity) about
+// the centroid of `anchor` (the waist loop, whose centre is held at its
+// source position by a second attachment per vertex at kAnchor; empty = no
+// hold, the garment's own centroid); settle = steps with the pull off after
+// the fit. Re-uploads (the attachments change) on the next queue.
+static Variant drape_fit_set(PackedInt32Array verts_a, PackedFloat32Array params_a, PackedInt32Array anchor_a) {
+	free_parked_sessions();
+	if (!g_scene_set || g_scene.name != "mesh") {
+		return text("FAIL: no scene_mesh scene (drape_scene_mesh first)");
+	}
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	const std::vector<float> p = params_a.fetch();
+	double k = 600.0, gap = 0.0;
+	int refresh = 1;
+	if (p.size() > 0) {
+		k = p[0];
+	}
+	if (p.size() > 1) {
+		gap = p[1];
+	}
+	if (p.size() > 2) {
+		refresh = int(p[2]);
+	}
+	const bool similarity = p.size() > 3 && p[3] != 0.0f;
+	const int restEvery = p.size() > 4 ? int(p[4]) : 4;
+	const int settle = p.size() > 5 ? int(p[5]) : 0;
+	const double kAnchor = p.size() > 6 ? p[6] : 100.0;
+	std::string err;
+	if (!scene_fit_set(g_scene, verts_a.fetch(), k, gap, refresh, similarity, anchor_a.fetch(), restEvery, settle, kAnchor,
+				err)) {
+		return text("FAIL: " + err);
+	}
+	g_dirty = true;
+	double amin = INFINITY, amax = 0.0, asum = 0.0;
+	for (uint32_t a = g_scene.nPin(); a < g_scene.nAttach(); ++a) {
+		const double av = g_scene.vertArea[g_scene.attachVert[a]];
+		amin = std::min(amin, av);
+		amax = std::max(amax, av);
+		asum += av;
+	}
+	return text(drape_fmt("FIT SET fit=%u pins=%u kFit=%g gap=%g refresh=%d similarity=%d rest_every=%d settle=%d anchor=%u "
+			  "kAnchor=%g vertex_area min=%.4g mean=%.4g max=%.4g (k per vertex = kFit x area; re-uploads on the next queue)",
+			g_scene.nFit, g_scene.nPin(), k, gap, refresh, int(similarity), restEvery, settle, g_scene.nAnchorAtt, kAnchor,
+			g_scene.nFit ? amin : 0.0, g_scene.nFit ? asum / g_scene.nFit : 0.0, amax));
+}
+
+// Queue the fit phase: up to max_steps steps with gravity off and damp 0,
+// the fit targets refreshed every `refresh` steps from the mesh collider,
+// stopping once the largest vertex move of a refresh cycle's last step is
+// under tol (drape units). drape_tick runs it; drape_positions has the result.
+static Variant drape_queue_fit(int max_steps, double tol) {
+	free_parked_sessions();
+	if (!g_sess || !g_scene_set) {
+		return text("FAIL: no scene (drape_scene_mesh)");
+	}
+	if (max_steps < 1 || !(tol >= 0.0)) {
+		return text("FAIL: max_steps >= 1 and tol >= 0");
+	}
+	if (g_scene.nFit == 0) {
+		return text("FAIL: no fit set (drape_fit_set first)");
+	}
+	if (g_dirty) {
+		if (session_busy()) {
+			return text("BUSY: a changed knob needs a re-upload; tick the queue empty first");
+		}
+		const std::string r = load_scene();
+		if (r.rfind("FAIL", 0) == 0) {
+			return text(r);
+		}
+	}
+	g_sess->enqueueFit(g_q, max_steps, tol);
+	g_opt_last = false;
+	return text("QUEUED fit " + std::to_string(max_steps) + " on " + g_sess->backend());
 }
 
 // kind: trajectory (the recorded frames become the MATCH_TRAJECTORY target)
@@ -837,6 +922,65 @@ static Variant drape_job_names_api() {
 	return text(drape_job_names());
 }
 
+// The org's rotation fitter (vendor/sinew-align, the C port of sinew-mocap/
+// solve's Align.lean) that the fit phase's similarity rest update uses,
+// checked in the guest against AlignTest.lean's oracle: the 120-degree
+// rotation of the unit quaternion (0.5, 0.5, 0.5, 0.5), as a matrix,
+// recovered from (R b, b) pairs at N=5 (the covariance + ns30 path), N=2
+// and N=1 (rodrigues), each to 1e-4 (the Lean test's bound); also the
+// similarity fit's scale on the same pairs scaled by 0.7.
+static Variant drape_sinew_align_test() {
+	// Math.lean's quatToMat of (0.5, 0.5, 0.5, 0.5): the cyclic permutation
+	// x -> y -> z -> x, row-major.
+	const double w = 0.5, x = 0.5, y = 0.5, z = 0.5;
+	const double R[9] = { 1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w), 2 * (x * y + z * w),
+		1 - 2 * (x * x + z * z), 2 * (y * z - x * w), 2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y) };
+	const double srcs[15] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0.3, -0.7, 0.5 };
+	double tg[15];
+	for (int i = 0; i < 5; ++i) {
+		for (int r = 0; r < 3; ++r) {
+			tg[3 * i + r] = R[3 * r] * srcs[3 * i] + R[3 * r + 1] * srcs[3 * i + 1] + R[3 * r + 2] * srcs[3 * i + 2];
+		}
+	}
+	auto err = [&](const double *rec, size_t n) {
+		double e = 0.0;
+		for (size_t i = 0; i < n; ++i) {
+			for (int r = 0; r < 3; ++r) {
+				const double d = tg[3 * i + r] - (rec[3 * r] * srcs[3 * i] + rec[3 * r + 1] * srcs[3 * i + 1] +
+														 rec[3 * r + 2] * srcs[3 * i + 2]);
+				e = std::max(e, std::abs(d));
+			}
+		}
+		return e;
+	};
+	double r5[9], r2[9], r1[9];
+	sinew_align(tg, srcs, 5, r5);
+	sinew_align(tg, srcs, 2, r2);
+	sinew_align(tg + 3, srcs + 3, 1, r1);
+	const double e5 = err(r5, 5), e2 = err(r2, 2);
+	double e1 = 0.0;
+	for (int r = 0; r < 3; ++r) {
+		const double d = tg[3 + r] - (r1[3 * r] * srcs[3] + r1[3 * r + 1] * srcs[4] + r1[3 * r + 2] * srcs[5]);
+		e1 = std::max(e1, std::abs(d));
+	}
+	// similarity_fit on the same pairs, the targets scaled by 0.7.
+	float sf[15], df[15];
+	for (int i = 0; i < 15; ++i) {
+		sf[i] = float(srcs[i]);
+		df[i] = float(0.7 * tg[i]);
+	}
+	Similarity S;
+	const bool ok = similarity_fit(sf, df, 5, S);
+	double eR = 0.0;
+	for (int i = 0; i < 9; ++i) {
+		eR = std::max(eR, std::abs(S.R[i] - R[i]));
+	}
+	const bool pass = e5 < 1e-4 && e2 < 1e-4 && e1 < 1e-4 && ok && std::abs(S.s - 0.7) < 1e-5 && eR < 1e-5;
+	return text(drape_fmt("%s sinew_align oracle (AlignTest.lean, 120 deg): N=5 err %.3g N=2 err %.3g N=1 err %.3g "
+						  "(want < 1e-4); similarity_fit s=%.7f (want 0.7) max|R-Rtrue|=%.3g rotated=%d",
+			pass ? "PASS" : "FAIL", e5, e2, e1, S.s, eR, int(S.rotated)));
+}
+
 // Shutdown: drop every job and session (each solver frees the RIDs it made),
 // then free the device. Refused while a submit is in flight, so it never
 // syncs in a submit's frame; tick to the verdict first.
@@ -890,6 +1034,12 @@ int main() {
 			"Add a triangle-mesh body collider; params = [skin, mu, band, depth]");
 	ADD_API_FUNCTION(drape_config, "String", "String key, double value", "Set a DrapeConfig knob; returns the config line");
 	ADD_API_FUNCTION(drape_queue_forward, "String", "int steps", "Queue steps (0 rewinds to the initial state)");
+	ADD_API_FUNCTION(drape_fit_set, "String", "PackedInt32Array verts, PackedFloat32Array params, PackedInt32Array anchor",
+			"The fit set: vertices pulled to the body collider's surface at kFit x vertex area; params = [kFit, gap, refresh, similarity, restEvery, settle, kAnchor]; anchor = the loop whose centre is held at its source position");
+	ADD_API_FUNCTION(drape_sinew_align_test, "String", "",
+			"AlignTest.lean's oracle through the vendored sinew_align: a 120-degree rotation recovered at N=5, 2, 1");
+	ADD_API_FUNCTION(drape_queue_fit, "String", "int max_steps, double tol",
+			"Queue the fit phase (gravity off, targets refreshed) until the largest move per step is under tol");
 	ADD_API_FUNCTION(drape_set_target, "String", "String kind, PackedInt32Array verts, PackedFloat32Array positions, int frame",
 			"Target: trajectory (the recorded frames) | points | clear");
 	ADD_API_FUNCTION(drape_queue_backward, "String", "String loss, String mode",

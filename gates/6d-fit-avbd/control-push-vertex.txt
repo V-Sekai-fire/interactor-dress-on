@@ -1,0 +1,22 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T12:59:27
+args: --gate=loop --fit-mode=avbd --push-vertex --out=../gates/6d-fit-avbd/control-push-vertex.txt --wallclock=600 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=avbd
+STATE INFER               90 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 11 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1138 ms  vm    1081.9 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               593 ms  vm     584.4 ms  heap 3.1 MiB  frames 732  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN          358 ms  vm     352.1 ms  heap 2.7 MiB  frames 1  FIT(avbd): QUEUED fit 300 on rd | 932 fit vertices (0 nofit), k 60.0 gap 0.0 iters 32 steps <= 300 tol 0.0005 refresh 1 kBend 0.00001 | fit.elf fit_begin STARTED on the worker (for CHECK)
+STATE FIT_RUN          13604 ms  vm   12726.7 ms  heap 77.2 MiB  frames 901  IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00213 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1308 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0093 sim_s=0.6946 sim_rot_deg=2.605 y=6.4996..9.5814 finite=yes projections=150193 self_pushes=3333 wall_ms=13601.4 ms/step=45.338
+STATE FIT_READ             3 ms  vm       0.1 ms  heap 77.2 MiB  frames 1  FIT(avbd) 932 v
+STATE CHECK              834 ms  vm    2873.3 ms  heap 8.3 MiB  frames 1  FAILED INTERSECTS OK INTERSECTS edge (5334,5634) face (2803,2624,2881)
+=> FAILED CHECK: INTERSECTS OK INTERSECTS edge (5334,5634) face (2803,2624,2881)
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS control push-vertex: FAILED(CHECK: INTERSECTS OK INTERSECTS edge (5334,5634) face (2803,2624,2881)), want FAILED(CHECK: INTERSECTS ...)
+wall 17.8 s, frames 1655
+RESULT: PASS (control push-vertex) FIXTURE:infer,rig
+drape rd_close: CLOSED device=freed permanent_slots=0

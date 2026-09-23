@@ -63,7 +63,19 @@ void DrapeScene::applyMaterial(const DrapeConfig &cfg) {
 		const double c = std::sqrt(cfg.kBend * 3.0 / bendAreaSum[b]);
 		bendK[b] = cfg.rawStiffness ? float(cfg.kBend) : float(c * c);
 	}
+	// Pins at kAttach (AttachmentSpring::k_stiff); the fit set at fitK times
+	// the vertex's lumped area (updateAreaMatrix's third of each incident
+	// triangle), so the pull is area-weighted like cloth-fit's fit term
+	// (FitForm::value_unweighted: fit_weight * area(f) * sum_i w_i sdf(p_i)^2)
+	// and a mesh's refinement does not change the balance against the
+	// membrane, whose stiffness is kTri * area too.
 	attachK.assign(nAttach(), float(cfg.kAttach));
+	for (uint32_t a = nPin(); a < nPin() + nFit; ++a) {
+		attachK[a] = float(fitK * vertArea[attachVert[a]]);
+	}
+	for (uint32_t a = nPin() + nFit; a < nAttach(); ++a) {
+		attachK[a] = float(anchorK);
+	}
 }
 
 std::string DrapeScene::describe() const {
@@ -328,5 +340,55 @@ bool scene_mesh(DrapeScene &s, const std::vector<float> &pos, const std::vector<
 			s.attachFixed.push_back(s.rest[3 * p + k]);
 		}
 	}
+	return true;
+}
+
+bool scene_fit_set(DrapeScene &s, const std::vector<int32_t> &verts, double k, double gap, int refresh, bool similarity,
+		const std::vector<int32_t> &anchor, int restEvery, int settle, double anchorK, std::string &err) {
+	if (s.nV == 0) {
+		err = "no scene";
+		return false;
+	}
+	if (refresh < 1 || restEvery < 1 || settle < 0) {
+		err = "refresh and restEvery must be >= 1, settle >= 0";
+		return false;
+	}
+	for (int32_t v : verts) {
+		if (v < 0 || uint32_t(v) >= s.nV) {
+			err = "fit vertex index out of range";
+			return false;
+		}
+	}
+	for (int32_t v : anchor) {
+		if (v < 0 || uint32_t(v) >= s.nV) {
+			err = "anchor vertex index out of range";
+			return false;
+		}
+	}
+	s.fitAnchor.assign(anchor.begin(), anchor.end());
+	const uint32_t nPin = s.nPin();
+	s.attachVert.resize(nPin);
+	s.attachFixed.resize(size_t(3) * nPin);
+	for (int32_t v : verts) {
+		s.attachVert.push_back(uint32_t(v));
+		for (int c = 0; c < 3; ++c) {
+			s.attachFixed.push_back(s.rest[3 * v + c]);
+		}
+	}
+	s.nFit = uint32_t(verts.size());
+	for (int32_t v : anchor) {
+		s.attachVert.push_back(uint32_t(v));
+		for (int c = 0; c < 3; ++c) {
+			s.attachFixed.push_back(s.rest[3 * v + c]);
+		}
+	}
+	s.nAnchorAtt = uint32_t(anchor.size());
+	s.anchorK = anchorK;
+	s.fitK = k;
+	s.fitGap = gap;
+	s.fitRefresh = refresh;
+	s.fitSimilarity = similarity;
+	s.fitRestEvery = restEvery;
+	s.fitSettle = settle;
 	return true;
 }

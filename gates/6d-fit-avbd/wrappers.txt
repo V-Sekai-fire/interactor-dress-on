@@ -1,0 +1,42 @@
+node path: /root/Main
+PASS flat control: guest/main.cpp has 8 entry points
+PASS flat control: guest/probes/main.cpp has 37 entry points
+PASS flat control: guest/rd_worker/main.cpp has 8 entry points
+PASS flat control: guest/curvenet/main.cpp has 23 entry points
+PASS flat control: guest/drape/main.cpp has 33 entry points
+PASS flat control: guest/fit/main.cpp has 17 entry points
+PASS flat control: guest/ggml_test/main.cpp has 9 entry points
+PASS every guest entry point has a /root/Main wrapper (135 of 135; 168 wrappers)
+PASS every such wrapper's arguments have defaults
+PASS main.gd compiles and its 168 wrappers take no required argument
+PASS control: main.gd without the p_memalign delegate -> missing ["dress_on:p_memalign"]
+PASS control: rd_calls with its defaults stripped -> no default ["rd_calls(kind: String)", "rd_calls(n: int)"]
+PASS wrappers on /root/Main callable with no argument: 49 old (279b31b) + 73 main (8d59e6a + 5) + 8 Cut 8 + 41 Cut 3, missing []
+PASS properties forwarded to the fit stage: fit_config_overrides, fit_memory_mib, fit_elf, fit_execution_timeout, missing []
+PASS rd_open -> ok
+PASS rd_probe -> PASS: GPU compute reached from the guest (device held from an earlier vmcall)
+PASS rd_bench -> nd=1 ns=1 barrier=true host_us=2245 OK value=1 expected=1 setup_us=669 loop_us=809 read_us=1138166991 us_per_dispatch=809.0 us_per_submit=809.0 | bind_pipe=-408021889 bind_set=3 dispatch=408021899 barrier=0 submit=788
+PASS rd_bench_quiet -> nd=1 ns=1 barrier=true host_us=1317 OK value=1 expected=1
+PASS rd_set_probe -> ok 552 bytes
+PASS rd_calls -> host_us=1583 ticks n=1000 last=3444042
+PASS rd_close -> closed
+PASS avbd_fixture -> host_us=420 PASS cpu: PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+PASS avbd_job_names -> fixture backward_smoke gradcheck stategrad gradcheck_duals self_collision bench_fwd bench_bwd two_vertex_bwd two_vertex_bwd_nopad
+PASS rd_rule4 -> same_frame_syncs=0 syncs=0 submits=0
+PASS p_fenv -> set_up=0 get_up=3(FE_UPWARD=3) set_dn=0 get_dn=2(FE_DOWNWARD=2) up=3fd5555555555555 dn=3fd5555555555555 nearest=3fd5555555555555 upf=3eaaaaab dnf=3eaaaaab double_differs=no float_differs=no
+PASS echo_i -> 9007199254740993
+PASS p_exceptions -> caught runtime_error: negative input -7 rethrow_sum=84
+PASS p_memalign -> fixed n=1000 made=3000 freed_midway=997 reallocs=206 live_at_end=2003 misaligned=0 overlaps=0 corrupt=0 nulls=0 exhausted=0
+PASS dress_on_stages -> infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+PASS drape_status -> IDLE no session
+PASS drape_open -> OPENED auto (rd from 160 vertices)
+PASS drape_job_names -> sphere_forward sphere_backward sim_gradcheck bench_drape mesh_parity mesh_bisect inverse_min lbfgsb_components lbfgsb_problems lbfgsb_replay lbfgsb_bench
+PASS drape_sinew_align_test -> PASS sinew_align oracle (AlignTest.lean, 120 deg): N=5 err 1.09e-17 N=2 err 0 N=1 err 0 (want < 1e-4); similarity_fit s=0.7000000 (want 0.7) max|R-Rtrue|=4.07e-09 rotated=1
+PASS cn_reset -> host_us=64 ok
+PASS cn_get_param -> host_us=15 0.03
+PASS check_names -> host_us=85 beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld skirt_tube
+PASS fit_status -> phase -/- newton 0 energy - io_attempts 0 io_total 0 heap_used 0.1 MiB heap_free 1638.3 MiB chunks 44 inputs body=0 skel=0 garment=0 config=0 host_heap_usage=78656 | last: 
+PASS dress_on_status -> IDLE t=0.0s
+PASS ggml_job_status -> IDLE
+PASS ggml_rd_stats -> IDLE
+RESULT: PASS

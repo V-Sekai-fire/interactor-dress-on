@@ -1,0 +1,180 @@
+{
+  "check": "OK INTERSECTS edge (5334,5634) face (2803,2624,2881)",
+  "check_control": "OK INTERSECTS edge (5334,5634) face (2803,2624,2881)",
+  "counts": {
+    "curvenet_build": "ok sketch curves=6 knots=4 intersections=4 needs_setup=0",
+    "curves": 6,
+    "cycles": 2,
+    "edges": 6,
+    "knot_degrees": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "knot_positions": [
+      "(-0.000, 0.955, 0.061)",
+      "(-0.028, 0.924, -0.127)",
+      "(-0.084, 0.564, 0.035)",
+      "(-0.104, 0.473, -0.088)"
+    ],
+    "knots": 4,
+    "last_pen_end": "ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=4 cycles=2 openings=2",
+    "nodes": 4,
+    "openings": 2,
+    "patches": 2,
+    "pen_ends": [
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=2 cycles=0 openings=1",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=1",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=4 nodes=4 cycles=0 openings=2",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=5 nodes=4 cycles=0 openings=2",
+      "ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=4 cycles=2 openings=2"
+    ],
+    "strokes": 6
+  },
+  "fit_avbd": {
+    "anchor": 64,
+    "fit_vertices": 932,
+    "last_running": "RUNNING 1199/1200",
+    "mu": 0.3,
+    "nofit": 0,
+    "queued": "QUEUED fit 300 on rd",
+    "restore": [
+      "SET [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.0166666667 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "SET (re-uploads and rewinds on the next forward) [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.0166666667 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "SET (re-uploads and rewinds on the next forward) [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000"
+    ],
+    "result": "IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00213 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1308 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0093 sim_s=0.6946 sim_rot_deg=2.605 y=6.4996..9.5814 finite=yes projections=150193 self_pushes=3333 wall_ms=13601.4 ms/step=45.338",
+    "result_full": "DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00213 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1308 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0093 sim_s=0.6946 sim_rot_deg=2.605 y=6.4996..9.5814 finite=yes projections=150193 self_pushes=3333 wall_ms=13601.4 ms/step=45.338",
+    "retarget": "similarity from the garment skeleton to the body skeleton",
+    "scale": 10.0,
+    "setting": {
+      "band": 0.1,
+      "depth": 1.0,
+      "gap": 0.0,
+      "h": 0.0166666666666667,
+      "iters": 32,
+      "k": 60.0,
+      "kAnchor": 100.0,
+      "kBend": 0.00001,
+      "refresh": 1,
+      "restEvery": 4,
+      "settle": 0,
+      "similarity": 1.0,
+      "skin": 0.1,
+      "steps": 300,
+      "tol": 0.0005
+    },
+    "setup": [
+      "OPENED auto (rd from 160 vertices)",
+      "[drape-scene]  nV=0 nTri=0 nBend=0 nAttach=0 prims=0",
+      "[drape-scene]  nV=0 nTri=0 nBend=0 nAttach=0 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000",
+      "SET [drape-config] solver=AVBD iters=32 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "SET (re-uploads and rewinds on the next forward) [drape-config] solver=AVBD iters=32 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "SET (re-uploads and rewinds on the next forward) [drape-config] solver=AVBD iters=32 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.0166666667 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "SET [drape-config] solver=AVBD iters=32 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.0166666667 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "LOADED rd [drape-scene] mesh nV=932 nTri=1728 nBend=2524 nAttach=0 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000\n[drape-config] solver=AVBD iters=32 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.0166666667 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000",
+      "FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 rest_every=4 settle=0 anchor=64 kAnchor=100 vertex_area min=0.006789 mean=0.06189 max=0.1176 (k per vertex = kFit x area; re-uploads on the next queue)"
+    ],
+    "ticks": 901
+  },
+  "fit_begin": "host_ms=2039 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0",
+  "fit_config": "{ -> \"shrink_normal_distance\": 1e-6, ; \"incremental_steps\": 2 -> 1; \"nonlinear\": { \"Newton\": { -> \"force_psd_projection\": true, ",
+  "fit_mode": "avbd",
+  "fixtures": [
+    "infer",
+    "rig"
+  ],
+  "mesh": {
+    "components": 1,
+    "finite": true,
+    "host_ms": 584,
+    "loops": 2,
+    "mesh_build": "ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0",
+    "triangles": 1728,
+    "vertices": 932
+  },
+  "min_clearance": "0.0100 m after growing both rings by 0.0348 m (the rings alone: -0.0248 m)",
+  "reason": "CHECK: INTERSECTS OK INTERSECTS edge (5334,5634) face (2803,2624,2881)",
+  "records": [
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 90,
+      "note": "FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f",
+      "state": "INFER",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 11,
+      "note": "FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",
+      "state": "RIG",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": false,
+      "frames": 7,
+      "heap": 3079104,
+      "ms": 1138,
+      "note": "strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]",
+      "state": "AUTHOR",
+      "vm_ms": 1081.909
+    },
+    {
+      "fixture": false,
+      "frames": 732,
+      "heap": 3234064,
+      "ms": 593,
+      "note": "ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops",
+      "state": "MESH",
+      "vm_ms": 584.391
+    },
+    {
+      "fixture": false,
+      "frames": 1,
+      "heap": 2831696,
+      "ms": 358,
+      "note": "FIT(avbd): QUEUED fit 300 on rd | 932 fit vertices (0 nofit), k 60.0 gap 0.0 iters 32 steps <= 300 tol 0.0005 refresh 1 kBend 0.00001 | fit.elf fit_begin STARTED on the worker (for CHECK)",
+      "state": "FIT_BEGIN",
+      "vm_ms": 352.138
+    },
+    {
+      "fixture": false,
+      "frames": 901,
+      "heap": 80990512,
+      "ms": 13604,
+      "note": "IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00213 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1308 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0093 sim_s=0.6946 sim_rot_deg=2.605 y=6.4996..9.5814 finite=yes projections=150193 self_pushes=3333 wall_ms=13601.4 ms/step=45.338",
+      "state": "FIT_RUN",
+      "vm_ms": 12726.73
+    },
+    {
+      "fixture": false,
+      "frames": 1,
+      "heap": 80990512,
+      "ms": 3,
+      "note": "FIT(avbd) 932 v",
+      "state": "FIT_READ",
+      "vm_ms": 0.13
+    },
+    {
+      "fixture": false,
+      "frames": 1,
+      "heap": 8697664,
+      "ms": 834,
+      "note": "FAILED INTERSECTS OK INTERSECTS edge (5334,5634) face (2803,2624,2881)",
+      "state": "CHECK",
+      "vm_ms": 2873.312
+    }
+  ],
+  "rings": {
+    "hem": "centre (-0.000869, 0.524922, -0.029805) radius 0.2305 m (body 0.1857 m + 0.01, 90 vertices)",
+    "waist": "centre (-0.000113, 0.952752, -0.027279) radius 0.2047 m (body 0.1599 m + 0.01, 60 vertices)"
+  },
+  "state": "FAILED",
+  "wall_s": 16.642
+}

@@ -1,0 +1,153 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T11:15:12
+args: --out=../gates/6d-fit-avbd/ladder.txt
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+[dress-on] xr_main: flat
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER               87 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1102 ms  vm    1049.6 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               593 ms  vm     584.6 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+fit.elf begin: STARTED on the worker
+[2026-09-23 18:15:15.913] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+
+RUNG k0-i16-s100: k 0.0 gap 0.15 iters 16 steps<=100 tol 0.0005 refresh 4 kBend 0.00001 | QUEUED fit 100 on rd
+  IDLE DONE fit rd steps=20 (+20 of 100) converged=yes max_disp=0.000452 tol=0.0005 refreshed=5 misses=0 dist_min=0.1000 dist_mean=0.7641 gap=0.15 k=0 fit=932 pins=0 iters=16 finite=yes projections=517 self_pushes=68 wall_ms=432.3 ms/step=21.615 | host_ms 801 vm_ms 766 ticks 61 finite true heap 4.5 MiB
+[2026-09-23 18:15:17.358] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+
+[2026-09-23 18:27:57.568] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+
+[2026-09-23 18:15:34.559] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+
+[2026-09-25 09:20:24.817] [polyfem] [info] Shrunk avatar inward 0.0000 along its own normals, topology and UVs unchanged
+
+[2026-09-23 18:15:17.970] [polyfem] [debug] curve 0 has 3 bone intersections
+
+[2026-09-23 18:15:17.970] [polyfem] [debug] curve normal [-0.0009899578852720086, -0.9999984920647856, 0.0014268326952763088]
+
+[2026-09-23 18:15:17.971] [polyfem] [debug] CurveTargetForm set curve center to bone 17 - 18, direction is [-0.0009899578852720114, -0.9999984920647856, 0.0014268326952763045]
+
+[2026-09-23 18:15:17.972] [polyfem] [debug] curve 1 has 4 bone intersections
+
+[2026-09-23 18:15:17.972] [polyfem] [debug] curve normal [-0.0006489879810447076, -0.999991976055631, -0.003953054382985814]
+
+[2026-09-23 18:15:17.973] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.0006489879810447083, -0.999991976055631, -0.0039530543829858]
+
+fit.elf begin: host_ms=2065 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+  check: OK none | control (vertex 430 onto the pelvis): OK INTERSECTS edge (5558,5605) face (1136,1241,2588) | 827 ms
+RUNG k10-i16-s100: k 10.0 gap 0.15 iters 16 steps<=100 tol 0.0005 refresh 4 kBend 0.00001 | QUEUED fit 100 on rd
+  IDLE DONE fit rd steps=100 (+100 of 100) converged=no max_disp=0.0105 tol=0.0005 refreshed=25 misses=0 dist_min=0.0921 dist_mean=0.3147 gap=0.15 k=10 fit=932 pins=0 iters=16 finite=yes projections=549 self_pushes=4586 wall_ms=2283.7 ms/step=22.837 | host_ms 2437 vm_ms 2281 ticks 301 finite true heap 13.9 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5133,5340) face (3548,3888,2588) | 837 ms
+RUNG k10-i16-s300: k 10.0 gap 0.15 iters 16 steps<=300 tol 0.0005 refresh 4 kBend 0.00001 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00182 tol=0.0005 refreshed=75 misses=0 dist_min=0.0909 dist_mean=0.2020 gap=0.15 k=10 fit=932 pins=0 iters=16 finite=yes projections=18939 self_pushes=29261 wall_ms=8508.4 ms/step=28.361 | host_ms 8661 vm_ms 8142 ticks 901 finite true heap 50.8 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5133,5340) face (3548,3888,2588) | 847 ms
+RUNG k10-i32-s300: k 10.0 gap 0.15 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.00001 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00188 tol=0.0005 refreshed=75 misses=0 dist_min=0.0910 dist_mean=0.2020 gap=0.15 k=10 fit=932 pins=0 iters=32 finite=yes projections=18942 self_pushes=29326 wall_ms=12269.5 ms/step=40.898 | host_ms 12423 vm_ms 11888 ticks 901 finite true heap 50.8 MiB
+  check: OK none | control (vertex 791 onto the pelvis): OK INTERSECTS edge (5784,5919) face (1099,1136,2588) | 856 ms
+RUNG k10-i32-s300-g0.10: k 10.0 gap 0.1 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.00001 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00405 tol=0.0005 refreshed=75 misses=0 dist_min=0.0923 dist_mean=0.1797 gap=0.1 k=10 fit=932 pins=0 iters=32 finite=yes projections=49631 self_pushes=36480 wall_ms=12572.7 ms/step=41.909 | host_ms 12728 vm_ms 12157 ticks 901 finite true heap 63.0 MiB
+  check: OK none | control (vertex 5 onto the pelvis): OK INTERSECTS edge (5133,5340) face (3548,3888,2588) | 849 ms
+RUNG k10-i32-s300-b1e-2: k 10.0 gap 0.15 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.01 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00205 tol=0.0005 refreshed=75 misses=0 dist_min=0.0948 dist_mean=0.2024 gap=0.15 k=10 fit=932 pins=0 iters=32 finite=yes projections=17138 self_pushes=27708 wall_ms=13045.8 ms/step=43.486 | host_ms 13206 vm_ms 12607 ticks 901 finite true heap 52.2 MiB
+  check: OK none | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5917,5919) face (1586,2056,2588) | 854 ms
+RUNG k30-i32-s300: k 30.0 gap 0.15 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.00001 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00192 tol=0.0005 refreshed=75 misses=0 dist_min=0.0906 dist_mean=0.1740 gap=0.15 k=30 fit=932 pins=0 iters=32 finite=yes projections=31985 self_pushes=52181 wall_ms=12508.4 ms/step=41.695 | host_ms 12661 vm_ms 12069 ticks 901 finite true heap 76.6 MiB
+  check: OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5334,5634) face (2254,2622,2624) | 853 ms
+RUNG k30-i32-s300-b1e-2: k 30.0 gap 0.15 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.01 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00365 tol=0.0005 refreshed=75 misses=0 dist_min=0.0891 dist_mean=0.1742 gap=0.15 k=30 fit=932 pins=0 iters=32 finite=yes projections=28604 self_pushes=53462 wall_ms=14324.1 ms/step=47.747 | host_ms 14480 vm_ms 13958 ticks 901 finite true heap 76.6 MiB
+  check: OK INTERSECTS edge (5548,5603) face (5744,5543,5519) | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5917,5919) face (1241,1586,2588) | 848 ms
+RUNG k30-i32-s300-b1e-1: k 30.0 gap 0.15 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.1 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00712 tol=0.0005 refreshed=75 misses=0 dist_min=0.0659 dist_mean=0.1777 gap=0.15 k=30 fit=932 pins=0 iters=32 finite=yes projections=16970 self_pushes=88357 wall_ms=14822.7 ms/step=49.409 | host_ms 14976 vm_ms 14440 ticks 901 finite true heap 78.4 MiB
+  check: OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5917,5919) face (1586,2056,2588) | 842 ms
+RUNG k100-i32-s300-b1e-1: k 100.0 gap 0.15 iters 32 steps<=300 tol 0.0005 refresh 4 kBend 0.1 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00262 tol=0.0005 refreshed=75 misses=0 dist_min=0.0708 dist_mean=0.1636 gap=0.15 k=100 fit=932 pins=0 iters=32 finite=yes projections=12031 self_pushes=198985 wall_ms=13478.8 ms/step=44.929 | host_ms 13638 vm_ms 13062 ticks 901 finite true heap 95.2 MiB
+  check: OK INTERSECTS edge (5523,5648) face (5305,5513,5657) | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5917,5919) face (1241,1586,2588) | 847 ms
+RUNG k30-i64-s300-b1e-1: k 30.0 gap 0.15 iters 64 steps<=300 tol 0.0005 refresh 4 kBend 0.1 | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300) converged=no max_disp=0.00681 tol=0.0005 refreshed=75 misses=0 dist_min=0.0659 dist_mean=0.1777 gap=0.15 k=30 fit=932 pins=0 iters=64 finite=yes projections=17008 self_pushes=88055 wall_ms=20154.1 ms/step=67.180 | host_ms 20308 vm_ms 19712 ticks 901 finite true heap 78.5 MiB
+  check: OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control (vertex 789 onto the pelvis): OK INTERSECTS edge (5917,5919) face (1586,2056,2588) | 858 ms
+
+rung                    k    gap  iters steps  ms/step  host_ms  conv  check
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+ERROR: String formatting error: unsupported format character.
+   at: validated_evaluate (core/variant/variant_op.h:770)
+   GDScript backtrace (most recent call first):
+       [0] _evaluate (res://gate_fit_avbd.gd:297)
+       [1] _process (res://gate_fit_avbd.gd:160)
+%-22s %5g %5.2f %5d %5d  %7.1f  %7d  %-4s  %s
+FAIL drape_stage.gd FIT_AVBD is not the chosen rung k30-i32-s300: kBend: FIT_AVBD 0.001, k30-i32-s300 0.00001; k: FIT_AVBD 100.0, k30-i32-s300 30.0
+FAIL chosen rung k30-i32-s300: check OK INTERSECTS edge (5527,5648) face (5513,5523,5652) | control OK INTERSECTS edge (5334,5634) face (2254,2622,2624)
+INFO control rung k0-i16-s100 (no pull): IDLE DONE fit rd steps=20 (+20 of 100) converged=yes max_disp=0.000452 tol=0.0005 refreshed=5 misses=0 dist_min=0.1000 dist_mean=0.7641 gap=0.15 k=0 fit=932 pins=0 iters=16 finite=yes projections=517 self_pushes=68 wall_ms=432.3 ms/step=21.615
+wall 140.3 s, frames 12461
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

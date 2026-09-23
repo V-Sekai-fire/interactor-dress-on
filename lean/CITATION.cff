@@ -15,7 +15,7 @@ abstract: >-
   and plausible properties. lake exe emit_shaders writes every kernel's
   Slang; lake exe csr_falsify runs the plausible-witness-dag ladder over the
   CSR and colouring properties. Source commit e361584 is on branch
-  feature/vulkan-avbd-windows-backend and not yet on any remote. Pins:
+  feature/vulkan-avbd-windows-backend of the V-Sekai-fire fork. Pins:
   lean-toolchain leanprover/lean4:v4.30.0; LeanSlang
   V-Sekai-fire/contract-lean-slang branch emit-fp
   (60532aef8ed70cc669ecab481182d0636c9e1ac3, pinned by SHA; e0e96da plus the additive
@@ -47,6 +47,6 @@ authors:
   - name: K. S. Ernest (Fire) Lee
   - name: Yifei Li
   - name: V-Sekai
-repository-code: https://github.com/v-sekai/TOOL_cloth_dynamics
+repository-code: https://github.com/V-Sekai-fire/TOOL_cloth_dynamics
 commit: e361584c6e52a1b6f2635b93a8dff80eafc00052
 license: MIT

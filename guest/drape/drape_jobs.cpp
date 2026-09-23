@@ -16,6 +16,7 @@
 #include "avbd/avbd_cpu.h"
 #include "avbd/avbd_rd.h"
 #include "drape_sim.h"
+#include "lbfgsb_jobs.h"
 
 namespace {
 
@@ -644,6 +645,11 @@ std::unique_ptr<jobs::Job> make_on(const std::string &name, const Args &a, rdc::
 
 std::unique_ptr<jobs::Job> make_drape_job(const std::string &name, const std::string &backend,
 		const std::string &args, rdc::Device &dev, std::string &err) {
+	if (name.rfind("lbfgsb_", 0) == 0) {
+		// The L-BFGS-B gates (G1, G2): lbfgsb_jobs.cpp; "auto" is cpu (n <= 1000:
+		// see gates/5-drape/lbfgsb for the per-iteration cost on each backend).
+		return make_lbfgsb_job(name, backend == "auto" ? "cpu" : backend, args, dev, err);
+	}
 	Args a(args);
 	std::string b = backend;
 	if (b == "auto") {
@@ -667,7 +673,7 @@ std::unique_ptr<jobs::Job> make_drape_job(const std::string &name, const std::st
 }
 
 const char *drape_job_names() {
-	return "sphere_forward sphere_backward sim_gradcheck bench_drape";
+	return "sphere_forward sphere_backward sim_gradcheck bench_drape lbfgsb_components lbfgsb_problems";
 }
 
 DrapeSession *drape_job_session(jobs::Job *job) {

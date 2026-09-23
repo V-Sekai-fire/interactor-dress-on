@@ -62,10 +62,16 @@ echo "== slangc -target cpp ($(echo $CPP | wc -w)) =="
 for k in $CPP; do
 	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -o "cpp/${k}_emit.cpp" "slang/$k.slang" )
 done
+# -fp-mode precise decorates every float op NoContraction: the driver may not
+# fuse a*b+c into an FMA, so the GPU rounds in the order the cpp path does
+# (the guest builds vec_cpu.cpp -ffp-contract=off). The Cauchy sweep of a
+# tight box amplifies that rounding: fixture comp_03's xcp sat 1.4e-4 from
+# LBFGSpp's on the GPU without it, 6.6e-6 on the uncontracted CPU
+# (gates/5-drape/lbfgsb/README.md).
 echo "== slangc -target spirv (+ reflection) ($(echo $SPIRV | wc -w)) =="
 rm -f "$SPV"/*.spv "$SPV"/*.refl.json
 for k in $SPIRV; do
-	"$SLANGC" -target spirv -profile sm_6_5 -stage compute -entry main \
+	"$SLANGC" -target spirv -profile sm_6_5 -stage compute -entry main -fp-mode precise \
 		-reflection-json "$SPV/$k.refl.json" -o "$SPV/$k.spv" "$HERE/slang/$k.slang"
 done
 echo "== binding table =="

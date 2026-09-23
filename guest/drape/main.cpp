@@ -7,7 +7,10 @@
 
 #include <api.hpp>
 
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <sstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,6 +25,8 @@
 #include "drape_jobs.h"
 #include "drape_scene.h"
 #include "jobs.h"
+#include "lbfgsb.h"
+#include "lbfgsb_jobs.h"
 
 // This stage's device, held across vmcalls.
 static rdc::Device g_dev;
@@ -182,8 +187,14 @@ static void free_parked_sessions() {
 	}
 }
 
+// An optimize's L-BFGS-B phase in flight (drape_queue_optimize, below).
+static bool opt_pending();
+static const std::string &drape_optimize_head();
+// The last queued operation was an optimize: drape_tick reports its verdict.
+static bool g_opt_last = false;
+
 static bool session_busy() {
-	return g_sess && (!g_q.empty() || g_sess->pending());
+	return g_sess && (!g_q.empty() || g_sess->pending() || opt_pending());
 }
 
 static void drop_session() {
@@ -333,6 +344,7 @@ static Variant drape_queue_forward(int steps) {
 		return text("REWOUND");
 	}
 	g_sess->enqueueForward(g_q, steps);
+	g_opt_last = false;
 	return text("QUEUED forward " + std::to_string(steps) + " on " + g_sess->backend());
 }
 
@@ -394,6 +406,7 @@ static Variant drape_queue_backward(String loss_s, String mode_s) {
 		return text("FAIL: mode native | step | unrolled");
 	}
 	g_sess->enqueueBackward(g_q, loss, mode);
+	g_opt_last = false;
 	return text("QUEUED backward " + l + " " + m);
 }
 
@@ -404,11 +417,11 @@ static Variant drape_tick(int64_t host_us) {
 	}
 	g_sess->now_us = host_us;
 	const bool cpu = std::string(g_sess->backend()) == "cpu";
-	g_q.tick([]() { return g_sess->pending(); }, cpu ? 4 : 256);
-	if (!g_q.empty() || g_sess->pending()) {
+	g_q.tick([]() { return g_sess->pending() || opt_pending(); }, cpu ? 4 : 256);
+	if (!g_q.empty() || g_sess->pending() || opt_pending()) {
 		return text("RUNNING " + std::to_string(g_q.done()) + "/" + std::to_string(g_q.total()));
 	}
-	const std::string &r = g_sess->result();
+	const std::string &r = g_opt_last ? drape_optimize_head() : g_sess->result();
 	return text("IDLE " + r.substr(0, r.find('\n')));
 }
 
@@ -447,6 +460,310 @@ static Variant drape_result() {
 		return text("no session\n" + g_cfg.dump());
 	}
 	return text(g_sess->result() + "\n" + g_sess->config().dump() + "\n" + g_sess->scene().describe());
+}
+
+// --- drape_queue_optimize: L-BFGS-B over the session's parameters ----------------
+//
+// The in-guest L-BFGS-B (lbfgsb.h) with the session as its objective: each
+// evaluation sets the parameters, rewinds, queues `steps` forward steps and a
+// backward (loss and mode as drape_queue_backward) on the drape queue, and
+// hands the loss and its gradient back. spec is "key=value ..." with
+//   params=mu[,kTri,kBend,kAttach,density]   (default mu)
+//   loss=match_trajectory|target_points      (default match_trajectory)
+//   mode=native|step|unrolled                (default native)
+//   steps=N                                  (default: the frames recorded now)
+//   vec=cpu|rd|auto                          (the L-BFGS-B vectors; auto = cpu)
+//   any LBFGSBParam key (m, epsilon, delta, max_linesearch, ...); the defaults
+//   are DiffCloth's BackwardTaskSolver (m 10, delta 1e-3, max_linesearch 20).
+// x0/lb/ub: one value per parameter (lb/ub empty: unbounded). maxIter 0 runs
+// to convergence. The iterates stream to drape_optimize_result().
+
+struct DrapeOpt {
+	std::unique_ptr<lbv::Vec> vec;
+	std::unique_ptr<Lbfgsb> drv;
+	std::vector<std::string> params;
+	DrapeLoss loss = DrapeLoss::MatchTrajectory;
+	DrapeMode mode = DrapeMode::Native;
+	int steps = 0;
+	bool done = false;
+	int64_t t0 = 0;
+	std::string head, log;
+	bool pending() const { return drv && drv->pending(); }
+};
+static std::unique_ptr<DrapeOpt> g_opt;
+static std::vector<std::unique_ptr<DrapeOpt>> g_opt_parked;
+static int64_t g_opt_parked_frame = -1;
+
+static bool opt_pending() {
+	return g_opt && g_opt->pending();
+}
+
+static const std::string &drape_optimize_head() {
+	static const std::string none = "no optimize";
+	return g_opt ? g_opt->head : none;
+}
+
+static void opt_handle(Lbfgsb::Status s);
+
+static void opt_stage() {
+	opt_handle(g_opt->drv->next());
+}
+
+static void opt_finish(const std::string &head) {
+	DrapeOpt &o = *g_opt;
+	o.done = true;
+	char b[160];
+	std::snprintf(b, sizeof b, " iterations=%d evaluations=%d wall_ms=%.1f", o.drv->iterations(), o.drv->nfev(),
+			double(g_sess->now_us - o.t0) / 1000.0);
+	o.head = head + b;
+	o.log += o.head + "\n";
+}
+
+static std::string opt_x_line(const std::vector<float> &x) {
+	std::string s;
+	for (size_t i = 0; i < x.size() && i < g_opt->params.size(); ++i) {
+		char b[64];
+		std::snprintf(b, sizeof b, "%s%s=%.9g", i ? " " : "", g_opt->params[i].c_str(), double(x[i]));
+		s += b;
+	}
+	return s;
+}
+
+// The collector after an evaluation's forward and backward: loss and
+// gradient back to the driver.
+static void opt_collect() {
+	DrapeOpt &o = *g_opt;
+	if (!g_sess->ok()) {
+		const std::string &r = g_sess->result();
+		opt_finish("FAIL optimize: " + r.substr(0, r.find('\n')));
+		return;
+	}
+	const DrapeGrad &gr = g_sess->grad();
+	std::vector<float> g(o.params.size(), 0.0f);
+	for (size_t i = 0; i < o.params.size(); ++i) {
+		const std::string &p = o.params[i];
+		double d = gr.ddensity;
+		if (p == "mu") {
+			d = gr.dmu.empty() ? 0.0 : gr.dmu[0];
+		} else if (p == "kTri") {
+			d = gr.dkTri;
+		} else if (p == "kBend") {
+			d = gr.dkBend;
+		} else if (p == "kAttach") {
+			d = gr.dkAttach;
+		}
+		g[i] = float(d);
+	}
+	char b[200];
+	std::snprintf(b, sizeof b, "  eval %d loss=%.9g grad[0]=%.9g\n", o.drv->nfev() + 1, gr.loss, double(g[0]));
+	o.log += b;
+	if (!o.drv->setGradient(g.data())) {
+		opt_finish("FAIL optimize: setGradient");
+		return;
+	}
+	opt_handle(o.drv->next(gr.loss));
+}
+
+// Apply x to the session, rewind, queue forward + backward + the collector.
+static void opt_eval(const std::vector<float> &x) {
+	DrapeOpt &o = *g_opt;
+	bool reload = false;
+	for (size_t i = 0; i < o.params.size(); ++i) {
+		const double v = x[i];
+		if (!g_cfg.set(o.params[i], v)) {
+			opt_finish("FAIL optimize: " + o.params[i] + " refused " + std::to_string(v));
+			return;
+		}
+		if (o.params[i] == "mu") {
+			if (!g_scene.prims.empty()) {
+				g_scene.prims[0].mu = v;
+			}
+		} else {
+			reload = true;
+		}
+	}
+	if (reload) {
+		std::string err;
+		if (!g_sess->load(g_scene, g_cfg, err)) {
+			opt_finish("FAIL optimize: reload: " + err);
+			return;
+		}
+	} else {
+		g_sess->setLive(g_cfg);
+		g_sess->setPrims(g_scene.prims);
+		g_sess->rewind();
+	}
+	g_sess->enqueueForward(g_q, o.steps);
+	g_sess->enqueueBackward(g_q, o.loss, o.mode);
+	g_q.push([]() { opt_collect(); });
+}
+
+static void opt_handle(Lbfgsb::Status s) {
+	DrapeOpt &o = *g_opt;
+	for (;;) {
+		switch (s) {
+			case Lbfgsb::BUSY:
+				g_q.next([]() { opt_stage(); });
+				return;
+			case Lbfgsb::NEED_EVAL:
+			case Lbfgsb::TRY: {
+				std::vector<float> x;
+				o.drv->readX(x);
+				o.log += std::string(s == Lbfgsb::TRY ? "  try " : "  x0 ") + opt_x_line(x) + "\n";
+				opt_eval(x);
+				return;
+			}
+			case Lbfgsb::ACCEPT: {
+				std::vector<float> x;
+				o.drv->readX(x);
+				char b[160];
+				std::snprintf(b, sizeof b, "iter %d f=%.9g pg=%.4g step=%.6g ", o.drv->iterations(), o.drv->fx(),
+						o.drv->pgNorm(), o.drv->lastStep());
+				o.log += b + opt_x_line(x) + "\n";
+				s = o.drv->next();
+				break;
+			}
+			case Lbfgsb::CONVERGED: {
+				std::vector<float> x;
+				o.drv->readX(x);
+				char b[160];
+				std::snprintf(b, sizeof b, "DONE optimize %s (%s) f=%.9g pg=%.4g ", o.vec->name(),
+						o.drv->reason().c_str(), o.drv->fx(), o.drv->pgNorm());
+				opt_finish(b + opt_x_line(x));
+				return;
+			}
+			case Lbfgsb::FAIL:
+				opt_finish("FAIL optimize: " + o.drv->error());
+				return;
+		}
+	}
+}
+
+static Variant drape_queue_optimize(String spec_s, PackedFloat32Array x0_a, PackedFloat32Array lb_a,
+		PackedFloat32Array ub_a, int max_iter) {
+	free_parked_sessions();
+	if (!g_opt_parked.empty() && process_frame() != g_opt_parked_frame) {
+		g_opt_parked.clear();
+	}
+	if (!g_sess || !g_scene_set) {
+		return text("FAIL: no scene (drape_scene_sphere_demo or drape_scene_mesh)");
+	}
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	const std::string spec = spec_s.utf8();
+	std::string lbkv, err, vecName = "auto", lossName = "match_trajectory", modeName = "native", params = "mu";
+	int steps = int(g_sess->steps());
+	LbfgsbParams prm;
+	prm.m = 10;
+	prm.delta = 1e-3;
+	prm.max_linesearch = 20;
+	std::istringstream ss(spec);
+	std::string tok;
+	while (ss >> tok) {
+		const size_t eq = tok.find('=');
+		if (eq == std::string::npos) {
+			return text("FAIL: spec wants key=value, got " + tok);
+		}
+		const std::string k = tok.substr(0, eq), v = tok.substr(eq + 1);
+		if (k == "params") {
+			params = v;
+		} else if (k == "loss") {
+			lossName = v;
+		} else if (k == "mode") {
+			modeName = v;
+		} else if (k == "steps") {
+			steps = std::atoi(v.c_str());
+		} else if (k == "vec") {
+			vecName = v;
+		} else {
+			lbkv += k + " " + v + " ";
+		}
+	}
+	if (!prm.parse(lbkv, err)) {
+		return text("FAIL: " + err);
+	}
+	prm.max_iterations = max_iter > 0 ? max_iter : 0;
+	auto o = std::make_unique<DrapeOpt>();
+	{
+		std::istringstream ps(params);
+		std::string p;
+		while (std::getline(ps, p, ',')) {
+			if (p != "mu" && p != "kTri" && p != "kBend" && p != "kAttach" && p != "density") {
+				return text("FAIL: params are mu, kTri, kBend, kAttach, density; got " + p);
+			}
+			o->params.push_back(p);
+		}
+	}
+	if (lossName == "match_trajectory") {
+		o->loss = DrapeLoss::MatchTrajectory;
+	} else if (lossName == "target_points") {
+		o->loss = DrapeLoss::TargetPoints;
+	} else {
+		return text("FAIL: loss match_trajectory | target_points");
+	}
+	if (modeName == "native") {
+		o->mode = DrapeMode::Native;
+	} else if (modeName == "step") {
+		o->mode = DrapeMode::Step;
+	} else if (modeName == "unrolled") {
+		o->mode = DrapeMode::Unrolled;
+	} else {
+		return text("FAIL: mode native | step | unrolled");
+	}
+	if (steps <= 0) {
+		return text("FAIL: steps=N (no frames recorded to take the count from)");
+	}
+	o->steps = steps;
+	const size_t n = o->params.size();
+	std::vector<float> x0 = x0_a.fetch(), lb = lb_a.fetch(), ub = ub_a.fetch();
+	if (n == 0 || x0.size() != n || (!lb.empty() && lb.size() != n) || (!ub.empty() && ub.size() != n)) {
+		return text("FAIL: x0 (and lb, ub if given) need one value per parameter");
+	}
+	if (lb.empty()) {
+		lb.assign(n, -INFINITY);
+	}
+	if (ub.empty()) {
+		ub.assign(n, INFINITY);
+	}
+	// A handful of parameters: auto is the CPU vector backend (the L-BFGS-B
+	// crossover is in gates/5-drape/lbfgsb; rd pays a submit per phase).
+	o->vec = make_lbfgsb_vec(vecName == "auto" ? "cpu" : vecName, g_dev, err);
+	if (!o->vec) {
+		return text("FAIL: " + err);
+	}
+	o->drv = std::make_unique<Lbfgsb>(*o->vec);
+	if (g_opt && g_opt->pending()) {
+		g_opt_parked.push_back(std::move(g_opt));
+		g_opt_parked_frame = process_frame();
+	}
+	g_opt = std::move(o);
+	g_opt->t0 = g_sess->now_us;
+	g_opt->log = "optimize " + spec + " | " + prm.dump() + "\n";
+	const Lbfgsb::Status s = g_opt->drv->start(uint32_t(n), x0.data(), lb.data(), ub.data(), prm);
+	g_q.push([s]() { opt_handle(s); });
+	g_opt_last = true;
+	return text("QUEUED optimize " + params + " on " + g_sess->backend() + " (vec " + g_opt->vec->name() + ")");
+}
+
+static Variant drape_optimize_result() {
+	if (!g_opt) {
+		return text("no optimize");
+	}
+	return text((g_opt->done ? g_opt->head : std::string("RUNNING")) + "\n" + g_opt->log);
+}
+
+// Hand the next drape job a data file (the Gate 5 oracle: comp_NN, prob_*,
+// trace_*); key "clear" drops them all.
+static Variant drape_job_data(String key_s, String text_s) {
+	const std::string key = key_s.utf8();
+	auto &d = lbfgsb_job_data();
+	if (key == "clear") {
+		d.clear();
+		return text("CLEARED");
+	}
+	d[key] = text_s.utf8();
+	return text("DATA " + key + " " + std::to_string(d[key].size()) + " bytes, " + std::to_string(d.size()) + " keys");
 }
 
 // --- the drape jobs (Gate 5): one at a time, like the avbd jobs ---------------------
@@ -503,7 +820,8 @@ static Variant rd_close() {
 	const int64_t f = process_frame();
 	const bool inflight = (g_job && g_job->pending()) || (!g_parked.empty() && f == g_parked_frame) ||
 			(g_djob && g_djob->pending()) || (!g_djob_parked.empty() && f == g_djob_parked_frame) ||
-			(g_sess && g_sess->pending()) || (!g_sess_parked.empty() && f == g_sess_parked_frame);
+			(g_sess && g_sess->pending()) || (!g_sess_parked.empty() && f == g_sess_parked_frame) || opt_pending() ||
+			(!g_opt_parked.empty() && f == g_opt_parked_frame);
 	if (inflight) {
 		return text("BUSY: a submit is in flight; tick the job to its verdict and close on a later frame");
 	}
@@ -514,6 +832,8 @@ static Variant rd_close() {
 	g_sess_parked.clear();
 	g_sess.reset();
 	g_q = jobs::StageQueue();
+	g_opt_parked.clear();
+	g_opt.reset();
 	const int64_t slots = g_dev.permanent_slots();
 	const bool was_open = g_dev.ok();
 	g_dev.close();
@@ -553,6 +873,12 @@ int main() {
 	ADD_API_FUNCTION(drape_frame, "PackedFloat32Array", "int i", "Frame i: x0, then each step's predictor");
 	ADD_API_FUNCTION(drape_faces, "PackedInt32Array", "", "The scene's triangles");
 	ADD_API_FUNCTION(drape_result, "String", "", "The last forward/backward result, the config and the scene");
+	ADD_API_FUNCTION(drape_queue_optimize, "String",
+			"String spec, PackedFloat32Array x0, PackedFloat32Array lb, PackedFloat32Array ub, int max_iter",
+			"Queue L-BFGS-B over session parameters (spec: params=mu loss= mode= steps= vec= m= delta= ...)");
+	ADD_API_FUNCTION(drape_optimize_result, "String", "", "The optimize verdict and its iterates");
+	ADD_API_FUNCTION(drape_job_data, "String", "String key, String text",
+			"Hand the drape jobs a data file (Gate 5 oracle: comp_NN, prob_*, trace_*); key clear drops all");
 	ADD_API_FUNCTION(drape_job_start, "String", "String name, String backend, String args",
 			"Start a Gate 5 drape job on cpu, rd or auto; then tick it once per frame");
 	ADD_API_FUNCTION(drape_job_tick, "String", "int host_us", "Advance the drape job one frame; RUNNING k/N, then PASS or FAIL");

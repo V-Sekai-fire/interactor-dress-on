@@ -56,6 +56,19 @@ abstract: >-
   per-type aggregation of AvbdBackwardShim.cpp. The step and unrolled modes
   are new: they recompute each step and chain through contact, friction and
   self-collision.
+
+
+  lbfgsb.*: LBFGSpp 0.3.0's LBFGSBSolver::minimize (LBFGSB.h: force_bounds,
+  the initial Cauchy direction, the pathological-direction reset, the
+  gradient, delta and iteration tests) and LineSearchMoreThuente
+  (LineSearchMoreThuente.h: the bracket update, step_selection with its
+  cubic and quadratic minimizers, the step_max and max_linesearch exits),
+  as scalar control flow in reverse communication. Every vector and matrix
+  operation is a Lean-emitted kernel (kernels/drape) through vec_cpu /
+  vec_rd. Adapted: float32 vectors with double scalars; x_lo and grad_lo
+  are copies (XLO/GLO) instead of swaps; a non-positive pivot in lb_compact's
+  Cholesky resets the BFGS memory, as LBFGSpp does on a pathological
+  direction; g.d at a trial point is a device dot.
 type: software
 authors:
   - name: V-Sekai-fire
@@ -65,6 +78,13 @@ license:
   - Apache-2.0
   - MIT
 references:
+  - type: software
+    title: LBFGSpp (LBFGSB.h, LineSearchMoreThuente.h; v0.3.0)
+    authors:
+      - name: Yixuan Qiu
+    repository-code: https://github.com/V-Sekai-fire/interactor-aria-lbfgspp
+    commit: 10086b6b2022802d7942ba16842c43063b3cff91
+    license: MIT
   - type: software
     title: cloth-dynamics-standalone (DiffCloth on AVBD; Simulation.cpp, Primitive.cpp, AvbdBackwardShim.cpp)
     authors:

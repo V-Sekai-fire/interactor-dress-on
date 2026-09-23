@@ -215,3 +215,36 @@ func drape_job_frame(i: int = 0) -> PackedFloat32Array:
 
 func drape_job_names() -> String:
 	return _dv("drape_job_names")
+
+# L-BFGS-B over the session's parameters (drape.elf's drape_queue_optimize):
+# spec "params=mu[,kTri,...] loss=match_trajectory mode=native steps=N vec=cpu
+# m=10 delta=1e-3 ...", one x0/lb/ub value per parameter, max_iter 0 = to
+# convergence. Poll drape_status, then drape_optimize_result.
+func drape_optimize(spec: String = "params=mu mode=native", x0: PackedFloat32Array = PackedFloat32Array([0.5]),
+		lb: PackedFloat32Array = PackedFloat32Array([0.01]), ub: PackedFloat32Array = PackedFloat32Array([1.0]),
+		max_iter: int = 10) -> String:
+	var r := _dv("drape_queue_optimize", [spec, x0, lb, ub, max_iter])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+	return r
+
+func drape_optimize_result() -> String:
+	return _dv("drape_optimize_result")
+
+# Hand the drape jobs a data file by key ("clear" drops them all).
+func drape_job_data(key: String = "clear", text: String = "") -> String:
+	return _dv("drape_job_data", [key, text])
+
+# The Gate 5 L-BFGS-B oracle (gates/5-drape/oracle) into drape.elf, for the
+# jobs lbfgsb_components and lbfgsb_problems.
+func lbfgsb_load_oracle() -> String:
+	var root := ProjectSettings.globalize_path("res://../gates/5-drape/oracle/")
+	var r := drape_job_data("clear", "")
+	for sub in [["components", ""], ["problems", "prob_"], ["traces", "trace_"]]:
+		var d := DirAccess.open(root + sub[0])
+		if d == null:
+			return "FAIL: no " + root + sub[0]
+		for f in d.get_files():
+			if f.ends_with(".txt"):
+				r = drape_job_data(sub[1] + f.get_basename(), FileAccess.get_file_as_string(root + sub[0] + "/" + f))
+	return r

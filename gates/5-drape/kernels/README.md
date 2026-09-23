@@ -18,6 +18,10 @@ on the GPU; the SPIR-V is only validated here (L1).
   - `slangc -target spirv`: 11 kernels. [`l1_spirv_val.log`](l1_spirv_val.log)
     shows all 11 valid under `spirv-val --target-env vulkan1.2`, using only
     the `Shader` capability (no Float64).
+    Since Task B the SPIR-V is compiled with `-fp-mode precise`, which marks
+    every float op `NoContraction` (counts in the log). Without it the GPU
+    could fuse ops into FMAs, which moved comp_03's Cauchy point to 1.4e-4
+    in the guest (gates/5-drape/lbfgsb).
   - `slangc -target cpp`: 11 kernels.
   - `tests/drape_kernels/build.sh` also compiles the host test's
     translation unit for riscv64, object only.

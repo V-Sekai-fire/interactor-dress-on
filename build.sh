@@ -51,6 +51,14 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh" --no-emit
 fi
 
+# The drape (L-BFGS-B) kernels, the same way: committed Slang and cpp, SPIR-V
+# embedded into $BUILD/drape_kernels.inc. DRAPE_EMIT=1 re-emits from lean/.
+if [ "${DRAPE_EMIT:-0}" = 1 ]; then
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/drape/gen.sh"
+else
+	BUILD_DIR="$BUILD" bash "$HERE/kernels/drape/gen.sh" --no-emit
+fi
+
 if [ ! -f "$BUILD/build.ninja" ]; then
 	cmake -S "$HERE" -B "$BUILD" -G Ninja \
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \

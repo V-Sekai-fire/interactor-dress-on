@@ -27,6 +27,12 @@
 # Results: gates/3-ggml-rd/ops/results.txt (results-headless.txt headless),
 # each run's full output in run-<name>.log beside it; the last line is
 # RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
+#
+# User arguments (after `--`) let an op family run its own ops without
+# touching the lead's evidence:
+#   --ops=SILU,GELU      the ops of ops_main / ops_barrier_all (default OPS)
+#   --fault-ops=SILU     the ops of the fault control (default ADD)
+#   --out=<name>         results in gates/3-ggml-rd/ops/<name>/ (default ops/)
 extends SceneTree
 
 const InferHost := preload("res://infer_host.gd")
@@ -51,6 +57,9 @@ var _cur = null
 var _run_t0 := 0
 var _headless := false
 var _results := {}
+var _ops := OPS
+var _fault_ops := "ADD"
+var _out_dir := OUT_DIR
 
 func _clean(t: String) -> String:
 	var root := ProjectSettings.globalize_path("res://").trim_suffix("/")
@@ -76,13 +85,20 @@ func _strip_ansi(t: String) -> String:
 
 func _initialize() -> void:
 	_t0 = Time.get_ticks_msec()
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--ops="):
+			_ops = a.substr(6)
+		elif a.begins_with("--fault-ops="):
+			_fault_ops = a.substr(12)
+		elif a.begins_with("--out="):
+			_out_dir = OUT_DIR + a.substr(6) + "/"
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	_rd = RenderingServer.create_local_rendering_device()
 	_headless = _rd == null
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var name := "results-headless.txt" if _headless else "results.txt"
-	_out = FileAccess.open(ProjectSettings.globalize_path(OUT_DIR + name), FileAccess.WRITE)
+	_out = FileAccess.open(ProjectSettings.globalize_path(_out_dir + name), FileAccess.WRITE)
 	_say("# Gate 3 G3.ops, %s, Godot %s, %s, %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _headless else RenderingServer.get_video_adapter_name()])
@@ -114,15 +130,15 @@ func _initialize() -> void:
 			["probe_files", "probe", "files", probe_file, ""],
 			["probe_alias_rw", "probe", "alias", "rw", ""],
 			["probe_alias_ro_control", "probe", "alias", "ro", ""],
-			["ops_main", "ops", "-o %s -b RD0" % OPS, ""],
-			["ops_barrier_all", "ops", "-o %s -b RD0" % OPS, "GGML_RD_BARRIER_ALL=1"],
-			["ops_fault", "ops", "-o ADD -b RD0", "GGML_RD_FAULT=1"],
+			["ops_main", "ops", "-o %s -b RD0" % _ops, ""],
+			["ops_barrier_all", "ops", "-o %s -b RD0" % _ops, "GGML_RD_BARRIER_ALL=1"],
+			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 		]
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
 func _write_probe_file() -> String:
-	var path := ProjectSettings.globalize_path(OUT_DIR + "upload_probe.f32")
+	var path := ProjectSettings.globalize_path(_out_dir + "upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	for i in 4096:
 		var v := 0.5 * i - 7.25
@@ -171,7 +187,7 @@ func _end_run(st: String) -> void:
 	var name: String = _cur[0]
 	var ms := Time.get_ticks_msec() - _run_t0
 	var text := _strip_ansi(str(_sb.vmcall("ggml_output")))
-	var lf := FileAccess.open(ProjectSettings.globalize_path(OUT_DIR + "run-%s.log" % name), FileAccess.WRITE)
+	var lf := FileAccess.open(ProjectSettings.globalize_path(_out_dir + "run-%s.log" % name), FileAccess.WRITE)
 	lf.store_string(_clean(text))
 	lf.close()
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
@@ -254,7 +270,7 @@ func _checks() -> void:
 		var r = _results.get(n, {})
 		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
 				and str(r.get("backend_line", "")).ends_with("OK"),
-				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, OPS, r.get("ok", 0),
+				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, _ops, r.get("ok", 0),
 				r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
 	var m = _results.get("ops_main", {})
 	var b = _results.get("ops_barrier_all", {})
@@ -262,8 +278,8 @@ func _checks() -> void:
 			"barrier elision and barrier-after-every-dispatch pass the same cases")
 	var f = _results.get("ops_fault", {})
 	_verdict(f.get("state", "") == "done" and f.get("fail", 0) > 0 and f.get("ok", -1) == 0,
-			"control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case: FAIL=%d OK=%d (%s)" % [
-			f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
+			"control: GGML_RD_FAULT=1 (a source read one element off) fails every %s case: FAIL=%d OK=%d (%s)" % [
+			_fault_ops, f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
 	var re := RegEx.new()
 	re.compile("rule4_same_frame_syncs=(\\d+)")

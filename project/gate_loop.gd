@@ -21,7 +21,10 @@
 #                          the pen bridge; xr waits for SketchTool strokes
 #   --drop-seam            control: must end FAILED(MESH: ...)
 #   --push-vertex          control: must end FAILED(CHECK: INTERSECTS ...)
-#   --drape-steps=N --mesh-edge=m --drape-backend=cpu|rd|auto
+#   --drape-steps=N --mesh-edge=m --drape-backend=cpu|rd|auto --drape-scale=s
+#   --no-capsules          drape with no body collider (a control for the drape)
+#   --fit-from=<obj>       with fit as a fixture: these vertices are the fit
+#                          (every run that fits writes <out>.fitted.obj)
 #
 # PASS (loop): pen copy == vendor/xr-grid; 2 cycles and 2 patches; the mesh
 # is one tube (2 boundary loops); fit ran to done; fit_check_intersections
@@ -150,6 +153,12 @@ func _opts() -> Dictionary:
 		o.mesh_edge = float(_arg("mesh-edge"))
 	if _args.has("drape-backend"):
 		o.drape_backend = _arg("drape-backend")
+	if _args.has("drape-scale"):
+		o.drape_scale = float(_arg("drape-scale"))
+	if _args.has("no-capsules"):
+		o.drape_capsules = false
+	if _args.has("fit-from"):
+		o.fit_from = _arg("fit-from")
 	if _arg("gate", "loop") == "pen":
 		o.stop_after = "MESH"
 	return o
@@ -160,14 +169,19 @@ func _process(_dt: float) -> bool:
 		return false
 	if (Time.get_ticks_msec() - _t0) / 1000.0 > _wall_s:
 		_say("TIMEOUT: wall clock %.0f s in %s: %s" % [_wall_s, _phase,
-				_main.dress_on_status() if _main != null and _main.pipeline != null else "-"])
+				_main.dress_on_status() if _main != null and _main.get("pipeline") != null else "-"])
 		_finish("FAIL (timeout)")
 		return false
 	match _phase:
 		"wait":
-			if _frames < 5 or _main.pipeline == null:
+			if _frames < 5:
+				return false
+			if _main.get("pipeline") == null:
+				_say("FAIL: Main has no pipeline (a script did not parse; see the log)")
+				_finish("FAIL")
 				return false
 			_main.pipeline.state_changed.connect(_on_state)
+			_main.pipeline.progress.connect(func(t: String): _say("      " + t))
 			_say("stages: " + _main.dress_on_stages())
 			var w = _main.get_node_or_null("World")
 			_say("view: %s" % ("XR " + str(w.xr_runtime) if w != null and w.xr_on else "flat"))
@@ -227,6 +241,17 @@ func _evaluate() -> void:
 	var img: Image = (_spectator if _spectator != null else root).get_texture().get_image()
 	if img != null and img.save_png(png) == OK:
 		shot = "%s (%dx%d)" % [png.get_file(), img.get_width(), img.get_height()]
+	if p.data.has("fitted") and p.data.has("garment") and not p.data.get("fit_fixture", false):
+		var fo := FileAccess.open(_out_path.get_basename() + ".fitted.obj", FileAccess.WRITE)
+		if fo != null:
+			var fv: PackedFloat32Array = p.data.fitted
+			var ft: PackedInt32Array = p.data.garment.triangles
+			fo.store_line("# fit.elf result (body space) of Gate 8 run %s" % _out_path.get_file())
+			for i in range(0, fv.size(), 3):
+				fo.store_line("v %.9f %.9f %.9f" % [fv[i], fv[i + 1], fv[i + 2]]) # GDScript has no %g
+			for i in range(0, ft.size(), 3):
+				fo.store_line("f %d %d %d" % [ft[i] + 1, ft[i + 1] + 1, ft[i + 2] + 1])
+			fo.close()
 	var js := FileAccess.open(_out_path.get_basename() + ".json", FileAccess.WRITE)
 	if js != null:
 		js.store_string(JSON.stringify(s, "  "))
@@ -302,11 +327,12 @@ func _finish(verdict: String) -> void:
 		_watch.wait_to_finish()
 		_watch = null
 	var busy := []
-	if _main != null:
+	var ok_main: bool = _main != null and _main.get("pipeline") != null
+	if ok_main:
 		for stg in [_main.curvenet, _main.fit, _main.drape]:
 			if stg != null and stg.busy():
 				busy.append(stg.busy_text())
-	if _main != null and busy.is_empty() and _main.drape != null and _main.drape.sandbox != null 			and _main.drape.drape_api_missing() == "":
+	if ok_main and busy.is_empty() and _main.drape.sandbox != null and _main.drape.drape_api_missing() == "":
 		_say("drape rd_close: " + str(_main.drape.call_now("rd_close")))
 	if _out != null:
 		_out.close()

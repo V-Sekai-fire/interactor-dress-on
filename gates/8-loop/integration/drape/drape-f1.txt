@@ -1,0 +1,25 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T00:50:57
+args: --gate=loop --out=../gates/8-loop/drape-f1.txt --wallclock=300 --allow-fixture=infer,rig --force-fixture=curvenet,fit --fit-from=../gates/8-loop/fitdrape3.fitted.obj --drape-steps=1
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture=curvenet,fit pen=scripted
+STATE INFER              107 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 12 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR              43 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fixtures/foxgirl/garment.obj (LCL_Skirt_DressEvening_003)
+STATE MESH                24 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE garment | 2682 v 5220 f 2 loops
+STATE FIT_BEGIN           27 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fit: vertices from fitdrape3.fitted.obj
+STATE FIT_READ             7 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fit
+STATE CHECK                2 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE check skipped
+STATE DRAPE              416 ms  vm     377.5 ms  heap 1.8 MiB  frames 1  QUEUED forward 1 on rd | 14 capsules, 44 pins, scale 10.0
+STATE DRAPE_COLLECT      106 ms  vm     102.8 ms  heap 2.1 MiB  frames 3  FAILED drape positions: 8046 of 8046 floats, finite=false (IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=104.0 ms/step=103.974)
+=> FAILED DRAPE_COLLECT: drape positions: 8046 of 8046 floats, finite=false (IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=104.0 ms/step=103.974)
+FIXTURE: infer,rig,curvenet,fit
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED DRAPE_COLLECT: drape positions: 8046 of 8046 floats, finite=false (IDLE FAIL forward rd steps=1 (+1 of 1) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=104.0 ms/step=103.974)
+PASS screenshot: drape-f1.png (1152x648)
+NOT MEASURED: cycles/patches (curvenet FIXTURE); fit done + intersections (fit FIXTURE)
+wall 2.0 s, frames 21
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0

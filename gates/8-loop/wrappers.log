@@ -14,9 +14,9 @@ node path: /root/Main
 PASS wrappers: 49 old + 51 new on /root/Main, missing []
 PASS rd_open -> ok
 PASS rd_probe -> PASS: GPU compute reached from the guest (device held from an earlier vmcall)
-PASS rd_bench -> nd=1 ns=1 barrier=true host_us=1397 OK value=1 expected=1 setup_us=658 loop_us=392 read_us=241 us_per_dispatch=392.0 us_per_submit=392.0 | bind_pipe=5 bind_set=4 dispatch=884763268 barrier=0 submit=370
+PASS rd_bench -> nd=1 ns=1 barrier=true host_us=1275 OK value=1 expected=1 setup_us=616 loop_us=448 read_us=117 us_per_dispatch=448.0 us_per_submit=448.0 | bind_pipe=5 bind_set=3 dispatch=176093665 barrier=0 submit=427
 PASS rd_close -> closed
-PASS avbd_fixture -> host_us=470 PASS cpu: PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
+PASS avbd_fixture -> host_us=495 PASS cpu: PASS four_vertex_all_constraints (max_abs_diff=0 v0=(0.875,2.14286,1.71429)); PASS four_vertex_perturbed (max_abs_diff=0.6 v0=(0.5,2.14286,1.71429), expected to differ); PASS two_vertex_spring (v0.x=0.0434783 pinned, v1.x=1.6 in (1,2)); 
 PASS avbd_job_names -> fixture backward_smoke gradcheck stategrad gradcheck_duals self_collision bench_fwd bench_bwd two_vertex_bwd two_vertex_bwd_nopad
 PASS rd_rule4 -> same_frame_syncs=0 syncs=0 submits=0
 PASS p_fenv -> set_up=0 get_up=3(FE_UPWARD=3) set_dn=0 get_dn=2(FE_DOWNWARD=2) up=3fd5555555555555 dn=3fd5555555555555 nearest=3fd5555555555555 upf=3eaaaaab dnf=3eaaaaab double_differs=no float_differs=no

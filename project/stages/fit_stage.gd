@@ -184,7 +184,7 @@ func fit_sdf() -> String:
 		hi = maxf(hi, x)
 		if x < 0.0:
 			inside += 1
-	return "sdf at %d garment vertices: min %.4g max %.4g voxels, %d inside" % [n, lo, hi, inside]
+	return "sdf at %d garment vertices: min %.4f max %.4f voxels, %d inside" % [n, lo, hi, inside]
 
 func fit_probe_io() -> String:
 	return _fit_now("fit_probe", ["io"])

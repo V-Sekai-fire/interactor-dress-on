@@ -9,7 +9,7 @@
       "fixture": true,
       "frames": 1,
       "heap": -1,
-      "ms": 112,
+      "ms": 125,
       "note": "FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f",
       "state": "INFER",
       "vm_ms": 0.0
@@ -34,5 +34,5 @@
     }
   ],
   "state": "FAILED",
-  "wall_s": 0.135
+  "wall_s": 0.148
 }

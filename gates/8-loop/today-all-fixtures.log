@@ -1,7 +1,7 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
 
-Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-22T22:39:29
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T00:55:51
 args: --gate=loop --out=../gates/8-loop/today-all-fixtures.txt --wallclock=120 --allow-fixture=infer,rig,curvenet,fit,drape
 XR_RUNTIME_JSON: (unset)
 PEN_SYNC: PASS 32 files identical to vendor/xr-grid
@@ -18,21 +18,21 @@ ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds 
 stages: infer: infer.elf not found (not built or not imported) | curvenet: curvenet.elf not found (not built or not imported) | fit: fit.elf not found (not built or not imported) | drape: drape.elf has no drape_open() (built before cut-5)
 view: flat
 run: STARTED allow_fixture=infer,rig,curvenet,fit,drape force_fixture= pen=scripted
-STATE INFER              109 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
-STATE RIG                 12 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-STATE AUTHOR              49 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/garment.obj (LCL_Skirt_DressEvening_003)
-STATE MESH                31 ms  vm       0.0 ms  heap -  frames 1  FIXTURE garment | 2682 v 5220 f 2 loops
-STATE FIT_BEGIN            1 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fit: similarity from the garment skeleton to the body skeleton
+STATE INFER              132 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 13 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR              53 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/garment.obj (LCL_Skirt_DressEvening_003)
+STATE MESH                33 ms  vm       0.0 ms  heap -  frames 1  FIXTURE garment | 2682 v 5220 f 2 loops
+STATE FIT_BEGIN            2 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fit: similarity from the garment skeleton to the body skeleton
 STATE FIT_READ            10 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fit
 STATE CHECK                1 ms  vm       0.0 ms  heap -  frames 1  FIXTURE check skipped
-STATE DRAPE               43 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE drape skipped; the fitted garment is shown undraped
+STATE DRAPE               39 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE drape skipped; the fitted garment is shown undraped
 => DONE 
 FIXTURE: infer,rig,curvenet,fit,drape
 PASS pen_sync: PASS 32 files identical to vendor/xr-grid
 PASS pipeline: DONE 
 PASS screenshot: today-all-fixtures.png (1152x648)
 NOT MEASURED: cycles/patches (curvenet FIXTURE); fit done + intersections (fit FIXTURE); drape steps (drape FIXTURE)
-wall 1.0 s, frames 18
+wall 1.1 s, frames 18
 RESULT: INCOMPLETE
 WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
    at: cleanup (core/object/object.cpp:2536)

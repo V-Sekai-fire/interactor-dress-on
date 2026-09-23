@@ -1,0 +1,26 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T00:51:24
+args: --gate=loop --out=../gates/8-loop/drape-fs1c.txt --wallclock=300 --allow-fixture=infer,rig --force-fixture=curvenet,fit --fit-from=../gates/8-loop/fitdrape3.fitted.obj --drape-scale=1
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture=curvenet,fit pen=scripted
+STATE INFER              106 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 11 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR              46 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fixtures/foxgirl/garment.obj (LCL_Skirt_DressEvening_003)
+STATE MESH                30 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE garment | 2682 v 5220 f 2 loops
+STATE FIT_BEGIN           31 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fit: vertices from fitdrape3.fitted.obj
+STATE FIT_READ             9 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fit
+STATE CHECK                2 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE check skipped
+STATE DRAPE              866 ms  vm     831.0 ms  heap 1.8 MiB  frames 1  QUEUED forward 100 on rd | 14 capsules, 44 pins, scale 1.0
+STATE DRAPE_COLLECT     4225 ms  vm    4054.8 ms  heap 101.6 MiB  frames 201  IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=0.288435 friction_events=364932 projections=27731 self_pushes=0 wall_ms=4213.8 ms/step=42.138 | 2682 finite vertices after RUNNING 299/300
+=> DONE 
+FIXTURE: infer,rig,curvenet,fit
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS pipeline: DONE 
+PASS drape: 100 steps queued, { "status": "IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=0.288435 friction_events=364932 projections=27731 self_pushes=0 wall_ms=4213.8 ms/step=42.138", "last_running": "RUNNING 299/300", "ticks": 201, "vertices": 2682, "finite": true }
+PASS screenshot: drape-fs1c.png (1152x648)
+NOT MEASURED: cycles/patches (curvenet FIXTURE); fit done + intersections (fit FIXTURE)
+wall 6.6 s, frames 219
+RESULT: INCOMPLETE
+drape rd_close: CLOSED device=freed permanent_slots=0

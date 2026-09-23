@@ -30,12 +30,14 @@ extends Node
 const PenSource := preload("res://xr/pen_source_scripted.gd")
 const MeshTopo := preload("res://util/mesh_topo.gd")
 const MeshWire := preload("res://util/mesh_wire.gd")
+const ObjIO := preload("res://util/obj_io.gd")
 
 signal state_changed(state: String, record: Dictionary)
 signal body_ready(v: PackedFloat32Array, f: PackedInt32Array)
 signal skeleton_ready(joints: PackedFloat32Array, bones: PackedInt32Array)
 signal strokes_ready(strokes: Array)
 signal garment_ready(v: PackedFloat32Array, f: PackedInt32Array, label: String)
+signal progress(text: String) # a line within a state (each fit phase)
 
 const TERMINAL := ["IDLE", "DONE", "FAILED"]
 const PEN_EVENTS_PER_FRAME := 64
@@ -73,8 +75,12 @@ const DEFAULTS := {
 	"weld_eps": 1e-5,
 	"drape_steps": 100,
 	"drape_backend": "auto",
-	"drape_scale": 10.0,      # body metres -> drape units (cut-5's capsule has DiffCloth's fixed 0.1 contact offset)
+	"drape_scale": 5.0,       # body metres -> drape units: cut-5's capsule has DiffCloth's fixed 0.1-unit
+	                          # contact offset (2 cm at 5); at 10 the rd backend gives NaN on step 1 for
+	                          # the fitted LCL skirt (cpu stays finite), at 5 and below it is finite
 	"drape_mu": 0.3,
+	"drape_capsules": true,   # false: no body collider at all (a control for the drape itself)
+	"fit_from": "",           # with fit as a fixture: an OBJ whose vertices are the fitted garment (a saved fit)
 	"stop_after": "",         # "MESH" for --gate=pen
 }
 
@@ -140,7 +146,7 @@ func summary() -> Dictionary:
 	var d := {"state": state, "reason": reason, "fixtures": fixtures, "records": records,
 			"wall_s": (Time.get_ticks_msec() - _run_t0) / 1000.0}
 	for k in ["counts", "rings", "min_clearance", "mesh", "fit_begin", "fit_phases", "check", "check_control",
-			"drape", "capsules", "pins"]:
+			"drape", "drape_input", "drape_setup", "capsules", "pins"]:
 		if data.has(k):
 			d[k] = data[k]
 	return d
@@ -398,8 +404,16 @@ func _fit_begin(first: bool) -> void:
 		if m == "":
 			return
 		if m == "fixture":
-			data.fitted = _similarity_retarget(g.vertices, g.source_joints, data.joints)
 			data.fit_fixture = true
+			if str(opts.fit_from) != "":
+				var fo := ObjIO.read(str(opts.fit_from))
+				if fo.has("error") or fo.v.size() != g.vertices.size():
+					_fail("fit_from %s: %s" % [opts.fit_from, fo.get("error", "%d floats, the garment %d" % [fo.v.size(), g.vertices.size()])])
+					return
+				data.fitted = fo.v
+				_goto("FIT_READ", "FIXTURE fit: vertices from %s" % str(opts.fit_from).get_file())
+				return
+			data.fitted = _similarity_retarget(g.vertices, g.source_joints, data.joints)
 			_goto("FIT_READ", "FIXTURE fit: similarity from the garment skeleton to the body skeleton")
 			return
 		var cfg: String = infer.fit_config_text()
@@ -433,6 +447,7 @@ func _fit_run(first: bool) -> void:
 			return
 		var r := str(p.result)
 		data.fit_phases.append("host_ms=%d %s" % [p.host_ms, r])
+		progress.emit("fit_step: " + data.fit_phases[-1])
 		if r.begins_with("FAIL"):
 			_fail(r)
 			return
@@ -514,6 +529,7 @@ func _drape() -> void:
 	var pins: PackedInt32Array = loops[wi] if wi >= 0 else PackedInt32Array()
 	data.pins = {"loop": wi, "count": pins.size(), "mean_y": MeshTopo.mean_y(fv, pins) if wi >= 0 else 0.0}
 	data.capsules = _capsules(data.body_v, data.joints, data.bones)
+	data.drape_input = MeshTopo.quality(fv, g.triangles)
 	if m == "fixture":
 		data.drape = "not run (drape FIXTURE)"
 		_goto("DONE", "FIXTURE drape skipped; the fitted garment is shown undraped")
@@ -523,7 +539,7 @@ func _drape() -> void:
 		drape.drape_open(opts.drape_backend),
 		drape.drape_primitive("clear", PackedFloat32Array()),
 	]
-	for c in data.capsules:
+	for c in (data.capsules if opts.drape_capsules else []):
 		var b: Vector3 = c.bottom * s
 		var ax: Vector3 = c.axis
 		steps.append(drape.drape_primitive("capsule", PackedFloat32Array([b.x, b.y, b.z, ax.x, ax.y, ax.z,

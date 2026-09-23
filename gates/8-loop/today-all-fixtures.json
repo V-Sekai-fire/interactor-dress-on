@@ -5,7 +5,7 @@
       "bottom": "(-0.000113, 0.952752, -0.027279)",
       "length": 0.0948842614889145,
       "median_skin": 0.0835514068603516,
-      "radius": 0.0735514068603516,
+      "radius": 0.0635514068603516,
       "vertices": 43
     },
     {
@@ -13,7 +13,7 @@
       "bottom": "(0.000069, 1.047043, -0.016683)",
       "length": 0.295857965946198,
       "median_skin": 0.140745639801025,
-      "radius": 0.130745639801025,
+      "radius": 0.120745639801025,
       "vertices": 2153
     },
     {
@@ -21,7 +21,7 @@
       "bottom": "(0.000069, 1.047043, -0.016683)",
       "length": 0.246696382761002,
       "median_skin": 0.0487118437886238,
-      "radius": 0.0387118437886238,
+      "radius": 0.0287118437886238,
       "vertices": 113
     },
     {
@@ -29,7 +29,7 @@
       "bottom": "(0.235667, 1.114168, -0.013297)",
       "length": 0.208976328372955,
       "median_skin": 0.0318985842168331,
-      "radius": 0.0218985842168331,
+      "radius": 0.0118985842168331,
       "vertices": 69
     },
     {
@@ -37,7 +37,7 @@
       "bottom": "(0.379585, 0.962856, -0.012785)",
       "length": 0.208825305104256,
       "median_skin": 0.103965312242508,
-      "radius": 0.0939653122425079,
+      "radius": 0.0839653122425079,
       "vertices": 546
     },
     {
@@ -45,7 +45,7 @@
       "bottom": "(0.000069, 1.047043, -0.016683)",
       "length": 0.244397073984146,
       "median_skin": 0.048517744988203,
-      "radius": 0.038517744988203,
+      "radius": 0.028517744988203,
       "vertices": 113
     },
     {
@@ -53,7 +53,7 @@
       "bottom": "(-0.231501, 1.114204, -0.013296)",
       "length": 0.209816068410873,
       "median_skin": 0.0313235633075237,
-      "radius": 0.0213235633075237,
+      "radius": 0.0113235633075237,
       "vertices": 74
     },
     {
@@ -61,7 +61,7 @@
       "bottom": "(-0.37479, 0.963851, -0.012553)",
       "length": 0.207697495818138,
       "median_skin": 0.103699199855328,
-      "radius": 0.0936991998553276,
+      "radius": 0.0836991998553276,
       "vertices": 542
     },
     {
@@ -69,7 +69,7 @@
       "bottom": "(0.097131, 0.881631, -0.027191)",
       "length": 0.120476245880127,
       "median_skin": 0.0936788320541382,
-      "radius": 0.0836788320541382,
+      "radius": 0.0736788320541382,
       "vertices": 87
     },
     {
@@ -77,7 +77,7 @@
       "bottom": "(0.133821, 0.52492, -0.029837)",
       "length": 0.35860288143158,
       "median_skin": 0.0810793191194534,
-      "radius": 0.0710793191194534,
+      "radius": 0.0610793191194534,
       "vertices": 136
     },
     {
@@ -85,7 +85,7 @@
       "bottom": "(0.175327, 0.033546, -0.038551)",
       "length": 0.493201464414597,
       "median_skin": 0.0499795079231262,
-      "radius": 0.0399795079231262,
+      "radius": 0.0299795079231262,
       "vertices": 520
     },
     {
@@ -93,7 +93,7 @@
       "bottom": "(-0.098774, 0.881613, -0.027102)",
       "length": 0.12163395434618,
       "median_skin": 0.0893421098589897,
-      "radius": 0.0793421098589897,
+      "radius": 0.0693421098589897,
       "vertices": 80
     },
     {
@@ -101,7 +101,7 @@
       "bottom": "(-0.135558, 0.524924, -0.029774)",
       "length": 0.35859027504921,
       "median_skin": 0.0803621858358383,
-      "radius": 0.0703621858358383,
+      "radius": 0.0603621858358383,
       "vertices": 132
     },
     {
@@ -109,7 +109,7 @@
       "bottom": "(-0.176781, 0.033617, -0.038489)",
       "length": 0.49311089515686,
       "median_skin": 0.0496953539550304,
-      "radius": 0.0396953539550304,
+      "radius": 0.0296953539550304,
       "vertices": 520
     }
   ],
@@ -118,6 +118,11 @@
     "fixture": true
   },
   "drape": "not run (drape FIXTURE)",
+  "drape_input": {
+    "degenerate": 0,
+    "min_area": 0.0000139425983434194,
+    "min_edge": 0.00408144481480122
+  },
   "fixtures": [
     "infer",
     "rig",
@@ -143,7 +148,7 @@
       "fixture": true,
       "frames": 1,
       "heap": -1,
-      "ms": 109,
+      "ms": 132,
       "note": "FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f",
       "state": "INFER",
       "vm_ms": 0.0
@@ -152,7 +157,7 @@
       "fixture": true,
       "frames": 1,
       "heap": -1,
-      "ms": 12,
+      "ms": 13,
       "note": "FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",
       "state": "RIG",
       "vm_ms": 0.0
@@ -161,7 +166,7 @@
       "fixture": true,
       "frames": 1,
       "heap": -1,
-      "ms": 49,
+      "ms": 53,
       "note": "FIXTURE fixtures/foxgirl/garment.obj (LCL_Skirt_DressEvening_003)",
       "state": "AUTHOR",
       "vm_ms": 0.0
@@ -170,7 +175,7 @@
       "fixture": true,
       "frames": 1,
       "heap": -1,
-      "ms": 31,
+      "ms": 33,
       "note": "FIXTURE garment | 2682 v 5220 f 2 loops",
       "state": "MESH",
       "vm_ms": 0.0
@@ -179,7 +184,7 @@
       "fixture": true,
       "frames": 1,
       "heap": -1,
-      "ms": 1,
+      "ms": 2,
       "note": "FIXTURE fit: similarity from the garment skeleton to the body skeleton",
       "state": "FIT_BEGIN",
       "vm_ms": 0.0
@@ -206,12 +211,12 @@
       "fixture": true,
       "frames": 1,
       "heap": 74736,
-      "ms": 43,
+      "ms": 39,
       "note": "FIXTURE drape skipped; the fitted garment is shown undraped",
       "state": "DRAPE",
       "vm_ms": 0.0
     }
   ],
   "state": "DONE",
-  "wall_s": 0.273
+  "wall_s": 0.296
 }

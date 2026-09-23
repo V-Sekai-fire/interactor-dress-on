@@ -1,0 +1,30 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T00:05:03
+args: --gate=loop --out=../gates/8-loop/fitdrape3.txt --wallclock=3500 --allow-fixture=infer,rig --force-fixture=curvenet
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture=curvenet pen=scripted
+STATE INFER              118 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 12 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR              63 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE fixtures/foxgirl/garment.obj (LCL_Skirt_DressEvening_003)
+STATE MESH                34 ms  vm       0.0 ms  heap 0.1 MiB  frames 1  FIXTURE garment | 2682 v 5220 f 2 loops
+STATE FIT_BEGIN         4342 ms  vm    4337.9 ms  heap 11.3 MiB  frames 10372  OK begin: phases 4, target_scale 1.5276081186803152 center (-0.00084284095419036938, -1.5261948035249064, -0.0069841535617863361), source_scale 3.2005518338853047, io_attempts 0
+      fit_step: host_ms=1149940 OK phase 0 (substep 0, AL): newton 49 minimize 1 post_steps 50 energy 0.0020753864613707275 |grad| 0.454617 status 4 io_attempts 0
+      fit_step: host_ms=394747 OK phase 1 (substep 0, reduced): newton 44 minimize 1 post_steps 45 energy 0.00051051425334949991 |grad| 0.00829018 status 4 io_attempts 0
+      fit_step: host_ms=567780 OK phase 2 (substep 1, AL): newton 49 minimize 1 post_steps 50 energy 0.0015847683058810842 |grad| 0.659643 status 4 io_attempts 0
+      fit_step: host_ms=601761 OK phase 3 (substep 1, reduced): newton 66 minimize 1 post_steps 67 energy 0.0013345137800919919 |grad| 0.00767681 status 4 io_attempts 0
+STATE FIT_RUN        2714239 ms  vm 2714230.9 ms  heap 99.0 MiB  frames 5886809  4 phases | phase 4/4 done newton 208 energy 0.0013345137800919919 |grad| 0.00767681 status 4 io_attempts 0 io_total 0 heap_used 99.0 MiB heap_free 1539.4 MiB chunks 79247
+STATE FIT_READ             9 ms  vm       0.5 ms  heap 99.0 MiB  frames 1  2682 v
+STATE CHECK             1399 ms  vm    1397.3 ms  heap 99.0 MiB  frames 1  OK none | control (one vertex pushed inside): OK INTERSECTS edge (5332,7022) face (2056,1586,2613)
+STATE DRAPE              359 ms  vm     333.6 ms  heap 1.8 MiB  frames 1  QUEUED forward 100 on rd | 14 capsules, 44 pins, scale 10.0
+STATE DRAPE_COLLECT     3343 ms  vm    3190.2 ms  heap 20.4 MiB  frames 201  FAILED drape positions: 8046 of 8046 floats, finite=false (IDLE FAIL forward rd steps=100 (+100 of 100) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=3338.3 ms/step=33.383)
+=> FAILED DRAPE_COLLECT: drape positions: 8046 of 8046 floats, finite=false (IDLE FAIL forward rd steps=100 (+100 of 100) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=3338.3 ms/step=33.383)
+FIXTURE: infer,rig,curvenet
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED DRAPE_COLLECT: drape positions: 8046 of 8046 floats, finite=false (IDLE FAIL forward rd steps=100 (+100 of 100) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=3338.3 ms/step=33.383)
+PASS screenshot: fitdrape3.png (1152x648)
+NOT MEASURED: cycles/patches (curvenet FIXTURE)
+wall 2725.6 s, frames 5897399
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0

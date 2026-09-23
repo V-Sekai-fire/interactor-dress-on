@@ -4,8 +4,11 @@
 fixtures and the controls are in and tested; on this branch the loop stops
 at AUTHOR with `FAILED(AUTHOR: curvenet missing ...)`, as it must, because
 curvenet.elf (cut-4), fit.elf (cut-6) and the drape API (cut-5) are not
-merged yet. A pre-merge integration run against those branches' built ELFs
-found one blocker in cut-4 (below).**
+merged yet. A pre-merge run against those branches' built ELFs got past
+AUTHOR only with the curvenet fixture: then fit.elf fitted the LCL skirt to
+FoxGirl in 42 min (208 Newton iterations, reproducible to the last digit),
+the intersection check said `OK none` (its control `INTERSECTS`), and the
+drape ran 100 finite steps on rd. The blocker is in cut-4 (below).**
 
 ## Design
 
@@ -62,8 +65,9 @@ IDLE → INFER → RIG → AUTHOR → MESH → FIT_BEGIN → FIT_RUN → FIT_REA
   by 14 capsules along the skeleton's bones** (radius = the median distance of
   the body vertices nearest each bone, less the capsule's own contact offset).
   DiffCloth's capsule has a fixed 0.1-unit contact offset, so the drape runs
-  in a frame scaled by 10 (1 m = 10 units, gravity −98) and the result is
-  scaled back. 100 steps are queued; `drape_tick` runs once per frame; the
+  in a frame scaled by 5 (1 m = 5 units, gravity −49; the offset is 2 cm)
+  and the result is scaled back. At 10 the rd backend gives NaN on the first
+  step for the fitted skirt (below). 100 steps are queued; `drape_tick` runs once per frame; the
   positions must all be finite.
 
 Every state records its host-timed duration, its stage's vmcall time and
@@ -187,18 +191,35 @@ fit.elf a4a13ca1; cut-4 at be47a124 with its uncommitted work, now
      left open, so the mesh is a disk with one boundary loop (euler 1).
      `merge_eps` 0.05 and 0.1 change which knot splits, not whether one does.
   The gate's MESH check is what caught it: the counts alone pass.
-- **cut-6 (fit) and cut-5 (drape)**: `--force-fixture=curvenet` (the LCL
-  skirt on its own skeleton) with the real fit.elf and drape.elf:
-  FIT_BEGIN **OK** (`target_scale 1.5276`, io_attempts 0, 3.7 s host, heap
-  11.3 MiB); FIT_RUN and the rest: see `integration/fitdrape.txt`.
+- **cut-6 (fit): works in the loop.** `--force-fixture=curvenet` (the LCL
+  skirt, 2682 v, on its own skeleton) with the real fit.elf
+  (`integration/fitdrape3.*`): FIT_BEGIN OK in 3.7–5.0 s (target_scale
+  1.5276, io_attempts 0); FIT_RUN 4 phases on the worker thread, **2446–2518 s**
+  (phase 0 AL 1082–1156 s, newton 49; 1 reduced 338–395 s; 2 AL 499–568 s;
+  3 reduced 526 s), 208 Newton iterations, final energy
+  0.0013345137800919919 in all three runs, heap 99 MiB, the main thread at
+  ~2100 frames/s meanwhile; CHECK `OK none`, control `OK INTERSECTS edge
+  (5332,7022) face (2056,1586,2613)`. The fitted garment is saved as
+  `integration/fitdrape3.fitted.obj` (reuse with `--force-fixture=curvenet,fit
+  --fit-from=...`). Phase 0 AL stops at its 50-iteration cap (newton 49)
+  both times; that is cut-6's setting, noted here.
+- **cut-5 (drape): works at scale 5, NaN at 10 on rd.** On the fitted skirt
+  (`integration/drape/`): at scale 10, rd gives non-finite positions on the
+  **first** step with or without capsules (friction 0, projections 0), while
+  cpu stays finite for 100 steps (1.47 s/step) — an rd-only fault for cut-5.
+  Scales 1, 2 and 5 are finite on rd; the similarity-placed skirt is finite
+  at 10. With scale 5 and 14 capsules: **100 finite steps, 42 ms/step**,
+  119924 friction events, 12797 projections (`drape-fs5c.*`); the skirt
+  sags (the sphere demo's kTri 150) and the thighs poke through the capsule
+  approximation. The default is now 5.
 
 ## What is waiting on which branch
 
 | stage | waiting on | then |
 |---|---|---|
 | AUTHOR, MESH | **cut-4** merge, and the two findings above fixed (no caps from ring cycles; stroke ends merge into shared knots) | 2 panels → one tube, 2 loops |
-| FIT_*, CHECK | **cut-6** merge (fit.elf is built by build.sh, not committed) | fit done, `OK none`, control INTERSECTS |
-| DRAPE | **cut-5** merge (drape_open / scene_mesh / primitive / tick in drape.elf) | 100 finite steps |
+| FIT_*, CHECK | **cut-6** merge (fit.elf is built by build.sh, not committed); a ~500-vertex authored skirt should fit well inside the 42 min the 2682-vertex LCL skirt takes | fit done, `OK none`, control INTERSECTS (all seen pre-merge) |
+| DRAPE | **cut-5** merge; the rd NaN at scale 10 is theirs to look at; a mesh collider would replace the capsules | 100 finite steps (seen pre-merge at scale 5) |
 | INFER, RIG | Cut 7 (Pixal3D) and Cut 4b (skin-tokens) | the FIXTURE label goes |
 
 Merging: cut-4, cut-5 and cut-6 each add their wrappers to the old

@@ -102,3 +102,19 @@ static func transform(v: PackedFloat32Array, xf: Transform3D) -> PackedFloat32Ar
 		out[i + 1] = p.y
 		out[i + 2] = p.z
 	return out
+
+# {min_area, min_edge, degenerate (area < eps)} over a triangle list.
+static func quality(v: PackedFloat32Array, tris: PackedInt32Array, eps: float = 1e-12) -> Dictionary:
+	var min_a := INF
+	var min_e := INF
+	var bad := 0
+	for t in range(0, tris.size() - 2, 3):
+		var a := Vector3(v[3 * tris[t]], v[3 * tris[t] + 1], v[3 * tris[t] + 2])
+		var b := Vector3(v[3 * tris[t + 1]], v[3 * tris[t + 1] + 1], v[3 * tris[t + 1] + 2])
+		var c := Vector3(v[3 * tris[t + 2]], v[3 * tris[t + 2] + 1], v[3 * tris[t + 2] + 2])
+		var area := 0.5 * (b - a).cross(c - a).length()
+		min_a = minf(min_a, area)
+		min_e = minf(min_e, minf((b - a).length(), minf((c - b).length(), (a - c).length())))
+		if area < eps:
+			bad += 1
+	return {"min_area": min_a, "min_edge": min_e, "degenerate": bad}

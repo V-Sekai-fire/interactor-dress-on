@@ -155,3 +155,11 @@ godot --path project --script gate_usd.gd --rendering-driver vulkan --xr-mode of
 
 Rule 8: `project/main.gd` has `usd_init()` and `usd_load(path = skel_quad.usda,
 path_mode = 0)`. They were not exercised over MCP in this gate.
+
+## The org fork (2026-09-23)
+
+The user approved an org fork: `V-Sekai-fire/OpenUSD`, branch
+`riscv64-sandbox` @ `df3f6b4`, is tag `v26.05` (2095fafa) plus exactly the
+four files of `openusd-26.05-rv64.patch` (+28/−3). Build from that branch
+instead of applying the patch to an upstream checkout; the patch file stays
+here as the record of what the branch changes.

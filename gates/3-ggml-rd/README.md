@@ -1,6 +1,9 @@
 # Gate 3 — ggml-rd: ggml over RenderingDevice, kernels from Lean
 
-**Result: G3.ops PASS for ADD and MUL.** `ops/results.txt`: RESULT: PASS.
+**Result: G3.ops PASS for ADD and MUL, and for the data-movement family
+K2 (CPY, DUP, CONT, GET_ROWS, CONCAT, REPEAT: its own section below; the
+committed `ops/results.txt` is the run of all eight ops, 425/425 OK).**
+`ops/results.txt`: RESULT: PASS.
 ggml's own `test-backend-ops -o ADD,MUL -b RD0`, run inside the guest
 (`ggml_test.elf`) against the in-guest ggml-cpu, reports **100/100 tests
 passed, 0 FAIL, `Backend RD0: OK`**; the 90 f16 cases report "not supported"
@@ -36,8 +39,8 @@ kernels/ggml/gen.sh --update                 # re-emit the kernels from lean/ af
 |---|---|---|---|
 | L0 | `native_decide` pins (`lean/Ggml`) and the committed emission | **PASS** | `lake build Ggml`: `add_f32`'s text pinned, MUL = ADD with one operator, the shared helpers, the generated `ggml_rd_params.h`; `kernels/ggml/gen.sh` (check mode) finds the committed `slang/` and header identical to Lean's emission (`kernels/lean-build.log`). Controls (`kernels/lean-negative-control.log`): a pin with one character changed is rejected by `native_decide`, and a copy of `kernels/ggml` whose `add_f32.slang` says `255u` for `256u` is refused with the diff. |
 | L1 | spirv-val, fixed layout, riscv64 cpp | **PASS** | Both kernels pass `spirv-val` and the SPIR-V layout check (`kernels/l1.log`); the cpp emits compile for riscv64 (3784-byte objects). Controls: `add_f32` built at slangc's default -O1 is refused (s2 dropped from the SPIR-V) and `kernels/avbd`'s saxpby is refused (another layout); the read-only-source control kernel is refused by `gen.sh`. |
-| L2 | cpp emits + the guest's packers vs native ggml-cpu | **PASS** | 41/41 cases, every one bit-exact (NMSE 0): broadcast in each dimension, permuted src1, overlapping views, odd sizes, a strided in-place destination and a two-node chain (`kernels/l2.log`). Control: src0's nb1/nb2 swapped after packing is caught in all 37 cases where the swap moves an address; the other 4 have nb1 = nb2 (`kernels/l2-control.log`). |
-| L3 | G3.ops, test-backend-ops in the guest | **PASS** | ADD,MUL: 100 OK (ADD 54, MUL 46), 0 FAIL, 90 not supported (f16), in 101 frames (one WAIT_GPU per submit), 149 s. Barrier-all: the same 100. Fault control: 54/54 ADD FAIL. The same verdicts in five runs this session, four of them before the rebase onto Cut 4. |
+| L2 | cpp emits + the guest's packers vs native ggml-cpu | **PASS** | ADD/MUL: 41/41 cases, every one bit-exact (NMSE 0): broadcast in each dimension, permuted src1, overlapping views, odd sizes, a strided in-place destination and a two-node chain. With K2's 116 the log is 157/157, all bit-exact (`kernels/l2.log`). Control: src0's nb1/nb2 swapped after packing is caught in all 152 cases where the swap moves an address; the other 5 have nb1 = nb2 or both extents 1 (`kernels/l2-control.log`). |
+| L3 | G3.ops, test-backend-ops in the guest | **PASS** | ADD,MUL: 100 OK (ADD 54, MUL 46), 0 FAIL, 90 not supported (f16), in 101 frames (one WAIT_GPU per submit), 149 s. Barrier-all: the same 100. Fault control: 54/54 ADD FAIL. The same verdicts in five runs this session, four of them before the rebase onto Cut 4. With K2 (the committed run): 425 OK, 0 FAIL, 698 not supported, 345 s; barrier-all the same 425; K2's fault control 129/129 FAIL. |
 | L3 | probes (`guest/ggml_test/probes.cpp`) | **PASS** | chain: 256 in-place ADDs on one tensor, one graph, x = 256 exactly (256/256), 255 barriers, elided or all. independent: 64 ADD/MULs into separate outputs, 64000/64000 exact, **0 barriers** with elision, 63 with barrier-all. files: READ of a 16 KiB host file, then `ggml_backend_rd_tensor_upload` of the same file into a tensor at byte 512 of its RD buffer (UPLOAD), 4096/4096 exact, and x + x on the GPU 4096/4096 exact (including -0, 1e-30 and FLT_MAX + FLT_MAX = inf). alias: see finding 1. |
 | rule 4 | no sync in its submit's frame | **PASS** | `rule4_same_frame_syncs=0` over every run; `close: permanent_slots=0`. |
 | rule 8 | `main.gd`'s wrappers, as MCP calls them | **PASS** | `ops/wrappers.txt` (`project/probe_ggml_wrappers.gd`): `ggml_attach`, the chain/files/alias presets and a short fault run through `ggml_ops_start`, each pumped by `main.gd`'s own `_process`; a second `ggml_pump` in the start frame does not pump again; `ggml_rd_close` ends at `permanent_slots=0`, rule-4 counter 0 over 23 submits. |
@@ -123,6 +126,130 @@ the 16.7M-element cases.
     machine path, and two builds in different directories are byte
     identical.
 
+## Family K2: data movement (CPY, DUP, CONT, GET_ROWS, CONCAT, REPEAT)
+
+**Result: PASS.** `ops/results.txt` (2026-09-23, RTX 4090): test-backend-ops
+`-o ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT -b RD0` in the guest,
+**425/425 OK, 0 FAIL** (CPY 161, CONCAT 80, CONT 36, GET_ROWS 20, REPEAT 18,
+DUP 10, plus ADD 54 and MUL 46), `Backend RD0: OK`; the same 425 with a
+barrier after every dispatch. Every census row of these ops is among the OK
+cases (all f32, plus CONT f16 -> f16 of a row-strided view); the 698 "not
+supported" are the quantized types (CPY, GET_ROWS, CONCAT), i8 and i64
+CONCAT, and CPY f32 <-> i32, none of them in the census. The fault control
+`GGML_RD_FAULT=1` on DUP, CONT, GET_ROWS, CONCAT and REPEAT fails **129/129**
+(i32 cases excluded: test_get_rows fills an i32 source like its row indices,
+mostly zeros, so a shifted index picks another zero row; with them, 2 of 4
+i32 GET_ROWS cases passed the fault, 2026-09-23 first run).
+
+| level | verdict | numbers |
+|---|---|---|
+| L0 | **PASS** | `lake build Ggml`: every helper, entry and `val` text pinned, and each of the 15 kernels pinned as the concatenation of pinned pieces (`kernels/lean-build.log`); gen.sh's check finds the committed `slang/` equal to Lean's emission. |
+| L1 | **PASS** | 17 kernels pass spirv-val and the fixed-layout check; the 15 new cpp emits compile for riscv64 (3632-5640-byte objects) (`kernels/l1.log`). |
+| L2 | **PASS** | 157/157 cases (116 new), **every one bit-exact** (NMSE 0 where test-backend-ops asks 0, and also the conversions): all 9 type pairs among f32/f16/bf16, permuted and strided sources and destinations (16-bit ones with odd strides: the word-ownership path), reshaping copies, f16 subnormals and +-65000, DUP/CONT nodes, GET_ROWS of f32/f16/bf16/i32 with views and batches, CONCAT on every dim with non-contiguous operands, REPEAT on every dim, and the census's hot shapes (KV-cache concat [128,8,514]+[128,8,1], CONT f16 [1024,1,1024], REPEAT [128,8,1,514] -> x2) (`kernels/l2.log`). Control swap-nb: 152 cases DETECTED, 0 missed, 5 no-ops (`kernels/l2-control.log`). |
+| L3 | **PASS** | G3.ops above; barrier-all identical; fault control 129/129 FAIL. |
+| perf | numbers | `probe_perf` (below), with and without a barrier per dispatch. |
+
+### How the kernels work
+
+- **One `val(i)` per kernel, two entries** (`lean/Ggml/SlangCodegen/Move.lean`).
+  Every storage binding is `uint`, so a same-type move is a bit copy and
+  the conversions are integer code with ggml-cpu's rounding: f16 -> f32 exact
+  (subnormals normalised by a shift loop), f32 -> f16 round-to-nearest-even
+  with ggml's NaN (`0x7E00 | sign`), bf16 = `h << 16`, f32 -> bf16 ggml's
+  `(u + 0x7fff + ((u >> 16) & 1)) >> 16`. L2 is bit-exact for all of them.
+- **16-bit destinations without atomics.** The cpp target has no
+  InterlockedAnd/Or, and an f16 shares its word. The thread of the element at
+  a word's even address owns the word: it stores its half and, when the next
+  address is in the destination, that element's half too (one store), else
+  it keeps the other half (read-modify-write); an odd-address thread returns
+  when the previous address is in the destination, else owns its word the
+  same way. "Next/previous address in dst" is a carry over dst's dimensions
+  sorted by stride, which the packer arranges (`guest/ggml-rd/ops/move.h`):
+  iteration order = dst dims by stride, size-1 last; word 55 = the merge
+  chain; a 16-bit dst is supported when that order is nested
+  (`nb[k+1] >= ne[k] nb[k]`): every permutation, transpose and strided
+  sub-block of a contiguous tensor is; an interleaved view such as
+  ne [3,2], nb [2,3] is not, and is "not supported" there. The sort also makes every op's writes coalesced whatever dst's
+  permutation.
+- **CPY/DUP/CONT** (8 kernels: `cpy_b32`, `cpy_b16` and the six conversions)
+  find a destination element's source by its ggml linear index (words 56-59:
+  dst's linear weights in iteration order), unravelled over src0, so shapes
+  may differ (reshaping copies) and both sides may have any strides.
+- **CONCAT** (`concat_b32`, `concat_b16`) needs no dimension word: an index
+  is past src0 in at most one dimension, so `i < src0.ne` on all four picks
+  src0, else src1 at `i - src0.ne` on the dimension that is past. The packer
+  permutes dst, src0 and src1 alike.
+- **REPEAT** (`repeat_b32`, `repeat_b16`): `src0[i mod src0.ne]`.
+- **GET_ROWS** (`get_rows_b32`, `_f16`, `_bf16` -> f32): one thread per dst
+  element in dst's order, the row read from src1 (i32), every operand strided.
+- **A 16-bit RMW writes 2 bytes outside dst's range at its ends**, so
+  `rd_graph.cpp`'s hazard ranges are now whole 4-byte words.
+
+### GPU time per op (`probe_perf`, RTX 4090)
+
+A graph of K copies of the op (each into its own output, K up to 256 and
+about 512 MiB of outputs) against a graph of one, both timed on the GPU by
+timestamps around the compute list (`ggml_backend_rd_set_timestamps`, new in
+`rd_compute`: `capture_timestamp`, read after the sync); per op =
+(T_K - T_1) / (K - 1). GB/s counts bytes read + written by one op; the
+sources are the same buffer every time, so their reads hit the 72 MB L2 and
+the rates above ~1 TB/s are cache-assisted. Numbers from the committed run
+(`ops/results.txt`); an earlier run the same day on the shared machine
+measured the large cases 1.6-2.1x slower (the sub-microsecond ones alike).
+
+| shape (census source) | per op, independent | per op, barrier after each |
+|---|---|---|
+| CONCAT f32 [128,8,514]+[128,8,1] dim 2 (skin-tokens KV cache, 213752/run) | 3.87 us (1089 GB/s) | 4.85 us |
+| CONCAT f32 [128,8,515,1]x2 dim 3 (skin-tokens, 192304/run) | 6.43 us (1313 GB/s) | 7.25 us |
+| CPY f32 [128,8] (skin-tokens KV write, 213752/run) | 0.14 us | 2.69 us |
+| REPEAT f32 [128,8,1,514] -> [128,8,2,514] (skin-tokens, 43008/run) | 7.37 us (857 GB/s) | 8.47 us |
+| CONT f32 permute(0,2,1,3) [128,8,2,514] (skin-tokens C:R, 21560/run) | 7.49 us (1124 GB/s) | 8.68 us |
+| CONT f32 transpose [128,515,16,2] (skin-tokens C:N, 10724/run) | 28.7 us (587 GB/s) | 29.0 us |
+| GET_ROWS f32 [896,33036] x10 (skin-tokens embedding) | 0.18 us | 1.66 us |
+| GET_ROWS f32 [512,246] x246 (pixal3d) | 1.20 us (839 GB/s) | 3.43 us |
+| CONT f16 permute [1024,1024] -> [1024,1,1024] (pixal3d, 1080/run) | 9.69 us (433 GB/s) | 11.2 us |
+| CONCAT f32 [1,64,12,4096]x2 dim 0 (pixal3d rotate-half) | 37.3 us (1349 GB/s) | 37.6 us |
+| CPY bf16 -> f32 [1536,4096] (a bf16 weight widened) | 41.1 us (919 GB/s) | 41.3 us |
+| CPY f32 -> f16 [1536,4096] | 84.0 us (449 GB/s) | 64.7 us |
+
+A skin-tokens run's K2 GPU time is then about 213752 x 4.85 + 192304 x 7.25 +
+213752 x 2.69 + 43008 x 8.47 + 21560 x 8.68 + 10724 x 29 us = 3.9 s, 63%
+of it the KV cache's two concats (which copy the whole cache every
+token: the model's O(n^2), not the kernel's). What is left on the table: the
+transpose reads uncoalesced (587 GB/s; a groupshared tile would about double
+it, 0.3 s/run), and 16-bit destinations run twice the `val` of an f32 one
+(the f16 CONT at 433 GB/s).
+
+### Files (K2)
+
+```
+lean/Ggml/SlangCodegen/Move.lean      the shared pieces: integer conversions, ld16, entry32/entry16, pins
+lean/Ggml/SlangCodegen/{Cpy,GetRows,Concat,Repeat}.lean   15 kernels, each pinned
+guest/ggml-rd/ops/move.h              iteration order, nesting, merge chain, block permutation
+guest/ggml-rd/ops/{cpy,get_rows,concat,repeat}.cpp        packers (CPY, DUP, CONT share cpy.cpp)
+tests/ggml_rd_kernels/cases/move.cpp  116 L2 cases
+guest/ggml_test/probes.cpp            probe perf (ggml_probe_start("perf", "move", ""))
+```
+
+Shared-layer changes: `rd_compute` gains `capture_timestamp`,
+`timestamps_count` and `timestamp_gpu_ns` (three names in the name pool,
+which is now **full: 32 of 32 host cache slots**; the next name needs one
+retired or a cold path outside the pool); ggml-rd gains
+`ggml_backend_rd_set_timestamps` / `ggml_backend_rd_last_gpu_ns` and
+`GGML_RD_TIMESTAMPS=1`; hazard ranges are word-aligned; the L2 harness
+compiles the emits with `SLANG_ENABLE_BOUND_ZERO_INDEX` (the swap-nb control
+moved the large cases' addresses past the 256 MiB block and faulted);
+`main.gd` gains `ggml_ops_move`, `ggml_ops_move_fault`, `ggml_probe_perf`.
+Every ELF links `rd_compute`, so all five were rebuilt (a second build in a
+fresh directory is byte-identical) and the earlier gates re-run on them
+(`regression/`, overwritten with these runs): Stage 1 PASS (held device,
+barriered counts exact, the no-barrier arm still loses counts); Stage 2
+PASS (gradcheck 5/5 cpu and rd, worst rel 1.04e-6 and 9.59e-7,
+backward_smoke 18/18 both, `same_frame_syncs=0` over 339 submits); Gate 0F
+`PASS=34 FAIL=5` (probe 3's five, as committed; 135 s); Gate 4 guest ==
+native 9/9, rule 8 23/23; lean gate clean, 0 DIFF, control 1 DIFF. Rule 8
+for ggml (`ops/wrappers.txt`): PASS.
+
 ## How ggml-rd works
 
 - **One params table, no push constants.** Every dispatch of a graph owns a
@@ -167,6 +294,7 @@ the 16.7M-element cases.
 lean/Ggml.lean                          Ggml.kernels / Ggml.controls: one import + one ++ line per family
 lean/Ggml/SlangCodegen/Common.lean      the fixed layout, the params words, helpers, entry1D, paramsHeader
 lean/Ggml/SlangCodegen/Binary.lean      ADD/MUL f32 with broadcast: the reference kernel (+ its control)
+lean/Ggml/SlangCodegen/Move.lean        K2's shared pieces; Cpy, GetRows, Concat, Repeat: its 15 kernels
 lean/EmitGgml.lean                      lake exe emit_ggml <outDir> [<params header>]
 kernels/ggml/kernels.txt                kernel names; a kernel's id is its line index
 kernels/ggml/controls.txt               control kernels, gates only
@@ -180,6 +308,7 @@ guest/ggml-rd/rd_kernels.cpp            pipelines, the params table, slot sets, 
 guest/ggml-rd/rd_pack.{h,cpp}           the packer core (no RenderingDevice; the L2 harness links it)
 guest/ggml-rd/ggml_rd_params.h          generated from Common.lean, committed
 guest/ggml-rd/ops/<op>.cpp              one packer file per op family; ops/binary.cpp is the template
+guest/ggml-rd/ops/move.h                K2's iteration order (16-bit destinations), shared by its packers
 guest/pump/, guest/fiber/               the pump protocol on Gate 0F's fiber
 guest/ggml_test/                        ggml_test.elf: test-backend-ops and the probes on the pump
 project/infer_host.gd                   the host side of the pump

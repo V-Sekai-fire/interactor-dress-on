@@ -1,6 +1,6 @@
-# ggml-rd L1, 2026-09-23T06:41:33Z, 2026.13.1-1-g84792eb15
-== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 
-layout ok: add_f32, mul_f32
+# ggml-rd L1, 2026-09-23T07:24:58Z, 2026.13.1-1-g84792eb15
+== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 cpy_b32 cpy_b16 cpy_f32_f16 cpy_f32_bf16 cpy_f16_f32 cpy_bf16_f32 cpy_f16_bf16 cpy_bf16_f16 get_rows_b32 get_rows_f16 get_rows_bf16 concat_b32 concat_b16 repeat_b32 repeat_b16 
+layout ok: add_f32, mul_f32, cpy_b32, cpy_b16, cpy_f32_f16, cpy_f32_bf16, cpy_f16_f32, cpy_bf16_f32, cpy_f16_bf16, cpy_bf16_f16, get_rows_b32, get_rows_f16, get_rows_bf16, concat_b32, concat_b16, repeat_b32, repeat_b16
 PASS layout
 == negative: add_f32 at slangc's default -O1 with -preserve-params (must fail)
 layout error: add_f32_o1: SPIR-V layout differs: missing ['s2'], extra [], wrong []
@@ -11,4 +11,19 @@ PASS saxpby is refused
 == cpp emits compiled for riscv64 (clang version 23.1.1 (https://github.com/llvm/llvm-project 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
 PASS riscv64 add_f32 (3784 bytes of object)
 PASS riscv64 mul_f32 (3784 bytes of object)
+PASS riscv64 cpy_b32 (3720 bytes of object)
+PASS riscv64 cpy_b16 (5192 bytes of object)
+PASS riscv64 cpy_f32_f16 (5632 bytes of object)
+PASS riscv64 cpy_f32_bf16 (5344 bytes of object)
+PASS riscv64 cpy_f16_f32 (4136 bytes of object)
+PASS riscv64 cpy_bf16_f32 (3728 bytes of object)
+PASS riscv64 cpy_f16_bf16 (5632 bytes of object)
+PASS riscv64 cpy_bf16_f16 (5640 bytes of object)
+PASS riscv64 get_rows_b32 (3632 bytes of object)
+PASS riscv64 get_rows_f16 (4024 bytes of object)
+PASS riscv64 get_rows_bf16 (3640 bytes of object)
+PASS riscv64 concat_b32 (3960 bytes of object)
+PASS riscv64 concat_b16 (5424 bytes of object)
+PASS riscv64 repeat_b32 (3632 bytes of object)
+PASS riscv64 repeat_b16 (5096 bytes of object)
 RESULT: PASS

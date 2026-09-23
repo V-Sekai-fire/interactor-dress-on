@@ -42,6 +42,11 @@ struct Ctx {
 	bool pending = false; // a graph is submitted and not yet synced
 	uint32_t next_buffer_index = 1;
 	uint64_t dispatch_serial = 0; // every dispatch ever recorded (GGML_RD_FAULT)
+	// GPU timestamps around each graph's compute list (ggml_backend_rd_set_timestamps
+	// or GGML_RD_TIMESTAMPS=1): armed at submit, read after the sync.
+	bool timestamps = false;
+	bool ts_armed = false;
+	int64_t last_gpu_ns = -1;
 	Stats st;
 	std::string last_error;
 };

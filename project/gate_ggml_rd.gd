@@ -15,10 +15,16 @@
 #   probe files        READ + UPLOAD of a host file into an RD buffer, x + x
 #   probe alias rw     x += 1 in place x1000 across barriers, read-write sources: exact
 #   probe alias ro     the same with the read-only-source control kernel: must lose counts
+#   probe perf         GPU time per op on the census's hottest data-movement shapes
+#                      (timestamps; numbers, PASS when every case was timed)
+#   probe perf         the same under GGML_RD_BARRIER_ALL=1 (serialised latency)
 #   ops main           test-backend-ops -o <OPS> -b RD0: 0 FAIL, every case OK or not supported
 #   ops barrier_all    the same under GGML_RD_BARRIER_ALL=1: 0 FAIL
 #   ops fault          -o ADD with GGML_RD_FAULT=1 (a source offset +1): the
 #                      control, it must FAIL
+#   ops fault move     the same control on the data-movement ops that read the
+#                      source it moves (DUP, CONT, GET_ROWS, CONCAT, REPEAT; a
+#                      CPY's src1 is its destination): every case must FAIL
 # and then the rule-4 counter (syncs in their submit's frame) must be 0.
 # Headless (no RenderingDevice): one run, -o ADD -b RD0, which must print
 # "no RD device" and test no RD0 case: the flat control that separates
@@ -38,9 +44,18 @@ extends SceneTree
 const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
-const OPS := "ADD,MUL"
+# GGML_GATE_OPS in the environment replaces the list for one run.
+const OPS := "ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT"
 const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
-const WALL_S := 1800.0
+const WALL_S := 3600.0
+# The data-movement ops whose fault control is meaningful (GGML_RD_FAULT moves
+# src1's offset when there is one, else src0's; a CPY never reads its src1).
+const FAULT_MOVE_OPS := "DUP,CONT,GET_ROWS,CONCAT,REPEAT"
+# Not the i32 cases: test_get_rows fills an i32 source the way it fills the
+# row indices (r * be1 * be2 values in [0, m), the rest of the tensor 0), so
+# a shifted index mostly picks another all-zero row and the fault is
+# invisible (2 of 4 i32 GET_ROWS cases passed under it, 2026-09-23).
+const FAULT_MOVE_PARAMS := "^(?!type=i32,)"
 # The device memory ggml-rd reports as total (free = total - allocated):
 # Godot has no call for it, so the host states it (24 GiB here).
 const TOTAL_MB := 24576
@@ -95,6 +110,8 @@ func _initialize() -> void:
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	_rd = RenderingServer.create_local_rendering_device()
+	if OS.get_environment("GGML_GATE_OPS") != "":
+		_ops = OS.get_environment("GGML_GATE_OPS")
 	_headless = _rd == null
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var name := "results-headless.txt" if _headless else "results.txt"
@@ -130,9 +147,12 @@ func _initialize() -> void:
 			["probe_files", "probe", "files", probe_file, ""],
 			["probe_alias_rw", "probe", "alias", "rw", ""],
 			["probe_alias_ro_control", "probe", "alias", "ro", ""],
+			["probe_perf", "probe", "perf", "move", ""],
+			["probe_perf_barrier_all", "probe", "perf", "move", "GGML_RD_BARRIER_ALL=1"],
 			["ops_main", "ops", "-o %s -b RD0" % _ops, ""],
 			["ops_barrier_all", "ops", "-o %s -b RD0" % _ops, "GGML_RD_BARRIER_ALL=1"],
 			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
+			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],
 		]
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
@@ -266,6 +286,8 @@ func _checks() -> void:
 	_verdict(_probe_pass("probe_alias_rw"), "probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact")
 	_verdict(_probe_pass("probe_alias_ro_control"),
 			"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
+	_verdict(_probe_pass("probe_perf") and _probe_pass("probe_perf_barrier_all"),
+			"probe_perf: every hot data-movement shape timed on the GPU, with and without a barrier per dispatch")
 	for n in ["ops_main", "ops_barrier_all"]:
 		var r = _results.get(n, {})
 		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
@@ -280,6 +302,10 @@ func _checks() -> void:
 	_verdict(f.get("state", "") == "done" and f.get("fail", 0) > 0 and f.get("ok", -1) == 0,
 			"control: GGML_RD_FAULT=1 (a source read one element off) fails every %s case: FAIL=%d OK=%d (%s)" % [
 			_fault_ops, f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
+	var fm = _results.get("ops_fault_move", {})
+	_verdict(fm.get("state", "") == "done" and fm.get("fail", 0) > 0 and fm.get("ok", -1) == 0,
+			"control: GGML_RD_FAULT=1 fails every %s case but i32: FAIL=%d OK=%d (%s)" % [FAULT_MOVE_OPS,
+			fm.get("fail", 0), fm.get("ok", 0), fm.get("backend_line", "")])
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
 	var re := RegEx.new()
 	re.compile("rule4_same_frame_syncs=(\\d+)")

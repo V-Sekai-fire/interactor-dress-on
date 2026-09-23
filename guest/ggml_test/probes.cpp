@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <algorithm>
 #include <cstring>
 #include <vector>
 
@@ -297,6 +298,141 @@ void alias(bool rw) {
 	}
 }
 
+// --- perf <set>: GPU time per op on the census's hottest shapes -------------
+//
+// For each case: one graph of K copies of the op (each into its own output,
+// K sized to ~512 MiB of outputs), timed on the GPU by ggml-rd's timestamps
+// around the compute list, and the same with one copy; per op =
+// (T_K - T_1) / (K - 1), which cancels the list's fixed cost. Under
+// GGML_RD_BARRIER_ALL=1 every dispatch is followed by a barrier: the
+// serialised latency a dependent chain pays. Sources hold zeros (buffers are
+// cleared) except GET_ROWS' indices, which spread over the rows.
+struct PerfCase {
+	const char *name;
+	ggml_type type;
+	int64_t ne[4]; // src0
+	int64_t ne1[4]; // src1 (CONCAT), the repeat target, GET_ROWS' row count
+	int kind; // 0 concat(dim = arg), 1 cpy, 2 repeat, 3 cont (arg 0: permute 0,2,1,3; 1: transpose), 4 get_rows, 5 cpy to type2
+	int arg;
+	ggml_type type2;
+};
+
+ggml_tensor *perf_node(ggml_context *ctx, const PerfCase &pc, ggml_tensor *a, ggml_tensor *b) {
+	switch (pc.kind) {
+		case 0:
+			return ggml_concat(ctx, a, b, pc.arg);
+		case 1:
+			return ggml_cpy(ctx, a, ggml_new_tensor(ctx, pc.type, 4, pc.ne));
+		case 2:
+			return ggml_repeat(ctx, a, ggml_new_tensor(ctx, pc.type, 4, pc.ne1));
+		case 3:
+			return pc.arg == 0 ? ggml_cont(ctx, ggml_permute(ctx, a, 0, 2, 1, 3)) : ggml_cont(ctx, ggml_transpose(ctx, a));
+		case 4:
+			return ggml_get_rows(ctx, a, b);
+		default:
+			return ggml_cpy(ctx, a, ggml_new_tensor(ctx, pc.type2, 4, pc.ne));
+	}
+}
+
+// Bytes one op reads and writes.
+int64_t perf_bytes(const ggml_tensor *o) {
+	int64_t n = int64_t(ggml_nbytes(o));
+	const ggml_tensor *s0 = o->src[0];
+	if (o->op == GGML_OP_GET_ROWS) {
+		n += ggml_nelements(o) * int64_t(ggml_type_size(s0->type)) + int64_t(ggml_nbytes(o->src[1]));
+	} else if (o->op == GGML_OP_CONCAT) {
+		n += int64_t(ggml_nbytes(s0)) + int64_t(ggml_nbytes(o->src[1]));
+	} else if (o->op == GGML_OP_REPEAT) {
+		n += int64_t(ggml_nbytes(s0)); // read once per output element, from the cache
+	} else {
+		n += int64_t(ggml_nbytes(s0));
+	}
+	return n;
+}
+
+// GPU ns of one graph of k copies (-1 on failure).
+int64_t perf_graph(ggml_backend_t be, const PerfCase &pc, int k, int64_t *barriers, int64_t *bytes) {
+	ggml_context *ctx = make_ctx(3 * k + 8);
+	ggml_tensor *a = ggml_new_tensor(ctx, pc.type, 4, pc.ne);
+	ggml_tensor *b = nullptr;
+	if (pc.kind == 0) {
+		b = ggml_new_tensor(ctx, pc.type, 4, pc.ne1);
+	} else if (pc.kind == 4) {
+		b = ggml_new_tensor_1d(ctx, GGML_TYPE_I32, pc.ne1[0]);
+	}
+	ggml_cgraph *gf = ggml_new_graph_custom(ctx, size_t(3 * k + 8), false);
+	ggml_tensor *o = nullptr;
+	for (int i = 0; i < k; ++i) {
+		o = perf_node(ctx, pc, a, b);
+		ggml_build_forward_expand(gf, o);
+	}
+	ggml_backend_buffer_t buf = ggml_backend_alloc_ctx_tensors(ctx, be);
+	if (buf == nullptr) {
+		ggml_free(ctx);
+		return -1;
+	}
+	if (pc.kind == 4) {
+		std::vector<int32_t> rows(size_t(pc.ne1[0]));
+		for (size_t i = 0; i < rows.size(); ++i) {
+			rows[i] = int32_t((i * 7919) % size_t(pc.ne[1]));
+		}
+		ggml_backend_tensor_set(b, rows.data(), 0, rows.size() * 4);
+	}
+	*bytes = perf_bytes(o);
+	const ggml_status st = ggml_backend_graph_compute(be, gf);
+	int64_t dispatches = 0;
+	ggml_backend_rd_last_graph(&dispatches, barriers);
+	const int64_t ns = st == GGML_STATUS_SUCCESS && dispatches == k ? ggml_backend_rd_last_gpu_ns() : -1;
+	ggml_backend_buffer_free(buf);
+	ggml_free(ctx);
+	return ns;
+}
+
+void perf(const std::string &set) {
+	ggml_backend_t be = rd_backend();
+	if (be == nullptr) {
+		result(false, "perf");
+		return;
+	}
+	const ggml_type F32 = GGML_TYPE_F32, F16 = GGML_TYPE_F16, BF16 = GGML_TYPE_BF16;
+	// The census's hottest data-movement shapes (skin-tokens unless noted).
+	const PerfCase move_cases[] = {
+		{ "CONCAT f32 [128,8,514]+[128,8,1] dim2 (KV cache)", F32, { 128, 8, 514, 1 }, { 128, 8, 1, 1 }, 0, 2, F32 },
+		{ "CONCAT f32 [128,8,515,1]+[128,8,515,1] dim3", F32, { 128, 8, 515, 1 }, { 128, 8, 515, 1 }, 0, 3, F32 },
+		{ "CPY f32 [128,8]", F32, { 128, 8, 1, 1 }, { 0, 0, 0, 0 }, 1, 0, F32 },
+		{ "REPEAT f32 [128,8,1,514]->[128,8,2,514]", F32, { 128, 8, 1, 514 }, { 128, 8, 2, 514 }, 2, 0, F32 },
+		{ "CONT f32 permute(0,2,1,3) [128,8,2,514]", F32, { 128, 8, 2, 514 }, { 0, 0, 0, 0 }, 3, 0, F32 },
+		{ "CONT f32 transpose [128,515,16,2]", F32, { 128, 515, 16, 2 }, { 0, 0, 0, 0 }, 3, 1, F32 },
+		{ "GET_ROWS f32 [896,33036] x10", F32, { 896, 33036, 1, 1 }, { 10, 0, 0, 0 }, 4, 0, F32 },
+		{ "GET_ROWS f32 [512,246] x246 (pixal3d)", F32, { 512, 246, 1, 1 }, { 246, 0, 0, 0 }, 4, 0, F32 },
+		{ "CONT f16 permute(0,2,1,3) [1024,1024] (pixal3d)", F16, { 1024, 1024, 1, 1 }, { 0, 0, 0, 0 }, 3, 0, F16 },
+		{ "CONCAT f32 [1,64,12,4096]x2 dim0 (pixal3d)", F32, { 1, 64, 12, 4096 }, { 1, 64, 12, 4096 }, 0, 0, F32 },
+		{ "CPY bf16->f32 [1536,4096]", BF16, { 1536, 4096, 1, 1 }, { 0, 0, 0, 0 }, 5, 0, F32 },
+		{ "CPY f32->f16 [1536,4096]", F32, { 1536, 4096, 1, 1 }, { 0, 0, 0, 0 }, 5, 0, F16 },
+	};
+	ggml_backend_rd_set_timestamps(true);
+	bool ok = true;
+	for (const PerfCase &pc : move_cases) {
+		int64_t bar1 = 0, bark = 0, bytes = 0;
+		perf_graph(be, pc, 1, &bar1, &bytes); // warm: pipelines, sets
+		const int64_t t1 = perf_graph(be, pc, 1, &bar1, &bytes);
+		const int64_t out_bytes = std::max<int64_t>(bytes / 2, 1);
+		const int k = int(std::min<int64_t>(256, std::max<int64_t>(16, (int64_t(512) << 20) / out_bytes)));
+		const int64_t tk = perf_graph(be, pc, k, &bark, &bytes);
+		const bool good = t1 > 0 && tk > 0;
+		ok = ok && good;
+		const double per_ns = good ? double(tk - t1) / double(k - 1) : -1.0;
+		std::printf("PROBE perf %s: k=%d barriers=%lld t1_us=%.1f tk_us=%.1f per_op_us=%.2f bytes=%lld GBps=%.0f\n",
+				pc.name, k, (long long)bark, double(t1) / 1e3, double(tk) / 1e3, per_ns / 1e3, (long long)bytes,
+				per_ns > 0 ? double(bytes) / per_ns : 0.0);
+		std::fflush(stdout);
+	}
+	ggml_backend_rd_set_timestamps(false);
+	ggml_backend_free(be);
+	(void)set;
+	result(ok, "perf");
+}
+
 void job(void *) {
 	const std::string &name = g_args.name;
 	const int n = g_args.arg.empty() ? 0 : std::atoi(g_args.arg.c_str());
@@ -308,6 +444,8 @@ void job(void *) {
 		files(g_args.arg);
 	} else if (name == "alias") {
 		alias(g_args.arg != "ro");
+	} else if (name == "perf" && g_args.arg == "move") {
+		perf(g_args.arg); // K2's data-movement set; other perf sets are census rows
 	} else if (census::known(name)) {
 		census::run(name, g_args.arg.empty() ? "all" : g_args.arg);
 	}
@@ -322,7 +460,7 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && !census::known(name)) {
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "perf" && !census::known(name)) {
 		err = "unknown probe '" + name + "' (chain, independent, files, alias, census, perf)";
 		return false;
 	}

@@ -8,23 +8,23 @@ ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds 
 [dress-on] sandbox loaded dress_on.elf
 [dress-on] sandbox loaded drape.elf
 [dress-on] sandbox loaded curvenet.elf
-check_names() -> host_us=111 beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld
-cn_get_param() -> host_us=44 0.03
-curvenet_extract_demo() -> host_us=3066 ok extract curves=12 knots=8 intersections=8 needs_setup=0
-pen_demo_circle() -> host_us=112983 ok body vertices=2210 triangles=4096 | host_us=185 ok | host_us=1699866 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
-patch_count() -> host_us=17 1
+check_names() -> host_us=94 beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld
+cn_get_param() -> host_us=39 0.03
+curvenet_extract_demo() -> host_us=5468 ok extract curves=12 knots=8 intersections=8 needs_setup=0
+pen_demo_circle() -> host_us=157222 ok body vertices=2210 triangles=4096 | host_us=173 ok | host_us=1934845 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+patch_count() -> host_us=22 1
 patch_vertices() -> patch 0: 2067 vertices
 patch_indices() -> patch 0: 3998 triangles
-mesh_build() -> host_us=450725 ok patches=1 vertices=2061 triangles=3986 loops=1 components=1 euler=1 | wire: 2061 vertices, 1 boundary loops
+mesh_build() -> host_us=616384 ok patches=1 vertices=2061 triangles=3986 loops=1 components=1 euler=1 | wire: 2061 vertices, 1 boundary loops
 mesh_patch_ids() -> 3986 triangles, per patch { -1: 3986 }
 mesh_array_mesh() -> ArrayMesh, 1 surface(s), 2061 vertices
-curvenet_build() -> host_us=1287 ok sketch curves=2 knots=2 intersections=0 needs_setup=2 | wire: 2 curves, 2 knots
-cn_reset() -> host_us=992 ok
-pen_begin() -> host_us=162 id=1 samples=65
-pen_point() -> host_us=4404 sent=64 left=0 ok
-pen_end() -> host_us=606292 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
-patch_count() -> host_us=20 1
-curvenet_checks() -> host_us=2753373 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+curvenet_build() -> host_us=1430 ok sketch curves=2 knots=2 intersections=0 needs_setup=2 | wire: 2 curves, 2 knots
+cn_reset() -> host_us=1282 ok
+pen_begin() -> host_us=195 id=1 samples=65
+pen_point() -> host_us=6993 sent=64 left=0 ok
+pen_end() -> host_us=848079 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+patch_count() -> host_us=17 1
+curvenet_checks() -> host_us=3503046 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
 PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
 PASS patch_pipeline ints=3596,0 fsig=34695a7b254c4b6d/5640 :: cycle -> 3596 triangles; one-edge graph -> 0 (control)
 PASS crossing_split ints=9,9,1,9474,1,1,0,3 fsig=6c7da88789b6406c/14610 :: 9 edges, 9 nodes, 1 cycle(s), 9474 triangles; far edge 0 kept yes, crossed edge 1 replaced yes; add_stroke -> 0 cycles over 3 edges (control)

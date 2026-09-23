@@ -116,7 +116,12 @@ our own, no host DLL. The GPU is reachable only through Godot's
   2.4-2.8 ms per submit with `compute_list_end` and `sync` in one slot, and
   it was the 50-86x rd regression of Cut A (`gates/2-avbd/perf-bisect.log`).
   Call RenderingDevice only through `rdc::Device`, whose method names sit at
-  addresses with a slot each.
+  addresses with a slot each. That pool is **full** (32 names, 32 slots,
+  since Gate 3's timestamps): a new name needs an old one retired first.
+- GPU time: `rdc::Device::capture_timestamp` before `list_begin` and after
+  `list_end`; on a local device both are readable right after that submit's
+  `sync()` (`get_captured_timestamp_gpu_time`, nanoseconds). ggml-rd wraps
+  it as `ggml_backend_rd_set_timestamps` / `GGML_RD_TIMESTAMPS=1`.
 - Cross-compile: `build.sh` (riscv64 clang from scoop, lld, the org's
   `riscv64-sysroot` via `RISCV64_SYSROOT`). First Godot run after adding an
   ELF: `godot --path project --headless --import`.

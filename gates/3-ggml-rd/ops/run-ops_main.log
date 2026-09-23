@@ -6,6 +6,747 @@ Backend 2/2: RD0
   Device description: Godot RenderingDevice (NVIDIA GeForce RTX 4090)
   Device memory: 24576 MB (24576 MB free)
 
+  GET_ROWS(type=f32,n=76800,m=5,r=4,be1=1,be2=2,v=0): OK
+  GET_ROWS(type=f32,n=256,m=80000,r=70000,be1=2,be2=1,v=0): OK
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=700,be2=100,v=0): OK
+  GET_ROWS(type=q4_0,n=76800,m=5,r=4,be1=1,be2=2,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=80000,r=70000,be1=2,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=700,be2=100,v=0): not supported [RD0] 
+  GET_ROWS(type=f32,n=1,m=8,r=2,be1=1,be2=1,v=0): OK
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=1,be2=1,v=0): OK
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=1,be2=1,v=1): OK
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=7,be2=1,v=0): OK
+  GET_ROWS(type=f32,n=256,m=5,r=4,be1=7,be2=1,v=1): OK
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=1,be2=1,v=0): OK
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=1,be2=1,v=1): OK
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=7,be2=1,v=0): OK
+  GET_ROWS(type=f16,n=256,m=5,r=4,be1=7,be2=1,v=1): OK
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=1,be2=1,v=0): OK
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=1,be2=1,v=1): OK
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=7,be2=1,v=0): OK
+  GET_ROWS(type=bf16,n=256,m=5,r=4,be1=7,be2=1,v=1): OK
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_1,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_1,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q8_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q1_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_0,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=mxfp4,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=nvfp4,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q2_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q3_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q4_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q5_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=q6_K,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xxs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_xs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq2_s,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_xxs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_s,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq1_m,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_nl,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq3_s,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=1,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=1,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=7,be2=1,v=0): not supported [RD0] 
+  GET_ROWS(type=iq4_xs,n=256,m=5,r=4,be1=7,be2=1,v=1): not supported [RD0] 
+  GET_ROWS(type=i32,n=256,m=5,r=4,be1=1,be2=1,v=0): OK
+  GET_ROWS(type=i32,n=256,m=5,r=4,be1=1,be2=1,v=1): OK
+  GET_ROWS(type=i32,n=256,m=5,r=4,be1=7,be2=1,v=0): OK
+  GET_ROWS(type=i32,n=256,m=5,r=4,be1=7,be2=1,v=1): OK
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[2,1,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,2,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,2,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,1],nr=[1,1,1,2]): OK
+  REPEAT(type=f16,ne=[10,5,4,1],nr=[2,1,1,1]): OK
+  REPEAT(type=i32,ne=[10,5,4,1],nr=[2,1,1,1]): OK
+  REPEAT(type=i16,ne=[10,5,4,1],nr=[1,1,1,2]): OK
+  REPEAT(type=bf16,ne=[10,5,4,1],nr=[2,1,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[2,1,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,2,1,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,2,1]): OK
+  REPEAT(type=f32,ne=[10,5,4,3],nr=[1,1,1,2]): OK
+  REPEAT(type=f16,ne=[10,5,4,3],nr=[2,1,1,1]): OK
+  REPEAT(type=i32,ne=[10,5,4,3],nr=[2,1,1,1]): OK
+  REPEAT(type=i16,ne=[10,5,4,3],nr=[1,1,1,2]): OK
+  REPEAT(type=bf16,ne=[10,5,4,3],nr=[2,1,1,1]): OK
+  DUP(type=f32,ne=[10,10,20,1]): OK
+  DUP(type=f16,ne=[10,10,20,1]): OK
+  DUP(type=i32,ne=[10,10,20,1]): OK
+  DUP(type=i16,ne=[10,10,20,1]): OK
+  DUP(type=f32,ne=[10,10,5,1],permute=[0,2,1,3]): OK
+  DUP(type=f16,ne=[10,10,5,1],permute=[0,2,1,3]): OK
+  DUP(type=f32,ne=[10,10,5,1],permute=[1,0,2,3]): OK
+  DUP(type=f16,ne=[10,10,5,1],permute=[1,0,2,3]): OK
+  DUP(type=i16,ne=[10,8,3,1],permute=[0,2,1,3]): OK
+  DUP(type=i16,ne=[10,8,3,1],permute=[1,2,0,3]): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[1,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[1,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[1,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[2,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[2,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[2,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[1,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[1,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[1,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[2,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[2,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[2,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[1,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[1,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[1,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[2,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[2,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[2,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[3,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[3,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[3,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=q4_1,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=q5_0,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=q5_1,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=q8_0,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[128,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[128,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[128,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[384,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[384,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=q1_0,ne_src=[384,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[128,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[128,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[128,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[192,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[192,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=q2_0,ne_src=[192,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=mxfp4,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[128,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[128,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[128,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[192,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[192,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=nvfp4,ne_src=[192,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=q2_K,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=q3_K,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=q4_K,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=q5_K,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=q6_K,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xxs,type_dst=iq2_xxs,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_xs,type_dst=iq2_xs,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq2_s,type_dst=iq2_s,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_xxs,type_dst=iq3_xxs,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_s,type_dst=iq1_s,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq1_m,type_dst=iq1_m,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[32,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[32,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[32,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[64,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[64,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[64,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[96,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[96,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=iq4_nl,ne_src=[96,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq3_s,type_dst=iq3_s,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[256,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[512,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[512,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[512,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[768,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[768,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=iq4_xs,ne_src=[768,2,3,4],permute_src=[0,3,1,2],permute_dst=[0,2,1,3],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=bf16,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=bf16,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=q4_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q4_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q4_1,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q4_1,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q5_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q5_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q5_1,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q5_1,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q8_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q8_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q1_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q1_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q2_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q2_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=mxfp4,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=mxfp4,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=nvfp4,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=nvfp4,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q2_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q2_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q3_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q3_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q4_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q4_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q5_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q5_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q6_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=q6_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=iq2_xxs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq2_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq2_xs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq2_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq2_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq2_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq3_xxs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq3_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq1_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq1_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq1_m,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq1_m,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq4_nl,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=iq4_nl,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=iq3_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq3_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f16,type_dst=iq4_xs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=iq4_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=f16,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=f16,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=q4_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q4_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q4_1,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q4_1,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q5_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q5_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q5_1,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q5_1,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q8_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q8_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q1_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q1_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q2_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q2_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=mxfp4,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=mxfp4,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=nvfp4,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=nvfp4,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q2_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q2_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q3_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q3_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q4_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q4_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q5_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q5_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q6_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=q6_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=iq2_xxs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq2_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq2_xs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq2_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq2_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq2_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq3_xxs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq3_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq1_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq1_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq1_m,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq1_m,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq4_nl,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=iq4_nl,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=iq3_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq3_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=bf16,type_dst=iq4_xs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=bf16,type_dst=iq4_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f16,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f16,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=bf16,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=bf16,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=q4_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q4_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q4_1,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q4_1,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q5_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q5_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q5_1,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q5_1,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q8_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q8_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q1_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q1_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q2_0,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q2_0,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=mxfp4,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=mxfp4,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=nvfp4,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=nvfp4,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q2_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q2_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q3_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q3_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q4_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q4_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q5_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q5_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q6_K,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=q6_K,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=iq2_xxs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq2_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq2_xs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq2_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq2_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq2_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq3_xxs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq3_xxs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq1_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq1_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq1_m,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq1_m,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq4_nl,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=iq4_nl,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=iq3_s,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq3_s,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0, CPU] 
+  CPY(type_src=f32,type_dst=iq4_xs,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=iq4_xs,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=bf16,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_0,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_1,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_0,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_1,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q8_0,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q1_0,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_0,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=mxfp4,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=nvfp4,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q2_K,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q3_K,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q4_K,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q5_K,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=q6_K,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_xxs,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_xxs,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_xs,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_xs,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_s,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq2_s,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq3_xxs,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq3_xxs,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq1_s,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq1_s,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq1_m,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq1_m,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_nl,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq3_s,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq3_s,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=f32,ne_src=[256,4,4,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=iq4_xs,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,2,1,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=f16,ne_src=[256,2,3,4],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f32,ne_src=[256,2,3,4],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f16,ne_src=[256,2,3,4],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,2,3,4],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=i32,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=i32,ne_src=[256,2,3,4],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=i32,type_dst=f32,ne_src=[256,2,3,4],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=i32,type_dst=f32,ne_src=[256,2,3,4],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=f16,ne_src=[256,4,3,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,4,3,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,4,3,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[256,4,3,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[256,4,1,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,4,1,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=bf16,type_dst=bf16,ne_src=[256,4,1,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=i32,type_dst=i32,ne_src=[256,4,1,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=1): OK
+  CPY(type_src=i32,type_dst=i32,ne_src=[256,1,4,1],permute_src=[1,2,0,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[256,1,4,1],permute_src=[1,2,0,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[2,2097121,1,1],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[2,2,524281,1],permute_src=[1,0,2,3],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[128,2,3,1],ne_dst=[128,2,3,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0,dst_alloc=[128,4,3,1]): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[128,2,3,1],ne_dst=[128,2,3,1],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0,dst_alloc=[128,4,3,1]): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,5,7,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,5,32,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,5,32,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,7,5,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,7,5,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,7,32,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,7,32,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,32,5,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,32,5,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,32,7,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[3,32,7,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,3,7,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,3,7,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,3,32,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,3,32,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,7,3,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,7,3,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,7,32,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,7,32,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,32,3,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,32,3,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,32,7,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[5,32,7,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,3,5,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,3,5,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,3,32,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,3,32,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,5,3,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,5,3,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,5,32,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,5,32,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,32,3,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,32,3,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,32,5,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[7,32,5,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,3,5,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,3,5,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,3,5,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,3,7,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,3,7,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,3,7,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,5,3,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,5,3,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,5,3,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,5,7,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,5,7,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,5,7,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,7,3,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,7,3,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,7,3,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f32,type_dst=f32,ne_src=[32,7,5,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=q4_0,type_dst=q4_0,ne_src=[32,7,5,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): not supported [RD0] 
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,5,7,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,5,32,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,5,32,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,7,5,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,7,5,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,7,32,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,7,32,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,32,5,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,32,5,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,32,7,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[3,32,7,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,3,7,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,3,7,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,3,32,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,3,32,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,7,3,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,7,3,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,7,32,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,7,32,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,32,3,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,32,3,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,32,7,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[5,32,7,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,3,5,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,3,5,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,3,32,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,3,32,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,5,3,32],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,5,3,32],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,5,32,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,5,32,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,32,3,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,32,3,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,32,5,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[7,32,5,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,3,5,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,3,5,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,3,7,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,3,7,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,5,3,7],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,5,3,7],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,5,7,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,5,7,3],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,7,3,5],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,7,3,5],ne_dst=[32,7,5,3],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CPY(type_src=f16,type_dst=f16,ne_src=[32,7,5,3],ne_dst=[3,5,7,32],permute_src=[0,0,0,0],permute_dst=[0,0,0,0],_src_transpose=0): OK
+  CONT(type=f32,ne=[2,1,1,1],use_view_slice=1): OK
+  CONT(type=f32,ne=[2,1,3,5],use_view_slice=1): OK
+  CONT(type=f32,ne=[2,3,5,7],use_view_slice=1): OK
+  CONT(type=f32,ne=[1,4,4,1],use_view_slice=1): OK
+  CONT(type=f32,ne=[1,8,17,1],use_view_slice=1): OK
+  CONT(type=f32,ne=[10,10,10,1],use_view_slice=1): OK
+  CONT(type=f32,ne=[2,1,1,1],use_view_slice=0): OK
+  CONT(type=f32,ne=[2,1,3,5],use_view_slice=0): OK
+  CONT(type=f32,ne=[2,3,5,7],use_view_slice=0): OK
+  CONT(type=f32,ne=[1,4,4,1],use_view_slice=0): OK
+  CONT(type=f32,ne=[1,8,17,1],use_view_slice=0): OK
+  CONT(type=f32,ne=[10,10,10,1],use_view_slice=0): OK
+  CONT(type=i32,ne=[2,1,1,1],use_view_slice=1): OK
+  CONT(type=i32,ne=[2,1,3,5],use_view_slice=1): OK
+  CONT(type=i32,ne=[2,3,5,7],use_view_slice=1): OK
+  CONT(type=i32,ne=[1,4,4,1],use_view_slice=1): OK
+  CONT(type=i32,ne=[1,8,17,1],use_view_slice=1): OK
+  CONT(type=i32,ne=[10,10,10,1],use_view_slice=1): OK
+  CONT(type=i32,ne=[2,1,1,1],use_view_slice=0): OK
+  CONT(type=i32,ne=[2,1,3,5],use_view_slice=0): OK
+  CONT(type=i32,ne=[2,3,5,7],use_view_slice=0): OK
+  CONT(type=i32,ne=[1,4,4,1],use_view_slice=0): OK
+  CONT(type=i32,ne=[1,8,17,1],use_view_slice=0): OK
+  CONT(type=i32,ne=[10,10,10,1],use_view_slice=0): OK
+  CONT(type=f16,ne=[2,1,1,1],use_view_slice=0): OK
+  CONT(type=f16,ne=[2,1,3,5],use_view_slice=0): OK
+  CONT(type=f16,ne=[2,3,5,7],use_view_slice=0): OK
+  CONT(type=f16,ne=[1,4,4,1],use_view_slice=0): OK
+  CONT(type=f16,ne=[1,8,17,1],use_view_slice=0): OK
+  CONT(type=f16,ne=[10,10,10,1],use_view_slice=0): OK
+  CONT(type=bf16,ne=[2,1,1,1],use_view_slice=0): OK
+  CONT(type=bf16,ne=[2,1,3,5],use_view_slice=0): OK
+  CONT(type=bf16,ne=[2,3,5,7],use_view_slice=0): OK
+  CONT(type=bf16,ne=[1,4,4,1],use_view_slice=0): OK
+  CONT(type=bf16,ne=[1,8,17,1],use_view_slice=0): OK
+  CONT(type=bf16,ne=[10,10,10,1],use_view_slice=0): OK
   ADD(type=f16,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
   MUL(type=f16,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
   ADD(type=f16,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
@@ -196,9 +937,201 @@ Backend 2/2: RD0
   ADD(type=f32,ne=[10,5,4,3],nr=[1,2,2,2],nf=7,perm1=0,src_overlap=0): OK
   ADD(type=f32,ne=[16,5,4,3],nr=[2,2,2,2],nf=8,perm1=0,src_overlap=0): OK
   ADD(type=f32,ne=[16,5,4,3],nr=[1,1,1,1],nf=16,perm1=0,src_overlap=0): OK
-  100/100 tests passed
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=1): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=1): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=1): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=1): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=2): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=2): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=2): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=2): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=0,v=3): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=1,v=3): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=2,v=3): not supported [RD0] 
+  CONCAT(type=f32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): OK
+  CONCAT(type=f16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): OK
+  CONCAT(type=bf16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): OK
+  CONCAT(type=i8,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): not supported [RD0] 
+  CONCAT(type=i16,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): OK
+  CONCAT(type=i32,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): OK
+  CONCAT(type=i64,ne_a=[11,12,13,14],ne_b_d=7,dim=3,v=3): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q4_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q4_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q5_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q5_1,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=0): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=4): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=8): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=256,dim=0,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=1,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=2,v=12): not supported [RD0] 
+  CONCAT(type=q8_0,ne_a=[128,12,13,14],ne_b_d=7,dim=3,v=12): not supported [RD0] 
+  425/425 tests passed
   Backend RD0: OK
 2/2 backends passed
 OK
 ggml_test: test-backend-ops returned 0
-ggml_test: rd stats graphs=519 nodes=1341 dispatches=814 skipped=527 barriers=646 failed_graphs=0 last{nodes=35 dispatches=16 barriers=15 skipped=19} pipelines=2 set0_created=105 slots_created=256 coop_yields=1 waits=105 faults=0 params_bytes=208384 set_bytes=815871592 get_bytes=1433562128 copies=0 clears=0 buffers_live=0 bytes_live=0
+ggml_test: rd stats graphs=2591 nodes=7977 dispatches=4871 skipped=3106 barriers=2476 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=17 set0_created=502 slots_created=256 coop_yields=2 waits=502 faults=0 params_bytes=1246976 set_bytes=2005618192 get_bytes=3099333152 copies=0 clears=0 buffers_live=0 bytes_live=0

@@ -64,9 +64,12 @@ bool rd_offset(const ggml_tensor *t, void *, uint64_t *off) {
 	return true;
 }
 
+// Widened to whole 4-byte words: kernels address uint words, and a 16-bit
+// destination's read-modify-write (lean/Ggml/SlangCodegen/Move.lean) stores
+// the neighbouring half of its first and last word too.
 Range range_of(const ggml_tensor *t, const Buffer *b) {
 	const uint64_t lo = byte_offset(t, b);
-	return Range{ b->rid.index, lo, lo + ggml_nbytes(t) };
+	return Range{ b->rid.index, lo & ~uint64_t(3), (lo + ggml_nbytes(t) + 3) & ~uint64_t(3) };
 }
 
 std::string node_desc(const ggml_tensor *n) {
@@ -203,6 +206,10 @@ ggml_status graph_compute(ggml_cgraph *g) {
 	int64_t barriers = 0;
 	int bound_kernel = -1;
 	int64_t bound_set0 = 0;
+	const bool ts = c.timestamps || env_int("GGML_RD_TIMESTAMPS") != 0;
+	if (ts) {
+		d.capture_timestamp("ggml_rd_graph_begin");
+	}
 	d.list_begin();
 	for (uint32_t i = 0; i < n; ++i) {
 		const Dispatch &dp = ds[i];
@@ -235,6 +242,10 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		d.dispatch(dp.groups[0], dp.groups[1], dp.groups[2]);
 	}
 	d.list_end();
+	if (ts) {
+		d.capture_timestamp("ggml_rd_graph_end");
+		c.ts_armed = true;
+	}
 	d.submit();
 	c.pending = true;
 

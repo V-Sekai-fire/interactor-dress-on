@@ -429,6 +429,10 @@ func ggml_ops_k1k5() -> String: return ggml_ops_start("-o SILU,GELU,GELU_ERF,SIG
 func ggml_probe_census() -> String: return ggml_probe_start("census", "all", "")
 func ggml_probe_census_fault() -> String: return ggml_probe_start("census", "all", "GGML_RD_FAULT=1")  # every row must FAIL
 func ggml_probe_perf() -> String: return ggml_probe_start("perf", "all", "")
+# The data-movement family (CPY/DUP/CONT, GET_ROWS, CONCAT, REPEAT).
+func ggml_ops_move() -> String: return ggml_ops_start("-o CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT -b RD0", "")
+func ggml_ops_move_fault() -> String: return ggml_ops_start("-o DUP,CONT,GET_ROWS,CONCAT,REPEAT -p ^(?!type=i32,) -b RD0", "GGML_RD_FAULT=1")  # must FAIL
+func ggml_probe_perf_move() -> String: return ggml_probe_start("perf", "move", "")  # GPU time per op, hot shapes
 func ggml_probe_files() -> String:
 	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)

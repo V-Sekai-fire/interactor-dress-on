@@ -26,6 +26,11 @@
 //                    order the spans, and increments are lost; the probe
 //                    PASSes when they are (the hazard is still there, and
 //                    read-write sources are what avoid it).
+//   perf <set>       GPU time per op (ggml-rd's timestamps around the compute
+//                    list) on the census's hottest data-movement shapes: a
+//                    graph of K copies against one of 1, per op = the
+//                    difference / (K - 1). Numbers, no threshold: RESULT PASS
+//                    when every case was timed.
 #pragma once
 
 #include <string>

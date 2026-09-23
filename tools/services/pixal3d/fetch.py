@@ -32,8 +32,8 @@ SOURCES = {
     # MoGe-3's refiner needs FlexGEMM 2.0 (flex_gemm.nn); Pixal3D needs the 0.0.1 API
     # (flex_gemm.ops.spconv / .grid_sample), which 2.0 removed. 2.0 runs pure Triton
     # without its CUDA extension and imports itself only relatively, so it is exposed
-    # as a second package, flex_gemm2 (see link_flexgemm2). Not yet in the org.
-    "flexgemm2": ("https://github.com/JeffreyXiang/FlexGEMM",
+    # as a second package, flex_gemm2 (see link_flexgemm2). Org fork of JeffreyXiang's.
+    "flexgemm2": ("https://github.com/V-Sekai-fire/FlexGEMM",
                   "b2fadb29d41846c7981ade6801ffc689fae119cf", ["flexgemm2-own-cache.patch"]),
     "naf": ("https://github.com/V-Sekai-fire/NAF",
             "37f2dfc180f2de53d98bd601109c0da0dd6b0f43", ["naf-na2d-block.patch"]),

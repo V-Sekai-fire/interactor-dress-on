@@ -14,7 +14,7 @@
 #   spconv-cu118, cumm-cu118                     pypi.org (traveller59 win_amd64 wheels)
 #   mitsuba 3.9.1, drjit                         pypi.org (the Step-1 renderer, cuda_ad_rgb)
 #   open3d 0.19.0, usd-core, xatlas, pymeshfix   pypi.org
-#   utils3d                                      git EasternJournalist/utils3d @ 9a4eb15 (pure python)
+#   utils3d                                      git V-Sekai-fire/utils3d (fork of EasternJournalist's) @ 9a4eb15 (pure python)
 #   pysdf                                        pypi sdist, built by MSVC (VS2022) against conda-forge eigen
 # Not installed, and why (the same three decisions VoxHammer's own win-64 pixi.toml records):
 #   flash-attn  -- no Windows wheel for torch 2.4 + cu118; ATTN_BACKEND=xformers covers
@@ -58,7 +58,7 @@ huggingface-hub = "*"
 opencv-python = "*"
 pillow = "*"
 tqdm = "*"
-utils3d = { git = "https://github.com/EasternJournalist/utils3d.git", rev = "9a4eb15e4021b67b12c460c7057d642626897ec8" }
+utils3d = { git = "https://github.com/V-Sekai-fire/utils3d.git", rev = "9a4eb15e4021b67b12c460c7057d642626897ec8" }
 usd-core = "*"
 open3d = "==0.19.0"
 pysdf = "*"

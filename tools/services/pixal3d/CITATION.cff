@@ -45,9 +45,10 @@ abstract: >-
 
   Binary wheels (not built here): cumesh 1.0, flex_gemm 0.0.1, o_voxel 0.0.1,
   nvdiffrast 0.4.0, nvdiffrec_render 0.0.0, cp311 win_amd64 for Torch 2.8.0 +
-  cu128, from visualbruno/ComfyUI-Trellis2 @14597418 wheels/Windows/Torch280
-  (sha256 in README.md); utils3d 0.0.2 from LDYang694/Storages release
-  20260430 (Pixal3D's own pin); torch/torchvision from download.pytorch.org
+  cu128, from V-Sekai-fire/ComfyUI-Trellis2-visualbruno (fork of
+  visualbruno/ComfyUI-Trellis2) @14597418 wheels/Windows/Torch280 (sha256 in
+  README.md); utils3d 0.0.2 from V-Sekai-fire/Storages release 20260430, a
+  mirror of LDYang694/Storages' asset (Pixal3D's own pin); torch/torchvision from download.pytorch.org
   cu128; triton-windows from PyPI.
 authors:
   - name: TencentARC (Pixal3D)
@@ -73,9 +74,9 @@ references:
     commit: 37f2dfc180f2de53d98bd601109c0da0dd6b0f43
   - type: software
     title: FlexGEMM
-    repository-code: https://github.com/JeffreyXiang/FlexGEMM
+    repository-code: https://github.com/V-Sekai-fire/FlexGEMM
     commit: b2fadb29d41846c7981ade6801ffc689fae119cf
   - type: software
     title: ComfyUI-Trellis2 (Windows wheels)
-    repository-code: https://github.com/visualbruno/ComfyUI-Trellis2
+    repository-code: https://github.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno
     commit: 14597418bbe33a440ead4667e2966408f0524a21

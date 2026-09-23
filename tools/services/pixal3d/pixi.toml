@@ -4,7 +4,7 @@
 # by `pixi run fetch` into ./src at a pinned commit with ./patches applied (see
 # CITATION.cff). The CUDA extensions are not built here: they are the community
 # Windows wheels visualbruno/ComfyUI-Trellis2 ships for Torch 2.8.0 + cu128,
-# pinned to one commit of that repo; README.md lists each wheel's sha256.
+# fetched from the org fork V-Sekai-fire/ComfyUI-Trellis2-visualbruno at one commit; README.md lists each wheel's sha256.
 #
 # Why torch 2.8.0 + triton 3.4 and not the Linux recipe's 2.6.0 + cu124: a CUDA
 # extension has to match the torch it was compiled against, and the Windows wheels
@@ -27,16 +27,16 @@ torch = { version = "==2.8.0", index = "https://download.pytorch.org/whl/cu128" 
 torchvision = { version = "==0.23.0", index = "https://download.pytorch.org/whl/cu128" }
 triton-windows = ">=3.4,<3.5"
 
-# visualbruno/ComfyUI-Trellis2 @14597418bbe33a440ead4667e2966408f0524a21, wheels/Windows/Torch280
-cumesh = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/cumesh-1.0-cp311-cp311-win_amd64.whl" }
-flex-gemm = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/flex_gemm-0.0.1-cp311-cp311-win_amd64.whl" }
-o-voxel = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/o_voxel-0.0.1-cp311-cp311-win_amd64.whl" }
-nvdiffrast = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrast-0.4.0-cp311-cp311-win_amd64.whl" }
-nvdiffrec-render = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrec_render-0.0.0-cp311-cp311-win_amd64.whl" }
+# V-Sekai-fire/ComfyUI-Trellis2-visualbruno (fork of visualbruno/ComfyUI-Trellis2) @14597418bbe33a440ead4667e2966408f0524a21, wheels/Windows/Torch280
+cumesh = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/cumesh-1.0-cp311-cp311-win_amd64.whl" }
+flex-gemm = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/flex_gemm-0.0.1-cp311-cp311-win_amd64.whl" }
+o-voxel = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/o_voxel-0.0.1-cp311-cp311-win_amd64.whl" }
+nvdiffrast = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrast-0.4.0-cp311-cp311-win_amd64.whl" }
+nvdiffrec-render = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrec_render-0.0.0-cp311-cp311-win_amd64.whl" }
 
 # Pixal3D's own utils3d pin (py3-none-any), and MoGe's (a different package name).
-utils3d = { url = "https://github.com/LDYang694/Storages/releases/download/20260430/utils3d-0.0.2-py3-none-any.whl" }
-utils3d-moge = { git = "https://github.com/EasternJournalist/utils3d-moge.git", rev = "62f09d58509485564e24d5d9f6aac9ee9ebc0c37" }
+utils3d = { url = "https://github.com/V-Sekai-fire/Storages/releases/download/20260430/utils3d-0.0.2-py3-none-any.whl" }
+utils3d-moge = { git = "https://github.com/V-Sekai-fire/utils3d-moge.git", rev = "62f09d58509485564e24d5d9f6aac9ee9ebc0c37" }
 
 # Pixal3D requirements.txt @cdbb2bb, as pinned there.
 pillow = "==12.0.0"

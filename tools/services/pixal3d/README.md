@@ -25,7 +25,7 @@ vertex normals, primvars:st; upAxis Y, metersPerUnit 1).
 |---|---|---|
 | torch 2.6.0 cu124 | torch 2.8.0 cu128 | the prebuilt Windows wheels of the CUDA extensions exist for 2.7.0, 2.8.0, 2.10.0; 2.7.0's triton (3.3) was measured to fail FlexGEMM 2.0 (below) |
 | triton | triton-windows 3.4.0 | flex_gemm's Windows wheel names it as its dependency |
-| cumesh, flex_gemm, o_voxel, nvdiffrast, nvdiffrec_render (source / Space wheels) | visualbruno/ComfyUI-Trellis2 @14597418, `wheels/Windows/Torch280`, cp311 | no build: the desk's nvcc is 12.4, torch is cu128 |
+| cumesh, flex_gemm, o_voxel, nvdiffrast, nvdiffrec_render (source / Space wheels) | V-Sekai-fire/ComfyUI-Trellis2-visualbruno (fork of visualbruno/ComfyUI-Trellis2) @14597418, `wheels/Windows/Torch280`, cp311 | no build: the desk's nvcc is 12.4, torch is cu128 |
 | flash_attn | `ATTN_BACKEND=sdpa` | upstream's own backend switch; no Windows flash-attn build |
 | natten (cutlass-fna) | na2d_block, `patches/naf-na2d-block.patch` | no NATTEN win-64 build; the pure-torch form is exact (gates/7-pixal3d/aux-models/naf_ref.py) |
 | MoGe-2 | MoGe-3 (`Ruicheng/moge-3-vitl`), user's choice | its refiner needs FlexGEMM 2.0, exposed as `flex_gemm2` beside Pixal3D's 0.0.1 |
@@ -58,10 +58,15 @@ Wheel sha256 (as downloaded from raw.githubusercontent.com at that commit):
 | nvdiffrec_render-0.0.0-cp311-cp311-win_amd64.whl | 2bc74423d15cce8dc7ee2db3741e6cc71e700f485cb51fd86f26c53b2755cab1 |
 | o_voxel-0.0.1-cp311-cp311-win_amd64.whl | 531e370e7768d32a438ca7ebbdc5d7644cb3b9c4838f2539c6768dc464cb3145 |
 
-Other sources: utils3d 0.0.2 (LDYang694/Storages release 20260430, Pixal3D's pin),
-utils3d-moge @62f09d5 (EasternJournalist, MoGe's pin), FlexGEMM @b2fadb2
-(JeffreyXiang, MoGe's pin). The last three and the wheels are outside
-V-Sekai-fire (AGENTS.md rule 1): org forks are pending the user's go.
+Other sources, every one from an org fork (AGENTS.md rule 1; forked
+2026-09-23 on the user's go): utils3d 0.0.2 from V-Sekai-fire/Storages release
+20260430, a byte-for-byte mirror of LDYang694/Storages' asset (Pixal3D's pin;
+sha256 ff63440827d6933807dd06c8a5a2db7e51fd5f33c7f3dddcc766a80e0f419252);
+utils3d-moge @62f09d5 from V-Sekai-fire/utils3d-moge (EasternJournalist's, MoGe's
+pin); FlexGEMM @b2fadb2 from V-Sekai-fire/FlexGEMM (JeffreyXiang's `dev/all_triton`,
+MoGe's pin). The wheels come from V-Sekai-fire/ComfyUI-Trellis2-visualbruno at the
+same commit (the org already had a different ComfyUI-TRELLIS2, PozzettiAndrea's,
+hence the suffix).
 
 ## Weights
 

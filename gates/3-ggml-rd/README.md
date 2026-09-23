@@ -1,14 +1,31 @@
 # Gate 3 — ggml-rd: ggml over RenderingDevice, kernels from Lean
 
-**Result: G3.ops PASS for ADD and MUL, and for the data-movement family
-K2 (CPY, DUP, CONT, GET_ROWS, CONCAT, REPEAT: its own section below; the
-committed `ops/results.txt` is the run of all eight ops, 425/425 OK).**
-`ops/results.txt`: RESULT: PASS.
-**Result: G3.ops PASS for ADD, MUL and MUL_MAT** (MUL_MAT: see K6 below;
-the paragraph here is the ADD/MUL reference run).
-**ADD and MUL.** `ops/results.txt`: RESULT: PASS.
-**Result: G3.ops PASS for ADD and MUL, and for FLASH_ATTN_EXT (K8, its own
-section below).** `ops/results.txt`: RESULT: PASS.
+**Result: G3.ops PASS for all 22 census ops** (and DUP and MEAN, which
+share their kernels), after the six op families merged into cut-3.
+`ops/results.txt` (2026-09-23, RTX 4090, Godot 4.7.2, `--xr-mode off`):
+`test-backend-ops -o ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT,
+FLASH_ATTN_EXT,IM2COL,CONV_3D,NORM,RMS_NORM,MEAN,SOFT_MAX,SILU,GELU,GELU_ERF,
+SIGMOID,NEG,SCALE,DIAG_MASK_INF,ROPE -b RD0` in the guest reports **1700/1700
+OK, 0 FAIL, `Backend RD0: OK`** (7230 not supported: quantized types,
+masks, sinks, frequency factors, f16 ADD/MUL; none a census row), in 1590 s.
+The same 1700 pass with a barrier after every dispatch (1612 s). Every
+census-required type row (the gate's `REQUIRED`: MUL_MAT f32/f16/bf16 x f32,
+f16 x f16 and permuted src1; CONT f16; GET_ROWS f32/f16/bf16; ROPE NEOX
+without frequency factors; FLASH_ATTN_EXT D=128 H=12 f32 K/V, no mask,
+prec f32; CONV_3D f16 kernel; IM2COL f16 out; SOFT_MAX without mask; the
+f32 unary, norm and move ops) matches at least one OK case and no "not
+supported" one. The census probe (K1/K5's 15 rows vs the in-guest ggml-cpu)
+passes. Controls: `GGML_RD_FAULT=1` fails 54/54 ADD cases and 129/129
+data-movement cases; headless, the same ELF prints `no RD device` and runs no
+RD0 case (`ops/results-headless.txt`). Rule 4: 0 same-frame syncs, 0
+permanent slots at close. L0 (all pins, three negative controls), L1 (67
+kernels spirv-val and layout, 48 cpp emits for riscv64, 19 group-shared
+kernels skipped for their siblings) and L2 (356/356 cases; swap-nb control
+detects 336, misses 0, 20 no-ops) pass on the merged tree. Per-family
+detail is in the sections below; their own evidence folders (`ops/k1k5`,
+`ops-k3k4`, `ops-k7`, `ops/fa-serial`) keep their runs.
+
+**ADD and MUL** (the first reference run, before the families):
 ggml's own `test-backend-ops -o ADD,MUL -b RD0`, run inside the guest
 (`ggml_test.elf`) against the in-guest ggml-cpu, reports **100/100 tests
 passed, 0 FAIL, `Backend RD0: OK`**; the 90 f16 cases report "not supported"

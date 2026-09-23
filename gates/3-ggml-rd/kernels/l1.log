@@ -1,6 +1,6 @@
-# ggml-rd L1, 2026-09-23T07:24:58Z, 2026.13.1-1-g84792eb15
-== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 cpy_b32 cpy_b16 cpy_f32_f16 cpy_f32_bf16 cpy_f16_f32 cpy_bf16_f32 cpy_f16_bf16 cpy_bf16_f16 get_rows_b32 get_rows_f16 get_rows_bf16 concat_b32 concat_b16 repeat_b32 repeat_b16 
-layout ok: add_f32, mul_f32, cpy_b32, cpy_b16, cpy_f32_f16, cpy_f32_bf16, cpy_f16_f32, cpy_bf16_f32, cpy_f16_bf16, cpy_bf16_f16, get_rows_b32, get_rows_f16, get_rows_bf16, concat_b32, concat_b16, repeat_b32, repeat_b16
+# ggml-rd L1, 2026-09-23T08:28:18Z, 2026.13.1-1-g84792eb15
+== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 silu_f32 gelu_f32 gelu_erf_f32 sigmoid_f32 neg_f32 scale_f32 diag_mask_inf_f32 rope_neox_f32 cpy_b32 cpy_b16 cpy_f32_f16 cpy_f32_bf16 cpy_f16_f32 cpy_bf16_f32 cpy_f16_bf16 cpy_bf16_f16 get_rows_b32 get_rows_f16 get_rows_bf16 concat_b32 concat_b16 repeat_b32 repeat_b16 norm_f32 norm_f32_serial rms_norm_f32 rms_norm_f32_serial mean_f32 mean_f32_serial soft_max_f32 soft_max_f32_serial norm_f32_t64 norm_f32_t64_serial rms_norm_f32_t64 rms_norm_f32_t64_serial soft_max_f32_t64 soft_max_f32_t64_serial mul_mat_tiled_f32_f32 mul_mat_tiled_f16_f32 mul_mat_tiled_bf16_f32 mul_mat_tiled_f16_f16 mul_mat_vec_f32_f32 mul_mat_vec_f16_f32 mul_mat_vec_bf16_f32 mul_mat_vec_f16_f16 mul_mat_serial_tiled_f32_f32 mul_mat_serial_tiled_f16_f32 mul_mat_serial_tiled_bf16_f32 mul_mat_serial_tiled_f16_f16 mul_mat_serial_vec_f32_f32 mul_mat_serial_vec_f16_f32 mul_mat_serial_vec_bf16_f32 mul_mat_serial_vec_f16_f16 im2col_f32 im2col_f16 conv3d_f32 conv3d_f16 flash_attn_ext_f32_d64 flash_attn_ext_f32_d64_serial flash_attn_ext_f32_d128 flash_attn_ext_f32_d128_serial flash_attn_ext_f16_d64 flash_attn_ext_f16_d64_serial flash_attn_ext_f16_d128 flash_attn_ext_f16_d128_serial 
+layout ok: add_f32, mul_f32, silu_f32, gelu_f32, gelu_erf_f32, sigmoid_f32, neg_f32, scale_f32, diag_mask_inf_f32, rope_neox_f32, cpy_b32, cpy_b16, cpy_f32_f16, cpy_f32_bf16, cpy_f16_f32, cpy_bf16_f32, cpy_f16_bf16, cpy_bf16_f16, get_rows_b32, get_rows_f16, get_rows_bf16, concat_b32, concat_b16, repeat_b32, repeat_b16, norm_f32, norm_f32_serial, rms_norm_f32, rms_norm_f32_serial, mean_f32, mean_f32_serial, soft_max_f32, soft_max_f32_serial, norm_f32_t64, norm_f32_t64_serial, rms_norm_f32_t64, rms_norm_f32_t64_serial, soft_max_f32_t64, soft_max_f32_t64_serial, mul_mat_tiled_f32_f32, mul_mat_tiled_f16_f32, mul_mat_tiled_bf16_f32, mul_mat_tiled_f16_f16, mul_mat_vec_f32_f32, mul_mat_vec_f16_f32, mul_mat_vec_bf16_f32, mul_mat_vec_f16_f16, mul_mat_serial_tiled_f32_f32, mul_mat_serial_tiled_f16_f32, mul_mat_serial_tiled_bf16_f32, mul_mat_serial_tiled_f16_f16, mul_mat_serial_vec_f32_f32, mul_mat_serial_vec_f16_f32, mul_mat_serial_vec_bf16_f32, mul_mat_serial_vec_f16_f16, im2col_f32, im2col_f16, conv3d_f32, conv3d_f16, flash_attn_ext_f32_d64, flash_attn_ext_f32_d64_serial, flash_attn_ext_f32_d128, flash_attn_ext_f32_d128_serial, flash_attn_ext_f16_d64, flash_attn_ext_f16_d64_serial, flash_attn_ext_f16_d128, flash_attn_ext_f16_d128_serial
 PASS layout
 == negative: add_f32 at slangc's default -O1 with -preserve-params (must fail)
 layout error: add_f32_o1: SPIR-V layout differs: missing ['s2'], extra [], wrong []
@@ -8,9 +8,22 @@ PASS the -O1 build is refused
 == negative: kernels/avbd saxpby, another layout (must fail)
 layout error: saxpby: SPIR-V layout differs: missing ['s0', 's1', 's2', 'slot'], extra ['x', 'y'], wrong ["dst=(0, 3, 'storage', True) want (0, 4, 'storage', True)", "params=(0, 0, 'uniform', None) want (0, 0, 'storage', False)"]
 PASS saxpby is refused
+== negative: slangc -target cpp on a kernel with a group barrier, mul_mat_tiled_f16_f32 (must fail)
+PASS refused: error[E36107]: unavailable features in entry point, at see using of 'GroupMemoryBarrierWithGroupSync'
+== negative: a cpp_siblings pair with different thread groups, mul_mat_tiled_f16_f32 -> mul_mat_serial_vec_f16_f32 (must fail)
+layout error: sibling pair mul_mat_tiled_f16_f32 -> mul_mat_serial_vec_f16_f32: thread groups [16, 16, 1] and [32, 8, 1] differ
+PASS the mismatched pair is refused
 == cpp emits compiled for riscv64 (clang version 23.1.1 (https://github.com/llvm/llvm-project 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
 PASS riscv64 add_f32 (3784 bytes of object)
 PASS riscv64 mul_f32 (3784 bytes of object)
+PASS riscv64 silu_f32 (3760 bytes of object)
+PASS riscv64 gelu_f32 (3848 bytes of object)
+PASS riscv64 gelu_erf_f32 (3920 bytes of object)
+PASS riscv64 sigmoid_f32 (3760 bytes of object)
+PASS riscv64 neg_f32 (3544 bytes of object)
+PASS riscv64 scale_f32 (3728 bytes of object)
+PASS riscv64 diag_mask_inf_f32 (3768 bytes of object)
+PASS riscv64 rope_neox_f32 (4552 bytes of object)
 PASS riscv64 cpy_b32 (3720 bytes of object)
 PASS riscv64 cpy_b16 (5192 bytes of object)
 PASS riscv64 cpy_f32_f16 (5632 bytes of object)
@@ -26,4 +39,46 @@ PASS riscv64 concat_b32 (3960 bytes of object)
 PASS riscv64 concat_b16 (5424 bytes of object)
 PASS riscv64 repeat_b32 (3632 bytes of object)
 PASS riscv64 repeat_b16 (5096 bytes of object)
+SKIP riscv64 norm_f32 (group-shared, no cpp emit; norm_f32_serial is compiled instead)
+PASS riscv64 norm_f32_serial (5272 bytes of object)
+SKIP riscv64 rms_norm_f32 (group-shared, no cpp emit; rms_norm_f32_serial is compiled instead)
+PASS riscv64 rms_norm_f32_serial (4560 bytes of object)
+SKIP riscv64 mean_f32 (group-shared, no cpp emit; mean_f32_serial is compiled instead)
+PASS riscv64 mean_f32_serial (4056 bytes of object)
+SKIP riscv64 soft_max_f32 (group-shared, no cpp emit; soft_max_f32_serial is compiled instead)
+PASS riscv64 soft_max_f32_serial (5328 bytes of object)
+SKIP riscv64 norm_f32_t64 (group-shared, no cpp emit; norm_f32_t64_serial is compiled instead)
+PASS riscv64 norm_f32_t64_serial (5104 bytes of object)
+SKIP riscv64 rms_norm_f32_t64 (group-shared, no cpp emit; rms_norm_f32_t64_serial is compiled instead)
+PASS riscv64 rms_norm_f32_t64_serial (4480 bytes of object)
+SKIP riscv64 soft_max_f32_t64 (group-shared, no cpp emit; soft_max_f32_t64_serial is compiled instead)
+PASS riscv64 soft_max_f32_t64_serial (5040 bytes of object)
+SKIP riscv64 mul_mat_tiled_f32_f32 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_tiled_f16_f32 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_tiled_bf16_f32 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_tiled_f16_f16 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_vec_f32_f32 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_vec_f16_f32 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_vec_bf16_f32 (GPU-only: cpp_siblings.txt names its sibling)
+SKIP riscv64 mul_mat_vec_f16_f16 (GPU-only: cpp_siblings.txt names its sibling)
+PASS riscv64 mul_mat_serial_tiled_f32_f32 (8048 bytes of object)
+PASS riscv64 mul_mat_serial_tiled_f16_f32 (9792 bytes of object)
+PASS riscv64 mul_mat_serial_tiled_bf16_f32 (8464 bytes of object)
+PASS riscv64 mul_mat_serial_tiled_f16_f16 (11480 bytes of object)
+PASS riscv64 mul_mat_serial_vec_f32_f32 (6504 bytes of object)
+PASS riscv64 mul_mat_serial_vec_f16_f32 (6952 bytes of object)
+PASS riscv64 mul_mat_serial_vec_bf16_f32 (6536 bytes of object)
+PASS riscv64 mul_mat_serial_vec_f16_f16 (8688 bytes of object)
+PASS riscv64 im2col_f32 (4232 bytes of object)
+PASS riscv64 im2col_f16 (5520 bytes of object)
+PASS riscv64 conv3d_f32 (4912 bytes of object)
+PASS riscv64 conv3d_f16 (6288 bytes of object)
+SKIP riscv64 flash_attn_ext_f32_d64 (group-shared, no cpp emit; flash_attn_ext_f32_d64_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f32_d64_serial (5520 bytes of object)
+SKIP riscv64 flash_attn_ext_f32_d128 (group-shared, no cpp emit; flash_attn_ext_f32_d128_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f32_d128_serial (5520 bytes of object)
+SKIP riscv64 flash_attn_ext_f16_d64 (group-shared, no cpp emit; flash_attn_ext_f16_d64_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f16_d64_serial (7496 bytes of object)
+SKIP riscv64 flash_attn_ext_f16_d128 (group-shared, no cpp emit; flash_attn_ext_f16_d128_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f16_d128_serial (7496 bytes of object)
 RESULT: PASS

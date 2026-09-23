@@ -20,8 +20,10 @@
 #   probe perf         the same under GGML_RD_BARRIER_ALL=1 (serialised latency)
 #   probe mm_perf      MUL_MAT timing on the census's hottest shapes and the
 #                      4096x1536x1024 benchmark, each checked against a double sum
-#   ops main           test-backend-ops -o <OPS> -b RD0: 0 FAIL, every case OK or not supported,
-#                      and no case REQUIRED names (the census's type rows) "not supported"
+#   probe census       the census's hot rows (K1/K5's census.cpp) vs the in-guest ggml-cpu
+#   ops main           test-backend-ops -o <OPS> -b RD0: 0 FAIL, every case OK or not supported;
+#                      every REQUIRED pattern (the census's type rows) matches at least one OK
+#                      case and no "not supported" one
 #   ops barrier_all    the same under GGML_RD_BARRIER_ALL=1: 0 FAIL
 #   ops fault          -o ADD with GGML_RD_FAULT=1 (a source offset +1): the
 #                      control, it must FAIL
@@ -56,15 +58,46 @@ const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
 # GGML_GATE_OPS in the environment replaces the list for one run.
-const OPS := "ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT,FLASH_ATTN_EXT"
+# The 22 census ops, and DUP and MEAN, which share their kernels.
+const OPS := ("ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT,FLASH_ATTN_EXT,IM2COL,CONV_3D,"
+		+ "NORM,RMS_NORM,MEAN,SOFT_MAX,SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,DIAG_MASK_INF,ROPE")
 const FAULT_OPS := "ADD"
-# Cases that must be OK, never "not supported": the census's required type
-# rows, as regexes over a case's test-backend-ops parameters, by op.
+# The census's required type rows (census_union.csv, the plan's Cut 3), as
+# regexes over a case's test-backend-ops parameters, by op: each must match
+# at least one OK case of a run that tests its op, and no "not supported"
+# one. Excluded on purpose: ROPE with frequency factors (ff=1), SOFT_MAX
+# with a mask or sinks, FLASH_ATTN_EXT with a mask; no census row has them.
 const REQUIRED := {
-	"MUL_MAT": ["^type_a=(f32|f16|bf16),type_b=f32,", "^type_a=f16,type_b=f16,"],
+	"ADD": ["^type=f32,"],
+	"MUL": ["^type=f32,"],
+	"MUL_MAT": ["^type_a=f32,type_b=f32,", "^type_a=f16,type_b=f32,", "^type_a=bf16,type_b=f32,",
+			"^type_a=f16,type_b=f16,", "^type_a=f32,type_b=f32,.*per=\\[0,2,1,3\\]",
+			"^type_a=f16,type_b=f32,.*per=\\[0,2,1,3\\]"],
+	"CPY": ["^type_src=f32,type_dst=f32,"],
+	"CONT": ["^type=f32,", "^type=f16,"],
+	"GET_ROWS": ["^type=f32,", "^type=f16,", "^type=bf16,"],
+	"CONCAT": ["^type=f32,"],
+	"REPEAT": ["^type=f32,"],
+	"ROPE": ["^type=f32,.*mode=2,.*ff=0,"],
+	"FLASH_ATTN_EXT": ["^hsk=128,hsv=128,nh=12,.*mask=0,sinks=0,max_bias=0\\.000000,logit_softcap=0\\.000000,prec=f32,type_K=f32,type_V=f32"],
+	"CONV_3D": ["type_kernel=f16"],
+	"IM2COL": ["^type_input=f32,type_kernel=f16,dst_type=f16,"],
+	"SOFT_MAX": ["^type=f32,.*mask=0,sinks=0,"],
+	"DIAG_MASK_INF": ["^type=f32,"],
+	"SCALE": ["^type=f32,"],
+	"SIGMOID": ["^type=f32,"],
+	"GELU": ["^type=f32,"],
+	"GELU_ERF": ["^type=f32,"],
+	"NEG": ["^type=f32,"],
+	"SILU": ["^type=f32,"],
+	"NORM": ["^type=f32,"],
+	"RMS_NORM": ["^type=f32,"],
 }
 const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
-const WALL_S := 3600.0
+# The full list takes about 27 min per ops run in the guest (ggml-cpu is
+# emulated; 1590 s and 1612 s on 2026-09-23), ops_main and ops_barrier_all
+# both run it, and the whole gate took 3466 s: an hour is too tight.
+const WALL_S := 10800.0
 # The data-movement ops whose fault control is meaningful (GGML_RD_FAULT moves
 # src1's offset when there is one, else src0's; a CPY never reads its src1).
 const FAULT_MOVE_OPS := "DUP,CONT,GET_ROWS,CONCAT,REPEAT"
@@ -178,6 +211,7 @@ func _initialize() -> void:
 			["probe_perf", "probe", "perf", "move", ""],
 			["probe_perf_barrier_all", "probe", "perf", "move", "GGML_RD_BARRIER_ALL=1"],
 			["probe_mm_perf", "probe", "mm_perf", "all", ""],
+			["probe_census", "probe", "census", "all", ""],
 			["ops_main", "ops", "-o %s -b RD0" % _ops, ""],
 			["ops_barrier_all", "ops", "-o %s -b RD0" % _ops, "GGML_RD_BARRIER_ALL=1"],
 			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
@@ -259,9 +293,12 @@ func _end_run(st: String) -> void:
 			_say("   %s: OK=%d FAIL=%d not_supported=%d" % [op, c.ok, c.fail, c.unsupported])
 		for l in res.fail_lines.slice(0, 5):
 			_say("   failed: %s" % l)
-		_say("   required cases not supported: %d" % res.required_unsupported.size())
-		for l in res.required_unsupported.slice(0, 5):
-			_say("   required, not supported: %s" % l)
+		if not _headless: # headless runs no RD0 case: nothing to require
+			_say("   required cases not supported: %d" % res.required_unsupported.size())
+			var missing := _required_missing(res)
+			_say("   required patterns with no OK case: %d%s" % [missing.size(), (" " + str(missing)) if missing.size() > 0 else ""])
+			for l in res.required_unsupported.slice(0, 5):
+				_say("   required, not supported: %s" % l)
 	else:
 		for l in text.split("\n"):
 			if l.begins_with("PROBE") or l.begins_with("RESULT"):
@@ -276,6 +313,7 @@ func _parse_ops(text: String) -> Dictionary:
 	var per_op := {}
 	var fail_lines := []
 	var required_unsupported := []
+	var required_ok := {}
 	var passed_line := ""
 	var backend_line := ""
 	# A case is "OP(params): OK|FAIL|not supported [..]"; a failing case's
@@ -294,6 +332,11 @@ func _parse_ops(text: String) -> Dictionary:
 			if st == "OK":
 				ok += 1
 				per_op[op].ok += 1
+				for pat in REQUIRED.get(op, []):
+					var rq := RegEx.new()
+					rq.compile(pat)
+					if rq.search(m.get_string(2)) != null:
+						required_ok[op + " " + pat] = required_ok.get(op + " " + pat, 0) + 1
 			elif st == "FAIL":
 				fail += 1
 				per_op[op].fail += 1
@@ -311,8 +354,20 @@ func _parse_ops(text: String) -> Dictionary:
 		elif s.begins_with("Backend RD0:"):
 			backend_line = s
 	return {"ok": ok, "fail": fail, "unsupported": unsupported, "per_op": per_op, "fail_lines": fail_lines,
-			"required_unsupported": required_unsupported,
+			"required_unsupported": required_unsupported, "required_ok": required_ok,
 			"passed_line": passed_line, "backend_line": backend_line}
+
+# REQUIRED patterns of the ops this run tested that matched no OK case.
+func _required_missing(res: Dictionary) -> Array:
+	var tested: PackedStringArray = _ops.split(",")
+	var out := []
+	for op in REQUIRED:
+		if not tested.has(op):
+			continue
+		for pat in REQUIRED[op]:
+			if res.get("required_ok", {}).get(op + " " + pat, 0) == 0:
+				out.append(op + " " + pat)
+	return out
 
 func _probe_pass(name: String) -> bool:
 	return _results.has(name) and _results[name].state == "done" and _results[name].text.contains("RESULT: PASS")
@@ -336,6 +391,7 @@ func _checks() -> void:
 	_verdict(_probe_pass("probe_perf") and _probe_pass("probe_perf_barrier_all"),
 			"probe_perf: every hot data-movement shape timed on the GPU, with and without a barrier per dispatch")
 	_verdict(_probe_pass("probe_mm_perf"), "probe_mm_perf: every shape timed and within nmse 1e-8 of a double sum")
+	_verdict(_probe_pass("probe_census"), "probe_census: every census row within threshold of the in-guest ggml-cpu")
 	for n in ["ops_main", "ops_barrier_all"]:
 		var r = _results.get(n, {})
 		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
@@ -343,8 +399,11 @@ func _checks() -> void:
 				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, _ops, r.get("ok", 0),
 				r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
 		_verdict(r.get("state", "") == "done" and r.get("required_unsupported", [null]).is_empty(),
-				"%s: every required case (%s) is OK, none not supported (%d are)" % [n, str(REQUIRED),
+				"%s: no census-required case is not supported (%d are)" % [n,
 				r.get("required_unsupported", [null]).size()])
+		var missing: Array = _required_missing(r) if r.get("state", "") == "done" else ["(run not done)"]
+		_verdict(missing.is_empty(), "%s: every census-required pattern of the tested ops has an OK case (%d missing%s)" % [
+				n, missing.size(), (": " + str(missing)) if missing.size() > 0 else ""])
 	var m = _results.get("ops_main", {})
 	var b = _results.get("ops_barrier_all", {})
 	_verdict(m.get("ok", -1) == b.get("ok", -2) and m.get("unsupported", -1) == b.get("unsupported", -2),

@@ -113,7 +113,10 @@ our own, no host DLL. The GPU is reachable only through Godot's
   sibling (same words, thread-group size and grid, same sums in the same
   order, no group memory; e.g. `lean/Ggml/SlangCodegen/MulMatSerial.lean`)
   named in `kernels/ggml/cpp_siblings.txt`, which the L2 harness runs in
-  its place.
+  its place. A sibling with another thread group is named `<k>_serial`
+  instead: run in place when it is one thread per group over the same
+  grid (NORM, SOFT_MAX), else chosen by its packer under
+  `GGML_RD_SERIAL=1` (FLASH_ATTN_EXT; `tests/ggml_rd_kernels/gen_host_kernels.py`).
 - godot-sandbox caches an Object call's method name in a 32-slot direct-mapped
   cache keyed by the guest ADDRESS of the name string; two hot names in one
   slot evict each other and each call re-resolves (~2-5 ms). It is decided

@@ -537,6 +537,7 @@ void perf(const std::string &set) {
 	ggml_backend_free(be);
 	(void)set;
 	result(ok, "perf");
+}
 
 // --- mm_perf: MUL_MAT timing on the census's hottest shapes ------------------
 

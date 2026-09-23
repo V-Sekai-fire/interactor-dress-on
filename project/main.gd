@@ -437,6 +437,15 @@ func ggml_probe_perf_move() -> String: return ggml_probe_start("perf", "move", "
 func ggml_ops_conv() -> String: return ggml_ops_start("-o IM2COL,CONV_3D -b RD0", "")
 func ggml_ops_conv_fault() -> String: return ggml_ops_start("-o IM2COL,CONV_3D -b RD0", "GGML_RD_FAULT=1")  # must FAIL
 func ggml_probe_conv_perf() -> String: return ggml_probe_start("conv_perf", "all", "")
+# Families K3/K4 (NORM, RMS_NORM, MEAN, SOFT_MAX), K6 (MUL_MAT), K8
+# (FLASH_ATTN_EXT), and every op of Gate 3 at once (the census's 22, DUP, MEAN).
+func ggml_ops_rows() -> String: return ggml_ops_start("-o NORM,RMS_NORM,MEAN,SOFT_MAX -b RD0", "")
+func ggml_probe_rows_perf() -> String: return ggml_probe_start("rows_perf", "", "")
+func ggml_ops_mul_mat() -> String: return ggml_ops_start("-o MUL_MAT -b RD0", "")
+func ggml_probe_mm_perf() -> String: return ggml_probe_start("mm_perf", "all", "")
+func ggml_ops_flash_attn() -> String: return ggml_ops_start("-o FLASH_ATTN_EXT -b RD0", "")
+func ggml_probe_fa_perf() -> String: return ggml_probe_start("fa_perf", "4096,4096,20", "")  # D=128, 12 heads, f32
+func ggml_ops_all() -> String: return ggml_ops_start("-o ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT,FLASH_ATTN_EXT,IM2COL,CONV_3D,NORM,RMS_NORM,MEAN,SOFT_MAX,SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,DIAG_MASK_INF,ROPE -b RD0", "")
 func ggml_probe_files() -> String:
 	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)

@@ -15,6 +15,7 @@
 
 #include "avbd/avbd_cpu.h"
 #include "avbd/avbd_rd.h"
+#include "body_mesh.h"
 #include "drape_sim.h"
 #include "inverse_jobs.h"
 #include "lbfgsb_jobs.h"
@@ -637,6 +638,514 @@ private:
 	DrapeConfig cfg_;
 };
 
+// --- mesh_parity / mesh_bisect: a host mesh on cpu and rd side by side ----------------
+//
+// The scene comes from drape_job_data (the guest has no filesystem):
+//   mesh_obj       Wavefront text: v x y z / f a b c (1-based; a/b/c forms and
+//                  polygons fanned from the first corner)
+//   mesh_pins      whitespace-separated vertex ids (0-based), each an attachment
+//   mesh_capsules  lines "bx by bz ax ay az radius length" (# comments)
+// all in body units; `scale` (10) multiplies positions, capsule bottoms,
+// radii and lengths, and gravity is -9.8 * scale unless gravityY is given.
+// keys: scale, caps (1: the capsules), capmu (0.3), steps, tol, any
+// DrapeConfig key.
+
+// Wavefront text: v x y z (as float), f a b c ... (1-based, a/b/c forms,
+// polygons fanned from the first corner).
+void obj_parse(const std::string &text, std::vector<float> &pos, std::vector<int32_t> &tris) {
+	std::istringstream in(text);
+	std::string line;
+	while (std::getline(in, line)) {
+		std::istringstream ls(line);
+		std::string tag;
+		ls >> tag;
+		if (tag == "v") {
+			double x = 0, y = 0, z = 0;
+			ls >> x >> y >> z;
+			pos.push_back(float(x));
+			pos.push_back(float(y));
+			pos.push_back(float(z));
+		} else if (tag == "f") {
+			std::vector<int32_t> ids;
+			std::string t;
+			while (ls >> t) {
+				ids.push_back(std::atoi(t.c_str()) - 1);
+			}
+			for (size_t k = 1; k + 1 < ids.size(); ++k) {
+				tris.push_back(ids[0]);
+				tris.push_back(ids[k]);
+				tris.push_back(ids[k + 1]);
+			}
+		}
+	}
+}
+
+bool mesh_scene_from_data(const Args &a, DrapeScene &sc, DrapeConfig &cfg, std::string &err,
+		std::shared_ptr<const BodyMesh> *bodyOut = nullptr) {
+	auto &d = lbfgsb_job_data();
+	auto it = d.find("mesh_obj");
+	if (it == d.end()) {
+		err = "no data mesh_obj (drape_job_data first)";
+		return false;
+	}
+	const double s = a.num("scale", 10.0);
+	std::vector<float> pos;
+	std::vector<int32_t> tris, pins;
+	obj_parse(it->second, pos, tris);
+	for (float &x : pos) {
+		// The host's float * scale (pipeline.gd's _scaled), in double then float.
+		x = float(double(x) * s);
+	}
+	it = d.find("mesh_pins");
+	if (it != d.end()) {
+		std::istringstream in(it->second);
+		int32_t p;
+		while (in >> p) {
+			pins.push_back(p);
+		}
+	}
+	sc = DrapeScene();
+	if (a.num("caps", 0.0) != 0.0) {
+		it = d.find("mesh_capsules");
+		if (it == d.end()) {
+			err = "caps=1 but no data mesh_capsules";
+			return false;
+		}
+		std::istringstream in(it->second);
+		std::string line;
+		const double mu = a.num("capmu", 0.3);
+		while (std::getline(in, line)) {
+			if (line.empty() || line[0] == '#') {
+				continue;
+			}
+			std::istringstream ls(line);
+			double c[8];
+			int n = 0;
+			while (n < 8 && ls >> c[n]) {
+				++n;
+			}
+			if (n == 8) {
+				sc.prims.push_back(make_capsule(v3d(c[0] * s, c[1] * s, c[2] * s), v3d(c[3], c[4], c[5]), c[6] * s,
+						c[7] * s, mu));
+			}
+		}
+	}
+	if (a.num("body", 0.0) != 0.0 || a.num("bodycheck", 0.0) != 0.0) {
+		it = d.find("body_obj");
+		if (it == d.end()) {
+			err = "body=1 or bodycheck=1 but no data body_obj";
+			return false;
+		}
+		std::vector<float> bv;
+		std::vector<int32_t> bt;
+		obj_parse(it->second, bv, bt);
+		auto body = std::make_shared<BodyMesh>();
+		if (!body->build(bv, bt, s, err)) {
+			return false;
+		}
+		if (bodyOut) {
+			*bodyOut = body;
+		}
+		if (a.num("body", 0.0) != 0.0) {
+			sc.prims.push_back(make_mesh_collider(body, a.num("bodyskin", 0.1), a.num("bodyband", 0.1),
+					a.num("bodydepth", 1.0), a.num("capmu", 0.3)));
+		}
+	}
+	cfg.gravity[1] = -9.8 * s;
+	if (!a.applyConfig(cfg, { "scale", "caps", "capmu", "steps", "tol", "body", "bodycheck", "bodyskin", "bodyband", "bodydepth" },
+				err)) {
+		return false;
+	}
+	if (!scene_mesh(sc, pos, tris, pins, err)) {
+		return false;
+	}
+	sc.name = fmt("mesh x%g", s);
+	sc.applyMaterial(cfg);
+	return true;
+}
+
+double max_abs_diff(const std::vector<float> &a, const std::vector<float> &b, size_t *at = nullptr) {
+	double m = 0.0;
+	for (size_t i = 0; i < a.size() && i < b.size(); ++i) {
+		if (!std::isfinite(a[i]) || !std::isfinite(b[i])) {
+			continue;
+		}
+		const double d = std::fabs(double(a[i]) - double(b[i]));
+		if (d > m) {
+			m = d;
+			if (at) {
+				*at = i;
+			}
+		}
+	}
+	return m;
+}
+
+size_t count_nonfinite(const std::vector<float> &a, long *first = nullptr) {
+	size_t n = 0;
+	if (first) {
+		*first = -1;
+	}
+	for (size_t i = 0; i < a.size(); ++i) {
+		if (!std::isfinite(a[i])) {
+			if (first && *first < 0) {
+				*first = long(i);
+			}
+			++n;
+		}
+	}
+	return n;
+}
+
+// mesh_parity: the same scene forward on cpu and on rd, compared step by step.
+// PASS when every step is finite on both and max |x_cpu - x_rd| <= tol (1e-3
+// drape units) at every step.
+class MeshParityJob : public DrapeJobBase {
+public:
+	bool pending() const override { return rd_ && rd_->pending(); }
+	void drain() override {
+		if (rd_) {
+			rd_->drain();
+		}
+	}
+	DrapeSession *session() override { return rd_.get(); }
+
+	bool build(rdc::Device &dev, const Args &a, std::string &err) {
+		steps_ = int(a.num("steps", 3));
+		tol_ = a.num("tol", 1e-3);
+		if (!mesh_scene_from_data(a, scene_, cfg_, err, &body_)) {
+			return false;
+		}
+		cpu_ = std::make_unique<DrapeSessionT<AvbdCpu>>();
+		cpu_->backendName = "cpu";
+		cpu_->solver = DBackend<AvbdCpu>::make(dev, err);
+		rd_ = std::make_unique<DrapeSessionT<AvbdRd>>();
+		rd_->backendName = "rd";
+		rd_->solver = DBackend<AvbdRd>::make(dev, err);
+		if (!rd_->solver) {
+			return false;
+		}
+		cpu_->clock = &now_us;
+		rd_->clock = &now_us;
+		// A cpu stage is a whole solve here (about a second at 2682 vertices).
+		max_stages_per_tick = 2;
+		label_ = fmt("mesh_parity %s steps=%d tol=%g", scene_.name.c_str(), steps_, tol_);
+		q.push([this]() {
+			std::string e;
+			if (!cpu_->load(scene_, cfg_, e) || !rd_->load(scene_, cfg_, e)) {
+				fail("load: " + e);
+			}
+			say(cfg_.dump());
+			say(rd_->scene().describe());
+		});
+		auto *cx = &xc_;
+		auto *rx = &xr_;
+		cpu_->onStep = [this, cx](const DrapeStepRecord &, const std::vector<float> &) { cx->push_back(cpu_->sim->x); };
+		rd_->onStep = [this, rx](const DrapeStepRecord &, const std::vector<float> &) { rx->push_back(rd_->sim->x); };
+		rd_->enqueueForward(q, steps_);
+		q.push([this]() { say(rd_->result()); });
+		cpu_->enqueueForward(q, steps_);
+		q.push([this]() {
+			say(cpu_->result());
+			report();
+		});
+		return true;
+	}
+
+private:
+	std::unique_ptr<DrapeSessionT<AvbdCpu>> cpu_;
+	std::unique_ptr<DrapeSessionT<AvbdRd>> rd_;
+	DrapeScene scene_;
+	DrapeConfig cfg_;
+	int steps_ = 3;
+	double tol_ = 1e-3;
+	std::vector<std::vector<float>> xc_, xr_;
+	std::shared_ptr<const BodyMesh> body_; // body=1 or bodycheck=1: inside counts
+	std::string label_, detail_;
+
+	// Vertices strictly inside the body (signed distance to its surface < 0).
+	size_t inside(const std::vector<float> &x, double &deepest) const {
+		size_t n = 0;
+		deepest = 0.0;
+		for (size_t i = 0; i + 2 < x.size(); i += 3) {
+			const v3d p(x[i], x[i + 1], x[i + 2]);
+			BodyMesh::Hit h;
+			if (!body_->closest(p, 1e300, h)) {
+				continue;
+			}
+			if ((p - h.point).dot(h.pseudo) < 0.0) {
+				++n;
+				deepest = std::max(deepest, std::sqrt(h.dist2));
+			}
+		}
+		return n;
+	}
+	bool failed_ = false;
+
+	void say(const std::string &l) {
+		detail_ += l;
+		detail_ += '\n';
+	}
+	void fail(const std::string &why) {
+		failed_ = true;
+		say("FAIL " + why);
+	}
+	void report() {
+		bool ok = !failed_ && int(xc_.size()) == steps_ && int(xr_.size()) == steps_;
+		double worst = 0.0;
+		size_t nfC = 0, nfR = 0;
+		for (size_t k = 0; k < xc_.size() && k < xr_.size(); ++k) {
+			long fc, fr;
+			const size_t c = count_nonfinite(xc_[k], &fc), r = count_nonfinite(xr_[k], &fr);
+			size_t at = 0;
+			const double d = max_abs_diff(xc_[k], xr_[k], &at);
+			worst = std::max(worst, d);
+			nfC += c;
+			nfR += r;
+			say(fmt("step %zu: non-finite floats cpu %zu rd %zu (first rd %ld); max|x_cpu - x_rd| = %.3g at v%zu.%c", k + 1,
+					c, r, fr, d, at / 3, "xyz"[at % 3]));
+		}
+		if (body_ && !xr_.empty() && !xc_.empty()) {
+			double d0, dc, dr;
+			const size_t i0 = inside(scene_.x0, d0), ic = inside(xc_.back(), dc), ir = inside(xr_.back(), dr);
+			say(fmt("inside the body (signed distance < 0): start %zu (deepest %.3g), after %zu steps cpu %zu (%.3g) "
+					"rd %zu (%.3g); collider %s",
+					i0, d0, xr_.size(), ic, dc, ir, dr, scene_.prims.empty() ? "none" : scene_.prims[0].describe().c_str()));
+		}
+		ok = ok && nfC == 0 && nfR == 0 && worst <= tol_;
+		finish(ok, fmt("%s: finite cpu=%s rd=%s, max|x_cpu - x_rd| over %zu steps = %.3g (tol %g)", label_.c_str(),
+						   nfC == 0 ? "yes" : "NO", nfR == 0 ? "yes" : "NO", xr_.size(), worst, tol_),
+				detail_);
+	}
+};
+
+// mesh_bisect: where inside the first step rd leaves cpu. The predictor is
+// computed once (cpu driver code, as a step would); then
+//  1. iterations: run(k) on rd from the predictor for k = 1..iters (one submit
+//     per k, read back on the next tick) against k cpu iterations;
+//  2. kernels: in the first iteration K where rd is non-finite or further
+//     than tol from cpu, every (colour, stage) of K -- stage 0 init + the four
+//     force kernels, 1-4 the spring/attachment/triangle/bending gathers, 5 the
+//     solve -- on both, each buffer compared, until the first stage whose rd
+//     buffers hold a non-finite value;
+//  3. the constraint behind the first non-finite row, with its inputs.
+class MeshBisectJob : public DrapeJobBase {
+public:
+	bool pending() const override { return rd_ && rd_->pending(); }
+	void drain() override {
+		if (rd_) {
+			rd_->sync();
+		}
+	}
+	DrapeSession *session() override { return nullptr; }
+
+	bool build(rdc::Device &dev, const Args &a, std::string &err) {
+		tol_ = a.num("tol", 1e-3);
+		if (!mesh_scene_from_data(a, scene_, cfg_, err)) {
+			return false;
+		}
+		cpu_ = std::make_unique<AvbdCpu>();
+		rd_ = DBackend<AvbdRd>::make(dev, err);
+		if (!rd_) {
+			return false;
+		}
+		simC_ = std::make_unique<DrapeSimT<AvbdCpu>>(*cpu_);
+		simR_ = std::make_unique<DrapeSimT<AvbdRd>>(*rd_);
+		max_stages_per_tick = 4;
+		q.push([this]() {
+			simC_->cfg = cfg_;
+			simC_->scene = scene_;
+			simR_->cfg = cfg_;
+			simR_->scene = scene_;
+			if (!simC_->setup() || !simR_->setup()) {
+				done(false, "setup failed");
+				return;
+			}
+			simC_->predict(rec_);
+			say(cfg_.dump());
+			say(scene_.describe() + fmt(" colours cpu %u rd %u", cpu_->numColors(), rd_->numColors()));
+			cpu_->updateState(simC_->x.data(), rec_.sBlend.data());
+			if (scene_.nAttach()) {
+				cpu_->updateAttachmentFixedPos(scene_.attachFixed.data());
+			}
+			iterStage(1);
+		});
+		return true;
+	}
+
+private:
+	std::unique_ptr<AvbdCpu> cpu_;
+	std::unique_ptr<AvbdRd> rd_;
+	std::unique_ptr<DrapeSimT<AvbdCpu>> simC_;
+	std::unique_ptr<DrapeSimT<AvbdRd>> simR_;
+	DrapeScene scene_;
+	DrapeConfig cfg_;
+	DrapeStepRecord rec_;
+	double tol_ = 1e-3;
+	int K_ = 0;
+	std::string detail_;
+	std::vector<std::string> lastRdBad_;
+
+	void say(const std::string &l) {
+		detail_ += l;
+		detail_ += '\n';
+	}
+	void done(bool pass, const std::string &head) {
+		cpu_->setDebugStopForTest(-1, -1);
+		rd_->setDebugStopForTest(-1, -1);
+		finish(pass, "mesh_bisect " + scene_.name + ": " + head, detail_);
+	}
+	void rdFromPredictor(int iters) {
+		rd_->updateState(simR_->x.data(), rec_.sBlend.data());
+		if (scene_.nAttach()) {
+			rd_->updateAttachmentFixedPos(scene_.attachFixed.data());
+		}
+		rd_->run(iters, cfg_.al);
+	}
+	void cpuFromPredictor(int iters) {
+		cpu_->updateState(simC_->x.data(), rec_.sBlend.data());
+		if (scene_.nAttach()) {
+			cpu_->updateAttachmentFixedPos(scene_.attachFixed.data());
+		}
+		cpu_->run(iters, cfg_.al);
+	}
+
+	// 1. iteration k: cpu one more iteration (no duals unless al), rd from scratch.
+	void iterStage(int k) {
+		if (cfg_.al) {
+			cpuFromPredictor(k);
+		} else {
+			cpu_->run(1, false);
+		}
+		rdFromPredictor(k);
+		q.next([this, k]() {
+			std::vector<float> xc, xr;
+			cpu_->readPositions(xc);
+			rd_->readPositions(xr);
+			long fr;
+			const size_t nr = count_nonfinite(xr, &fr), nc = count_nonfinite(xc);
+			size_t at = 0;
+			const double d = max_abs_diff(xc, xr, &at);
+			say(fmt("iteration %2d: non-finite floats cpu %zu rd %zu (first rd v%ld); max|cpu - rd| %.3g at v%zu", k, nc,
+					nr, fr < 0 ? -1L : fr / 3, d, at / 3));
+			if (nr > 0 || d > tol_) {
+				K_ = k;
+				kernelStage(0, 0);
+				return;
+			}
+			if (k >= cfg_.iters) {
+				done(true, fmt("rd stays finite and within %g of cpu over %d iterations of the first step", tol_, k));
+				return;
+			}
+			iterStage(k + 1);
+		});
+	}
+
+	// 2. colour c, stage s of iteration K.
+	void kernelStage(int c, int s) {
+		cpu_->setDebugStopForTest(c, s);
+		rd_->setDebugStopForTest(c, s);
+		cpuFromPredictor(K_);
+		rdFromPredictor(K_);
+		q.next([this, c, s]() {
+			// Per-constraint buffers first: at stage 0 the vertex scratch rows
+			// of later colours still hold the previous run's values.
+			static const char *const names[] = { "attachGradV", "attachHess", "triGrad", "triHess", "bendGrad",
+				"bendHess", "gScratch", "hScratch", "positions" };
+			static const char *const stages[] = { "init+forces", "gather spring", "gather attachment",
+				"gather triangle", "gather bending", "solve" };
+			std::string line = fmt("iteration %d colour %d after %-17s:", K_, c, stages[s]);
+			std::vector<std::string> bad;
+			for (const char *n : names) {
+				const std::vector<float> vc = cpu_->readDebugForTest(n), vr = rd_->readDebugForTest(n);
+				long fr;
+				const size_t nr = count_nonfinite(vr, &fr), nc = count_nonfinite(vc);
+				const double d = max_abs_diff(vc, vr);
+				if (nr || nc) {
+					const std::string sn = n;
+					const long per = sn == "hScratch" ? 6 : (sn.find("Hess") != std::string::npos ? 1 : 3);
+					line += fmt(" %s non-finite cpu %zu rd %zu (first rd row %ld);", n, nc, nr, fr < 0 ? -1L : fr / per);
+					bad.push_back(n);
+				}
+				if (d > 0.0) {
+					line += fmt(" %s %.2g;", n, d);
+				}
+			}
+			say(line);
+			if (!bad.empty()) {
+				explain(bad);
+				done(false, fmt("first non-finite rd buffer at iteration %d colour %d after %s: %s", K_, c, stages[s],
+								   bad[0].c_str()));
+				return;
+			}
+			int nc2 = c, ns = s + 1;
+			if (ns > 5) {
+				ns = 0;
+				++nc2;
+			}
+			if (nc2 >= int(rd_->numColors())) {
+				done(false, fmt("iteration %d leaves cpu by more than %g without a non-finite rd buffer", K_, tol_));
+				return;
+			}
+			kernelStage(nc2, ns);
+		});
+	}
+
+	// 3. the constraint behind the first non-finite row of a force buffer.
+	void explain(const std::vector<std::string> &bad) {
+		for (const std::string &n : bad) {
+			const std::vector<float> vr = rd_->readDebugForTest(n.c_str());
+			const std::vector<float> xr = rd_->readDebugForTest("positions");
+			const std::vector<float> xc = cpu_->readDebugForTest("positions");
+			long first;
+			count_nonfinite(vr, &first);
+			if (n == "bendGrad" || n == "bendHess") {
+				const size_t row = size_t(first) / (n == "bendGrad" ? 3 : 1);
+				const uint32_t b = uint32_t(row / 4);
+				std::string ids;
+				double sd[3] = { 0, 0, 0 };
+				float sf[3] = { 0, 0, 0 }, sfc[3] = { 0, 0, 0 };
+				for (int r = 0; r < 4; ++r) {
+					const uint32_t v = scene_.bendIdx[4 * b + r];
+					const float w = scene_.bendW[4 * b + r];
+					ids += fmt(" v%u w=%.9g rd(%.9g %.9g %.9g) cpu(%.9g %.9g %.9g)", v, double(w), xr[3 * v],
+							xr[3 * v + 1], xr[3 * v + 2], xc[3 * v], xc[3 * v + 1], xc[3 * v + 2]);
+					for (int k = 0; k < 3; ++k) {
+						sd[k] += double(w) * double(xr[3 * v + k]);
+						sf[k] += w * xr[3 * v + k];
+						sfc[k] += w * xc[3 * v + k];
+					}
+				}
+				const double lenD = std::sqrt(sd[0] * sd[0] + sd[1] * sd[1] + sd[2] * sd[2]);
+				const float lenF = std::sqrt(sf[0] * sf[0] + sf[1] * sf[1] + sf[2] * sf[2]);
+				const float lenFc = std::sqrt(sfc[0] * sfc[0] + sfc[1] * sfc[1] + sfc[2] * sfc[2]);
+				say(fmt("  %s row %zu = bending %u: nTarget %.9g k %.9g;%s", n.c_str(), row, b, double(scene_.bendN[b]),
+						double(scene_.bendK[b]), ids.c_str()));
+				say(fmt("  |s| on rd's positions: %.6g (double), %.6g (float, sequential); on cpu's positions %.6g (float)",
+						lenD, double(lenF), double(lenFc)));
+				size_t below = 0;
+				for (uint32_t k = 0; k < scene_.nBend(); ++k) {
+					if (scene_.bendN[k] > 1e-6f && scene_.bendN[k] < 1e-4f) {
+						++below;
+					}
+				}
+				say(fmt("  bendings with 1e-6 < nTarget < 1e-4: %zu of %u", below, scene_.nBend()));
+				return;
+			}
+			if (n == "triGrad" || n == "triHess") {
+				const size_t row = size_t(first) / (n == "triGrad" ? 3 : 1);
+				const uint32_t t = uint32_t(row / 3);
+				say(fmt("  %s row %zu = triangle %u (%u %u %u) invUV (%.6g %.6g %.6g %.6g) k %.6g", n.c_str(), row, t,
+						scene_.tri[3 * t], scene_.tri[3 * t + 1], scene_.tri[3 * t + 2], double(scene_.triInvUV[4 * t]),
+						double(scene_.triInvUV[4 * t + 1]), double(scene_.triInvUV[4 * t + 2]),
+						double(scene_.triInvUV[4 * t + 3]), double(scene_.triK[t])));
+				return;
+			}
+		}
+		say("  first non-finite buffer: " + bad[0] + " (a vertex buffer: see the force buffers of the stage before)");
+	}
+};
+
 template <class S>
 std::unique_ptr<jobs::Job> make_on(const std::string &name, const Args &a, rdc::Device &dev, std::string &err) {
 	std::unique_ptr<DJob<S>> j;
@@ -675,6 +1184,21 @@ std::unique_ptr<jobs::Job> make_drape_job(const std::string &name, const std::st
 		return make_inverse_job(backend == "auto" ? "cpu" : backend, args, dev, err);
 	}
 	Args a(args);
+	if (name == "mesh_parity") {
+		// Both backends by construction; `backend` is ignored.
+		auto j = std::make_unique<MeshParityJob>();
+		if (!j->build(dev, a, err)) {
+			return nullptr;
+		}
+		return j;
+	}
+	if (name == "mesh_bisect") {
+		auto j = std::make_unique<MeshBisectJob>();
+		if (!j->build(dev, a, err)) {
+			return nullptr;
+		}
+		return j;
+	}
 	std::string b = backend;
 	if (b == "auto") {
 		// The scene sizes the jobs build: the sphere demo is 625 vertices,
@@ -697,8 +1221,8 @@ std::unique_ptr<jobs::Job> make_drape_job(const std::string &name, const std::st
 }
 
 const char *drape_job_names() {
-	return "sphere_forward sphere_backward sim_gradcheck bench_drape inverse_min lbfgsb_components lbfgsb_problems "
-	       "lbfgsb_replay lbfgsb_bench";
+	return "sphere_forward sphere_backward sim_gradcheck bench_drape mesh_parity mesh_bisect inverse_min "
+	       "lbfgsb_components lbfgsb_problems lbfgsb_replay lbfgsb_bench";
 }
 
 DrapeSession *drape_job_session(jobs::Job *job) {

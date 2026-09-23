@@ -1,0 +1,16 @@
+--- dress_on_stages
+event: message
+data: {"id":1.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok\"}","type":"text"}],"isError":false}}
+
+
+--- dress_on_run ["infer,rig"]
+event: message
+data: {"id":2.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"STARTED allow_fixture=infer,rig force_fixture= pen=scripted\"}","type":"text"}],"isError":false}}
+
+
+--- final dress_on_status: DONE FIXTURE:infer,rig t=1411.4s
+--- dress_on_result
+event: message
+data: {"id":4.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"{\\n  \\\"capsules\\\": [\\n    {\\n      \\\"axis\\\": \\\"(0.001915, 0.993744, 0.111665)\\\",\\n      \\\"bottom\\\": \\\"(-0.000113, 0.952752, -0.027279)\\\",\\n      \\\"length\\\": 0.0948842614889145,\\n      \\\"median_skin\\\": 0.0835514068603516,\\n      \\\"radius\\\": 0.0735514068603516,\\n      \\\"vertices\\\": 43\\n    },\\n    {\\n      \\\"axis\\\": \\\"(0.00064, 0.999598, 0.028341)\\\",\\n      \\\"bottom\\\": \\\"(0.000069, 1.047043, -0.016683)\\\",\\n      \\\"length\\\": 0.295857965946198,\\n      \\\"median_skin\\\": 0.140745639801025,\\n      \\\"radius\\\": 0.130745639801025,\\n      \\\"vertices\\\": 2153\\n    },\\n    {\\n      \\\"axis\\\": \\\"(0.403473, 0.914979, 0.004754)\\\",\\n      \\\"bottom\\\": \\\"(0.000069, 1.047043, -0.016683)\\\",\\n      \\\"length\\\": 0.246696382761002,\\n      \\\"median_skin\\\": 0.0487118437886238,\\n      \\\"radius\\\": 0.0387118437886238,\\n      \\\"vertices\\\": 113\\n    },\\n    {\\n      \\\"axis\\\": \\\"(-0.651094, 0.758923, -0.01059)\\\",\\n      \\\"bottom\\\": \\\"(0.235667, 1.114168, -0.013297)\\\",\\n      \\\"length\\\": 0.208976328372955,\\n      \\\"median_skin\\\": 0.0318985842168331,\\n      \\\"radius\\\": 0.0218985842168331,\\n      \\\"vertices\\\": 69\\n    },\\n    {\\n      \\\"axis\\\": \\\"(-0.689178, 0.724588, -0.002454)\\\",\\n      \\\"bottom\\\": \\\"(0.379585, 0.962856, -0.012785)\\\",\\n      \\\"length\\\": 0.208825305104256,\\n      \\\"median_skin\\\": 0.103965312242508,\\n      \\\"radius\\\": 0.0939653122425079,\\n      \\\"vertices\\\": 546\\n    },\\n    {\\n      \\\"axis\\\": \\\"(-0.384708, 0.923027, 0.004631)\\\",\\n      \\\"bottom\\\": \\\"(0.000069, 1.047043, -0.016683)\\\",\\n      \\\"length\\\": 0.244397073984146,\\n      \\\"median_skin\\\": 0.048517744988203,\\n      \\\"radius\\\": 0.038517744988203,\\n      \\\"vertices\\\": 113\\n    },\\n    {\\n      \\\"axis\
+MCP RESULT: PASS (pipeline: DONE FIXTURE:infer,rig t=1411.4s)
+rc=0

@@ -4366,9 +4366,24 @@ void _main_0(void* _S1, void* entryPointParams_0, void* globalParams_1)
         float sx_0 = w0_0 * p0_0.x + w1_0 * p1_0.x + (w2_0 * p2_0.x + w3_0 * p3_0.x);
         float sy_0 = w0_0 * p0_0.y + w1_0 * p1_0.y + (w2_0 * p2_0.y + w3_0 * p3_0.y);
         float sz_0 = w0_0 * p0_0.z + w1_0 * p1_0.z + (w2_0 * p2_0.z + w3_0 * p3_0.z);
+        float len_0 = (F32_sqrt((sx_0 * sx_0 + sy_0 * sy_0 + sz_0 * sz_0)));
+        if(len_0 > 0.0f)
+        {
 
+#line 47
+            k_eff_0 = n_c_0 / len_0;
 
-        float om_0 = 1.0f - n_c_0 / (F32_sqrt((sx_0 * sx_0 + sy_0 * sy_0 + sz_0 * sz_0)));
+#line 47
+        }
+        else
+        {
+
+#line 47
+            k_eff_0 = 1.0f;
+
+#line 47
+        }
+        float om_0 = 1.0f - k_eff_0;
         float _S6 = sx_0 * om_0;
         float _S7 = sy_0 * om_0;
         float _S8 = sz_0 * om_0;

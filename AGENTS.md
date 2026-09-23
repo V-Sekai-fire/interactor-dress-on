@@ -47,7 +47,10 @@ our own, no host DLL. The GPU is reachable only through Godot's
    README that states the result (including negative ones), and a flat
    control that separates "the sandbox/VR blocked it" from "nothing was there".
 8. **Every guest entry point gets a no-argument wrapper in `project/main.gd`**
-   so MCP `call_method` needs no argument marshalling (Gate 0E).
+   so MCP `call_method` needs no argument marshalling (Gate 0E). main.gd is a
+   thin root: the wrapper lives in the stage file and main.gd keeps a
+   same-named delegate with the same defaults; `tests/probe_main_wrappers.gd`
+   FAILs on any `ADD_API_FUNCTION` without one.
 9. **Do not touch the user's machine config.** OpenXR runtime is selected per
    process with `XR_RUNTIME_JSON` (OXRSys, Windows port, at
    `tools/oxrsys/build/windows/runtime/oxrsys-runtime.json`; its Qt simulator
@@ -130,7 +133,7 @@ our own, no host DLL. The GPU is reachable only through Godot's
   `lake update LeanSlang` (only that package; the other revs must not move).
 - The guest heap also caps **live allocations**: `Sandbox.allocations_max`
   defaults to 10000 ("Too many arena chunks"). fit.elf holds ~79k after
-  `fit_begin`; main.gd sets 4,000,000 before `program=`.
+  `fit_begin`; `stages/fit_stage.gd` sets 4,000,000 before `program=`.
 - Unqualified `abs(double)` binds to C's `int abs` under the guest's
   libstdc++ (clang `-Wabsolute-value`) but to the double overload under
   llvm-mingw's libc++, so native and guest silently differ. Treat that
@@ -141,7 +144,11 @@ our own, no host DLL. The GPU is reachable only through Godot's
   iterations while inputs, LDLT and the libm the solver calls are bitwise
   equal (`gates/6-fit`, 6.0); SimpleBVH's Morton sort, which has such ties,
   is the *likely* cause (hypothesis: no call site instrumented yet). Test an
-  index tie-break before relying on it.
+  index tie-break before relying on it. Confirmed at one call site: Geogram's
+  Hilbert sort (`nth_element` on one coordinate) inserted a skirt panel's
+  tied boundary points in another order, DMWT tiled the panel differently,
+  and an index tie-break in `Hilbert_vcmp` made curvenet.elf bit-identical to
+  its native control again (`gates/4-curvenet/README.md`, skirt (c)).
 - **Guest out-of-memory is not `std::bad_alloc`.** Below the heap floor a
   failed allocation is a `Protection fault` at the malloc ecall (the vmcall
   aborts) or a segfault that kills Godot (exit 139), and the heap's meminfo
@@ -154,6 +161,17 @@ our own, no host DLL. The GPU is reachable only through Godot's
   vmcall's start.
 - Starting several Godot processes in the same second segfaulted one once.
   Stagger launches by a few seconds.
+- Godot imports every `.obj` under `res://` as a mesh and fails on line-only
+  ones (skeletons). Data OBJs live under a `.gdignore`d directory
+  (`project/fixtures/`) and are read as text (`util/obj_io.gd`).
+- Make a stage's Sandbox with `stages/sandbox_util.gd` (memory_max,
+  references_max, execution_timeout before `program=`; a missing ELF or
+  entry point is a reason, not an error). In XR the root viewport reads back
+  black: screenshot a SubViewport on the same World3D.
+- The GPU and the guest CPU round the same Slang differently (the driver
+  forms FMAs slangc's cpp build does not), so a sum at float noise can be
+  exactly 0 on rd and not on cpu. Guard every division by a computed norm in
+  the Lean kernel (Gate 5 G10: a bending hinge went NaN on rd only).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 - godot-sandbox's guest heap has no aligned entry point (malloc/calloc/

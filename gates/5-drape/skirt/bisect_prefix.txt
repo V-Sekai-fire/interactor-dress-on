@@ -1,0 +1,18 @@
+# probe_drape_skirt 2026-09-23T09:00:04 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=1 caps=false body=false
+mesh 2682 v 5220 f, 44 pins, 14 capsules, body 5128 v 10171 f
+DATA mesh_obj 185598 bytes, 1 keys
+DATA mesh_pins 194 bytes, 2 keys
+DATA mesh_capsules 1229 bytes, 3 keys
+DATA body_obj 340622 bytes, 4 keys
+STARTED mesh_bisect rd scale=10
+ticks=3 wall_s=0.8
+FAIL mesh_bisect mesh x10: first non-finite rd buffer at iteration 1 colour 0 after init+forces: bendGrad
+[drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+[drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=0 colours cpu 9 rd 9
+iteration  1: non-finite floats cpu 0 rd 216 (first rd v264); max|cpu - rd| 4.77e-07 at v463
+iteration 1 colour 0 after init+forces      : triGrad 1.2e-05; bendGrad non-finite cpu 0 rd 12 (first rd row 9772); bendGrad 6.1e-08; gScratch non-finite cpu 0 rd 213 (first rd row 264); gScratch 0.00014;
+  bendGrad row 9772 = bending 2443: nTarget 1.65900894e-06 k 0.000479145296; v274 w=2.25989437 rd(2.14215755 6.84740829 -0.731058121) cpu(2.14215755 6.84740829 -0.731058121) v2575 w=5.04274893 rd(2.03971624 7.2909503 -0.87708056) cpu(2.03971624 7.2909503 -0.87708056) v1673 w=-3.71447849 rd(2.06092691 7.37199402 -0.772039831) cpu(2.06092691 7.37199402 -0.772039831) v1766 w=-3.58816504 rd(2.08227825 6.92770243 -0.89385128) cpu(2.08227825 6.92770243 -0.89385128)
+  |s| on rd's positions: 1.65901e-06 (double), 5.74188e-06 (float, sequential); on cpu's positions 5.74188e-06 (float)
+  bendings with 1e-6 < nTarget < 1e-4: 34 of 7758
+CLOSED device=freed permanent_slots=0
+END

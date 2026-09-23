@@ -1,0 +1,94 @@
+{
+  "counts": {
+    "curvenet_build": "ok sketch curves=6 knots=5 intersections=3 needs_setup=0",
+    "curves": 6,
+    "cycles": 2,
+    "edges": 6,
+    "knot_degrees": [
+      3,
+      3,
+      2,
+      3,
+      1
+    ],
+    "knot_positions": [
+      "(-0.000, 0.955, 0.061)",
+      "(-0.028, 0.924, -0.127)",
+      "(-0.084, 0.564, 0.035)",
+      "(-0.104, 0.473, -0.088)",
+      "(-0.080, 0.578, 0.036)"
+    ],
+    "knots": 5,
+    "last_pen_end": "ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=5 cycles=2",
+    "nodes": 5,
+    "patches": 2,
+    "pen_ends": [
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0",
+      "ok=1 valid=1 closed=0 new_patches=1 patches=1 edges=2 nodes=2 cycles=1",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=1 edges=3 nodes=4 cycles=1",
+      "ok=1 valid=1 closed=0 new_patches=1 patches=2 edges=4 nodes=4 cycles=2",
+      "ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=5 nodes=5 cycles=2",
+      "ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=5 cycles=2"
+    ],
+    "strokes": 6
+  },
+  "fixtures": [
+    "infer",
+    "rig"
+  ],
+  "mesh": {
+    "components": 2,
+    "finite": true,
+    "host_ms": 116,
+    "loops": 2,
+    "mesh_build": "ok patches=2 vertices=491 triangles=843 loops=2 components=2 euler=2",
+    "triangles": 843,
+    "vertices": 491
+  },
+  "min_clearance": "0.0100 m after growing both rings by 0.0348 m (the rings alone: -0.0248 m)",
+  "reason": "MESH: not a skirt tube: 843 triangles, 2 components, 2 boundary loops (want >0, 1, 2)",
+  "records": [
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 113,
+      "note": "FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f",
+      "state": "INFER",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 66,
+      "note": "FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",
+      "state": "RIG",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": false,
+      "frames": 7,
+      "heap": 2466288,
+      "ms": 1520,
+      "note": "strokes 6 cycles 2 patches 2 curves 6 knots 5 degrees [3, 3, 2, 3, 1]",
+      "state": "AUTHOR",
+      "vm_ms": 1317.326
+    },
+    {
+      "fixture": false,
+      "frames": 77,
+      "heap": 2511952,
+      "ms": 124,
+      "note": "FAILED not a skirt tube: 843 triangles, 2 components, 2 boundary loops (want >0, 1, 2)",
+      "state": "MESH",
+      "vm_ms": 116.434
+    }
+  ],
+  "rings": {
+    "hem": "centre (-0.000869, 0.524922, -0.029805) radius 0.2305 m (body 0.1857 m + 0.01, 90 vertices)",
+    "waist": "centre (-0.000113, 0.952752, -0.027279) radius 0.2047 m (body 0.1599 m + 0.01, 60 vertices)"
+  },
+  "state": "FAILED",
+  "wall_s": 1.835
+}

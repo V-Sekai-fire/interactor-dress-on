@@ -1,6 +1,22 @@
 # Gate 5: drape.elf, DiffCloth's Simulation and L-BFGS-B in the guest
 
-**Result: FAIL, on two of nine criteria.** G1, G3, G4, G6, G7, G8 and G9
+**Cut 5 fix (G10), 2026-09-23:** the fitted-skirt regression is added.
+rd went NaN on step 1 for Gate 8's fitted skirt at drape scale 10: one
+bending hinge's |s| summed to exactly 0 on the GPU, and the kernel divided by
+it. The three bending kernels now guard it, in Lean. The cut also adds a
+triangle-mesh body collider. Details are in [`skirt/README.md`](skirt/README.md).
+
+The re-run ([`results.txt`](results.txt)):
+
+- **G10 passes.** Its pre-fix control fails 3 of 3.
+- **Unchanged:** G1, G3, G4, G6, G7 and G8 keep their verdicts and numbers.
+  G2 and G5 fail as below.
+- **G9 now fails** its "auto at the crossover" check. cpu measured about 22%
+  faster on this boot, so at 90 fps the crossover moved to between 196 and
+  256 vertices. main's own drape.elf gives the same table in the same hour
+  (skirt/g9_main_elf.txt), so the move is the machine, not this cut.
+
+**Result (the original run): FAIL, on two of nine criteria.** G1, G3, G4, G6, G7, G8 and G9
 pass. G2 fails on one of 20 LBFGSpp traces. G5 fails in two places: dL/dμ at
 native's starting μ is 5.02% off (the limit is 5%), and the loss at μ 0.01
 prints 1.650 where native prints 1.652. For each failure a flat control
@@ -32,6 +48,7 @@ The gate is frame-driven: vsync is off, there is one `drape_job_tick` or
 | G6 | unrolled mode against central FD, single colour | **PASS**. Worst errors: 9.5e-5 on the panel and 0.043 on the plane. The table picks unrolled as the default |
 | G7 | our L-BFGS-B reproduces the native μ sequence | **PASS**. Fed backwardLog's values, it gives 0.539770 → 0.010000 → 0.375146 on cpu and rd. Live, it gives 0.539770 → 0.010000 → 0.374976. The recompute modes reach 0.300046 over 60 steps and stay at μ₀ over 350 |
 | G8 | rule 4 and no Eigen | **PASS**. same_frame_syncs is 0 of 49,624, and the probe raises it. llvm-nm finds 0 Eigen and 0 LBFGSpp symbols. rd_close frees every slot |
+| G10 | the fitted skirt at drape scale 10 (Gate 8's fit.elf result, waist pins, capsules or the body mesh) | **PASS**. mesh_bisect: rd finite, within 9.5e-7 of cpu through step 1's 16 iterations. mesh_parity over 5 steps: 2.98e-6 with capsules, 2.03e-6 with the body mesh (limit 1e-4). Control (pre-fix kernels): 3/3 FAIL |
 | G9 | crossovers and `auto` | **PASS**. L-BFGS-B: cpu is cheaper up to n = 1e5. Drape: at 90 fps rd is cheaper from 196 vertices, and `auto` is set to rd from 160 |
 
 ## What this cut added (Task I, the integration)

@@ -17,11 +17,17 @@
 #    (rewound by util/mesh_wire.gd), one closed stroke sample by sample;
 #    pen_end, mesh_build and curvenet_build host-timed; the wire buffers
 #    decoded (1 patch, 1 loop, CCW-outward, 2 curves, 2 knots).
+# 4b. the Cut 8 scripted skirt as a host draws it: a Godot CylinderMesh body,
+#    the four half rings with cn_set_param("boundary", 1), the two seams
+#    without; 2 panel patches (the caps are openings), 1 welded component with
+#    2 boundary loops and Euler 0, patch ids on every triangle before and
+#    after the remesh, 6 curves on 4 knots of degree 3; pen_end host-timed.
 # 5. mesh -> curvenet on a cube through the wire (12 curves, 8 knots).
 # 6. llvm-nm -C curvenet.elf: 0 Eigen:: symbols (control: Cassie's own
 #    symbols are there, so the table was read).
 # 7. rule 8: every ADD_API_FUNCTION in guest/curvenet/main.cpp has a
-#    project/main.gd wrapper, all its arguments defaulted (with controls).
+#    project/main.gd wrapper (a delegate into stages/curvenet_stage.gd),
+#    all its arguments defaulted (with controls).
 #
 # No GPU: the stage never opens a RenderingDevice. One step per frame; quits
 # on a 300 s wall clock whatever step it is in. Results stream to
@@ -31,7 +37,7 @@ extends SceneTree
 const MeshWire := preload("res://util/mesh_wire.gd")
 const OUT_DIR := "res://../gates/4-curvenet/"
 const WALL_S := 300.0
-const STEPS := ["checks", "compare", "repeat", "failpaths", "pen", "extract", "nm", "wrappers"]
+const STEPS := ["checks", "compare", "repeat", "failpaths", "pen", "skirt", "extract", "nm", "wrappers"]
 
 var _sb = null
 var _out: FileAccess
@@ -114,7 +120,7 @@ func _process(_delta: float) -> bool:
 
 func _checks() -> void:
 	_names = str(_call("check_names")[0]).split(" ", false)
-	_check(_names.size() == 9, "check_names: %d checks (%s)" % [_names.size(), " ".join(_names)])
+	_check(_names.size() == 10, "check_names: %d checks (%s)" % [_names.size(), " ".join(_names)])
 	for n in _names:
 		var r := _call("check", [n])
 		var line := str(r[0])
@@ -246,10 +252,13 @@ func _pen() -> void:
 		var ids: PackedInt32Array = _call("mesh_patch_ids")[0]
 		var n := _area_normal(v, f)
 		var am := MeshWire.to_array_mesh(v, f)
+		var unassigned := 0
+		for id in ids:
+			unassigned += 1 if id != 0 else 0
 		_say("mesh_build(%.2f): %.1f ms, heap %d  %s" % [target, m[1] / 1000.0, _heap(), m[0]])
-		_check(str(m[0]).begins_with("ok") and loops.size() == 1 and ids.size() == f.size() / 3 and am.get_surface_count() == 1,
-				"mesh_build(%.2f): %d vertices, %d triangles, %d boundary loop (%d vertices), %d patch ids, ArrayMesh with %d surface" % [
-				target, v.size() / 3, f.size() / 3, loops.size(), loops[0].size() if loops.size() > 0 else 0, ids.size(), am.get_surface_count()])
+		_check(str(m[0]).begins_with("ok") and loops.size() == 1 and ids.size() == f.size() / 3 and unassigned == 0 and am.get_surface_count() == 1,
+				"mesh_build(%.2f): %d vertices, %d triangles, %d boundary loop (%d vertices), %d patch ids (%d not patch 0), ArrayMesh with %d surface" % [
+				target, v.size() / 3, f.size() / 3, loops.size(), loops[0].size() if loops.size() > 0 else 0, ids.size(), unassigned, am.get_surface_count()])
 		_check(n.normalized().y > 0.99, "mesh_build(%.2f): CCW-outward, area-weighted normal %s (the cap's outward is +Y)" % [target, n.normalized()])
 	var cb := _call("curvenet_build")
 	var curves := MeshWire.curves(_call("curvenet_curves")[0])
@@ -262,6 +271,97 @@ func _pen() -> void:
 			curves.size(), ends_ok, knots.size(), [knots[0].degree, knots[1].degree] if knots.size() == 2 else [],
 			MeshWire.to_curve3d(curves[0]).get_baked_length() + MeshWire.to_curve3d(curves[1]).get_baked_length() if curves.size() == 2 else 0.0])
 	_say("heap: %d before the body, %d after the pen, mesh and curvenet steps" % [h0, _heap()])
+	_call("cn_set_body", [PackedFloat32Array(), PackedInt32Array()])
+	_call("cn_reset")
+
+# --- 4b. the scripted skirt as a host draws it ------------------------------------------
+
+func _ring_arc(y: float, r: float, a0: float, a1: float, n: int) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	for i in n + 1:
+		var a := a0 + (a1 - a0) * float(i) / float(n)
+		out.append(Vector3(r * cos(a), y, r * sin(a)))
+	return out
+
+func _seam(a: Vector3, b: Vector3, n: int) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	for i in n + 1:
+		out.append(a.lerp(b, float(i) / float(n)))
+	out[n] = b
+	return out
+
+func _skirt() -> void:
+	var yw := 0.9
+	var yh := 0.5
+	var r := 0.16
+	var body := MeshWire.cylinder(0.15, 0.3, 1.1)
+	var vol := _signed_volume(body.vertices, body.triangles)
+	_check(vol > 0.05, "body: CylinderMesh r=0.15 y 0.3..1.1 rewound to wire winding, %d vertices %d triangles, signed volume %.4f (pi r^2 h = %.4f)" % [
+			body.vertices.size() / 3, body.triangles.size() / 3, vol, PI * 0.15 * 0.15 * 0.8])
+	_call("cn_set_body", [body.vertices, body.triangles])
+	_call("cn_reset")
+	var strokes := [
+		["waist_left", _ring_arc(yw, r, PI / 2, -PI / 2, 24), true],
+		["waist_right", _ring_arc(yw, r, PI / 2, 3 * PI / 2, 24), true],
+		["hem_left", _ring_arc(yh, r, PI / 2, -PI / 2, 24), true],
+		["hem_right", _ring_arc(yh, r, PI / 2, 3 * PI / 2, 24), true],
+		["seam_front", _seam(Vector3(0, yw, r), Vector3(0, yh, r), 12), false],
+		["seam_back", _seam(Vector3(0, yw, -r), Vector3(0, yh, -r), 12), false],
+	]
+	var last := ""
+	var total_us := 0
+	for s in strokes:
+		var pts: PackedVector3Array = s[1]
+		_call("cn_set_param", ["boundary", 1.0 if s[2] else 0.0])
+		var id := int(_call("pen_begin", [pts[0].x, pts[0].y, pts[0].z, 0.5])[0])
+		for i in range(1, pts.size()):
+			_sb.vmcall("pen_point", id, pts[i].x, pts[i].y, pts[i].z, 0.5)
+		var e := _call("pen_end", [id])
+		total_us += e[1]
+		last = str(e[0])
+		_say("%-11s %2d samples boundary=%d  pen_end %7.1f ms  %s" % [s[0], pts.size(), 1 if s[2] else 0, e[1] / 1000.0, last])
+	_call("cn_set_param", ["boundary", 0.0])
+	_say("skirt: 6 strokes, pen_end total %.1f ms" % [total_us / 1000.0])
+	_check(last.contains(" patches=2 ") and last.contains(" nodes=4 ") and last.contains(" edges=6 ") and last.contains(" cycles=2 ") and last.contains(" openings=2"),
+			"skirt -> 2 patches on 4 knots and 6 edges; 2 cycles, 2 openings (%s)" % last)
+	var sides := []
+	for i in int(_call("patch_count")[0]):
+		var pv: PackedFloat32Array = _call("patch_vertices", [i])[0]
+		var mx := 0.0
+		var ymin := INF
+		var ymax := -INF
+		for k in range(0, pv.size(), 3):
+			mx += pv[k]
+			ymin = minf(ymin, pv[k + 1])
+			ymax = maxf(ymax, pv[k + 1])
+		sides.append("%s y %.3f..%.3f" % ["+x" if mx > 0 else "-x", ymin, ymax])
+	_say("skirt patches: %s" % str(sides))
+	for target in [0.0, 0.02]:
+		var m := _call("mesh_build", [target, 1e-5])
+		var v: PackedFloat32Array = _call("mesh_vertices")[0]
+		var f: PackedInt32Array = _call("mesh_indices")[0]
+		var loops := MeshWire.loops(_call("mesh_boundary_loops")[0])
+		var ids: PackedInt32Array = _call("mesh_patch_ids")[0]
+		var per := {}
+		for id in ids:
+			per[id] = per.get(id, 0) + 1
+		var heights := []
+		for l in loops:
+			var y := 0.0
+			for i in l:
+				y += v[3 * i + 1]
+			heights.append(snappedf(y / maxf(1.0, l.size()), 0.001))
+		_say("skirt mesh_build(%.2f): %.1f ms  %s" % [target, m[1] / 1000.0, m[0]])
+		_check(str(m[0]).contains(" components=1 ") and str(m[0]).ends_with(" euler=0") and loops.size() == 2 and ids.size() == f.size() / 3 and per.keys().size() == 2 and not per.has(-1),
+				"skirt mesh_build(%.2f): %d vertices, %d triangles, 2 boundary loops at mean y %s, patch ids %s" % [
+				target, v.size() / 3, f.size() / 3, str(heights), str(per)])
+	var cb := _call("curvenet_build")
+	var knots := MeshWire.knots(_call("curvenet_knots")[0])
+	var degrees := []
+	for k in knots:
+		degrees.append(k.degree)
+	_say("skirt curvenet_build: %.1f ms  %s" % [cb[1] / 1000.0, cb[0]])
+	_check(str(cb[0]).contains(" curves=6 ") and degrees == [3, 3, 3, 3], "skirt curvenet over the wire: 6 curves, knots of degree %s" % str(degrees))
 	_call("cn_set_body", [PackedFloat32Array(), PackedInt32Array()])
 	_call("cn_reset")
 
@@ -299,121 +399,44 @@ func _nm() -> void:
 		cassie += 1 if line.contains("CassieSketcher::") else 0
 	_check(eigen == 0 and cassie > 0, "llvm-nm -C curvenet.elf: %d symbols, %d Eigen:: (must be 0), %d CassieSketcher:: (control: > 0)" % [total, eigen, cassie])
 
+
 # --- 7. rule 8 --------------------------------------------------------------------------
 # Every ADD_API_FUNCTION in guest/curvenet/main.cpp must be reached by a public
-# project/main.gd function that passes its name as a string literal ("name"),
-# and every such wrapper's parameters must all have defaults. Read from the
-# source text, so a wrapper that only exists as a helper call is not counted.
-# Controls: the same audit on main.gd with one wrapper deleted, and with one
-# default stripped, must each report exactly that.
+# project/main.gd function, and every such wrapper's parameters must all have
+# defaults. Since Cut 8 main.gd is a thin root: a wrapper is a delegate to
+# stages/curvenet_stage.gd, and the guest name's string literal ("name") is in
+# the stage function it calls or in one that calls in turn
+# (tests/wrapper_audit.gd). Read from the source text, so a wrapper that only
+# exists as a helper call is not counted. Controls: the same audit on main.gd
+# with the cn_get_param delegate deleted, and with one default stripped, must
+# each report exactly that.
 
-func _api_names(cpp: String) -> PackedStringArray:
-	var re := RegEx.new()
-	re.compile("(?m)^\\s*ADD_API_FUNCTION\\(\\s*(\\w+)\\s*,")
-	var out := PackedStringArray()
-	for m in re.search_all(cpp):
-		out.append(m.get_string(1))
-	return out
-
-# Top-level funcs of a GDScript source: [{name, params: PackedStringArray, body}].
-func _gd_funcs(src: String) -> Array:
-	var funcs := []
-	var cur = null
-	for line in src.split("\n"):
-		if line.begins_with("func ") or line.begins_with("static func "):
-			var open := line.find("(")
-			var name := line.substr(line.find("func ") + 5, open - line.find("func ") - 5).strip_edges()
-			# the parameter list, up to the matching parenthesis
-			var depth := 0
-			var close := -1
-			for i in range(open, line.length()):
-				var ch := line[i]
-				if ch == "(" or ch == "[" or ch == "{":
-					depth += 1
-				elif ch == ")" or ch == "]" or ch == "}":
-					depth -= 1
-					if depth == 0:
-						close = i
-						break
-			var params := PackedStringArray()
-			var inner := line.substr(open + 1, close - open - 1)
-			var d := 0
-			var start := 0
-			for i in inner.length():
-				var ch := inner[i]
-				if ch == "(" or ch == "[" or ch == "{":
-					d += 1
-				elif ch == ")" or ch == "]" or ch == "}":
-					d -= 1
-				elif ch == "," and d == 0:
-					params.append(inner.substr(start, i - start).strip_edges())
-					start = i + 1
-			if not inner.substr(start).strip_edges().is_empty():
-				params.append(inner.substr(start).strip_edges())
-			cur = {"name": name, "params": params, "body": line + "\n"}
-			funcs.append(cur)
-		elif line.begins_with("#"):
-			continue # a column-0 comment neither ends a body nor counts in one
-		elif cur != null and (line.is_empty() or line.begins_with("\t") or line.begins_with(" ")):
-			cur.body += line + "\n"
-		else:
-			cur = null
-	return funcs
-
-# [missing api names, "wrapper(param)" entries without a default, wrapper names]
-func _audit(api: PackedStringArray, gd_src: String) -> Array:
-	var funcs := _gd_funcs(gd_src)
-	var missing := []
-	var nodefault := []
-	var wrappers := {}
-	for n in api:
-		var found := false
-		for f in funcs:
-			if f.name.begins_with("_"):
-				continue
-			if f.body.contains("\"%s\"" % n):
-				found = true
-				wrappers[f.name] = f
-		if not found:
-			missing.append(n)
-	for w in wrappers:
-		for p in wrappers[w].params:
-			if not p.contains("="):
-				nodefault.append("%s(%s)" % [w, p])
-	return [missing, nodefault, wrappers.keys()]
-
-func _read(path: String) -> String:
-	var f := FileAccess.open(ProjectSettings.globalize_path(path), FileAccess.READ)
-	if f == null:
-		return ""
-	var t := f.get_as_text()
-	f.close()
-	return t.replace("\r", "")
+const Audit := preload("res://tests/wrapper_audit.gd")
 
 func _wrappers() -> void:
-	var api := _api_names(_read("res://../guest/curvenet/main.cpp"))
-	var gd := _read("res://main.gd")
-	if not _check(api.size() > 0 and not gd.is_empty(), "rule 8: %d ADD_API_FUNCTION in guest/curvenet/main.cpp, main.gd %d bytes" % [api.size(), gd.length()]):
+	var api := Audit.api_by_stage({"guest/curvenet/main.cpp": "curvenet"})
+	var gd := Audit.read("res://main.gd")
+	var stages := {"curvenet": Audit.read(Audit.STAGE_FILES["curvenet"])}
+	var n: int = api["curvenet"].size()
+	if not _check(n > 0 and not gd.is_empty() and not stages.curvenet.is_empty(),
+			"rule 8: %d ADD_API_FUNCTION in guest/curvenet/main.cpp, main.gd %d bytes, curvenet_stage.gd %d bytes" % [
+			n, gd.length(), stages.curvenet.length()]):
 		return
-	var a := _audit(api, gd)
+	var a := Audit.audit(api, gd, stages)
 	_check(a[0].is_empty(), "rule 8: every curvenet entry point has a main.gd wrapper (%d/%d; %d wrappers)%s" % [
-			api.size() - a[0].size(), api.size(), a[2].size(), "" if a[0].is_empty() else " missing: %s" % ", ".join(a[0])])
+			n - a[0].size(), n, a[2].size(), "" if a[0].is_empty() else " missing: %s" % ", ".join(a[0])])
 	_check(a[1].is_empty(), "rule 8: every wrapper argument has a default%s" % ["" if a[1].is_empty() else " (no default: %s)" % ", ".join(a[1])])
-	# controls: delete the cn_get_param wrapper; strip patch_vertices' default
-	var no_get := gd.replace("\"cn_get_param\"", "\"cn_get_param_x\"")
-	var c1 := _audit(api, no_get)
-	_check(c1[0] == ["cn_get_param"], "rule 8 control: main.gd without the cn_get_param wrapper -> missing %s" % str(c1[0]))
+	# controls: delete the cn_get_param delegate; strip patch_vertices' default
+	var kept := PackedStringArray()
+	for l in gd.split("\n"):
+		if not l.begins_with("func cn_get_param("):
+			kept.append(l)
+	var c1 := Audit.audit(api, "\n".join(kept), stages)
+	_check(c1[0] == ["curvenet:cn_get_param"], "rule 8 control: main.gd without the cn_get_param delegate -> missing %s" % str(c1[0]))
 	var no_def := gd.replace("func patch_vertices(i: int = 0)", "func patch_vertices(i: int)")
-	var c2 := _audit(api, no_def)
+	var c2 := Audit.audit(api, no_def, stages)
 	_check(c2[1] == ["patch_vertices(i: int)"], "rule 8 control: patch_vertices(i: int) -> no default %s" % str(c2[1]))
 	# the wrappers actually load: every one is a method of the compiled script
-	var s: Script = load("res://main.gd")
-	var have := {}
-	for m in s.get_script_method_list():
-		have[m.name] = m.args.size() - m.default_args.size()
-	var bad := []
-	for w in a[2]:
-		if have.get(w, -1) != 0:
-			bad.append(w)
+	var bad := Audit.not_callable(a[2], load("res://main.gd"))
 	_check(bad.is_empty(), "project/main.gd compiles; its %d wrappers take no required argument: %s%s" % [a[2].size(), ", ".join(a[2]),
 			"" if bad.is_empty() else " (missing or with required args: %s)" % ", ".join(bad)])

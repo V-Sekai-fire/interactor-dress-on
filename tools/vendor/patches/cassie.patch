@@ -1,8 +1,25 @@
 diff --git a/vendor/cassie/src/cassie_sketcher.cpp b/vendor/cassie/src/cassie_sketcher.cpp
-index f1207ba0d..fcf84751a 100644
+index f1207ba..dee961a 100644
 --- a/vendor/cassie/src/cassie_sketcher.cpp
 +++ b/vendor/cassie/src/cassie_sketcher.cpp
-@@ -210,9 +210,28 @@ Dictionary CassieSketcher::_run_chain_locally(
+@@ -88,6 +88,7 @@ int CassieSketcher::begin_stroke(const Vector3 &p_local_position, float p_pressu
+ 	InFlightStroke s;
+ 	s.input.instantiate();
+ 	s.sample_index = 0;
++	s.boundary = boundary_strokes;
+ 	const float t = float(s.sample_index) * sample_dt;
+ 	s.input->add_sample(p_local_position, t, p_pressure);
+ 	++s.sample_index;
+@@ -109,7 +110,7 @@ void CassieSketcher::add_sample(int p_stroke_id, const Vector3 &p_local_position
+ // update chain synchronously. Identical input bits produce identical
+ // output bits.
+ Dictionary CassieSketcher::_run_chain_locally(
+-		const Ref<CassieInputStroke> &p_input, bool p_emit_signals) {
++		const Ref<CassieInputStroke> &p_input, bool p_emit_signals, bool p_boundary) {
+ 	Dictionary result;
+ 	result["ok"] = false;
+ 	result["is_valid"] = false;
+@@ -210,9 +211,28 @@ Dictionary CassieSketcher::_run_chain_locally(
  		}
  	}
  	PackedVector3Array empty_normals;
@@ -27,14 +44,35 @@ index f1207ba0d..fcf84751a 100644
 +			second_half.push_back(points[s]);
 +		}
 +		second_half.push_back(points[0]);
-+		sketch_graph->add_stroke_intersecting(first_half, empty_normals, graph_proximity);
-+		sketch_graph->add_stroke_intersecting(second_half, empty_normals, graph_proximity);
++		sketch_graph->add_stroke_intersecting(first_half, empty_normals, graph_proximity, p_boundary);
++		sketch_graph->add_stroke_intersecting(second_half, empty_normals, graph_proximity, p_boundary);
 +	} else if (points.size() >= 2) {
-+		sketch_graph->add_stroke_intersecting(points, empty_normals, graph_proximity);
++		sketch_graph->add_stroke_intersecting(points, empty_normals, graph_proximity, p_boundary);
  	}
  
  	const Dictionary patch_update = surface_manager->update();
-@@ -338,6 +357,10 @@ void CassieSketcher::_bind_methods() {
+@@ -247,9 +267,10 @@ Dictionary CassieSketcher::commit_stroke(int p_stroke_id) {
+ 		return result;
+ 	}
+ 	Ref<CassieInputStroke> input = it->value.input;
++	const bool boundary = it->value.boundary;
+ 	in_flight.remove(it);
+ 
+-	result = _run_chain_locally(input, true);
++	result = _run_chain_locally(input, true, boundary);
+ 
+ 	// Stash the encoded packet for the caller's convenience.
+ 	PackedVector3Array positions = input->get_points();
+@@ -285,7 +306,7 @@ Dictionary CassieSketcher::apply_remote_samples(const PackedByteArray &p_packet)
+ 		const float pr = i < pressures.size() ? pressures[i] : 0.0f;
+ 		input->add_sample(positions[i], t, pr);
+ 	}
+-	return _run_chain_locally(input, true);
++	return _run_chain_locally(input, true, boundary_strokes);
+ }
+ 
+ PackedByteArray CassieSketcher::encode_stroke_packet(int p_stroke_id) {
+@@ -338,6 +359,14 @@ void CassieSketcher::_bind_methods() {
  			&CassieSketcher::set_async_triangulation);
  	ClassDB::bind_method(D_METHOD("get_async_triangulation"),
  			&CassieSketcher::get_async_triangulation);
@@ -42,23 +80,38 @@ index f1207ba0d..fcf84751a 100644
 +			&CassieSketcher::set_split_closed_strokes);
 +	ClassDB::bind_method(D_METHOD("get_split_closed_strokes"),
 +			&CassieSketcher::get_split_closed_strokes);
++	ClassDB::bind_method(D_METHOD("set_boundary_strokes", "enable"),
++			&CassieSketcher::set_boundary_strokes);
++	ClassDB::bind_method(D_METHOD("get_boundary_strokes"),
++			&CassieSketcher::get_boundary_strokes);
  	ClassDB::bind_method(D_METHOD("get_sketch_graph"),
  			&CassieSketcher::get_sketch_graph);
  	ClassDB::bind_method(D_METHOD("get_surface_manager"),
-@@ -366,6 +389,8 @@ void CassieSketcher::_bind_methods() {
+@@ -366,6 +395,10 @@ void CassieSketcher::_bind_methods() {
  			"set_peer_id", "get_peer_id");
  	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "async_triangulation"),
  			"set_async_triangulation", "get_async_triangulation");
 +	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "split_closed_strokes"),
 +			"set_split_closed_strokes", "get_split_closed_strokes");
++	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "boundary_strokes"),
++			"set_boundary_strokes", "get_boundary_strokes");
  
  	ADD_SIGNAL(MethodInfo("stroke_committed",
  			PropertyInfo(Variant::OBJECT, "final_stroke",
 diff --git a/vendor/cassie/src/cassie_sketcher.h b/vendor/cassie/src/cassie_sketcher.h
-index 98a257ad6..fa29b8e0b 100644
+index 98a257a..27a680d 100644
 --- a/vendor/cassie/src/cassie_sketcher.h
 +++ b/vendor/cassie/src/cassie_sketcher.h
-@@ -90,6 +90,10 @@ class CassieSketcher : public Node3D {
+@@ -75,6 +75,8 @@ class CassieSketcher : public Node3D {
+ 	struct InFlightStroke {
+ 		Ref<CassieInputStroke> input;
+ 		int sample_index = 0;
++		// interactor-dress-on: boundary_strokes when the stroke began.
++		bool boundary = false;
+ 	};
+ 
+ 	HashMap<int, InFlightStroke> in_flight;
+@@ -90,6 +92,17 @@ class CassieSketcher : public Node3D {
  
  	float sample_dt = 1.0f / 60.0f;
  	int64_t peer_id = 0;
@@ -66,21 +119,40 @@ index 98a257ad6..fa29b8e0b 100644
 +	// not one edge whose two ends merge into a single node (a self-loop
 +	// the minimal-cycle search never reports as a face).
 +	bool split_closed_strokes = true;
++	// interactor-dress-on: a pen mode. A stroke begun while it is true is a
++	// boundary stroke: its graph edges are marked boundary, and a cycle made
++	// only of boundary edges is an opening that gets no patch (a skirt is an
++	// open tube: its waist and hem rings bound openings, not caps).
++	// apply_remote_samples takes the mode current when it runs; the stroke
++	// packet does not carry it.
++	bool boundary_strokes = false;
  	uint16_t broadcast_seq = 0;
  
  	// Last encoded packet, keyed by stroke_id. Kept so the
-@@ -123,6 +127,9 @@ public:
+@@ -100,7 +113,7 @@ class CassieSketcher : public Node3D {
+ 	void _ensure_owned_state();
+ 
+ 	Dictionary _run_chain_locally(const Ref<CassieInputStroke> &p_input,
+-			bool p_emit_signals);
++			bool p_emit_signals, bool p_boundary = false);
+ 
+ 	Dictionary _drain_patches();
+ 
+@@ -123,6 +136,12 @@ public:
  	void set_async_triangulation(bool p_enable);
  	bool get_async_triangulation() const;
  
 +	void set_split_closed_strokes(bool p_enable) { split_closed_strokes = p_enable; }
 +	bool get_split_closed_strokes() const { return split_closed_strokes; }
 +
++	void set_boundary_strokes(bool p_enable) { boundary_strokes = p_enable; }
++	bool get_boundary_strokes() const { return boundary_strokes; }
++
  	Ref<CassieSketchGraph> get_sketch_graph() const { return sketch_graph; }
  	Ref<CassieSurfaceManager> get_surface_manager() const { return surface_manager; }
  	Ref<CassieSketchContext> get_sketch_context() const { return sketch_context; }
 diff --git a/vendor/cassie/src/delaunay_geogram.cpp b/vendor/cassie/src/delaunay_geogram.cpp
-index 3586e95c3..de75c035e 100644
+index 3586e95..de75c03 100644
 --- a/vendor/cassie/src/delaunay_geogram.cpp
 +++ b/vendor/cassie/src/delaunay_geogram.cpp
 @@ -30,61 +30,38 @@
@@ -242,7 +314,7 @@ index 3586e95c3..de75c035e 100644
  }
  
 diff --git a/vendor/cassie/src/delaunay_geogram.h b/vendor/cassie/src/delaunay_geogram.h
-index 170db449d..560938a18 100644
+index 170db44..560938a 100644
 --- a/vendor/cassie/src/delaunay_geogram.h
 +++ b/vendor/cassie/src/delaunay_geogram.h
 @@ -30,71 +30,23 @@
@@ -329,10 +401,228 @@ index 170db449d..560938a18 100644
  		int **out_face_indices, int *out_face_count);
  
 diff --git a/vendor/cassie/src/sketch/cassie_sketch_graph.cpp b/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
-index e00beeb83..af6044db4 100644
+index e00beeb..21f82ba 100644
 --- a/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
 +++ b/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
-@@ -1004,9 +1004,13 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
+@@ -74,6 +74,7 @@ void CassieSketchGraphEdge::_bind_methods() {
+ 			&CassieSketchGraphEdge::get_opposite);
+ 	ClassDB::bind_method(D_METHOD("get_source_polyline_idx"),
+ 			&CassieSketchGraphEdge::get_source_polyline_idx);
++	ClassDB::bind_method(D_METHOD("get_boundary"), &CassieSketchGraphEdge::get_boundary);
+ }
+ 
+ // ── Graph implementation ────────────────────────────────────────────────────
+@@ -358,19 +359,104 @@ void CassieSketchGraph::_cumulative_lengths(const PackedVector3Array &p_poly,
+ 	}
+ }
+ 
++// interactor-dress-on: the stretch beside a knot two polylines share. p_a's
++// end p_a_end (0 start, 1 end) and p_b's end p_b_end meet within
++// merge_epsilon, so add_stroke merges them into one node; leaving it, the
++// two stay within p_proximity of each other for a while (up to p_proximity
++// along each when they leave in opposite directions, farther as the angle
++// between them closes). The zone grows segment by segment from the knot on
++// both polylines together, as long as each next segment stays within
++// p_proximity of the other's zone (or its next segment). r_la / r_lb count
++// the zone's segments from that end.
++static void _knot_zone(const PackedVector3Array &p_a, int p_a_end,
++		const PackedVector3Array &p_b, int p_b_end, real_t p_prox2,
++		int &r_la, int &r_lb) {
++	const int sa = p_a.size() - 1;
++	const int sb = p_b.size() - 1;
++	auto seg = [](const PackedVector3Array &p, int s, int end, int k, Vector3 &r0, Vector3 &r1) {
++		r0 = end == 0 ? p[k] : p[s - k];
++		r1 = end == 0 ? p[k + 1] : p[s - k - 1];
++	};
++	// Segment k of one polyline within p_proximity of any of the other's
++	// first `upto` segments.
++	auto near = [&](const PackedVector3Array &p, int s, int end, int k,
++						const PackedVector3Array &q, int t, int qend, int upto) {
++		Vector3 a0, a1, b0, b1;
++		seg(p, s, end, k, a0, a1);
++		for (int j = 0; j < MIN(upto, t); ++j) {
++			seg(q, t, qend, j, b0, b1);
++			real_t u, v, d2;
++			_segment_segment_closest(a0, a1, b0, b1, u, v, d2);
++			if (d2 <= p_prox2) {
++				return true;
++			}
++		}
++		return false;
++	};
++	r_la = 1;
++	r_lb = 1;
++	for (;;) {
++		bool grown = false;
++		if (r_la < sa && near(p_a, sa, p_a_end, r_la, p_b, sb, p_b_end, r_lb + 1)) {
++			++r_la;
++			grown = true;
++		}
++		if (r_lb < sb && near(p_b, sb, p_b_end, r_lb, p_a, sa, p_a_end, r_la + 1)) {
++			++r_lb;
++			grown = true;
++		}
++		if (!grown) {
++			break;
++		}
++	}
++}
++
+ // Pairwise segment-segment closest-pair tests between two polylines with a
+ // per-polyline and a per-segment AABB cull. Each hit within p_proximity is
+ // recorded on both polylines as the midpoint of the closest pair, so the
+ // crossing is one position from both points of view; merge_epsilon then
+ // collapses it to one graph node.
+ void CassieSketchGraph::_crossings(const PackedVector3Array &p_a,
+-		const PackedVector3Array &p_b, real_t p_proximity,
++		const PackedVector3Array &p_b, real_t p_proximity, real_t p_merge_epsilon,
+ 		LocalVector<SplitPt> &r_a, LocalVector<SplitPt> &r_b) {
+ 	const int na = p_a.size();
+ 	const int nb = p_b.size();
+ 	if (na < 2 || nb < 2) {
+ 		return;
+ 	}
++	// interactor-dress-on: a shared endpoint is an endpoint merge wherever
++	// the two polylines have not yet parted beside it, not only on their
++	// first or last segments (below): with p_proximity at or above the
++	// sample spacing, hits on the second and third segments beside a knot
++	// were split as crossings, trimming the edges short of the knot or
++	// leaving a dangling node a few cm from it.
++	struct Zone {
++		int a_end, b_end, la, lb;
++	};
++	LocalVector<Zone> zones;
++	for (int ae = 0; ae < 2; ++ae) {
++		for (int be = 0; be < 2; ++be) {
++			const Vector3 pa = ae == 0 ? p_a[0] : p_a[na - 1];
++			const Vector3 pb = be == 0 ? p_b[0] : p_b[nb - 1];
++			if (pa.distance_to(pb) > p_merge_epsilon) {
++				continue;
++			}
++			Zone z = { ae, be, 1, 1 };
++			_knot_zone(p_a, ae, p_b, be, p_proximity * p_proximity, z.la, z.lb);
++			zones.push_back(z);
++		}
++	}
++	auto in_zone = [&](int a, int b) {
++		for (uint32_t k = 0; k < zones.size(); ++k) {
++			const Zone &z = zones[k];
++			const bool ina = z.a_end == 0 ? a < z.la : a >= na - 1 - z.la;
++			const bool inb = z.b_end == 0 ? b < z.lb : b >= nb - 1 - z.lb;
++			if (ina && inb) {
++				return true;
++			}
++		}
++		return false;
++	};
+ 	AABB box_a(p_a[0], Vector3());
+ 	for (int k = 1; k < na; ++k) {
+ 		box_a.expand_to(p_a[k]);
+@@ -413,7 +499,7 @@ void CassieSketchGraph::_crossings(const PackedVector3Array &p_a,
+ 			}
+ 			const bool at_end_a = (a == 0 && s < real_t(0.05)) || (a == na - 2 && s > real_t(0.95));
+ 			const bool at_end_b = (b == 0 && t < real_t(0.05)) || (b == nb - 2 && t > real_t(0.95));
+-			if (at_end_a && at_end_b) {
++			if ((at_end_a && at_end_b) || in_zone(a, b)) {
+ 				continue;
+ 			}
+ 			const Vector3 mid = (a0 + (a1 - a0) * s + b0 + (b1 - b0) * t) * real_t(0.5);
+@@ -440,7 +526,7 @@ void CassieSketchGraph::_crossings(const PackedVector3Array &p_a,
+ // edge per slice of p_poly between consecutive splits. The endpoint merge
+ // inside add_stroke snaps each slice end to the shared crossing node.
+ int CassieSketchGraph::_add_polyline_sliced(const PackedVector3Array &p_poly,
+-		LocalVector<SplitPt> &p_splits, int p_source_idx) {
++		LocalVector<SplitPt> &p_splits, int p_source_idx, bool p_boundary) {
+ 	const int n = p_poly.size();
+ 	if (n < 2) {
+ 		return 0;
+@@ -483,6 +569,7 @@ int CassieSketchGraph::_add_polyline_sliced(const PackedVector3Array &p_poly,
+ 				const int new_eid = add_stroke(current, empty_normals);
+ 				if (new_eid >= 0) {
+ 					edges[new_eid]->set_source_polyline_idx(p_source_idx);
++					edges[new_eid]->set_boundary(p_boundary);
+ 					added++;
+ 				}
+ 			}
+@@ -500,6 +587,7 @@ int CassieSketchGraph::_add_polyline_sliced(const PackedVector3Array &p_poly,
+ 		const int new_eid = add_stroke(current, empty_normals);
+ 		if (new_eid >= 0) {
+ 			edges[new_eid]->set_source_polyline_idx(p_source_idx);
++			edges[new_eid]->set_boundary(p_boundary);
+ 			added++;
+ 		}
+ 	}
+@@ -526,7 +614,7 @@ int CassieSketchGraph::build_from_polylines(
+ 	splits_per_poly.resize(P);
+ 	for (int i = 0; i < P; ++i) {
+ 		for (int j = i + 1; j < P; ++j) {
+-			_crossings(polys[i], polys[j], p_proximity,
++			_crossings(polys[i], polys[j], p_proximity, merge_epsilon,
+ 					splits_per_poly[i], splits_per_poly[j]);
+ 		}
+ 	}
+@@ -538,7 +626,7 @@ int CassieSketchGraph::build_from_polylines(
+ }
+ 
+ int CassieSketchGraph::add_stroke_intersecting(const PackedVector3Array &p_points,
+-		const PackedVector3Array &p_normals, real_t p_proximity) {
++		const PackedVector3Array &p_normals, real_t p_proximity, bool p_boundary) {
+ 	if (p_points.size() < 2) {
+ 		return 0;
+ 	}
+@@ -546,27 +634,47 @@ int CassieSketchGraph::add_stroke_intersecting(const PackedVector3Array &p_point
+ 	LocalVector<int> hit_ids;
+ 	LocalVector<PackedVector3Array> hit_points;
+ 	LocalVector<int> hit_source;
++	LocalVector<bool> hit_boundary;
+ 	LocalVector<LocalVector<SplitPt>> hit_splits;
+ 	for (const KeyValue<int, Ref<CassieSketchGraphEdge>> &kv : edges) {
+ 		LocalVector<SplitPt> on_edge;
+-		_crossings(p_points, kv.value->get_points(), p_proximity, new_splits, on_edge);
++		_crossings(p_points, kv.value->get_points(), p_proximity, merge_epsilon, new_splits, on_edge);
+ 		if (on_edge.is_empty()) {
+ 			continue;
+ 		}
+ 		hit_ids.push_back(kv.key);
+ 		hit_points.push_back(kv.value->get_points());
+ 		hit_source.push_back(kv.value->get_source_polyline_idx());
++		hit_boundary.push_back(kv.value->get_boundary());
+ 		hit_splits.push_back(on_edge);
+ 	}
+ 	int added = 0;
+ 	for (uint32_t h = 0; h < hit_ids.size(); ++h) {
+ 		_remove_edge(hit_ids[h]);
+-		added += _add_polyline_sliced(hit_points[h], hit_splits[h], hit_source[h]) - 1;
++		added += _add_polyline_sliced(hit_points[h], hit_splits[h], hit_source[h], hit_boundary[h]) - 1;
+ 	}
+ 	if (new_splits.is_empty()) {
+-		return added + (add_stroke(p_points, p_normals) >= 0 ? 1 : 0);
++		const int eid = add_stroke(p_points, p_normals);
++		if (eid < 0) {
++			return added;
++		}
++		edges[eid]->set_boundary(p_boundary);
++		return added + 1;
++	}
++	return added + _add_polyline_sliced(p_points, new_splits, -1, p_boundary);
++}
++
++bool CassieSketchGraph::is_opening(const PackedInt32Array &p_cycle_edge_ids) const {
++	if (p_cycle_edge_ids.is_empty()) {
++		return false;
++	}
++	for (int i = 0; i < p_cycle_edge_ids.size(); ++i) {
++		HashMap<int, Ref<CassieSketchGraphEdge>>::ConstIterator it = edges.find(p_cycle_edge_ids[i]);
++		if (!it || it->value.is_null() || !it->value->get_boundary()) {
++			return false;
++		}
+ 	}
+-	return added + _add_polyline_sliced(p_points, new_splits, -1);
++	return true;
+ }
+ 
+ Ref<CassieSketchGraphNode> CassieSketchGraph::get_node(int p_id) const {
+@@ -1004,9 +1112,13 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
  		real_t p_target_edge_length) const {
  	PackedVector3Array out;
  	const int N = p_cycle_edge_ids.size();
@@ -347,7 +637,7 @@ index e00beeb83..af6044db4 100644
  	for (int i = 0; i < N; ++i) {
  		const int eid = p_cycle_edge_ids[i];
  		Ref<CassieSketchGraphEdge> edge = get_edge(eid);
-@@ -1025,13 +1029,18 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
+@@ -1025,13 +1137,18 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
  		const int na = next_edge->get_node_a_id();
  		const int nb = next_edge->get_node_b_id();
  		int exit_nid = -1;
@@ -367,8 +657,100 @@ index e00beeb83..af6044db4 100644
  		const int entry_nid = edge->get_opposite(exit_nid);
  		const bool reversed = (entry_nid == b);
  
+@@ -1076,8 +1193,10 @@ void CassieSketchGraph::_bind_methods() {
+ 			&CassieSketchGraph::add_stroke);
+ 	ClassDB::bind_method(D_METHOD("build_from_polylines", "polylines", "proximity"),
+ 			&CassieSketchGraph::build_from_polylines);
+-	ClassDB::bind_method(D_METHOD("add_stroke_intersecting", "points", "normals", "proximity"),
+-			&CassieSketchGraph::add_stroke_intersecting);
++	ClassDB::bind_method(D_METHOD("add_stroke_intersecting", "points", "normals", "proximity", "boundary"),
++			&CassieSketchGraph::add_stroke_intersecting, DEFVAL(false));
++	ClassDB::bind_method(D_METHOD("is_opening", "cycle_edge_ids"),
++			&CassieSketchGraph::is_opening);
+ 	ClassDB::bind_method(D_METHOD("get_edge_count"),
+ 			&CassieSketchGraph::get_edge_count);
+ 	ClassDB::bind_method(D_METHOD("get_node_count"),
+diff --git a/vendor/cassie/src/sketch/cassie_sketch_graph.h b/vendor/cassie/src/sketch/cassie_sketch_graph.h
+index 5183fa3..26948a5 100644
+--- a/vendor/cassie/src/sketch/cassie_sketch_graph.h
++++ b/vendor/cassie/src/sketch/cassie_sketch_graph.h
+@@ -92,6 +92,11 @@ class CassieSketchGraphEdge : public Resource {
+ 	// array. Lets callers map cycle → set-of-strokes for the border-set
+ 	// diff. -1 for edges added via the per-stroke add_stroke path.
+ 	int source_polyline_idx = -1;
++	// interactor-dress-on: the edge lies on a boundary stroke, an edge of an
++	// opening in the surface being authored (a skirt's waist or hem). A
++	// cycle made only of boundary edges bounds an opening, not a patch
++	// (CassieSketchGraph::is_opening). Slices of a split edge keep it.
++	bool boundary = false;
+ 
+ protected:
+ 	static void _bind_methods();
+@@ -110,6 +115,8 @@ public:
+ 	int get_node_b_id() const { return node_b_id; }
+ 	void set_source_polyline_idx(int n) { source_polyline_idx = n; }
+ 	int get_source_polyline_idx() const { return source_polyline_idx; }
++	void set_boundary(bool p_boundary) { boundary = p_boundary; }
++	bool get_boundary() const { return boundary; }
+ 
+ 	int get_opposite(int node_id) const;
+ 	Vector3 get_tangent_away_from(int node_id) const;
+@@ -148,10 +155,10 @@ class CassieSketchGraph : public Resource {
+ 	static void _cumulative_lengths(const PackedVector3Array &p_poly,
+ 			LocalVector<real_t> &r_cum);
+ 	static void _crossings(const PackedVector3Array &p_a,
+-			const PackedVector3Array &p_b, real_t p_proximity,
++			const PackedVector3Array &p_b, real_t p_proximity, real_t p_merge_epsilon,
+ 			LocalVector<SplitPt> &r_a, LocalVector<SplitPt> &r_b);
+ 	int _add_polyline_sliced(const PackedVector3Array &p_poly,
+-			LocalVector<SplitPt> &p_splits, int p_source_idx);
++			LocalVector<SplitPt> &p_splits, int p_source_idx, bool p_boundary = false);
+ 
+ protected:
+ 	static void _bind_methods();
+@@ -191,9 +198,20 @@ public:
+ 	// The online counterpart: adds one stroke and splits it, and every
+ 	// existing edge it crosses within p_proximity, at the crossings.
+ 	// Untouched edges keep their ids, so patch signatures over them
+-	// survive. Returns the number of edges added.
++	// survive. Returns the number of edges added. interactor-dress-on:
++	// p_boundary marks the stroke's edges as boundary edges (see
++	// is_opening); the slices of an existing edge it splits keep that
++	// edge's mark.
+ 	int add_stroke_intersecting(const PackedVector3Array &p_points,
+-			const PackedVector3Array &p_normals, real_t p_proximity);
++			const PackedVector3Array &p_normals, real_t p_proximity,
++			bool p_boundary = false);
++
++	// interactor-dress-on: true when every edge of the cycle is a boundary
++	// edge. Such a cycle bounds an opening of the surface (a skirt's waist
++	// ring drawn as two half rings is a two-edge cycle of boundary edges);
++	// CassieSurfaceManager gives it no patch. False for an empty cycle or
++	// one naming a missing edge.
++	bool is_opening(const PackedInt32Array &p_cycle_edge_ids) const;
+ 
+ 	int get_edge_count() const { return edges.size(); }
+ 	int get_node_count() const { return nodes.size(); }
+diff --git a/vendor/cassie/src/sketch/cassie_surface_manager.cpp b/vendor/cassie/src/sketch/cassie_surface_manager.cpp
+index 869c205..bddcb97 100644
+--- a/vendor/cassie/src/sketch/cassie_surface_manager.cpp
++++ b/vendor/cassie/src/sketch/cassie_surface_manager.cpp
+@@ -210,6 +210,13 @@ Dictionary CassieSurfaceManager::update() {
+ 		if (sig.is_empty()) {
+ 			continue;
+ 		}
++		// interactor-dress-on: a cycle of boundary edges only is an opening
++		// (a skirt's waist or hem), not a face to surface. find_cycles
++		// reports every face cycle of the network, the cap over an opening
++		// among them; the author's boundary strokes say which are openings.
++		if (graph->is_opening(cycle)) {
++			continue;
++		}
+ 		if (seen_sigs.has(sig)) {
+ 			continue;
+ 		}
 diff --git a/vendor/cassie/src/sketch/cassie_surface_patch.cpp b/vendor/cassie/src/sketch/cassie_surface_patch.cpp
-index 74436698b..5d8b80257 100644
+index 7443669..5d8b802 100644
 --- a/vendor/cassie/src/sketch/cassie_surface_patch.cpp
 +++ b/vendor/cassie/src/sketch/cassie_surface_patch.cpp
 @@ -374,7 +374,7 @@ Dictionary CassieSurfacePatch::project(const Vector3 &p_pos) const {
@@ -381,7 +763,7 @@ index 74436698b..5d8b80257 100644
  
  Vector3i CassieSurfacePatch::get_triangle_indices(int p_idx) const {
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
-index 3746c8b7d..cfec0dc5e 100644
+index 3746c8b..cfec0dc 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
 @@ -30,8 +30,8 @@
@@ -430,7 +812,7 @@ index 3746c8b7d..cfec0dc5e 100644
  	auto store = [](float dst[3], const Vector<float, 3> &src) {
  		dst[0] = src.x;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
-index 481c9f58f..c9ac47347 100644
+index 481c9f5..c9ac473 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
 @@ -34,7 +34,23 @@
@@ -468,7 +850,7 @@ index 481c9f58f..c9ac47347 100644
  	for (int k = 0; k < 4; ++k) {
  		r_out_ctrl_xyz[k * 3 + 0] = out_scratch[k].x;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
-index 170dc398e..ae9536bd2 100644
+index 170dc39..ae9536b 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
 @@ -34,7 +34,23 @@
@@ -506,7 +888,7 @@ index 170dc398e..ae9536bd2 100644
  	delete[] in_packed;
  }
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
-index ddaae225b..46c02eac5 100644
+index ddaae22..46c02ea 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
 @@ -34,7 +34,23 @@
@@ -544,7 +926,7 @@ index ddaae225b..46c02eac5 100644
  	delete[] in_packed;
  	return out_count_scratch;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
-index 0750044de..52a2f06c4 100644
+index 0750044..52a2f06 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
 @@ -30,17 +30,15 @@
@@ -606,7 +988,7 @@ index 0750044de..52a2f06c4 100644
  	}
  }
 diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
-index 93d4e00c5..59a995eb9 100644
+index 93d4e00..59a995e 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
 +++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
 @@ -32,7 +32,7 @@

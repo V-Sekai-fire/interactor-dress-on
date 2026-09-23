@@ -1,0 +1,116 @@
+# Gate 5 drape.elf, 2026-09-23T08:57:27, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 4090 only G9
+sandbox memory_max = 512
+sandbox execution_timeout = 8000
+oracle handed to the guest: 47 files (20 components, 5 problems, 20 traces, 2 inverse_min): DATA invmin_k_bend_density 1961 bytes, 47 keys
+G10 scene handed to the guest: DATA body_obj 340622 bytes, 51 keys
+PASS G9 lbfgsb_bench cpu n=10 iters=10 ticks=    9 wall_ms=      5.4  PASS lbfgsb_bench cpu n=10 iterations=9 evaluations=30 f=-27.5921181 stop=the line search routine is unable to sufficiently decrease the function value phases=69
+PASS G9 lbfgsb_bench rd n=10 iters=10 ticks=   70 wall_ms=     75.9  PASS lbfgsb_bench rd n=10 iterations=9 evaluations=30 f=-27.5921181 stop=the line search routine is unable to sufficiently decrease the function value phases=69
+PASS G9 lbfgsb_bench cpu n=100 iters=10 ticks=    5 wall_ms=      5.8  PASS lbfgsb_bench cpu n=100 iterations=10 evaluations=12 f=-288.289589 stop=max_iterations phases=34
+PASS G9 lbfgsb_bench rd n=100 iters=10 ticks=   35 wall_ms=     34.7  PASS lbfgsb_bench rd n=100 iterations=10 evaluations=12 f=-288.289589 stop=max_iterations phases=34
+PASS G9 lbfgsb_bench cpu n=1000 iters=10 ticks=    5 wall_ms=     44.1  PASS lbfgsb_bench cpu n=1000 iterations=10 evaluations=13 f=-2886.40621 stop=max_iterations phases=36
+PASS G9 lbfgsb_bench rd n=1000 iters=10 ticks=   37 wall_ms=     99.4  PASS lbfgsb_bench rd n=1000 iterations=10 evaluations=13 f=-2886.40621 stop=max_iterations phases=36
+PASS G9 lbfgsb_bench cpu n=10000 iters=10 ticks=    6 wall_ms=    482.5  PASS lbfgsb_bench cpu n=10000 iterations=10 evaluations=18 f=-28887.1695 stop=max_iterations phases=46
+PASS G9 lbfgsb_bench rd n=10000 iters=10 ticks=   47 wall_ms=    788.1  PASS lbfgsb_bench rd n=10000 iterations=10 evaluations=18 f=-28887.1695 stop=max_iterations phases=46
+PASS G9 lbfgsb_bench cpu n=100000 iters=10 ticks=    8 wall_ms=   1368.4  PASS lbfgsb_bench cpu n=100000 iterations=10 evaluations=26 f=-288899.415 stop=max_iterations phases=62
+PASS G9 lbfgsb_bench rd n=100000 iters=10 ticks=   65 wall_ms=  14477.2  PASS lbfgsb_bench rd n=100000 iterations=10 evaluations=27 f=-288899.408 stop=max_iterations phases=64
+job bench_drape cpu sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 0 ticks=   187 wall_ms=  21383.6  PASS bench_drape cpu: every size finite
+    bench_drape cpu  4x4  nv=  16 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=24.6 ms/step=1.228
+    bench_drape cpu  6x6  nv=  36 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=61.8 ms/step=3.088
+    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=117.4 ms/step=5.868
+    bench_drape cpu 10x10 nv= 100 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=182.2 ms/step=9.109
+    bench_drape cpu 12x12 nv= 144 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=282.7 ms/step=14.134
+    bench_drape cpu 14x14 nv= 196 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=375.9 ms/step=18.797
+    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=524.4 ms/step=26.220
+    bench_drape cpu 20x20 nv= 400 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=811.0 ms/step=40.551
+    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=1238.5 ms/step=61.923
+    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=2153.0 ms/step=107.650
+    bench_drape cpu 48x48 nv=2304 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.042931 friction_events=376 projections=0 self_pushes=0 wall_ms=5346.8 ms/step=267.342
+    bench_drape cpu 64x64 nv=4096 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=9583.6 ms/step=479.182
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+job bench_drape rd sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 0 ticks=   481 wall_ms=   1662.8  PASS bench_drape rd: every size finite
+    bench_drape rd  4x4  nv=  16 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=218.3 ms/step=10.915
+    bench_drape rd  6x6  nv=  36 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=87.0 ms/step=4.348
+    bench_drape rd  8x8  nv=  64 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=91.0 ms/step=4.548
+    bench_drape rd 10x10 nv= 100 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=90.3 ms/step=4.514
+    bench_drape rd 12x12 nv= 144 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=93.7 ms/step=4.684
+    bench_drape rd 14x14 nv= 196 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=97.1 ms/step=4.857
+    bench_drape rd 16x16 nv= 256 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=99.6 ms/step=4.981
+    bench_drape rd 20x20 nv= 400 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=108.2 ms/step=5.411
+    bench_drape rd 24x24 nv= 576 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=117.0 ms/step=5.849
+    bench_drape rd 32x32 nv=1024 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=139.6 ms/step=6.979
+    bench_drape rd 48x48 nv=2304 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.042930 friction_events=376 projections=0 self_pushes=0 wall_ms=207.9 ms/step=10.396
+    bench_drape rd 64x64 nv=4096 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=311.7 ms/step=15.584
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+job bench_drape cpu sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 90 ticks=   187 wall_ms=  21796.5  PASS bench_drape cpu: every size finite
+    bench_drape cpu  4x4  nv=  16 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=155.6 ms/step=7.779
+    bench_drape cpu  6x6  nv=  36 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=166.7 ms/step=8.333
+    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=166.7 ms/step=8.332
+    bench_drape cpu 10x10 nv= 100 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=197.9 ms/step=9.897
+    bench_drape cpu 12x12 nv= 144 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=285.4 ms/step=14.270
+    bench_drape cpu 14x14 nv= 196 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=376.5 ms/step=18.824
+    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=526.1 ms/step=26.306
+    bench_drape cpu 20x20 nv= 400 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=801.1 ms/step=40.056
+    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=1241.2 ms/step=62.061
+    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=2139.2 ms/step=106.962
+    bench_drape cpu 48x48 nv=2304 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.042931 friction_events=376 projections=0 self_pushes=0 wall_ms=5351.6 ms/step=267.579
+    bench_drape cpu 64x64 nv=4096 DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=9681.2 ms/step=484.062
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+job bench_drape rd sizes=4,6,8,10,12,14,16,20,24,32,48,64 steps=20 fps 90 ticks=   481 wall_ms=   5419.0  PASS bench_drape rd: every size finite
+    bench_drape rd  4x4  nv=  16 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=0 projections=0 self_pushes=0 wall_ms=433.4 ms/step=21.668
+    bench_drape rd  6x6  nv=  36 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=9 projections=0 self_pushes=0 wall_ms=444.5 ms/step=22.224
+    bench_drape rd  8x8  nv=  64 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=15 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.220
+    bench_drape rd 10x10 nv= 100 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063520 friction_events=24 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.222
+    bench_drape rd 12x12 nv= 144 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063518 friction_events=38 projections=0 self_pushes=0 wall_ms=444.5 ms/step=22.224
+    bench_drape rd 14x14 nv= 196 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=53 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.222
+    bench_drape rd 16x16 nv= 256 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063519 friction_events=66 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.222
+    bench_drape rd 20x20 nv= 400 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063517 friction_events=108 projections=0 self_pushes=0 wall_ms=444.5 ms/step=22.223
+    bench_drape rd 24x24 nv= 576 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.063488 friction_events=158 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.222
+    bench_drape rd 32x32 nv=1024 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.062378 friction_events=272 projections=0 self_pushes=0 wall_ms=444.4 ms/step=22.221
+    bench_drape rd 48x48 nv=2304 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.042930 friction_events=376 projections=0 self_pushes=0 wall_ms=475.9 ms/step=23.797
+    bench_drape rd 64x64 nv=4096 DONE forward rd steps=20 (+20 of 20) finite=yes ymin=-0.020368 friction_events=331 projections=0 self_pushes=0 wall_ms=508.3 ms/step=25.416
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+--- checks
+PASS G8 rd_rule4 after every job: same_frame_syncs=0 syncs=1209 submits=1209 (want same_frame_syncs=0 with syncs>0)
+PASS G8 rd_rule4_probe (positive control): PASS same_frame_syncs 0 -> 1; counter now 1
+PASS G8 llvm-nm -C project/drape.elf: 9372 symbols, 0 matching Eigen, 0 matching LBFGSpp (rc 0)
+G9 L-BFGS-B cost (box QP, 10 iterations, host wall of one job / its iterations)
+         n    cpu ms/it     rd ms/it   rd/cpu
+        10        0.602        8.434    14.02
+       100        0.579        3.474     6.00
+      1000        4.406        9.937     2.26
+     10000       48.253       78.813     1.63
+    100000      136.845     1447.725    10.58
+PASS G9 L-BFGS-B bench: every size ran on both backends; rd first cheaper at n = none up to 100000 (the optimize and lbfgsb jobs' auto stays cpu)
+G9 drape step cost at uncapped frames (sphere-demo scene at n x n, contact + self-collision, host ms per step over 20 frame-driven steps)
+     verts        cpu         rd   rd/cpu
+        16      1.228      10.91    8.888
+        36      3.088      4.348    1.408
+        64      5.868      4.548   0.7751
+       100      9.109      4.514   0.4956
+       144      14.13      4.684   0.3314
+       196       18.8      4.857   0.2584
+       256      26.22      4.981     0.19
+       400      40.55      5.411   0.1334
+       576      61.92      5.849  0.09446
+      1024      107.7      6.979  0.06483
+      2304      267.3       10.4  0.03889
+      4096      479.2      15.58  0.03252
+info G9 crossover at uncapped frames: cpu cheaper up to 36 vertices, rd from 64
+G9 drape step cost at 90 fps (sphere-demo scene at n x n, contact + self-collision, host ms per step over 20 frame-driven steps)
+     verts        cpu         rd   rd/cpu
+        16      7.779      21.67    2.785
+        36      8.333      22.22    2.667
+        64      8.332      22.22    2.667
+       100      9.897      22.22    2.245
+       144      14.27      22.22    1.557
+       196      18.82      22.22    1.181
+       256      26.31      22.22   0.8448
+       400      40.06      22.22   0.5548
+       576      62.06      22.22   0.3581
+      1024      107.0      22.22   0.2077
+      2304      267.6       23.8  0.08893
+      4096      484.1      25.42  0.05251
+FAIL G9 drape_open(auto) threshold 160 vertices sits at the measured crossover at 90 fps: cpu cheaper up to 196 vertices, rd from 256
+PASS G8 rd_close: CLOSED device=freed permanent_slots=0
+SUMMARY G9 FAIL(1)
+RESULT: FAIL

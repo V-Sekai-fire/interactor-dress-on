@@ -639,10 +639,16 @@ void AvbdRd::snapshot_pre_step() {
 
 // --- recording --------------------------------------------------------------
 
-void AvbdRd::record_iteration() {
+void AvbdRd::record_iteration(bool last) {
 	const uint32_t nc = numColors();
+	const bool dbg = last && dbgColor_ >= 0;
 	for (uint32_t k = 0; k < nc; ++k) {
 		const uint32_t count = colorOffsets_[k + 1] - colorOffsets_[k];
+		if (dbg && int(k) > dbgColor_) {
+			break;
+		}
+		// The debug stop's stage within its colour (5: the whole colour).
+		const int upTo = (dbg && int(k) == dbgColor_) ? dbgStage_ : 5;
 		if (count == 0) {
 			continue;
 		}
@@ -678,6 +684,9 @@ void AvbdRd::record_iteration() {
 							{ "grad", &bd_grad_ }, { "hessScalar", &bd_hess_ } });
 		}
 		d_.barrier();
+		if (upTo < 1) {
+			break;
+		}
 		// The gathers all accumulate into gScratch/hScratch: serialise them.
 		if (nSprings_) {
 			dispatch("vbd_gather_spring", c, count,
@@ -686,12 +695,18 @@ void AvbdRd::record_iteration() {
 							{ "hScratch", &hScratch_ }, { "vertPerm", &vertPerm_b_ } });
 			d_.barrier();
 		}
+		if (upTo < 2) {
+			break;
+		}
 		if (nAttach_) {
 			dispatch("vbd_gather_attachment", c, count,
 					{ { "attachGradV", &at_gradV_ }, { "attachHessScalar", &at_hess_ },
 							{ "vertAttachOffset", &at_off_ }, { "vertAttachIdx", &at_idx_ }, { "gScratch", &gScratch_ },
 							{ "hScratch", &hScratch_ }, { "vertPerm", &vertPerm_b_ } });
 			d_.barrier();
+		}
+		if (upTo < 3) {
+			break;
 		}
 		if (nTri_) {
 			dispatch("vbd_gather_triangle", c, count,
@@ -700,12 +715,18 @@ void AvbdRd::record_iteration() {
 							{ "hScratch", &hScratch_ }, { "vertPerm", &vertPerm_b_ } });
 			d_.barrier();
 		}
+		if (upTo < 4) {
+			break;
+		}
 		if (nBend_) {
 			dispatch("vbd_gather_bending", c, count,
 					{ { "bendGrad", &bd_grad_ }, { "bendHessScalar", &bd_hess_ }, { "vertBendOffset", &bd_off_ },
 							{ "vertBendIdx", &bd_idxc_ }, { "vertBendRole", &bd_role_ }, { "gScratch", &gScratch_ },
 							{ "hScratch", &hScratch_ }, { "vertPerm", &vertPerm_b_ } });
 			d_.barrier();
+		}
+		if (upTo < 5) {
+			break;
 		}
 		dispatch("vbd_solve_apply", c, count,
 				{ { "gScratch", &gScratch_ }, { "hScratch", &hScratch_ }, { "positions", &positions_ },
@@ -845,10 +866,23 @@ void AvbdRd::record_run(int iters, bool duals) {
 	}
 	snapshot_pre_step();
 	d_.list_begin();
-	record_iteration();
-	if (duals) {
+	record_iteration(true);
+	if (duals && dbgColor_ < 0) {
 		record_duals();
 	}
+}
+
+std::vector<float> AvbdRd::readDebugForTest(const std::string &name) {
+	if (name == "positions") return read_v3(positions_, nVerts_);
+	if (name == "gScratch") return read_v3(gScratch_, nVerts_);
+	if (name == "hScratch") return read_f32(hScratch_, 6 * nVerts_);
+	if (name == "attachGradV") return read_v3(at_gradV_, nAttach_);
+	if (name == "attachHess") return read_f32(at_hess_, nAttach_);
+	if (name == "triGrad") return read_v3(tri_grad_, 3 * nTri_);
+	if (name == "triHess") return read_f32(tri_hess_, 3 * nTri_);
+	if (name == "bendGrad") return read_v3(bd_grad_, 4 * nBend_);
+	if (name == "bendHess") return read_f32(bd_hess_, 4 * nBend_);
+	return {};
 }
 
 void AvbdRd::sync() {

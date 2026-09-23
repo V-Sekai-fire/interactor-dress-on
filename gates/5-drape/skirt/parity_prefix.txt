@@ -1,0 +1,20 @@
+# probe_drape_skirt 2026-09-23T09:00:08 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=1 caps=false body=false
+mesh 2682 v 5220 f, 44 pins, 14 capsules, body 5128 v 10171 f
+DATA mesh_obj 185598 bytes, 1 keys
+DATA mesh_pins 194 bytes, 2 keys
+DATA mesh_capsules 1229 bytes, 3 keys
+DATA body_obj 340622 bytes, 4 keys
+STARTED mesh_parity rd scale=10 caps=1 steps=5 tol=1e-4
+ticks=22 wall_s=7.0
+FAIL mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=NO, max|x_cpu - x_rd| over 5 steps = 0 (tol 0.0001)
+[drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+[drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=14 | prim0 capsule c=(-0.00113,9.52752,-0.27279) a=(0.001915,0.993744,0.111665) r=0.735514 len=0.948843 mu=0.300000 | prim1 capsule c=(0.00069,10.4704,-0.16683) a=(0.00064,0.999598,0.028341) r=1.30746 len=2.95858 mu=0.300000 | prim2 capsule c=(0.00069,10.4704,-0.16683) a=(0.403473,0.914979,0.004754) r=0.387118 len=2.46696 mu=0.300000 | prim3 capsule c=(2.35667,11.1417,-0.13297) a=(-0.651094,0.758923,-0.01059) r=0.218986 len=2.08976 mu=0.300000 | prim4 capsule c=(3.79585,9.62856,-0.12785) a=(-0.689178,0.724588,-0.002454) r=0.939653 len=2.08825 mu=0.300000 | prim5 capsule c=(0.00069,10.4704,-0.16683) a=(-0.384708,0.923027,0.004631) r=0.385177 len=2.44397 mu=0.300000 | prim6 capsule c=(-2.31501,11.142,-0.13296) a=(0.655567,0.755061,-0.010752) r=0.213236 len=2.09816 mu=0.300000 | prim7 capsule c=(-3.7479,9.63851,-0.12553) a=(0.689893,0.723903,-0.003575) r=0.936992 len=2.07697 mu=0.300000 | prim8 capsule c=(0.97131,8.81631,-0.27191) a=(-0.807161,0.59033,-0.000731) r=0.836788 len=1.20476 mu=0.300000 | prim9 capsule c=(1.33821,5.2492,-0.29837) a=(-0.102312,0.994725,0.00738) r=0.710793 len=3.58603 mu=0.300000 | prim10 capsule c=(1.75327,0.33546,-0.38551) a=(-0.084157,0.996296,0.017668) r=0.399795 len=4.93201 mu=0.300000 | prim11 capsule c=(-0.98774,8.81613,-0.27102) a=(0.811129,0.584866,-0.001452) r=0.793421 len=1.21634 mu=0.300000 | prim12 capsule c=(-1.35558,5.24924,-0.29774) a=(0.102581,0.994697,0.00745) r=0.703622 len=3.5859 mu=0.300000 | prim13 capsule c=(-1.76781,0.33617,-0.38489) a=(0.083596,0.996343,0.017675) r=0.396954 len=4.93111 mu=0.300000
+FAIL forward rd steps=5 (+5 of 5) finite=NO ymin=inf friction_events=0 projections=0 self_pushes=0 wall_ms=375.6 ms/step=75.114
+DONE forward cpu steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=3206 projections=837 self_pushes=172 wall_ms=5953.4 ms/step=1190.689
+step 1: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+step 2: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+step 3: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+step 4: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+step 5: non-finite floats cpu 0 rd 8046 (first rd 0); max|x_cpu - x_rd| = 0 at v0.x
+CLOSED device=freed permanent_slots=0
+END

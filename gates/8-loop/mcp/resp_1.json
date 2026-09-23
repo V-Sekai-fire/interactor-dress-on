@@ -1,0 +1,3 @@
+event: message
+data: {"id":1.0,"jsonrpc":"2.0","result":{"content":[{"text":"{\"value\":\"infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok\"}","type":"text"}],"isError":false}}
+

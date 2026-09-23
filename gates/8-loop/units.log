@@ -1,0 +1,47 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+Gate 8 units, Godot 4.7.2-stable (official)
+PASS fixture skeleton reads: 45 floats, 28 bone ids
+PASS FoxGirl -> identity: method topology map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+PASS layout bones == FoxGirl's own: [0, 1, 1, 2, 1, 3, 3, 4, 4, 5, 1, 6, 6, 8, 7, 8, 0, 9, 9, 10, 10, 11, 0, 12, 12, 13, 13, 14]
+PASS garment skeleton -> identity: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+PASS permuted rig seed 1 (topology): map [13, 8, 3, 2, 11, 5, 1, 10, 7, 12, 6, 0, 14, 4, 9] want [13, 8, 3, 2, 11, 5, 1, 10, 7, 12, 6, 0, 14, 4, 9]
+PASS permuted rig seed 7 (topology): map [12, 3, 0, 8, 2, 11, 1, 9, 14, 10, 7, 4, 6, 13, 5] want [12, 3, 0, 8, 2, 11, 1, 9, 14, 10, 7, 4, 6, 13, 5]
+PASS permuted rig seed 12345 (topology): map [7, 13, 8, 2, 11, 0, 10, 1, 6, 9, 4, 14, 5, 12, 3] want [7, 13, 8, 2, 11, 0, 10, 1, 6, 9, 4, 14, 5, 12, 3]
+PASS named rig, 20 joints permuted (names): method names map [12, 9, 19, 5, 11, 17, 1, 18, 15, 16, 3, 10, 0, 2, 7]
+PASS same rig unnamed (topology: clavicle, toes, spine skipped): method topology map [12, 9, 19, 5, 11, 17, 1, 18, 15, 16, 3, 10, 0, 2, 7]
+PASS control: 14 joints refused: rig has 14 joints; the 15-joint layout needs at least 15
+PASS control: a chain refused: no branch joint (a chain is not a body)
+PASS fixture body reads: 5128 v 10171 f
+PASS fixture body is 1.7 m tall, feet on y=0: [P: (-0.513313, 0.0, -0.167375), S: (1.030855, 1.7, 0.301197)]
+PASS scripted pen made: waist 0.20470779959939 | hem 0.23053572897694
+PASS deterministic: 132 events
+PASS 6 strokes, none closed: ["waist_left", "waist_right", "hem_left", "hem_right", "seam_front", "seam_back"]
+PASS rings are boundary strokes, seams are not: waist_left=true, waist_right=true, hem_left=true, hem_right=true, seam_front=false, seam_back=false
+PASS control: no_boundary marks no stroke
+PASS stroke waist_left open
+PASS stroke waist_right open
+PASS stroke hem_left open
+PASS stroke hem_right open
+PASS stroke seam_front open
+PASS stroke seam_back open
+PASS 4 knots of degree 3: [3, 3, 3, 3]
+PASS waist above hem: 0.953 vs 0.525
+PASS ring radii torso-sized (hands left out): waist 0.2047 hem 0.2305
+INFO straight-cone clearance to the body between the rings: -0.0248 m before growing, grown by 0.0348 m
+PASS the cone between the rings clears the body by 1 cm: 0.0100 m
+PASS control: drop_seam leaves 5 strokes
+PASS closed_rings: two closed strokes: 2 closed of 4
+PASS open tube: 2 boundary loops of 16: [16, 16]
+PASS open tube: the top loop is highest: mean y 1.0000
+PASS open tube: one component
+PASS control: two tubes -> two components, four loops
+34 checks, 0 failed
+RESULT: PASS
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

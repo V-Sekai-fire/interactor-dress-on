@@ -143,6 +143,22 @@ static func cube() -> Dictionary:
 				0, 7, 3, 1, 2, 6, 1, 6, 5]),
 	}
 
+# A capped cylinder body of radius r around the y axis from y0 to y1, in wire
+# winding (Godot's CylinderMesh, rewound and lifted).
+static func cylinder(r: float, y0: float, y1: float, radial: int = 64, rings: int = 16) -> Dictionary:
+	var c := CylinderMesh.new()
+	c.top_radius = r
+	c.bottom_radius = r
+	c.height = y1 - y0
+	c.radial_segments = radial
+	c.rings = rings
+	var d := from_godot_arrays(c.get_mesh_arrays())
+	var v: PackedFloat32Array = d.vertices
+	for i in range(1, v.size(), 3):
+		v[i] += 0.5 * (y0 + y1)
+	d.vertices = v
+	return d
+
 # A sphere body of radius r in wire winding (Godot's SphereMesh, rewound).
 static func sphere(r: float, radial: int = 64, rings: int = 32) -> Dictionary:
 	var s := SphereMesh.new()

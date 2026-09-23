@@ -1,0 +1,46 @@
+# probe_drape_skirt 2026-09-23T08:46:59 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=1 caps=false body=false
+mesh 2682 v 5220 f, 44 pins, 14 capsules, body 5128 v 10171 f
+DATA mesh_obj 185598 bytes, 1 keys
+DATA mesh_pins 194 bytes, 2 keys
+DATA mesh_capsules 1229 bytes, 3 keys
+DATA body_obj 340622 bytes, 4 keys
+STARTED mesh_parity rd scale=10 body=1 steps=30 tol=1e-4
+ticks=152 wall_s=36.9
+FAIL mesh_parity mesh x10 steps=30 tol=0.0001: finite cpu=yes rd=yes, max|x_cpu - x_rd| over 30 steps = 0.00285 (tol 0.0001)
+[drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+[drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+DONE forward rd steps=30 (+30 of 30) finite=yes ymin=1.502512 friction_events=26194 projections=11150 self_pushes=771 wall_ms=1398.6 ms/step=46.620
+DONE forward cpu steps=30 (+30 of 30) finite=yes ymin=1.502514 friction_events=26193 projections=11150 self_pushes=759 wall_ms=34280.3 ms/step=1142.676
+step 1: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v95.y
+step 2: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v95.y
+step 3: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v171.y
+step 4: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v171.y
+step 5: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.03e-06 at v686.z
+step 6: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.86e-06 at v686.z
+step 7: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.5e-06 at v686.z
+step 8: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 3.1e-06 at v2097.x
+step 9: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 3.81e-06 at v2097.x
+step 10: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 4.29e-06 at v2097.x
+step 11: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 6.44e-06 at v1866.z
+step 12: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.48e-05 at v1866.z
+step 13: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 3.05e-05 at v1866.z
+step 14: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.85e-05 at v1866.z
+step 15: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.91e-05 at v1866.y
+step 16: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.57e-05 at v1866.y
+step 17: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.98e-05 at v1157.z
+step 18: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 4.53e-05 at v1157.z
+step 19: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 7.09e-05 at v1157.z
+step 20: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000111 at v1157.z
+step 21: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000172 at v1157.z
+step 22: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000226 at v1157.z
+step 23: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000203 at v1157.z
+step 24: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000122 at v1157.z
+step 25: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.00124 at v2316.z
+step 26: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000966 at v1680.z
+step 27: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000656 at v1203.y
+step 28: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000923 at v1159.y
+step 29: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.000867 at v1258.z
+step 30: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 0.00285 at v2182.x
+inside the body (signed distance < 0): start 0 (deepest 0), after 30 steps cpu 0 (0) rd 0 (0); collider mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+CLOSED device=freed permanent_slots=0
+END

@@ -1,0 +1,17 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T00:55:46
+args: --gate=loop --out=../gates/8-loop/today-infer-rig.txt --wallclock=120 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: curvenet.elf not found (not built or not imported) | fit: fit.elf not found (not built or not imported) | drape: drape.elf has no drape_open() (built before cut-5)
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              125 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 11 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR               4 ms  vm       0.0 ms  heap -  frames 1  FAILED curvenet missing (curvenet.elf not found (not built or not imported))
+=> FAILED AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))
+PASS screenshot: today-infer-rig.png (1152x648)
+wall 1.0 s, frames 13
+RESULT: FAIL

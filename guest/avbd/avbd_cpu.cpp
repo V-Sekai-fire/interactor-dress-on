@@ -2,6 +2,7 @@
 #include "avbd_cpu.h"
 
 #include <cstring>
+#include <string>
 
 #include "avbd_topology.h"
 #include "slang-cpp-prelude.h"
@@ -196,6 +197,10 @@ void AvbdCpu::updateAttachmentFixedPos(const float *fixedPos) {
 }
 
 int AvbdCpu::step() {
+	return step_impl(-1, 5);
+}
+
+int AvbdCpu::step_impl(int stopColor, int stopStage) {
 	if (!meshReady_) {
 		return -1;
 	}
@@ -209,6 +214,10 @@ int AvbdCpu::step() {
 	for (uint32_t k = 0; k < numColors; ++k) {
 		const uint32_t offset = colorOffsets_[k];
 		const uint32_t count = colorOffsets_[k + 1] - offset;
+		if (stopColor >= 0 && int(k) > stopColor) {
+			break;
+		}
+		const int upTo = int(k) == stopColor ? stopStage : 5;
 		if (count == 0) {
 			continue;
 		}
@@ -236,7 +245,48 @@ int AvbdCpu::step() {
 			gp.gradA_0.data = v3(springGradA_); gp.gradA_0.count = nSprings_;
 			gp.hess_0.data = springHess_.data(); gp.hess_0.count = 6 * nSprings_;
 			dispatch(nSprings_, &k_sf::main_0_Thread, &gp);
-
+		}
+		if (nAttach_ > 0) {
+			k_afa::GlobalParams_0 gp{};
+			gp.positions_0.data = v3(positions_); gp.positions_0.count = nVerts_;
+			gp.vertIdx_0.data = attachVert_.data(); gp.vertIdx_0.count = nAttach_;
+			gp.fixedPos_0.data = v3(attachFixed_); gp.fixedPos_0.count = nAttach_;
+			gp.stiffness_0.data = attachStiff_.data(); gp.stiffness_0.count = nAttach_;
+			gp.lambda_0.data = v3(attachLambda_); gp.lambda_0.count = nAttach_;
+			gp.gradV_0.data = v3(attachGradV_); gp.gradV_0.count = nAttach_;
+			gp.hessScalar_0.data = attachHess_.data(); gp.hessScalar_0.count = nAttach_;
+			dispatch(nAttach_, &k_afa::main_0_Thread, &gp);
+		}
+		if (nTri_ > 0) {
+			k_tmf::GlobalParams_0 gp{};
+			gp.positions_0.data = v3(positions_); gp.positions_0.count = nVerts_;
+			gp.idx_0.data = triIdx_.data(); gp.idx_0.count = 3 * nTri_;
+			gp.stiffness_0.data = triStiff_.data(); gp.stiffness_0.count = nTri_;
+			gp.lambda0_0.data = v3(triLambda0_); gp.lambda0_0.count = nTri_;
+			gp.lambda1_0.data = v3(triLambda1_); gp.lambda1_0.count = nTri_;
+			gp.grad_0.data = v3(triGrad_); gp.grad_0.count = 3 * nTri_;
+			gp.hessScalar_0.data = triHess_.data(); gp.hessScalar_0.count = 3 * nTri_;
+			gp.inv_deltaUV_0.data = triInvUV_.data(); gp.inv_deltaUV_0.count = 4 * nTri_;
+			dispatch(nTri_, &k_tmf::main_0_Thread, &gp);
+		}
+		if (nBend_ > 0) {
+			k_tbf::GlobalParams_0 gp{};
+			gp.positions_0.data = v3(positions_); gp.positions_0.count = nVerts_;
+			gp.idx_0.data = bendIdx_.data(); gp.idx_0.count = 4 * nBend_;
+			gp.weight_0.data = bendWeight_.data(); gp.weight_0.count = 4 * nBend_;
+			gp.nTarget_0.data = bendNTarget_.data(); gp.nTarget_0.count = nBend_;
+			gp.stiffness_0.data = bendStiff_.data(); gp.stiffness_0.count = nBend_;
+			gp.lambda_0.data = v3(bendLambda_); gp.lambda_0.count = nBend_;
+			gp.grad_0.data = v3(bendGrad_); gp.grad_0.count = 4 * nBend_;
+			gp.hessScalar_0.data = bendHess_.data(); gp.hessScalar_0.count = 4 * nBend_;
+			dispatch(nBend_, &k_tbf::main_0_Thread, &gp);
+		}
+		// The gathers after every force kernel: forces read positions only, so
+		// this order is the interleaved one's arithmetic, and it is AvbdRd's.
+		if (upTo < 1) {
+			break;
+		}
+		if (nSprings_ > 0) {
 			k_gs::GlobalParams_0 gg{};
 			k_gs::VbdGatherSpringParams_0 gpar{ offset, count };
 			gg.springGradA_0.data = v3(springGradA_); gg.springGradA_0.count = nSprings_;
@@ -250,18 +300,10 @@ int AvbdCpu::step() {
 			gg.params_0 = &gpar;
 			dispatch(count, &k_gs::main_0_Thread, &gg);
 		}
-
+		if (upTo < 2) {
+			break;
+		}
 		if (nAttach_ > 0) {
-			k_afa::GlobalParams_0 gp{};
-			gp.positions_0.data = v3(positions_); gp.positions_0.count = nVerts_;
-			gp.vertIdx_0.data = attachVert_.data(); gp.vertIdx_0.count = nAttach_;
-			gp.fixedPos_0.data = v3(attachFixed_); gp.fixedPos_0.count = nAttach_;
-			gp.stiffness_0.data = attachStiff_.data(); gp.stiffness_0.count = nAttach_;
-			gp.lambda_0.data = v3(attachLambda_); gp.lambda_0.count = nAttach_;
-			gp.gradV_0.data = v3(attachGradV_); gp.gradV_0.count = nAttach_;
-			gp.hessScalar_0.data = attachHess_.data(); gp.hessScalar_0.count = nAttach_;
-			dispatch(nAttach_, &k_afa::main_0_Thread, &gp);
-
 			k_ga::GlobalParams_0 gg{};
 			k_ga::VbdGatherAttachmentParams_0 gpar{ offset, count };
 			gg.attachGradV_0.data = v3(attachGradV_); gg.attachGradV_0.count = nAttach_;
@@ -274,19 +316,10 @@ int AvbdCpu::step() {
 			gg.params_0 = &gpar;
 			dispatch(count, &k_ga::main_0_Thread, &gg);
 		}
-
+		if (upTo < 3) {
+			break;
+		}
 		if (nTri_ > 0) {
-			k_tmf::GlobalParams_0 gp{};
-			gp.positions_0.data = v3(positions_); gp.positions_0.count = nVerts_;
-			gp.idx_0.data = triIdx_.data(); gp.idx_0.count = 3 * nTri_;
-			gp.stiffness_0.data = triStiff_.data(); gp.stiffness_0.count = nTri_;
-			gp.lambda0_0.data = v3(triLambda0_); gp.lambda0_0.count = nTri_;
-			gp.lambda1_0.data = v3(triLambda1_); gp.lambda1_0.count = nTri_;
-			gp.grad_0.data = v3(triGrad_); gp.grad_0.count = 3 * nTri_;
-			gp.hessScalar_0.data = triHess_.data(); gp.hessScalar_0.count = 3 * nTri_;
-			gp.inv_deltaUV_0.data = triInvUV_.data(); gp.inv_deltaUV_0.count = 4 * nTri_;
-			dispatch(nTri_, &k_tmf::main_0_Thread, &gp);
-
 			k_gt::GlobalParams_0 gg{};
 			k_gt::VbdGatherTriangleParams_0 gpar{ offset, count };
 			gg.triGrad_0.data = v3(triGrad_); gg.triGrad_0.count = 3 * nTri_;
@@ -300,19 +333,10 @@ int AvbdCpu::step() {
 			gg.params_0 = &gpar;
 			dispatch(count, &k_gt::main_0_Thread, &gg);
 		}
-
+		if (upTo < 4) {
+			break;
+		}
 		if (nBend_ > 0) {
-			k_tbf::GlobalParams_0 gp{};
-			gp.positions_0.data = v3(positions_); gp.positions_0.count = nVerts_;
-			gp.idx_0.data = bendIdx_.data(); gp.idx_0.count = 4 * nBend_;
-			gp.weight_0.data = bendWeight_.data(); gp.weight_0.count = 4 * nBend_;
-			gp.nTarget_0.data = bendNTarget_.data(); gp.nTarget_0.count = nBend_;
-			gp.stiffness_0.data = bendStiff_.data(); gp.stiffness_0.count = nBend_;
-			gp.lambda_0.data = v3(bendLambda_); gp.lambda_0.count = nBend_;
-			gp.grad_0.data = v3(bendGrad_); gp.grad_0.count = 4 * nBend_;
-			gp.hessScalar_0.data = bendHess_.data(); gp.hessScalar_0.count = 4 * nBend_;
-			dispatch(nBend_, &k_tbf::main_0_Thread, &gp);
-
 			k_gb::GlobalParams_0 gg{};
 			k_gb::VbdGatherBendingParams_0 gpar{ offset, count };
 			gg.bendGrad_0.data = v3(bendGrad_); gg.bendGrad_0.count = 4 * nBend_;
@@ -325,6 +349,9 @@ int AvbdCpu::step() {
 			gg.vertPerm_0.data = vertPerm_.data(); gg.vertPerm_0.count = nVerts_;
 			gg.params_0 = &gpar;
 			dispatch(count, &k_gb::main_0_Thread, &gg);
+		}
+		if (upTo < 5) {
+			break;
 		}
 
 		{
@@ -417,4 +444,18 @@ void AvbdCpu::setPositions(const float *positions) {
 
 void AvbdCpu::readPositions(std::vector<float> &out) const {
 	out = positions_;
+}
+
+std::vector<float> AvbdCpu::readDebugForTest(const char *name) const {
+	const std::string n = name;
+	if (n == "positions") return positions_;
+	if (n == "gScratch") return gScratch_;
+	if (n == "hScratch") return hScratch_;
+	if (n == "attachGradV") return attachGradV_;
+	if (n == "attachHess") return attachHess_;
+	if (n == "triGrad") return triGrad_;
+	if (n == "triHess") return triHess_;
+	if (n == "bendGrad") return bendGrad_;
+	if (n == "bendHess") return bendHess_;
+	return {};
 }

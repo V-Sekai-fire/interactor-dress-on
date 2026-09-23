@@ -1,5 +1,5 @@
 diff --git a/vendor/geogram-subset/geogram/basic/algorithm.h b/vendor/geogram-subset/geogram/basic/algorithm.h
-index 5d776a5e7..3861fd415 100644
+index 5d776a5..3861fd4 100644
 --- a/vendor/geogram-subset/geogram/basic/algorithm.h
 +++ b/vendor/geogram-subset/geogram/basic/algorithm.h
 @@ -208,9 +208,21 @@ namespace GEO {
@@ -28,7 +28,7 @@ index 5d776a5e7..3861fd415 100644
  
  }
 diff --git a/vendor/geogram-subset/geogram/basic/numeric.cpp b/vendor/geogram-subset/geogram/basic/numeric.cpp
-index 17bbd0c09..1132dff91 100644
+index 17bbd0c..1132dff 100644
 --- a/vendor/geogram-subset/geogram/basic/numeric.cpp
 +++ b/vendor/geogram-subset/geogram/basic/numeric.cpp
 @@ -72,18 +72,21 @@ namespace GEO {
@@ -59,7 +59,7 @@ index 17bbd0c09..1132dff91 100644
      }
  }
 diff --git a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
-index ab4f2573a..c2c8f09c0 100644
+index ab4f257..c2c8f09 100644
 --- a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
 +++ b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
 @@ -139,6 +139,12 @@ namespace GEO {
@@ -75,3 +75,42 @@ index ab4f2573a..c2c8f09c0 100644
  
  #ifndef GEOGRAM_PSM
          geo_register_Delaunay_creator(Delaunay_NearestNeighbors, "NN");
+diff --git a/vendor/geogram-subset/geogram/mesh/mesh_reorder.cpp b/vendor/geogram-subset/geogram/mesh/mesh_reorder.cpp
+index 91454ad..8350e83 100644
+--- a/vendor/geogram-subset/geogram/mesh/mesh_reorder.cpp
++++ b/vendor/geogram-subset/geogram/mesh/mesh_reorder.cpp
+@@ -179,9 +179,17 @@ namespace {
+          *  false otherwise.
+          */
+         bool operator() (index_t i1, index_t i2) {
+-            return
+-                mesh_.vertices.point_ptr(i1)[COORD] <
+-                mesh_.vertices.point_ptr(i2)[COORD];
++            // interactor-dress-on: ties on COORD are broken on the index, so
++            // this is a strict total order. reorder_split's std::nth_element
++            // leaves tied elements in an unspecified order, and libc++ and
++            // libstdc++ leave them differently: points sharing a coordinate
++            // (a boundary snapped to one height or one plane) got a different
++            // BRIO insertion order, hence a different Delaunay cell order, in
++            // the guest than in its native control. Untied inputs sort as
++            // before.
++            const double c1 = mesh_.vertices.point_ptr(i1)[COORD];
++            const double c2 = mesh_.vertices.point_ptr(i2)[COORD];
++            return c1 < c2 || (c1 == c2 && i1 < i2);
+         }
+ 
+         const MESH& mesh_;
+@@ -214,9 +222,10 @@ namespace {
+          *  false otherwise.
+          */
+         bool operator() (index_t i1, index_t i2) {
+-            return
+-                mesh_.vertices.point_ptr(i1)[COORD] >
+-                mesh_.vertices.point_ptr(i2)[COORD];
++            // interactor-dress-on: ties broken on the index (see UP=true).
++            const double c1 = mesh_.vertices.point_ptr(i1)[COORD];
++            const double c2 = mesh_.vertices.point_ptr(i2)[COORD];
++            return c1 > c2 || (c1 == c2 && i1 < i2);
+         }
+ 
+         const MESH& mesh_;

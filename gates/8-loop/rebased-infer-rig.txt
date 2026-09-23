@@ -1,0 +1,23 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T01:31:55
+args: --gate=loop --out=../gates/8-loop/rebased-infer-rig.txt --wallclock=300 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER               89 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 11 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1266 ms  vm    1208.9 ms  heap 2.4 MiB  frames 7  strokes 6 cycles 2 patches 2 curves 6 knots 5 degrees [3, 3, 2, 3, 1]
+STATE MESH               113 ms  vm     107.0 ms  heap 2.4 MiB  frames 199  FAILED not a skirt tube: 843 triangles, 2 components, 2 boundary loops (want >0, 1, 2)
+=> FAILED MESH: not a skirt tube: 843 triangles, 2 components, 2 boundary loops (want >0, 1, 2)
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED MESH: not a skirt tube: 843 triangles, 2 components, 2 boundary loops (want >0, 1, 2)
+PASS cycles: cycles=2 (want 2)
+PASS patches: patches=2 (want 2)
+INFO curvenet: curves=6 knots=5 degrees=[3, 3, 2, 3, 1] edges=6 (4 knots of degree 3 have 6 edges)
+FAIL mesh: 491 v 843 f, 2 loops, 2 components
+PASS screenshot: rebased-infer-rig.png (1152x648)
+wall 2.7 s, frames 218
+RESULT: FAIL
+drape rd_close: CLOSED device=none permanent_slots=0

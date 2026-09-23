@@ -22,6 +22,7 @@
 #include "avbd/avbd_sim.h"
 #include "avbd/cloth_grid.h"
 #include "avbd_jobs.h"
+#include "body_mesh.h"
 #include "drape_jobs.h"
 #include "drape_scene.h"
 #include "jobs.h"
@@ -293,6 +294,26 @@ static Variant drape_primitive(String kind_s, PackedFloat32Array params_a) {
 	} else {
 		return text("FAIL: kind sphere(5) | plane(10) | capsule(9) | clear, with that many params");
 	}
+	if (g_sess) {
+		g_sess->setPrims(g_scene.prims);
+	}
+	return text(g_scene.describe());
+}
+
+// A triangle-mesh body collider (body_mesh.h), positions in drape units;
+// params [skin, mu, band, depth], any prefix (0.1, 0.3, 0.1, 1.0).
+static Variant drape_primitive_mesh(PackedFloat32Array pos_a, PackedInt32Array tris_a, PackedFloat32Array params_a) {
+	const std::vector<float> p = params_a.fetch();
+	double k[4] = { 0.1, 0.3, 0.1, 1.0 };
+	for (size_t i = 0; i < p.size() && i < 4; ++i) {
+		k[i] = p[i];
+	}
+	auto body = std::make_shared<BodyMesh>();
+	std::string err;
+	if (!body->build(pos_a.fetch(), tris_a.fetch(), 1.0, err)) {
+		return text("FAIL: " + err);
+	}
+	g_scene.prims.push_back(make_mesh_collider(body, k[0], k[2], k[3], k[1]));
 	if (g_sess) {
 		g_sess->setPrims(g_scene.prims);
 	}
@@ -865,6 +886,8 @@ int main() {
 			"Load a host mesh; material = [density, kTri, kBend, kAttach]");
 	ADD_API_FUNCTION(drape_primitive, "String", "String kind, PackedFloat32Array params",
 			"Add a sphere(c,r,mu) / plane(c,ul,ur,mu) / capsule(b,axis,r,len,mu), or clear");
+	ADD_API_FUNCTION(drape_primitive_mesh, "String", "PackedFloat32Array positions, PackedInt32Array triangles, PackedFloat32Array params",
+			"Add a triangle-mesh body collider; params = [skin, mu, band, depth]");
 	ADD_API_FUNCTION(drape_config, "String", "String key, double value", "Set a DrapeConfig knob; returns the config line");
 	ADD_API_FUNCTION(drape_queue_forward, "String", "int steps", "Queue steps (0 rewinds to the initial state)");
 	ADD_API_FUNCTION(drape_set_target, "String", "String kind, PackedInt32Array verts, PackedFloat32Array positions, int frame",

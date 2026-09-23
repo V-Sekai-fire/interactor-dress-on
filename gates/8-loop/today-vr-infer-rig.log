@@ -1,0 +1,83 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+[2026-09-22 22:38:40.220] [info] OXRSys: Runtime negotiation successful
+[2026-09-22 22:38:40.224] [info] OXRSys Runtime starting (config from C:\interactor-dress-on\tools\oxrsys\build\windows\runtime/oxrsys-runtime.toml)
+[2026-09-22 22:38:40.224] [info]   runtime_enabled=true file_logging=true quest_logcat=false
+[2026-09-22 22:38:40.224] [info]   bitrate=50Mbps fov=100° refresh=72Hz res_scale=0.75 keyframe=2s preset=balanced transport=auto ffe=off client_ffr=auto upscaling=false reprojection=pose abr=bitrate audio=false
+[2026-09-22 22:38:40.224] [info] OXRSys: Creating instance for 'interactor-dress-on'
+[2026-09-22 22:38:40.224] [info] OXRSys: Instance created
+OpenXR: Created instance for OpenXR 1.1.54
+OpenXR: Running on OpenXR runtime:  OXRSys Runtime   1.2.0
+[2026-09-22 22:38:40.482] [info] OXRSys: Vulkan graphics requirements provided
+OpenXR: XrGraphicsRequirementsVulkan2KHR:
+ - minApiVersionSupported:  1.1.0
+ - maxApiVersionSupported:  2.0.0
+[2026-09-22 22:38:40.532] [info] OXRSys: Created Vulkan instance on behalf of app
+[2026-09-22 22:38:40.795] [info] OXRSys: runtime adapter 10de:2684 (NVENC AV1)
+[2026-09-22 22:38:40.798] [info] OXRSys: Selected Vulkan device: NVIDIA GeForce RTX 4090
+[2026-09-22 22:38:41.064] [info] OXRSys: Created Vulkan device on behalf of app
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+[2026-09-22 22:38:42.043] [info] OXRSys: Stored 36 bindings for profile /interaction_profiles/oculus/touch_controller
+[2026-09-22 22:38:42.044] [info] OXRSys: Stored 37 bindings for profile /interaction_profiles/bytedance/pico4_controller
+[2026-09-22 22:38:42.044] [info] OXRSys: Session state -> 1
+[2026-09-22 22:38:42.044] [info] OXRSys: Session state -> 2
+[2026-09-22 22:38:42.044] [info] OXRSys: Vulkan session created
+[2026-09-22 22:38:42.044] [info] OXRSys: Session created with Vulkan binding
+[2026-09-22 22:38:42.044] [info] OXRSys: Attached 1 action sets
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-22T22:38:42
+args: --gate=loop --out=../gates/8-loop/today-vr-infer-rig.txt --wallclock=60 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: oxrsys-runtime.json
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+[dress-on] xr_main: XR on ({ &"XRRuntimeName": "OXRSys Runtime", &"XRRuntimeVersion": "1.2.0", &"OpenXRSystemName": "OXRSys Runtime", &"OpenXRVendorID": 0 })
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: curvenet.elf not found (not built or not imported)
+[dress-on] fit: fit.elf not found (not built or not imported)
+[dress-on] infer: infer.elf not found (not built or not imported)
+[2026-09-22 22:38:42.825] [info] StreamingServer: Resolution scaling 75%: 1512x1680 -> 1136x1264 per eye, encoded 2272x1264
+[2026-09-22 22:38:42.826] [info] TrackingReceiver: Listening on port 9945
+[2026-09-22 22:38:42.828] [info] StreamingServer: USB ADB TCP listeners active on localhost ports 9946/9944/9945
+[2026-09-22 22:38:42.837] [info] StreamingServer: Started transport=auto wifi=true usb_adb=true on 100.86.241.78 (1512x1680 @ 72Hz)
+[2026-09-22 22:38:42.837] [info] OXRSys: Streaming server started, waiting for headset connection...
+[2026-09-22 22:38:42.837] [info] OXRSys: Session begun
+[2026-09-22 22:38:42.838] [info] InputManager: Using default FOV/IPD (L=-0.82 R=0.82 U=0.87 D=-0.87, IPD=63.0mm)
+[2026-09-22 22:38:42.884] [info] OXRSys: D3D11 interop on adapter 10de:2684 (KMT handles)
+[2026-09-22 22:38:42.886] [info] OXRSys: Vulkan swapchain (D3D11 shared) created 1512x1680 format=43 arraySize=2 images=3
+[2026-09-22 22:38:42.928] [info] OXRSys: Session state -> 3
+[2026-09-22 22:38:42.929] [info] OXRSys: Session state -> 4
+[2026-09-22 22:38:42.943] [info] OXRSys: Session state -> 5
+stages: infer: infer.elf not found (not built or not imported) | curvenet: curvenet.elf not found (not built or not imported) | fit: fit.elf not found (not built or not imported) | drape: drape.elf has no drape_open() (built before cut-5)
+view: XR { &"XRRuntimeName": "OXRSys Runtime", &"XRRuntimeVersion": "1.2.0", &"OpenXRSystemName": "OXRSys Runtime", &"OpenXRVendorID": 0 }
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              126 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 15 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR               9 ms  vm       0.0 ms  heap -  frames 1  FAILED curvenet missing (curvenet.elf not found (not built or not imported))
+=> FAILED AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED AUTHOR: curvenet missing (curvenet.elf not found (not built or not imported))
+PASS screenshot: today-vr-infer-rig.png (1152x648)
+wall 1.0 s, frames 13
+RESULT: FAIL
+[2026-09-22 22:38:43.675] [info] StreamingServer: video send thread ended
+[2026-09-22 22:38:43.675] [info] StreamingServer: Encode thread ended
+[2026-09-22 22:38:43.677] [info] StreamingServer: USB ADB control thread ended
+[2026-09-22 22:38:43.677] [info] StreamingServer: USB ADB video thread ended
+[2026-09-22 22:38:43.677] [info] StreamingServer: USB ADB tracking thread ended
+[2026-09-22 22:38:43.677] [info] StreamingServer: Control thread ended
+[2026-09-22 22:38:43.736] [info] StreamingServer: Broadcast thread ended
+[2026-09-22 22:38:43.737] [info] TrackingReceiver: Stopped (0 packets received)
+[2026-09-22 22:38:43.737] [info] TrackingReceiver: Stopped (0 packets received)
+[2026-09-22 22:38:43.737] [info] StreamingServer: Stopped
+[2026-09-22 22:38:43.738] [info] StreamingServer: Stopped
+[2026-09-22 22:38:43.738] [info] OXRSys: Session destroyed
+[2026-09-22 22:38:43.738] [info] OXRSys: Instance destroyed
+ERROR: 2 RID allocations of type 'N9OpenXRAPI18InteractionProfileE' were leaked at exit.
+ERROR: Attempt to disconnect a nonexistent connection from '<OpenXRSpatialEntityExtension#4143972567>'. Signal: 'spatial_discovery_recommended', callable: 'OpenXRSpatialMarkerTrackingCapability::_on_spatial_discovery_recommended'.
+   at: _disconnect (core/object/object.cpp:1640)
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

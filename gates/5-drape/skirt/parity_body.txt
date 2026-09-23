@@ -1,0 +1,20 @@
+# probe_drape_skirt 2026-09-23T08:45:21 Godot 4.7.2-stable (official) NVIDIA GeForce RTX 4090 steps=1 caps=false body=false
+mesh 2682 v 5220 f, 44 pins, 14 capsules, body 5128 v 10171 f
+DATA mesh_obj 185598 bytes, 1 keys
+DATA mesh_pins 194 bytes, 2 keys
+DATA mesh_capsules 1229 bytes, 3 keys
+DATA body_obj 340622 bytes, 4 keys
+STARTED mesh_parity rd scale=10 body=1 steps=5 tol=1e-4
+ticks=27 wall_s=7.8
+PASS mesh_parity mesh x10 steps=5 tol=0.0001: finite cpu=yes rd=yes, max|x_cpu - x_rd| over 5 steps = 2.03e-06 (tol 0.0001)
+[drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-98,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+[drape-scene] mesh x10 nV=2682 nTri=5220 nBend=7758 nAttach=44 prims=1 | prim0 mesh nV=5128 nTri=10171 bvh=8053 skin=0.1 band=0.1 depth=1 mu=0.300000
+DONE forward rd steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=4396 projections=2153 self_pushes=72 wall_ms=584.5 ms/step=116.896
+DONE forward cpu steps=5 (+5 of 5) finite=yes ymin=2.845893 friction_events=4396 projections=2153 self_pushes=71 wall_ms=6084.4 ms/step=1216.886
+step 1: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v95.y
+step 2: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 9.54e-07 at v95.y
+step 3: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v171.y
+step 4: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 1.91e-06 at v171.y
+step 5: non-finite floats cpu 0 rd 0 (first rd -1); max|x_cpu - x_rd| = 2.03e-06 at v686.z
+CLOSED device=freed permanent_slots=0
+END

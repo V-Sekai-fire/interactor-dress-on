@@ -4412,73 +4412,124 @@ void _main_0(void* _S1, void* entryPointParams_0, void* globalParams_1)
         float sz_0 = w0_0 * p0_0.z + w1_0 * p1_0.z + (w2_0 * p2_0.z + w3_0 * p3_0.z);
         float len2_0 = sx_0 * sx_0 + sy_0 * sy_0 + sz_0 * sz_0;
         float len_0 = (F32_sqrt((len2_0)));
+        bool _S6 = len_0 > 0.0f;
 
-        float om_0 = 1.0f - n_c_0 / len_0;
+#line 78
+        if(_S6)
+        {
+
+#line 78
+            vpx0_0 = n_c_0 / len_0;
+
+#line 78
+        }
+        else
+        {
+
+#line 78
+            vpx0_0 = 1.0f;
+
+#line 78
+        }
+        float om_0 = 1.0f - vpx0_0;
 
 
 
         float k_0 = (&kernelContext_0)->globalParams_0->stiffness_0.Load(c_0);
-
+        float AdotE_0 = Ax_0 * (sx_0 * om_0) + Ay_0 * (sy_0 * om_0) + Az_0 * (sz_0 * om_0);
         float AdotS_0 = Ax_0 * sx_0 + Ay_0 * sy_0 + Az_0 * sz_0;
+        float len3_0 = len_0 * len2_0;
+        if(_S6)
+        {
 
-        float factor_0 = k_0 * (n_c_0 * AdotS_0) / (len_0 * len2_0);
+#line 87
+            vpy0_0 = k_0 * (n_c_0 * AdotS_0) / len3_0;
+
+#line 87
+        }
+        else
+        {
+
+#line 87
+            vpy0_0 = 0.0f;
+
+#line 87
+        }
         float kom_0 = k_0 * om_0;
-        float tx_0 = kom_0 * Ax_0 + factor_0 * sx_0;
-        float ty_0 = kom_0 * Ay_0 + factor_0 * sy_0;
-        float tz_0 = kom_0 * Az_0 + factor_0 * sz_0;
+        float tx_0 = kom_0 * Ax_0 + vpy0_0 * sx_0;
+        float ty_0 = kom_0 * Ay_0 + vpy0_0 * sy_0;
+        float tz_0 = kom_0 * Az_0 + vpy0_0 * sz_0;
+        float _S7 = w0_0 * tx_0;
+        float _S8 = w0_0 * ty_0;
+        float _S9 = w0_0 * tz_0;
+        float _S10 = w1_0 * tx_0;
+        float _S11 = w1_0 * ty_0;
+        float _S12 = w1_0 * tz_0;
+        float _S13 = w2_0 * tx_0;
+        float _S14 = w2_0 * ty_0;
+        float _S15 = w2_0 * tz_0;
+        float _S16 = w3_0 * tx_0;
+        float _S17 = w3_0 * ty_0;
+        float _S18 = w3_0 * tz_0;
 
-        float _S6 = w0_0 * ty_0;
-        float _S7 = w0_0 * tz_0;
-        float _S8 = w1_0 * tx_0;
-        float _S9 = w1_0 * ty_0;
-        float _S10 = w1_0 * tz_0;
-        float _S11 = w2_0 * tx_0;
-        float _S12 = w2_0 * ty_0;
-        float _S13 = w2_0 * tz_0;
-        float _S14 = w3_0 * tx_0;
-        float _S15 = w3_0 * ty_0;
-        float _S16 = w3_0 * tz_0;
 
 
-
-        float _S17 = Ax_0 * (sx_0 * om_0) + Ay_0 * (sy_0 * om_0) + Az_0 * (sz_0 * om_0) + HW_0;
-        float _S18 = 0.0f - k_0 * AdotS_0 / len_0;
-
-#line 108
-        vpx0_0 = w0_0 * tx_0;
+        float _S19 = AdotE_0 + HW_0;
+        if(_S6)
+        {
 
 #line 108
-        vpy0_0 = _S6;
+            vpx0_0 = 0.0f - k_0 * AdotS_0 / len_0;
 
 #line 108
-        vpz0_0 = _S7;
+        }
+        else
+        {
 
 #line 108
-        vpx1_0 = _S8;
+            vpx0_0 = 0.0f;
 
 #line 108
-        vpy1_0 = _S9;
+        }
 
 #line 108
-        vpz1_0 = _S10;
+        float _S20 = vpx0_0;
 
 #line 108
-        vpx2_0 = _S11;
+        vpx0_0 = _S7;
 
 #line 108
-        vpy2_0 = _S12;
+        vpy0_0 = _S8;
 
 #line 108
-        vpz2_0 = _S13;
+        vpz0_0 = _S9;
 
 #line 108
-        vpx3_0 = _S14;
+        vpx1_0 = _S10;
 
 #line 108
-        vpy3_0 = _S15;
+        vpy1_0 = _S11;
 
 #line 108
-        vpz3_0 = _S16;
+        vpz1_0 = _S12;
+
+#line 108
+        vpx2_0 = _S13;
+
+#line 108
+        vpy2_0 = _S14;
+
+#line 108
+        vpz2_0 = _S15;
+
+#line 108
+        vpx3_0 = _S16;
+
+#line 108
+        vpy3_0 = _S17;
+
+#line 108
+        vpz3_0 = _S18;
 
 #line 108
         vlx_0 = Ax_0;
@@ -4490,10 +4541,10 @@ void _main_0(void* _S1, void* entryPointParams_0, void* globalParams_1)
         vlz_0 = Az_0;
 
 #line 108
-        vk_0 = _S17;
+        vk_0 = _S19;
 
 #line 108
-        vn_0 = _S18;
+        vn_0 = _S20;
 
 #line 64
     }

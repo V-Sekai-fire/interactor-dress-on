@@ -30,12 +30,19 @@
 # G9 crossovers: L-BFGS-B ms/iteration cpu vs rd for n = 10..1e5; drape ms/step
 #    cpu vs rd with contact + self-collision, 8x8..64x64; drape_open(auto)'s
 #    threshold must sit at the measured crossover.
+# G10 the fitted skirt at drape scale 10 (gates/5-drape/skirt: Gate 8's fit.elf
+#    result, its 44 waist pins, the 14 skeleton capsules, the FoxGirl body):
+#    mesh_parity cpu vs rd over 5 steps, capsules and the body mesh collider,
+#    both finite and max|x_cpu - x_rd| <= 1e-4 drape units; mesh_bisect finds
+#    rd finite and within 1e-3 of cpu through all 16 iterations of step 1.
+#    Before the bending kernels' |s| = 0 guard rd was NaN on step 1 here.
 # Results stream to gates/5-drape/results.txt; the last line is RESULT.
 extends SceneTree
 
 const GATE_DIR := "res://../gates/5-drape/"
 const NATIVE := "res://../gates/5-drape/native/"
 const ORACLE := "res://../gates/5-drape/oracle/"
+const SKIRT := "res://../gates/5-drape/skirt/"
 const WALL_S := 3600.0
 const NATIVE_FRAMES := [0, 1, 10, 50, 100, 350]
 const NATIVE_DLDMU := {"0.539770": 0.01153, "0.010000": -50.45588, "0.375146": 0.00781}
@@ -106,7 +113,7 @@ func _finish() -> void:
 		var c := str(_sb.vmcall("rd_close"))
 		_check(c.begins_with("CLOSED device=") and c.ends_with("permanent_slots=0"), "G8 rd_close: " + c)
 	var summary := []
-	for g in ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"]:
+	for g in ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G10"]:
 		if _on(g):
 			summary.append("%s %s" % [g, "PASS" if int(_fails.get(g, 0)) == 0 else "FAIL(%d)" % int(_fails.get(g, 0))])
 	_say("SUMMARY " + ", ".join(PackedStringArray(summary)))
@@ -231,6 +238,10 @@ func _plan() -> void:
 	for fps in BENCH_FPS:
 		for b in ["cpu", "rd"]:
 			_job("G9", "bench_drape", b, "sizes=%s steps=%d" % [",".join(sizes), 6 if _quick else 20], "fps %d" % fps, fps)
+	# G10: the fitted skirt at drape scale 10 (5 cpu steps are ~6 s each run).
+	_job("G10", "mesh_bisect", "rd", "scale=10")
+	_job("G10", "mesh_parity", "rd", "scale=10 caps=1 steps=5 tol=1e-4")
+	_job("G10", "mesh_parity", "rd", "scale=10 body=1 steps=5 tol=1e-4")
 	# G7 live: the sphere demo on the API's rd session.
 	if _on("G7"):
 		# [name, spec, max iterations, steps]: the native run as upstream
@@ -289,6 +300,13 @@ func _data() -> void:
 	_say("oracle handed to the guest: %d files (20 components, 5 problems, 20 traces, 2 inverse_min): %s" % [n, r])
 	if n != 47 or not r.ends_with("47 keys"):
 		_fail("expected 47 oracle files")
+	# G10's scene: the fitted skirt, its pins and capsules, and the body.
+	for kf in [["mesh_obj", "fitted_skirt.obj"], ["mesh_pins", "fitted_skirt_pins.txt"],
+			["mesh_capsules", "fitted_skirt_capsules.txt"], ["body_obj", "body.obj"]]:
+		r = str(_sb.vmcall("drape_job_data", kf[0], _text(SKIRT + kf[1])))
+	_say("G10 scene handed to the guest: " + r)
+	if not r.ends_with("51 keys"):
+		_fail("expected the 4 G10 scene files after the oracle")
 	_phase = "api"
 
 # --- G4's API end to end on auto -----------------------------------------------------
@@ -396,7 +414,7 @@ func _jobs() -> void:
 		_say("    " + lines[i])
 	# sim_gradcheck multi-colour and sphere_forward/backward verdicts are
 	# judged in the checks; the rest are their own verdicts.
-	if _cur[1] in ["lbfgsb_components", "lbfgsb_problems", "inverse_min", "lbfgsb_replay"]:
+	if _cur[1] in ["lbfgsb_components", "lbfgsb_problems", "inverse_min", "lbfgsb_replay", "mesh_parity", "mesh_bisect"]:
 		_check(r.begins_with("PASS"), "%s %s %s: %s" % [_cur[0], _cur[1], _cur[2], lines[0]])
 	elif not r.begins_with("PASS"):
 		_check(false, "%s %s did not finish cleanly: %s" % [_cur[0], key, lines[0]])

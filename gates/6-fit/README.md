@@ -23,7 +23,8 @@ Nothing here ran on the GPU.
 ## Result
 
 - **Gate 6 in the guest: PASS on the five-part criterion; the tight
-  guest-vs-native bound is MISSED, and the cause is isolated.** fit.elf runs
+  guest-vs-native bound is MISSED; the likely cause (sort-tie order, libstdc++
+  vs libc++) is a hypothesis, not yet instrumented.** fit.elf runs
   all four phases of foxgirl in Godot on a worker Thread: 219 Newton, energy
   0.0013124783, no intersections, 0 file opens, fit gap 1.772 / 3.869 voxels
   (mean / p95), 7.42 voxels Hausdorff to the 1-thread oracle. The
@@ -92,8 +93,9 @@ Nothing here ran on the GPU.
 
 **The libm difference is not on the solve path.** In the disassembly of
 fit.elf (`llvm-objdump`), the nine differing functions are called only from
-`probe_libm`, and from libm's own wrappers (tanh calls expm1, cabs calls
-hypot). The solver calls pow (668 call sites), sqrt, atan2, log, sin and atan,
+`probe_libm`, from libm's own wrappers (tanh calls expm1, cabs calls
+hypot), and through `cabs` from Eigen's DGMRES, which the configured
+SimplicialLDLT path never reaches. The solver calls pow (668 call sites), sqrt, atan2, log, sin and atan,
 and all of these are equal.
 
 ### 6.P: time, instructions, heap, ISA
@@ -115,7 +117,8 @@ and all of these are equal.
   iteration** (20.2 s against 0.82 s).
   - Three more rv64gc phase-0 runs took 709.7–725.4 s under load.
   - The earlier smoke run took 596 s on a quieter machine.
-- **ISA:** libriscv runs both extensions, and both give phase 0 bit for bit.
+- **ISA:** libriscv runs both extensions, and both give the same phase-0
+  Newton count and 17-digit energy (no vertex arrays were compared).
   Neither is faster.
   - The bit-manipulation ops save 1.6% of the instructions and no time.
   - V saves 6.3% of the instructions, but costs 12% more time: vector

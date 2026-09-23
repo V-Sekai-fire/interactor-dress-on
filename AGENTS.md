@@ -118,10 +118,11 @@ our own, no host DLL. The GPU is reachable only through Godot's
   warning as an error in anything shared between them.
 - libstdc++ (guest) and libc++ (native) leave **tied sort keys** in different
   orders (`std::sort`, `nth_element`, `partial_sort`), and a sum taken in that
-  order differs by one ULP. SimpleBVH's Morton sort ties, so fit.elf and
-  fit_native part after 7 Newton iterations. Inputs, LDLT and the libm the
-  solver calls are bitwise equal (`gates/6-fit`, 6.0). Guest-vs-native
-  bitwise needs index tie-breaks, not libm work.
+  order differs by one ULP. fit.elf and fit_native part after 7 Newton
+  iterations while inputs, LDLT and the libm the solver calls are bitwise
+  equal (`gates/6-fit`, 6.0); SimpleBVH's Morton sort, which has such ties,
+  is the *likely* cause (hypothesis: no call site instrumented yet). Test an
+  index tie-break before relying on it.
 - **Guest out-of-memory is not `std::bad_alloc`.** Below the heap floor a
   failed allocation is a `Protection fault` at the malloc ecall (the vmcall
   aborts) or a segfault that kills Godot (exit 139), and the heap's meminfo

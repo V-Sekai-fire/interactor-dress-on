@@ -316,6 +316,11 @@ func fit_status() -> String:
 		host_heap = " host_heap_usage=%d" % _fit.get_heap_usage()
 	return "%s%s | last: %s" % [str(_fit.vmcall("fit_status")), host_heap, _fit_last]
 
+# Skin weights for the target avatar (J x N, rows are joints); the FoxGirl
+# fixture has none, so the default clears them.
+func fit_set_skin_weights(weights: PackedFloat32Array = PackedFloat32Array()) -> String:
+	return _fit_now("fit_set_skin_weights", [weights])
+
 # Intersection check on the current state.
 func fit_check() -> String:
 	return _fit_now("fit_check_intersections", [PackedFloat32Array()])

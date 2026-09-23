@@ -9747,6 +9747,13 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
         }
     }
 
+#ifdef GGML_GUEST_EXTRA_EVAL_CASES
+    // interactor-dress-on: the embedder's own eval cases (the op census's
+    // shapes that the list above does not reach), written against the
+    // test_case types above.
+#   include GGML_GUEST_EXTRA_EVAL_CASES
+#endif
+
     return test_cases;
 }
 #ifdef _MSC_VER

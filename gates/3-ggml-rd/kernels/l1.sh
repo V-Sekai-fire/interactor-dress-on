@@ -6,7 +6,9 @@
 #     -O1, which drops the unused s2 from the SPIR-V while the reflection
 #     JSON still lists it; and kernels/avbd's saxpby, another layout;
 #   - every cpp emit compiled for riscv64 by the guest's clang (the x86
-#     compile is the L2 harness, tests/ggml_rd_kernels).
+#     compile is the L2 harness, tests/ggml_rd_kernels). A kernel with
+#     workgroup barriers has no cpp emit (gen.sh); its <k>_serial sibling,
+#     which must exist, is compiled in its place.
 # Writes l1.log beside this script; the last line is RESULT: PASS or FAIL.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -37,6 +39,15 @@ rc=0
 
 	echo "== cpp emits compiled for riscv64 ($("$CLANG" --version | head -1))"
 	for k in $KERNELS; do
+		if grep -q 'GroupMemoryBarrierWithGroupSync' "$ROOT/kernels/ggml/slang/$k.slang"; then
+			if [ -f "$ROOT/kernels/ggml/cpp/${k}_serial_emit.cpp" ] && [ ! -f "$ROOT/kernels/ggml/cpp/${k}_emit.cpp" ]; then
+				echo "SKIP riscv64 $k (workgroup barriers, no cpp emit; ${k}_serial is compiled instead)"
+			else
+				echo "FAIL $k: workgroup barriers need ${k}_serial's emit and no emit of their own"
+				rc=1
+			fi
+			continue
+		fi
 		if "$CLANG" --target=riscv64-unknown-linux-gnu --sysroot="$SYSROOT/sysroot" -march=rv64gc -mabi=lp64d \
 			-isystem "$SYSROOT/sysroot/include/c++/14" -isystem "$SYSROOT/sysroot/include/c++/14/riscv64-linux-gnu" \
 			-std=c++17 -O2 -w -c "$ROOT/kernels/ggml/cpp/${k}_emit.cpp" -o "$TMP/${k}_rv64.o"; then

@@ -17,6 +17,14 @@ struct KernelDesc {
 static const KernelDesc kKernels[] = {
 	{ "add_f32", { 256, 1, 1 } },
 	{ "mul_f32", { 256, 1, 1 } },
+	{ "flash_attn_ext_f32_d64", { 128, 1, 1 } },
+	{ "flash_attn_ext_f32_d64_serial", { 64, 1, 1 } },
+	{ "flash_attn_ext_f32_d128", { 128, 1, 1 } },
+	{ "flash_attn_ext_f32_d128_serial", { 64, 1, 1 } },
+	{ "flash_attn_ext_f16_d64", { 128, 1, 1 } },
+	{ "flash_attn_ext_f16_d64_serial", { 64, 1, 1 } },
+	{ "flash_attn_ext_f16_d128", { 128, 1, 1 } },
+	{ "flash_attn_ext_f16_d128_serial", { 64, 1, 1 } },
 };
 static const uint32_t kKernelCount = sizeof(kKernels) / sizeof(kKernels[0]);
 

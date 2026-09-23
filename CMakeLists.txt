@@ -147,7 +147,7 @@ add_stage_elf(ggml_test
 	vendor/ggml/tests/test-backend-ops.cpp
 )
 set_source_files_properties(vendor/ggml/tests/test-backend-ops.cpp PROPERTIES
-	COMPILE_DEFINITIONS "main=ggml_test_backend_ops_main;GGML_GUEST_REGISTER_BACKENDS;N_THREADS=1")
+	COMPILE_DEFINITIONS "main=ggml_test_backend_ops_main;GGML_GUEST_REGISTER_BACKENDS;N_THREADS=1;GGML_GUEST_EXTRA_EVAL_CASES=\"census_cases.inc\"")
 target_include_directories(ggml_test PRIVATE guest guest/ggml_test)
 target_link_libraries(ggml_test PRIVATE ggml_rd pump ggml ggml-cpu ggml-base)
 target_link_options(ggml_test PRIVATE -Wl,--wrap=ggml_backend_init_by_type)

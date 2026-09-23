@@ -1,16 +1,23 @@
-# ggml-rd L0, 2026-09-23T06:41:19Z
+# ggml-rd L0, 2026-09-23T07:35:52Z
 == lake build Ggml
-Build completed successfully (13 jobs).
+Build completed successfully (14 jobs).
 PASS lake build Ggml
 == kernels/ggml/gen.sh (check mode: Lean's emission vs the committed files)
 == emitting Slang from Lean at <checkout>/lean ==
-== 2 kernels, 1 control(s) and the params header match Lean ==
+✔ [24/27] Built EmitGgml (1.3s)
+✔ [26/27] Built Ggml.SlangCodegen.FlashAttn:c.o (1.5s)
+✔ [27/27] Built emit_ggml:exe (736ms)
+== 10 kernels, 1 control(s) and the params header match Lean ==
 == slangc -target cpp ==
+flash_attn_ext_f32_d64: workgroup barriers, no cpp (the host runs flash_attn_ext_f32_d64_serial)
+flash_attn_ext_f32_d128: workgroup barriers, no cpp (the host runs flash_attn_ext_f32_d128_serial)
+flash_attn_ext_f16_d64: workgroup barriers, no cpp (the host runs flash_attn_ext_f16_d64_serial)
+flash_attn_ext_f16_d128: workgroup barriers, no cpp (the host runs flash_attn_ext_f16_d128_serial)
 == slangc -target spirv -O0 -preserve-params (+ reflection), spirv-val ==
 == fixed-layout check + kernel table ==
-wrote <checkout>/kernels/ggml/GgmlKernelTable.inc: 2 kernels, all on the fixed layout
+wrote <checkout>/kernels/ggml/GgmlKernelTable.inc: 10 kernels, all on the fixed layout
 == embedding SPIR-V ==
-embedded 2 kernels, 8408 bytes -> <tmp>/build/ggml_kernels.inc
+embedded 10 kernels, 114504 bytes -> <tmp>/build/ggml_kernels.inc
 == controls: compiled alike, the layout check must refuse each ==
 control ctl_add_f32_rosrc: refused by the layout check, as it must be
 embedded 1 kernels, 4240 bytes -> <tmp>/build/ggml_controls.inc

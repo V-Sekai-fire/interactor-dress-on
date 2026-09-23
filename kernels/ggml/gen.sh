@@ -12,7 +12,9 @@
 #                                                           ->  guest/ggml-rd/ggml_rd_params.h (committed)
 #     slangc -target cpp                                    ->  cpp/<k>_emit.cpp           (committed;
 #                                                               the host test harness tests/ggml_rd_kernels
-#                                                               runs them against ggml-cpu)
+#                                                               runs them against ggml-cpu; none for a
+#                                                               kernel with workgroup barriers, whose
+#                                                               <k>_serial sibling it runs instead)
 #     slangc -target spirv -O0 -preserve-params             ->  <build>/spv-ggml/<k>.spv + .refl.json
 #       spirv-val                                           ->  (fails the run on any error)
 #       gen_ggml_kernel_table.py (fixed-layout check)       ->  GgmlKernelTable.inc        (committed)
@@ -92,6 +94,18 @@ rm -rf "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 mkdir -p "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 echo "== slangc -target cpp =="
 for k in $KERNELS; do
+	# A groupshared kernel with workgroup barriers has no cpp emit (slangc
+	# refuses the barrier on the cpp target, E36107); its <k>_serial sibling,
+	# which must be listed too, is the one the host harness runs.
+	if grep -q 'GroupMemoryBarrierWithGroupSync' "$HERE/slang/$k.slang"; then
+		case " $KERNELS " in
+			*" ${k}_serial "*) ;;
+			*) echo "error: $k uses workgroup barriers and kernels.txt lists no ${k}_serial" >&2; exit 1 ;;
+		esac
+		rm -f "$HERE/cpp/${k}_emit.cpp"
+		echo "$k: workgroup barriers, no cpp (the host runs ${k}_serial)"
+		continue
+	fi
 	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -preserve-params \
 		-o "cpp/${k}_emit.cpp" "slang/$k.slang" 2>&1 | grep -v "has been renamed to 'main_0'" || true )
 	[ -s "$HERE/cpp/${k}_emit.cpp" ] || { echo "error: no cpp for $k" >&2; exit 1; }

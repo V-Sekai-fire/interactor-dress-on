@@ -26,6 +26,11 @@
 //                    order the spans, and increments are lost; the probe
 //                    PASSes when they are (the hazard is still there, and
 //                    read-write sources are what avoid it).
+//   fa_perf <lq,lk,reps>  FLASH_ATTN_EXT at a census shape (D = 128, 12
+//                    heads, f32, no mask): a one-node graph computed reps
+//                    times, one submit and one WAIT_GPU each (the host times
+//                    the period), then 8 sampled query rows checked against
+//                    a double reference.
 #pragma once
 
 #include <string>

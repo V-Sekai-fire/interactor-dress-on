@@ -4,3 +4,11 @@
 # GgmlKernelTable.inc, so ids are per build, never stored.
 add_f32
 mul_f32
+flash_attn_ext_f32_d64
+flash_attn_ext_f32_d64_serial
+flash_attn_ext_f32_d128
+flash_attn_ext_f32_d128_serial
+flash_attn_ext_f16_d64
+flash_attn_ext_f16_d64_serial
+flash_attn_ext_f16_d128
+flash_attn_ext_f16_d128_serial

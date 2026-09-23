@@ -10,11 +10,14 @@ abstract: >-
   __riscv_v_intrinsic undefined for ggml-cpu, Gate 0F finding 5). ggml-cpu is
   the in-guest reference; guest/ggml-rd is the GPU backend, over Godot's
   RenderingDevice, with kernels generated from lean/Ggml. Adapted here, in
-  tests/test-backend-ops.cpp only, both marked "interactor-dress-on": (1)
+  tests/test-backend-ops.cpp only, each marked "interactor-dress-on": (1)
   N_THREADS is wrapped in #ifndef so an embedder can set it (the guest builds
   with -DN_THREADS=1; its threads are serialized, Gate 0C); (2) under
   GGML_GUEST_REGISTER_BACKENDS, main() calls the embedder's
-  ggml_guest_register_backends() instead of ggml_backend_load_all(). The
+  ggml_guest_register_backends() instead of ggml_backend_load_all(); (3)
+  under GGML_GUEST_EXTRA_EVAL_CASES, make_test_cases_eval() includes the
+  named file before it returns (guest/ggml_test/census_cases.inc: the op
+  census shapes the upstream list does not reach). The
   guest also compiles the file with -Dmain=... and links it with
   --wrap=ggml_backend_init_by_type (guest/ggml_test), which changes no
   source. Nothing else is modified.

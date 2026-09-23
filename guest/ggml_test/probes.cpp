@@ -1,5 +1,6 @@
 #include "probes.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -189,6 +190,105 @@ void files(const std::string &path) {
 	result(ok, "files");
 }
 
+// FLASH_ATTN_EXT at a census shape on the GPU: Q [128, lq, 12], K and V
+// [128, lk, 12] f32, no mask, scale 1/sqrt(128). One graph of one FA node is
+// computed `reps` times: every compute is one submit, a WAIT_GPU, and the
+// sync on the next pump, so after the first (pipeline creation) the host's
+// period between WAIT_GPUs is the node's GPU time plus one frame's overhead
+// (the guest clock is not a clock, AGENTS.md: the host times it). Then 8
+// sampled query rows of the output, every head, are checked against a double
+// precision reference in the guest.
+void fa_perf(const std::string &arg) {
+	int lq = 0, lk = 0, reps = 0;
+	if (std::sscanf(arg.c_str(), "%d,%d,%d", &lq, &lk, &reps) != 3 || lq < 1 || lk < 1 || reps < 1) {
+		std::printf("PROBE fa_perf: bad argument '%s' (lq,lk,reps)\n", arg.c_str());
+		result(false, "fa_perf");
+		return;
+	}
+	ggml_backend_t be = rd_backend();
+	if (be == nullptr) {
+		result(false, "fa_perf");
+		return;
+	}
+	const int d = 128, nh = 12;
+	ggml_context *ctx = make_ctx(4);
+	ggml_tensor *q = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, d, lq, nh);
+	ggml_tensor *k = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, d, lk, nh);
+	ggml_tensor *v = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, d, lk, nh);
+	const float scale = 1.0f / std::sqrt(float(d));
+	ggml_cgraph *gf = ggml_new_graph_custom(ctx, 8, false);
+	ggml_tensor *out = ggml_flash_attn_ext(ctx, q, k, v, nullptr, scale, 0.0f, 0.0f);
+	ggml_flash_attn_ext_set_prec(out, GGML_PREC_F32);
+	ggml_build_forward_expand(gf, out);
+	ggml_backend_buffer_t buf = ggml_backend_alloc_ctx_tensors(ctx, be);
+	auto fill = [](std::vector<float> &x, uint32_t seed) {
+		uint32_t s = seed;
+		for (float &e : x) {
+			s = s * 1664525u + 1013904223u;
+			e = float(s >> 8) * (2.0f / 16777216.0f) - 1.0f; // [-1, 1)
+		}
+	};
+	std::vector<float> qv(size_t(d) * lq * nh), kv(size_t(d) * lk * nh), vv(size_t(d) * lk * nh);
+	fill(qv, 1u);
+	fill(kv, 2u);
+	fill(vv, 3u);
+	ggml_backend_tensor_set(q, qv.data(), 0, qv.size() * 4);
+	ggml_backend_tensor_set(k, kv.data(), 0, kv.size() * 4);
+	ggml_backend_tensor_set(v, vv.data(), 0, vv.size() * 4);
+	ggml_status st = GGML_STATUS_SUCCESS;
+	int64_t dispatches = 0, barriers = 0;
+	for (int r = 0; r < reps && st == GGML_STATUS_SUCCESS; ++r) {
+		st = ggml_backend_graph_compute(be, gf);
+		int64_t dd = 0;
+		ggml_backend_rd_last_graph(&dd, &barriers);
+		dispatches += dd;
+	}
+	// 8 sampled rows of the output, every head, vs a double reference.
+	double max_err = 0.0;
+	std::vector<float> row(size_t(d) * nh);
+	std::vector<double> sc(static_cast<size_t>(lk)), acc(static_cast<size_t>(d));
+	for (int si = 0; si < 8; ++si) {
+		const int iq = int((int64_t(si) * (lq - 1)) / 7);
+		ggml_backend_tensor_get(out, row.data(), size_t(iq) * d * nh * 4, row.size() * 4); // dst [d, nh, lq]
+		for (int h = 0; h < nh; ++h) {
+			const float *qr = &qv[(size_t(h) * lq + iq) * d];
+			double m = -INFINITY;
+			for (int j = 0; j < lk; ++j) {
+				const float *kr = &kv[(size_t(h) * lk + j) * d];
+				double s = 0.0;
+				for (int c = 0; c < d; ++c) {
+					s += double(qr[c]) * double(kr[c]);
+				}
+				sc[size_t(j)] = s * double(scale);
+				m = std::max(m, sc[size_t(j)]);
+			}
+			double l = 0.0;
+			std::fill(acc.begin(), acc.end(), 0.0);
+			for (int j = 0; j < lk; ++j) {
+				const double p = std::exp(sc[size_t(j)] - m);
+				l += p;
+				const float *vr = &vv[(size_t(h) * lk + j) * d];
+				for (int c = 0; c < d; ++c) {
+					acc[size_t(c)] += p * double(vr[c]);
+				}
+			}
+			for (int c = 0; c < d; ++c) {
+				max_err = std::max(max_err, std::fabs(double(row[size_t(h) * d + c]) - acc[size_t(c)] / l));
+			}
+		}
+	}
+	const double gflop = 4.0 * d * double(lq) * double(lk) * nh * 1e-9; // QK^T and PV, per node
+	std::printf("PROBE fa_perf lq=%d lk=%d d=%d heads=%d reps=%d status=%d dispatches=%lld barriers=%lld "
+				"gflop_per_node=%.2f sampled_max_abs_err=%.3e serial=%s\n",
+			lq, lk, d, nh, reps, int(st), (long long)dispatches, (long long)barriers, gflop, max_err,
+			std::getenv("GGML_RD_SERIAL") ? std::getenv("GGML_RD_SERIAL") : "0");
+	const bool ok = st == GGML_STATUS_SUCCESS && dispatches == reps && barriers == 0 && max_err < 1e-4;
+	ggml_backend_buffer_free(buf);
+	ggml_free(ctx);
+	ggml_backend_free(be);
+	result(ok, "fa_perf");
+}
+
 bool rd_offset(const ggml_tensor *t, void *, uint64_t *off) {
 	*off = ggml_backend_rd_tensor_offset(t);
 	return true;
@@ -306,6 +406,8 @@ void job(void *) {
 		files(g_args.arg);
 	} else if (name == "alias") {
 		alias(g_args.arg != "ro");
+	} else if (name == "fa_perf") {
+		fa_perf(g_args.arg);
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -318,8 +420,8 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias") {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias)";
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "fa_perf") {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, fa_perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

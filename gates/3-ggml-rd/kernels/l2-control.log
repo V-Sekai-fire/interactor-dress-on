@@ -1,44 +1,65 @@
-ggml-rd L2: 41 cases, 2 packers, 2 kernels, control=swap-nb
+ggml-rd L2: 62 cases, 3 packers, 10 kernels, control=swap-nb
+NOOP FA d=64 nh=4 nr23=[1,1] kv=113 nb=1 kv_type=f32 out=[64,4,1,1]         dispatches=1 nmse=8.849e-14 (max 5e-04) exact=20/256
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=512 nb=3 kv_type=f32 out=[64,4,3,1]         dispatches=1 nmse=1.727e-01 (max 5e-04) exact=23/768
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=1024 nb=32 kv_type=f32 out=[64,4,32,1]        dispatches=1 nmse=9.415e-01 (max 5e-04) exact=15/8192
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=2 nb=17 kv_type=f32 out=[64,4,17,1]        dispatches=1 nmse=2.148e-01 (max 5e-04) exact=177/4352
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=31 nb=15 kv_type=f32 out=[64,4,15,1]        dispatches=1 nmse=5.665e-01 (max 5e-04) exact=59/3840
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=33 nb=16 kv_type=f32 out=[64,4,16,1]        dispatches=1 nmse=5.573e-01 (max 5e-04) exact=50/4096
+DETECTED FA d=64 nh=4 nr23=[4,1] kv=512 nb=75 kv_type=f32 out=[64,16,75,1]       dispatches=1 nmse=5.383e-01 (max 5e-04) exact=84/76800
+DETECTED FA d=64 nh=4 nr23=[1,3] kv=113 nb=3 kv_type=f32 out=[64,4,3,3]         dispatches=1 nmse=1.631e-01 (max 5e-04) exact=62/2304
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=512 nb=32 kv_type=f32 perm0213 out=[64,4,32,1]        dispatches=1 nmse=1.849e-01 (max 5e-04) exact=9/8192
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=113 nb=32 kv_type=f16 out=[64,4,32,1]        dispatches=1 nmse=-nan(ind) (max 5e-04) exact=0/8192
+DETECTED FA d=64 nh=4 nr23=[4,3] kv=512 nb=3 kv_type=f16 out=[64,16,3,3]        dispatches=1 nmse=2.299e-01 (max 5e-04) exact=0/9216
+DETECTED FA d=64 nh=4 nr23=[1,1] kv=512 nb=75 kv_type=f16 perm0213 out=[64,4,75,1]        dispatches=1 nmse=2.137e-01 (max 5e-04) exact=0/19200
+DETECTED FA d=128 nh=12 nr23=[1,1] kv=5 nb=33 kv_type=f32 out=[128,12,33,1]      dispatches=1 nmse=1.461e-01 (max 5e-04) exact=522/50688
+DETECTED FA d=128 nh=12 nr23=[1,1] kv=1029 nb=17 kv_type=f32 out=[128,12,17,1]      dispatches=1 nmse=8.395e-01 (max 5e-04) exact=61/26112
+DETECTED FA d=128 nh=4 nr23=[1,1] kv=32 nb=16 kv_type=f32 out=[128,4,16,1]       dispatches=1 nmse=4.337e-01 (max 5e-04) exact=64/8192
+DETECTED FA d=128 nh=4 nr23=[1,1] kv=113 nb=3 kv_type=f32 softcap=10 out=[128,4,3,1]        dispatches=1 nmse=1.530e-01 (max 5e-04) exact=39/1536
+DETECTED FA d=128 nh=4 nr23=[1,1] kv=512 nb=32 kv_type=f32 perm0213 out=[128,4,32,1]       dispatches=1 nmse=2.107e-01 (max 5e-04) exact=24/16384
+DETECTED FA d=128 nh=4 nr23=[1,1] kv=512 nb=75 kv_type=f16 softcap=10 out=[128,4,75,1]       dispatches=1 nmse=-nan(ind) (max 5e-04) exact=0/38400
+NOOP FA d=128 nh=4 nr23=[12,1] kv=512 nb=1 kv_type=f16 prec=def out=[128,48,1,1]       dispatches=1 nmse=1.041e-05 (max 5e-04) exact=0/6144
+DETECTED FA d=128 nh=4 nr23=[1,1] kv=1024 nb=8 kv_type=f16 perm0213 out=[128,4,8,1]        dispatches=1 nmse=1.817e-01 (max 5e-04) exact=0/4096
+DETECTED FA d=64 nh=2 nr23=[1,1] kv=77 nb=9 kv_type=f32 +ADD out=[64,2,9,1]         dispatches=2 nmse=2.101e-01 (max 5e-04) exact=85/1152
 NOOP ADD ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
 NOOP MUL ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
 NOOP ADD ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
 NOOP MUL ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
-DETECTED ADD ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=4.731e-01 (max 1e-07) exact=10/50
-DETECTED MUL ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=1.434e+00 (max 1e-07) exact=10/50
-DETECTED ADD ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=8.435e-01 (max 1e-07) exact=40/200
-DETECTED MUL ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=2.576e-01 (max 1e-07) exact=40/200
-DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=7.579e-01 (max 1e-07) exact=120/600
-DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=7.557e-02 (max 1e-07) exact=120/600
+DETECTED ADD ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=10/50
+DETECTED MUL ne=[10,5,1,1] nr=[1,1,1,1]               out=[10,5,1,1]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=10/50
+DETECTED ADD ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=40/200
+DETECTED MUL ne=[10,5,4,1] nr=[1,1,1,1]               out=[10,5,4,1]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=40/200
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=120/600
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,1]               out=[10,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=120/600
 DETECTED ADD ne=[10,5,4,3] nr=[2,1,1,1]               out=[20,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=240/1200
 DETECTED MUL ne=[10,5,4,3] nr=[2,1,1,1]               out=[20,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=240/1200
-DETECTED ADD ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=8.782e-01 (max 1e-07) exact=120/1200
-DETECTED MUL ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=7.678e-02 (max 1e-07) exact=120/1200
+DETECTED ADD ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=120/1200
+DETECTED MUL ne=[10,5,4,3] nr=[1,2,1,1]               out=[10,10,4,3]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=120/1200
 DETECTED ADD ne=[10,5,4,3] nr=[1,1,2,1]               out=[10,5,8,3]         dispatches=1 nmse=8.807e-01 (max 1e-07) exact=150/1200
 DETECTED MUL ne=[10,5,4,3] nr=[1,1,2,1]               out=[10,5,8,3]         dispatches=1 nmse=5.725e-03 (max 1e-07) exact=150/1200
-DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=7.674e-01 (max 1e-07) exact=240/1200
-DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=3.785e-02 (max 1e-07) exact=240/1200
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=240/1200
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,2]               out=[10,5,4,6]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=240/1200
 DETECTED ADD ne=[10,5,4,3] nr=[1,1,2,2]               out=[10,5,8,6]         dispatches=1 nmse=9.308e-01 (max 1e-07) exact=300/2400
 DETECTED MUL ne=[10,5,4,3] nr=[1,1,2,2]               out=[10,5,8,6]         dispatches=1 nmse=5.833e-03 (max 1e-07) exact=300/2400
 DETECTED ADD ne=[10,5,4,3] nr=[1,2,2,2]               out=[10,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=480/4800
 DETECTED MUL ne=[10,5,4,3] nr=[1,2,2,2]               out=[10,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=480/4800
 DETECTED ADD ne=[10,5,4,3] nr=[2,2,2,2]               out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
 DETECTED MUL ne=[10,5,4,3] nr=[2,2,2,2]               out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
-DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=8.689e-01 (max 1e-07) exact=120/600
-DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=7.660e-02 (max 1e-07) exact=120/600
+DETECTED ADD ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=120/600
+DETECTED MUL ne=[10,5,4,3] nr=[1,1,1,1] perm1         out=[10,5,4,3]         dispatches=1 nmse=1.000e+00 (max 1e-07) exact=120/600
 DETECTED ADD ne=[10,5,4,3] nr=[2,2,2,2] perm1         out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
 DETECTED MUL ne=[10,5,4,3] nr=[2,2,2,2] perm1         out=[20,10,8,6]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=960/9600
 DETECTED ADD ne=[10,5,4,6] nr=[1,1,1,1] overlap       out=[10,5,4,4]         dispatches=1 nmse=8.135e-01 (max 1e-07) exact=160/800
 DETECTED MUL ne=[10,5,4,6] nr=[1,1,1,1] overlap       out=[10,5,4,4]         dispatches=1 nmse=5.575e-03 (max 1e-07) exact=160/800
 DETECTED ADD ne=[7,3,5,2] nr=[3,1,1,1]                out=[21,3,5,2]         dispatches=1 nmse=7.859e-01 (max 1e-07) exact=126/630
 DETECTED MUL ne=[7,3,5,2] nr=[3,1,1,1]                out=[21,3,5,2]         dispatches=1 nmse=5.401e-03 (max 1e-07) exact=126/630
-DETECTED ADD ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=5.691e-01 (max 1e-07) exact=13/143
-DETECTED MUL ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=1.074e+01 (max 1e-07) exact=13/143
+DETECTED ADD ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=13/143
+DETECTED MUL ne=[13,1,1,1] nr=[1,11,1,1]              out=[13,11,1,1]        dispatches=1 nmse=1.000e+00 (max 1e-07) exact=13/143
 DETECTED ADD ne=[1280,1,1,1] nr=[1,16,16,1]           out=[1280,16,16,1]     dispatches=1 nmse=9.252e-01 (max 1e-07) exact=20480/327680
 DETECTED MUL ne=[1280,1,1,1] nr=[1,16,16,1]           out=[1280,16,16,1]     dispatches=1 nmse=6.266e-03 (max 1e-07) exact=20480/327680
 DETECTED ADD ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatches=1 nmse=1.007e+00 (max 1e-07) exact=1024/655360
 DETECTED MUL ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatches=1 nmse=6.635e-03 (max 1e-07) exact=1024/655360
-DETECTED ADD inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=4.558e-01 (max 1e-07) exact=36/144
-DETECTED MUL inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=1.440e-01 (max 1e-07) exact=36/144
+DETECTED ADD inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=1.000e+00 (max 1e-07) exact=36/144
+DETECTED MUL inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=1.000e+00 (max 1e-07) exact=36/144
 DETECTED ADD then MUL chain [9,7,5,3]                 out=[9,7,5,3]          dispatches=2 nmse=1.000e+00 (max 1e-07) exact=135/945
-summary: swapped strides detected in 37 cases, missed in 0, no-op in 4 (of those, 4 still OK)
+summary: swapped strides detected in 56 cases, missed in 0, no-op in 6 (of those, 6 still OK)
 RESULT: PASS

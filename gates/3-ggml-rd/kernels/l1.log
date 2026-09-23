@@ -1,6 +1,6 @@
-# ggml-rd L1, 2026-09-23T06:41:33Z, 2026.13.1-1-g84792eb15
-== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 
-layout ok: add_f32, mul_f32
+# ggml-rd L1, 2026-09-23T07:36:25Z, 2026.13.1-1-g84792eb15
+== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 flash_attn_ext_f32_d64 flash_attn_ext_f32_d64_serial flash_attn_ext_f32_d128 flash_attn_ext_f32_d128_serial flash_attn_ext_f16_d64 flash_attn_ext_f16_d64_serial flash_attn_ext_f16_d128 flash_attn_ext_f16_d128_serial 
+layout ok: add_f32, mul_f32, flash_attn_ext_f32_d64, flash_attn_ext_f32_d64_serial, flash_attn_ext_f32_d128, flash_attn_ext_f32_d128_serial, flash_attn_ext_f16_d64, flash_attn_ext_f16_d64_serial, flash_attn_ext_f16_d128, flash_attn_ext_f16_d128_serial
 PASS layout
 == negative: add_f32 at slangc's default -O1 with -preserve-params (must fail)
 layout error: add_f32_o1: SPIR-V layout differs: missing ['s2'], extra [], wrong []
@@ -11,4 +11,12 @@ PASS saxpby is refused
 == cpp emits compiled for riscv64 (clang version 23.1.1 (https://github.com/llvm/llvm-project 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
 PASS riscv64 add_f32 (3784 bytes of object)
 PASS riscv64 mul_f32 (3784 bytes of object)
+SKIP riscv64 flash_attn_ext_f32_d64 (workgroup barriers, no cpp emit; flash_attn_ext_f32_d64_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f32_d64_serial (5520 bytes of object)
+SKIP riscv64 flash_attn_ext_f32_d128 (workgroup barriers, no cpp emit; flash_attn_ext_f32_d128_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f32_d128_serial (5520 bytes of object)
+SKIP riscv64 flash_attn_ext_f16_d64 (workgroup barriers, no cpp emit; flash_attn_ext_f16_d64_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f16_d64_serial (7496 bytes of object)
+SKIP riscv64 flash_attn_ext_f16_d128 (workgroup barriers, no cpp emit; flash_attn_ext_f16_d128_serial is compiled instead)
+PASS riscv64 flash_attn_ext_f16_d128_serial (7496 bytes of object)
 RESULT: PASS

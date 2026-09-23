@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: If you use this code, cite the cloth-fit tree it is vendored from and the paper it implements.
+title: cloth-fit, intersection-free garment retargeting on PolyFEM (vendored)
+abstract: >-
+  V-Sekai-fire/cloth-fit at d2bd59a6 (tip of its default branch main/main),
+  added here as a squashed git subtree: the reference implementation of
+  Zizhou Huang's SIGGRAPH 2025 paper "Intersection-free Garment Retargeting"
+  (https://huangzizhou.github.io/assets/img/research/cloth/paper.pdf), built
+  on PolyFEM's nonlinear optimizers, linear solvers and IPC collision
+  handling, with the org's commits on top that isolate the garment domain
+  from base PolyFEM (POLYFEM_WITH_GARMENT), extract run_retarget, start the
+  retarget from a feasible body and link PolyFEM_bin -static under
+  llvm-mingw. It is the source of fit.elf (Cut 6) and of the native oracle
+  in tools/native, which was built from this same tree: foxgirl_skirt, 1
+  thread, 248 Newton iterations to step_garment_252.obj, bitwise
+  reproducible. garment-data/ carries the four example avatars and
+  garments (FoxGirl, Goblin, T-rex; skirt, jacket, jumpsuit) used as gate
+  inputs. CPM pins as vendored: polysolve Huangzizhou#ee553dc6, ipc-toolkit
+  Huangzizhou#993e7e0f, openvdb Huangzizhou#c96cb069, libigl v2.5.0,
+  nlohmann_json v3.11.2 (via polysolve), oneTBB v2021.9.0; the native
+  build takes the first five from the V-Sekai-fire forks in
+  tools/forks.tsv through CPM_<pkg>_SOURCE (tools/forks/fetch.sh) without
+  editing the recipes. Adapted here: nothing yet; no file under
+  vendor/cloth-fit differs from d2bd59a6 except this one. The fit.elf
+  patches (POLYFEM_THREADING=NONE, OpenVDB replaced by a brick-grid SDF,
+  embedded specs, no file I/O) will be listed here as they land.
+type: software
+authors:
+  - name: Zizhou Huang
+  - name: The PolyFEM contributors
+  - name: K. S. Ernest (iFire) Lee
+  - name: V-Sekai
+repository-code: https://github.com/V-Sekai-fire/cloth-fit
+commit: d2bd59a61d73048c2431bf25bfc7d125c7a8a37d
+license: MIT

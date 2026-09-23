@@ -11,6 +11,12 @@
 # Lean side of Cut 4, and the default build must not wait on them.
 
 include(${CMAKE_CURRENT_LIST_DIR}/cassie_sources.cmake)
+
+# Until the Lean side of Cut 4 lands kernels/cassie/cpp/*_emit.cpp, the five
+# dispatch TUs cannot compile. ON leaves them (and cassie_kernels) out so the
+# rest of the stage can be compile- and link-checked; the symbols they would
+# define stay unresolved and are listed by tests/native/curvenet.
+option(CURVENET_KERNELS_PENDING "Build curvenet without the Lean-emitted Cassie kernels" OFF)
 include(${CMAKE_CURRENT_LIST_DIR}/godot_lite.cmake)
 
 # Bit-determinism: the beautify chain runs on every peer from the same stroke
@@ -50,11 +56,17 @@ target_link_libraries(mwt_subset PUBLIC geogram_subset)
 # ---- Cassie kernels ------------------------------------------------------------
 # Lean -> Slang -> slangc -target cpp (AGENTS.md rule 2). No godot_lite
 # prelude: the Slang prelude's Vector<T, N> and gdl's Vector cannot share a TU.
-add_library(cassie_kernels STATIC EXCLUDE_FROM_ALL ${CASSIE_KERNEL_SOURCES})
-target_include_directories(cassie_kernels
-	PUBLIC "${CASSIE_SRC}/solver/slang_dispatch"
-	PRIVATE "${DRESS_ON_ROOT}/guest/avbd/slang-rt" "${DRESS_ON_ROOT}/kernels/cassie/cpp")
-target_compile_options(cassie_kernels PRIVATE ${CURVENET_STRICT_FP} -Wno-non-virtual-dtor)
+if(CURVENET_KERNELS_PENDING)
+	# Headers only: cassie_core still includes the dispatch declarations.
+	add_library(cassie_kernels INTERFACE)
+	target_include_directories(cassie_kernels INTERFACE "${CASSIE_SRC}/solver/slang_dispatch")
+else()
+	add_library(cassie_kernels STATIC EXCLUDE_FROM_ALL ${CASSIE_KERNEL_SOURCES})
+	target_include_directories(cassie_kernels
+		PUBLIC "${CASSIE_SRC}/solver/slang_dispatch"
+		PRIVATE "${DRESS_ON_ROOT}/guest/avbd/slang-rt" "${DRESS_ON_ROOT}/kernels/cassie/cpp")
+	target_compile_options(cassie_kernels PRIVATE ${CURVENET_STRICT_FP} -Wno-non-virtual-dtor)
+endif()
 
 # ---- Cassie ------------------------------------------------------------------
 add_library(cassie_core STATIC EXCLUDE_FROM_ALL ${CASSIE_CORE_SOURCES})
@@ -72,3 +84,13 @@ target_link_libraries(cassie_core PUBLIC
 	# guest/godot_lite's own library, once it defines one.
 	$<TARGET_NAME_IF_EXISTS:godot_lite>
 )
+
+# ---- Compile check -------------------------------------------------------------
+# Scratch target until curvenet.elf exists: every curvenet library, built for
+# whatever toolchain configured this tree (riscv64 via build.sh's toolchain
+# file; the host via tests/native/curvenet). Not part of the default build.
+add_custom_target(curvenet_compile_check)
+add_dependencies(curvenet_compile_check godot_lite geogram_subset pmp_subset mwt_subset cassie_core)
+if(NOT CURVENET_KERNELS_PENDING)
+	add_dependencies(curvenet_compile_check cassie_kernels)
+endif()

@@ -1,10 +1,14 @@
-# Pixal3D image -> textured mesh, as a native win-64 service (no Docker, no WSL).
+# Pixal3D image -> textured mesh: a native win-64 service (no Docker, no WSL), and the
+# same service on linux-64 for the RunPod worker image (tools/runpod/pixal3d).
 #
 # The service code is V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh, cloned
 # by `pixi run fetch` into ./src at a pinned commit with ./patches applied (see
 # CITATION.cff). The CUDA extensions are not built here: they are the community
-# Windows wheels visualbruno/ComfyUI-Trellis2 ships for Torch 2.8.0 + cu128,
-# fetched from the org fork V-Sekai-fire/ComfyUI-Trellis2-visualbruno at one commit; README.md lists each wheel's sha256.
+# wheels visualbruno/ComfyUI-Trellis2 ships (Windows: Torch 2.8.0 + cu128, cp311;
+# Linux: Torch 2.11.0 + cu130, cp313), fetched from the org fork
+# V-Sekai-fire/ComfyUI-Trellis2-visualbruno at one commit; README.md lists each
+# wheel's sha256. Each platform keeps its own python, torch and wheels in its
+# [target.*] tables; everything else is shared.
 #
 # Why torch 2.8.0 + triton 3.4 and not the Linux recipe's 2.6.0 + cu124: a CUDA
 # extension has to match the torch it was compiled against, and the Windows wheels
@@ -12,17 +16,29 @@
 # measured to fail MoGe-3's FlexGEMM 2.0 kernels (tl.dtype has no `itemsize`, and
 # `tl.pointer_type` annotations do not parse: KeyError 'ier_type'); 3.4 compiles
 # them. Triton on Windows is triton-windows, which flex_gemm's wheel names.
+#
+# linux-64 (the RunPod image): the Linux wheels at that commit exist for Torch 2.7.0,
+# 2.9.1 and 2.11.0, and the fatbins decide (gates/7-pixal3d/linux-wheels). 2.9.1's
+# flex_gemm, nvdiffrast, nvdiffrec_render and o_voxel carry sm_120 code only
+# (Blackwell): measured on the RTX 3090, "no kernel image is available". 2.7.0 has no
+# nvdiffrec_render and pairs with triton 3.3 (above). 2.11.0's five carry SASS for
+# sm_80, sm_86, sm_100 and sm_120 (sm_89 runs sm_86 code; nothing runs on sm_90), link
+# libcudart.so.13 (so torch cu130, driver >= 580) and are cp313. Its flex_gemm is
+# 1.0.0: 0.0.1's modules plus ops/serialize, not the 2.0 rewrite MoGe-3 uses.
 
 [workspace]
 name = "pixal3d-service"
 version = "0.1.0"
 channels = ["conda-forge"]
-platforms = ["win-64"]
+platforms = ["win-64", "linux-64"]
 
-[dependencies]
+[target.win-64.dependencies]
 python = "3.11.*"
 
-[pypi-dependencies]
+[target.linux-64.dependencies]
+python = "3.13.*"
+
+[target.win-64.pypi-dependencies]
 torch = { version = "==2.8.0", index = "https://download.pytorch.org/whl/cu128" }
 torchvision = { version = "==0.23.0", index = "https://download.pytorch.org/whl/cu128" }
 triton-windows = ">=3.4,<3.5"
@@ -34,6 +50,21 @@ o-voxel = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trelli
 nvdiffrast = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrast-0.4.0-cp311-cp311-win_amd64.whl" }
 nvdiffrec-render = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrec_render-0.0.0-cp311-cp311-win_amd64.whl" }
 
+[target.linux-64.pypi-dependencies]
+torch = { version = "==2.11.0", index = "https://download.pytorch.org/whl/cu130" }
+torchvision = { version = "==0.26.0", index = "https://download.pytorch.org/whl/cu130" }
+
+# V-Sekai-fire/ComfyUI-Trellis2-visualbruno @14597418bbe33a440ead4667e2966408f0524a21, wheels/Linux/Torch2110
+# (libcudart.so.13; SASS sm_80, sm_86, sm_100, sm_120: gates/7-pixal3d/linux-wheels)
+cumesh = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Linux/Torch2110/cumesh-1.0-cp313-cp313-linux_x86_64.whl" }
+flex-gemm = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Linux/Torch2110/flex_gemm-1.0.0-cp313-cp313-linux_x86_64.whl" }
+o-voxel = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Linux/Torch2110/o_voxel-0.0.1-cp313-cp313-linux_x86_64.whl" }
+nvdiffrast = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Linux/Torch2110/nvdiffrast-0.4.0-cp313-cp313-linux_x86_64.whl" }
+nvdiffrec-render = { url = "https://raw.githubusercontent.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno/14597418bbe33a440ead4667e2966408f0524a21/wheels/Linux/Torch2110/nvdiffrec_render-0.0.0-cp313-cp313-linux_x86_64.whl" }
+# the RunPod worker (tools/runpod/pixal3d/handler.py)
+runpod = "==1.12.0"
+
+[pypi-dependencies]
 # Pixal3D's own utils3d pin (py3-none-any), and MoGe's (a different package name).
 utils3d = { url = "https://github.com/V-Sekai-fire/Storages/releases/download/20260430/utils3d-0.0.2-py3-none-any.whl" }
 utils3d-moge = { git = "https://github.com/V-Sekai-fire/utils3d-moge.git", rev = "62f09d58509485564e24d5d9f6aac9ee9ebc0c37" }
@@ -65,7 +96,8 @@ requests = "*"
 usd-core = "*"
 
 [activation.env]
-# Windows: no flash-attn build; torch SDPA is upstream's own supported backend.
+# No flash-attn build on either platform from an org source; torch SDPA is
+# upstream's own supported backend.
 ATTN_BACKEND = "sdpa"
 PYTHONUTF8 = "1"
 PYTHONUNBUFFERED = "1"

@@ -50,6 +50,14 @@ abstract: >-
   README.md); utils3d 0.0.2 from V-Sekai-fire/Storages release 20260430, a
   mirror of LDYang694/Storages' asset (Pixal3D's own pin); torch/torchvision from download.pytorch.org
   cu128; triton-windows from PyPI.
+
+
+  linux-64 (the RunPod worker image, tools/runpod/pixal3d): the same five
+  extensions as cp313 linux_x86_64 wheels for Torch 2.11.0 + cu130 from the
+  same fork commit, wheels/Linux/Torch2110 (flex_gemm 1.0.0; sha256 in
+  README.md), because the Torch291 set carries sm_120 code only
+  (gates/7-pixal3d/linux-wheels); torch/torchvision cu130 from
+  download.pytorch.org, triton and runpod from PyPI.
 authors:
   - name: TencentARC (Pixal3D)
   - name: Microsoft (TRELLIS.2, MoGe)
@@ -77,6 +85,6 @@ references:
     repository-code: https://github.com/V-Sekai-fire/FlexGEMM
     commit: b2fadb29d41846c7981ade6801ffc689fae119cf
   - type: software
-    title: ComfyUI-Trellis2 (Windows wheels)
+    title: ComfyUI-Trellis2 (Windows and Linux wheels)
     repository-code: https://github.com/V-Sekai-fire/ComfyUI-Trellis2-visualbruno
     commit: 14597418bbe33a440ead4667e2966408f0524a21

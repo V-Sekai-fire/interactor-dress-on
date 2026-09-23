@@ -4,7 +4,7 @@ Stage 7's image -> mesh step (AGENTS.md: the loop calls this HTTP service; USD i
 the interchange) running natively on Windows 11 under pixi. No Docker, no WSL.
 
 ```
-pixi install            # torch 2.7.0+cu128, triton-windows, the Windows wheels below
+pixi install            # torch 2.8.0+cu128, triton-windows, the Windows wheels below
 pixi run fetch          # clone the pinned sources into src/, apply patches/, fetch + verify weights
 pixi run check          # imports + one real kernel from each CUDA extension
 pixi run smoke-stub     # WEFTSPUN_STUB=1: the HTTP + USD contract, no GPU, no weights
@@ -68,6 +68,29 @@ MoGe's pin). The wheels come from V-Sekai-fire/ComfyUI-Trellis2-visualbruno at t
 same commit (the org already had a different ComfyUI-TRELLIS2, PozzettiAndrea's,
 hence the suffix).
 
+## linux-64 (the RunPod worker image)
+
+The same pixi.toml carries a linux-64 half in `[target.linux-64.*]` tables, used by
+`tools/runpod/pixal3d/Dockerfile` (`pixi install --locked`, then `fetch.py --src`);
+the win-64 half and its lock entries are unchanged by it (84 packages, the same
+versions; the seven wheel/git URLs differ only by upstream -> org fork, and the five
+wheels and utils3d hash to the sha256 values in the tables here). Linux takes python
+3.13, torch 2.11.0 + cu130 (triton 3.6.0) and the `wheels/Linux/Torch2110` set of the
+same fork commit, not the Torch291 set the plan named: Torch291's flex_gemm,
+nvdiffrast, nvdiffrec_render and o_voxel carry sm_120 code only and failed on the
+3090 ("no kernel image is available"); see gates/7-pixal3d/linux-wheels. Torch2110
+covers sm_80, sm_86, sm_89 (via sm_86 SASS), sm_100 and sm_120, not sm_90 (H100).
+
+Linux wheel sha256 (raw.githubusercontent.com, V-Sekai-fire/ComfyUI-Trellis2-visualbruno @14597418, `wheels/Linux/Torch2110`):
+
+| wheel | sha256 |
+|---|---|
+| cumesh-1.0-cp313-cp313-linux_x86_64.whl | 60bf02cb02241ba3c942842b18494a43c9337b1bdf46def125b8c11670febadb |
+| flex_gemm-1.0.0-cp313-cp313-linux_x86_64.whl | 088acf0a7d6207eedfc60afa5a887ce4eebe1af71cba97320686f575fd150cd6 |
+| nvdiffrast-0.4.0-cp313-cp313-linux_x86_64.whl | 7432379e67596c45850394b416d7fd9d851dfeccd15336a6f8fd72c7beb5a131 |
+| nvdiffrec_render-0.0.0-cp313-cp313-linux_x86_64.whl | aecccdea1f59acccf4936da9079bb54be7be0d70225e742eeb2914ec12610635 |
+| o_voxel-0.0.1-cp313-cp313-linux_x86_64.whl | a6b17a70a63cdb3cb851df3189b58305763ac3f0bd74d5e9c8b3c9789dc2585a |
+
 ## Weights
 
 All local and pinned; `serve.py` sets `HF_HUB_OFFLINE=1`. `fetch` downloads what is
@@ -89,6 +112,7 @@ TRELLIS.2's flow models, not Pixal3D's.
 | `check` | PASS: torch 2.8.0+cu128, triton 3.4.0; nvdiffrast rasterizes, flex_gemm SparseConv3d runs through Triton, CuMesh initializes, na2d_block matches a brute-force neighbourhood attention to 1.3e-15 (float64) |
 | `smoke-stub` | PASS in 2.6 s: /health, /predict, /extract; the layer opens in usd-core, upAxis Y, metersPerUnit 1 |
 | `smoke` (Pixal3D `assets/images/17_img.png`, RGBA 779x1081, seed 42, 1024 cascade, 4 views) | PASS in 279.7 s |
+| `check` + `smoke-stub` again after the lock moved to the org forks and gained linux-64 (`runs/check.log`, `runs/stub.*`, 3090 via `CUDA_VISIBLE_DEVICES=0`) | PASS: the same torch 2.8.0+cu128 / triton 3.4.0, every import and kernel (na2d_block 1.6e-15); smoke-stub PASS in 3.2 s |
 
 Real run: model load 130.1 s (to /health ready). /predict 103.2 s wall, peak
 torch allocation 13,233 MiB; MoGe-3 camera_angle_x 0.727 rad, distance 1.314.

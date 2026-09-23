@@ -1,0 +1,35 @@
+## Linux/Torch291 (cp312, torch 2.9.1): wheels/Linux/Torch291
+  cumesh-1.0-cp312-cp312-linux_x86_64.whl  _C.cpython-312-x86_64-linux-gnu.so: PTX sm_86 x11, SASS sm_86 x11
+  cumesh-1.0-cp312-cp312-linux_x86_64.whl  _cubvh.cpython-312-x86_64-linux-gnu.so: PTX sm_86 x2, SASS sm_86 x2
+  cumesh-1.0-cp312-cp312-linux_x86_64.whl  _xatlas.cpython-312-x86_64-linux-gnu.so: no fatbin (host code)
+  flex_gemm-0.0.1-cp312-cp312-linux_x86_64.whl  cuda.cpython-312-x86_64-linux-gnu.so: PTX sm_120 x3, SASS sm_120 x3
+  nvdiffrast-0.4.0-cp312-cp312-linux_x86_64.whl  _nvdiffrast_c.cpython-312-x86_64-linux-gnu.so: PTX sm_120 x5, SASS sm_120 x5
+  nvdiffrec_render-0.0.0-cp312-cp312-linux_x86_64.whl  _C.cpython-312-x86_64-linux-gnu.so: PTX sm_120 x5, SASS sm_120 x5
+  o_voxel-0.0.1-cp312-cp312-linux_x86_64.whl  _C.cpython-312-x86_64-linux-gnu.so: PTX sm_120 x5, SASS sm_120 x5
+
+## Linux/Torch270 (cp312, torch 2.7.0; no nvdiffrec_render): wheels/Linux/Torch270
+  cumesh-1.0-cp312-cp312-linux_x86_64.whl  _C.cpython-312-x86_64-linux-gnu.so: PTX sm_86 x11, SASS sm_86 x11
+  cumesh-1.0-cp312-cp312-linux_x86_64.whl  _cubvh.cpython-312-x86_64-linux-gnu.so: PTX sm_86 x2, SASS sm_86 x2
+  cumesh-1.0-cp312-cp312-linux_x86_64.whl  _xatlas.cpython-312-x86_64-linux-gnu.so: no fatbin (host code)
+  flex_gemm-0.0.1-cp312-cp312-linux_x86_64.whl  cuda.cpython-312-x86_64-linux-gnu.so: PTX sm_86 x3, SASS sm_86 x3
+  nvdiffrast-0.4.0-cp312-cp312-linux_x86_64.whl  _nvdiffrast_c.cpython-312-x86_64-linux-gnu.so: PTX sm_86 x5, SASS sm_86 x5
+  o_voxel-0.0.1-cp312-cp312-linux_x86_64.whl  _C.cpython-312-x86_64-linux-gnu.so: SASS sm_120 x5, SASS sm_80 x5, SASS sm_86 x5, SASS sm_89 x5, SASS sm_90 x5
+
+## Linux/Torch2110 (cp313, torch 2.11.0): wheels/Linux/Torch2110
+  cumesh-1.0-cp313-cp313-linux_x86_64.whl  _C.cpython-313-x86_64-linux-gnu.so: SASS sm_100 x11, SASS sm_120 x11, SASS sm_80 x11, SASS sm_86 x11
+  cumesh-1.0-cp313-cp313-linux_x86_64.whl  _cubvh.cpython-313-x86_64-linux-gnu.so: SASS sm_100 x2, SASS sm_120 x2, SASS sm_80 x2, SASS sm_86 x2
+  cumesh-1.0-cp313-cp313-linux_x86_64.whl  _xatlas.cpython-313-x86_64-linux-gnu.so: no fatbin (host code)
+  flex_gemm-1.0.0-cp313-cp313-linux_x86_64.whl  cuda.cpython-313-x86_64-linux-gnu.so: SASS sm_100 x4, SASS sm_120 x4, SASS sm_80 x4, SASS sm_86 x4
+  nvdiffrast-0.4.0-cp313-cp313-linux_x86_64.whl  _nvdiffrast_c.cpython-313-x86_64-linux-gnu.so: PTX sm_120 x5, SASS sm_100 x5, SASS sm_120 x5, SASS sm_80 x5, SASS sm_86 x5
+  nvdiffrec_render-0.0.0-cp313-cp313-linux_x86_64.whl  _C.cpython-313-x86_64-linux-gnu.so: PTX sm_120 x5, SASS sm_100 x5, SASS sm_120 x5, SASS sm_80 x5, SASS sm_86 x5
+  o_voxel-0.0.1-cp313-cp313-linux_x86_64.whl  _C.cpython-313-x86_64-linux-gnu.so: SASS sm_100 x5, SASS sm_120 x5, SASS sm_80 x5, SASS sm_86 x5
+
+## CONTROL Windows/Torch280 (cp311, torch 2.8.0; runs on the desk's sm_86): wheels/Windows/Torch280
+  cumesh-1.0-cp311-cp311-win_amd64.whl  _C.cp311-win_amd64.pyd: PTX sm_86 x11, SASS sm_86 x11
+  cumesh-1.0-cp311-cp311-win_amd64.whl  _cubvh.cp311-win_amd64.pyd: PTX sm_86 x2, SASS sm_86 x2
+  cumesh-1.0-cp311-cp311-win_amd64.whl  _xatlas.cp311-win_amd64.pyd: no fatbin (host code)
+  flex_gemm-0.0.1-cp311-cp311-win_amd64.whl  cuda.cp311-win_amd64.pyd: PTX sm_86 x3, SASS sm_86 x3
+  nvdiffrast-0.4.0-cp311-cp311-win_amd64.whl  _nvdiffrast_c.cp311-win_amd64.pyd: PTX sm_86 x5, SASS sm_86 x5
+  nvdiffrec_render-0.0.0-cp311-cp311-win_amd64.whl  _C.cp311-win_amd64.pyd: PTX sm_86 x5, SASS sm_86 x5
+  o_voxel-0.0.1-cp311-cp311-win_amd64.whl  _C.cp311-win_amd64.pyd: PTX sm_86 x5, SASS sm_86 x5
+

@@ -11,6 +11,7 @@
 # Lean side of Cut 4, and the default build must not wait on them.
 
 include(${CMAKE_CURRENT_LIST_DIR}/cassie_sources.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/godot_lite.cmake)
 
 # Bit-determinism: the beautify chain runs on every peer from the same stroke
 # samples, so no fast-math anywhere and strict IEEE evaluation (SCsub's clang

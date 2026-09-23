@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: If you use this code, cite Godot Engine and the org fork it is vendored from.
+title: Godot core subset for curvenet.elf (vendored)
+abstract: >-
+  42 source files of the org's Godot fork (entities-godot) plus its
+  LICENSE.txt, 484,310 bytes before this file: the math, containers and
+  Curve3D that Cassie's pen -> curvenet -> mesh path calls, so it runs in a
+  sandbox guest with no engine. Taken: core/typedefs.h,
+  core/error/error_list.h; core/math/{math_defs.h, math_funcs.{h,cpp},
+  math_funcs_binary.h, vector2.{h,cpp}, vector2i.{h,cpp}, vector3.{h,cpp},
+  vector3i.{h,cpp}, basis.{h,cpp}, quaternion.{h,cpp}, transform_3d.{h,cpp},
+  plane.{h,cpp}, aabb.{h,cpp}, dynamic_bvh.{h,cpp}, geometry_3d.{h,cpp}};
+  core/templates/{hashfuncs.{h,cpp}, hash_map.h, hash_set.h, local_vector.h,
+  pair.h, sort_array.h, sort_list.h, list.h, paged_allocator.h, rb_map.h,
+  span.h}; scene/resources/curve.{h,cpp}. What they include from the rest
+  of Godot (memory, error macros, String, Vector, Variant, Object,
+  Resource) is the hand-written guest/godot_lite, at the same include
+  paths. tools/vendor/godot_core_subset.py reproduces the tree from the
+  pinned commit; every edit asserts how many times its anchor matches.
+  Local adaptations:
+  (1) every file's body, below its includes, is wrapped in namespace gdl,
+  so nothing collides with the godot-sandbox guest API in the same ELF;
+  (2) the explicit operator String() declarations and definitions are
+  removed from vector2, vector2i, vector3, vector3i, basis, quaternion,
+  transform_3d, plane and aabb, and the 18 error messages that printed a
+  value through it print a fixed placeholder such as "<p_normal>" instead;
+  (3) the Variant-returning *_bind helpers are removed from plane (3) and
+  aabb (2), with their core/variant/variant.h includes;
+  (4) math_funcs.cpp loses the RandomPCG-backed rand_from_seed, seed,
+  randomize, rand, randfn and the three random overloads, and the
+  random_pcg.h include (Cassie draws no random numbers);
+  (5) geometry_3d.{h,cpp} keep only get_closest_points_between_segments,
+  the one Geometry3D function Cassie calls;
+  (6) curve.{h,cpp} keep only Curve3D (curve.cpp from get_point_count
+  through the constructor, lines 1363-2398 at the pin), without its
+  PropertyListHelper members, the _set/_get/_get_property_list/
+  _property_can_revert/_property_get_revert forwarders, _filter_property
+  and _bind_methods; the constructor body is empty;
+  (7) each file except LICENSE.txt starts with a one-line banner naming
+  the pin and the script.
+type: software
+authors:
+  - name: Godot Engine contributors
+    website: https://godotengine.org
+  - family-names: Linietsky
+    given-names: Juan
+  - family-names: Manzur
+    given-names: Ariel
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: MIT

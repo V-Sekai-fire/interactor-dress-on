@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: If you use this code, cite TRELLIS.2, Pixal3D and the org's ggml port they are vendored from.
+title: trellis2.cpp / pixal3d-ggml, the org's C++/ggml port of TRELLIS.2 and Pixal3D (vendored)
+abstract: >-
+  git subtree (squashed) of V-Sekai-fire/pixal3d-ggml at 1c22f5e: a
+  single-file C++/ggml implementation of the TRELLIS.2 image-to-3D pipeline
+  (trellis2.h / trellis2.cpp, the C ABI trellis2_capi, mesh_export with
+  vendored xatlas and meshoptimizer, stb), which the dress-on loop's infer
+  stage replaces its FoxGirl infer fixture with (Cut 7). At 1c22f5e the tree
+  is TRELLIS.2 only (no Pixal3D code); Pixal3D's projection-attention
+  conditioning is the port to come. Local adaptations:
+  (1) none to the tree yet. The host build (tests/native/infer/CMakeLists.txt)
+  lists the library sources against the org ggml (V-Sekai-fire/ggml;
+  C:/contract-manifest 2-contract/ggml @04b55bba on the host until Cut 3
+  lands vendor/ggml), ggml-cpu only, instead of the upstream
+  CMakeLists.txt's bundled or workspace-relative ggml.
+  Adaptations to come, recorded here as they land: Pixal3D's
+  projection-attention blocks and the Aero-Ex GGUF schema (architecture
+  'flux', bf16/f16/f32 mix, comfy.gguf.orig_shape reshapes for ss_flow,
+  torch-key tensor names, rope phases recomputed from config); weights
+  streamed via host UPLOAD instead of file paths (the guest has no
+  filesystem); one thread in the guest; the ggml backend swapped to
+  ggml-rd over RenderingDevice.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: rms80
+    website: https://github.com/rms80
+  - name: Microsoft
+    website: https://github.com/microsoft/TRELLIS.2
+  - name: TencentARC
+    website: https://github.com/TencentARC
+  - name: The ggml authors
+    website: https://github.com/ggml-org/ggml
+repository-code: https://github.com/V-Sekai-fire/pixal3d-ggml
+commit: 1c22f5e98c90e8cf00d12e99547c8d524421f532
+license: MIT
+references:
+  - type: software
+    title: TRELLIS.2
+    authors:
+      - name: Microsoft
+    repository-code: https://github.com/microsoft/TRELLIS.2
+    license: MIT
+  - type: software
+    title: Pixal3D
+    authors:
+      - name: TencentARC
+    repository-code: https://github.com/TencentARC/Pixal3D
+    license: MIT

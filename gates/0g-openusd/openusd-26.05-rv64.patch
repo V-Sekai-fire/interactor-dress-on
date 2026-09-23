@@ -1,0 +1,111 @@
+diff --git a/pxr/base/arch/defines.h b/pxr/base/arch/defines.h
+index b7ed634..fe9f0ba 100644
+--- a/pxr/base/arch/defines.h
++++ b/pxr/base/arch/defines.h
+@@ -39,6 +39,8 @@
+ #elif defined(__arm__) || defined(__aarch64__) || defined(_M_ARM) || \
+     defined(_M_ARM64)
+ #define ARCH_CPU_ARM
++#elif defined(__riscv) && (__riscv_xlen == 64)
++#define ARCH_CPU_RISCV
+ #endif
+ 
+ //
+@@ -46,7 +48,7 @@
+ //
+ 
+ #if defined(__x86_64__) || defined(__aarch64__) || defined(_M_X64) || \
+-    defined(_M_ARM64) || defined(__wasm64__)
++    defined(_M_ARM64) || defined(__wasm64__) || defined(ARCH_CPU_RISCV)
+ #define ARCH_BITS_64
+ #elif defined(__wasm32__)
+ #define ARCH_BITS_32
+diff --git a/pxr/base/arch/math.h b/pxr/base/arch/math.h
+index ccd53a6..87d3a5a 100644
+--- a/pxr/base/arch/math.h
++++ b/pxr/base/arch/math.h
+@@ -29,7 +29,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+ /// \addtogroup group_arch_Math
+ ///@{
+ 
+-#if defined (ARCH_CPU_INTEL) || defined (ARCH_CPU_ARM) ||  \
++#if defined (ARCH_CPU_INTEL) || defined (ARCH_CPU_ARM) || defined(ARCH_CPU_RISCV) || \
+     defined(ARCH_OS_WASM_VM) || defined (doxygen)
+ 
+ /// This is the smallest value e such that 1+e^2 == 1, using floats.
+diff --git a/pxr/base/arch/stackTrace.cpp b/pxr/base/arch/stackTrace.cpp
+index 751bb7d..b5dca3e 100644
+--- a/pxr/base/arch/stackTrace.cpp
++++ b/pxr/base/arch/stackTrace.cpp
+@@ -672,6 +672,16 @@ nonLockingLinux__execve (const char *file,
+         );
+         result = __file_result;
+     }
++#elif defined(ARCH_CPU_RISCV)
++    {
++        register long a0 asm ("a0") = (long)file;
++        register char* const* a1 asm ("a1") = argv;
++        register char* const* a2 asm ("a2") = envp;
++        register long a7 asm ("a7") = 221;
++        __asm__ __volatile__ ("ecall" : "+r" (a0)
++            : "r" (a1), "r" (a2), "r" (a7) : "memory");
++        result = a0;
++    }
+ #elif defined(ARCH_CPU_INTEL) && defined(ARCH_BITS_64)
+ 
+     /*
+diff --git a/pxr/base/plug/info.cpp b/pxr/base/plug/info.cpp
+index 722273e..5f777cb 100644
+--- a/pxr/base/plug/info.cpp
++++ b/pxr/base/plug/info.cpp
+@@ -17,12 +17,19 @@
+ #include "pxr/base/tf/stopwatch.h"
+ #include "pxr/base/work/dispatcher.h"
+ #include "pxr/base/work/threadLimits.h"
++#include "pxr/base/plug/api.h"
+ #include <fstream>
++#include <sstream>
+ #include <regex>
+ #include <set>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
++// Gate 0G (interactor-dress-on): a guest without a filesystem registers its
++// plugInfo.json contents from memory. When set, the hook is asked first for
++// every plugInfo path; a non-null return is that file's contents.
++PLUG_API const char* (*Plug_InMemoryPlugInfoHook)(const char* pathname) = nullptr;
++
+ namespace {
+ 
+ typedef std::function<bool (const std::string&)> AddVisitedPathCallback;
+@@ -131,8 +138,12 @@ _ReadPlugInfoObject(const std::string& pathname, JsObject* result)
+ {
+     result->clear();
+ 
++    const char* inMemory = Plug_InMemoryPlugInfoHook
++        ? Plug_InMemoryPlugInfoHook(pathname.c_str()) : nullptr;
++    std::istringstream iss(inMemory ? inMemory : "");
+     // The file may not exist or be readable.
+     std::ifstream ifs;
++    if (!inMemory) {
+ #if defined(ARCH_OS_WINDOWS)
+     // XXX: This is a MSVC specific overload to std::ifstream::open which
+     // supports std::wstring as an argument.
+@@ -149,6 +160,8 @@ _ReadPlugInfoObject(const std::string& pathname, JsObject* result)
+             Msg("Failed to open plugin info %s\n", pathname.c_str());
+         return false;
+     }
++    }
++    std::istream& in = inMemory ? static_cast<std::istream&>(iss) : ifs;
+ 
+     // The Js library doesn't allow comments, but we'd like to allow them.
+     // Strip comments, retaining empty lines so line numbers reported in parse
+@@ -158,7 +171,7 @@ _ReadPlugInfoObject(const std::string& pathname, JsObject* result)
+     //       calling JsParseStream() as of this writing.
+     std::string line;
+     std::vector<std::string> filtered;
+-    while (getline(ifs, line)) {
++    while (getline(in, line)) {
+         if (line.find('#') < line.find_first_not_of(" \t#"))
+             line.clear();
+         filtered.push_back(line);

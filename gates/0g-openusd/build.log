@@ -1,0 +1,53 @@
+# Gate 0G build evidence (trimmed; full logs under C:/b)
+## run A: pristine OpenUSD v26.05 (2095fafa), riscv64 -- errors by kind
+    538 "Unsupported architecture.  x86_64 or ARM64 required."
+    464 Unknown system architecture.
+      1 static assertion failed due to requirement 'sizeof(pxrInternal_v0_26_5__pxrReserved__::TfSmallVector<int, 1>) == 12': Expecting sizeof(TfSmallVector<int, N = 1>) to be 12 bytes.
+      1 static assertion failed due to requirement 'pxrInternal_v0_26_5__pxrReserved__::TfSmallVectorBase::ComputeSerendipitousLocalCapacity() == 4': Expecting 4 bytes of local capacity.
+      1 Unknown architecture
+FAILED TUs: 538 (every later TU includes arch/defines.h)
+## run B: after patch_usd.py (arch port + plug hook)
+FAILED TUs: 0
+      4 expression with side effects will be evaluated despite being used as an operand to 'typeid' [-Wpotentially-evaluated-expression]
+      3 use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
+      3 use of bitwise '&' with boolean operands [-Wbitwise-instead-of-logical]
+      3 unused function 'operator==' [-Wunused-function]
+      2 lambda capture 'vstep' is not required to be captured for this use [-Wunused-lambda-capture]
+      2 implicit conversion from 'const int32_t' (aka 'const int') to 'float' changes value from 2147483647 to 2147483648 [-Wimplicit-const-int-float-conversion]
+      1 variable '_archDebuggerInitialized' set but not used [-Wunused-but-set-global]
+      1 unused variable 'Arch_NanosecondsPerTick' [-Wunused-variable]
+      1 unused function 'operator<<' [-Wunused-function]
+      1 unused function 'hash_value' [-Wunused-function]
+[558/559] Building CXX object pxr/usd/usdSkel/CMakeFiles/usdSkel.dir/utils.cpp.o
+[559/559] Linking CXX static library pxr\usd\usdSkel\libusd_usdSkel.a
+## objects
+OpenUSD TUs: 554; oneTBB TUs: 33
+## libraries (bytes)
+1279186 libtbb.a
+1153224 libusd_arch.a
+1480930 libusd_gf.a
+728160 libusd_js.a
+1486 libusd_pegtl.a
+1698010 libusd_plug.a
+4649466 libusd_tf.a
+2375642 libusd_trace.a
+1781820 libusd_ts.a
+16337908 libusd_vt.a
+262046 libusd_work.a
+1104284 libusd_ar.a
+125240 libusd_kind.a
+10324330 libusd_pcp.a
+74576920 libusd_sdf.a
+3318924 libusd_sdr.a
+29555550 libusd_usd.a
+10056636 libusd_usdGeom.a
+3935216 libusd_usdShade.a
+8661880 libusd_usdSkel.a
+172127672 total libusd_*.a
+## usd_probe.elf
+31808800 bytes
+6b03f2085bc039be4e3cc1e75c6c461203818b0a893931e6ff4469e958c376c0 *project/usd_probe.elf
+   text	   data	    bss	    dec	    hex	filename
+17078040	 371204	69559788	87009032	52fa708	project/usd_probe.elf
+## build times (-j16, this machine)
+oneTBB not timed separately; OpenUSD full build of the 554 TUs 182 s (run B, after patch_usd.py touched arch/defines.h); usd_probe.elf incl. link 54 s

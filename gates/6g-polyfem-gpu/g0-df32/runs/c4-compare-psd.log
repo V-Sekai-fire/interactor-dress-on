@@ -1,0 +1,140 @@
+# g6g0 c4-compare-psd: C:/b/g6g0/fit_native.exe --phases 1 --out C:/b/g6g0-out/c4-compare-psd  env: G6G_FORMS=compare  (cap 300s)  2026-09-23T10:04:24-07:00
+inputs: avatar 5128 v / 10171 f, garment 2682 v / 5220 f, skeleton 15 v / 14 b, no-fit 2005, float32 yes, harness file opens 7
+[2026-09-23 10:04:24.903] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+[2026-09-23 10:04:25.272] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+[2026-09-23 10:04:25.273] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+[2026-09-23 10:04:25.274] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+[2026-09-23 10:04:25.275] [polyfem] [info] Shrunk avatar blended 0.010 toward the target body (0 = fully collapsed onto the skeleton, 1 = no shrink)
+[2026-09-23 10:04:25.417] [polyfem] [debug] curve 0 has 3 bone intersections
+[2026-09-23 10:04:25.417] [polyfem] [debug] curve normal [-0.011034943664410036, 0.055700501234311195, -0.9983865404644485]
+[2026-09-23 10:04:25.417] [polyfem] [debug] CurveTargetForm set curve center to bone 15 - 16, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+[2026-09-23 10:04:25.417] [polyfem] [debug] curve 1 has 1 bone intersections
+[2026-09-23 10:04:25.417] [polyfem] [debug] curve normal [0.004042139558851457, -0.06527869003077968, 0.9978588846804203]
+[2026-09-23 10:04:25.417] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+[2026-09-23 10:04:25.417] [polyfem] [info] Start substep 1 out of 2
+[2026-09-23 10:04:25.717] [polyfem] [debug] Set initial AL weight to 1
+[2026-09-23 10:04:26.654] [polyfem] [debug] Solving AL Problem with weight 1
+[2026-09-23 10:04:26.864] [polyfem] [debug] Starting SparseProjectedNewton with Backtracking solve f₀=53.6213 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:26.933] [polyfem] [debug] [g6g-it] iter=0 strategy=SparseProjectedNewton f=53.621289260257349 grad_norm=214.48515704102945
+[2026-09-23 10:04:31.098] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.5 descent_step_size=0.5 final_step_size=0.5)
+[2026-09-23 10:04:31.098] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=0 f=53.6213 Δf=nan ‖∇f‖=214.485 ‖Δx‖=16.9839 Δx⋅∇f(x)=-107.243 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:31.154] [polyfem] [debug] [g6g-it] iter=1 strategy=SparseProjectedNewton f=13.412437256532842 grad_norm=106.63009975025089
+[2026-09-23 10:04:34.409] [polyfem] [debug] Line search finished (nan_free_step_size=0.1968228462035182 collision_free_step_size=0.08284242843136362 descent_step_size=0.08284242843136362 final_step_size=0.08284242843136362)
+[2026-09-23 10:04:34.409] [polyfem] [debug] Min distance: 0.00044417616983655835
+[2026-09-23 10:04:34.409] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=1 f=13.4124 Δf=40.2089 ‖∇f‖=106.63 ‖Δx‖=75.3337 Δx⋅∇f(x)=-26.9463 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:34.462] [polyfem] [debug] [g6g-it] iter=2 strategy=SparseProjectedNewton f=11.315965386969127 grad_norm=112.71280064728154
+[2026-09-23 10:04:37.412] [polyfem] [debug] Line search finished (nan_free_step_size=0.5740885180753288 collision_free_step_size=0.03251673246911042 descent_step_size=0.03251673246911042 final_step_size=0.03251673246911042)
+[2026-09-23 10:04:37.412] [polyfem] [debug] Min distance: 0.0004625790561848787
+[2026-09-23 10:04:37.412] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=2 f=11.316 Δf=2.09647 ‖∇f‖=112.713 ‖Δx‖=18.2691 Δx⋅∇f(x)=-22.6331 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:37.467] [polyfem] [debug] [g6g-it] iter=3 strategy=SparseProjectedNewton f=10.606735042045175 grad_norm=109.01763581743026
+[2026-09-23 10:04:40.450] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.1171875 descent_step_size=0.1171875 final_step_size=0.1171875)
+[2026-09-23 10:04:40.450] [polyfem] [debug] Min distance: 0.000386455629106767
+[2026-09-23 10:04:40.450] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=3 f=10.6067 Δf=0.70923 ‖∇f‖=109.018 ‖Δx‖=6.64958 Δx⋅∇f(x)=-21.1866 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:40.511] [polyfem] [debug] [g6g-it] iter=4 strategy=SparseProjectedNewton f=8.2809508712116884 grad_norm=97.666203484609255
+[2026-09-23 10:04:43.033] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.5625 descent_step_size=0.5625 final_step_size=0.5625)
+[2026-09-23 10:04:43.033] [polyfem] [debug] Min distance: 0.0004449908211275677
+[2026-09-23 10:04:43.033] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=4 f=8.28095 Δf=2.32578 ‖∇f‖=97.6662 ‖Δx‖=3.28636 Δx⋅∇f(x)=-16.5228 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:43.093] [polyfem] [debug] [g6g-it] iter=5 strategy=SparseProjectedNewton f=1.6036140597935682 grad_norm=48.982382902653207
+[2026-09-23 10:04:45.519] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.71875 descent_step_size=0.71875 final_step_size=0.71875)
+[2026-09-23 10:04:45.520] [polyfem] [debug] Min distance: 0.0008200830866300709
+[2026-09-23 10:04:45.520] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=5 f=1.60361 Δf=6.67734 ‖∇f‖=48.9824 ‖Δx‖=1.87071 Δx⋅∇f(x)=-3.18739 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:45.584] [polyfem] [debug] [g6g-it] iter=6 strategy=SparseProjectedNewton f=0.15101885962487133 grad_norm=31.010013233662669
+[2026-09-23 10:04:47.812] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 10:04:47.813] [polyfem] [debug] Min distance: 0.00141240809312752
+[2026-09-23 10:04:47.813] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=6 f=0.151019 Δf=1.4526 ‖∇f‖=31.01 ‖Δx‖=0.412824 Δx⋅∇f(x)=-0.28856 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:47.875] [polyfem] [debug] [g6g-it] iter=7 strategy=SparseProjectedNewton f=0.0033974320464197488 grad_norm=7.0965932490628543
+[2026-09-23 10:04:50.097] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 10:04:50.097] [polyfem] [debug] Min distance: 0.0017052351772717223
+[2026-09-23 10:04:50.097] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=7 f=0.00339743 Δf=0.147621 ‖∇f‖=7.09659 ‖Δx‖=0.140878 Δx⋅∇f(x)=-0.003987 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:50.155] [polyfem] [debug] [g6g-it] iter=8 strategy=SparseProjectedNewton f=0.0010556693823613611 grad_norm=1.5443037397468486
+[2026-09-23 10:04:52.381] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 10:04:52.382] [polyfem] [debug] Min distance: 0.001535597388525553
+[2026-09-23 10:04:52.382] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=8 f=0.00105567 Δf=0.00234176 ‖∇f‖=1.5443 ‖Δx‖=0.273341 Δx⋅∇f(x)=-0.000644973 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:52.441] [polyfem] [debug] [g6g-it] iter=9 strategy=SparseProjectedNewton f=0.00093586647877255962 grad_norm=1.7754284455203264
+[2026-09-23 10:04:54.796] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=1 descent_step_size=1 final_step_size=1)
+[2026-09-23 10:04:54.796] [polyfem] [debug] Min distance: 0.0018676726790889794
+[2026-09-23 10:04:54.796] [polyfem] [debug] [SparseProjectedNewton][Backtracking] iters=9 f=0.000935866 Δf=0.000119803 ‖∇f‖=1.77543 ‖Δx‖=0.284742 Δx⋅∇f(x)=-0.000739322 (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:54.865] [polyfem] [debug] [g6g-it] iter=10 strategy=SparseProjectedNewton f=0.00048603156308044793 grad_norm=0.25002031850469558
+[2026-09-23 10:04:54.865] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 28.0109s (iters=10 f=0.000486032 Δf=0.000449835 ‖∇f‖=0.25002 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=7.9805e-308 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 10:04:54.865] [polyfem] [debug] [[35mtiming[0m] f: 1.32e-01s, grad_f: 5.21e-01s, update_direction: 2.10e+01s, line_search: 6.29e+00s, constraint_set_update: 3.63e-04s
+[2026-09-23 10:04:54.865] [polyfem] [debug] [[35mtiming[0m][SparseProjectedNewton] assembly: 1.96e+01s; linear_solve: 1.42e+00s
+[2026-09-23 10:04:54.865] [polyfem] [debug] [[35mtiming[0m][Backtracking] constraint_set_update 3.01e-01s, checking_for_nan_inf 1.16e-01s, broad_phase_ccd 2.54e+00s, narrow_phase_ccd 2.62e+00s, classical_line_search 4.09e-01s
+[2026-09-23 10:04:54.877] [polyfem] [debug] Current eta = 0.999993994574943
+begin: ok  wall 0.52 s  cpu 0.47 s
+normalisation: target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248) source_scale 0.90869314092562126
+phase 0 (substep 0, AL): ok  newton 10  minimize 1  post_steps 11  energy 0.00048603156308044793  |grad| 0.25002  status 4  wall 29.57 s  cpu 28.59 s
+final: phases 1/4  newton 10  post_steps 11  intersections none
+preview ring: latest seq 10, max |preview - final| 0
+time: begin+phases wall 30.15 s, cpu 29.14 s; process cpu 29.27 s; peak working set 135.7 MB
+sdf grid: voxel 0.01  bricks 0 (0 voxels)  0.00 MB  distance queries 0  winding queries 0  fill 0.00 s
+[g6g] config forms=compare ccd=ticcd audit=0 df_bits=48 bound_ub=2^-44
+[g6g] form similarity energy per-call(norm-wise rel) n 68  zero 0  max 1.442e+04  p99 1.000e+04  p50 1.585e-13  inf 0  nan 0
+[g6g] form similarity energy per-element(rel) n 1055088  zero 1  max 2.700e+08  p99 1.000e+04  p50 1.148e-11  inf 224  nan 0
+[g6g] form similarity energy objective-relative n 68  zero 0  max 2.497e-13  p99 2.512e-13  p50 6.026e-17  inf 0  nan 0
+[g6g] form similarity gradient per-call(norm-wise rel) n 21  zero 0  max 2.758e+02  p99 2.884e+02  p50 5.495e-11  inf 0  nan 0
+[g6g] form similarity gradient per-element(rel) n 325836  zero 0  max 1.114e+04  p99 4.786e+02  p50 1.514e-11  inf 0  nan 0
+[g6g] form similarity gradient objective-relative n 21  zero 0  max 1.330e-11  p99 1.380e-11  p50 7.244e-14  inf 0  nan 0
+[g6g] form similarity hessian per-call(norm-wise rel) n 10  zero 0  max 1.788e-14  p99 1.820e-14  p50 1.820e-14  inf 0  nan 0
+[g6g] form similarity hessian per-element(rel) n 155160  zero 0  max 1.602e-13  p99 9.120e-14  p50 3.981e-14  inf 0  nan 0
+[g6g] form similarity hessian objective-relative n 10  zero 0  max 1.253e-14  p99 1.259e-14  p50 1.318e-15  inf 0  nan 0
+[g6g] form curve-curvature energy per-call(norm-wise rel) n 68  zero 0  max 4.922e-11  p99 inf  p50 1.380e-12  inf 7  nan 0
+[g6g] form curve-curvature energy per-element(rel) n 9792  zero 161  max 1.879e-07  p99 inf  p50 3.020e-11  inf 847  nan 0
+[g6g] form curve-curvature energy objective-relative n 68  zero 0  max 1.615e-14  p99 1.660e-14  p50 7.244e-18  inf 0  nan 0
+[g6g] form curve-curvature gradient per-call(norm-wise rel) n 21  zero 0  max 6.971e-10  p99 inf  p50 2.399e-11  inf 2  nan 0
+[g6g] form curve-curvature gradient per-element(rel) n 3024  zero 46  max 9.394e-08  p99 inf  p50 1.585e-11  inf 242  nan 0
+[g6g] form curve-curvature gradient objective-relative n 21  zero 0  max 1.686e-12  p99 1.738e-12  p50 1.000e-14  inf 0  nan 0
+[g6g] form curve-curvature hessian per-call(norm-wise rel) n 10  zero 0  max 4.955e-13  p99 5.012e-13  p50 3.631e-13  inf 0  nan 0
+[g6g] form curve-curvature hessian per-element(rel) n 1440  zero 0  max 4.583e-10  p99 4.365e-11  p50 7.244e-13  inf 0  nan 0
+[g6g] form curve-curvature hessian objective-relative n 10  zero 0  max 3.929e-14  p99 3.981e-14  p50 6.607e-15  inf 0  nan 0
+[g6g] form curve-torsion energy per-call(norm-wise rel) n 68  zero 0  max 9.903e-12  p99 inf  p50 1.738e-12  inf 7  nan 0
+[g6g] form curve-torsion energy per-element(rel) n 9792  zero 0  max 2.689e-08  p99 inf  p50 2.754e-11  inf 1008  nan 0
+[g6g] form curve-torsion energy objective-relative n 68  zero 0  max 6.903e-14  p99 6.918e-14  p50 1.585e-17  inf 0  nan 0
+[g6g] form curve-torsion gradient per-call(norm-wise rel) n 21  zero 0  max 4.750e+03  p99 4.786e+03  p50 1.380e-10  inf 0  nan 0
+[g6g] form curve-torsion gradient per-element(rel) n 3024  zero 0  max 6.102e+05  p99 inf  p50 3.802e-11  inf 32  nan 0
+[g6g] form curve-torsion gradient objective-relative n 21  zero 0  max 1.102e-11  p99 1.148e-11  p50 4.786e-14  inf 0  nan 0
+[g6g] form curve-torsion hessian per-call(norm-wise rel) n 10  zero 0  max 4.014e-13  p99 4.169e-13  p50 3.020e-13  inf 0  nan 0
+[g6g] form curve-torsion hessian per-element(rel) n 1440  zero 0  max 4.404e-12  p99 2.630e-12  p50 3.802e-13  inf 0  nan 0
+[g6g] form curve-torsion hessian objective-relative n 10  zero 0  max 7.295e-14  p99 7.586e-14  p50 1.148e-14  inf 0  nan 0
+[g6g] form curve-target energy per-call(norm-wise rel) n 68  zero 0  max 4.480e-12  p99 inf  p50 3.802e-13  inf 6  nan 0
+[g6g] form curve-target energy per-element(rel) n 9792  zero 259  max 3.245e-07  p99 inf  p50 9.120e-12  inf 606  nan 0
+[g6g] form curve-target energy objective-relative n 68  zero 0  max 5.302e-14  p99 5.495e-14  p50 3.020e-16  inf 0  nan 0
+[g6g] form curve-target gradient per-call(norm-wise rel) n 21  zero 0  max 1.121e+02  p99 1.148e+02  p50 2.399e-12  inf 0  nan 0
+[g6g] form curve-target gradient per-element(rel) n 3024  zero 68  max 6.500e+01  p99 inf  p50 4.571e-12  inf 140  nan 0
+[g6g] form curve-target gradient objective-relative n 21  zero 0  max 7.247e-13  p99 7.586e-13  p50 3.467e-15  inf 0  nan 0
+[g6g] form curve-target hessian per-call(norm-wise rel) n 10  zero 0  max 1.719e-14  p99 1.738e-14  p50 3.981e-15  inf 0  nan 0
+[g6g] form curve-target hessian per-element(rel) n 1440  zero 0  max 2.660e-14  p99 2.630e-14  p50 7.943e-15  inf 0  nan 0
+[g6g] form curve-target hessian objective-relative n 10  zero 0  max 1.993e-16  p99 1.995e-16  p50 2.512e-17  inf 0  nan 0
+[g6g] form al-penalty energy per-call(norm-wise rel) n 67  zero 0  max 5.657e+00  p99 5.754e+00  p50 1.738e-13  inf 0  nan 0
+[g6g] form al-penalty energy per-element(rel) n 1030728  zero 16445  max 1.023e+03  p99 6.607e-08  p50 2.291e-14  inf 0  nan 0
+[g6g] form al-penalty energy objective-relative n 67  zero 0  max 1.746e-13  p99 1.820e-13  p50 4.571e-14  inf 0  nan 0
+[g6g] form al-penalty gradient per-call(norm-wise rel) n 21  zero 0  max 3.750e-10  p99 3.802e-10  p50 1.259e-14  inf 0  nan 0
+[g6g] form al-penalty gradient per-element(rel) n 323064  zero 13234  max 1.167e-09  p99 5.012e-10  p50 6.607e-15  inf 0  nan 0
+[g6g] form al-penalty gradient objective-relative n 21  zero 0  max 2.487e-14  p99 2.512e-14  p50 3.311e-17  inf 0  nan 0
+[g6g] form al-lagrangian energy per-call(norm-wise rel) n 67  zero 67  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form al-lagrangian energy per-element(rel) n 1030728  zero 1030728  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form al-lagrangian energy objective-relative n 67  zero 67  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form al-lagrangian gradient per-call(norm-wise rel) n 21  zero 21  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form al-lagrangian gradient objective-relative n 21  zero 21  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form contact-barrier energy per-call(norm-wise rel) n 68  zero 8  max 7.185e-12  p99 7.244e-12  p50 5.248e-13  inf 0  nan 0
+[g6g] form contact-barrier energy per-element(rel) n 2562  zero 67  max 1.166e-09  p99 1.380e-10  p50 2.512e-12  inf 0  nan 0
+[g6g] form contact-barrier energy port(double vs original) n 68  zero 68  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form contact-barrier energy objective-relative n 68  zero 8  max 7.159e-13  p99 7.244e-13  p50 1.660e-14  inf 0  nan 0
+[g6g] form contact-barrier gradient per-call(norm-wise rel) n 21  zero 2  max 6.342e-12  p99 6.607e-12  p50 1.000e-12  inf 0  nan 0
+[g6g] form contact-barrier gradient per-element(rel) n 818  zero 0  max 7.757e-10  p99 7.943e-11  p50 1.445e-12  inf 0  nan 0
+[g6g] form contact-barrier gradient port(double vs original) n 21  zero 21  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form contact-barrier gradient objective-relative n 21  zero 2  max 5.964e-12  p99 6.026e-12  p50 1.096e-12  inf 0  nan 0
+[g6g] form contact-barrier hessian per-call(norm-wise rel) n 10  zero 1  max 3.606e-12  p99 3.631e-12  p50 8.710e-13  inf 0  nan 0
+[g6g] form contact-barrier hessian per-element(rel) n 391  zero 0  max 3.863e-10  p99 3.981e-11  p50 7.244e-13  inf 0  nan 0
+[g6g] form contact-barrier hessian port(double vs original) n 10  zero 10  max 0.000e+00  p99 0.000e+00  p50 0.000e+00  inf 0  nan 0
+[g6g] form contact-barrier hessian objective-relative n 10  zero 1  max 3.415e-12  p99 3.467e-12  p50 7.244e-13  inf 0  nan 0
+[g6g] objective all-forms energy objective-relative n 68  zero 0  max 7.200e-13  p99 7.244e-13  p50 1.202e-13  inf 0  nan 0
+[g6g] objective all-forms gradient objective-relative n 21  zero 0  max 1.960e-11  p99 1.995e-11  p50 1.096e-12  inf 0  nan 0
+[g6g] objective all-forms hessian objective-relative n 10  zero 0  max 3.415e-12  p99 3.467e-12  p50 7.244e-13  inf 0  nan 0
+[g6g] df-events similarity ops 3238066045 overflow 0 underflow_hi 277992 underflow_lo 1536277 nan 0 inf 0
+[g6g] df-events curve-curvature ops 21724915 overflow 0 underflow_hi 1482 underflow_lo 10032 nan 0 inf 0
+[g6g] df-events curve-torsion ops 128266346 overflow 0 underflow_hi 1225 underflow_lo 11358 nan 0 inf 0
+[g6g] df-events curve-target ops 7639802 overflow 0 underflow_hi 0 underflow_lo 0 nan 0 inf 0
+[g6g] df-events al-penalty ops 7153761 overflow 0 underflow_hi 0 underflow_lo 0 nan 0 inf 0
+[g6g] df-events al-lagrangian ops 6507499 overflow 0 underflow_hi 0 underflow_lo 0 nan 0 inf 0
+[g6g] df-events contact-barrier ops 14361276 overflow 0 underflow_hi 1551 underflow_lo 10018 nan 0 inf 0
+# exit 0  wall 30.42 s

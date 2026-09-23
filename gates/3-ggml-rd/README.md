@@ -1,6 +1,8 @@
 # Gate 3 — ggml-rd: ggml over RenderingDevice, kernels from Lean
 
-**Result: G3.ops PASS for ADD and MUL.** `ops/results.txt`: RESULT: PASS.
+**Result: G3.ops PASS for ADD, MUL and MUL_MAT** (MUL_MAT: see K6 below;
+the paragraph here is the ADD/MUL reference run).
+**ADD and MUL.** `ops/results.txt`: RESULT: PASS.
 ggml's own `test-backend-ops -o ADD,MUL -b RD0`, run inside the guest
 (`ggml_test.elf`) against the in-guest ggml-cpu, reports **100/100 tests
 passed, 0 FAIL, `Backend RD0: OK`**; the 90 f16 cases report "not supported"
@@ -123,6 +125,70 @@ the 16.7M-element cases.
     machine path, and two builds in different directories are byte
     identical.
 
+## K6: MUL_MAT
+
+**Result: G3.ops PASS for MUL_MAT.** `test-backend-ops -o ADD,MUL,MUL_MAT
+-b RD0` in the guest: **728/728 passed, 0 FAIL, `Backend RD0: OK`**, of
+which MUL_MAT **628 OK** (f32 x f32 209, f16 x f32 208, bf16 x f32 149,
+f16 x f16 62), in 981 s; the same 728 with a barrier after every dispatch
+(953 s). No case of a census type row reports "not supported" (the gate's
+`REQUIRED` check: 0). The 917 MUL_MAT cases not supported are the
+quantized types (855) and f32 x f16 (62), which neither the census needs
+nor ggml-cpu computes (it refuses f32 x f16 and bf16 x f16, so no reference
+could check them).
+
+Kernels (`lean/Ggml/SlangCodegen/MulMat*.lean`, 16, one module each):
+
+| kernel | threads | work | used when |
+|---|---|---|---|
+| `mul_mat_tiled_<a>_<b>` | 16 x 16 | a 64 x 64 dst tile, BK = 16, `As/Bs[16][65]` f32 group memory, 4 x 4 register block, converted on load, every edge bounds-checked, batch = `gid.z` | ne11 > 4 |
+| `mul_mat_vec_<a>_<b>` | 32 x 8 | 8 rows x 32 lanes, up to 4 columns, lane partials over k = l, l+32, ..., a group-memory tree 16/8/4/2/1 | ne11 <= 4 (decode, beams) |
+| `mul_mat_serial_{tiled,vec}_<a>_<b>` | same | the same sums in the same order, no group memory | the cpp target (L2) |
+
+for (a, b) in f32 x f32, f16 x f32, bf16 x f32, f16 x f16. f16 and bf16
+stay in `uint` words and widen exactly on load (bf16 = `h << 16`); every sum
+is f32 (GGML_PREC_F32 holds). Every operand is read through its strides, so
+permuted src1, non-contiguous src0 rows (RC, RR) and broadcast
+(r2 = ne12/ne02, r3 = ne13/ne03, words 55/56) need no copy. The packer is
+`guest/ggml-rd/ops/mul_mat.cpp`. slangc's cpp target rejects the group
+barrier (E36107), so `kernels/ggml/cpp_siblings.txt` names each GPU
+kernel's serial sibling: gen.sh emits cpp for the siblings only, the table
+check requires each pair's thread groups to match, and the L2 harness runs
+the sibling wherever the packer chose the kernel.
+
+| level | verdict | numbers |
+|---|---|---|
+| L0 | **PASS** | pins: the tiled and vec f16 x f32 texts whole, the other pairs as those texts with two declarations and two load helpers replaced, the siblings as the kernels' preamble/stores around their own loops, the load helpers of each type, the sibling pairs; control (1b): the tiled pin with `As[16][64]` is rejected. |
+| L1 | **PASS** | 18 kernels spirv-val and layout OK; the 8 siblings' cpp compile for riscv64 (6.5-11.5 KB objects); controls: slangc -target cpp refuses `mul_mat_tiled_f16_f32` (E36107 at GroupMemoryBarrierWithGroupSync), and a sibling pair with different thread groups is refused by the table check. |
+| L2 | **PASS** | 64/64 cases (23 MUL_MAT: every pair, vec at n = 1..4 and tiled from n = 5, broadcast, the three permutations, k views, o = 3, one past the tile on every side, m = 1, skin-tokens' decode and RC attention, an RR case, a scaled Pixal3D block) within NMSE 5e-4 of ggml-cpu (worst 2.3e-6, bf16: ggml-cpu rounds src1 to bf16, the kernels keep it f32). Control swap-nb: detected in 58, missed 0 (6 no-ops: nb1 = nb2). |
+| L3 | **PASS** | as above; fault control (ADD) 54/54 FAIL; rule 4: 0 same-frame syncs; headless control PASS. |
+| perf | **PASS** | `probe_mm_perf`, below; every shape within nmse 1e-8 of a double sum over the same inputs (worst 5.2e-13). |
+
+GPU time per MUL_MAT (RTX 4090, `probe mm_perf`): each shape runs a short
+and a long graph of r1 < r2 independent MUL_MATs over the same operands,
+timed on the host clock from graph_compute to its synchronize (a frame
+later), best of 3; per-op = (long - short) / (r2 - r1). Independent
+dispatches may overlap on the GPU, so this is throughput, and the smaller
+shapes move between runs (two runs of the full gate this session):
+
+| shape (census calls) | a x b | M x N x K, batch | kernel | per op | GFLOP/s |
+|---|---|---|---|---|---|
+| benchmark | f16 x f32 | 4096 x 1024 x 1536 | tiled | 1281-1402 us | 9193-10061 |
+| benchmark | bf16 x f32 | 4096 x 1024 x 1536 | tiled | 1231-1301 us | 9906-10470 |
+| benchmark | f32 x f32 | 4096 x 1024 x 1536 | tiled | 1337-1374 us | 9375-9637 |
+| skin-tokens decode (32172) | f16 x f32 | 2048 x 1 x 896, 2 (bcast) | vec | 6.0-8.6 us | 857-1230 |
+| skin-tokens decode (21448) | f16 x f32 | 1024 x 1 x 896, 2 (bcast) | vec | 7.4-8.3 us | 442-496 |
+| skin-tokens decode (21448) | f16 x f32 | 896 x 1 x 2048, 2 (bcast) | vec | 4.0-10.1 us | 726-1828 |
+| skin-tokens attention RC (10724) | f32 x f32 | 515 x 1 x 128, 16 x 2, permuted KV | vec | 14.0-23.1 us | 183-301 |
+| skin-tokens mat (3183) | f16 x f32 | 1024 x 54000 x 512 | tiled | 5463-5810 us | 9746-10365 |
+| Pixal3D bf16 (120) | bf16 x f32 | 4608 x 4096 x 1536 | tiled | 5014-5043 us | 11498-11564 |
+| Pixal3D f16 (663) | f16 x f32 | 1024 x 1029 x 1024 | tiled | 101-236 us | 9134-21419 |
+| Pixal3D f32 attention (24) | f32 x f32 | 1029 x 1029 x 64, 16 | tiled | 318-329 us | 6591-6819 |
+
+About 10 TFLOP/s on the large tiles, 12% of the 4090's f32 peak: the
+simple 4 x 4 block is the first version, not a tuned one (a wider block
+and vectorised f16 loads are the obvious next steps, gated by this probe).
+
 ## How ggml-rd works
 
 - **One params table, no push constants.** Every dispatch of a graph owns a
@@ -167,9 +233,11 @@ the 16.7M-element cases.
 lean/Ggml.lean                          Ggml.kernels / Ggml.controls: one import + one ++ line per family
 lean/Ggml/SlangCodegen/Common.lean      the fixed layout, the params words, helpers, entry1D, paramsHeader
 lean/Ggml/SlangCodegen/Binary.lean      ADD/MUL f32 with broadcast: the reference kernel (+ its control)
+lean/Ggml/SlangCodegen/MulMat*.lean     MUL_MAT (K6): MulMat (shared), MulMatTiled, MulMatVec, MulMatSerial
 lean/EmitGgml.lean                      lake exe emit_ggml <outDir> [<params header>]
 kernels/ggml/kernels.txt                kernel names; a kernel's id is its line index
 kernels/ggml/controls.txt               control kernels, gates only
+kernels/ggml/cpp_siblings.txt           <kernel> <serial sibling>: group-memory kernels' cpp stand-ins
 kernels/ggml/gen.sh                     check (default) | --update | --no-emit (build.sh)
 kernels/ggml/gen_ggml_kernel_table.py   the fixed-layout check -> GgmlKernelTable.inc
 kernels/ggml/{slang,cpp}/, GgmlKernelTable.inc   generated, committed
@@ -180,6 +248,7 @@ guest/ggml-rd/rd_kernels.cpp            pipelines, the params table, slot sets, 
 guest/ggml-rd/rd_pack.{h,cpp}           the packer core (no RenderingDevice; the L2 harness links it)
 guest/ggml-rd/ggml_rd_params.h          generated from Common.lean, committed
 guest/ggml-rd/ops/<op>.cpp              one packer file per op family; ops/binary.cpp is the template
+guest/ggml-rd/ops/mul_mat.cpp           MUL_MAT: vec (ne11 <= 4) or tiled, r2/r3, the grid
 guest/pump/, guest/fiber/               the pump protocol on Gate 0F's fiber
 guest/ggml_test/                        ggml_test.elf: test-backend-ops and the probes on the pump
 project/infer_host.gd                   the host side of the pump
@@ -197,7 +266,14 @@ tests/ggml_rd_kernels/                  L2: main.cpp, l2.h, cases/<family>.cpp, 
    37; derived 53-63, of which 53 and 54 belong to `entry1D`'s grid and
    55-63 are the op's own); pin every kernel's text with `native_decide`; export
    `kernels : List (String × SlangShaderModule)`. Add one import and one
-   `++ <Family>.kernels` line to `lean/Ggml.lean`.
+   `++ <Family>.kernels` line to `lean/Ggml.lean`. A kernel that shares
+   group memory (`GroupMemoryBarrierWithGroupSync`) has no cpp emit
+   (slangc E36107): give it a serial sibling with the same words,
+   thread-group size and grid (`MulMatSerial.lean` is the pattern) and a
+   `<kernel> <sibling>` line in `kernels/ggml/cpp_siblings.txt`; gen.sh then
+   emits cpp for the sibling only, the table check requires equal
+   thread groups, and L2 runs the sibling wherever the packer picked the
+   kernel.
 2. **List.** One line per kernel in `kernels/ggml/kernels.txt`.
 3. **Emit.** `kernels/ggml/gen.sh --update` writes `kernels/ggml/slang/`,
    `cpp/` and `GgmlKernelTable.inc` and fails on any spirv-val error or

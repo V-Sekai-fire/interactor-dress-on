@@ -27,6 +27,11 @@
 # six descriptors, so the table step reads the SPIR-V and refuses a kernel
 # that differs. The driver compiles SPIR-V with its own optimiser.
 #
+# cpp_siblings.txt pairs a kernel that shares group memory with its serial
+# sibling (slangc -target cpp rejects the barrier, E36107): no cpp is
+# emitted for the kernel (the sibling's cpp stands in for it on the host),
+# and the table step checks each pair.
+#
 # Kernels are the names in kernels.txt, in order: a kernel's id (params
 # word 0) is its line index. Relative slangc paths (as kernels/avbd/gen.sh)
 # keep the committed cpp independent of where the checkout lives.
@@ -52,6 +57,9 @@ esac
 
 KERNELS=$(grep -v '^#' "$HERE/kernels.txt" | grep -v '^[[:space:]]*$' | tr '\n' ' ')
 CONTROLS=$(grep -v '^#' "$HERE/controls.txt" | grep -v '^[[:space:]]*$' | tr '\n' ' ')
+SIBLINGS="$HERE/cpp_siblings.txt"
+GPU_ONLY=$(grep -v '^#' "$SIBLINGS" | awk 'NF { print $1 }' | tr '\n' ' ')
+gpu_only() { case " $GPU_ONLY " in *" $1 "*) return 0 ;; esac; return 1; }
 
 if [ "$MODE" != none ]; then
 	command -v lake >/dev/null 2>&1 || { echo "error: lake not on PATH (or pass --no-emit)" >&2; exit 1; }
@@ -92,6 +100,10 @@ rm -rf "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 mkdir -p "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 echo "== slangc -target cpp =="
 for k in $KERNELS; do
+	if gpu_only "$k"; then
+		rm -f "$HERE/cpp/${k}_emit.cpp" # its cpp_siblings.txt sibling runs on the host
+		continue
+	fi
 	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -preserve-params \
 		-o "cpp/${k}_emit.cpp" "slang/$k.slang" 2>&1 | grep -v "has been renamed to 'main_0'" || true )
 	[ -s "$HERE/cpp/${k}_emit.cpp" ] || { echo "error: no cpp for $k" >&2; exit 1; }
@@ -103,7 +115,8 @@ for k in $KERNELS; do
 	"$SPIRV_VAL" --target-env vulkan1.2 "$BUILD/spv-ggml/$k.spv"
 done
 echo "== fixed-layout check + kernel table =="
-"$PY" "$HERE/gen_ggml_kernel_table.py" --spv-dir "$BUILD/spv-ggml" --out "$HERE/GgmlKernelTable.inc" $KERNELS
+"$PY" "$HERE/gen_ggml_kernel_table.py" --spv-dir "$BUILD/spv-ggml" --siblings "$SIBLINGS" \
+	--out "$HERE/GgmlKernelTable.inc" $KERNELS
 echo "== embedding SPIR-V =="
 # The reflection JSON sits beside each .spv; embed_spv takes only *.spv.
 "$PY" "$HERE/../embed_spv.py" --namespace ggml_kernels "$BUILD/spv-ggml" "$BUILD/ggml_kernels.inc"

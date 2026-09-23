@@ -4,3 +4,19 @@
 # GgmlKernelTable.inc, so ids are per build, never stored.
 add_f32
 mul_f32
+mul_mat_tiled_f32_f32
+mul_mat_tiled_f16_f32
+mul_mat_tiled_bf16_f32
+mul_mat_tiled_f16_f16
+mul_mat_vec_f32_f32
+mul_mat_vec_f16_f32
+mul_mat_vec_bf16_f32
+mul_mat_vec_f16_f16
+mul_mat_serial_tiled_f32_f32
+mul_mat_serial_tiled_f16_f32
+mul_mat_serial_tiled_bf16_f32
+mul_mat_serial_tiled_f16_f16
+mul_mat_serial_vec_f32_f32
+mul_mat_serial_vec_f16_f32
+mul_mat_serial_vec_bf16_f32
+mul_mat_serial_vec_f16_f16

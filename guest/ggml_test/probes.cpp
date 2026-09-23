@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <utility>
 #include <vector>
 
 #include "ggml-alloc.h"
@@ -295,6 +296,199 @@ void alias(bool rw) {
 	}
 }
 
+// --- mm_perf: MUL_MAT timing on the census's hottest shapes ------------------
+
+// The host's clock (Time.get_ticks_usec(), a host call): the guest clock
+// jumps between time bases (AGENTS.md facts), so every time here is the
+// host's.
+double host_us() {
+	Object t("Time");
+	return double(int64_t(t.call("get_ticks_usec")));
+}
+
+struct MmShape {
+	const char *label;
+	ggml_type ta, tb;
+	int64_t m, n, k;
+	int64_t ne02, ne03, ne12, ne13;
+	bool kv; // src0 is a K cache [K, ne02, M, ne03] viewed as [K, M, ne02, ne03] (the census's RC)
+	int r1, r2; // mul_mats in the short and the long graph
+	const char *census;
+};
+
+const MmShape kMmShapes[] = {
+	{ "gflops_f16", GGML_TYPE_F16, GGML_TYPE_F32, 4096, 1024, 1536, 1, 1, 1, 1, false, 1, 4, "the 4096x1536x1024 benchmark" },
+	{ "gflops_bf16", GGML_TYPE_BF16, GGML_TYPE_F32, 4096, 1024, 1536, 1, 1, 1, 1, false, 1, 4, "the 4096x1536x1024 benchmark" },
+	{ "gflops_f32", GGML_TYPE_F32, GGML_TYPE_F32, 4096, 1024, 1536, 1, 1, 1, 1, false, 1, 4, "the same in f32" },
+	{ "st_decode_2048x896", GGML_TYPE_F16, GGML_TYPE_F32, 2048, 1, 896, 1, 1, 2, 1, false, 8, 72, "skin-tokens vec, 32172 calls" },
+	{ "st_decode_1024x896", GGML_TYPE_F16, GGML_TYPE_F32, 1024, 1, 896, 1, 1, 2, 1, false, 8, 72, "skin-tokens vec, 21448 calls" },
+	{ "st_decode_896x2048", GGML_TYPE_F16, GGML_TYPE_F32, 896, 1, 2048, 1, 1, 2, 1, false, 8, 72, "skin-tokens vec, 21448 calls" },
+	{ "st_attn_kq_rc", GGML_TYPE_F32, GGML_TYPE_F32, 515, 1, 128, 16, 2, 16, 2, true, 8, 72, "skin-tokens RC vec, 10724 calls" },
+	{ "st_mat_1024x54000x512", GGML_TYPE_F16, GGML_TYPE_F32, 1024, 54000, 512, 1, 1, 1, 1, false, 1, 3, "skin-tokens mat, 3183 calls" },
+	{ "p3_bf16_4608x4096x1536", GGML_TYPE_BF16, GGML_TYPE_F32, 4608, 4096, 1536, 1, 1, 1, 1, false, 1, 3, "Pixal3D bf16, 120 calls" },
+	{ "p3_f16_1024x1029x1024", GGML_TYPE_F16, GGML_TYPE_F32, 1024, 1029, 1024, 1, 1, 1, 1, false, 1, 5, "Pixal3D f16, 663 calls" },
+	{ "p3_f32_attn_1029x1029x64x16", GGML_TYPE_F32, GGML_TYPE_F32, 1029, 1029, 64, 16, 1, 16, 1, false, 1, 3, "Pixal3D f32 batch, 24 calls" },
+};
+
+uint32_t g_lcg = 12345u;
+float rnd() {
+	g_lcg = g_lcg * 1664525u + 1013904223u;
+	return float(g_lcg >> 8) * (2.0f / 16777216.0f) - 1.0f; // [-1, 1)
+}
+
+// n values of type t in [-1, 1), as bytes.
+std::vector<uint8_t> random_bytes(ggml_type t, int64_t n) {
+	std::vector<uint8_t> v(size_t(n) * ggml_type_size(t));
+	for (int64_t i = 0; i < n; ++i) {
+		const float x = rnd();
+		if (t == GGML_TYPE_F32) {
+			std::memcpy(v.data() + 4 * i, &x, 4);
+		} else if (t == GGML_TYPE_F16) {
+			const ggml_fp16_t h = ggml_fp32_to_fp16(x);
+			std::memcpy(v.data() + 2 * i, &h, 2);
+		} else {
+			const ggml_bf16_t h = ggml_fp32_to_bf16(x);
+			std::memcpy(v.data() + 2 * i, &h, 2);
+		}
+		if ((i & 0xFFFFF) == 0xFFFFF) {
+			pump::coop();
+		}
+	}
+	return v;
+}
+
+double elem_at(const std::vector<uint8_t> &bytes, ggml_type t, size_t off) {
+	if (t == GGML_TYPE_F32) {
+		float f;
+		std::memcpy(&f, bytes.data() + off, 4);
+		return f;
+	}
+	uint16_t h;
+	std::memcpy(&h, bytes.data() + off, 2);
+	if (t == GGML_TYPE_F16) {
+		return ggml_fp16_to_fp32(h);
+	}
+	ggml_bf16_t b;
+	b.bits = h;
+	return ggml_bf16_to_fp32(b);
+}
+
+// Host microseconds for one graph: compute (pack, record, submit) and the
+// synchronize that waits for it (a frame later, rule 4).
+double time_graph(ggml_backend_t be, ggml_cgraph *g, ggml_status *st) {
+	const double t0 = host_us();
+	*st = ggml_backend_graph_compute(be, g);
+	ggml_backend_synchronize(be);
+	return host_us() - t0;
+}
+
+bool mm_shape(ggml_backend_t be, const MmShape &s) {
+	const int trials = 3;
+	ggml_context *ctx = make_ctx(s.r2 + 8);
+	ggml_tensor *abase = s.kv ? ggml_new_tensor_4d(ctx, s.ta, s.k, s.ne02, s.m, s.ne03)
+							  : ggml_new_tensor_4d(ctx, s.ta, s.k, s.m, s.ne02, s.ne03);
+	ggml_tensor *a = s.kv ? ggml_permute(ctx, abase, 0, 2, 1, 3) : abase;
+	ggml_tensor *b = ggml_new_tensor_4d(ctx, s.tb, s.k, s.n, s.ne12, s.ne13);
+	std::vector<ggml_tensor *> outs;
+	ggml_cgraph *g1 = ggml_new_graph_custom(ctx, size_t(s.r2 + 8), false);
+	ggml_cgraph *g2 = ggml_new_graph_custom(ctx, size_t(s.r2 + 8), false);
+	for (int i = 0; i < s.r2; ++i) {
+		outs.push_back(ggml_mul_mat(ctx, a, b));
+		if (i < s.r1) {
+			ggml_build_forward_expand(g1, outs.back());
+		}
+		ggml_build_forward_expand(g2, outs.back());
+	}
+	ggml_backend_buffer_t buf = ggml_backend_alloc_ctx_tensors(ctx, be);
+	if (buf == nullptr) {
+		std::printf("PROBE mm_perf %s: could not allocate %.0f MB\n", s.label,
+				double(ggml_nbytes(abase) + ggml_nbytes(b) + s.r2 * ggml_nbytes(outs[0])) / 1048576.0);
+		ggml_free(ctx);
+		return false;
+	}
+	const std::vector<uint8_t> ab = random_bytes(s.ta, ggml_nelements(abase));
+	const std::vector<uint8_t> bb = random_bytes(s.tb, ggml_nelements(b));
+	ggml_backend_tensor_set(abase, ab.data(), 0, ab.size());
+	ggml_backend_tensor_set(b, bb.data(), 0, bb.size());
+
+	ggml_status st = GGML_STATUS_SUCCESS, st1 = GGML_STATUS_SUCCESS;
+	time_graph(be, g2, &st); // warm-up: pipelines and sets
+	int64_t dispatches = 0, barriers = 0;
+	ggml_backend_rd_last_graph(&dispatches, &barriers);
+	double t1 = 1e30, t2 = 1e30;
+	for (int t = 0; t < trials; ++t) {
+		const double x1 = time_graph(be, g1, &st1);
+		const double x2 = time_graph(be, g2, &st);
+		t1 = x1 < t1 ? x1 : t1;
+		t2 = x2 < t2 ? x2 : t2;
+	}
+	const double per_op_us = (t2 - t1) / double(s.r2 - s.r1);
+	const double flops = 2.0 * double(s.m) * double(s.n) * double(s.k) * double(s.ne12) * double(s.ne13);
+
+	// Check the last output of the long graph against a double sum over the
+	// same inputs: dst columns j in {0, N/2, N-1}, first and last batch.
+	const ggml_tensor *o = outs.back();
+	const int64_t r2b = s.ne12 / s.ne02, r3b = s.ne13 / s.ne03;
+	std::vector<int64_t> js = { 0, s.n / 2, s.n - 1 };
+	std::vector<std::pair<int64_t, int64_t>> batches = { { 0, 0 }, { s.ne12 - 1, s.ne13 - 1 } };
+	std::vector<float> got(size_t(s.m));
+	double se = 0.0, sr = 0.0, maxrel = 0.0;
+	int64_t checked = 0;
+	for (auto [b2, b3] : batches) {
+		for (int64_t j : js) {
+			ggml_backend_tensor_get(const_cast<ggml_tensor *>(o), got.data(), size_t(j * o->nb[1] + b2 * o->nb[2] + b3 * o->nb[3]),
+					size_t(s.m) * 4);
+			for (int64_t i = 0; i < s.m; ++i) {
+				double ref = 0.0;
+				for (int64_t k = 0; k < s.k; ++k) {
+					const size_t ao = size_t(k * a->nb[0] + i * a->nb[1] + (b2 / r2b) * a->nb[2] + (b3 / r3b) * a->nb[3]);
+					const size_t bo = size_t(k * b->nb[0] + j * b->nb[1] + b2 * b->nb[2] + b3 * b->nb[3]);
+					ref += elem_at(ab, s.ta, ao) * elem_at(bb, s.tb, bo);
+				}
+				const double d = double(got[size_t(i)]) - ref;
+				se += d * d;
+				sr += ref * ref;
+				const double rel = std::fabs(d) / (std::fabs(ref) > 1e-3 ? std::fabs(ref) : 1e-3);
+				maxrel = rel > maxrel ? rel : maxrel;
+				++checked;
+			}
+			pump::coop();
+		}
+	}
+	const double nmse = sr > 0 ? se / sr : se;
+	const bool ok = st == GGML_STATUS_SUCCESS && st1 == GGML_STATUS_SUCCESS && nmse < 1e-8 && per_op_us > 0.0;
+	std::printf("PROBE mm_perf %-28s %s x %s M=%lld N=%lld K=%lld batch=%lldx%lld (bcast %lldx%lld)%s kernel=%s "
+				"per_op_us=%.1f gflops=%.1f graph_us(r=%d)=%.0f graph_us(r=%d)=%.0f dispatches=%lld barriers=%lld "
+				"checked=%lld nmse=%.2e maxrel=%.2e [%s] %s\n",
+			s.label, ggml_type_name(s.ta), ggml_type_name(s.tb), (long long)s.m, (long long)s.n, (long long)s.k,
+			(long long)s.ne12, (long long)s.ne13, (long long)r2b, (long long)r3b, s.kv ? " src0=permuted-kv" : "",
+			s.n <= 4 ? "vec" : "tiled", per_op_us, flops / per_op_us / 1e3, s.r1, t1, s.r2, t2, (long long)dispatches,
+			(long long)barriers, (long long)checked, nmse, maxrel, s.census, ok ? "ok" : "BAD");
+	std::fflush(stdout);
+	ggml_backend_buffer_free(buf);
+	ggml_free(ctx);
+	return ok;
+}
+
+void mm_perf(const std::string &which) {
+	ggml_backend_t be = rd_backend();
+	if (be == nullptr) {
+		result(false, "mm_perf");
+		return;
+	}
+	bool ok = true;
+	int ran = 0;
+	for (const MmShape &s : kMmShapes) {
+		if (which != "all" && which.find(s.label) == std::string::npos) {
+			continue;
+		}
+		ok = mm_shape(be, s) && ok;
+		++ran;
+	}
+	ggml_backend_free(be);
+	result(ok && ran > 0, "mm_perf");
+}
+
 void job(void *) {
 	const std::string &name = g_args.name;
 	const int n = g_args.arg.empty() ? 0 : std::atoi(g_args.arg.c_str());
@@ -306,6 +500,8 @@ void job(void *) {
 		files(g_args.arg);
 	} else if (name == "alias") {
 		alias(g_args.arg != "ro");
+	} else if (name == "mm_perf") {
+		mm_perf(g_args.arg.empty() ? "all" : g_args.arg);
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -318,8 +514,8 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias") {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias)";
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "mm_perf") {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, mm_perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

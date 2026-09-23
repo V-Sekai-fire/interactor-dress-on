@@ -1,4 +1,27 @@
-ggml-rd L2: 41 cases, 2 packers, 2 kernels, control=none
+ggml-rd L2: 64 cases, 3 packers, 18 kernels, control=none
+OK   MUL_MAT f32 x f32 m=16 n=16 k=256 bs=[1,1] nr=[1,1] per=[0,1,2,3] tiled out=[16,16,1,1]        dispatches=1 nmse=7.820e-14 (max 5e-04) exact=28/256
+OK   MUL_MAT f32 x f32 m=16 n=1 k=256 bs=[3,2] nr=[2,2] per=[0,1,2,3] vec, broadcast in dims 2 and 3 out=[16,1,6,4]         dispatches=1 nmse=9.771e-15 (max 5e-04) exact=114/384
+OK   MUL_MAT f32 x f32 m=64 n=77 k=77 bs=[12,1] nr=[1,1] per=[0,1,2,3] tiled, odd n and k out=[64,77,12,1]       dispatches=1 nmse=2.606e-14 (max 5e-04) exact=11826/59136
+OK   MUL_MAT f32 x f32 m=16 n=16 k=256 bs=[2,3] nr=[1,1] per=[0,2,1,3] permuted out=[16,16,2,3]        dispatches=1 nmse=9.287e-14 (max 5e-04) exact=165/1536
+OK   MUL_MAT f32 x f32 m=16 n=8 k=256 bs=[2,3] nr=[1,1] per=[0,1,3,2] permuted out=[16,8,2,3]         dispatches=1 nmse=9.737e-14 (max 5e-04) exact=72/768
+OK   MUL_MAT f32 x f32 m=16 n=4 k=4 bs=[2,3] nr=[1,1] per=[0,3,2,1] vec at n = 4, permuted out=[16,4,2,3]         dispatches=1 nmse=2.563e-15 (max 5e-04) exact=200/384
+OK   MUL_MAT f32 x f32 m=16 n=32 k=32 bs=[1,1] nr=[1,1] per=[0,1,2,3] k_v=64 o=3 k view, three outputs summed out=[16,32,1,1]        dispatches=5 nmse=1.421e-14 (max 5e-04) exact=150/512
+OK   MUL_MAT f32 x f32 m=1 n=64 k=256 bs=[1,1] nr=[1,1] per=[0,1,2,3] m = 1 out=[1,64,1,1]         dispatches=1 nmse=8.655e-14 (max 5e-04) exact=8/64
+OK   MUL_MAT f16 x f32 m=64 n=45 k=128 bs=[8,1] nr=[4,1] per=[0,1,2,3] tiled, broadcast out=[64,45,32,1]       dispatches=1 nmse=3.407e-08 (max 5e-04) exact=11/92160
+OK   MUL_MAT f16 x f32 m=83 n=2 k=64 bs=[8,1] nr=[4,1] per=[0,1,2,3] vec, broadcast out=[83,2,32,1]        dispatches=1 nmse=3.279e-08 (max 5e-04) exact=0/5312
+OK   MUL_MAT f16 x f32 m=1056 n=1 k=67 bs=[1,1] nr=[4,1] per=[0,2,1,3] vec, permuted, odd k out=[1056,1,4,1]       dispatches=1 nmse=3.317e-08 (max 5e-04) exact=1/4224
+OK   MUL_MAT f16 x f32 m=128 n=1 k=1057 bs=[1,1] nr=[1,1] per=[0,1,2,3] k_v=2113 vec, k view out=[128,1,1,1]        dispatches=1 nmse=3.691e-08 (max 5e-04) exact=0/128
+OK   MUL_MAT f16 x f32 m=33 n=5 k=8 bs=[1,1] nr=[1,1] per=[0,1,2,3] tiled at n = 5 out=[33,5,1,1]         dispatches=1 nmse=3.737e-08 (max 5e-04) exact=0/165
+OK   MUL_MAT f16 x f32 m=2048 n=1 k=896 bs=[1,1] nr=[2,1] per=[0,1,2,3] skin-tokens decode (896 x 2048, 2 beams) out=[2048,1,2,1]       dispatches=1 nmse=3.623e-08 (max 5e-04) exact=3/4096
+OK   MUL_MAT bf16 x f32 m=16 n=16 k=256 bs=[2,3] nr=[1,1] per=[0,2,1,3] permuted out=[16,16,2,3]        dispatches=1 nmse=2.045e-06 (max 5e-04) exact=0/1536
+OK   MUL_MAT bf16 x f32 m=16 n=1 k=256 bs=[2,3] nr=[1,1] per=[0,2,1,3] vec, permuted out=[16,1,2,3]         dispatches=1 nmse=2.301e-06 (max 5e-04) exact=0/96
+OK   MUL_MAT bf16 x f32 m=65 n=67 k=17 bs=[1,1] nr=[1,1] per=[0,1,2,3] one past the tile on every side out=[65,67,1,1]        dispatches=1 nmse=2.147e-06 (max 5e-04) exact=0/4355
+OK   MUL_MAT bf16 x f32 m=129 n=3 k=33 bs=[2,1] nr=[2,1] per=[0,1,2,3] vec, broadcast out=[129,3,4,1]        dispatches=1 nmse=2.218e-06 (max 5e-04) exact=0/1548
+OK   MUL_MAT bf16 x f32 m=192 n=130 k=96 bs=[1,1] nr=[1,1] per=[0,1,2,3] Pixal3D block, scaled (1536 x 4608 x 4096) out=[192,130,1,1]      dispatches=1 nmse=2.167e-06 (max 5e-04) exact=1/24960
+OK   MUL_MAT f16 x f16 m=64 n=77 k=77 bs=[2,1] nr=[1,1] per=[0,1,2,3] tiled out=[64,77,2,1]        dispatches=1 nmse=2.367e-14 (max 5e-04) exact=1987/9856
+OK   MUL_MAT f16 x f16 m=16 n=1 k=256 bs=[3,2] nr=[2,2] per=[0,1,2,3] vec, broadcast out=[16,1,6,4]         dispatches=1 nmse=2.375e-15 (max 5e-04) exact=241/384
+OK   MUL_MAT f32 x f32 skin-tokens attention scores over a permuted K cache (RC) [128,67,16,2] x [128,1,16,2] out=[67,1,16,2]        dispatches=1 nmse=8.413e-15 (max 5e-04) exact=695/2144
+OK   MUL_MAT f32 x f32 both permuted (RR) [64,100,8] x [64,72,8] out=[100,72,8,1]       dispatches=1 nmse=2.622e-14 (max 5e-04) exact=10494/57600
 OK   ADD ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
 OK   MUL ne=[1,1,8,1] nr=[1,1,1,1]                out=[1,1,8,1]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=8/8
 OK   ADD ne=[1,1,1,1] nr=[32,1,1,1]               out=[32,1,1,1]         dispatches=1 nmse=0.000e+00 (max 1e-07) exact=32/32
@@ -40,5 +63,5 @@ OK   MUL ne=[1,1,640,1] nr=[32,32,1,1]            out=[32,32,640,1]      dispatc
 OK   ADD inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=144/144
 OK   MUL inplace on permute(a,0,2,1,3) [6,4,3,2]  out=[6,3,4,2]          dispatches=1 nmse=0.000e+00 (max 1e-07) exact=144/144
 OK   ADD then MUL chain [9,7,5,3]                 out=[9,7,5,3]          dispatches=2 nmse=0.000e+00 (max 1e-07) exact=945/945
-summary: 41/41 cases OK
+summary: 64/64 cases OK
 RESULT: PASS

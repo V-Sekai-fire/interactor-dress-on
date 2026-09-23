@@ -28,8 +28,9 @@ file(GLOB EMITS CONFIGURE_DEPENDS ${ROOT}/kernels/ggml/cpp/*_emit.cpp)
 add_custom_command(
 	OUTPUT ${HOST_KERNELS}
 	COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/gen_host_kernels.py
-		${ROOT}/kernels/ggml/kernels.txt ${HOST_KERNELS}
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gen_host_kernels.py ${ROOT}/kernels/ggml/kernels.txt ${EMITS}
+		${ROOT}/kernels/ggml/kernels.txt ${HOST_KERNELS} ${ROOT}/kernels/ggml/cpp_siblings.txt
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gen_host_kernels.py ${ROOT}/kernels/ggml/kernels.txt
+		${ROOT}/kernels/ggml/cpp_siblings.txt ${EMITS}
 	COMMENT "host kernel runners from kernels/ggml/kernels.txt"
 )
 
@@ -50,3 +51,8 @@ target_include_directories(ggml_rd_l2 PRIVATE
 	${ROOT}/guest/avbd/slang-rt
 )
 target_link_libraries(ggml_rd_l2 PRIVATE ggml ggml-cpu ggml-base -static)
+# An out-of-range index reads and writes element 0 instead of leaving the
+# memory block (the control arm swaps strides, which sends MUL_MAT's src0
+# reads far past it; the GPU's robust buffer access keeps them in the buffer
+# the same way). Cases that pass never index out of range.
+target_compile_definitions(ggml_rd_l2 PRIVATE SLANG_ENABLE_BOUND_ZERO_INDEX)

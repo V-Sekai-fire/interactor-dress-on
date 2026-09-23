@@ -108,6 +108,12 @@ our own, no host DLL. The GPU is reachable only through Godot's
   the reflection JSON still lists them. Shared-layout kernels compile at
   `-O0 -preserve-params`, and the layout check reads the SPIR-V
   (`kernels/ggml/gen_ggml_kernel_table.py`).
+- `slangc -target cpp` rejects `GroupMemoryBarrierWithGroupSync` (E36107):
+  a kernel that shares group memory has no cpp emit. It gets a serial
+  sibling (same words, thread-group size and grid, same sums in the same
+  order, no group memory; e.g. `lean/Ggml/SlangCodegen/MulMatSerial.lean`)
+  named in `kernels/ggml/cpp_siblings.txt`, which the L2 harness runs in
+  its place.
 - godot-sandbox caches an Object call's method name in a 32-slot direct-mapped
   cache keyed by the guest ADDRESS of the name string; two hot names in one
   slot evict each other and each call re-resolves (~2-5 ms). It is decided

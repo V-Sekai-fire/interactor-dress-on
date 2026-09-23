@@ -15,7 +15,10 @@
 #   probe files        READ + UPLOAD of a host file into an RD buffer, x + x
 #   probe alias rw     x += 1 in place x1000 across barriers, read-write sources: exact
 #   probe alias ro     the same with the read-only-source control kernel: must lose counts
-#   ops main           test-backend-ops -o <OPS> -b RD0: 0 FAIL, every case OK or not supported
+#   probe mm_perf      MUL_MAT timing on the census's hottest shapes and the
+#                      4096x1536x1024 benchmark, each checked against a double sum
+#   ops main           test-backend-ops -o <OPS> -b RD0: 0 FAIL, every case OK or not supported,
+#                      and no case REQUIRED names (the census's type rows) "not supported"
 #   ops barrier_all    the same under GGML_RD_BARRIER_ALL=1: 0 FAIL
 #   ops fault          -o ADD with GGML_RD_FAULT=1 (a source offset +1): the
 #                      control, it must FAIL
@@ -27,14 +30,24 @@
 # Results: gates/3-ggml-rd/ops/results.txt (results-headless.txt headless),
 # each run's full output in run-<name>.log beside it; the last line is
 # RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
+#
+# User arguments (after ++) select runs while an op family iterates:
+#   godot ... --script gate_ggml_rd.gd ++ runs=ops_main,probe_mm_perf
+# runs only those (the verdicts of the runs left out then FAIL, so a partial
+# run never reads RESULT: PASS).
 extends SceneTree
 
 const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
-const OPS := "ADD,MUL"
+const OPS := "ADD,MUL,MUL_MAT"
+# Cases that must be OK, never "not supported": the census's required type
+# rows, as regexes over a case's test-backend-ops parameters, by op.
+const REQUIRED := {
+	"MUL_MAT": ["^type_a=(f32|f16|bf16),type_b=f32,", "^type_a=f16,type_b=f16,"],
+}
 const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
-const WALL_S := 1800.0
+const WALL_S := 3600.0
 # The device memory ggml-rd reports as total (free = total - allocated):
 # Godot has no call for it, so the host states it (24 GiB here).
 const TOTAL_MB := 24576
@@ -114,10 +127,16 @@ func _initialize() -> void:
 			["probe_files", "probe", "files", probe_file, ""],
 			["probe_alias_rw", "probe", "alias", "rw", ""],
 			["probe_alias_ro_control", "probe", "alias", "ro", ""],
+			["probe_mm_perf", "probe", "mm_perf", "all", ""],
 			["ops_main", "ops", "-o %s -b RD0" % OPS, ""],
 			["ops_barrier_all", "ops", "-o %s -b RD0" % OPS, "GGML_RD_BARRIER_ALL=1"],
 			["ops_fault", "ops", "-o ADD -b RD0", "GGML_RD_FAULT=1"],
 		]
+		for ua in OS.get_cmdline_user_args():
+			if ua.begins_with("runs="):
+				var keep := ua.trim_prefix("runs=").split(",")
+				_runs = _runs.filter(func(r): return keep.has(r[0]))
+				_say("runs selected: %s" % str(keep))
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
@@ -188,6 +207,9 @@ func _end_run(st: String) -> void:
 			_say("   %s: OK=%d FAIL=%d not_supported=%d" % [op, c.ok, c.fail, c.unsupported])
 		for l in res.fail_lines.slice(0, 5):
 			_say("   failed: %s" % l)
+		_say("   required cases not supported: %d" % res.required_unsupported.size())
+		for l in res.required_unsupported.slice(0, 5):
+			_say("   required, not supported: %s" % l)
 	else:
 		for l in text.split("\n"):
 			if l.begins_with("PROBE") or l.begins_with("RESULT"):
@@ -201,6 +223,7 @@ func _parse_ops(text: String) -> Dictionary:
 	var unsupported := 0
 	var per_op := {}
 	var fail_lines := []
+	var required_unsupported := []
 	var passed_line := ""
 	var backend_line := ""
 	# A case is "OP(params): OK|FAIL|not supported [..]"; a failing case's
@@ -226,11 +249,17 @@ func _parse_ops(text: String) -> Dictionary:
 			else:
 				unsupported += 1
 				per_op[op].unsupported += 1
+				for pat in REQUIRED.get(op, []):
+					var rq := RegEx.new()
+					rq.compile(pat)
+					if rq.search(m.get_string(2)) != null:
+						required_unsupported.append(s)
 		elif s.ends_with("tests passed"):
 			passed_line = s
 		elif s.begins_with("Backend RD0:"):
 			backend_line = s
 	return {"ok": ok, "fail": fail, "unsupported": unsupported, "per_op": per_op, "fail_lines": fail_lines,
+			"required_unsupported": required_unsupported,
 			"passed_line": passed_line, "backend_line": backend_line}
 
 func _probe_pass(name: String) -> bool:
@@ -250,12 +279,16 @@ func _checks() -> void:
 	_verdict(_probe_pass("probe_alias_rw"), "probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact")
 	_verdict(_probe_pass("probe_alias_ro_control"),
 			"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
+	_verdict(_probe_pass("probe_mm_perf"), "probe_mm_perf: every shape timed and within nmse 1e-8 of a double sum")
 	for n in ["ops_main", "ops_barrier_all"]:
 		var r = _results.get(n, {})
 		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
 				and str(r.get("backend_line", "")).ends_with("OK"),
 				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, OPS, r.get("ok", 0),
 				r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
+		_verdict(r.get("state", "") == "done" and r.get("required_unsupported", [null]).is_empty(),
+				"%s: every required case (%s) is OK, none not supported (%d are)" % [n, str(REQUIRED),
+				r.get("required_unsupported", [null]).size()])
 	var m = _results.get("ops_main", {})
 	var b = _results.get("ops_barrier_all", {})
 	_verdict(m.get("ok", -1) == b.get("ok", -2) and m.get("unsupported", -1) == b.get("unsupported", -2),

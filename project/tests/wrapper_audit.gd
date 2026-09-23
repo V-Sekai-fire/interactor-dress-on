@@ -19,6 +19,7 @@ extends RefCounted
 const GUESTS := {
 	"guest/main.cpp": "dress_on",
 	"guest/probes/main.cpp": "dress_on",
+	"guest/rd_worker/main.cpp": "dress_on",
 	"guest/curvenet/main.cpp": "curvenet",
 	"guest/drape/main.cpp": "drape",
 	"guest/fit/main.cpp": "fit",

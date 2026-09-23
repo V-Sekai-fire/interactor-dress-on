@@ -170,6 +170,12 @@ target_include_directories(ggml_test PRIVATE guest guest/ggml_test)
 target_link_libraries(ggml_test PRIVATE ggml_rd pump ggml ggml-cpu ggml-base)
 target_link_options(ggml_test PRIVATE -Wl,--wrap=ggml_backend_init_by_type)
 
+# Gate 6G.1: rd_worker.elf, GPU round trips from a vmcall on a worker Thread
+# (gates/6g-polyfem-gpu/g1-rd-worker). rd_compute plus Lean's saxpby and df32
+# dot_reduce, from ${CMAKE_BINARY_DIR}/drape_kernels.inc (kernels/drape/gen.sh).
+add_stage_elf(rd_worker guest/rd_worker/main.cpp)
+target_include_directories(rd_worker PRIVATE guest ${CMAKE_BINARY_DIR})
+
 # Gate 0G: usd_probe.elf, OpenUSD 26.05 reading a stage from bytes (gates/0g-openusd).
 include(cmake/usd_probe.cmake)
 

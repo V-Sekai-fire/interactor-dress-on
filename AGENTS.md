@@ -46,10 +46,17 @@ state fails loudly, never a silent fixture.
 3. **No Eigen in the drape ELF.** The drape is Lean-generated kernels plus an
    Eigen-free driver (`guest/avbd/avbd_sim.h` lineage). Eigen survives only
    inside `fit.elf` (PolyFEM), a separate ELF.
-4. **State machines and queues, not waits.** Never `sync()` in the frame that
-   `submit()`s; the host advances each guest's state machine from `_process`
-   and reads back once the fence is known-done. Batch iterations into one
-   compute list (`AvbdRd::run`).
+4. **State machines and queues, not waits — on the main thread.** Nothing on
+   the main thread `sync()`s in the frame that `submit()`s; the host advances
+   each main-thread guest's state machine from `_process` and reads back once
+   the fence is known-done. A stage whose vmcalls run on its own persistent
+   worker Thread (fit.elf) may submit, sync and read back inside the vmcall:
+   the wait blocks only that worker, and its local RenderingDevice is
+   created, used and freed on that one OS thread (Gate 6G.1: 0.26–0.33 ms a
+   round trip for one dispatch, ~1 ms for 100, with the main thread rendering
+   and using RD meanwhile). The host polls the worker and never joins a live
+   one. Batch dispatches into one compute list per round trip (`AvbdRd::run`),
+   ending in one small `buffer_get_data`. (User, 2026-09-23.)
 5. **Batch / CPU / GPU chosen per problem.** Small meshes run on `AvbdCpu`,
    large ones on `AvbdRd`; thresholds come from a measured gate, never a
    guess.
@@ -112,6 +119,11 @@ state fails loudly, never a silent fixture.
   (4 GiB−256), which must be `buffer_clear`ed (`storage_buffer_empty` does
   both). `buffer_get_data` stages the whole buffer; read big buffers through
   `Device::buffer_get_into` (a `buffer_copy` into a small staging buffer).
+- A local RenderingDevice is bound to the OS thread that created it, and a new
+  GDScript `Thread` is a new OS thread: a stage's worker opens, uses and frees
+  its own device (Gate 6G.1). `rdc::Device`'s same-frame sync counter fires on
+  every worker-thread sync (no frame waited); it is a rule-4 signal on the main
+  thread only — split it into `worker_syncs` when the fit gets its GPU path.
 - A guest static can hold the RenderingDevice across vmcalls (handle = engine
   instance id in unrestricted mode); RefCounted helpers are per-call only.
 - An RID (any handle a host call returns) is a per-vmcall scoped Variant: the

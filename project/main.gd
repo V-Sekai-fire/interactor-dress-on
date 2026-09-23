@@ -177,6 +177,7 @@ func set0_share(variant: String = "") -> String: return _pv("set0_share", [varia
 func inplace_run(mode: int = 0, rounds: int = 1000) -> String: return _pv("inplace_run", [mode, rounds])
 func p_rd_close() -> String: return _pv("p_rd_close")
 func p_list_end() -> String: return _pv("p_list_end")
+func p_recovery(on: bool = true) -> String: return _pv("p_recovery", [on])
 func f16_read() -> String:
 	var h := PackedByteArray()
 	h.resize(128)

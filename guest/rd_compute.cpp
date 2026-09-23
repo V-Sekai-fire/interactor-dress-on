@@ -2,6 +2,7 @@
 
 #include <syscalls.h>
 
+#include <algorithm>
 #include <cstring>
 #include <string_view>
 
@@ -57,6 +58,8 @@ enum Name : int {
 	N_LIMIT_GET,
 	N_CREATE_LOCAL_DEVICE,
 	N_FREE,
+	N_GET_MEMORY_USAGE,
+	N_GET_DEVICE_NAME,
 	N_COUNT
 };
 
@@ -89,6 +92,8 @@ const char *const kNameText[N_COUNT] = {
 	"limit_get",
 	"create_local_rendering_device",
 	"free",
+	"get_memory_usage",
+	"get_device_name",
 };
 
 constexpr unsigned kHostSlots = 32;
@@ -222,16 +227,29 @@ bool Device::open() {
 void Device::adopt(const Object &rd) {
 	rd_ = rd;
 	owned_ = false;
+	list_open_ = false;
+	submitted_ = false;
 	err_.clear();
 }
 
 void Device::close() {
+	if (staging_.index != 0) {
+		if (rd_.is_valid()) {
+			free_rid(staging_);
+		} else {
+			forget(staging_);
+		}
+		staging_ = ::RID();
+		staging_bytes_ = 0;
+	}
 	if (rd_.is_valid() && owned_) {
 		step_ = "free";
 		rd_.voidcall(nm(N_FREE));
 	}
 	rd_ = Object(uint64_t(0));
 	owned_ = false;
+	list_open_ = false;
+	submitted_ = false;
 }
 
 // --- resources -------------------------------------------------------------
@@ -263,6 +281,15 @@ static PackedByteArray bytes_or_zeros(size_t bytes, const void *data) {
 }
 
 ::RID Device::storage_buffer(size_t bytes, const void *data) {
+	if (bytes > kMaxTransferBytes) {
+		// Too big to cross in one PackedByteArray: create empty, then fill.
+		::RID r = storage_buffer_empty(bytes, data == nullptr);
+		if (r.index != 0 && data != nullptr && !buffer_update(r, 0, bytes, data)) {
+			free_rid(r);
+			return ::RID();
+		}
+		return r;
+	}
 	step_ = "storage_buffer_create";
 	return rid_or_fail(rd_.call(nm(N_STORAGE_BUFFER_CREATE), int64_t(bytes), bytes_or_zeros(bytes, data)));
 }
@@ -272,28 +299,95 @@ static PackedByteArray bytes_or_zeros(size_t bytes, const void *data) {
 	return rid_or_fail(rd_.call(nm(N_STORAGE_BUFFER_CREATE), int64_t(bytes), PackedByteArray(std::vector<uint8_t>{})));
 }
 
+::RID Device::storage_buffer_empty(size_t bytes, bool clear) {
+	bytes = (bytes + 3) & ~size_t(3);
+	::RID r = storage_buffer_uninit(bytes);
+	if (r.index != 0 && clear && !buffer_clear(r, 0, bytes)) {
+		free_rid(r);
+		return ::RID();
+	}
+	return r;
+}
+
 ::RID Device::uniform_buffer(size_t bytes, const void *data) {
 	step_ = "uniform_buffer_create";
 	return rid_or_fail(rd_.call(nm(N_UNIFORM_BUFFER_CREATE), int64_t(bytes), bytes_or_zeros(bytes, data)));
 }
 
 bool Device::buffer_update(::RID buffer, size_t offset, size_t bytes, const void *data) {
+	recover();
 	step_ = "buffer_update";
-	PackedByteArray pba(static_cast<const uint8_t *>(data), bytes);
-	Variant err = rd_.call(nm(N_BUFFER_UPDATE), buffer, int64_t(offset), int64_t(bytes), pba);
-	if (int64_t(err) != GODOT_OK) {
-		return fail("Godot Error != OK");
-	}
+	// One call per kMaxTransferBytes (a single call when bytes == 0, as before).
+	const uint8_t *src = static_cast<const uint8_t *>(data);
+	size_t done = 0;
+	do {
+		const size_t n = std::min(bytes - done, kMaxTransferBytes);
+		PackedByteArray pba(src + done, n);
+		Variant err = rd_.call(nm(N_BUFFER_UPDATE), buffer, int64_t(offset + done), int64_t(n), pba);
+		if (int64_t(err) != GODOT_OK) {
+			return fail("Godot Error != OK");
+		}
+		done += n;
+	} while (done < bytes);
 	return true;
 }
 
 std::vector<uint8_t> Device::buffer_get(::RID buffer, size_t offset, size_t bytes) {
+	recover();
 	step_ = "buffer_get_data";
 	Variant v = rd_.call(nm(N_BUFFER_GET_DATA), buffer, int64_t(offset), int64_t(bytes));
 	return v.as_byte_array().fetch();
 }
 
+bool Device::buffer_get_into(::RID buffer, size_t offset, size_t bytes, void *out) {
+	if (submitted_) {
+		step_ = "buffer_get_into";
+		return fail("the device is submitted; sync() first");
+	}
+	if (bytes == 0) {
+		return true;
+	}
+	// Grow the staging buffer to the read (rounded to 256), up to the cap.
+	const size_t want = std::min(staging_max_, (bytes + 255) & ~size_t(255));
+	if (staging_bytes_ < want) {
+		if (staging_.index != 0) {
+			free_rid(staging_);
+			staging_ = ::RID();
+			staging_bytes_ = 0;
+		}
+		staging_ = storage_buffer_empty(want, false);
+		if (staging_.index == 0) {
+			return false;
+		}
+		staging_bytes_ = want;
+	}
+	uint8_t *dst = static_cast<uint8_t *>(out);
+	size_t done = 0;
+	while (done < bytes) {
+		const size_t n = std::min(bytes - done, staging_bytes_);
+		// buffer_copy takes whole 4-byte words; copy the words that cover
+		// [offset+done, offset+done+n) and take the bytes wanted out of them.
+		const size_t lo = (offset + done) & ~size_t(3);
+		const size_t skew = (offset + done) - lo;
+		const size_t span = std::min(staging_bytes_, (skew + n + 3) & ~size_t(3));
+		const size_t take = std::min(n, span - skew);
+		if (!buffer_copy(buffer, staging_, span, lo, 0)) {
+			return false;
+		}
+		step_ = "buffer_get_data (staging)";
+		Variant v = rd_.call(nm(N_BUFFER_GET_DATA), staging_, int64_t(0), int64_t(span));
+		std::vector<uint8_t> got = v.as_byte_array().fetch();
+		if (got.size() < span) {
+			return fail("short staging read");
+		}
+		std::memcpy(dst + done, got.data() + skew, take);
+		done += take;
+	}
+	return true;
+}
+
 bool Device::buffer_copy(::RID src, ::RID dst, size_t bytes, size_t src_offset, size_t dst_offset) {
+	recover();
 	// RenderingDevice.buffer_copy(src_buffer, dst_buffer, src_offset, dst_offset, size)
 	step_ = "buffer_copy";
 	Variant err = rd_.call(nm(N_BUFFER_COPY), src, dst, int64_t(src_offset), int64_t(dst_offset), int64_t(bytes));
@@ -304,6 +398,7 @@ bool Device::buffer_copy(::RID src, ::RID dst, size_t bytes, size_t src_offset, 
 }
 
 bool Device::buffer_clear(::RID buffer, size_t offset, size_t bytes) {
+	recover();
 	// RenderingDevice.buffer_clear(buffer, offset, size_bytes)
 	step_ = "buffer_clear";
 	Variant err = rd_.call(nm(N_BUFFER_CLEAR), buffer, int64_t(offset), int64_t(bytes));
@@ -341,10 +436,33 @@ int64_t Device::limit_get(int limit) {
 	return int64_t(rd_.call(nm(N_LIMIT_GET), limit));
 }
 
+int64_t Device::memory_usage() {
+	step_ = "get_memory_usage";
+	return int64_t(rd_.call(nm(N_GET_MEMORY_USAGE), MEMORY_TOTAL));
+}
+
+std::string Device::device_name() {
+	step_ = "get_device_name";
+	return rd_.call(nm(N_GET_DEVICE_NAME)).as_std_string();
+}
+
 // --- recording -------------------------------------------------------------
 
+bool Device::recover() {
+	if (!list_open_ || !recovery_) {
+		return false;
+	}
+	list_end();
+	++recoveries_;
+	return true;
+}
+
 bool Device::list_begin() {
+	recover();
 	step_ = "compute_list_begin";
+	// The flag goes up before the call: if this vmcall dies anywhere after
+	// here, the next one ends the list.
+	list_open_ = true;
 	list_ = rd_.call(nm(N_LIST_BEGIN));
 	return true;
 }
@@ -372,6 +490,7 @@ void Device::barrier() {
 void Device::list_end() {
 	step_ = "compute_list_end";
 	rd_.voidcall(nm(N_LIST_END));
+	list_open_ = false;
 }
 
 int64_t Device::process_frame() {
@@ -382,8 +501,10 @@ int64_t Device::process_frame() {
 }
 
 void Device::submit() {
+	recover();
 	step_ = "submit";
 	rd_.voidcall(nm(N_SUBMIT));
+	submitted_ = true;
 	submit_frame_ = process_frame();
 	++submits_;
 }
@@ -395,6 +516,7 @@ void Device::sync() {
 	}
 	++syncs_;
 	rd_.voidcall(nm(N_SYNC));
+	submitted_ = false;
 }
 
 } // namespace rdc

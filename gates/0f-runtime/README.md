@@ -4,6 +4,10 @@
 `results.txt`: `SUMMARY: PASS=31 FAIL=5 INFO=27 DEFERRED=0` in 263 s. The five
 FAIL lines are all probe 3: the guest cannot open a file by any path. That is
 a real negative result, not a harness fault. Every probe has a control.
+Cut 4 added probe 17 and rebuilt every ELF against the fixed aligned
+allocator. A full re-run gave `SUMMARY: PASS=33 FAIL=5 INFO=27 DEFERRED=0`
+in 164 s (`results-memalign.txt`): the same five probe-3 FAILs, and probe
+17's two PASS lines. The table's other numbers are from `results.txt`.
 
 This is the corrected run. A verifier found three claims of the first run
 wrong or untested (the memory ceiling, the `references_max` rows, the
@@ -45,6 +49,7 @@ godot --path project --script gate_runtime.gd --rendering-driver vulkan --xr-mod
 | 15 | ggml-cpu in the guest | **PASS** | `V-Sekai-fire/ggml` @04b55bba, static, rv64gc, 1 thread, no OpenMP/llamafile/RVV/Zfh/Zvfh/Zicbop/Zihintpause. 256³ f16×f32 `mul_mat` + `soft_max`, two calls with identical results: **190 and 215 ms** in the full run, but **637 and 675 ms** alone (`--only=15`, `results-only15.txt`). The first run saw the same split (218 vs 685 ms). The solo process is ~3× slower on both calls; probe 5's first-call vs warm rates show the same kind of gap, which fits libriscv still compiling in the background (this was not isolated). The worst relative difference of four checksums against the llvm-mingw native build (`ggml_host.txt`, AVX2/FMA/F16C) is **1.7e-8** (limit 1e-6). Control: a Zfh TU (`fmadd.h`) **traps** in the full run. Alone it returns **1.5 with no trap, where 4.875 is right**. Either way Zfh is not executed correctly. |
 | 16 | set-0 uniform sets shared across pipelines | **PASS** | Lean `probe_add` and `probe_scale` (`lean/Probes/Set0.lean`) share Cut 3's layout: b0 params, b1–b3 sources, b4 destination. Built with **`slangc -O0 -preserve-params`**, a set made for `probe_add` binds under `probe_scale` and gives 256/256 exact. **Control:** `-O0` without the flag drops the unused sources, and Godot refuses the dispatch (`Uniforms supplied for set (0) ... not the same format`); D is unchanged. **`-preserve-params` at the default `-O1` is also refused:** the optimiser strips the sources again (`gen.log`: 3 bindings, not 5). One dispatch with the same RID read-only at b1 and read-write at b4 is exact (256/256). |
 | 16 | in-place ops across barriers | **PASS** (hazard reproduced, with controls) | 1000 rounds of +1 over 4096 elements, one compute list, a barrier after every round, twice per shape. **Aliased** (X at b1 read-only and b4 read-write): 0/4096 exact, values 12–477 where 1000 is right. **Read-only first:** X read by one dispatch, then written by the next, in the same span between barriers: 0/4096, values 449–622. **Controls, all 4096/4096:** the same +1 with X bound once read-write (`probe_acc`); ping-pong between two buffers; the write dispatch first, then the read. See finding 4. |
+| 17 | aligned allocation (added with Cut 4) | **PASS** (bug reproduced by the control) | `results-memalign.txt`. 1000 blocks at each of 64, 128 and 4096 alignment, rotating through `posix_memalign`, `aligned_alloc`, `memalign` and aligned `operator new`, each filled with its own tag byte. A third of the steps free a random live block (997) and every seventh reallocs one (206). Of 3000 blocks, 0 are misaligned, 0 overlap and 0 are corrupted, and 0 calls return null. The heap reads 74736 bytes before and after (after a warm-up call). The whole call takes 49 ms. **Control:** the same sequence through a copy of upstream's fallback. 2953 of 3000 calls exhaust the 16 tries and return a block they have already freed. Among the 2963 blocks still held, 2953 are misaligned, 2945 overlap and 2938 are corrupted. The fix is in `vendor/sandbox-api` (see its `CITATION.cff` and AGENTS.md). |
 
 ## What these verdicts set
 
@@ -198,7 +203,7 @@ fails with the diff) and the binding counts per slangc flag set.
   `GGML_SRC` pointing at a `V-Sekai-fire/ggml` checkout until Cut 3 vendors
   `vendor/ggml`.
 - `project/gate_runtime.gd` is the frame-driven runner, with a wall-clock
-  quit. `project/main.gd` has the no-argument wrappers for all 35 entry
+  quit. `project/main.gd` has the no-argument wrappers for all 36 entry
   points (rule 8).
 - `guest/probes/`:
   - `main.cpp`;

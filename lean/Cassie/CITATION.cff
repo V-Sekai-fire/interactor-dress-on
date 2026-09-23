@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: If you use this code, cite the CASSIE Godot module it is vendored from.
+title: CASSIE editing-pipeline Lean kernels (vendored)
+abstract: >-
+  The four editing-pipeline kernels of the CASSIE Godot module, as LeanSlang
+  shader modules: CurveCasteljau (De Casteljau split of a cubic Bezier),
+  CurveGenerateBezier (Schneider 1990 2x2 least-squares Bezier generator),
+  CurveNewton (Newton-Raphson chord-length reparameterize) and CurveRdp
+  (iterative Ramer-Douglas-Peucker simplifier), copied from
+  modules/cassie/lean/CassieAvbd/Curve{Casteljau,GenerateBezier,Newton,Rdp}.lean.
+  lake exe emit_cassie writes their Slang; kernels/cassie/gen.sh lowers it
+  to the cpp the curvenet dispatchers (vendor/cassie) call and to SPIR-V.
+  Local adaptations: the namespace CassieAvbd.* is renamed Cassie.* (the
+  only edit to the four files); lean/Cassie.lean replaces the part of
+  CassieAvbd.Codegen these kernels use, keeping its per-kernel GPU/CPU
+  module pairing (slangc -target cpp rejects the groupshared barriers of a
+  GPU module, E36107, so such a kernel pairs with a serial CPU sibling; the
+  four curve kernels have none and pair with themselves, pinned by
+  native_decide), and drops the rest (the CG and MAS ubershaders, the
+  slangc driver and the .cpu.cpp post-processing). Written for LeanSlang
+  v0.0.6 on Lean 4.29.1, they build unchanged on this tree's LeanSlang
+  emit-fp (v0.0.6 plus additive scalars and expressions) on Lean 4.30.0,
+  their six native_decide examples hold, and the cpp slangc lowers from their
+  emission matches the module's thirdparty/avbd/*.cpu.cpp line for line
+  outside the prelude and #line directives
+  (gates/4-curvenet/kernel-parity.log), so the Slang is unchanged. One
+  behaviour change since: two guards now fire. CurveGenerateBezier's
+  singular-determinant guard (abs(det) < 1.0e-12) and CurveNewton's |den|
+  guard (abs_den < 1.0e-9) were .litFloat, which LeanSlang prints with six
+  decimals, so both emitted as "< 0.000000" and could never hold: det = 0
+  (collinear samples) gave alpha = det_y / 0 instead of the seg_length / 3
+  fallback, and den = 0 stepped u to inf or NaN. The module's prebuilt
+  modules/cassie/thirdparty/avbd/curve_generate_bezier.cpu.cpp and
+  curve_newton.cpu.cpp at c165a519d2 carry the same bug ("< 0.0f"), so the
+  CASSIE module as shipped never fires them either. They are now
+  .litFloatExact (LeanSlang emit-fp 60532ae), emitted as 1.0e-12f and
+  1.0e-9f and pinned by native_decide to the whole emitted line; the
+  kernel-parity check against the prebuilt files now differs on exactly
+  those two lines.
+type: software
+authors:
+  - name: K. S. Ernest (iFire) Lee
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: MIT

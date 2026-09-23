@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Build the guest ELFs (one per stage: dress_on, drape; and Gate 0F's
-# probes) for the RISC-V sandbox and drop them into project/.
+# Build the guest ELFs (one per stage: dress_on, drape, curvenet; and Gate
+# 0F's probes) for the RISC-V sandbox and drop them into project/.
 #
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
@@ -68,4 +68,4 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		${GGML_SRC:+-DGGML_SRC="$GGML_SRC"}
 fi
 cmake --build "$BUILD"
-ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/probes.elf"
+ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf"

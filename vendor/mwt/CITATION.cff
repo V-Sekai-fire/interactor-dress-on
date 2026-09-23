@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: If you use this code, cite Zou, Ju and Carr, and CASSIE.
+title: multipolygon_triangulator (MWT) for curvenet.elf (vendored)
+abstract: >-
+  All 18 files of thirdparty/multipolygon_triangulator in the org's Godot
+  fork, 94,889 bytes before this file: DMWT and MingCurve, Ming
+  Zou's triangulator for multiple 3D polygons (SGP 2013, v1.1.0) as adapted
+  by Tibor Stanko and Emilie Yu for CASSIE, plus the fork's DelaunayFaces
+  (3D Delaunay through Geogram "BDEL"). DMWT.cpp's coplanar branch calls
+  cassie::delaunay_triangulate_2d_raw (vendor/cassie/src/delaunay_geogram),
+  which builds in the same library. tools/vendor/thirdparty_subset.sh
+  reproduces the tree from the pinned commit. Local adaptation
+  (tools/vendor/patches/mwt.patch): DMWT.cpp includes <climits> for
+  INT_MAX, which it used to receive through the Godot-typed
+  delaunay_geogram.h that the Cassie subset rewrote include-free; and
+  Point3::pertube draws 0..9999 as mt19937's raw output modulo 10000
+  instead of through std::uniform_int_distribution, whose algorithm
+  differs between libc++ (the native flat control) and libstdc++ (the
+  guest), so degenerate input was perturbed differently on each.
+type: software
+authors:
+  - family-names: Zou
+    given-names: Ming
+  - family-names: Ju
+    given-names: Tao
+  - family-names: Carr
+    given-names: Nathan
+  - family-names: Stanko
+    given-names: Tibor
+  - family-names: Yu
+    given-names: Emilie
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: MPL-2.0

@@ -1,0 +1,33 @@
+CURVENET_KERNELS_PENDING=OFF tests/native/curvenet/build.sh (llvm-mingw clang++, clean tree; ninja progress lines and CMake's object-path-length note dropped)
+
+curvenet: 141 library TUs compiled natively (OFF = CURVENET_KERNELS_PENDING)
+cassie_core: 0 symbols unresolved by the curvenet libraries:
+geogram BDEL2d: square 2 cells, colinear 0 cells
+cassie delaunay_triangulate_2d_raw: square 2 faces, colinear 0 faces
+PASS BDEL2d triangulates a square into 2 cells
+PASS control: BDEL2d leaves 4 colinear points with 0 cells
+PASS delaunay_triangulate_2d_raw: square -> 2 faces
+PASS control: delaunay_triangulate_2d_raw: colinear -> 0 faces
+triangle: 3 edges added, 3 nodes, 3 edges, 1 cycles, first cycle 3 edges
+PASS triangle: 3 nodes, 3 edges
+PASS triangle: >= 1 cycle, first walks 3 edges
+open path: 3 nodes, 2 edges, 0 cycles
+PASS control: an open path of 2 strokes has 0 cycles
+curvenet smoke: OK (0 failed)
+casteljau u=0.5: split (2, 1.5, 0)
+PASS curve_casteljau: split at u=0.5 is (2, 1.5, 0), ld == ra
+PASS curve_casteljau: la == P0, rd == P3
+PASS control: curve_casteljau at u=0.25 cuts at B(0.25), not (2, 1.5, 0)
+rdp: colinear keeps 2, bumped keeps 3 (keep[2] = 1)
+PASS curve_rdp: 5 colinear points keep 2
+PASS control: curve_rdp keeps the lifted middle point (3)
+newton: exact u moved by 7.45058e-09; offset u error 0.05 -> 0.00464868
+PASS curve_newton: exact parameters are a fixed point
+PASS control: curve_newton pulls u+0.05 back by >10x
+generate_bezier: |P1 - fit| 2.6656e-07, |P2 - fit| 5.3312e-07
+PASS curve_generate_bezier: recovers P1, P2 from 9 exact samples
+PASS control: curve_generate_bezier on a straight chord does not give P1
+spmv: (5, 6, 13)
+PASS spmv: A x = (5, 6, 13)
+PASS control: spmv without A[2][0] gives y[2] = 12
+curvenet kernel smoke: OK (0 failed)

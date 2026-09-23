@@ -1,0 +1,154 @@
+diff --git a/vendor/pmp-subset/pmp/algorithms/remeshing.cpp b/vendor/pmp-subset/pmp/algorithms/remeshing.cpp
+index 4145f6394..cf6025356 100644
+--- a/vendor/pmp-subset/pmp/algorithms/remeshing.cpp
++++ b/vendor/pmp-subset/pmp/algorithms/remeshing.cpp
+@@ -10,7 +10,15 @@
+ #include <memory>
+ #include <limits>
+ 
++// interactor-dress-on: PMP_NO_EIGEN compiles out adaptive remeshing's
++// curvature sizing (curvature.cpp needs Eigen and is not vendored). Uniform
++// remeshing, the path Cassie's refine/cassie_remesh use, is unchanged.
++#ifndef PMP_NO_EIGEN
+ #include "pmp/algorithms/curvature.h"
++#else
++#include <cstdio>
++#include <cstdlib>
++#endif
+ #include "pmp/algorithms/normals.h"
+ #include "pmp/algorithms/barycentric_coordinates.h"
+ #include "pmp/algorithms/differential_geometry.h"
+@@ -269,7 +277,7 @@ private:
+     void tangential_smoothing(unsigned int iterations);
+     void remove_caps();
+ 
+-    Point minimize_squared_areas(Vertex v);
++    bool minimize_squared_areas(Vertex v, Point& p);
+     Point weighted_centroid(Vertex v);
+ 
+     void project_to_reference(Vertex v);
+@@ -450,6 +458,13 @@ void Remeshing::preprocessing()
+     }
+     else
+     {
++#ifdef PMP_NO_EIGEN
++        // Adaptive sizing needs curvature(), compiled out under
++        // PMP_NO_EIGEN. Fail loudly rather than remesh with a wrong field.
++        std::fprintf(stderr,
++                     "pmp: adaptive_remeshing needs curvature (PMP_NO_EIGEN)\n");
++        std::abort();
++#else
+         // compute curvature for all mesh vertices, using cotan or Cohen-Steiner
+         // don't use two-ring neighborhood, since we otherwise compute
+         // curvature over sharp features edges, leading to high curvatures.
+@@ -550,6 +565,7 @@ void Remeshing::preprocessing()
+             // store target edge length
+             vsizing_[v] = h;
+         }
++#endif // PMP_NO_EIGEN
+     }
+ 
+     if (use_projection_)
+@@ -995,12 +1011,17 @@ void Remeshing::tangential_smoothing(unsigned int iterations)
+                 }
+                 else
+                 {
+-                    // -fno-exceptions patch: minimize_squared_areas now
+-                    // aborts on singular matrices; the upstream catch fell
+-                    // back to weighted_centroid in that case. Skip the
+-                    // fallback here — aborts are loud and surface real
+-                    // input pathology rather than silently degrading.
+-                    Point p = minimize_squared_areas(v);
++                    // interactor-dress-on: upstream falls back to
++                    // weighted_centroid when minimize_squared_areas'
++                    // 3x3 system is singular (it catches the
++                    // SolverException). The fork's -fno-exceptions patch
++                    // made that an abort, which every planar patch hits (a
++                    // flat one-ring's squared-area matrix has rank 2).
++                    // Restored without exceptions: the singular case is
++                    // reported and the upstream fallback taken.
++                    Point p;
++                    if (!minimize_squared_areas(v, p))
++                        p = weighted_centroid(v);
+                     u = p - mesh_.position(v);
+ 
+                     n = vnormal_[v];
+@@ -1096,7 +1117,7 @@ void Remeshing::remove_caps()
+     }
+ }
+ 
+-Point Remeshing::minimize_squared_areas(Vertex v)
++bool Remeshing::minimize_squared_areas(Vertex v, Point& result)
+ {
+     dmat3 A(0);
+     dvec3 b(0), x;
+@@ -1127,11 +1148,16 @@ Point Remeshing::minimize_squared_areas(Vertex v)
+         b += w * D * p;
+     }
+ 
+-    // -fno-exceptions patch: inverse() now aborts on singular matrices,
+-    // so no need to catch — direct call.
++    // inverse() aborts on a singular matrix (the fork's -fno-exceptions
++    // patch); test first with its own criterion and let the caller fall
++    // back to weighted_centroid, as upstream's catch did.
++    const double det = determinant(A);
++    if (std::fabs(det) < 1.0e-10 || std::isnan(det))
++        return false;
+     x = inverse(A) * b;
+ 
+-    return Point(x);
++    result = Point(x);
++    return true;
+ }
+ 
+ Point Remeshing::weighted_centroid(Vertex v)
+diff --git a/vendor/pmp-subset/pmp/mat_vec.h b/vendor/pmp-subset/pmp/mat_vec.h
+index f211f2786..3c5117045 100644
+--- a/vendor/pmp-subset/pmp/mat_vec.h
++++ b/vendor/pmp-subset/pmp/mat_vec.h
+@@ -13,7 +13,13 @@
+ #include <limits>
+ #include <initializer_list>
+ 
++// interactor-dress-on: PMP_NO_EIGEN drops the Eigen interop (the include
++// and the three Matrix <-> Eigen conversions below). Nothing in the
++// remeshing subset converts to or from Eigen; the Eigen users (curvature,
++// laplace, numerics, smoothing, ...) are not vendored.
++#ifndef PMP_NO_EIGEN
+ #include <Eigen/Dense>
++#endif
+ 
+ #include "pmp/exceptions.h"
+ 
+@@ -154,6 +160,7 @@ public:
+     }
+     // clang-format on
+ 
++#ifndef PMP_NO_EIGEN
+     //! construct from Eigen
+     template <typename Derived>
+     Matrix(const Eigen::MatrixBase<Derived>& m)
+@@ -173,6 +180,7 @@ public:
+                     (*this)(i, j) = m(i, j);
+         }
+     }
++#endif // PMP_NO_EIGEN
+ 
+     //! copy constructor from other scalar type
+     //! is also invoked for type-casting
+@@ -183,6 +191,7 @@ public:
+             data_[i] = static_cast<Scalar>(m[i]);
+     }
+ 
++#ifndef PMP_NO_EIGEN
+     //! assign from Eigen
+     template <typename Derived>
+     Matrix<Scalar, M, N>& operator=(const Eigen::MatrixBase<Derived>& m)
+@@ -214,6 +223,7 @@ public:
+                 m(i, j) = static_cast<OtherScalar>((*this)(i, j));
+         return m;
+     }
++#endif // PMP_NO_EIGEN
+ 
+     //! return identity matrix (only for square matrices, N==M)
+     static Matrix<Scalar, M, N> identity();

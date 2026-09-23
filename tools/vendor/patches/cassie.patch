@@ -1,0 +1,620 @@
+diff --git a/vendor/cassie/src/cassie_sketcher.cpp b/vendor/cassie/src/cassie_sketcher.cpp
+index f1207ba0d..fcf84751a 100644
+--- a/vendor/cassie/src/cassie_sketcher.cpp
++++ b/vendor/cassie/src/cassie_sketcher.cpp
+@@ -210,9 +210,28 @@ Dictionary CassieSketcher::_run_chain_locally(
+ 		}
+ 	}
+ 	PackedVector3Array empty_normals;
+-	if (points.size() >= 2) {
+-		sketch_graph->add_stroke_intersecting(points, empty_normals,
+-				MAX(snap_threshold, sketch_graph->get_merge_epsilon()));
++	const real_t graph_proximity = MAX(snap_threshold, sketch_graph->get_merge_epsilon());
++	if (is_closed && split_closed_strokes && points.size() >= 4) {
++		// A closed stroke added whole is one edge from a node back to
++		// itself: no cycle, no patch. Split it at the middle sample into
++		// two half polylines that share both end nodes, so the graph
++		// holds a two-edge cycle the patch lifecycle can triangulate.
++		// The second half ends exactly on the first sample so the two
++		// halves meet in one node whatever the baked end point is.
++		const int mid = points.size() / 2;
++		PackedVector3Array first_half;
++		PackedVector3Array second_half;
++		for (int s = 0; s <= mid; ++s) {
++			first_half.push_back(points[s]);
++		}
++		for (int s = mid; s < points.size() - 1; ++s) {
++			second_half.push_back(points[s]);
++		}
++		second_half.push_back(points[0]);
++		sketch_graph->add_stroke_intersecting(first_half, empty_normals, graph_proximity);
++		sketch_graph->add_stroke_intersecting(second_half, empty_normals, graph_proximity);
++	} else if (points.size() >= 2) {
++		sketch_graph->add_stroke_intersecting(points, empty_normals, graph_proximity);
+ 	}
+ 
+ 	const Dictionary patch_update = surface_manager->update();
+@@ -338,6 +357,10 @@ void CassieSketcher::_bind_methods() {
+ 			&CassieSketcher::set_async_triangulation);
+ 	ClassDB::bind_method(D_METHOD("get_async_triangulation"),
+ 			&CassieSketcher::get_async_triangulation);
++	ClassDB::bind_method(D_METHOD("set_split_closed_strokes", "enable"),
++			&CassieSketcher::set_split_closed_strokes);
++	ClassDB::bind_method(D_METHOD("get_split_closed_strokes"),
++			&CassieSketcher::get_split_closed_strokes);
+ 	ClassDB::bind_method(D_METHOD("get_sketch_graph"),
+ 			&CassieSketcher::get_sketch_graph);
+ 	ClassDB::bind_method(D_METHOD("get_surface_manager"),
+@@ -366,6 +389,8 @@ void CassieSketcher::_bind_methods() {
+ 			"set_peer_id", "get_peer_id");
+ 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "async_triangulation"),
+ 			"set_async_triangulation", "get_async_triangulation");
++	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "split_closed_strokes"),
++			"set_split_closed_strokes", "get_split_closed_strokes");
+ 
+ 	ADD_SIGNAL(MethodInfo("stroke_committed",
+ 			PropertyInfo(Variant::OBJECT, "final_stroke",
+diff --git a/vendor/cassie/src/cassie_sketcher.h b/vendor/cassie/src/cassie_sketcher.h
+index 98a257ad6..fa29b8e0b 100644
+--- a/vendor/cassie/src/cassie_sketcher.h
++++ b/vendor/cassie/src/cassie_sketcher.h
+@@ -90,6 +90,10 @@ class CassieSketcher : public Node3D {
+ 
+ 	float sample_dt = 1.0f / 60.0f;
+ 	int64_t peer_id = 0;
++	// A closed stroke goes into the sketch graph as two half polylines,
++	// not one edge whose two ends merge into a single node (a self-loop
++	// the minimal-cycle search never reports as a face).
++	bool split_closed_strokes = true;
+ 	uint16_t broadcast_seq = 0;
+ 
+ 	// Last encoded packet, keyed by stroke_id. Kept so the
+@@ -123,6 +127,9 @@ public:
+ 	void set_async_triangulation(bool p_enable);
+ 	bool get_async_triangulation() const;
+ 
++	void set_split_closed_strokes(bool p_enable) { split_closed_strokes = p_enable; }
++	bool get_split_closed_strokes() const { return split_closed_strokes; }
++
+ 	Ref<CassieSketchGraph> get_sketch_graph() const { return sketch_graph; }
+ 	Ref<CassieSurfaceManager> get_surface_manager() const { return surface_manager; }
+ 	Ref<CassieSketchContext> get_sketch_context() const { return sketch_context; }
+diff --git a/vendor/cassie/src/delaunay_geogram.cpp b/vendor/cassie/src/delaunay_geogram.cpp
+index 3586e95c3..de75c035e 100644
+--- a/vendor/cassie/src/delaunay_geogram.cpp
++++ b/vendor/cassie/src/delaunay_geogram.cpp
+@@ -30,61 +30,38 @@
+ 
+ #include "delaunay_geogram.h"
+ 
+-// Implementation now backed by Godot's built-in Delaunay2D and Delaunay3D.
+-// Godot uses R128 (128-bit fixed-point) for circumsphere tests — strictly more
+-// precise than Geogram's double arithmetic. This fixes the 1mm-scale failure
+-// where Geogram's double precision produced "No solution!" from DMWT.
++// Backed by Geogram's GEO::Delaunay "BDEL2d" in double. The Godot module
++// used Godot's Delaunay2D (R128 fixed point, in float Vector2) here, which
++// the guest does not carry. Geogram's predicates are exact on doubles
++// (filtered, with exact fallback), so the old "No solution!" at 1 mm scale is
++// addressed by conditioning instead: the input is mapped affinely into the
++// unit box [0,1]^2 (one uniform scale, so the triangulation is unchanged)
++// before the triangulation sees it.
+ 
+-#include "core/math/delaunay_2d.h"
+-#include "core/math/delaunay_3d.h"
++#include <geogram/basic/common.h>
++#include <geogram/basic/logger.h>
++#include <geogram/basic/numeric.h>
++#include <geogram/delaunay/delaunay.h>
+ 
+-namespace cassie {
++#include <cmath>
++#include <cstddef>
++#include <mutex>
++#include <vector>
+ 
+-Vector<DelaunayTriangle2D>
+-delaunay_triangulate_2d(const PackedVector2Array &p_points) {
+-	Vector<DelaunayTriangle2D> out;
+-	const int n = p_points.size();
+-	if (n < 3) {
+-		return out;
+-	}
+-	Vector<Vector2> pts;
+-	pts.resize(n);
+-	for (int i = 0; i < n; ++i) {
+-		pts.write[i] = p_points[i];
+-	}
+-	Vector<Delaunay2D::Triangle> tris = Delaunay2D::triangulate(pts);
+-	out.resize(tris.size());
+-	for (int i = 0; i < tris.size(); ++i) {
+-		out.write[i].points[0] = tris[i].points[0];
+-		out.write[i].points[1] = tris[i].points[1];
+-		out.write[i].points[2] = tris[i].points[2];
+-	}
+-	return out;
+-}
++namespace {
+ 
+-Vector<DelaunayTet3D>
+-delaunay_tetrahedralize_3d(const PackedVector3Array &p_points) {
+-	Vector<DelaunayTet3D> out;
+-	const int n = p_points.size();
+-	if (n < 4) {
+-		return out;
+-	}
+-	Vector<Vector3> pts;
+-	pts.resize(n);
+-	for (int i = 0; i < n; ++i) {
+-		pts.write[i] = p_points[i];
+-	}
+-	Vector<Delaunay3D::OutputSimplex> tets = Delaunay3D::tetrahedralize(pts);
+-	out.resize(tets.size());
+-	for (int i = 0; i < tets.size(); ++i) {
+-		out.write[i].points[0] = int(tets[i].points[0]);
+-		out.write[i].points[1] = int(tets[i].points[1]);
+-		out.write[i].points[2] = int(tets[i].points[2]);
+-		out.write[i].points[3] = int(tets[i].points[3]);
+-	}
+-	return out;
++void ensure_geogram_initialized() {
++	static std::once_flag init_flag;
++	std::call_once(init_flag, []() {
++		GEO::initialize(GEO::GEOGRAM_INSTALL_NONE);
++		GEO::Logger::instance()->set_quiet(true);
++	});
+ }
+ 
++} // namespace
++
++namespace cassie {
++
+ bool delaunay_triangulate_2d_raw(const double *p_xy_coords, int n_points,
+ 		int **out_face_indices, int *out_face_count) {
+ 	*out_face_indices = nullptr;
+@@ -92,26 +69,56 @@ bool delaunay_triangulate_2d_raw(const double *p_xy_coords, int n_points,
+ 	if (p_xy_coords == nullptr || n_points < 3) {
+ 		return false;
+ 	}
+-	Vector<Vector2> pts;
+-	pts.resize(n_points);
++
++	double lo[2] = { p_xy_coords[0], p_xy_coords[1] };
++	double hi[2] = { lo[0], lo[1] };
++	for (int i = 0; i < n_points; ++i) {
++		for (int a = 0; a < 2; ++a) {
++			const double v = p_xy_coords[i * 2 + a];
++			if (!std::isfinite(v)) {
++				return false;
++			}
++			if (v < lo[a]) {
++				lo[a] = v;
++			}
++			if (v > hi[a]) {
++				hi[a] = v;
++			}
++		}
++	}
++	const double span = std::fmax(hi[0] - lo[0], hi[1] - lo[1]);
++	if (!(span > 0.0)) {
++		return false;
++	}
++	const double inv = 1.0 / span;
++	std::vector<double> unit(std::size_t(n_points) * 2u);
+ 	for (int i = 0; i < n_points; ++i) {
+-		pts.write[i] = Vector2(
+-				float(p_xy_coords[i * 2]),
+-				float(p_xy_coords[i * 2 + 1]));
++		unit[i * 2 + 0] = (p_xy_coords[i * 2 + 0] - lo[0]) * inv;
++		unit[i * 2 + 1] = (p_xy_coords[i * 2 + 1] - lo[1]) * inv;
+ 	}
+-	Vector<Delaunay2D::Triangle> tris = Delaunay2D::triangulate(pts);
+-	if (tris.is_empty()) {
++
++	ensure_geogram_initialized();
++	// Deterministic call to call, as DelaunayFaces does for BDEL.
++	GEO::Numeric::random_reset();
++
++	GEO::Delaunay_var delaunay = GEO::Delaunay::create(2, "BDEL2d");
++	if (delaunay.get() == nullptr) {
+ 		return false;
+ 	}
+-	const int nf = tris.size();
++	delaunay->set_vertices(GEO::index_t(n_points), unit.data());
++
++	const GEO::index_t nf = delaunay->nb_cells();
++	if (nf == 0) {
++		return false; // colinear input: Delaunay2d leaves no cells
++	}
+ 	int *indices = new int[std::size_t(nf) * 3u];
+-	for (int i = 0; i < nf; ++i) {
+-		indices[i * 3 + 0] = tris[i].points[0];
+-		indices[i * 3 + 1] = tris[i].points[1];
+-		indices[i * 3 + 2] = tris[i].points[2];
++	for (GEO::index_t c = 0; c < nf; ++c) {
++		for (GEO::index_t k = 0; k < 3; ++k) {
++			indices[c * 3 + k] = int(delaunay->cell_vertex(c, k));
++		}
+ 	}
+ 	*out_face_indices = indices;
+-	*out_face_count = nf;
++	*out_face_count = int(nf);
+ 	return true;
+ }
+ 
+diff --git a/vendor/cassie/src/delaunay_geogram.h b/vendor/cassie/src/delaunay_geogram.h
+index 170db449d..560938a18 100644
+--- a/vendor/cassie/src/delaunay_geogram.h
++++ b/vendor/cassie/src/delaunay_geogram.h
+@@ -30,71 +30,23 @@
+ 
+ #pragma once
+ 
+-// Windows headers leak LEFT/RIGHT/UP/DOWN/INF macros that collide
+-// with Godot's core/math symbols.  Undefine them before the includes.
+-#ifdef LEFT
+-#undef LEFT
+-#endif
+-#ifdef RIGHT
+-#undef RIGHT
+-#endif
+-#ifdef UP
+-#undef UP
+-#endif
+-#ifdef DOWN
+-#undef DOWN
+-#endif
+-#ifdef INF
+-#undef INF
+-#endif
+-#ifdef I
+-#undef I
+-#endif
+-#ifdef J
+-#undef J
+-#endif
+-#ifdef K
+-#undef K
+-#endif
+-
+-// Geogram-backed Delaunay shims that replace Godot's built-in
+-// Delaunay2D::triangulate / Delaunay3D::tetrahedralize. Backed by
+-// GEO::Delaunay::create(3, "BDEL") / create(2, "BDEL2d"). Mirrors the
+-// proven cassie-triangulation/src/Utility/DelaunayFaces wrapper but
+-// produces godot-cpp containers instead of std::vector<>.
+-
+-#include "core/templates/vector.h"
+-#include "core/variant/variant.h"
++// Geogram-backed 2D Delaunay for mwt::DMWT's coplanar branch
++// (DMWT.cpp:548), the one caller in the curvenet subset. The Godot-typed
++// delaunay_triangulate_2d / delaunay_tetrahedralize_3d overloads are gone:
++// nothing in the subset calls them, and 3D Delaunay goes through
++// cassie::DelaunayFaces (GEO::Delaunay "BDEL") already. This header has no
++// Godot or Eigen dependency, so mwt compiles against it without the
++// godot_lite prelude.
+ 
+ namespace cassie {
+ 
+-// Triangle output for the 2D path (replaces Delaunay2D::Triangle).
+-struct DelaunayTriangle2D {
+-	int points[3];
+-};
+-
+-// Tetrahedron output for the 3D path (replaces Delaunay3D::OutputSimplex).
+-struct DelaunayTet3D {
+-	int points[4];
+-};
+-
+-// 2D Delaunay triangulation. Returns triangles whose three indices
+-// refer back into p_points. Empty result on degenerate input
+-// (fewer than 3 points or all colinear).
+-Vector<DelaunayTriangle2D> delaunay_triangulate_2d(const PackedVector2Array &p_points);
+-
+-// 3D Delaunay tetrahedralization. Returns tetrahedra whose four
+-// indices refer back into p_points. Empty result on degenerate
+-// input (fewer than 4 points or all coplanar).
+-Vector<DelaunayTet3D> delaunay_tetrahedralize_3d(const PackedVector3Array &p_points);
+-
+-// Non-godot-cpp overload for callers that have stride-3 doubles
+-// already (e.g. mwt::DMWT's coplanar branch). `p_xy_coords` has
+-// length 2*n_points; each consecutive pair is (x, y).
++// 2D Delaunay triangulation of n_points points. `p_xy_coords` has length
++// 2*n_points; each consecutive pair is (x, y).
+ //
+ // Returns the flat face index list (`*out_face_indices`, length
+ // 3 * *out_face_count) — caller owns and must `delete[]` it.
+-// Returns false on degenerate input.
++// Returns false on degenerate input (fewer than 3 points, non-finite
++// coordinates, all points coincident or colinear).
+ bool delaunay_triangulate_2d_raw(const double *p_xy_coords, int n_points,
+ 		int **out_face_indices, int *out_face_count);
+ 
+diff --git a/vendor/cassie/src/sketch/cassie_sketch_graph.cpp b/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
+index e00beeb83..af6044db4 100644
+--- a/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
++++ b/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
+@@ -1004,9 +1004,13 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
+ 		real_t p_target_edge_length) const {
+ 	PackedVector3Array out;
+ 	const int N = p_cycle_edge_ids.size();
+-	if (N < 3 || p_target_edge_length <= 0) {
++	// interactor-dress-on: two-edge cycles too (a closed stroke split in
++	// two by CassieSketcher::split_closed_strokes), which find_cycles
++	// reports and this used to refuse (N < 3), so they never became patches.
++	if (N < 2 || p_target_edge_length <= 0) {
+ 		return out;
+ 	}
++	int prev_exit = -1;
+ 	for (int i = 0; i < N; ++i) {
+ 		const int eid = p_cycle_edge_ids[i];
+ 		Ref<CassieSketchGraphEdge> edge = get_edge(eid);
+@@ -1025,13 +1029,18 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
+ 		const int na = next_edge->get_node_a_id();
+ 		const int nb = next_edge->get_node_b_id();
+ 		int exit_nid = -1;
+-		if (a == na || a == nb) {
++		if ((a == na || a == nb) && (b == na || b == nb) && a != b) {
++			// Both ends shared with the next edge (a two-edge cycle): enter
++			// where the previous edge left off, else at node a.
++			exit_nid = (prev_exit == a) ? b : (prev_exit == b ? a : b);
++		} else if (a == na || a == nb) {
+ 			exit_nid = a;
+ 		} else if (b == na || b == nb) {
+ 			exit_nid = b;
+ 		} else {
+ 			continue;
+ 		}
++		prev_exit = exit_nid;
+ 		const int entry_nid = edge->get_opposite(exit_nid);
+ 		const bool reversed = (entry_nid == b);
+ 
+diff --git a/vendor/cassie/src/sketch/cassie_surface_patch.cpp b/vendor/cassie/src/sketch/cassie_surface_patch.cpp
+index 74436698b..5d8b80257 100644
+--- a/vendor/cassie/src/sketch/cassie_surface_patch.cpp
++++ b/vendor/cassie/src/sketch/cassie_surface_patch.cpp
+@@ -374,7 +374,7 @@ Dictionary CassieSurfacePatch::project(const Vector3 &p_pos) const {
+ }
+ 
+ Callable CassieSurfacePatch::get_callback() {
+-	return Callable(this, "project");
++	return callable_mp(this, &CassieSurfacePatch::project);
+ }
+ 
+ Vector3i CassieSurfacePatch::get_triangle_indices(int p_idx) const {
+diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
+index 3746c8b7d..cfec0dc5e 100644
+--- a/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
++++ b/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
+@@ -30,8 +30,8 @@
+ 
+ // Slang-emitted De Casteljau cubic split + dispatch wrapper.
+ //
+-// Pulls the namespaced .cpu.cpp into this TU so CasteljauParams_0,
+-// GlobalParams_0, and _main_0 are visible without re-declaration. One
++// Pulls the namespaced emit into this TU so CasteljauParams_0,
++// GlobalParams_0, and main_0_Thread are visible without re-declaration. One
+ // dispatch is one thread (numthreads(1,1,1)) — the kernel is a pure
+ // 8-output function, no SIMT fan-out.
+ //
+@@ -39,7 +39,23 @@
+ 
+ #include "curve_casteljau_dispatch.h"
+ 
+-#include "../../../thirdparty/avbd/curve_casteljau.cpu.cpp"
++// The Lean-emitted slangc -target cpp output for this kernel
++// (kernels/cassie/cpp/curve_casteljau_emit.cpp, regenerated from lean/Cassie by the
++// kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
++// comes in once at file scope; emptying the EXTERN_C macros demotes the
++// emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
++// namespace below (the guest/avbd/avbd_cpu.cpp pattern).
++#include "slang-cpp-prelude.h"
++#undef SLANG_PRELUDE_EXTERN_C
++#undef SLANG_PRELUDE_EXTERN_C_START
++#undef SLANG_PRELUDE_EXTERN_C_END
++#define SLANG_PRELUDE_EXTERN_C
++#define SLANG_PRELUDE_EXTERN_C_START
++#define SLANG_PRELUDE_EXTERN_C_END
++
++namespace cassie_slang_curve_casteljau {
++#include "curve_casteljau_emit.cpp"
++} // namespace cassie_slang_curve_casteljau
+ 
+ namespace cassie_slang_dispatch {
+ 
+@@ -68,7 +84,7 @@ void curve_casteljau(
+ 	ComputeThreadVaryingInput tvi;
+ 	tvi.groupID = uint3(0u, 0u, 0u);
+ 	tvi.groupThreadID = uint3(0u, 0u, 0u);
+-	_main_0(&tvi, nullptr, &g);
++	main_0_Thread(&tvi, nullptr, &g);
+ 
+ 	auto store = [](float dst[3], const Vector<float, 3> &src) {
+ 		dst[0] = src.x;
+diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
+index 481c9f58f..c9ac47347 100644
+--- a/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
++++ b/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
+@@ -34,7 +34,23 @@
+ 
+ #include "curve_generate_bezier_dispatch.h"
+ 
+-#include "../../../thirdparty/avbd/curve_generate_bezier.cpu.cpp"
++// The Lean-emitted slangc -target cpp output for this kernel
++// (kernels/cassie/cpp/curve_generate_bezier_emit.cpp, regenerated from lean/Cassie by the
++// kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
++// comes in once at file scope; emptying the EXTERN_C macros demotes the
++// emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
++// namespace below (the guest/avbd/avbd_cpu.cpp pattern).
++#include "slang-cpp-prelude.h"
++#undef SLANG_PRELUDE_EXTERN_C
++#undef SLANG_PRELUDE_EXTERN_C_START
++#undef SLANG_PRELUDE_EXTERN_C_END
++#define SLANG_PRELUDE_EXTERN_C
++#define SLANG_PRELUDE_EXTERN_C_START
++#define SLANG_PRELUDE_EXTERN_C_END
++
++namespace cassie_slang_curve_generate_bezier {
++#include "curve_generate_bezier_emit.cpp"
++} // namespace cassie_slang_curve_generate_bezier
+ 
+ namespace cassie_slang_dispatch {
+ 
+@@ -78,7 +94,7 @@ void curve_generate_bezier(
+ 	ComputeThreadVaryingInput tvi;
+ 	tvi.groupID = uint3(0u, 0u, 0u);
+ 	tvi.groupThreadID = uint3(0u, 0u, 0u);
+-	_main_0(&tvi, nullptr, &g);
++	main_0_Thread(&tvi, nullptr, &g);
+ 
+ 	for (int k = 0; k < 4; ++k) {
+ 		r_out_ctrl_xyz[k * 3 + 0] = out_scratch[k].x;
+diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
+index 170dc398e..ae9536bd2 100644
+--- a/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
++++ b/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
+@@ -34,7 +34,23 @@
+ 
+ #include "curve_newton_dispatch.h"
+ 
+-#include "../../../thirdparty/avbd/curve_newton.cpu.cpp"
++// The Lean-emitted slangc -target cpp output for this kernel
++// (kernels/cassie/cpp/curve_newton_emit.cpp, regenerated from lean/Cassie by the
++// kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
++// comes in once at file scope; emptying the EXTERN_C macros demotes the
++// emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
++// namespace below (the guest/avbd/avbd_cpu.cpp pattern).
++#include "slang-cpp-prelude.h"
++#undef SLANG_PRELUDE_EXTERN_C
++#undef SLANG_PRELUDE_EXTERN_C_START
++#undef SLANG_PRELUDE_EXTERN_C_END
++#define SLANG_PRELUDE_EXTERN_C
++#define SLANG_PRELUDE_EXTERN_C_START
++#define SLANG_PRELUDE_EXTERN_C_END
++
++namespace cassie_slang_curve_newton {
++#include "curve_newton_emit.cpp"
++} // namespace cassie_slang_curve_newton
+ 
+ namespace cassie_slang_dispatch {
+ 
+@@ -80,7 +96,7 @@ void curve_newton_reparameterize(
+ 	ComputeThreadVaryingInput tvi;
+ 	tvi.groupID = uint3(0u, 0u, 0u);
+ 	tvi.groupThreadID = uint3(0u, 0u, 0u);
+-	_main_0(&tvi, nullptr, &g);
++	main_0_Thread(&tvi, nullptr, &g);
+ 
+ 	delete[] in_packed;
+ }
+diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
+index ddaae225b..46c02eac5 100644
+--- a/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
++++ b/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
+@@ -34,7 +34,23 @@
+ 
+ #include "curve_rdp_dispatch.h"
+ 
+-#include "../../../thirdparty/avbd/curve_rdp.cpu.cpp"
++// The Lean-emitted slangc -target cpp output for this kernel
++// (kernels/cassie/cpp/curve_rdp_emit.cpp, regenerated from lean/Cassie by the
++// kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
++// comes in once at file scope; emptying the EXTERN_C macros demotes the
++// emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
++// namespace below (the guest/avbd/avbd_cpu.cpp pattern).
++#include "slang-cpp-prelude.h"
++#undef SLANG_PRELUDE_EXTERN_C
++#undef SLANG_PRELUDE_EXTERN_C_START
++#undef SLANG_PRELUDE_EXTERN_C_END
++#define SLANG_PRELUDE_EXTERN_C
++#define SLANG_PRELUDE_EXTERN_C_START
++#define SLANG_PRELUDE_EXTERN_C_END
++
++namespace cassie_slang_curve_rdp {
++#include "curve_rdp_emit.cpp"
++} // namespace cassie_slang_curve_rdp
+ 
+ namespace cassie_slang_dispatch {
+ 
+@@ -79,7 +95,7 @@ uint32_t curve_rdp_reduce(const float *p_in_points_xyz,
+ 	ComputeThreadVaryingInput tvi;
+ 	tvi.groupID = uint3(0u, 0u, 0u);
+ 	tvi.groupThreadID = uint3(0u, 0u, 0u);
+-	_main_0(&tvi, nullptr, &g);
++	main_0_Thread(&tvi, nullptr, &g);
+ 
+ 	delete[] in_packed;
+ 	return out_count_scratch;
+diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
+index 0750044de..52a2f06c4 100644
+--- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
++++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
+@@ -30,17 +30,15 @@
+ 
+ // Slang-emitted SPMV kernel + dispatch wrapper.
+ //
+-// We #include the slangc -target cpp output (which lives under
+-// modules/cassie/thirdparty/avbd/) directly here. The .cpu.cpp file
+-// wraps its contents in `namespace cassie_slang_spmv { ... }` (post-
+-// processed by `lake exe avbd-codegen`), so pulling it in here makes
+-// `_main_0`, `GlobalParams_0`, `SpmvDf32Params_0` etc. visible in this
+-// TU only — no duplicate-symbol risk if no other TU includes the same
+-// file.
++// We #include the slangc -target cpp output (kernels/cassie/cpp/
++// spmv_df32_emit.cpp) directly here, inside `namespace cassie_slang_spmv`,
++// so `main_0_Thread`, `GlobalParams_0`, `SpmvDf32Params_0` etc. are
++// visible in this TU only — no duplicate-symbol risk if no other TU
++// includes the same file.
+ //
+ // The dispatch wrapper at the bottom simulates the SIMT workgroup loop
+ // that a GPU would run in parallel: ceil(rows/256) groups × 256 threads.
+-// Each thread invocation calls `_main_0` with the appropriate
++// Each thread invocation calls `main_0_Thread` with the appropriate
+ // ComputeThreadVaryingInput. The kernel itself early-exits any thread
+ // whose global ID >= rows, so the trailing thread tail is harmless.
+ //
+@@ -58,7 +56,23 @@
+ 
+ #include "spmv_dispatch.h"
+ 
+-#include "../../../thirdparty/avbd/spmv.cpu.cpp"
++// The Lean-emitted slangc -target cpp output for this kernel
++// (kernels/cassie/cpp/spmv_df32_emit.cpp, from Cloth.SlangCodegen.SpmvDf32 by the
++// kernel generator; never a copied .cpu.cpp, AGENTS.md rule 2). The prelude
++// comes in once at file scope; emptying the EXTERN_C macros demotes the
++// emit's main_0 / GlobalParams_0 to ordinary C++ so they stay inside the
++// namespace below (the guest/avbd/avbd_cpu.cpp pattern).
++#include "slang-cpp-prelude.h"
++#undef SLANG_PRELUDE_EXTERN_C
++#undef SLANG_PRELUDE_EXTERN_C_START
++#undef SLANG_PRELUDE_EXTERN_C_END
++#define SLANG_PRELUDE_EXTERN_C
++#define SLANG_PRELUDE_EXTERN_C_START
++#define SLANG_PRELUDE_EXTERN_C_END
++
++namespace cassie_slang_spmv {
++#include "spmv_df32_emit.cpp"
++} // namespace cassie_slang_spmv
+ 
+ namespace cassie_slang_dispatch {
+ 
+@@ -94,7 +108,7 @@ void spmv(int p_rows,
+ 			ComputeThreadVaryingInput tvi;
+ 			tvi.groupID = uint3(uint32_t(gi), 0u, 0u);
+ 			tvi.groupThreadID = uint3(uint32_t(ti), 0u, 0u);
+-			_main_0(&tvi, nullptr, &g);
++			main_0_Thread(&tvi, nullptr, &g);
+ 		}
+ 	}
+ }
+diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
+index 93d4e00c5..59a995eb9 100644
+--- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
++++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
+@@ -32,7 +32,7 @@
+ 
+ // Public C++ entry point to the Slang-emitted SPMV kernel. The
+ // implementation is in spmv_dispatch.cpp, which `#include`s the
+-// slangc-emitted modules/cassie/thirdparty/avbd/spmv.cpu.cpp directly.
++// slangc-emitted kernels/cassie/cpp/spmv_df32_emit.cpp directly.
+ //
+ // Single source of truth: this kernel is generated from the Lean
+ // `Cloth.SlangCodegen.Spmv` module → Slang source → slangc -target cpp.

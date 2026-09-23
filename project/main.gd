@@ -5,8 +5,11 @@
 # them as packed arrays.
 extends Node
 
+const MeshWire := preload("res://util/mesh_wire.gd")
+
 var _sb = null     # dress_on.elf: the Stage 1 GPU-layer probes
 var _drape = null  # drape.elf: the AVBD solver, cpu and rd
+var _cn = null     # curvenet.elf: Cassie pen -> curvenet -> mesh (CPU only)
 
 func _ready() -> void:
 	_sb = ClassDB.instantiate("Sandbox")
@@ -25,6 +28,11 @@ func _ready() -> void:
 	_drape.references_max = 65536
 	_drape.program = load("res://drape.elf")
 	print("[dress-on] sandbox loaded drape.elf")
+	_cn = ClassDB.instantiate("Sandbox")
+	add_child(_cn)
+	_cn.references_max = 4096
+	_cn.program = load("res://curvenet.elf")
+	print("[dress-on] sandbox loaded curvenet.elf")
 
 func _bytes(path: String) -> PackedByteArray:
 	var f := FileAccess.open(path, FileAccess.READ)
@@ -141,6 +149,7 @@ func p_file(path: String = "res://project.godot") -> String: return _pv("p_file"
 func p_threads() -> String: return _pv("p_threads")
 func p_spin(n: int = 1000000) -> String: return _pv("p_spin", [n])
 func p_alloc(mb: int = 64) -> String: return _pv("p_alloc", [mb])
+func p_memalign(n: int = 1000, upstream: bool = false) -> String: return _pv("p_memalign", [n, upstream])
 func echo_f(x: float = 0.1) -> String: return _pv("echo_f", [x])
 func echo_i(x: int = 9007199254740993) -> String: return _pv("echo_i", [x])
 func echo_b(x: bool = true) -> String: return _pv("echo_b", [x])
@@ -176,3 +185,145 @@ func f16_read() -> String:
 	return _pv("f16_read", [h])
 func ggml_probe(n: int = 256) -> String: return _pv("ggml_probe", [n])
 func zfh_probe() -> String: return _pv("zfh_probe")
+
+# --- Cut 4: the curvenet stage (curvenet.elf) ----------------------------------
+# Meshes, curves and knots cross as packed arrays in util/mesh_wire.gd's
+# format. No GPU: every call is a plain vmcall; host_us times it.
+
+func _cn_call(fn: String, args: Array = []) -> String:
+	if _cn == null:
+		return "FAIL: no curvenet sandbox"
+	var t0 := Time.get_ticks_usec()
+	var r = _cn.callv("vmcall", [fn] + args)
+	return "host_us=%d %s" % [Time.get_ticks_usec() - t0, str(r)]
+
+func cn_reset() -> String:
+	return _cn_call("cn_reset")
+
+func cn_set_param(name: String = "snap_radius", value: float = 0.03) -> String:
+	return _cn_call("cn_set_param", [name, value])
+
+func cn_get_param(name: String = "snap_radius") -> String:
+	return _cn_call("cn_get_param", [name])
+
+# The demo body: an r = 0.5 SphereMesh at the origin.
+func cn_set_body_sphere(radius: float = 0.5) -> String:
+	var b := MeshWire.sphere(radius)
+	return _cn_call("cn_set_body", [b.vertices, b.triangles])
+
+# One closed stroke at 30 degrees latitude, 1 cm off the demo sphere: it
+# snaps onto the body and closes one patch. Resets the stage first.
+func pen_demo_circle() -> String:
+	var b := cn_set_body_sphere()
+	var r := cn_reset()
+	var s := MeshWire.circle_stroke(0.51, PI / 6.0, TAU, 64)
+	return "%s | %s | %s" % [b, r, _cn_call("pen_stroke", [s])]
+
+# The scripted pen source: pen_begin/pen_point/pen_end with no arguments
+# replay one stroke sample by sample, as a tracked pen would deliver it. The
+# stroke is pen_demo_circle's (30 degrees latitude, 1 cm off the demo sphere,
+# closed); call cn_set_body_sphere and cn_reset first for a fresh stage.
+var _pen_src := PackedFloat32Array()
+var _pen_next := 0
+var _pen_id := -1
+
+# Loads the scripted stroke (samples + 1 samples, the last on the first) and
+# sends its first sample; the guest's stroke id is kept for pen_point/pen_end.
+func pen_begin(samples: int = 64, pressure: float = 0.5) -> String:
+	if _cn == null:
+		return "FAIL: no curvenet sandbox"
+	_pen_src = MeshWire.circle_stroke(0.51, PI / 6.0, TAU, samples, pressure)
+	_pen_next = 4
+	var t0 := Time.get_ticks_usec()
+	_pen_id = int(_cn.vmcall("pen_begin", _pen_src[0], _pen_src[1], _pen_src[2], _pen_src[3]))
+	return "host_us=%d id=%d samples=%d" % [Time.get_ticks_usec() - t0, _pen_id, _pen_src.size() / 4]
+
+# The next `count` samples of the scripted stroke (0: all that remain).
+func pen_point(count: int = 0) -> String:
+	if _cn == null:
+		return "FAIL: no curvenet sandbox"
+	if _pen_id < 0 or _pen_next >= _pen_src.size():
+		return "FAIL: no scripted stroke in progress (pen_begin first)"
+	var end := _pen_src.size() if count <= 0 else mini(_pen_src.size(), _pen_next + 4 * count)
+	var sent := 0
+	var r = ""
+	var t0 := Time.get_ticks_usec()
+	while _pen_next < end:
+		var i := _pen_next
+		r = _cn.vmcall("pen_point", _pen_id, _pen_src[i], _pen_src[i + 1], _pen_src[i + 2], _pen_src[i + 3])
+		_pen_next += 4
+		sent += 1
+	return "host_us=%d sent=%d left=%d %s" % [Time.get_ticks_usec() - t0, sent,
+			(_pen_src.size() - _pen_next) / 4, str(r)]
+
+# id < 0: the scripted stroke's.
+func pen_end(id: int = -1) -> String:
+	var r := _cn_call("pen_end", [_pen_id if id < 0 else id])
+	if id < 0:
+		_pen_id = -1
+	return r
+
+func patch_count() -> String:
+	return _cn_call("patch_count")
+
+# Patch i over the wire: vertex and triangle counts (the buffers are
+# mesh_wire's; mesh_array_mesh has the built mesh as an ArrayMesh).
+func patch_vertices(i: int = 0) -> String:
+	if _cn == null:
+		return "FAIL: no curvenet sandbox"
+	var v: PackedFloat32Array = _cn.vmcall("patch_vertices", i)
+	return "patch %d: %d vertices" % [i, v.size() / 3]
+
+func patch_indices(i: int = 0) -> String:
+	if _cn == null:
+		return "FAIL: no curvenet sandbox"
+	var f: PackedInt32Array = _cn.vmcall("patch_indices", i)
+	return "patch %d: %d triangles" % [i, f.size() / 3]
+
+# The built mesh's source patch per triangle (-1 after a remesh).
+func mesh_patch_ids() -> String:
+	if _cn == null:
+		return "FAIL: no curvenet sandbox"
+	var ids: PackedInt32Array = _cn.vmcall("mesh_patch_ids")
+	var per := {}
+	for p in ids:
+		per[p] = per.get(p, 0) + 1
+	return "%d triangles, per patch %s" % [ids.size(), str(per)]
+
+func check_names() -> String:
+	return _cn_call("check_names")
+
+# Gate 4's checks in the guest, one line each. pen_sphere resets the stage
+# and clears the body.
+func curvenet_checks() -> String:
+	return _cn_call("check_all")
+
+func curvenet_check(name: String = "pen_sphere") -> String:
+	return _cn_call("check", [name])
+
+func curvenet_build() -> String:
+	var r := _cn_call("curvenet_build")
+	var c := MeshWire.curves(_cn.vmcall("curvenet_curves")) if _cn != null else []
+	var k := MeshWire.knots(_cn.vmcall("curvenet_knots")) if _cn != null else []
+	return "%s | wire: %d curves, %d knots" % [r, c.size(), k.size()]
+
+# Merge + weld the active patches; target_edge_length > 0 PMP-remeshes.
+func mesh_build(target_edge_length: float = 0.02, weld_eps: float = 1e-5) -> String:
+	var r := _cn_call("mesh_build", [target_edge_length, weld_eps])
+	if _cn == null:
+		return r
+	var loops := MeshWire.loops(_cn.vmcall("mesh_boundary_loops"))
+	var v: PackedFloat32Array = _cn.vmcall("mesh_vertices")
+	return "%s | wire: %d vertices, %d boundary loops" % [r, v.size() / 3, loops.size()]
+
+# The built mesh as an ArrayMesh (Godot winding), for a MeshInstance3D.
+func mesh_array_mesh() -> ArrayMesh:
+	if _cn == null:
+		return ArrayMesh.new()
+	return MeshWire.to_array_mesh(_cn.vmcall("mesh_vertices"), _cn.vmcall("mesh_indices"))
+
+# Mesh -> curvenet on a unit cube: 12 curves on 8 knots.
+func curvenet_extract_demo() -> String:
+	var c := MeshWire.cube()
+	var r := _cn_call("curvenet_extract", [c.vertices, c.triangles, 200, 1e-3, 1e-2, 0.0])
+	return r

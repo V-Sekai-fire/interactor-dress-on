@@ -3,10 +3,23 @@ message: If you use this code, cite godot-sandbox.
 title: godot-sandbox guest API and cmake helper (vendored)
 abstract: >-
   The C++ guest API (program/cpp/docker/api) and the add_sandbox_program cmake
-  helper (program/cpp/cmake) from the org's godot-sandbox fork, unmodified
-  except that the cmake example directory is omitted. This is everything a
-  guest ELF needs to build against; the runtime addon is separate
-  (project/addons/godot_sandbox).
+  helper (program/cpp/cmake) from the org's godot-sandbox fork. This is
+  everything a guest ELF needs to build against; the runtime addon is
+  separate (project/addons/godot_sandbox). Local adaptations: the cmake
+  example directory is omitted; and docker/api/native.cpp's aligned
+  allocation is rewritten. Upstream's memalign (behind posix_memalign,
+  aligned_alloc and aligned operator new) retried malloc up to 16 times for
+  an aligned block and, when every try missed, returned the last block after
+  freeing it, so the caller held freed memory and a later free was a double
+  free (Gate 4: "Possible double-free" in Geogram's ~Delaunay3d; at 4096
+  alignment nearly every call missed). Now memalign over-allocates by
+  alignment - 1 and returns the aligned address inside the block; a small
+  open-addressing table maps each such address to the host block, and
+  free/realloc (the --wrap targets, which become C functions around the
+  renamed free/realloc syscalls) consult it first. The table is freed when
+  no aligned block is live. posix_memalign answers EINVAL/ENOMEM instead of
+  1. Gate 0F probe 17 (gates/0f-runtime) checks 3000 blocks at 64/128/4096
+  alignment against a copy of the old fallback.
 type: software
 authors:
   - name: libriscv contributors

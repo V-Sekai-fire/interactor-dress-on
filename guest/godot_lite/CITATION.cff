@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: If you use this code, cite Godot Engine, whose API it re-implements.
+title: godot-lite, a namespaced Godot API shim for sandbox guests
+abstract: >-
+  A hand-written stand-in for the parts of Godot's core that Cassie's
+  curvenet subset (vendor/cassie) and the vendored Godot core subset
+  (vendor/godot-core-subset) include, at Godot's include paths and in
+  namespace gdl, so the Cassie sources compile almost verbatim with no
+  engine: memory.h (memnew/memdelete over malloc), error_macros.h (the
+  ERR_*/WARN_*/CRASH_* macros in use), a String over std::string, a
+  copy-on-write Vector over a shared std::vector, Variant with the types
+  Cassie moves (bool, int, float, String, Vector3, Object, Callable,
+  Dictionary, Array, PackedInt32/Float32/Vector3Array), Array and
+  Dictionary as shared references (the Dictionary on Godot's own
+  insertion-ordered HashMap), TypedArray, Callable over std::function with
+  callable_mp, Object/RefCounted/Ref, no-op ClassDB and GDCLASS, a
+  synchronous WorkerThreadPool, Resource, Node3D, Mesh/ArrayMesh, OS
+  environment and Time ticks. gdl_prelude.h (force-included into Cassie
+  TUs) is `using namespace gdl`. Mostly new code; these parts follow
+  Godot's source at the pin closely enough to cite it: Ref<T> and the
+  RefCounted reference protocol (core/object/ref_counted.h), the
+  memory.h templates and the _GlobalNil sentinel (core/os/memory.h), the
+  Vector method set including sort_custom/slice/bsearch
+  (core/templates/vector.h), the Variant type enum numbering, the
+  Mesh::ArrayType values and Dictionary::next (core/variant/dictionary.cpp).
+  tests/native/godot_lite checks it natively against Godot's own Curve3D
+  unit-test expectations and a Godot 4.7.2 run.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: Godot Engine contributors
+    website: https://godotengine.org
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: c165a519d2836f3ded600948abb9d8f799cd4c5f
+license: MIT

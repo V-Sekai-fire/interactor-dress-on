@@ -1,0 +1,42 @@
+bezier length 97.991241
+bezier baked_points 722
+bezier sample_baked 0.10 lin 9.641861 1.010575 -0.980408
+bezier sample_baked 0.10 cub 9.642135 1.010484 -0.980326
+bezier up 0.10 -0.268032 0.962736 0.036019
+bezier sample_baked 0.25 lin 12.908060 10.286341 -9.044251
+bezier sample_baked 0.25 cub 12.908231 10.286283 -9.044234
+bezier up 0.25 -0.666972 0.185819 0.721539
+bezier sample_baked 0.50 lin -1.707988 26.710367 -19.564919
+bezier sample_baked 0.50 cub -1.707993 26.710371 -19.564938
+bezier up 0.50 -0.460737 -0.058359 0.885616
+bezier sample_baked 0.75 lin -14.290479 45.355064 -18.602262
+bezier sample_baked 0.75 cub -14.290719 45.355145 -18.602449
+bezier up 0.75 -0.150906 -0.730057 0.666516
+bezier sample_baked 0.90 lin -6.717927 49.595333 -7.115199
+bezier sample_baked 0.90 cub -6.717975 49.595348 -7.115232
+bezier up 0.90 -0.308006 -0.872197 0.380006
+bezier closest_offset 18.637264
+bezier closest_point 14.429375 5.957825 -5.458436
+bezier tessellate 41
+bezier tessellate_even 33
+closed length 5.227301
+closed baked_points 140
+closed sample_baked 0.10 lin 0.491970 0.154880 0.000000
+closed sample_baked 0.10 cub 0.492007 0.154809 0.000000
+closed up 0.10 -0.539414 0.842041 0.000000
+closed sample_baked 0.25 lin 0.963419 0.761764 0.000000
+closed sample_baked 0.25 cub 0.963555 0.761738 0.000000
+closed up 0.25 -0.957188 0.289466 0.000000
+closed sample_baked 0.50 lin 0.497320 1.811785 0.392517
+closed sample_baked 0.50 cub 0.497335 1.811827 0.392537
+closed up 0.50 -0.625469 -0.708197 -0.327484
+closed sample_baked 0.75 lin 0.000000 1.267807 0.316952
+closed sample_baked 0.75 cub 0.000000 1.267852 0.316963
+closed up 0.75 0.978531 0.049987 -0.199946
+closed sample_baked 0.90 lin 0.000000 0.507122 0.126781
+closed sample_baked 0.90 cub 0.000000 0.507095 0.126774
+closed up 0.90 0.978531 0.049986 -0.199946
+closed closest_offset 2.203443
+closed closest_point 0.778342 1.549504 0.252923
+closed tessellate 35
+closed tessellate_even 37

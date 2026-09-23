@@ -56,7 +56,7 @@ silently; these two show the properties can fail.
 | dependency | repository | rev |
 |---|---|---|
 | toolchain | leanprover/lean4 | v4.30.0 |
-| LeanSlang | V-Sekai-fire/contract-lean-slang (the renamed lean-slang) | branch `emit-fp` = e0e96da4ba8116a3dcfd860f6732d29eee13fe24 (pinned by SHA; was lean-slang v0.0.5 = 813d6c6) |
+| LeanSlang | V-Sekai-fire/contract-lean-slang (the renamed lean-slang) | branch `emit-fp` = 60532aef8ed70cc669ecab481182d0636c9e1ac3 (pinned by SHA; e0e96da plus the additive `litFloatExact`/`litDoubleExact`, AVBD emission unchanged; was lean-slang v0.0.5 = 813d6c6) |
 | plausible | V-Sekai-fire/plausible (fork of leanprover-community, created 2026-09-22) | v4.30.0 = a456461b368b71d2accd95234832cd9c174b5437 |
 | plausible-witness-dag | V-Sekai-fire/plausible-witness-dag | 160b94c9c6eed3bb9ebffce919fc6f989dcafba8 (pinned by SHA; the fork's `main/main` is 12 ahead) |
 

@@ -1,0 +1,65 @@
+# AVBD_EMIT=1 BUILD_DIR=build bash kernels/avbd/gen.sh   (2026-09-23T00:30:03Z)
+== emitting Slang from Lean at /c/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-L/lean ==
+== 24 kernels into slang/ ==
+== slangc -target cpp ==
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+== slangc -target spirv (+ reflection) ==
+== binding table ==
+wrote C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-L/kernels/avbd/AvbdKernelTable.inc: 24 kernels, 180 bindings
+== embedding SPIR-V ==
+embedded 24 kernels, 103776 bytes -> build/avbd_kernels.inc
+# exit 0  wall 70 s
+# git diff --stat HEAD -- kernels/avbd (content; must be empty):
+
+# git status --porcelain kernels/avbd:
+ M kernels/avbd/AvbdKernelTable.inc
+ M kernels/avbd/slang/attachment_dual_update.slang
+ M kernels/avbd/slang/attachment_force_al.slang
+ M kernels/avbd/slang/attachment_force_al_backward.slang
+ M kernels/avbd/slang/self_collision_scan.slang
+ M kernels/avbd/slang/spring_force.slang
+ M kernels/avbd/slang/spring_force_backward.slang
+ M kernels/avbd/slang/triangle_bending_dual_update.slang
+ M kernels/avbd/slang/triangle_bending_force_al.slang
+ M kernels/avbd/slang/triangle_bending_force_al_backward.slang
+ M kernels/avbd/slang/triangle_membrane_dual_update.slang
+ M kernels/avbd/slang/triangle_membrane_force_al.slang
+ M kernels/avbd/slang/triangle_membrane_force_al_backward.slang
+ M kernels/avbd/slang/vbd_gather_attachment.slang
+ M kernels/avbd/slang/vbd_gather_attachment_backward.slang
+ M kernels/avbd/slang/vbd_gather_bending.slang
+ M kernels/avbd/slang/vbd_gather_bending_backward.slang
+ M kernels/avbd/slang/vbd_gather_spring.slang
+ M kernels/avbd/slang/vbd_gather_spring_backward.slang
+ M kernels/avbd/slang/vbd_gather_triangle.slang
+ M kernels/avbd/slang/vbd_gather_triangle_backward.slang
+ M kernels/avbd/slang/vbd_init.slang
+ M kernels/avbd/slang/vbd_init_backward.slang
+ M kernels/avbd/slang/vbd_solve_apply.slang
+ M kernels/avbd/slang/vbd_solve_apply_backward.slang
+# git status --porcelain kernels/avbd after git add (must be empty):
+
+RESULT CLEAN

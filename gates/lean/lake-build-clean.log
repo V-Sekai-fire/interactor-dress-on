@@ -1,0 +1,86 @@
+# lake build (default target Cloth) of lean/ from an empty .lake: every package fetched and built
+# 2026-09-23T00:25:48Z  Lake version 5.0.0-src+d024af0 (Lean version 4.30.0)
+info: plausible-witness-dag: cloning https://github.com/V-Sekai-fire/plausible-witness-dag
+info: plausible-witness-dag: checking out revision '160b94c9c6eed3bb9ebffce919fc6f989dcafba8'
+info: plausible: cloning https://github.com/V-Sekai-fire/plausible
+info: plausible: checking out revision 'a456461b368b71d2accd95234832cd9c174b5437'
+info: LeanSlang: cloning https://github.com/V-Sekai-fire/lean-slang.git
+info: LeanSlang: checking out revision '813d6c62b298bcd3f7177264179a7e1d16bd87cd'
+✔ [5/74] Built LeanSlang.Types (2.2s)
+✔ [6/74] Built Plausible.Attr (5.4s)
+✔ [7/74] Built LeanSlang.AST (4.9s)
+✔ [8/74] Built Cloth.Avbd.Coloring (7.9s)
+✔ [9/74] Built LeanSlang.Emit (1.7s)
+✔ [10/74] Built Plausible.Shrinkable (9.1s)
+✔ [11/74] Built Cloth.Avbd.AdjacencyKwise (9.3s)
+✔ [12/74] Built Cloth.Avbd.AdjacencySpring (9.4s)
+✔ [13/74] Built Plausible.Random (9.4s)
+✔ [14/74] Built LeanSlang.Test (1.5s)
+✔ [15/74] Built LeanSlang (1.5s)
+✔ [16/74] Built Plausible.Gen (9.1s)
+✔ [17/74] Built Cloth.SlangCodegen.TriangleBendingForceAl (8.7s)
+✔ [18/74] Built Cloth.SlangCodegen.VbdGatherTriangleBackward (9.8s)
+✔ [19/74] Built Cloth.SlangCodegen.SpringForceBackward (9.8s)
+✔ [20/74] Built Cloth.SlangCodegen.AttachmentDualUpdate (4.1s)
+✔ [21/74] Built Cloth.SlangCodegen.VbdGatherBending (2.9s)
+✔ [22/74] Built Cloth.SlangCodegen.VbdGatherAttachment (2.4s)
+✔ [23/74] Built Cloth.SlangCodegen.VbdGatherSpringBackward (12s)
+✔ [24/74] Built Cloth.SlangCodegen.VbdGatherTriangle (2.9s)
+✔ [25/74] Built Cloth.SlangCodegen.VbdGatherSpring (2.3s)
+✔ [26/74] Built Cloth.SlangCodegen.VbdSolveApply (2.2s)
+✔ [27/74] Built Cloth.SlangCodegen.VbdInit (3.0s)
+✔ [28/74] Built Cloth.SlangCodegen.AttachmentForce (1.4s)
+✔ [29/74] Built Cloth.SlangCodegen.TriangleBendingForce (3.0s)
+✔ [30/74] Built Cloth.SlangCodegen.TriangleMembraneForce (2.2s)
+✔ [31/74] Built Cloth.SlangCodegen.SpmvDf32 (1.0s)
+✔ [32/74] Built Cloth.SlangCodegen.AttachmentForceAl (17s)
+✔ [33/74] Built Cloth.SlangCodegen.TriangleMembraneDualUpdate (17s)
+✔ [34/74] Built Cloth.SlangCodegen.TriangleBendingDualUpdate (17s)
+✔ [35/74] Built Cloth.SlangCodegen.VbdSolveApplyBackward (17s)
+✔ [36/74] Built Cloth.SlangCodegen.VbdInitBackward (17s)
+✔ [37/74] Built Cloth.SlangCodegen.VbdGatherAttachmentBackward (17s)
+✔ [38/74] Built Cloth.SlangCodegen.VbdGatherBendingBackward (17s)
+✔ [39/74] Built Cloth.SlangCodegen.AttachmentForceAlBackward (17s)
+✔ [40/74] Built Cloth.SlangCodegen.TriangleBendingForceAlBackward (17s)
+✔ [41/74] Built Cloth.SlangCodegen.TriangleMembraneForceAlBackward (17s)
+✔ [42/74] Built Cloth.SlangCodegen.SelfCollisionScan (18s)
+✔ [43/74] Built Cloth.SlangCodegen.TriangleMembraneForceAl (7.3s)
+✔ [44/74] Built Cloth.SlangCodegen.SpringForce (3.5s)
+✔ [45/74] Built Cloth.SlangCodegen.SaxpbyIndirectDf32 (4.6s)
+✔ [46/74] Built Cloth.SlangCodegen.AttachmentProject (2.6s)
+✔ [47/74] Built Cloth.SlangCodegen.CGBeta (2.8s)
+✔ [48/74] Built Cloth.SlangCodegen.Saxpby (2.0s)
+✔ [49/74] Built Cloth.SlangCodegen.Spmv (2.9s)
+✔ [50/74] Built Cloth.SlangCodegen.DotReduce (3.3s)
+✔ [51/74] Built Cloth.SlangCodegen.DotReduceSerial (3.4s)
+✔ [52/74] Built Cloth.SlangCodegen.SaxpbyIndirect (5.5s)
+✔ [53/74] Built Cloth.SlangCodegen.SpringProject (4.6s)
+✔ [54/74] Built Cloth.SlangCodegen.TriangleBending (4.6s)
+✔ [55/74] Built Cloth.SlangCodegen.AssembleB (4.6s)
+✔ [56/74] Built Cloth.SlangCodegen.CGAlpha (4.6s)
+✔ [57/74] Built Cloth.SlangCodegen.TriangleProject (4.7s)
+✔ [58/74] Built Plausible.Arbitrary (4.4s)
+✔ [59/74] Built Cloth.SlangCodegen (1.6s)
+✔ [60/74] Built Plausible.ArbitraryFueled (1.9s)
+✔ [61/74] Built Plausible.Sampleable (2.6s)
+✔ [62/74] Built Plausible.DeriveArbitrary (8.2s)
+✔ [63/74] Built Plausible.DeriveShrinkable (7.8s)
+✔ [64/74] Built Plausible.Testable (7.9s)
+✔ [65/74] Built Plausible.Functions (4.1s)
+✔ [66/74] Built Plausible.Tactic (4.2s)
+✔ [67/74] Built Plausible (2.0s)
+✔ [68/74] Built PlausibleWitnessDag (7.7s)
+✔ [69/74] Built Cloth.Avbd.SpringHessAdjoint (11s)
+ℹ [70/74] Built Cloth.Avbd.CsrProperties (56s)
+info: Cloth/Avbd/CsrProperties.lean:84:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:87:0: Unable to find a counter-example
+info: Cloth/Avbd/CsrProperties.lean:90:0: Unable to find a counter-example
+ℹ [71/74] Built Cloth.Avbd.ColoringProperties (56s)
+info: Cloth/Avbd/ColoringProperties.lean:83:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:86:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:89:0: Unable to find a counter-example
+info: Cloth/Avbd/ColoringProperties.lean:92:0: Unable to find a counter-example
+✔ [72/74] Built Cloth.Avbd (4.9s)
+✔ [73/74] Built Cloth (4.0s)
+Build completed successfully (74 jobs).
+# exit 0  wall 134 s

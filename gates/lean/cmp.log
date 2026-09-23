@@ -1,0 +1,29 @@
+# lake exe emit_shaders /tmp/tmp.9VZGpBUanb   (2026-09-23T00:31:16Z)
+wrote C:/Users/ernest.lee/AppData/Local/Temp/tmp.9VZGpBUanb/triangle_membrane_force_al_backward.slang
+# exit 0  wall 7 s; 41 .slang emitted
+# CR-stripped cmp against kernels/avbd/slang, 24 kernels:
+SAME vbd_init
+SAME spring_force
+SAME vbd_gather_spring
+SAME attachment_force_al
+SAME vbd_gather_attachment
+SAME triangle_membrane_force_al
+SAME vbd_gather_triangle
+SAME triangle_bending_force_al
+SAME vbd_gather_bending
+SAME vbd_solve_apply
+SAME attachment_dual_update
+SAME triangle_membrane_dual_update
+SAME triangle_bending_dual_update
+SAME self_collision_scan
+SAME vbd_solve_apply_backward
+SAME vbd_gather_spring_backward
+SAME vbd_gather_attachment_backward
+SAME vbd_gather_triangle_backward
+SAME vbd_gather_bending_backward
+SAME attachment_force_al_backward
+SAME spring_force_backward
+SAME triangle_membrane_force_al_backward
+SAME triangle_bending_force_al_backward
+SAME vbd_init_backward
+RESULT 0 DIFF

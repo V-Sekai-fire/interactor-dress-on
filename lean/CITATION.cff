@@ -38,7 +38,10 @@ abstract: >-
   interactor-dress-on (gates/0f-runtime); Drape.lean, Drape/ (the drape
   L-BFGS-B kernels, a port of LBFGSpp's algorithm; see
   kernels/drape/CITATION.cff), EmitDrape.lean, and the lean_lib Drape and
-  lean_exe emit_drape entries in lakefile.lean.
+  lean_exe emit_drape entries in lakefile.lean; Fit.lean, Fit/ (fit.elf's
+  SDF spline kernel, a re-statement of the openvdb fork's
+  SplineSampler::sampleHessian; see kernels/fit/CITATION.cff), EmitFit.lean,
+  and the lean_lib Fit and lean_exe emit_fit entries in lakefile.lean.
 type: software
 authors:
   - name: K. S. Ernest (Fire) Lee

@@ -1,0 +1,11 @@
+# Newton/setup trace, guest phase 0 (smoke.log) vs native same code, float32 inputs (../foxgirl/run-sdf-guest-f32.log).
+# Timestamps, timing lines and the uninitialised stopping-criteria print removed. First difference only:
+40c40
+< [polyfem] [debug] Min distance: 0.000665209312062554
+---
+> [polyfem] [debug] Min distance: 0.0006652093120624329
+43c43
+< [polyfem] [debug] Min distance: 0.00048228374599309533
+---
+> [polyfem] [debug] Min distance: 0.00048228374599633303
+# lines 1-39 identical (setup, normalisation, curve targets, f0, Newton iterations 0-7, and three IPC min distances printed to 16-17 digits); first difference at line 40, the min distance after iteration 7, in its 13th significant digit (relative 2e-13)

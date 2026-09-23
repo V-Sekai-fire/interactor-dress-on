@@ -128,6 +128,32 @@ our own, no host DLL. The GPU is reachable only through Godot's
   (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
   Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
   `lake update LeanSlang` (only that package; the other revs must not move).
+- The guest heap also caps **live allocations**: `Sandbox.allocations_max`
+  defaults to 10000 ("Too many arena chunks"). fit.elf holds ~79k after
+  `fit_begin`; main.gd sets 4,000,000 before `program=`.
+- Unqualified `abs(double)` binds to C's `int abs` under the guest's
+  libstdc++ (clang `-Wabsolute-value`) but to the double overload under
+  llvm-mingw's libc++, so native and guest silently differ. Treat that
+  warning as an error in anything shared between them.
+- libstdc++ (guest) and libc++ (native) leave **tied sort keys** in different
+  orders (`std::sort`, `nth_element`, `partial_sort`), and a sum taken in that
+  order differs by one ULP. fit.elf and fit_native part after 7 Newton
+  iterations while inputs, LDLT and the libm the solver calls are bitwise
+  equal (`gates/6-fit`, 6.0); SimpleBVH's Morton sort, which has such ties,
+  is the *likely* cause (hypothesis: no call site instrumented yet). Test an
+  index tie-break before relying on it.
+- **Guest out-of-memory is not `std::bad_alloc`.** Below the heap floor a
+  failed allocation is a `Protection fault` at the malloc ecall (the vmcall
+  aborts) or a segfault that kills Godot (exit 139), and the heap's meminfo
+  cannot see in-phase peaks. Size `memory_max` with a ladder of fresh
+  Sandboxes, then add 1.25x headroom. For fit.elf on foxgirl the floor is
+  352 MiB, run at 440.
+- `execution_timeout` (2^20-instruction units) must cover a whole vmcall. One
+  fit phase is up to 5.4e5 units, 67x the 8000 default. Read a call's
+  instructions from the guest with `rdinstret`; libriscv counts from the
+  vmcall's start.
+- Starting several Godot processes in the same second segfaulted one once.
+  Stagger launches by a few seconds.
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 - godot-sandbox's guest heap has no aligned entry point (malloc/calloc/

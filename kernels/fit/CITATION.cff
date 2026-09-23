@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: If you use this kernel, cite OpenVDB, whose spline sampler it re-states.
+title: fit.elf SDF spline kernel (Lean-emitted tricubic B-spline value, gradient and Hessian)
+abstract: >-
+  lean/Fit/SdfSplineHessian.lean re-states the tricubic uniform B-spline
+  sampler of the Huangzizhou/openvdb fork (c96cb069 "spline hessian",
+  openvdb/tools/Interpolation.h: SplineSampler::spline, spline_1st_deriv,
+  spline_2nd_deriv and trilinearInterpolationHessian, behind
+  SplineSampler::sampleHessian) as a LeanSlang compute kernel: value,
+  gradient and symmetric Hessian over the 4^3 stencil at offsets -1..2, one
+  thread per sample. lake exe emit_fit writes it as Slang into slang/, and
+  gen.sh compiles it to cpp/ (the path fit.elf and fit_native compile,
+  through vendor/cloth-fit/.../garment_forms/SdfSpline.cpp) and to SPIR-V
+  (validation only; nothing embeds it yet). No OpenVDB source is copied;
+  the arithmetic is followed operation for operation (per-axis basis and
+  derivative tables, then i, j, k ascending, acc + ((v*a)*b)*c), so the
+  kernel rounds as the fork does: Gate 6a measures 0 ULP in all 13 outputs
+  against sampleHessian on OpenVDB's own stencils at 21,015 and 78,300
+  samples. Local adaptations: double storage buffers instead of OpenVDB
+  tree access (the caller gathers the stencil from its brick grid, SdfGrid);
+  the Hessian written as its upper triangle (6 values) instead of a Mat3;
+  every constant a double cast (double(2) / double(3) for 2/3), because an
+  unsuffixed Slang literal is float; a count parameter bounding the lanes.
+type: software
+authors:
+  - name: Zizhou Huang
+  - name: OpenVDB contributors (Academy Software Foundation)
+repository-code: https://github.com/V-Sekai-fire/openvdb
+commit: c96cb06971a89ad2638ed29972ab54f63a8e2fbc
+license: Apache-2.0

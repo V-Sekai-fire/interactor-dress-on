@@ -1,0 +1,2784 @@
+[
+  {
+    "doc": "Root of the configuration file.",
+    "optional": [
+      "units",
+      "common",
+      "root_path",
+      "contact",
+      "solver",
+      "output",
+      "is_skirt",
+      "voxel_size",
+      "incremental_steps",
+      "avatar_skin_weights_path",
+      "symmetry_weight",
+      "twist_penalty_weight",
+      "curvature_penalty_weight",
+      "similarity_penalty_weight",
+      "curve_size_weight"
+    ],
+    "pointer": "/",
+    "required": [
+      "avatar_mesh_path",
+      "garment_mesh_path",
+      "no_fit_spec_path",
+      "source_skeleton_path",
+      "target_skeleton_path",
+      "fit_weight",
+      "curve_center_target_weight"
+    ],
+    "type": "object"
+  },
+  {
+    "default": 1,
+    "doc": "If this value is larger than 1, instead of directly optimizing towards the target avatar directly, the optimization is divided into a number of substeps to gradually optimize towards the target. Larger values may be useful when the target avatar is very different from the original avatar.",
+    "min": 1,
+    "pointer": "/incremental_steps",
+    "type": "int"
+  },
+  {
+    "default": false,
+    "doc": "Set this value to true if the garment is a skirt. This option will insert an extra skeleton bone in the middle of two legs, which helps to enforce the positional constraint on the hemline of the skirt.",
+    "pointer": "/is_skirt",
+    "type": "bool"
+  },
+  {
+    "default": 0.01,
+    "doc": "The voxel size of the signed distance field representing the target avatar. The avatars are scaled to unit size.",
+    "pointer": "/voxel_size",
+    "type": "float"
+  },
+  {
+    "default": "",
+    "doc": "The path to the file that stores the skinning weights of the target avatar. The skinning weights should be a matrix of size #number_of_skeleton_nodes times #number_of_vertices. The skinning weights will be used to project the target avatar to its skeleton. If this file is not provided, the vertices will be simply projected to the closest bone in distance.",
+    "pointer": "/avatar_skin_weights_path",
+    "type": "file"
+  },
+  {
+    "doc": "The path to the target avatar mesh. The target avatar mesh should be one or multiple closed surfaces, so that it can be converted to a signed distance field by OpenVDB.",
+    "extensions": [
+      ".obj",
+      ".usd",
+      ".usda",
+      ".usdc"
+    ],
+    "pointer": "/avatar_mesh_path",
+    "type": "file"
+  },
+  {
+    "doc": "The path to the source garment mesh. The garment mesh should be a connected manifold triangular mesh.",
+    "extensions": [
+      ".obj",
+      ".usd",
+      ".usda",
+      ".usdc"
+    ],
+    "pointer": "/garment_mesh_path",
+    "type": "file"
+  },
+  {
+    "doc": "The path to a text file with a list of vertex IDs indicating the faces on the source garment mesh that should not fit tightly to the avatar.",
+    "extensions": [
+      ".obj"
+    ],
+    "pointer": "/no_fit_spec_path",
+    "type": "file"
+  },
+  {
+    "doc": "The path to the skeleton mesh of the source avatar. The skeleton connectivity should be exactly the same for the source and target avatars.",
+    "extensions": [
+      ".obj"
+    ],
+    "pointer": "/source_skeleton_path",
+    "type": "file"
+  },
+  {
+    "doc": "The path to the skeleton mesh of the target avatar. The skeleton connectivity should be exactly the same for the source and target avatars.",
+    "extensions": [
+      ".obj"
+    ],
+    "pointer": "/target_skeleton_path",
+    "type": "file"
+  },
+  {
+    "doc": "The weight controlling how tight does the garment fit on the avatar.",
+    "min": 0,
+    "pointer": "/fit_weight",
+    "type": "float"
+  },
+  {
+    "doc": "The weight of enforcing the positional constraints on curve loops, e.g. hem, collar, cuff.",
+    "min": 0,
+    "pointer": "/curve_center_target_weight",
+    "type": "float"
+  },
+  {
+    "default": 0,
+    "doc": "The weight of enforcing symmetry on originally symmetric garment curve loops, e.g. collar.",
+    "min": 0,
+    "pointer": "/symmetry_weight",
+    "type": "float"
+  },
+  {
+    "default": 0,
+    "doc": "The weight of preserving torsion on the curve loops.",
+    "min": 0,
+    "pointer": "/twist_penalty_weight",
+    "type": "float"
+  },
+  {
+    "default": 0,
+    "doc": "The weight of preserving curvature on the curve loops.",
+    "min": 0,
+    "pointer": "/curvature_penalty_weight",
+    "type": "float"
+  },
+  {
+    "default": 1,
+    "doc": "The weight of preserving surface geometry.",
+    "min": 0,
+    "pointer": "/similarity_penalty_weight",
+    "type": "float"
+  },
+  {
+    "default": 0,
+    "doc": "The weight of penalizing the curve loop size, for cases like the collar being much wider than the neck.",
+    "min": 0,
+    "pointer": "/curve_size_weight",
+    "type": "float"
+  },
+  {
+    "default": "",
+    "doc": "Path to common settings will patch the current file.",
+    "extensions": [
+      ".json"
+    ],
+    "pointer": "/common",
+    "type": "file"
+  },
+  {
+    "default": "",
+    "doc": "Path for all relative paths, set automatically to the folder containing this JSON.",
+    "pointer": "/root_path",
+    "type": "string"
+  },
+  {
+    "default": null,
+    "doc": "Basic units used in the code.",
+    "optional": [
+      "length",
+      "mass",
+      "time",
+      "characteristic_length"
+    ],
+    "pointer": "/units",
+    "type": "object"
+  },
+  {
+    "default": "m",
+    "doc": "Length unit.",
+    "pointer": "/units/length",
+    "type": "string"
+  },
+  {
+    "default": "kg",
+    "doc": "Mass unit.",
+    "pointer": "/units/mass",
+    "type": "string"
+  },
+  {
+    "default": "s",
+    "doc": "Time unit.",
+    "pointer": "/units/time",
+    "type": "string"
+  },
+  {
+    "default": 1,
+    "doc": "Characteristic length, used for tolerances.",
+    "pointer": "/units/characteristic_length",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Used to test to compare different norms of solutions.",
+    "optional": [
+      "err_h1",
+      "err_h1_semi",
+      "err_l2",
+      "err_linf",
+      "err_linf_grad",
+      "err_lp",
+      "margin",
+      "time_steps"
+    ],
+    "pointer": "/tests",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Contact handling parameters.",
+    "optional": [
+      "enabled",
+      "dhat"
+    ],
+    "pointer": "/contact",
+    "type": "object"
+  },
+  {
+    "default": false,
+    "doc": "True if contact handling is enabled.",
+    "pointer": "/contact/enabled",
+    "type": "bool"
+  },
+  {
+    "default": 0.002,
+    "doc": "Contact barrier activation distance.",
+    "min": 0,
+    "pointer": "/contact/dhat",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the linear solver.",
+    "optional": [
+      "enable_overwrite_solver",
+      "solver",
+      "precond",
+      "Eigen::LeastSquaresConjugateGradient",
+      "Eigen::DGMRES",
+      "Eigen::ConjugateGradient",
+      "Eigen::BiCGSTAB",
+      "Eigen::GMRES",
+      "Eigen::MINRES",
+      "Pardiso",
+      "Hypre",
+      "AMGCL"
+    ],
+    "pointer": "/solver/linear",
+    "type": "object"
+  },
+  {
+    "default": false,
+    "doc": "If solver name is not present, falls back to default",
+    "pointer": "/solver/linear/enable_overwrite_solver",
+    "type": "bool"
+  },
+  {
+    "default": "",
+    "doc": "Linear solver type.",
+    "options": [
+      "Eigen::SimplicialLDLT",
+      "Eigen::SparseLU",
+      "Eigen::CholmodSupernodalLLT",
+      "Eigen::UmfPackLU",
+      "Eigen::SuperLU",
+      "Eigen::PardisoLDLT",
+      "Eigen::PardisoLLT",
+      "Eigen::PardisoLU",
+      "Pardiso",
+      "Hypre",
+      "AMGCL",
+      "Eigen::LeastSquaresConjugateGradient",
+      "Eigen::DGMRES",
+      "Eigen::ConjugateGradient",
+      "Eigen::BiCGSTAB",
+      "Eigen::GMRES",
+      "Eigen::MINRES"
+    ],
+    "pointer": "/solver/linear/solver",
+    "type": "string"
+  },
+  {
+    "default": "",
+    "doc": "Preconditioner used if using an iterative linear solver.",
+    "options": [
+      "Eigen::IdentityPreconditioner",
+      "Eigen::DiagonalPreconditioner",
+      "Eigen::IncompleteCholesky",
+      "Eigen::LeastSquareDiagonalPreconditioner",
+      "Eigen::IncompleteLUT"
+    ],
+    "pointer": "/solver/linear/precond",
+    "type": "string"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's Least Squares Conjugate Gradient solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Eigen::LeastSquaresConjugateGradient",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's DGMRES solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Eigen::DGMRES",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's Conjugate Gradient solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Eigen::ConjugateGradient",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's BiCGSTAB solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Eigen::BiCGSTAB",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's GMRES solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Eigen::GMRES",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's MINRES solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Eigen::MINRES",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Pardiso solver.",
+    "optional": [
+      "mtype"
+    ],
+    "pointer": "/solver/linear/Pardiso",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Hypre solver.",
+    "optional": [
+      "max_iter",
+      "pre_max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/linear/Hypre",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the AMGCL solver.",
+    "optional": [
+      "solver",
+      "precond"
+    ],
+    "pointer": "/solver/linear/AMGCL",
+    "type": "object"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Eigen::LeastSquaresConjugateGradient/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Eigen::LeastSquaresConjugateGradient/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Eigen::DGMRES/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Eigen::DGMRES/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Eigen::ConjugateGradient/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Eigen::ConjugateGradient/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Eigen::BiCGSTAB/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Eigen::BiCGSTAB/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Eigen::GMRES/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Eigen::GMRES/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Eigen::MINRES/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Eigen::MINRES/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 11,
+    "doc": "Matrix type.",
+    "options": [
+      1,
+      2,
+      -2,
+      3,
+      4,
+      -4,
+      6,
+      11,
+      13
+    ],
+    "pointer": "/solver/linear/Pardiso/mtype",
+    "type": "int"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/Hypre/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1,
+    "doc": "Maximum number of pre iterations.",
+    "pointer": "/solver/linear/Hypre/pre_max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/Hypre/tolerance",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Solver settings for the AMGCL.",
+    "optional": [
+      "tol",
+      "maxiter",
+      "type"
+    ],
+    "pointer": "/solver/linear/AMGCL/solver",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Preconditioner settings for the AMGCL.",
+    "optional": [
+      "relax",
+      "class",
+      "max_levels",
+      "direct_coarse",
+      "ncycle",
+      "coarsening"
+    ],
+    "pointer": "/solver/linear/AMGCL/precond",
+    "type": "object"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/linear/AMGCL/solver/maxiter",
+    "type": "int"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/linear/AMGCL/solver/tol",
+    "type": "float"
+  },
+  {
+    "default": "cg",
+    "doc": "Type of solver to use.",
+    "pointer": "/solver/linear/AMGCL/solver/type",
+    "type": "string"
+  },
+  {
+    "default": null,
+    "doc": "Preconditioner settings for the AMGCL.",
+    "optional": [
+      "degree",
+      "type",
+      "power_iters",
+      "higher",
+      "lower",
+      "scale"
+    ],
+    "pointer": "/solver/linear/AMGCL/precond/relax",
+    "type": "object"
+  },
+  {
+    "default": "amg",
+    "doc": "Type of preconditioner to use.",
+    "pointer": "/solver/linear/AMGCL/precond/class",
+    "type": "string"
+  },
+  {
+    "default": 6,
+    "doc": "Maximum number of levels.",
+    "pointer": "/solver/linear/AMGCL/precond/max_levels",
+    "type": "int"
+  },
+  {
+    "default": false,
+    "doc": "Use direct solver for the coarsest level.",
+    "pointer": "/solver/linear/AMGCL/precond/direct_coarse",
+    "type": "bool"
+  },
+  {
+    "default": 2,
+    "doc": "Number of cycles.",
+    "pointer": "/solver/linear/AMGCL/precond/ncycle",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Coarsening parameters.",
+    "optional": [
+      "type",
+      "estimate_spectral_radius",
+      "relax",
+      "aggr"
+    ],
+    "pointer": "/solver/linear/AMGCL/precond/coarsening",
+    "type": "object"
+  },
+  {
+    "default": 16,
+    "doc": "Degree of the polynomial.",
+    "pointer": "/solver/linear/AMGCL/precond/relax/degree",
+    "type": "int"
+  },
+  {
+    "default": "chebyshev",
+    "doc": "Type of relaxation to use.",
+    "pointer": "/solver/linear/AMGCL/precond/relax/type",
+    "type": "string"
+  },
+  {
+    "default": 100,
+    "doc": "Number of power iterations.",
+    "pointer": "/solver/linear/AMGCL/precond/relax/power_iters",
+    "type": "int"
+  },
+  {
+    "default": 2,
+    "doc": "Higher level relaxation.",
+    "pointer": "/solver/linear/AMGCL/precond/relax/higher",
+    "type": "float"
+  },
+  {
+    "default": 0.008333333333,
+    "doc": "Lower level relaxation.",
+    "pointer": "/solver/linear/AMGCL/precond/relax/lower",
+    "type": "float"
+  },
+  {
+    "default": true,
+    "doc": "Scale.",
+    "pointer": "/solver/linear/AMGCL/precond/relax/scale",
+    "type": "bool"
+  },
+  {
+    "default": "smoothed_aggregation",
+    "doc": "Coarsening type.",
+    "pointer": "/solver/linear/AMGCL/precond/coarsening/type",
+    "type": "string"
+  },
+  {
+    "default": true,
+    "doc": "Should the spectral radius be estimated.",
+    "pointer": "/solver/linear/AMGCL/precond/coarsening/estimate_spectral_radius",
+    "type": "bool"
+  },
+  {
+    "default": 1,
+    "doc": "Coarsening relaxation.",
+    "pointer": "/solver/linear/AMGCL/precond/coarsening/relax",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Aggregation settings.",
+    "optional": [
+      "eps_strong"
+    ],
+    "pointer": "/solver/linear/AMGCL/precond/coarsening/aggr",
+    "type": "object"
+  },
+  {
+    "default": 0,
+    "doc": "Aggregation epsilon strong.",
+    "pointer": "/solver/linear/AMGCL/precond/coarsening/aggr/eps_strong",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the linear solver.",
+    "optional": [
+      "enable_overwrite_solver",
+      "solver",
+      "precond",
+      "Eigen::LeastSquaresConjugateGradient",
+      "Eigen::DGMRES",
+      "Eigen::ConjugateGradient",
+      "Eigen::BiCGSTAB",
+      "Eigen::GMRES",
+      "Eigen::MINRES",
+      "Pardiso",
+      "Hypre",
+      "AMGCL"
+    ],
+    "pointer": "/solver/adjoint_linear",
+    "type": "object"
+  },
+  {
+    "default": false,
+    "doc": "If solver name is not present, falls back to default",
+    "pointer": "/solver/adjoint_linear/enable_overwrite_solver",
+    "type": "bool"
+  },
+  {
+    "default": "",
+    "doc": "Linear solver type.",
+    "options": [
+      "Eigen::SimplicialLDLT",
+      "Eigen::SparseLU",
+      "Eigen::CholmodSupernodalLLT",
+      "Eigen::UmfPackLU",
+      "Eigen::SuperLU",
+      "Eigen::PardisoLDLT",
+      "Eigen::PardisoLLT",
+      "Eigen::PardisoLU",
+      "Pardiso",
+      "Hypre",
+      "AMGCL",
+      "Eigen::LeastSquaresConjugateGradient",
+      "Eigen::DGMRES",
+      "Eigen::ConjugateGradient",
+      "Eigen::BiCGSTAB",
+      "Eigen::GMRES",
+      "Eigen::MINRES"
+    ],
+    "pointer": "/solver/adjoint_linear/solver",
+    "type": "string"
+  },
+  {
+    "default": "",
+    "doc": "Preconditioner used if using an iterative linear solver.",
+    "options": [
+      "Eigen::IdentityPreconditioner",
+      "Eigen::DiagonalPreconditioner",
+      "Eigen::IncompleteCholesky",
+      "Eigen::LeastSquareDiagonalPreconditioner",
+      "Eigen::IncompleteLUT"
+    ],
+    "pointer": "/solver/adjoint_linear/precond",
+    "type": "string"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's Least Squares Conjugate Gradient solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Eigen::LeastSquaresConjugateGradient",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's DGMRES solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Eigen::DGMRES",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's Conjugate Gradient solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Eigen::ConjugateGradient",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's BiCGSTAB solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Eigen::BiCGSTAB",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's GMRES solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Eigen::GMRES",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Eigen's MINRES solver.",
+    "optional": [
+      "max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Eigen::MINRES",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Pardiso solver.",
+    "optional": [
+      "mtype"
+    ],
+    "pointer": "/solver/adjoint_linear/Pardiso",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the Hypre solver.",
+    "optional": [
+      "max_iter",
+      "pre_max_iter",
+      "tolerance"
+    ],
+    "pointer": "/solver/adjoint_linear/Hypre",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for the AMGCL solver.",
+    "optional": [
+      "solver",
+      "precond"
+    ],
+    "pointer": "/solver/adjoint_linear/AMGCL",
+    "type": "object"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Eigen::LeastSquaresConjugateGradient/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Eigen::LeastSquaresConjugateGradient/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Eigen::DGMRES/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Eigen::DGMRES/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Eigen::ConjugateGradient/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Eigen::ConjugateGradient/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Eigen::BiCGSTAB/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Eigen::BiCGSTAB/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Eigen::GMRES/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Eigen::GMRES/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Eigen::MINRES/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-12,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Eigen::MINRES/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 11,
+    "doc": "Matrix type.",
+    "options": [
+      1,
+      2,
+      -2,
+      3,
+      4,
+      -4,
+      6,
+      11,
+      13
+    ],
+    "pointer": "/solver/adjoint_linear/Pardiso/mtype",
+    "type": "int"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/Hypre/max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1,
+    "doc": "Maximum number of pre iterations.",
+    "pointer": "/solver/adjoint_linear/Hypre/pre_max_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/Hypre/tolerance",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Solver settings for the AMGCL.",
+    "optional": [
+      "tol",
+      "maxiter",
+      "type"
+    ],
+    "pointer": "/solver/adjoint_linear/AMGCL/solver",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Preconditioner settings for the AMGCL.",
+    "optional": [
+      "relax",
+      "class",
+      "max_levels",
+      "direct_coarse",
+      "ncycle",
+      "coarsening"
+    ],
+    "pointer": "/solver/adjoint_linear/AMGCL/precond",
+    "type": "object"
+  },
+  {
+    "default": 1000,
+    "doc": "Maximum number of iterations.",
+    "pointer": "/solver/adjoint_linear/AMGCL/solver/maxiter",
+    "type": "int"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Convergence tolerance.",
+    "pointer": "/solver/adjoint_linear/AMGCL/solver/tol",
+    "type": "float"
+  },
+  {
+    "default": "cg",
+    "doc": "Type of solver to use.",
+    "pointer": "/solver/adjoint_linear/AMGCL/solver/type",
+    "type": "string"
+  },
+  {
+    "default": null,
+    "doc": "Preconditioner settings for the AMGCL.",
+    "optional": [
+      "degree",
+      "type",
+      "power_iters",
+      "higher",
+      "lower",
+      "scale"
+    ],
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax",
+    "type": "object"
+  },
+  {
+    "default": "amg",
+    "doc": "Type of preconditioner to use.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/class",
+    "type": "string"
+  },
+  {
+    "default": 6,
+    "doc": "Maximum number of levels.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/max_levels",
+    "type": "int"
+  },
+  {
+    "default": false,
+    "doc": "Use direct solver for the coarsest level.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/direct_coarse",
+    "type": "bool"
+  },
+  {
+    "default": 2,
+    "doc": "Number of cycles.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/ncycle",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Coarsening parameters.",
+    "optional": [
+      "type",
+      "estimate_spectral_radius",
+      "relax",
+      "aggr"
+    ],
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/coarsening",
+    "type": "object"
+  },
+  {
+    "default": 16,
+    "doc": "Degree of the polynomial.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax/degree",
+    "type": "int"
+  },
+  {
+    "default": "chebyshev",
+    "doc": "Type of relaxation to use.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax/type",
+    "type": "string"
+  },
+  {
+    "default": 100,
+    "doc": "Number of power iterations.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax/power_iters",
+    "type": "int"
+  },
+  {
+    "default": 2,
+    "doc": "Higher level relaxation.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax/higher",
+    "type": "float"
+  },
+  {
+    "default": 0.008333333333,
+    "doc": "Lower level relaxation.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax/lower",
+    "type": "float"
+  },
+  {
+    "default": true,
+    "doc": "Scale.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/relax/scale",
+    "type": "bool"
+  },
+  {
+    "default": "smoothed_aggregation",
+    "doc": "Coarsening type.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/coarsening/type",
+    "type": "string"
+  },
+  {
+    "default": true,
+    "doc": "Should the spectral radius be estimated.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/coarsening/estimate_spectral_radius",
+    "type": "bool"
+  },
+  {
+    "default": 1,
+    "doc": "Coarsening relaxation.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/coarsening/relax",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Aggregation settings.",
+    "optional": [
+      "eps_strong"
+    ],
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/coarsening/aggr",
+    "type": "object"
+  },
+  {
+    "default": 0,
+    "doc": "Aggregation epsilon strong.",
+    "pointer": "/solver/adjoint_linear/AMGCL/precond/coarsening/aggr/eps_strong",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Settings for nonlinear solver. Interior-loop linear solver settings are defined in the solver/linear section.",
+    "optional": [
+      "solver",
+      "x_delta",
+      "grad_norm",
+      "first_grad_norm_tol",
+      "max_iterations",
+      "iterations_per_strategy",
+      "line_search",
+      "allow_out_of_iterations",
+      "L-BFGS",
+      "L-BFGS-B",
+      "Newton",
+      "ADAM",
+      "StochasticADAM",
+      "StochasticGradientDescent",
+      "box_constraints",
+      "advanced"
+    ],
+    "pointer": "/solver/nonlinear",
+    "type": "object"
+  },
+  {
+    "default": "Newton",
+    "doc": "Nonlinear solver type",
+    "options": [
+      "Newton",
+      "DenseNewton",
+      "GradientDescent",
+      "ADAM",
+      "StochasticADAM",
+      "StochasticGradientDescent",
+      "L-BFGS",
+      "BFGS",
+      "L-BFGS-B",
+      "MMA"
+    ],
+    "pointer": "/solver/nonlinear/solver",
+    "type": "string"
+  },
+  {
+    "default": 0,
+    "doc": "Stopping criterion: minimal change of the variables x for the iterations to continue. Computed as the L2 norm of x divide by the time step.",
+    "min": 0,
+    "pointer": "/solver/nonlinear/x_delta",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Stopping criterion: Minimal gradient norm for the iterations to continue.",
+    "min": 0,
+    "pointer": "/solver/nonlinear/grad_norm",
+    "type": "float"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Minimal gradient norm for the iterations to not start, assume we already are at a minimum.",
+    "pointer": "/solver/nonlinear/first_grad_norm_tol",
+    "type": "float"
+  },
+  {
+    "default": 500,
+    "doc": "Maximum number of iterations for a nonlinear solve.",
+    "pointer": "/solver/nonlinear/max_iterations",
+    "type": "int"
+  },
+  {
+    "default": 5,
+    "doc": "Number of iterations for every substrategy before reset.",
+    "pointer": "/solver/nonlinear/iterations_per_strategy",
+    "type": "int"
+  },
+  {
+    "doc": "Number of iterations for every substrategy before reset.",
+    "pointer": "/solver/nonlinear/iterations_per_strategy",
+    "type": "list"
+  },
+  {
+    "default": 5,
+    "doc": "Number of iterations for every substrategy before reset.",
+    "pointer": "/solver/nonlinear/iterations_per_strategy/*",
+    "type": "int"
+  },
+  {
+    "default": false,
+    "doc": "If false (default), an exception will be thrown when the nonlinear solver reaches the maximum number of iterations.",
+    "pointer": "/solver/nonlinear/allow_out_of_iterations",
+    "type": "bool"
+  },
+  {
+    "default": null,
+    "doc": "Options for LBFGS.",
+    "optional": [
+      "history_size"
+    ],
+    "pointer": "/solver/nonlinear/L-BFGS",
+    "type": "object"
+  },
+  {
+    "default": 6,
+    "doc": "The number of corrections to approximate the inverse Hessian matrix.",
+    "pointer": "/solver/nonlinear/L-BFGS/history_size",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Options for the boxed L-BFGS.",
+    "optional": [
+      "history_size"
+    ],
+    "pointer": "/solver/nonlinear/L-BFGS-B",
+    "type": "object"
+  },
+  {
+    "default": 6,
+    "doc": "The number of corrections to approximate the inverse Hessian matrix.",
+    "pointer": "/solver/nonlinear/L-BFGS-B/history_size",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Options for Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc",
+      "force_psd_projection",
+      "use_psd_projection",
+      "use_psd_projection_in_regularized"
+    ],
+    "pointer": "/solver/nonlinear/Newton",
+    "type": "object"
+  },
+  {
+    "default": 1e-05,
+    "doc": "Tolerance of the linear system residual. If residual is above, the direction is rejected.",
+    "pointer": "/solver/nonlinear/Newton/residual_tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Minimum regulariztion weight.",
+    "pointer": "/solver/nonlinear/Newton/reg_weight_min",
+    "type": "float"
+  },
+  {
+    "default": 100000000.0,
+    "doc": "Maximum regulariztion weight.",
+    "pointer": "/solver/nonlinear/Newton/reg_weight_max",
+    "type": "float"
+  },
+  {
+    "default": 10,
+    "doc": "Regulariztion weight increment.",
+    "pointer": "/solver/nonlinear/Newton/reg_weight_inc",
+    "type": "float"
+  },
+  {
+    "default": false,
+    "doc": "Force the Hessian to be PSD when using second order solvers (i.e., Newton's method).",
+    "pointer": "/solver/nonlinear/Newton/force_psd_projection",
+    "type": "bool"
+  },
+  {
+    "default": true,
+    "doc": "Use PSD as fallback using second order solvers (i.e., Newton's method).",
+    "pointer": "/solver/nonlinear/Newton/use_psd_projection",
+    "type": "bool"
+  },
+  {
+    "default": true,
+    "doc": "Use PSD in regularized Newton.",
+    "pointer": "/solver/nonlinear/Newton/use_psd_projection_in_regularized",
+    "type": "bool"
+  },
+  {
+    "default": null,
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon"
+    ],
+    "pointer": "/solver/nonlinear/ADAM",
+    "type": "object"
+  },
+  {
+    "default": 0.001,
+    "doc": "Parameter alpha for ADAM.",
+    "pointer": "/solver/nonlinear/ADAM/alpha",
+    "type": "float"
+  },
+  {
+    "default": 0.9,
+    "doc": "Parameter beta_1 for ADAM.",
+    "pointer": "/solver/nonlinear/ADAM/beta_1",
+    "type": "float"
+  },
+  {
+    "default": 0.999,
+    "doc": "Parameter beta_2 for ADAM.",
+    "pointer": "/solver/nonlinear/ADAM/beta_2",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Parameter epsilon for ADAM.",
+    "pointer": "/solver/nonlinear/ADAM/epsilon",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon",
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/nonlinear/StochasticADAM",
+    "type": "object"
+  },
+  {
+    "default": 0.001,
+    "doc": "Parameter alpha for ADAM.",
+    "pointer": "/solver/nonlinear/StochasticADAM/alpha",
+    "type": "float"
+  },
+  {
+    "default": 0.9,
+    "doc": "Parameter beta_1 for ADAM.",
+    "pointer": "/solver/nonlinear/StochasticADAM/beta_1",
+    "type": "float"
+  },
+  {
+    "default": 0.999,
+    "doc": "Parameter beta_2 for ADAM.",
+    "pointer": "/solver/nonlinear/StochasticADAM/beta_2",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Parameter epsilon for ADAM.",
+    "pointer": "/solver/nonlinear/StochasticADAM/epsilon",
+    "type": "float"
+  },
+  {
+    "default": 0.3,
+    "doc": "Probability of erasing a component on the gradient for ADAM.",
+    "pointer": "/solver/nonlinear/StochasticADAM/erase_component_probability",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for Stochastic Gradient Descent.",
+    "optional": [
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/nonlinear/StochasticGradientDescent",
+    "type": "object"
+  },
+  {
+    "default": 0.3,
+    "doc": "Probability of erasing a component on the gradient for StochasticGradientDescent.",
+    "pointer": "/solver/nonlinear/StochasticGradientDescent/erase_component_probability",
+    "type": "float"
+  },
+  {
+    "doc": "List of solvers for ballback. Eg, [{'type':'Newton'}, {'type':'L-BFGS'}, {'type':'GradientDescent'}] will solve using Newton, in case of failure will fallback to L-BFGS and eventually to GradientDescent",
+    "pointer": "/solver/nonlinear/solver",
+    "type": "list"
+  },
+  {
+    "doc": "Options for Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "Newton"
+  },
+  {
+    "doc": "Options for projected Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "ProjectedNewton"
+  },
+  {
+    "doc": "Options for regularized Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "RegularizedNewton"
+  },
+  {
+    "doc": "Options for regularized projected Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "RegularizedProjectedNewton"
+  },
+  {
+    "doc": "Options for Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseNewton"
+  },
+  {
+    "doc": "Options for projected Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseProjectedNewton"
+  },
+  {
+    "doc": "Options for regularized Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseRegularizedNewton"
+  },
+  {
+    "doc": "Options for projected regularized Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseRegularizedProjectedNewton"
+  },
+  {
+    "doc": "Options for Gradient Descent.",
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "GradientDescent"
+  },
+  {
+    "doc": "Options for Stochastic Gradient Descent.",
+    "optional": [
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "StochasticGradientDescent"
+  },
+  {
+    "doc": "Options for L-BFGS.",
+    "optional": [
+      "history_size"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "L-BFGS"
+  },
+  {
+    "doc": "Options for BFGS.",
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "BFGS"
+  },
+  {
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "ADAM"
+  },
+  {
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon",
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "StochasticADAM"
+  },
+  {
+    "doc": "Nonlinear solver type",
+    "options": [
+      "Newton",
+      "DenseNewton",
+      "ProjectedNewton",
+      "DenseProjectedNewton",
+      "RegularizedNewton",
+      "DenseRegularizedNewton",
+      "RegularizedProjectedNewton",
+      "DenseRegularizedProjectedNewton",
+      "GradientDescent",
+      "StochasticGradientDescent",
+      "ADAM",
+      "StochasticADAM",
+      "L-BFGS",
+      "BFGS"
+    ],
+    "pointer": "/solver/nonlinear/solver/*/type",
+    "type": "string"
+  },
+  {
+    "default": 1e-05,
+    "doc": "Tolerance of the linear system residual. If residual is above, the direction is rejected.",
+    "pointer": "/solver/nonlinear/solver/*/residual_tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Minimum regulariztion weight.",
+    "pointer": "/solver/nonlinear/solver/*/reg_weight_min",
+    "type": "float"
+  },
+  {
+    "default": 100000000.0,
+    "doc": "Maximum regulariztion weight.",
+    "pointer": "/solver/nonlinear/solver/*/reg_weight_max",
+    "type": "float"
+  },
+  {
+    "default": 10,
+    "doc": "Regulariztion weight increment.",
+    "pointer": "/solver/nonlinear/solver/*/reg_weight_inc",
+    "type": "float"
+  },
+  {
+    "default": 0.3,
+    "doc": "Probability of erasing a component on the gradient for stochastic solvers.",
+    "pointer": "/solver/nonlinear/solver/*/erase_component_probability",
+    "type": "float"
+  },
+  {
+    "default": 6,
+    "doc": "The number of corrections to approximate the inverse Hessian matrix.",
+    "pointer": "/solver/nonlinear/solver/*/history_size",
+    "type": "int"
+  },
+  {
+    "default": 0.001,
+    "doc": "Parameter alpha for ADAM.",
+    "pointer": "/solver/nonlinear/solver/*/alpha",
+    "type": "float"
+  },
+  {
+    "default": 0.9,
+    "doc": "Parameter beta_1 for ADAM.",
+    "pointer": "/solver/nonlinear/solver/*/beta_1",
+    "type": "float"
+  },
+  {
+    "default": 0.999,
+    "doc": "Parameter beta_2 for ADAM.",
+    "pointer": "/solver/nonlinear/solver/*/beta_2",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Parameter epsilon for ADAM.",
+    "pointer": "/solver/nonlinear/solver/*/epsilon",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Settings for line-search in the nonlinear solver",
+    "optional": [
+      "method",
+      "use_grad_norm_tol",
+      "min_step_size",
+      "max_step_size_iter",
+      "min_step_size_final",
+      "max_step_size_iter_final",
+      "default_init_step_size",
+      "max_step_size_limiter",
+      "step_ratio",
+      "Armijo",
+      "RobustArmijo"
+    ],
+    "pointer": "/solver/nonlinear/line_search",
+    "type": "object"
+  },
+  {
+    "default": "RobustArmijo",
+    "doc": "Line-search type",
+    "options": [
+      "Armijo",
+      "RobustArmijo",
+      "Backtracking",
+      "None"
+    ],
+    "pointer": "/solver/nonlinear/line_search/method",
+    "type": "string"
+  },
+  {
+    "default": 1e-06,
+    "doc": "When the energy is smaller than use_grad_norm_tol, line-search uses norm of gradient instead of energy",
+    "pointer": "/solver/nonlinear/line_search/use_grad_norm_tol",
+    "type": "float"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Mimimum step size",
+    "pointer": "/solver/nonlinear/line_search/min_step_size",
+    "type": "float"
+  },
+  {
+    "default": 30,
+    "doc": "Number of iterations",
+    "pointer": "/solver/nonlinear/line_search/max_step_size_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-20,
+    "doc": "Mimimum step size for last descent strategy",
+    "pointer": "/solver/nonlinear/line_search/min_step_size_final",
+    "type": "float"
+  },
+  {
+    "default": 100,
+    "doc": "Number of iterations for last descent strategy",
+    "pointer": "/solver/nonlinear/line_search/max_step_size_iter_final",
+    "type": "int"
+  },
+  {
+    "default": 1,
+    "doc": "Initial step size",
+    "pointer": "/solver/nonlinear/line_search/default_init_step_size",
+    "type": "float"
+  },
+  {
+    "default": 1e+16,
+    "doc": "Maximum entry of the descent step",
+    "pointer": "/solver/nonlinear/line_search/max_step_size_limiter",
+    "type": "float"
+  },
+  {
+    "default": 0.5,
+    "doc": "Ratio used to decrease the step",
+    "pointer": "/solver/nonlinear/line_search/step_ratio",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for Armijo.",
+    "optional": [
+      "c"
+    ],
+    "pointer": "/solver/nonlinear/line_search/Armijo",
+    "type": "object"
+  },
+  {
+    "default": 0.0001,
+    "doc": "Armijo c parameter.",
+    "min_value": 0,
+    "pointer": "/solver/nonlinear/line_search/Armijo/c",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for RobustArmijo.",
+    "optional": [
+      "delta_relative_tolerance"
+    ],
+    "pointer": "/solver/nonlinear/line_search/RobustArmijo",
+    "type": "object"
+  },
+  {
+    "default": 0.1,
+    "doc": "Relative tolerance on E to switch to approximate.",
+    "min_value": 0,
+    "pointer": "/solver/nonlinear/line_search/RobustArmijo/delta_relative_tolerance",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "optional": [
+      "bounds",
+      "max_change"
+    ],
+    "pointer": "/solver/nonlinear/box_constraints",
+    "type": "object"
+  },
+  {
+    "default": [],
+    "doc": "Box constraints on optimization variables.",
+    "pointer": "/solver/nonlinear/box_constraints/bounds",
+    "type": "list"
+  },
+  {
+    "doc": "Box constraint values on optimization variables.",
+    "pointer": "/solver/nonlinear/box_constraints/bounds/*",
+    "type": "list"
+  },
+  {
+    "doc": "Box constraint values on optimization variables.",
+    "pointer": "/solver/nonlinear/box_constraints/bounds/*/*",
+    "type": "float"
+  },
+  {
+    "doc": "Box constraint values on optimization variables.",
+    "pointer": "/solver/nonlinear/box_constraints/bounds/*",
+    "type": "float"
+  },
+  {
+    "default": -1,
+    "doc": "Maximum change of optimization variables in one iteration, only for solvers with box constraints. Negative value to disable this constraint.",
+    "pointer": "/solver/nonlinear/box_constraints/max_change",
+    "type": "float"
+  },
+  {
+    "doc": "Maximum change of optimization variables in one iteration, only for solvers with box constraints.",
+    "pointer": "/solver/nonlinear/box_constraints/max_change",
+    "type": "list"
+  },
+  {
+    "doc": "Maximum change of every optimization variable in one iteration, only for solvers with box constraints.",
+    "pointer": "/solver/nonlinear/box_constraints/max_change/*",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Nonlinear solver advanced options",
+    "optional": [
+      "f_delta",
+      "f_delta_step_tol",
+      "derivative_along_delta_x_tol",
+      "apply_gradient_fd",
+      "gradient_fd_eps"
+    ],
+    "pointer": "/solver/nonlinear/advanced",
+    "type": "object"
+  },
+  {
+    "default": 0,
+    "doc": "Dangerous Option: Quit the optimization if the solver reduces the energy by less than f_delta for consecutive f_delta_step_tol steps.",
+    "min": 0,
+    "pointer": "/solver/nonlinear/advanced/f_delta",
+    "type": "float"
+  },
+  {
+    "default": 100,
+    "doc": "Dangerous Option: Quit the optimization if the solver reduces the energy by less than f_delta for consecutive f_delta_step_tol steps.",
+    "pointer": "/solver/nonlinear/advanced/f_delta_step_tol",
+    "type": "int"
+  },
+  {
+    "default": 0,
+    "doc": "Quit the optimization if the directional derivative along the descent direction is smaller than this tolerance.",
+    "min": 0,
+    "pointer": "/solver/nonlinear/advanced/derivative_along_delta_x_tol",
+    "type": "float"
+  },
+  {
+    "default": "None",
+    "doc": "Expensive Option: For every iteration of the nonlinear solver, run finite difference to verify gradient of energy.",
+    "options": [
+      "None",
+      "DirectionalDerivative",
+      "FullFiniteDiff"
+    ],
+    "pointer": "/solver/nonlinear/advanced/apply_gradient_fd",
+    "type": "string"
+  },
+  {
+    "default": 1e-07,
+    "doc": "Expensive Option: Eps for finite difference to verify gradient of energy.",
+    "pointer": "/solver/nonlinear/advanced/gradient_fd_eps",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "The settings for the solver including linear solver, nonlinear solver, and some advanced options.",
+    "optional": [
+      "max_threads",
+      "linear",
+      "nonlinear",
+      "augmented_lagrangian",
+      "contact"
+    ],
+    "pointer": "/solver",
+    "type": "object"
+  },
+  {
+    "default": 16,
+    "doc": "Maximum number of threads used; 0 is unlimited.",
+    "min": 0,
+    "pointer": "/solver/max_threads",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Parameters for the AL for imposing Dirichlet BCs. If the bc are not imposable, we add $w\\|u - bc\\|^2$ to the energy ($u$ is the solution at the Dirichlet nodes and $bc$ are the Dirichlet values). After convergence, we try to impose bc again. The algorithm computes E + a/2*AL^2 - lambda AL, where E is the current energy (elastic, inertia, contact, etc.) and AL is the augmented Lagrangian energy. a starts at `initial_weight` and, in case DBC cannot be imposed, we update a as `a *= scaling` until `max_weight`. See IPC additional material",
+    "optional": [
+      "initial_weight",
+      "scaling",
+      "max_weight",
+      "eta",
+      "error_threshold",
+      "nonlinear"
+    ],
+    "pointer": "/solver/augmented_lagrangian",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "Settings for nonlinear solver. Interior-loop linear solver settings are defined in the solver/linear section.",
+    "optional": [
+      "solver",
+      "x_delta",
+      "grad_norm",
+      "first_grad_norm_tol",
+      "max_iterations",
+      "iterations_per_strategy",
+      "line_search",
+      "allow_out_of_iterations",
+      "L-BFGS",
+      "L-BFGS-B",
+      "Newton",
+      "ADAM",
+      "StochasticADAM",
+      "StochasticGradientDescent",
+      "box_constraints",
+      "advanced"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear",
+    "type": "object"
+  },
+  {
+    "default": "Newton",
+    "doc": "Nonlinear solver type",
+    "options": [
+      "Newton",
+      "DenseNewton",
+      "GradientDescent",
+      "ADAM",
+      "StochasticADAM",
+      "StochasticGradientDescent",
+      "L-BFGS",
+      "BFGS",
+      "L-BFGS-B",
+      "MMA"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver",
+    "type": "string"
+  },
+  {
+    "default": 0,
+    "doc": "Stopping criterion: minimal change of the variables x for the iterations to continue. Computed as the L2 norm of x divide by the time step.",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/nonlinear/x_delta",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Stopping criterion: Minimal gradient norm for the iterations to continue.",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/nonlinear/grad_norm",
+    "type": "float"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Minimal gradient norm for the iterations to not start, assume we already are at a minimum.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/first_grad_norm_tol",
+    "type": "float"
+  },
+  {
+    "default": 500,
+    "doc": "Maximum number of iterations for a nonlinear solve.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/max_iterations",
+    "type": "int"
+  },
+  {
+    "default": 5,
+    "doc": "Number of iterations for every substrategy before reset.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/iterations_per_strategy",
+    "type": "int"
+  },
+  {
+    "doc": "Number of iterations for every substrategy before reset.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/iterations_per_strategy",
+    "type": "list"
+  },
+  {
+    "default": 5,
+    "doc": "Number of iterations for every substrategy before reset.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/iterations_per_strategy/*",
+    "type": "int"
+  },
+  {
+    "default": false,
+    "doc": "If false (default), an exception will be thrown when the nonlinear solver reaches the maximum number of iterations.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/allow_out_of_iterations",
+    "type": "bool"
+  },
+  {
+    "default": null,
+    "doc": "Options for LBFGS.",
+    "optional": [
+      "history_size"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/L-BFGS",
+    "type": "object"
+  },
+  {
+    "default": 6,
+    "doc": "The number of corrections to approximate the inverse Hessian matrix.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/L-BFGS/history_size",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Options for the boxed L-BFGS.",
+    "optional": [
+      "history_size"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/L-BFGS-B",
+    "type": "object"
+  },
+  {
+    "default": 6,
+    "doc": "The number of corrections to approximate the inverse Hessian matrix.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/L-BFGS-B/history_size",
+    "type": "int"
+  },
+  {
+    "default": null,
+    "doc": "Options for Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc",
+      "force_psd_projection",
+      "use_psd_projection",
+      "use_psd_projection_in_regularized"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton",
+    "type": "object"
+  },
+  {
+    "default": 1e-05,
+    "doc": "Tolerance of the linear system residual. If residual is above, the direction is rejected.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/residual_tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Minimum regulariztion weight.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/reg_weight_min",
+    "type": "float"
+  },
+  {
+    "default": 100000000.0,
+    "doc": "Maximum regulariztion weight.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/reg_weight_max",
+    "type": "float"
+  },
+  {
+    "default": 10,
+    "doc": "Regulariztion weight increment.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/reg_weight_inc",
+    "type": "float"
+  },
+  {
+    "default": false,
+    "doc": "Force the Hessian to be PSD when using second order solvers (i.e., Newton's method).",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection",
+    "type": "bool"
+  },
+  {
+    "default": true,
+    "doc": "Use PSD as fallback using second order solvers (i.e., Newton's method).",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/use_psd_projection",
+    "type": "bool"
+  },
+  {
+    "default": true,
+    "doc": "Use PSD in regularized Newton.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/Newton/use_psd_projection_in_regularized",
+    "type": "bool"
+  },
+  {
+    "default": null,
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/ADAM",
+    "type": "object"
+  },
+  {
+    "default": 0.001,
+    "doc": "Parameter alpha for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/ADAM/alpha",
+    "type": "float"
+  },
+  {
+    "default": 0.9,
+    "doc": "Parameter beta_1 for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/ADAM/beta_1",
+    "type": "float"
+  },
+  {
+    "default": 0.999,
+    "doc": "Parameter beta_2 for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/ADAM/beta_2",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Parameter epsilon for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/ADAM/epsilon",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon",
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticADAM",
+    "type": "object"
+  },
+  {
+    "default": 0.001,
+    "doc": "Parameter alpha for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticADAM/alpha",
+    "type": "float"
+  },
+  {
+    "default": 0.9,
+    "doc": "Parameter beta_1 for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticADAM/beta_1",
+    "type": "float"
+  },
+  {
+    "default": 0.999,
+    "doc": "Parameter beta_2 for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticADAM/beta_2",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Parameter epsilon for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticADAM/epsilon",
+    "type": "float"
+  },
+  {
+    "default": 0.3,
+    "doc": "Probability of erasing a component on the gradient for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticADAM/erase_component_probability",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for Stochastic Gradient Descent.",
+    "optional": [
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticGradientDescent",
+    "type": "object"
+  },
+  {
+    "default": 0.3,
+    "doc": "Probability of erasing a component on the gradient for StochasticGradientDescent.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/StochasticGradientDescent/erase_component_probability",
+    "type": "float"
+  },
+  {
+    "doc": "List of solvers for ballback. Eg, [{'type':'Newton'}, {'type':'L-BFGS'}, {'type':'GradientDescent'}] will solve using Newton, in case of failure will fallback to L-BFGS and eventually to GradientDescent",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver",
+    "type": "list"
+  },
+  {
+    "doc": "Options for Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "Newton"
+  },
+  {
+    "doc": "Options for projected Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "ProjectedNewton"
+  },
+  {
+    "doc": "Options for regularized Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "RegularizedNewton"
+  },
+  {
+    "doc": "Options for regularized projected Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "RegularizedProjectedNewton"
+  },
+  {
+    "doc": "Options for Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseNewton"
+  },
+  {
+    "doc": "Options for projected Newton.",
+    "optional": [
+      "residual_tolerance"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseProjectedNewton"
+  },
+  {
+    "doc": "Options for regularized Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseRegularizedNewton"
+  },
+  {
+    "doc": "Options for projected regularized Newton.",
+    "optional": [
+      "residual_tolerance",
+      "reg_weight_min",
+      "reg_weight_max",
+      "reg_weight_inc"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "DenseRegularizedProjectedNewton"
+  },
+  {
+    "doc": "Options for Gradient Descent.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "GradientDescent"
+  },
+  {
+    "doc": "Options for Stochastic Gradient Descent.",
+    "optional": [
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "StochasticGradientDescent"
+  },
+  {
+    "doc": "Options for L-BFGS.",
+    "optional": [
+      "history_size"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "L-BFGS"
+  },
+  {
+    "doc": "Options for BFGS.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "BFGS"
+  },
+  {
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "ADAM"
+  },
+  {
+    "doc": "Options for ADAM.",
+    "optional": [
+      "alpha",
+      "beta_1",
+      "beta_2",
+      "epsilon",
+      "erase_component_probability"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*",
+    "required": [
+      "type"
+    ],
+    "type": "object",
+    "type_name": "StochasticADAM"
+  },
+  {
+    "doc": "Nonlinear solver type",
+    "options": [
+      "Newton",
+      "DenseNewton",
+      "ProjectedNewton",
+      "DenseProjectedNewton",
+      "RegularizedNewton",
+      "DenseRegularizedNewton",
+      "RegularizedProjectedNewton",
+      "DenseRegularizedProjectedNewton",
+      "GradientDescent",
+      "StochasticGradientDescent",
+      "ADAM",
+      "StochasticADAM",
+      "L-BFGS",
+      "BFGS"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/type",
+    "type": "string"
+  },
+  {
+    "default": 1e-05,
+    "doc": "Tolerance of the linear system residual. If residual is above, the direction is rejected.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/residual_tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Minimum regulariztion weight.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/reg_weight_min",
+    "type": "float"
+  },
+  {
+    "default": 100000000.0,
+    "doc": "Maximum regulariztion weight.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/reg_weight_max",
+    "type": "float"
+  },
+  {
+    "default": 10,
+    "doc": "Regulariztion weight increment.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/reg_weight_inc",
+    "type": "float"
+  },
+  {
+    "default": 0.3,
+    "doc": "Probability of erasing a component on the gradient for stochastic solvers.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/erase_component_probability",
+    "type": "float"
+  },
+  {
+    "default": 6,
+    "doc": "The number of corrections to approximate the inverse Hessian matrix.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/history_size",
+    "type": "int"
+  },
+  {
+    "default": 0.001,
+    "doc": "Parameter alpha for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/alpha",
+    "type": "float"
+  },
+  {
+    "default": 0.9,
+    "doc": "Parameter beta_1 for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/beta_1",
+    "type": "float"
+  },
+  {
+    "default": 0.999,
+    "doc": "Parameter beta_2 for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/beta_2",
+    "type": "float"
+  },
+  {
+    "default": 1e-08,
+    "doc": "Parameter epsilon for ADAM.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/solver/*/epsilon",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Settings for line-search in the nonlinear solver",
+    "optional": [
+      "method",
+      "use_grad_norm_tol",
+      "min_step_size",
+      "max_step_size_iter",
+      "min_step_size_final",
+      "max_step_size_iter_final",
+      "default_init_step_size",
+      "max_step_size_limiter",
+      "step_ratio",
+      "Armijo",
+      "RobustArmijo"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search",
+    "type": "object"
+  },
+  {
+    "default": "RobustArmijo",
+    "doc": "Line-search type",
+    "options": [
+      "Armijo",
+      "RobustArmijo",
+      "Backtracking",
+      "None"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/method",
+    "type": "string"
+  },
+  {
+    "default": 1e-06,
+    "doc": "When the energy is smaller than use_grad_norm_tol, line-search uses norm of gradient instead of energy",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/use_grad_norm_tol",
+    "type": "float"
+  },
+  {
+    "default": 1e-10,
+    "doc": "Mimimum step size",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/min_step_size",
+    "type": "float"
+  },
+  {
+    "default": 30,
+    "doc": "Number of iterations",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/max_step_size_iter",
+    "type": "int"
+  },
+  {
+    "default": 1e-20,
+    "doc": "Mimimum step size for last descent strategy",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/min_step_size_final",
+    "type": "float"
+  },
+  {
+    "default": 100,
+    "doc": "Number of iterations for last descent strategy",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/max_step_size_iter_final",
+    "type": "int"
+  },
+  {
+    "default": 1,
+    "doc": "Initial step size",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/default_init_step_size",
+    "type": "float"
+  },
+  {
+    "default": 1e+16,
+    "doc": "Maximum entry of the descent step",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/max_step_size_limiter",
+    "type": "float"
+  },
+  {
+    "default": 0.5,
+    "doc": "Ratio used to decrease the step",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/step_ratio",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for Armijo.",
+    "optional": [
+      "c"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/Armijo",
+    "type": "object"
+  },
+  {
+    "default": 0.0001,
+    "doc": "Armijo c parameter.",
+    "min_value": 0,
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/Armijo/c",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Options for RobustArmijo.",
+    "optional": [
+      "delta_relative_tolerance"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/RobustArmijo",
+    "type": "object"
+  },
+  {
+    "default": 0.1,
+    "doc": "Relative tolerance on E to switch to approximate.",
+    "min_value": 0,
+    "pointer": "/solver/augmented_lagrangian/nonlinear/line_search/RobustArmijo/delta_relative_tolerance",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "optional": [
+      "bounds",
+      "max_change"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints",
+    "type": "object"
+  },
+  {
+    "default": [],
+    "doc": "Box constraints on optimization variables.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/bounds",
+    "type": "list"
+  },
+  {
+    "doc": "Box constraint values on optimization variables.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/bounds/*",
+    "type": "list"
+  },
+  {
+    "doc": "Box constraint values on optimization variables.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/bounds/*/*",
+    "type": "float"
+  },
+  {
+    "doc": "Box constraint values on optimization variables.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/bounds/*",
+    "type": "float"
+  },
+  {
+    "default": -1,
+    "doc": "Maximum change of optimization variables in one iteration, only for solvers with box constraints. Negative value to disable this constraint.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/max_change",
+    "type": "float"
+  },
+  {
+    "doc": "Maximum change of optimization variables in one iteration, only for solvers with box constraints.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/max_change",
+    "type": "list"
+  },
+  {
+    "doc": "Maximum change of every optimization variable in one iteration, only for solvers with box constraints.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/box_constraints/max_change/*",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Nonlinear solver advanced options",
+    "optional": [
+      "f_delta",
+      "f_delta_step_tol",
+      "derivative_along_delta_x_tol",
+      "apply_gradient_fd",
+      "gradient_fd_eps"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/advanced",
+    "type": "object"
+  },
+  {
+    "default": 0,
+    "doc": "Dangerous Option: Quit the optimization if the solver reduces the energy by less than f_delta for consecutive f_delta_step_tol steps.",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/nonlinear/advanced/f_delta",
+    "type": "float"
+  },
+  {
+    "default": 100,
+    "doc": "Dangerous Option: Quit the optimization if the solver reduces the energy by less than f_delta for consecutive f_delta_step_tol steps.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/advanced/f_delta_step_tol",
+    "type": "int"
+  },
+  {
+    "default": 0,
+    "doc": "Quit the optimization if the directional derivative along the descent direction is smaller than this tolerance.",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/nonlinear/advanced/derivative_along_delta_x_tol",
+    "type": "float"
+  },
+  {
+    "default": "None",
+    "doc": "Expensive Option: For every iteration of the nonlinear solver, run finite difference to verify gradient of energy.",
+    "options": [
+      "None",
+      "DirectionalDerivative",
+      "FullFiniteDiff"
+    ],
+    "pointer": "/solver/augmented_lagrangian/nonlinear/advanced/apply_gradient_fd",
+    "type": "string"
+  },
+  {
+    "default": 1e-07,
+    "doc": "Expensive Option: Eps for finite difference to verify gradient of energy.",
+    "pointer": "/solver/augmented_lagrangian/nonlinear/advanced/gradient_fd_eps",
+    "type": "float"
+  },
+  {
+    "default": 1000000.0,
+    "doc": "Initial weight for AL",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/initial_weight",
+    "type": "float"
+  },
+  {
+    "default": 0.01,
+    "doc": "Don't stop AL unless the error is smaller than this number.",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/error",
+    "type": "float"
+  },
+  {
+    "default": 2.0,
+    "doc": "Multiplication factor",
+    "pointer": "/solver/augmented_lagrangian/scaling",
+    "type": "float"
+  },
+  {
+    "default": 100000000.0,
+    "doc": "Maximum weight",
+    "pointer": "/solver/augmented_lagrangian/max_weight",
+    "type": "float"
+  },
+  {
+    "default": 0.99,
+    "doc": "Tolerance for increasing the weight or updating the lagrangian",
+    "max": 1,
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/eta",
+    "type": "float"
+  },
+  {
+    "default": 0.01,
+    "doc": "Error tolerance for enforcing the constraints directly",
+    "min": 0,
+    "pointer": "/solver/augmented_lagrangian/error_threshold",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "Settings for contact handling in the solver.",
+    "optional": [
+      "CCD",
+      "barrier_stiffness"
+    ],
+    "pointer": "/solver/contact",
+    "type": "object"
+  },
+  {
+    "default": null,
+    "doc": "CCD options",
+    "optional": [
+      "broad_phase",
+      "tolerance",
+      "max_iterations"
+    ],
+    "pointer": "/solver/contact/CCD",
+    "type": "object"
+  },
+  {
+    "default": "hash_grid",
+    "doc": "Broad phase collision-detection algorithm to use",
+    "options": [
+      "hash_grid",
+      "HG",
+      "brute_force",
+      "BF",
+      "spatial_hash",
+      "SH",
+      "bvh",
+      "BVH",
+      "sweep_and_prune",
+      "SAP",
+      "sweep_and_tiniest_queue",
+      "STQ"
+    ],
+    "pointer": "/solver/contact/CCD/broad_phase",
+    "type": "string"
+  },
+  {
+    "default": 1e-06,
+    "doc": "CCD tolerance",
+    "pointer": "/solver/contact/CCD/tolerance",
+    "type": "float"
+  },
+  {
+    "default": 1000000,
+    "doc": "Maximum number of iterations for continuous collision detection",
+    "pointer": "/solver/contact/CCD/max_iterations",
+    "type": "int"
+  },
+  {
+    "default": 100000000.0,
+    "doc": "The coefficient of clamped log-barrier function value when not adaptive",
+    "pointer": "/solver/contact/barrier_stiffness",
+    "type": "float"
+  },
+  {
+    "default": null,
+    "doc": "output settings",
+    "optional": [
+      "directory",
+      "log",
+      "skip_frame",
+      "format"
+    ],
+    "pointer": "/output",
+    "type": "object"
+  },
+  {
+    "default": "obj",
+    "doc": "Output mesh format: \"obj\" (per-step .obj, default) or \"usd\" (per-step .usda). USD requires a build with OpenUSD support.",
+    "options": [
+      "obj",
+      "usd"
+    ],
+    "pointer": "/output/format",
+    "type": "string"
+  },
+  {
+    "default": ".",
+    "doc": "Directory for output files.",
+    "pointer": "/output/directory",
+    "type": "string"
+  },
+  {
+    "default": null,
+    "doc": "Setting for the output log.",
+    "optional": [
+      "level"
+    ],
+    "pointer": "/output/log",
+    "type": "object"
+  },
+  {
+    "doc": "Level of logging, 0 trace, 1 debug, 2 info, 3 warning, 4 error, 5 critical, and 6 off.",
+    "max": 6,
+    "min": 0,
+    "pointer": "/output/log/level",
+    "type": "int"
+  },
+  {
+    "default": "debug",
+    "doc": "Level of logging.",
+    "options": [
+      "trace",
+      "debug",
+      "info",
+      "warning",
+      "error",
+      "critical",
+      "off"
+    ],
+    "pointer": "/output/log/level",
+    "type": "string"
+  },
+  {
+    "default": 1,
+    "doc": "export every skip_frame-th frames for time dependent simulations",
+    "pointer": "/output/skip_frame",
+    "type": "int"
+  },
+  {
+    "default": false,
+    "doc": "Set this value to true if the bone used by curve center target is automatically generated if more than 1 bone intersects with the plane fit to the curve loops (hem, collar, cuff, etc.)",
+    "pointer": "/curve_center_target_automatic_bone_generation",
+    "type": "bool"
+  }
+]

@@ -42,6 +42,14 @@ lean_exe emit_cassie where
 lean_exe emit_drape where
   root := `EmitDrape
 
+-- fit.elf's kernels (Cut 6): the SDF spline sampler FitForm evaluates.
+-- A default target, so a bare `lake build` checks their native_decide
+-- pins as well as Cloth's.
+@[default_target] lean_lib Fit
+
+lean_exe emit_fit where
+  root := `EmitFit
+
 -- Iterative-deepening witness search over the plausible ladder. Shares
 -- the `Level` shape (walkSteps / finBound / numInst) that witness-cpp
 -- mirrors on the C++ side, so a property stated here and a property

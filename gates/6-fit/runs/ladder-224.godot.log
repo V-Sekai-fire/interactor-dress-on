@@ -1,0 +1,72 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+gate_fit 2026-09-22T23:05:25, arm solve, tag ladder-224, args { "tag": "ladder-224", "arm": "solve", "phases": "2", "mem": "224", "wall": "7200" }
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+[dress-on] sandbox loaded dress_on.elf
+[dress-on] sandbox loaded drape.elf
+[dress-on] sandbox loaded res://fit.elf (memory_max 2048 MiB, execution_timeout 1073741824)
+[dress-on] sandbox loaded res://fit.elf (memory_max 224 MiB, execution_timeout 1073741824)
+ok   fit_configure: OK fit sandbox res://fit.elf memory_max 224 MiB execution_timeout 1073741824
+ok   io positive control (before fit_begin): PASS io: fopen refused (errno 13), ifstream refused, open -1 (errno 13); counted 3 of 3 (total 3)
+ok   fit_fixture_foxgirl (230 ms): OK reset | OK body 5128 v / 10171 f | OK skeletons 15 joints / 14 bones | OK garment 2682 v / 5220 f, no-fit 2005 | OK config 1046 bytes
+[2026-09-23 06:05:28.947] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+
+[2026-09-23 06:05:31.782] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+
+[2026-09-23 06:11:45.445] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+
+[2026-09-23 06:05:48.994] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+
+[2026-09-24 21:10:39.250] [polyfem] [info] Shrunk avatar blended 0.010 toward the target body (0 = fully collapsed onto the skeleton, 1 = no shrink)
+
+[2026-09-23 06:05:55.025] [polyfem] [debug] curve 0 has 3 bone intersections
+
+[2026-09-23 06:05:55.026] [polyfem] [debug] curve normal [-0.011034943664410036, 0.055700501234311195, -0.9983865404644485]
+
+[2026-09-23 06:05:55.027] [polyfem] [debug] CurveTargetForm set curve center to bone 15 - 16, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+
+[2026-09-23 06:05:55.027] [polyfem] [debug] curve 1 has 1 bone intersections
+
+[2026-09-23 06:05:55.028] [polyfem] [debug] curve normal [0.004042139558851457, -0.06527869003077968, 0.9978588846804203]
+
+[2026-09-23 06:05:55.029] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+
+ok   fit_begin (4630 ms): OK begin: phases 4, target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248), source_scale 0.90869314092562126, io_attempts 0
+     fit_status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 last_instructions 0 heap_used 11.3 MiB heap_free 167.9 MiB chunks 79252 host_heap_usage=11825248 | last: 
+[2026-09-23 06:11:47.221] [polyfem] [info] Start substep 1 out of 2
+
+[2026-09-23 06:11:52.029] [polyfem] [debug] Set initial AL weight to 1
+
+[2026-09-23 06:46:36.675] [polyfem] [debug] Solving AL Problem with weight 1
+
+[2026-09-23 06:06:10.051] [polyfem] [debug] Starting SparseNewton with Backtracking solve f₀=53.6213 (stopping criteria: iters=50 f=1.13635e-322 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+
+[@Sandbox@6] Exception when calling:
+  _ZN12_GLOBAL__N_18fit_stepEv (0x12cec2)
+Backtrace:
+-> [0] 0x000000000013276C + 0x004: __wrap_malloc
+-> [1] 0x0000000000351C94 + 0x1ba: _ZZN3ipc3BVH17detect_candidatesINS_17EdgeEdgeCandidateELb0ELb1EEEvRKSt6vectorINS_4AABBESaIS4_EERKN9SimpleBVH3BVHERKSt8functionIFbmmEERS3_IT_SaISI_EEENKUlRKN3tbb13blocked_rangeImEEE_clESQ_
+-> [-] 0x12cec2 + 0x0: _ZN12_GLOBAL__N_18fit_stepEv
+
+Exception: Protection fault  (data: 0)
+>>> [0x132770] 00000073 ecall
+>>> Machine registers:
+[PC	132770] [RA	00351E4E] [SP	0075AF20] [GP	004501A8] [TP	0045C760] 
+[LR	00000001] [TMP1	000000E0] [TMP2	0000CF00] [SR0	0075B050] [SR1	01082C0C] 
+[A0	00442450] [A1	00000000] [A2	0000558E] [A3	00442450] [A4	00000000] 
+[A5	00000BA7] [A6	00000000] [A7	000001E0] [SR2	00442500] [SR3	00000000] 
+[SR4	01082908] [SR5	00004EBB] [SR6	09761870] [SR7	06761870] [SR8	06000000] 
+[SR9	06761870] [SR10	00000000] [SR11	00442500] [TMP3	0232F458] [TMP4	00000000] 
+[TMP5	01288C88] [TMP6	01281280] 
+
+FAIL phase 0: host_ms=65841 <null>
+     status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 last_instructions 0 heap_used 94.7 MiB heap_free 84.5 MiB chunks 79252 host_heap_usage=99339872 | last: host_ms=65841 <null>
+summary ladder-224 phases_ok 0/2 FAILED at phase 0, mem 224 MiB
+wall 74.6 s, frames 3986
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

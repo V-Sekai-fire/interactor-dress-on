@@ -1,0 +1,66 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+gate_fit 2026-09-22T23:48:39, arm solve, tag timeout-ctl, args { "tag": "timeout-ctl", "arm": "solve", "phases": "1", "timeout": "100000", "wall": "1800" }
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+[dress-on] sandbox loaded dress_on.elf
+[dress-on] sandbox loaded drape.elf
+[dress-on] sandbox loaded res://fit.elf (memory_max 2048 MiB, execution_timeout 1073741824)
+[dress-on] sandbox loaded res://fit.elf (memory_max 2048 MiB, execution_timeout 100000)
+ok   fit_configure: OK fit sandbox res://fit.elf memory_max 2048 MiB execution_timeout 100000
+ok   io positive control (before fit_begin): PASS io: fopen refused (errno 13), ifstream refused, open -1 (errno 13); counted 3 of 3 (total 3)
+ok   fit_fixture_foxgirl (243 ms): OK reset | OK body 5128 v / 10171 f | OK skeletons 15 joints / 14 bones | OK garment 2682 v / 5220 f, no-fit 2005 | OK config 1046 bytes
+[2026-09-23 06:48:42.851] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+
+[2026-09-23 06:48:45.279] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+
+[2026-09-23 06:56:33.431] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+
+[2026-09-23 06:49:02.486] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+
+[2026-09-24 21:53:52.740] [polyfem] [info] Shrunk avatar blended 0.010 toward the target body (0 = fully collapsed onto the skeleton, 1 = no shrink)
+
+[2026-09-23 06:48:46.810] [polyfem] [debug] curve 0 has 3 bone intersections
+
+[2026-09-23 06:48:46.811] [polyfem] [debug] curve normal [-0.011034943664410036, 0.055700501234311195, -0.9983865404644485]
+
+[2026-09-23 06:48:46.812] [polyfem] [debug] CurveTargetForm set curve center to bone 15 - 16, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+
+[2026-09-23 06:48:46.813] [polyfem] [debug] curve 1 has 1 bone intersections
+
+[2026-09-23 06:48:46.813] [polyfem] [debug] curve normal [0.004042139558851457, -0.06527869003077968, 0.9978588846804203]
+
+[2026-09-23 06:48:46.814] [polyfem] [debug] CurveTargetForm set curve center to bone 0 - 1, direction is [-0.011034943664410032, 0.055700501234311174, -0.9983865404644484]
+
+ok   fit_begin (3987 ms): OK begin: phases 4, target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248), source_scale 0.90869314092562126, io_attempts 0
+     fit_status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 last_instructions 0 heap_used 11.3 MiB heap_free 1627.1 MiB chunks 79252 host_heap_usage=11825248 | last: 
+[2026-09-23 06:56:34.971] [polyfem] [info] Start substep 1 out of 2
+
+[2026-09-23 06:56:38.648] [polyfem] [debug] Set initial AL weight to 1
+
+[2026-09-23 07:31:46.506] [polyfem] [debug] Solving AL Problem with weight 1
+
+[2026-09-23 06:49:14.435] [polyfem] [debug] Starting SparseNewton with Backtracking solve f₀=53.6213 (stopping criteria: iters=50 f=1.13635e-322 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+
+[2026-09-23 06:51:08.265] [polyfem] [debug] Line search finished (nan_free_step_size=1 collision_free_step_size=0.4140625 descent_step_size=0.4140625 final_step_size=0.4140625)
+
+[2026-09-23 06:51:08.269] [polyfem] [debug] [SparseNewton][Backtracking] iters=0 f=53.6213 Δf=nan ‖∇f‖=214.485 ‖Δx‖=17.7455 Δx⋅∇f(x)=-107.243 (stopping criteria: iters=50 f=1.13635e-322 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+
+[@Sandbox@6] Exception when calling:
+  _ZN12_GLOBAL__N_18fit_stepEv (0x12d17a)
+Backtrace:
+-> [0] 0x0000000000132A98 + 0x008: __wrap_free
+-> [1] 0x0000000000132DA2 + 0x008: _ZdlPvm
+-> [-] 0x12d17a + 0x0: _ZN12_GLOBAL__N_18fit_stepEv
+Sandbox: Timeout for '_ZN12_GLOBAL__N_18fit_stepEv' (Timeouts: 1)
+
+FAIL phase 0: host_ms=163963 <null>
+     status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 last_instructions 0 heap_used 113.1 MiB heap_free 1525.3 MiB chunks 79252 host_heap_usage=118592976 | last: host_ms=163963 <null>
+summary timeout-ctl phases_ok 0/1 FAILED at phase 0, mem 2048 MiB
+wall 171.6 s, frames 9872
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

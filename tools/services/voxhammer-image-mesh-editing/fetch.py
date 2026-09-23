@@ -7,8 +7,8 @@ src/VoxHammer  V-Sekai-fire/VoxHammer @ VOXHAMMER_REV (win-64 edit path, USD dri
 <models>/TRELLIS-image-large  microsoft/TRELLIS-image-large @ TRELLIS_REV, pipeline.json
                adapted to name the two encoders VoxHammer inverts with (its README, Step 1).
 
-<models> is VOXHAMMER_MODELS if set, else models/ beside the MAIN checkout's .git, so
-worktrees share one copy. Every file is checked against tools/models/manifest.tsv.
+<models> is VOXHAMMER_MODELS, else MODELS_DIR, else models/ beside the MAIN checkout's .git
+(worktrees share one copy), else models/ in this tree when there is no git. Every file is checked against tools/models/manifest.tsv.
 """
 from __future__ import annotations
 
@@ -39,10 +39,8 @@ def git(*a, cwd=None):
     subprocess.run(["git", *a], cwd=cwd, check=True)
 
 
-def repo_root() -> Path:
-    common = subprocess.run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
-                            cwd=HERE, check=True, capture_output=True, text=True).stdout.strip()
-    return Path(common).parent
+sys.path.insert(0, str(HERE.parent))
+from svc_common import main_checkout as repo_root, models_dir  # noqa: E402
 
 
 def fetch_repo(name: str) -> None:
@@ -121,7 +119,7 @@ def repo_root_of_manifest() -> Path:
 if __name__ == "__main__":
     for n in REPOS:
         fetch_repo(n)
-    models = Path(os.environ.get("VOXHAMMER_MODELS") or repo_root() / "models")
+    models = models_dir("VOXHAMMER_MODELS")
     fetch_weights(models)
     if "--manifest" in sys.argv:  # print rows to paste into tools/models/manifest.tsv
         d = models / "TRELLIS-image-large"

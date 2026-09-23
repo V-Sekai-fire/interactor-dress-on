@@ -10,8 +10,12 @@ pixi run serve     # http://127.0.0.1:8765  GET /health, POST /predict
 pixi run smoke     # serve, one real edit on VoxHammer's example, check the USD, -> runs/smoke.json
 ```
 
-Pin the card with `CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<4090 index>`
-(the smoke does); the Step-1 render subprocess inherits it.
+No card is pinned: `serve.py` (and the smoke) take the next GPU in round robin
+(`../svc_common.py`); a caller's `CUDA_VISIBLE_DEVICES` wins, and the Step-1 render
+subprocess inherits the pick. `serve.py` also hands the server `VOXHAMMER_TRELLIS`
+from `VOXHAMMER_MODELS`, else `MODELS_DIR`, else the main checkout's `models/`, else
+this tree's `models/`, so the service starts outside a git checkout (before, the
+server's own git lookup left a relative path there and failed).
 
 ## Contract (OpenUSD in, OpenUSD out)
 

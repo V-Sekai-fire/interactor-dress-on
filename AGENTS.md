@@ -17,11 +17,14 @@ mesh and 3D editing are not in the sandbox: the loop calls the org's
 Pixal3D and VoxHammer model services over HTTP
 (`V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh`,
 `interactor-voxhammer-{image,text}-mesh-editing`; `POST /predict`, `/extract`)
-from GDScript, and loads the returned GLB with Godot's own GLTF importer.
-The services run from **pixi** environments (not Docker). No GDExtension,
-no host DLL: curvenet, fit and drape stay guest ELFs, the rig (4b) stays on
-ggml-rd. Without a reachable service the INFER state fails loudly, never a
-silent fixture.
+from GDScript. They answer with **OpenUSD** layers carrying real
+`UsdGeom.Mesh` geometry, never GLB, and the loop reads them in the guest
+(the org's `flow-*` USD importer as a sandbox ELF; Gate 0G). The services
+run natively from **pixi** environments (win-64 here, not Docker); no card
+is pinned, each launch takes the next GPU in round robin
+(`tools/services/svc_common.py`). No GDExtension, no host DLL: curvenet, fit
+and drape stay guest ELFs, the rig (4b) stays on ggml-rd. Without a
+reachable service the INFER state fails loudly, never a silent fixture.
 
 ## Rules
 

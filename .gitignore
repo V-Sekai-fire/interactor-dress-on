@@ -21,3 +21,4 @@ lean/.lake/
 /gates/6-fit/runs/*.f64
 /gates/6-fit/runs/*.f32
 /gates/6-fit/runs/*.i32
+__pycache__/

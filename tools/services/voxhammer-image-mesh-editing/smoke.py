@@ -22,6 +22,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 VH = HERE / "src" / "VoxHammer"
 RUNS = HERE / "runs"
+sys.path.insert(0, str(HERE.parent))
+from svc_common import models_dir, round_robin_gpu  # noqa: E402
 WORK = RUNS / "work"
 PORT = int(os.environ.get("SMOKE_PORT", "8766"))
 LOAD_WALL, REQ_WALL = 600, 1800
@@ -50,24 +52,27 @@ def build_request() -> dict:
             "_faces_in": int(len(m.faces)), "_verts_in": int(len(m.vertices))}
 
 
-def gpu_4090() -> tuple[str, int]:
+def gpu_state(idx: str) -> tuple[str, int]:
     q = subprocess.run(["nvidia-smi", "--query-gpu=index,name,memory.used", "--format=csv,noheader,nounits"],
                        capture_output=True, text=True, check=True).stdout
     for line in q.splitlines():
         i, name, used = [s.strip() for s in line.split(",")]
-        if "4090" in name:
-            return i, int(used)
-    raise SystemExit("no RTX 4090 visible")
+        if i == idx:
+            return name, int(used)
+    raise SystemExit(f"GPU {idx} not listed by nvidia-smi")
 
 
 def main() -> int:
     req = build_request()
     meta = {k: req.pop(k) for k in [k for k in req if k.startswith("_")]}
-    idx, idle = gpu_4090()
-    env = dict(os.environ, PORT=str(PORT), CUDA_DEVICE_ORDER="PCI_BUS_ID", CUDA_VISIBLE_DEVICES=idx)
+    idx = round_robin_gpu(models_dir("VOXHAMMER_MODELS"), "voxhammer-smoke")  # the next card, not a pinned one
+    if idx is None:
+        raise SystemExit("no GPU listed by nvidia-smi")
+    gpu_name, idle = gpu_state(idx)
+    env = dict(os.environ, PORT=str(PORT))  # carries the pick; serve.py keeps a caller's CUDA_VISIBLE_DEVICES
     log = open(RUNS / "smoke_server.log", "w")
     t0 = time.time()
-    srv = subprocess.Popen([sys.executable, "-u", str(HERE / "src/service/server.py")], env=env,
+    srv = subprocess.Popen([sys.executable, "-u", str(HERE / "serve.py")], env=env,
                            stdout=log, stderr=subprocess.STDOUT)
     peak = {"mib": idle}
     stop = threading.Event()
@@ -75,13 +80,13 @@ def main() -> int:
     def sample():
         while not stop.is_set():
             try:
-                peak["mib"] = max(peak["mib"], gpu_4090()[1])
+                peak["mib"] = max(peak["mib"], gpu_state(idx)[1])
             except Exception:
                 pass
             stop.wait(0.5)
 
     threading.Thread(target=sample, daemon=True).start()
-    result = {"gpu": f"RTX 4090 (nvidia-smi index {idx})", "idle_mib": idle, **meta}
+    result = {"gpu": f"{gpu_name} (nvidia-smi index {idx}, round robin)", "idle_mib": idle, **meta}
     try:
         while True:
             if srv.poll() is not None:

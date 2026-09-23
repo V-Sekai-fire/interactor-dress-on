@@ -66,16 +66,12 @@ WEIGHTS.update({f"BiRefNet_HR-matting/{f}": _BRN for f in
 NAF_URL = "https://github.com/valeoai/NAF/releases/download/model/naf_release.pth"
 
 
-def main_checkout() -> Path:
-    """models/ lives in the main checkout, which worktrees share."""
-    common = subprocess.check_output(
-        ["git", "-C", str(HERE), "rev-parse", "--path-format=absolute", "--git-common-dir"],
-        text=True).strip()
-    return Path(common).parent
+sys.path.insert(0, str(HERE.parent))
+from svc_common import main_checkout, models_dir as _models_dir  # noqa: E402
 
 
 def models_dir() -> Path:
-    return Path(os.environ.get("MODELS_DIR") or main_checkout() / "models")
+    return _models_dir("PIXAL3D_MODELS")
 
 
 def git(*args, cwd=None):

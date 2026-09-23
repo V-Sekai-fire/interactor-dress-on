@@ -84,5 +84,5 @@ SPCONV_ALGO = "native"
 
 [tasks]
 fetch = "python fetch.py"
-serve = { cmd = "python src/service/server.py", env = { PORT = "8765" } }
+serve = { cmd = "python serve.py", env = { PORT = "8765" } }
 smoke = "python smoke.py"

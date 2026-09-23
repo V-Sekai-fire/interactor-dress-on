@@ -1,14 +1,14 @@
 {
   "mode": "stub",
-  "port": 59811,
-  "load_s": 1.1280355999988387,
-  "predict_wall_s": 0.049184000003151596,
+  "port": 65011,
+  "load_s": 1.1465683999995235,
+  "predict_wall_s": 0.02543839999998454,
   "predict_server": {
     "seconds": null,
     "vram_peak_mib": null,
     "camera_params": null
   },
-  "extract_wall_s": 1.246194799998193,
+  "extract_wall_s": 1.440501299999596,
   "extract_server": {
     "seconds": null,
     "vram_peak_mib": null
@@ -23,12 +23,12 @@
   },
   "gpu_mem_used_mib_max": {
     "NVIDIA GeForce RTX 3090": 3,
-    "NVIDIA GeForce RTX 4090": 1688
+    "NVIDIA GeForce RTX 4090": 1342
   },
   "gpu_mem_used_mib_before": {
     "NVIDIA GeForce RTX 3090": 3,
-    "NVIDIA GeForce RTX 4090": 1632
+    "NVIDIA GeForce RTX 4090": 1314
   },
-  "total_wall_s": 2.610863599998993,
+  "total_wall_s": 2.811670700000832,
   "pass": true
 }

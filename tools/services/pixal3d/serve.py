@@ -1,6 +1,7 @@
 """Run the Pixal3D service (src/service/server.py) with every weight from the pinned
 local models/ tree. `pixi run serve`; PORT (default 8000), HOST (default 127.0.0.1),
-WEFTSPUN_STUB=1 for the no-GPU contract mode."""
+WEFTSPUN_STUB=1 for the no-GPU contract mode. The GPU is the next one in round robin
+(svc_common.round_robin_gpu), never a pinned card."""
 
 import os
 import runpy
@@ -10,8 +11,11 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from fetch import models_dir  # noqa: E402
+from svc_common import round_robin_gpu  # noqa: E402
 
 M = models_dir()
+if os.environ.get("WEFTSPUN_STUB") != "1":
+    round_robin_gpu(M, "pixal3d")
 env = {
     "PIXAL3D_WEIGHTS": M / "Pixal3D-src",
     "PIXAL3D_DINO": M / "dinov3-vitl16",

@@ -41,8 +41,12 @@ Measured on the way (negative results, kept because they cost time):
   does not parse `tl.pointer_type` annotations). triton 3.4 has both; so torch 2.8.
 - pixi does not expand `$PIXI_PROJECT_ROOT` inside `[activation.env]` on win-64 (the
   literal string reached torch.hub), so `serve.py`/`smoke.py` set the paths.
-- Another service holding the 4090 (24 GB used) leaves no room; pick the GPU with
-  `CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<n>` (0 = 3090, 1 = 4090 here).
+- No card is pinned. Each launch takes the next GPU in PCI bus order
+  (`../svc_common.py` `round_robin_gpu`, a counter beside the weights shared by
+  every service and worktree), so Pixal3D and VoxHammer launched one after the
+  other land on different cards: each needs most of a 24 GB card. A caller's
+  `CUDA_VISIBLE_DEVICES` wins. Measured: four launches went 3090, 4090, 3090,
+  4090, and torch saw only the card it was given.
 
 Wheel sha256 (as downloaded from raw.githubusercontent.com at that commit):
 

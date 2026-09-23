@@ -23,6 +23,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/godot_lite.cmake)
 # samples, so no fast-math anywhere and strict IEEE evaluation (SCsub's clang
 # branch). The warning flag silences targets without full strict-FP support.
 set(CURVENET_STRICT_FP -ffp-model=strict -Wno-unsupported-floating-point-opt)
+# godot_lite carries Godot's vector/basis/quaternion math and Curve3D, which
+# the beautify chain runs through, so it needs the same strict FP.
+target_compile_options(godot_lite PRIVATE ${CURVENET_STRICT_FP})
 
 # ---- Geogram -----------------------------------------------------------------
 add_library(geogram_subset STATIC EXCLUDE_FROM_ALL ${GEOGRAM_SUBSET_SOURCES})

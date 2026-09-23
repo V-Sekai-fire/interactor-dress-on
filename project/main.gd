@@ -8,6 +8,7 @@
 #   Curvenet  stages/curvenet_stage.gd   curvenet.elf (Cut 4)
 #   Fit       stages/fit_stage.gd        fit.elf (Cut 6)
 #   Infer     stages/infer_stage.gd      infer.elf (Cut 4b / 7); fixtures until then
+#   Ggml      stages/ggml_stage.gd       ggml_test.elf (Cut 3: ggml-rd, Gate 3), made on first use
 #   Pipeline  stages/pipeline.gd         the loop's state machine
 #
 # Every guest entry point keeps a no-argument wrapper here (rule 8), each a
@@ -20,6 +21,7 @@ const DrapeStage := preload("res://stages/drape_stage.gd")
 const CurvenetStage := preload("res://stages/curvenet_stage.gd")
 const FitStage := preload("res://stages/fit_stage.gd")
 const InferStage := preload("res://stages/infer_stage.gd")
+const GgmlStage := preload("res://stages/ggml_stage.gd")
 const Pipeline := preload("res://stages/pipeline.gd")
 
 var dress_on = null
@@ -27,6 +29,7 @@ var drape = null
 var curvenet = null
 var fit = null
 var infer = null
+var ggml = null
 var pipeline = null
 
 func _ready() -> void:
@@ -35,6 +38,7 @@ func _ready() -> void:
 	curvenet = _add(CurvenetStage, "Curvenet")
 	fit = _add(FitStage, "Fit")
 	infer = _add(InferStage, "Infer")
+	ggml = _add(GgmlStage, "Ggml")
 	pipeline = _add(Pipeline, "Pipeline")
 	pipeline.setup({"infer": infer, "curvenet": curvenet, "fit": fit, "drape": drape})
 	var world = get_node_or_null("World")
@@ -276,6 +280,7 @@ func set0_share(variant: String = "") -> String: return dress_on.pv("set0_share"
 func inplace_run(mode: int = 0, rounds: int = 1000) -> String: return dress_on.pv("inplace_run", [mode, rounds])
 func p_rd_close() -> String: return dress_on.pv("p_rd_close")
 func p_list_end() -> String: return dress_on.pv("p_list_end")
+func p_recovery(on: bool = true) -> String: return dress_on.pv("p_recovery", [on])
 func f16_read() -> String:
 	var h := PackedByteArray()
 	h.resize(128)
@@ -284,6 +289,53 @@ func f16_read() -> String:
 	return dress_on.pv("f16_read", [h])
 func ggml_probe(n: int = 256) -> String: return dress_on.pv("ggml_probe", [n])
 func zfh_probe() -> String: return dress_on.pv("zfh_probe")
+
+# --- Cut 3: ggml_test.elf, ggml-rd under test-backend-ops (stages/ggml_stage.gd) -----------
+# Start a job (or a preset), then poll ggml_job_status() until it is not
+# RUNNING; the stage pumps it once per frame (rule 4). A job that runs
+# ggml-cpu has every vmcall capped at ~5 minutes (rule 10).
+
+func ggml_attach(total_mb: int = GgmlStage.GGML_TOTAL_MB) -> String: return ggml.ggml_attach(total_mb)
+func ggml_ops_start(args: String = "-o ADD,MUL -b RD0", env: String = "") -> String: return ggml.ggml_ops_start(args, env)
+func ggml_probe_start(name: String = "chain", arg: String = "256", env: String = "") -> String: return ggml.ggml_probe_start(name, arg, env)
+func ggml_pump() -> String: return ggml.ggml_pump()
+func ggml_output() -> String: return ggml.ggml_output()
+func ggml_rd_stats() -> String: return ggml.ggml_rd_stats()
+func ggml_rd_close() -> String: return ggml.ggml_rd_close()
+func ggml_job_status() -> String: return ggml.ggml_job_status()
+func ggml_ops_add_mul() -> String: return ggml.ggml_ops_add_mul()
+func ggml_ops_barrier_all() -> String: return ggml.ggml_ops_barrier_all()
+func ggml_ops_fault() -> String: return ggml.ggml_ops_fault()
+func ggml_probe_chain() -> String: return ggml.ggml_probe_chain()
+func ggml_probe_independent() -> String: return ggml.ggml_probe_independent()
+func ggml_probe_alias_rw() -> String: return ggml.ggml_probe_alias_rw()
+func ggml_probe_alias_ro() -> String: return ggml.ggml_probe_alias_ro()
+func ggml_ops_k1k5() -> String: return ggml.ggml_ops_k1k5()
+func ggml_probe_census() -> String: return ggml.ggml_probe_census()
+func ggml_probe_census_fault() -> String: return ggml.ggml_probe_census_fault()
+func ggml_probe_perf() -> String: return ggml.ggml_probe_perf()
+func ggml_ops_move() -> String: return ggml.ggml_ops_move()
+func ggml_ops_move_fault() -> String: return ggml.ggml_ops_move_fault()
+func ggml_probe_perf_move() -> String: return ggml.ggml_probe_perf_move()
+func ggml_ops_conv() -> String: return ggml.ggml_ops_conv()
+func ggml_ops_conv_fault() -> String: return ggml.ggml_ops_conv_fault()
+func ggml_probe_conv_perf() -> String: return ggml.ggml_probe_conv_perf()
+func ggml_ops_rows() -> String: return ggml.ggml_ops_rows()
+func ggml_probe_rows_perf() -> String: return ggml.ggml_probe_rows_perf()
+func ggml_ops_mul_mat() -> String: return ggml.ggml_ops_mul_mat()
+func ggml_probe_mm_perf() -> String: return ggml.ggml_probe_mm_perf()
+func ggml_ops_flash_attn() -> String: return ggml.ggml_ops_flash_attn()
+func ggml_probe_fa_perf() -> String: return ggml.ggml_probe_fa_perf()
+func ggml_ops_all() -> String: return ggml.ggml_ops_all()
+func ggml_graph_qwen() -> String: return ggml.ggml_graph_qwen()
+func ggml_graph_sconv() -> String: return ggml.ggml_graph_sconv()
+func ggml_graph_dit() -> String: return ggml.ggml_graph_dit()
+func ggml_dump_list() -> String: return ggml.ggml_dump_list()
+func ggml_dump_chunk(index: int = 0, offset: int = 0, bytes: int = 4096) -> PackedByteArray: return ggml.ggml_dump_chunk(index, offset, bytes)
+func ggml_graph_dump() -> String: return ggml.ggml_graph_dump()
+func ggml_cost_decode() -> String: return ggml.ggml_cost_decode()
+func ggml_cost_dit() -> String: return ggml.ggml_cost_dit()
+func ggml_probe_files() -> String: return ggml.ggml_probe_files()
 
 # --- Gate 0G: usd_probe.elf, OpenUSD reading a stage from bytes (gates/0g-openusd) ---
 # A probe, not a pipeline stage: its Sandbox is made on first use.

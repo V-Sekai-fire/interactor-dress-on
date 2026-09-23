@@ -1,0 +1,66 @@
+PROBE graph sconv cpu_native status=0 nodes=789 host_ms=209129 frames=571
+PROBE graph sconv cpu_f32 status=0 nodes=789 host_ms=143107 frames=571
+PROBE graph sconv rd_native nodes=789 dispatches=571 barriers=359 (barrier_all: 570) graph_compute_us=13694 frames=1 status=0/0/0
+PROBE graph sconv drop k=1 barriers=358 detected=1 differing=814016 worst_rel_l2=3.233e-01 [barrier 1 before dispatch 4 SILU 'node_10' f32]
+PROBE graph sconv drop k=8 barriers=358 detected=1 differing=697639 worst_rel_l2=6.371e-02 [barrier 8 before dispatch 12 ADD 'node_20' f32]
+PROBE graph sconv drop k=16 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 26 MUL_MAT 'node_40' f32]
+PROBE graph sconv drop k=23 barriers=358 detected=1 differing=814016 worst_rel_l2=8.681e-02 [barrier 23 before dispatch 37 ADD 'node_55' f32]
+PROBE graph sconv drop k=31 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 31 before dispatch 51 MUL_MAT 'node_75' f32]
+PROBE graph sconv drop k=39 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 39 before dispatch 65 MUL 'node_95' f32]
+PROBE graph sconv drop k=46 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 46 before dispatch 76 MUL_MAT 'node_110' f32]
+PROBE graph sconv drop k=54 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 54 before dispatch 90 MUL 'node_130' f32]
+PROBE graph sconv drop k=61 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 61 before dispatch 101 MUL_MAT 'node_145' f32]
+PROBE graph sconv drop k=69 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 69 before dispatch 115 MUL 'node_165' f32]
+PROBE graph sconv drop k=77 barriers=358 detected=1 differing=814015 worst_rel_l2=8.678e-02 [barrier 77 before dispatch 127 ADD 'node_181' f32]
+PROBE graph sconv drop k=84 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 84 before dispatch 138 ADD 'node_196' f32]
+PROBE graph sconv drop k=92 barriers=358 detected=1 differing=639392 worst_rel_l2=7.808e-02 [barrier 92 before dispatch 148 ADD 'node_210' f32]
+PROBE graph sconv drop k=100 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 100 before dispatch 162 MUL_MAT 'node_230' f32]
+PROBE graph sconv drop k=107 barriers=358 detected=1 differing=805567 worst_rel_l2=7.267e-02 [barrier 107 before dispatch 173 ADD 'node_245' f32]
+PROBE graph sconv drop k=115 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 115 before dispatch 187 MUL_MAT 'node_265' f32]
+PROBE graph sconv drop k=122 barriers=358 detected=1 differing=801407 worst_rel_l2=8.064e-02 [barrier 122 before dispatch 198 ADD 'node_280' f32]
+PROBE graph sconv drop k=130 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 130 before dispatch 212 MUL_MAT 'node_300' f32]
+PROBE graph sconv drop k=138 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 138 before dispatch 226 MUL 'node_320' f32]
+PROBE graph sconv drop k=145 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 145 before dispatch 237 MUL_MAT 'node_335' f32]
+PROBE graph sconv drop k=153 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 153 before dispatch 251 MUL 'node_355' f32]
+PROBE graph sconv drop k=160 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 160 before dispatch 262 MUL_MAT 'node_370' f32]
+PROBE graph sconv drop k=168 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 168 before dispatch 274 ADD 'node_386' f32]
+PROBE graph sconv drop k=176 barriers=358 detected=1 differing=814014 worst_rel_l2=2.851e-02 [barrier 176 before dispatch 282 ADD 'node_394' f32]
+PROBE graph sconv drop k=183 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 183 before dispatch 290 MUL_MAT 'node_404' f32]
+PROBE graph sconv drop k=191 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 191 before dispatch 304 MUL 'node_424' f32]
+PROBE graph sconv drop k=199 barriers=358 detected=1 differing=704160 worst_rel_l2=7.042e-02 [barrier 199 before dispatch 316 ADD 'node_440' f32]
+PROBE graph sconv drop k=206 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 206 before dispatch 329 MUL 'node_459' f32]
+PROBE graph sconv drop k=214 barriers=358 detected=1 differing=708111 worst_rel_l2=7.773e-02 [barrier 214 before dispatch 341 ADD 'node_475' f32]
+PROBE graph sconv drop k=221 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 221 before dispatch 354 MUL 'node_494' f32]
+PROBE graph sconv drop k=229 barriers=358 detected=1 differing=708111 worst_rel_l2=8.047e-02 [barrier 229 before dispatch 366 ADD 'node_510' f32]
+PROBE graph sconv drop k=237 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 237 before dispatch 380 MUL_MAT 'node_530' f32]
+PROBE graph sconv drop k=244 barriers=358 detected=1 differing=704160 worst_rel_l2=7.023e-02 [barrier 244 before dispatch 391 ADD 'node_545' f32]
+PROBE graph sconv drop k=252 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 252 before dispatch 405 MUL_MAT 'node_565' f32]
+PROBE graph sconv drop k=259 barriers=358 detected=1 differing=583535 worst_rel_l2=6.890e-02 [barrier 259 before dispatch 416 ADD 'node_580' f32]
+PROBE graph sconv drop k=267 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 267 before dispatch 424 MUL_MAT 'node_588' f32]
+PROBE graph sconv drop k=275 barriers=358 detected=1 differing=9216 worst_rel_l2=9.285e-04 [barrier 275 before dispatch 434 SILU 'node_600' f32]
+PROBE graph sconv drop k=282 barriers=358 detected=1 differing=202752 worst_rel_l2=1.777e-01 [barrier 282 before dispatch 442 ADD 'node_610' f32]
+PROBE graph sconv drop k=290 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 290 before dispatch 456 MUL_MAT 'node_630' f32]
+PROBE graph sconv drop k=298 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 298 before dispatch 470 MUL 'node_650' f32]
+PROBE graph sconv drop k=305 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 305 before dispatch 481 MUL_MAT 'node_665' f32]
+PROBE graph sconv drop k=313 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 313 before dispatch 495 MUL 'node_685' f32]
+PROBE graph sconv drop k=320 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 320 before dispatch 506 MUL_MAT 'node_700' f32]
+PROBE graph sconv drop k=328 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 328 before dispatch 520 MUL 'node_720' f32]
+PROBE graph sconv drop k=336 barriers=358 detected=1 differing=309248 worst_rel_l2=2.455e-01 [barrier 336 before dispatch 532 ADD 'node_736' f32]
+PROBE graph sconv drop k=343 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 343 before dispatch 545 MUL 'node_755' f32]
+PROBE graph sconv drop k=351 barriers=358 detected=1 differing=348160 worst_rel_l2=2.461e-01 [barrier 351 before dispatch 557 ADD 'node_771' f32]
+PROBE graph sconv drop k=359 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 359 before dispatch 569 CONT ' (cont)' f32]
+PROBE graph sconv rd_f16_vs_cpu_f16 output=subdiv n=5056 rel_l2=2.754e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=h1 n=647168 rel_l2=2.743e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=x n=161792 rel_l2=1.654e-04 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=subdiv n=5056 rel_l2=4.458e-07 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=h1 n=647168 rel_l2=4.715e-07 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=x n=161792 rel_l2=3.241e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=subdiv n=5056 rel_l2=4.458e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=h1 n=647168 rel_l2=4.715e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=x n=161792 rel_l2=3.241e-07 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=subdiv n=5056 rel_l2=2.754e-04 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=h1 n=647168 rel_l2=2.743e-04 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=x n=161792 rel_l2=1.654e-04 finite=1
+PROBE graph sconv SUMMARY weights=f16 rel_l2(rd_f16,cpu_f16)=2.754e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.715e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=4.715e-07 rel_l2(cpu_f16,cpu_f32)=2.754e-04 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=17/48 detected dispatches=571 barriers=359/570 wall_s=357.9 L=632 neighbours=6200/17064
+RESULT: PASS (graph sconv)
+ggml_test: rd stats graphs=97 nodes=45161 dispatches=32243 skipped=12918 barriers=20872 failed_graphs=0 last{nodes=789 dispatches=571 barriers=359 skipped=218} pipelines=17 set0_created=16 slots_created=571 coop_yields=2 waits=97 faults=0 params_bytes=8254208 set_bytes=165558984 get_bytes=173923072 copies=0 clears=97 buffers_live=0 bytes_live=0

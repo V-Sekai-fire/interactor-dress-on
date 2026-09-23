@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 project(interactor_dress_on C CXX)
 
-# The fiber's context switch is a .S file; clang assembles it, and needs the
-# same target triple as C (the toolchain file only sets C and CXX).
+# The fiber's context switch (guest/fiber, Gate 0F) is a .S file; clang
+# assembles it, and needs the same target triple as C (the toolchain file
+# only sets C and CXX).
 if(CMAKE_C_COMPILER_TARGET AND NOT CMAKE_ASM_COMPILER_TARGET)
 	set(CMAKE_ASM_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 endif()
 enable_language(ASM)
+
+# __FILE__ (ggml's asserts) and debug info name sources relative to the
+# checkout, so a committed ELF names neither the machine nor the worktree
+# it was built in, and two checkouts build the same strings.
+add_compile_options("-ffile-prefix-map=${CMAKE_SOURCE_DIR}/=")
 
 # The guest ELF. It builds against the vendored godot-sandbox guest API and
 # nothing else; the riscv64 sysroot comes in through the toolchain file that
@@ -79,43 +85,90 @@ set_source_files_properties(guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp g
 target_include_directories(drape PRIVATE guest guest/drape)
 target_link_libraries(drape PRIVATE avbd)
 
+# ggml (vendor/ggml, V-Sekai-fire/ggml @04b55bba): static, riscv64 at rv64gc,
+# one thread, no dynamic backend loading, no OpenMP, llamafile or vector
+# paths, never Zfh (Gate 0F probe 15 and its Zfh control). ggml's own CMake
+# gives its libraries -march=rv64gc; the TUs that include its headers build
+# at sandbox-api's -march=rv64gcv_zba_zbb_zbs_zbc. Gate 0F's probes.elf and
+# Cut 3's ggml-rd both link it.
+foreach(opt GGML_NATIVE GGML_BACKEND_DL BUILD_SHARED_LIBS GGML_OPENMP GGML_LLAMAFILE
+		GGML_RVV GGML_RV_ZFH GGML_RV_ZVFH GGML_RV_ZICBOP GGML_RV_ZIHINTPAUSE GGML_RV_ZVFBFWMA
+		GGML_BUILD_TESTS GGML_BUILD_EXAMPLES GGML_CCACHE)
+	set(${opt} OFF CACHE BOOL "" FORCE)
+endforeach()
+add_subdirectory(vendor/ggml ggml EXCLUDE_FROM_ALL)
+# ggml stamps ggml_commit() with `git rev-parse HEAD` of the enclosing repo,
+# which here is this one (vendor/ggml is a subtree): the wrong project, and a
+# committed ELF that changes with every commit. Stamp the vendored pin.
+get_target_property(_ggml_defs ggml-base COMPILE_DEFINITIONS)
+list(FILTER _ggml_defs EXCLUDE REGEX "^GGML_COMMIT=")
+list(APPEND _ggml_defs "GGML_COMMIT=\"04b55bba\"")
+set_target_properties(ggml-base PROPERTIES COMPILE_DEFINITIONS "${_ggml_defs}")
+# clang predefines __riscv_v_intrinsic for every riscv64 target, V or not,
+# and ggml-cpu keys its RVV paths on that macro alone; at rv64gc they then
+# fail on vfloat32m8_t. Undefine it so the scalar paths are compiled (Gate 0F
+# finding 5).
+target_compile_options(ggml-cpu PRIVATE -U__riscv_v_intrinsic)
+
 # Gate 0F: probes.elf, the sandbox runtime probes (gates/0f-runtime). One ELF,
 # its own Sandbox, sharing only rd_compute. Its kernels come from
 # Lean (lean/ `lake exe emit_probes`) through kernels/probes/gen.sh into
-# ${CMAKE_BINARY_DIR}/probes_kernels.inc.
+# ${CMAKE_BINARY_DIR}/probes_kernels.inc. Probe 15 runs ggml-cpu in the guest.
 add_stage_elf(probes
 	guest/probes/main.cpp
 	guest/probes/zfh_probe.cpp
+	guest/probes/ggml_probe.cpp
 	guest/fiber/fiber.cpp
 	guest/fiber/fiber_riscv64.S
 )
 target_include_directories(probes PRIVATE guest guest/probes ${CMAKE_BINARY_DIR})
 # The Zfh control arm: this one TU may emit half-precision instructions.
 set_source_files_properties(guest/probes/zfh_probe.cpp PROPERTIES COMPILE_OPTIONS "-march=rv64gc_zfh")
+target_compile_definitions(probes PRIVATE PROBES_WITH_GGML=1)
+target_link_libraries(probes PRIVATE ggml ggml-cpu ggml-base)
 
-# Probe 15: ggml-cpu in the guest at rv64gc, static, one thread, no OpenMP.
-# Cut 3 vendors V-Sekai-fire/ggml at vendor/ggml; until then point GGML_SRC
-# at a checkout of it (build.sh passes $GGML_SRC through). The probe TUs
-# themselves build at sandbox-api's -march=rv64gcv_zba_zbb_zbs_zbc; ggml's own
-# CMake gives its libraries -march=rv64gc.
-set(GGML_SRC "${CMAKE_SOURCE_DIR}/vendor/ggml" CACHE PATH "V-Sekai-fire/ggml source tree for probes.elf")
-if(EXISTS "${GGML_SRC}/CMakeLists.txt")
-	foreach(opt GGML_NATIVE GGML_BACKEND_DL BUILD_SHARED_LIBS GGML_OPENMP GGML_LLAMAFILE
-			GGML_RVV GGML_RV_ZFH GGML_RV_ZVFH GGML_RV_ZICBOP GGML_RV_ZIHINTPAUSE GGML_RV_ZVFBFWMA
-			GGML_BUILD_TESTS GGML_BUILD_EXAMPLES GGML_CCACHE)
-		set(${opt} OFF CACHE BOOL "" FORCE)
-	endforeach()
-	add_subdirectory(${GGML_SRC} ggml EXCLUDE_FROM_ALL)
-	# clang predefines __riscv_v_intrinsic for every riscv64 target, V or not,
-	# and ggml-cpu keys its RVV paths on that macro alone; at rv64gc they then
-	# fail on vfloat32m8_t. Undefine it so the scalar paths are compiled.
-	target_compile_options(ggml-cpu PRIVATE -U__riscv_v_intrinsic)
-	target_sources(probes PRIVATE guest/probes/ggml_probe.cpp)
-	target_compile_definitions(probes PRIVATE PROBES_WITH_GGML=1)
-	target_link_libraries(probes PRIVATE ggml ggml-cpu ggml-base)
-else()
-	message(STATUS "probes.elf: no ggml at GGML_SRC=${GGML_SRC}; probe 15 reports SKIP")
-endif()
+# --- Cut 3: the ggml-rd backend and Gate 3's ggml_test.elf -----------------------
+
+# The pump protocol: a job on a guest fiber, advanced one host call at a time.
+add_library(pump STATIC guest/pump/pump.cpp guest/fiber/fiber.cpp guest/fiber/fiber_riscv64.S)
+target_include_directories(pump PUBLIC guest)
+target_link_libraries(pump PUBLIC sandbox_api)
+
+# ggml-rd: ggml's backend over rd_compute. An OBJECT library, so every
+# ops/<op>.cpp is linked and its GGML_RD_OP registrar runs; the glob means an
+# op family adds a file, not a line here. The kernels come from Lean through
+# kernels/ggml/gen.sh (${CMAKE_BINARY_DIR}/ggml_kernels.inc).
+file(GLOB GGML_RD_OPS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/guest/ggml-rd/ops/*.cpp)
+add_library(ggml_rd OBJECT
+	guest/ggml-rd/ggml-rd.cpp
+	guest/ggml-rd/rd_graph.cpp
+	guest/ggml-rd/rd_kernels.cpp
+	guest/ggml-rd/rd_pack.cpp
+	${GGML_RD_OPS}
+)
+target_include_directories(ggml_rd PUBLIC guest/ggml-rd kernels/ggml ${CMAKE_BINARY_DIR} vendor/ggml/src)
+target_link_libraries(ggml_rd PUBLIC ggml ggml-base rd_compute)
+
+# Gate 3 (G3.ops): test-backend-ops in the guest, ggml-rd against ggml-cpu.
+# test-backend-ops.cpp is compiled as is (two guarded edits, see
+# vendor/ggml/CITATION.cff) with its main renamed; the link gives every CPU
+# backend it creates one thread (guest/ggml_test/main.cpp says why).
+add_stage_elf(ggml_test
+	guest/ggml_test/main.cpp
+	guest/ggml_test/probes.cpp
+	guest/ggml_test/census.cpp
+	guest/ggml_test/probes_rows.cpp
+	guest/ggml_test/probe_conv.cpp
+	guest/ggml_test/probe_graph.cpp
+	guest/ggml_test/graph_nets.cpp
+	guest/ggml_test/app_graphs/app_graphs.cpp
+	vendor/ggml/tests/test-backend-ops.cpp
+)
+set_source_files_properties(vendor/ggml/tests/test-backend-ops.cpp PROPERTIES
+	COMPILE_DEFINITIONS "main=ggml_test_backend_ops_main;GGML_GUEST_REGISTER_BACKENDS;N_THREADS=1;GGML_GUEST_EXTRA_EVAL_CASES=\"census_cases.inc\"")
+target_include_directories(ggml_test PRIVATE guest guest/ggml_test)
+target_link_libraries(ggml_test PRIVATE ggml_rd pump ggml ggml-cpu ggml-base)
+target_link_options(ggml_test PRIVATE -Wl,--wrap=ggml_backend_init_by_type)
 
 # Gate 0G: usd_probe.elf, OpenUSD 26.05 reading a stage from bytes (gates/0g-openusd).
 include(cmake/usd_probe.cmake)

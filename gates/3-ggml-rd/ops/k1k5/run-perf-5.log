@@ -1,0 +1,5 @@
+ROW 5
+PERF GELU [8192,4096,1,1] (Pixal3D x60) reps=16 iters=5 warmup=1 dispatches=16 barriers=15 elements=33554432 bytes_per_dispatch=268435456 OK
+perf 5: 1/1 rows OK
+RESULT: PASS (perf 5)
+ggml_test: rd stats graphs=66 nodes=3972 dispatches=3972 skipped=0 barriers=3906 failed_graphs=0 last{nodes=16 dispatches=16 barriers=15 skipped=0} pipelines=8 set0_created=36 slots_created=256 coop_yields=1 waits=66 faults=15 params_bytes=1016832 set_bytes=629890320 get_bytes=629886208 copies=0 clears=6 buffers_live=0 bytes_live=0

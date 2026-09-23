@@ -7,6 +7,7 @@ ok   res://stages/drape_stage.gd
 ok   res://stages/curvenet_stage.gd
 ok   res://stages/fit_stage.gd
 ok   res://stages/infer_stage.gd
+ok   res://stages/ggml_stage.gd
 ok   res://stages/pipeline.gd
 ok   res://util/skeleton15.gd
 ok   res://util/mesh_topo.gd
@@ -25,6 +26,16 @@ ok   res://gate_drape.gd
 ok   res://gate_lbfgsb.gd
 ok   res://gate_runtime.gd
 ok   res://probe_curvenet_wrappers.gd
+ok   res://infer_host.gd
+ok   res://graph_dump.gd
+ok   res://gate_ggml_rd.gd
+ok   res://gate_ggml_rd_serial.gd
+ok   res://gate_ggml_graph.gd
+ok   res://census_ggml_rd.gd
+ok   res://perf_ggml_fa.gd
+ok   res://probe_ggml_wrappers.gd
+ok   res://probe_ggml_wrappers_k7.gd
+ok   res://probe_ggml_wrappers_graph.gd
 ok   res://xr_main.tscn
 ok   res://main.tscn
 RESULT: PASS

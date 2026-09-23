@@ -1,0 +1,69 @@
+# Gate 3 G3.graph + G3.cost, 2026-09-23T10:10:02, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+execution_timeout=4000000 memory_max=3072
+runs selected: ["cost_decode", "cost_dit"]
+== cost_decode: STARTED probe cost
+== cost_decode: done in 5.2 s, frames=13 pumps=13 vm_ms=5215.3 waits=7 coops=5 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE cost decode model: 28 layers, 926.9 MiB of weights and caches on RD0
+   PROBE cost decode step=0 nodes=2135 dispatches=1265 barriers=1123 frames=5 build_us=7595 alloc_us=7874 set_us=20 graph_compute_us=91872 (pack 4105, prepare 38199, upload 127, record 17739, submit 7239) host_us_per_node=43.03 host_us_per_dispatch=72.63 read_us=1975 step_total_us=109336 gpu_us=15660.2
+   PROBE cost decode step=1 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7721 alloc_us=6068 set_us=14 graph_compute_us=27599 (pack 4306, prepare 305, upload 80, record 4026, submit 2847) host_us_per_node=12.93 host_us_per_dispatch=21.82 read_us=486 step_total_us=41888 gpu_us=15756.5
+   PROBE cost decode step=2 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=8230 alloc_us=6062 set_us=12 graph_compute_us=27720 (pack 4036, prepare 301, upload 84, record 3889, submit 3219) host_us_per_node=12.98 host_us_per_dispatch=21.91 read_us=453 step_total_us=42477 gpu_us=15826.1
+   PROBE cost decode step=3 nodes=2135 dispatches=1265 barriers=1123 frames=2 build_us=7897 alloc_us=10139 set_us=25 graph_compute_us=30424 (pack 5422, prepare 778, upload 78, record 4973, submit 3000) host_us_per_node=14.25 host_us_per_dispatch=24.05 read_us=444 step_total_us=48929 gpu_us=15649.3
+   PROBE cost decode step=4 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7685 alloc_us=6774 set_us=18 graph_compute_us=27388 (pack 4016, prepare 300, upload 68, record 4340, submit 2854) host_us_per_node=12.83 host_us_per_dispatch=21.65 read_us=489 step_total_us=42354 gpu_us=15523.6
+   PROBE cost decode step=5 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=8113 alloc_us=6948 set_us=35 graph_compute_us=27101 (pack 4036, prepare 297, upload 75, record 3944, submit 2698) host_us_per_node=12.69 host_us_per_dispatch=21.42 read_us=490 step_total_us=42687 gpu_us=15666.0
+   PROBE cost decode(profile2) step=6 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=13237 alloc_us=9045 set_us=17 graph_compute_us=29044 (pack 5417, prepare 279, upload 66, record 4709, submit 3051) host_us_per_node=13.60 host_us_per_dispatch=22.96 read_us=738 step_total_us=52081 gpu_us=15218.9
+   PROBE cost decode profile2 dispatches=1265 total_us=13522 pack_us=5417 prepare_us=279 upload_us=66 record_us=4709 submit_us=3051 (per reading 0.12 us; 3 readings per dispatch in this run)
+   PROBE cost decode kernel=mul_mat_vec_f16_f32        dispatches=  197 barriers_before=  169 pack_us/dispatch=   5.26 record_us/dispatch=   3.83
+   PROBE cost decode kernel=cpy_b32                    dispatches=  224 barriers_before=  168 pack_us/dispatch=   3.88 record_us/dispatch=   3.35
+   PROBE cost decode kernel=concat_b32                 dispatches=  168 barriers_before=  168 pack_us/dispatch=   4.02 record_us/dispatch=   3.74
+   PROBE cost decode kernel=repeat_b32                 dispatches=  169 barriers_before=  112 pack_us/dispatch=   3.99 record_us/dispatch=   3.21
+   PROBE cost decode kernel=mul_f32                    dispatches=  141 barriers_before=  141 pack_us/dispatch=   2.63 record_us/dispatch=   3.70
+   PROBE cost decode kernel=rms_norm_f32_t64           dispatches=  113 barriers_before=  113 pack_us/dispatch=   3.61 record_us/dispatch=   3.45
+   PROBE cost decode kernel=mul_mat_vec_f32_f32        dispatches=   56 barriers_before=   56 pack_us/dispatch=   5.38 record_us/dispatch=   3.23
+   PROBE cost decode kernel=rope_neox_f32              dispatches=   56 barriers_before=   56 pack_us/dispatch=   4.18 record_us/dispatch=   3.50
+   PROBE cost decode kernel=add_f32                    dispatches=   56 barriers_before=   56 pack_us/dispatch=   2.64 record_us/dispatch=   3.64
+   PROBE cost decode kernel=soft_max_f32_t64           dispatches=   28 barriers_before=   28 pack_us/dispatch=   3.86 record_us/dispatch=   3.18
+   PROBE cost decode kernel=scale_f32                  dispatches=   28 barriers_before=   28 pack_us/dispatch=   2.75 record_us/dispatch=   3.21
+   PROBE cost decode kernel=silu_f32                   dispatches=   28 barriers_before=   28 pack_us/dispatch=   2.29 record_us/dispatch=   3.68
+   PROBE cost decode kernel=get_rows_f16               dispatches=    1 barriers_before=    0 pack_us/dispatch=  19.00 record_us/dispatch=  15.00
+   PROBE cost decode SUMMARY steps=5 nodes=2135 dispatches/graph=1265 barriers/graph=1123 frames/graph=1 (cold 5) graph_compute_us=27599 (cold 91872) host_us/node=12.93 host_us/dispatch=21.82 build_us=7897 alloc_us=6774 read_us=486 step_us=42477 gpu_ms=15.67
+   PROBE cost decode host_clock_us_per_reading=0.12
+   RESULT: PASS (cost decode:5)
+   rd: graphs=7 nodes=14945 dispatches=8855 skipped=6090 barriers=7861 failed_graphs=0 last{nodes=2135 dispatches=1265 barriers=1123 skipped=870} pipelines=13 set0_created=28 slots_created=1265 coop_yields=5 waits=7 faults=0 params_bytes=2266880 set_bytes=148887124 get_bytes=1850016 copies=351 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=7 submits=7 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== cost_dit: STARTED probe cost
+== cost_dit: done in 11.7 s, frames=9 pumps=9 vm_ms=11739.7 waits=5 coops=3 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE cost dit model: 30 blocks, 4096 tokens, 2604.3 MiB of weights on RD0 (bf16 matrices)
+   PROBE cost dit step=0 nodes=3107 dispatches=2115 barriers=1903 frames=4 build_us=11733 alloc_us=11053 set_us=0 graph_compute_us=1899678 (pack 6930, prepare 25591, upload 130, record 7126, submit 7028) host_us_per_node=611.42 host_us_per_dispatch=898.19 read_us=364 step_total_us=1922828 gpu_us=1836706.6
+   PROBE cost dit step=1 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=17143 alloc_us=14066 set_us=0 graph_compute_us=1875017 (pack 8167, prepare 659, upload 159, record 8674, submit 5799) host_us_per_node=603.48 host_us_per_dispatch=886.53 read_us=660 step_total_us=1906886 gpu_us=1848931.9
+   PROBE cost dit step=2 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=14244 alloc_us=13281 set_us=0 graph_compute_us=1867258 (pack 8153, prepare 649, upload 145, record 8894, submit 6188) host_us_per_node=600.98 host_us_per_dispatch=882.86 read_us=928 step_total_us=1895711 gpu_us=1839884.9
+   PROBE cost dit step=3 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=11709 alloc_us=15567 set_us=0 graph_compute_us=1870934 (pack 7077, prepare 446, upload 115, record 6718, submit 4835) host_us_per_node=602.17 host_us_per_dispatch=884.60 read_us=604 step_total_us=1898814 gpu_us=1848606.2
+   PROBE cost dit(profile2) step=4 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=16180 alloc_us=13989 set_us=0 graph_compute_us=1869897 (pack 9182, prepare 484, upload 130, record 8913, submit 5681) host_us_per_node=601.83 host_us_per_dispatch=884.11 read_us=567 step_total_us=1900633 gpu_us=1841825.7
+   PROBE cost dit profile2 dispatches=2115 total_us=24390 pack_us=9182 prepare_us=484 upload_us=130 record_us=8913 submit_us=5681 (per reading 0.12 us; 3 readings per dispatch in this run)
+   PROBE cost dit kernel=add_f32                    dispatches=  605 barriers_before=  576 pack_us/dispatch=   2.85 record_us/dispatch=   4.06
+   PROBE cost dit kernel=cpy_b32                    dispatches=  452 barriers_before=  331 pack_us/dispatch=   4.20 record_us/dispatch=   3.53
+   PROBE cost dit kernel=mul_f32                    dispatches=  390 barriers_before=  390 pack_us/dispatch=   2.98 record_us/dispatch=   4.32
+   PROBE cost dit kernel=mul_mat_tiled_bf16_f32     dispatches=  240 barriers_before=  209 pack_us/dispatch=   5.97 record_us/dispatch=   4.22
+   PROBE cost dit kernel=rms_norm_f32_t64           dispatches=  120 barriers_before=  120 pack_us/dispatch=   4.08 record_us/dispatch=   4.08
+   PROBE cost dit kernel=flash_attn_ext_f32_d128    dispatches=   60 barriers_before=   60 pack_us/dispatch=   8.67 record_us/dispatch=   3.95
+   PROBE cost dit kernel=norm_f32                   dispatches=   91 barriers_before=   61 pack_us/dispatch=   3.55 record_us/dispatch=   3.73
+   PROBE cost dit kernel=concat_b32                 dispatches=   60 barriers_before=   60 pack_us/dispatch=   4.78 record_us/dispatch=   3.85
+   PROBE cost dit kernel=neg_f32                    dispatches=   60 barriers_before=   60 pack_us/dispatch=   2.88 record_us/dispatch=   3.97
+   PROBE cost dit kernel=gelu_f32                   dispatches=   30 barriers_before=   30 pack_us/dispatch=   2.73 record_us/dispatch=   4.30
+   PROBE cost dit kernel=mul_mat_tiled_f16_f32      dispatches=    2 barriers_before=    2 pack_us/dispatch=  13.00 record_us/dispatch=   6.00
+   PROBE cost dit kernel=mul_mat_vec_f16_f32        dispatches=    2 barriers_before=    1 pack_us/dispatch=   9.00 record_us/dispatch=   3.00
+   PROBE cost dit kernel=silu_f32                   dispatches=    2 barriers_before=    2 pack_us/dispatch=   3.50 record_us/dispatch=   3.00
+   PROBE cost dit kernel=mul_mat_vec_f32_f32        dispatches=    1 barriers_before=    1 pack_us/dispatch=   7.00 record_us/dispatch=   3.00
+   PROBE cost dit SUMMARY steps=3 nodes=3107 dispatches/graph=2115 barriers/graph=1903 frames/graph=1 (cold 4) graph_compute_us=1870934 (cold 1899678) host_us/node=602.17 host_us/dispatch=884.60 build_us=14244 alloc_us=14066 read_us=660 step_us=1898814 gpu_ms=1848.61
+   PROBE cost dit host_clock_us_per_reading=0.12
+   RESULT: PASS (cost dit:3)
+   rd: graphs=12 nodes=30480 dispatches=19430 skipped=11050 barriers=17376 failed_graphs=0 last{nodes=3107 dispatches=2115 barriers=1903 skipped=992} pipelines=19 set0_created=63 slots_created=2115 coop_yields=8 waits=12 faults=0 params_bytes=4974080 set_bytes=320492148 get_bytes=2505376 copies=1018 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=12 submits=12 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== verdicts
+FAIL graph_qwen: G3.graph Qwen3 decoder layer (f16): rel-L2 <= 1e-3, f32 arm <= 1e-4, elision == barrier-all bit for bit, dropped barrier detected
+FAIL graph_sconv: G3.graph sparse-conv level (f16): the same criteria
+FAIL graph_dit: G3.graph DiT block (bf16): the same criteria
+PASS cost_decode: G3.cost skin-tokens decode step: every step computed, finite logits
+PASS cost_dit: G3.cost Pixal3D flow forward: every forward computed, finite output
+PASS rule 4: no sync in its submit's frame (rule4_same_frame_syncs=0)
+close: CLOSED permanent_slots=0
+wall_s=17.8
+RESULT: FAIL

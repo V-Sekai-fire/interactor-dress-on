@@ -1,0 +1,8 @@
+PROBE conv_perf im2col_dino status=0 out=786432 K=10 per_graph_ms(R=1)=0.497 per_graph_ms(R=17)=0.593 per_op_ms=0.006 dispatches(R=17)=17 barriers=0 checked=4096 bad=0
+PROBE conv_perf im2col_dino f16_exact=4096/4096
+PROBE conv_perf conv3d_ss_a status=0 out=2097152 K=10 per_graph_ms(R=1)=1.230 per_graph_ms(R=17)=14.166 per_op_ms=0.809 dispatches(R=17)=17 barriers=0 checked=4096 bad=0
+PROBE conv_perf conv3d_ss_a nmse=2.502e-14 (max 5e-4) max_abs_err=4.127e-06 (vs double accumulation of the f16-rounded input)
+PROBE conv_perf conv3d_ss_b status=0 out=262144 K=10 per_graph_ms(R=1)=0.913 per_graph_ms(R=17)=9.776 per_op_ms=0.554 dispatches(R=17)=17 barriers=0 checked=4096 bad=0
+PROBE conv_perf conv3d_ss_b nmse=1.893e-13 (max 5e-4) max_abs_err=2.554e-05 (vs double accumulation of the f16-rounded input)
+RESULT: PASS (conv_perf)
+ggml_test: rd stats graphs=6474 nodes=12390 dispatches=7914 skipped=4476 barriers=573 failed_graphs=0 last{nodes=17 dispatches=17 barriers=0 skipped=0} pipelines=6 set0_created=1061 slots_created=256 coop_yields=5 waits=1998 faults=350 params_bytes=2025984 set_bytes=1134174852 get_bytes=1864536548 copies=0 clears=0 buffers_live=0 bytes_live=0

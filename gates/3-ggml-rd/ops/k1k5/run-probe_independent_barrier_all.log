@@ -1,0 +1,3 @@
+PROBE independent n=64 status=0 dispatches=64 barriers=63 (want 63) exact=64000/64000 barrier_all=1
+RESULT: PASS (independent)
+ggml_test: rd stats graphs=4 nodes=640 dispatches=640 skipped=0 barriers=573 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=2 set0_created=4 slots_created=256 coop_yields=1 waits=4 faults=0 params_bytes=163840 set_bytes=20096 get_bytes=514048 copies=0 clears=0 buffers_live=0 bytes_live=0

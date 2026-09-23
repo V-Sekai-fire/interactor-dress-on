@@ -1,0 +1,28 @@
+Build completed successfully (76 jobs).
+# exit 0  wall 15 s
+# exit 0  wall 9 s
+
+RESULT CLEAN
+RESULT 0 DIFF
+DIFF vbd_init
+RESULT 1 DIFF (expect 1: vbd_init)
+# git status --porcelain (whole tree, after the gate):
+ M AGENTS.md
+ M gates/0f-runtime/results.txt
+ M gates/2-avbd/results.txt
+ M gates/4-curvenet/results.txt
+ M gates/lean/cmp.log
+ M gates/lean/csr-falsify.log
+ M gates/lean/gen.log
+ M gates/lean/lake-build.log
+ M gates/lean/negative-control.log
+ M kernels/ggml/GgmlKernelTable.inc
+ M project/curvenet.elf
+ M project/drape.elf
+ M project/dress_on.elf
+ M project/ggml_test.elf
+ M project/probes.elf
+?? gates/3-ggml-rd/README.md
+?? gates/3-ggml-rd/kernels/
+?? gates/3-ggml-rd/ops/
+?? gates/3-ggml-rd/regression/

@@ -97,6 +97,15 @@ godot --path project --script gate_runtime.gd --rendering-driver vulkan --xr-mod
    is refused (`Updating buffers is forbidden during creation of a compute
    list.`). `p_list_end` recovers, and the setup then passes. `rd_compute`
    needs a recovery path on this pattern.
+   **Done in Cut 3:** `rdc::Device` keeps a list-open flag in guest memory,
+   which survives the killed call, and ends an orphaned list before its
+   next `buffer_update`/`buffer_copy`/`buffer_clear`, `list_begin` or
+   `submit`. Probe 13 now kills the call twice: with the recovery off
+   (`p_recovery(false)`, a gate hook) the next `buffer_update` is refused as
+   above; with it on, it goes through with no `p_list_end` and one recovery
+   counted. That run (`gates/3-ggml-rd/regression/0f-runtime-results.txt`)
+   reads `SUMMARY: PASS=34 FAIL=5`, the five being probe 3's; `results.txt`
+   and `results-memalign.txt` here are the runs before the change.
 3. **`buffer_get_data` stages the whole source buffer.** One 4-byte direct
    read adds ~60 ms at 256 MiB, ~200 ms at 1 GiB and ~410 ms at 2 GiB over the
    copy path. From the host, a 4-byte read out of a 1 GiB buffer takes
@@ -200,11 +209,11 @@ fails with the diff) and the binding counts per slangc flag set.
   import, and `gen.log` is the kernel check. Absolute paths in the logs are
   replaced by `<project>`, `<repo>` and `<godot-sandbox>`.
 - `ggml_host/` is the host-native twin: `build.sh` → `ggml_host.txt`, with
-  `GGML_SRC` pointing at a `V-Sekai-fire/ggml` checkout until Cut 3 vendors
-  `vendor/ggml`.
+  `GGML_SRC` defaulting to `vendor/ggml` (vendored by Cut 3; probes.elf
+  builds against it unconditionally since).
 - `project/gate_runtime.gd` is the frame-driven runner, with a wall-clock
-  quit. `project/main.gd` has the no-argument wrappers for all 36 entry
-  points (rule 8).
+  quit. `project/main.gd` has the no-argument wrappers for all 37 entry
+  points (rule 8; `p_recovery` came with Cut 3).
 - `guest/probes/`:
   - `main.cpp`;
   - `ggml_probe.cpp`, shared with the native twin;

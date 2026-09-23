@@ -1,0 +1,25 @@
+PROBE cost dit model: 30 blocks, 4096 tokens, 2604.3 MiB of weights on RD0 (bf16 matrices)
+PROBE cost dit step=0 nodes=3107 dispatches=2115 barriers=1903 frames=4 build_us=11733 alloc_us=11053 set_us=0 graph_compute_us=1899678 (pack 6930, prepare 25591, upload 130, record 7126, submit 7028) host_us_per_node=611.42 host_us_per_dispatch=898.19 read_us=364 step_total_us=1922828 gpu_us=1836706.6
+PROBE cost dit step=1 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=17143 alloc_us=14066 set_us=0 graph_compute_us=1875017 (pack 8167, prepare 659, upload 159, record 8674, submit 5799) host_us_per_node=603.48 host_us_per_dispatch=886.53 read_us=660 step_total_us=1906886 gpu_us=1848931.9
+PROBE cost dit step=2 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=14244 alloc_us=13281 set_us=0 graph_compute_us=1867258 (pack 8153, prepare 649, upload 145, record 8894, submit 6188) host_us_per_node=600.98 host_us_per_dispatch=882.86 read_us=928 step_total_us=1895711 gpu_us=1839884.9
+PROBE cost dit step=3 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=11709 alloc_us=15567 set_us=0 graph_compute_us=1870934 (pack 7077, prepare 446, upload 115, record 6718, submit 4835) host_us_per_node=602.17 host_us_per_dispatch=884.60 read_us=604 step_total_us=1898814 gpu_us=1848606.2
+PROBE cost dit(profile2) step=4 nodes=3107 dispatches=2115 barriers=1903 frames=1 build_us=16180 alloc_us=13989 set_us=0 graph_compute_us=1869897 (pack 9182, prepare 484, upload 130, record 8913, submit 5681) host_us_per_node=601.83 host_us_per_dispatch=884.11 read_us=567 step_total_us=1900633 gpu_us=1841825.7
+PROBE cost dit profile2 dispatches=2115 total_us=24390 pack_us=9182 prepare_us=484 upload_us=130 record_us=8913 submit_us=5681 (per reading 0.12 us; 3 readings per dispatch in this run)
+PROBE cost dit kernel=add_f32                    dispatches=  605 barriers_before=  576 pack_us/dispatch=   2.85 record_us/dispatch=   4.06
+PROBE cost dit kernel=cpy_b32                    dispatches=  452 barriers_before=  331 pack_us/dispatch=   4.20 record_us/dispatch=   3.53
+PROBE cost dit kernel=mul_f32                    dispatches=  390 barriers_before=  390 pack_us/dispatch=   2.98 record_us/dispatch=   4.32
+PROBE cost dit kernel=mul_mat_tiled_bf16_f32     dispatches=  240 barriers_before=  209 pack_us/dispatch=   5.97 record_us/dispatch=   4.22
+PROBE cost dit kernel=rms_norm_f32_t64           dispatches=  120 barriers_before=  120 pack_us/dispatch=   4.08 record_us/dispatch=   4.08
+PROBE cost dit kernel=flash_attn_ext_f32_d128    dispatches=   60 barriers_before=   60 pack_us/dispatch=   8.67 record_us/dispatch=   3.95
+PROBE cost dit kernel=norm_f32                   dispatches=   91 barriers_before=   61 pack_us/dispatch=   3.55 record_us/dispatch=   3.73
+PROBE cost dit kernel=concat_b32                 dispatches=   60 barriers_before=   60 pack_us/dispatch=   4.78 record_us/dispatch=   3.85
+PROBE cost dit kernel=neg_f32                    dispatches=   60 barriers_before=   60 pack_us/dispatch=   2.88 record_us/dispatch=   3.97
+PROBE cost dit kernel=gelu_f32                   dispatches=   30 barriers_before=   30 pack_us/dispatch=   2.73 record_us/dispatch=   4.30
+PROBE cost dit kernel=mul_mat_tiled_f16_f32      dispatches=    2 barriers_before=    2 pack_us/dispatch=  13.00 record_us/dispatch=   6.00
+PROBE cost dit kernel=mul_mat_vec_f16_f32        dispatches=    2 barriers_before=    1 pack_us/dispatch=   9.00 record_us/dispatch=   3.00
+PROBE cost dit kernel=silu_f32                   dispatches=    2 barriers_before=    2 pack_us/dispatch=   3.50 record_us/dispatch=   3.00
+PROBE cost dit kernel=mul_mat_vec_f32_f32        dispatches=    1 barriers_before=    1 pack_us/dispatch=   7.00 record_us/dispatch=   3.00
+PROBE cost dit SUMMARY steps=3 nodes=3107 dispatches/graph=2115 barriers/graph=1903 frames/graph=1 (cold 4) graph_compute_us=1870934 (cold 1899678) host_us/node=602.17 host_us/dispatch=884.60 build_us=14244 alloc_us=14066 read_us=660 step_us=1898814 gpu_ms=1848.61
+PROBE cost dit host_clock_us_per_reading=0.12
+RESULT: PASS (cost dit:3)
+ggml_test: rd stats graphs=12 nodes=30480 dispatches=19430 skipped=11050 barriers=17376 failed_graphs=0 last{nodes=3107 dispatches=2115 barriers=1903 skipped=992} pipelines=19 set0_created=63 slots_created=2115 coop_yields=8 waits=12 faults=0 params_bytes=4974080 set_bytes=320492148 get_bytes=2505376 copies=1018 clears=0 buffers_live=0 bytes_live=0

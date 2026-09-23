@@ -71,7 +71,9 @@ silent fixture.
 ## Facts that cost time (do not relearn)
 
 - Run Godot with `--rendering-driver vulkan`; `--headless` hands back a null
-  RenderingDevice. `--xr-mode off` on non-VR runs.
+  RenderingDevice. `--xr-mode off` on non-VR runs, headless ones included:
+  without it a headless run hung after OpenXR failed to start, twice
+  (Gate 3).
 - Godot buffers stdout when redirected: **poll the port**, or write results to
   a file from GDScript; never wait on the log. `--quit-after` never fires under
   `--xr-mode on`; quit on a wall clock, in every branch.
@@ -87,12 +89,17 @@ silent fixture.
   first bound read-only and then written in the same span is recorded as
   read-only, and later spans race its writes (Gate 0F finding 4: 0 of 4096
   exact). Bind a written buffer read-write first; never alias a read-only
-  source binding with the read-write destination for an in-place op.
+  source binding with the read-write destination for an in-place op. A
+  storage binding that can share a buffer with a written one is declared
+  read-write even when the kernel only reads it: ggml-rd's sources are, and
+  one buffer at b1 and b4 over 1000 dependent spans is exact where the
+  read-only control loses (`gates/3-ggml-rd/`).
 - `buffer_update` is refused inside a compute list; `RDUniform` binds whole
   buffers; every buffer is created with contents (zeros if none), except
   `rdc::Device::storage_buffer_uninit` for sizes a zero array cannot reach
-  (4 GiB−256), which must be `buffer_clear`ed. `buffer_get_data` stages the
-  whole buffer; read big buffers through `buffer_copy` into a small one.
+  (4 GiB−256), which must be `buffer_clear`ed (`storage_buffer_empty` does
+  both). `buffer_get_data` stages the whole buffer; read big buffers through
+  `Device::buffer_get_into` (a `buffer_copy` into a small staging buffer).
 - A guest static can hold the RenderingDevice across vmcalls (handle = engine
   instance id in unrestricted mode); RefCounted helpers are per-call only.
 - An RID (any handle a host call returns) is a per-vmcall scoped Variant: the
@@ -111,7 +118,19 @@ silent fixture.
 - The guest has no filesystem (`openat` → EBADF); every byte comes through
   the host. `fesetround` is accepted and ignored.
 - `slangc -preserve-params` keeps unused bindings only at `-O0`; at the
-  default `-O1` the optimiser strips them again (Gate 0F finding 9).
+  default `-O1` the optimiser strips them again (Gate 0F finding 9) while
+  the reflection JSON still lists them. Shared-layout kernels compile at
+  `-O0 -preserve-params`, and the layout check reads the SPIR-V
+  (`kernels/ggml/gen_ggml_kernel_table.py`).
+- `slangc -target cpp` rejects `GroupMemoryBarrierWithGroupSync` (E36107):
+  a kernel that shares group memory has no cpp emit. It gets a serial
+  sibling (same words, thread-group size and grid, same sums in the same
+  order, no group memory; e.g. `lean/Ggml/SlangCodegen/MulMatSerial.lean`)
+  named in `kernels/ggml/cpp_siblings.txt`, which the L2 harness runs in
+  its place. A sibling with another thread group is named `<k>_serial`
+  instead: run in place when it is one thread per group over the same
+  grid (NORM, SOFT_MAX), else chosen by its packer under
+  `GGML_RD_SERIAL=1` (FLASH_ATTN_EXT; `tests/ggml_rd_kernels/gen_host_kernels.py`).
 - godot-sandbox caches an Object call's method name in a 32-slot direct-mapped
   cache keyed by the guest ADDRESS of the name string; two hot names in one
   slot evict each other and each call re-resolves (~2-5 ms). It is decided
@@ -120,7 +139,12 @@ silent fixture.
   2.4-2.8 ms per submit with `compute_list_end` and `sync` in one slot, and
   it was the 50-86x rd regression of Cut A (`gates/2-avbd/perf-bisect.log`).
   Call RenderingDevice only through `rdc::Device`, whose method names sit at
-  addresses with a slot each.
+  addresses with a slot each. That pool is **full** (32 names, 32 slots,
+  since Gate 3's timestamps): a new name needs an old one retired first.
+- GPU time: `rdc::Device::capture_timestamp` before `list_begin` and after
+  `list_end`; on a local device both are readable right after that submit's
+  `sync()` (`get_captured_timestamp_gpu_time`, nanoseconds). ggml-rd wraps
+  it as `ggml_backend_rd_set_timestamps` / `GGML_RD_TIMESTAMPS=1`.
 - Cross-compile: `build.sh` (riscv64 clang from scoop, lld, the org's
   `riscv64-sysroot` via `RISCV64_SYSROOT`). First Godot run after adding an
   ELF: `godot --path project --headless --import`.
@@ -183,6 +207,44 @@ silent fixture.
   forms FMAs slangc's cpp build does not), so a sum at float noise can be
   exactly 0 on rd and not on cpu. Guard every division by a computed norm in
   the Lean kernel (Gate 5 G10: a bending hinge went NaN on rd only).
+- A local RenderingDevice drops whatever is recorded between `submit()` and
+  `sync()` (sync's `_begin_frame` clears the graph): sync before any
+  buffer_update/copy/clear or compute list, and let the host upload only
+  while the guest is idle.
+- A vmcall killed while recording (execution_timeout, references_max, a
+  trap) leaves its compute list open, and Godot then refuses every
+  buffer_update and list_begin on that device. `rdc::Device` ends the
+  orphaned list before its next such call (`recoveries()` counts them;
+  Gate 0F probe 13 has the hazard and the fix as two arms).
+- The host views at most **16 MiB** of guest memory per syscall: a
+  PackedByteArray made from guest memory or fetched into it, and a
+  memcpy/memset/memmove/memcmp, fault above that ("Protection fault").
+  `rdc::Device` splits buffer_update and staged reads, the pump splits READ,
+  and `vendor/sandbox-api` splits the mem* wrappers.
+- **Guest inference is ggml-rd only.** The guest CPU (rv64gc, one thread)
+  runs ggml-cpu at ~0.1 GFLOP/s: a 4096-token DiT block's two reference arms
+  would be hours (the parked Gate 3 run stalled there). In the guest, graphs
+  run on ggml-rd with zero CPU fallback in release gates; the in-guest
+  ggml-cpu is only G3.ops' single-op reference. Oracles for anything bigger
+  run on the HOST: the guest dumps its outputs (`main.gd`'s
+  `ggml_graph_dump`, `project/graph_dump.gd`) and `tests/ggml_graph_oracle`
+  rebuilds the same net from the same seeds (`guest/ggml_test/graph_nets.cpp`,
+  compiled for both) on host ggml-vulkan (the GPU, large graphs) or host
+  ggml-cpu (small ones). ggml-vulkan is an oracle only (its glslc shaders
+  never ship; rule 2 is about shipped kernels) and must run with f16,
+  coopmat, coopmat2, bf16 and integer dot off (`--vk=precise`): by default
+  its f32 arm is 1.1e-3 off (f16 accumulation, coopmat2's f16 conversion).
+  Host ggml-cpu is not an exact f32 reference either: 4.5e-5 from both GPUs
+  on the DiT block's f32 arm, where ggml-rd and precise ggml-vulkan agree to
+  3.5e-7 (its GELU reads an f16 table, `GGML_GELU_FP16` in ggml-cpu's
+  `vec.h`, the likely cause; not isolated). `ggml-vulkan.cpp` takes ~20 min to compile with
+  llvm-mingw clang -O3: build the oracle once, outside the checkout (C:/b).
+- With unboxed arguments (the default) declare an Object parameter as
+  `Object`, never `Variant`: the host passes a bare handle, and a Variant
+  parameter reads it as a pointer (it arrives as Nil).
+- Guest threads are serialized (Gate 0C), so ggml's spin barriers never
+  release: every in-guest ggml-cpu backend runs one thread (ggml_test.elf
+  wraps `ggml_backend_init_by_type` to set it; the default is 4).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 - godot-sandbox's guest heap has no aligned entry point (malloc/calloc/
@@ -195,8 +257,9 @@ silent fixture.
   `native.cpp`: over-allocate, return the aligned address, and map it back
   to the host block in a side table that the wrapped `free`/`realloc`
   consult (a header below the block cannot work: the host only frees the
-  pointer it returned). Gate 0F probe 17 checks it; re-vendoring
-  sandbox-api must keep that patch, or the bug returns silently.
+  pointer it returned). Gate 0F probe 17 checks it (ggml's 64-byte
+  buffers need it too, Gate 3); re-vendoring sandbox-api must keep that
+  patch and Gate 3's 16 MiB mem* split, or the bugs return silently.
 - A native flat control built with llvm-mingw links libc++; the guest links
   libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
   between them from the same seed: use the engine's raw output (Gate 4).
@@ -218,6 +281,12 @@ silent fixture.
   as an absolute threshold keeps 2^-52 in the float32 kernels (`dblEps`), not
   FLT_EPSILON: the sphere demo's gradients are ~1e-5, so fpp = g.g ~ 1e-10,
   and FLT_EPSILON there shrank the first Cauchy step to nothing.
+- test-backend-ops cannot fail an op on values where its output holds
+  infinities: `nmse()` sums `-inf - -inf = NaN`, and `NaN > max_err` is
+  false (DIAG_MASK_INF passes with every source read one element off).
+  Its inf check still catches a wrong position or sign. Judge such ops
+  with an inf-aware NMSE, as L2 and the census probe do
+  (gates/3-ggml-rd/k1k5).
 
 ## Conventions
 

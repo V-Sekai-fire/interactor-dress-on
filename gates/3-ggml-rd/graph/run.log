@@ -1,0 +1,567 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate 3 G3.graph + G3.cost, 2026-09-23T12:52:54, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+oracle: ggml_graph_oracle.exe
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+execution_timeout=4000000 memory_max=3600
+runs selected: ["graph_qwen", "graph_sconv", "graph_dit8", "graph_dit"]
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+== graph_qwen: STARTED probe graph
+PROBE graph qwen rd_native nodes=76 dispatches=45 barriers=39 (barrier_all: 44) host_us(entry..submit)=900 frames=1 run_ms=2.7 status=0/0/0
+
+PROBE graph qwen drop k=1 barriers=38 detected=1 differing=5888 worst_rel_l2=1.207e-01 [barrier 1 before dispatch 2 MUL 'node_3' f32]
+
+PROBE graph qwen drop k=2 barriers=38 detected=1 differing=963 worst_rel_l2=4.421e-03 [barrier 2 before dispatch 3 MUL_MAT 'node_4' f32]
+
+PROBE graph qwen drop k=3 barriers=38 detected=1 differing=1920 worst_rel_l2=2.059e+00 [barrier 3 before dispatch 4 CPY 'cache.v.0 (view) (copy of  (reshaped) (view))' f32]
+
+PROBE graph qwen drop k=4 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 4 before dispatch 5 CONCAT 'node_9' f32]
+
+PROBE graph qwen drop k=5 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 5 before dispatch 7 CONCAT 'node_14' f32]
+
+PROBE graph qwen drop k=6 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 6 before dispatch 8 CONCAT 'node_15' f32]
+
+PROBE graph qwen drop k=7 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 7 before dispatch 9 REPEAT 'node_18' f32]
+
+PROBE graph qwen drop k=8 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 8 before dispatch 10 CONT ' (permuted) (cont)' f32]
+
+PROBE graph qwen drop k=9 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 9 before dispatch 11 CONT ' (permuted) (cont) (reshaped) (reshaped) (permuted) (transposed' f32]
+
+PROBE graph qwen drop k=10 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 10 before dispatch 12 MUL_MAT 'node_27' f32]
+
+PROBE graph qwen drop k=11 barriers=38 detected=1 differing=3840 worst_rel_l2=1.427e+00 [barrier 11 before dispatch 13 RMS_NORM 'node_29' f32]
+
+PROBE graph qwen drop k=12 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 12 before dispatch 14 REPEAT 'node_30' f32]
+
+PROBE graph qwen drop k=13 barriers=38 detected=1 differing=3840 worst_rel_l2=1.412e+00 [barrier 13 before dispatch 15 MUL 'node_31' f32]
+
+PROBE graph qwen drop k=14 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 14 before dispatch 16 ROPE 'node_32' f32]
+
+PROBE graph qwen drop k=15 barriers=38 detected=1 differing=1920 worst_rel_l2=9.755e-01 [barrier 15 before dispatch 17 CPY 'cache.k.0 (view) (copy of  (view))' f32]
+
+PROBE graph qwen drop k=16 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 18 CONCAT 'node_36' f32]
+
+PROBE graph qwen drop k=17 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 17 before dispatch 20 CONCAT 'node_41' f32]
+
+PROBE graph qwen drop k=18 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 18 before dispatch 21 CONCAT 'node_42' f32]
+
+PROBE graph qwen drop k=19 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 19 before dispatch 22 REPEAT 'node_45' f32]
+
+PROBE graph qwen drop k=20 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 20 before dispatch 23 CONT ' (permuted) (cont)' f32]
+
+PROBE graph qwen drop k=21 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 21 before dispatch 24 MUL_MAT 'node_51' f32]
+
+PROBE graph qwen drop k=22 barriers=38 detected=1 differing=1792 worst_rel_l2=2.395e-02 [barrier 22 before dispatch 25 RMS_NORM 'node_53' f32]
+
+PROBE graph qwen drop k=23 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 23 before dispatch 26 REPEAT 'node_54' f32]
+
+PROBE graph qwen drop k=24 barriers=38 detected=1 differing=1792 worst_rel_l2=1.134e-02 [barrier 24 before dispatch 27 MUL 'node_55' f32]
+
+PROBE graph qwen drop k=25 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 25 before dispatch 28 ROPE 'node_56' f32]
+
+PROBE graph qwen drop k=26 barriers=38 detected=1 differing=896 worst_rel_l2=6.689e-03 [barrier 26 before dispatch 29 MUL_MAT 'node_58' f32]
+
+PROBE graph qwen drop k=27 barriers=38 detected=1 differing=896 worst_rel_l2=1.887e-01 [barrier 27 before dispatch 30 SCALE 'node_59' f32]
+
+PROBE graph qwen drop k=28 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 28 before dispatch 31 SOFT_MAX 'node_60' f32]
+
+PROBE graph qwen drop k=29 barriers=38 detected=1 differing=1792 worst_rel_l2=5.657e+00 [barrier 29 before dispatch 32 MUL_MAT 'node_61' f32]
+
+PROBE graph qwen drop k=30 barriers=38 detected=1 differing=1792 worst_rel_l2=7.206e-01 [barrier 30 before dispatch 33 CONT ' (permuted) (cont)' f32]
+
+PROBE graph qwen drop k=31 barriers=38 detected=1 differing=896 worst_rel_l2=2.664e-02 [barrier 31 before dispatch 34 MUL_MAT 'node_65' f32]
+
+PROBE graph qwen drop k=32 barriers=38 detected=1 differing=1792 worst_rel_l2=1.022e+00 [barrier 32 before dispatch 35 ADD 'node_66' f32]
+
+PROBE graph qwen drop k=33 barriers=38 detected=1 differing=1792 worst_rel_l2=1.431e-01 [barrier 33 before dispatch 36 RMS_NORM 'node_67' f32]
+
+PROBE graph qwen drop k=34 barriers=38 detected=1 differing=1792 worst_rel_l2=2.899e-02 [barrier 34 before dispatch 38 MUL 'node_69' f32]
+
+PROBE graph qwen drop k=35 barriers=38 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 35 before dispatch 39 MUL_MAT 'node_70' f32]
+
+PROBE graph qwen drop k=36 barriers=38 detected=1 differing=1792 worst_rel_l2=1.708e-01 [barrier 36 before dispatch 40 SILU 'node_71' f32]
+
+PROBE graph qwen drop k=37 barriers=38 detected=1 differing=1792 worst_rel_l2=2.821e-01 [barrier 37 before dispatch 42 MUL 'node_73' f32]
+
+PROBE graph qwen drop k=38 barriers=38 detected=1 differing=120 worst_rel_l2=1.380e-02 [barrier 38 before dispatch 43 MUL_MAT 'node_74' f32]
+
+PROBE graph qwen drop k=39 barriers=38 detected=1 differing=1792 worst_rel_l2=1.725e+00 [barrier 39 before dispatch 44 ADD 'node_75' f32]
+
+PROBE graph qwen rd_f16_vs_rd_f32_info output=layer_out n=1792 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+
+PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+
+PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+
+PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+
+PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+
+PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=20/39 detected nodes=76 dispatches=45 barriers=39/44 status=0/0/0/0 wall_s=2.0
+
+RESULT: PASS (graph qwen)
+
+ggml_test: rd stats graphs=45 nodes=3420 dispatches=2025 skipped=1395 barriers=1721 failed_graphs=0 last{nodes=76 dispatches=45 barriers=39 skipped=31} pipelines=12 set0_created=10 slots_created=45 coop_yields=0 waits=45 faults=0 params_bytes=518400 set_bytes=82999304 get_bytes=1382400 copies=0 clears=45 buffers_live=0 bytes_live=0
+
+== graph_qwen: done in 2.0 s, frames=46 pumps=46 vm_ms=1980.4 waits=45 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph qwen rd_native nodes=76 dispatches=45 barriers=39 (barrier_all: 44) host_us(entry..submit)=900 frames=1 run_ms=2.7 status=0/0/0
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=layer_out n=1792 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=20/39 detected nodes=76 dispatches=45 barriers=39/44 status=0/0/0/0 wall_s=2.0
+   RESULT: PASS (graph qwen)
+   rd: graphs=45 nodes=3420 dispatches=2025 skipped=1395 barriers=1721 failed_graphs=0 last{nodes=76 dispatches=45 barriers=39 skipped=31} pipelines=12 set0_created=10 slots_created=45 coop_yields=0 waits=45 faults=0 params_bytes=518400 set_bytes=82999304 get_bytes=1382400 copies=0 clears=45 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=45 submits=45 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 11 files 54272 bytes to <checkout>/build/graph-dumps/graph_qwen in 0.0 s
+   oracle: ggml_graph_oracle.exe --graph=qwen --dump=<checkout>/build/graph-dumps/graph_qwen --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_qwen.txt --ref=cpu --check=vulkan
+== graph_qwen oracle: exited in 17.9 s
+   ORACLE graph=qwen ref=cpu check=vulkan vk=precise dump=<checkout>/build/graph-dumps/graph_qwen
+   ORACLE cpu_native status=0 nodes=76 ms=1621.6
+   ORACLE cpu_native rerun status=0 ms=2700.2 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=76 ms=2934.4
+   ORACLE cpu_f32 rerun status=0 ms=1769.5 repeat=bit-identical
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=76 ms=25.4
+   ORACLE vulkan_native rerun status=0 ms=1.1 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=76 ms=9.9
+   ORACLE vulkan_f32 rerun status=0 ms=1.2 repeat=bit-identical
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=layer_out n=1792 rel_l2=6.721e-05 rel_l2_of_branch=0.000342 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=k_cache_row_beam0 n=1024 rel_l2=2.094e-04 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=v_cache_row_beam0 n=1024 rel_l2=2.021e-04 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=k_cache_row_beam1 n=1024 rel_l2=2.060e-04 finite=1
+   PROBE graph qwen vulkan_f16_vs_cpu_f16_oracle_check output=v_cache_row_beam1 n=1024 rel_l2=1.980e-04 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=layer_out n=1792 rel_l2=2.461e-07 rel_l2_of_branch=0.000001 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=k_cache_row_beam0 n=1024 rel_l2=1.388e-05 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=v_cache_row_beam0 n=1024 rel_l2=1.467e-07 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=k_cache_row_beam1 n=1024 rel_l2=1.288e-05 finite=1
+   PROBE graph qwen vulkan_f32_vs_cpu_f32_oracle_check output=v_cache_row_beam1 n=1024 rel_l2=1.979e-07 finite=1
+   ORACLE check vulkan vs cpu: native 2.094e-04 f32 1.388e-05
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=1792)
+   ORACLE qwen SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=2.097e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=9.166e-06 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=9.166e-06 rel_l2(cpu_f16,cpu_f32)=2.091e-04 rel_l2(rd_f16,vulkan_f16)=1.574e-05 rel_l2(rd_f32,vulkan_f32)=1.574e-05 ref_ms=1622/2934 inputs=bit-identical wall_s=9.8
+   RESULT: PASS (oracle qwen)
+== graph_sconv: STARTED probe graph
+PROBE graph sconv rd_native nodes=789 dispatches=571 barriers=359 (barrier_all: 570) host_us(entry..submit)=4271 frames=1 run_ms=54.5 status=0/0/0
+
+PROBE graph sconv drop k=1 barriers=358 detected=1 differing=814016 worst_rel_l2=2.886e-01 [barrier 1 before dispatch 4 SILU 'node_10' f32]
+
+PROBE graph sconv drop k=8 barriers=358 detected=1 differing=697639 worst_rel_l2=6.371e-02 [barrier 8 before dispatch 12 ADD 'node_20' f32]
+
+PROBE graph sconv drop k=16 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 26 MUL_MAT 'node_40' f32]
+
+PROBE graph sconv drop k=23 barriers=358 detected=1 differing=814016 worst_rel_l2=8.681e-02 [barrier 23 before dispatch 37 ADD 'node_55' f32]
+
+PROBE graph sconv drop k=31 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 31 before dispatch 51 MUL_MAT 'node_75' f32]
+
+PROBE graph sconv drop k=39 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 39 before dispatch 65 MUL 'node_95' f32]
+
+PROBE graph sconv drop k=46 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 46 before dispatch 76 MUL_MAT 'node_110' f32]
+
+PROBE graph sconv drop k=54 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 54 before dispatch 90 MUL 'node_130' f32]
+
+PROBE graph sconv drop k=61 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 61 before dispatch 101 MUL_MAT 'node_145' f32]
+
+PROBE graph sconv drop k=69 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 69 before dispatch 115 MUL 'node_165' f32]
+
+PROBE graph sconv drop k=77 barriers=358 detected=1 differing=814015 worst_rel_l2=8.678e-02 [barrier 77 before dispatch 127 ADD 'node_181' f32]
+
+PROBE graph sconv drop k=84 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 84 before dispatch 138 ADD 'node_196' f32]
+
+PROBE graph sconv drop k=92 barriers=358 detected=1 differing=639392 worst_rel_l2=7.808e-02 [barrier 92 before dispatch 148 ADD 'node_210' f32]
+
+PROBE graph sconv drop k=100 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 100 before dispatch 162 MUL_MAT 'node_230' f32]
+
+PROBE graph sconv drop k=107 barriers=358 detected=1 differing=805567 worst_rel_l2=7.267e-02 [barrier 107 before dispatch 173 ADD 'node_245' f32]
+
+PROBE graph sconv drop k=115 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 115 before dispatch 187 MUL_MAT 'node_265' f32]
+
+PROBE graph sconv drop k=122 barriers=358 detected=1 differing=801407 worst_rel_l2=8.064e-02 [barrier 122 before dispatch 198 ADD 'node_280' f32]
+
+PROBE graph sconv drop k=130 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 130 before dispatch 212 MUL_MAT 'node_300' f32]
+
+PROBE graph sconv drop k=138 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 138 before dispatch 226 MUL 'node_320' f32]
+
+PROBE graph sconv drop k=145 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 145 before dispatch 237 MUL_MAT 'node_335' f32]
+
+PROBE graph sconv drop k=153 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 153 before dispatch 251 MUL 'node_355' f32]
+
+PROBE graph sconv drop k=160 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 160 before dispatch 262 MUL_MAT 'node_370' f32]
+
+PROBE graph sconv drop k=168 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 168 before dispatch 274 ADD 'node_386' f32]
+
+PROBE graph sconv drop k=176 barriers=358 detected=1 differing=814014 worst_rel_l2=2.851e-02 [barrier 176 before dispatch 282 ADD 'node_394' f32]
+
+PROBE graph sconv drop k=183 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 183 before dispatch 290 MUL_MAT 'node_404' f32]
+
+PROBE graph sconv drop k=191 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 191 before dispatch 304 MUL 'node_424' f32]
+
+PROBE graph sconv drop k=199 barriers=358 detected=1 differing=704160 worst_rel_l2=7.042e-02 [barrier 199 before dispatch 316 ADD 'node_440' f32]
+
+PROBE graph sconv drop k=206 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 206 before dispatch 329 MUL 'node_459' f32]
+
+PROBE graph sconv drop k=214 barriers=358 detected=1 differing=708111 worst_rel_l2=7.773e-02 [barrier 214 before dispatch 341 ADD 'node_475' f32]
+
+PROBE graph sconv drop k=221 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 221 before dispatch 354 MUL 'node_494' f32]
+
+PROBE graph sconv drop k=229 barriers=358 detected=1 differing=708111 worst_rel_l2=8.047e-02 [barrier 229 before dispatch 366 ADD 'node_510' f32]
+
+PROBE graph sconv drop k=237 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 237 before dispatch 380 MUL_MAT 'node_530' f32]
+
+PROBE graph sconv drop k=244 barriers=358 detected=1 differing=704160 worst_rel_l2=7.023e-02 [barrier 244 before dispatch 391 ADD 'node_545' f32]
+
+PROBE graph sconv drop k=252 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 252 before dispatch 405 MUL_MAT 'node_565' f32]
+
+PROBE graph sconv drop k=259 barriers=358 detected=1 differing=583535 worst_rel_l2=6.890e-02 [barrier 259 before dispatch 416 ADD 'node_580' f32]
+
+PROBE graph sconv drop k=267 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 267 before dispatch 424 MUL_MAT 'node_588' f32]
+
+PROBE graph sconv drop k=275 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 275 before dispatch 434 SILU 'node_600' f32]
+
+PROBE graph sconv drop k=282 barriers=358 detected=1 differing=202752 worst_rel_l2=1.777e-01 [barrier 282 before dispatch 442 ADD 'node_610' f32]
+
+PROBE graph sconv drop k=290 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 290 before dispatch 456 MUL_MAT 'node_630' f32]
+
+PROBE graph sconv drop k=298 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 298 before dispatch 470 MUL 'node_650' f32]
+
+PROBE graph sconv drop k=305 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 305 before dispatch 481 MUL_MAT 'node_665' f32]
+
+PROBE graph sconv drop k=313 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 313 before dispatch 495 MUL 'node_685' f32]
+
+PROBE graph sconv drop k=320 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 320 before dispatch 506 MUL_MAT 'node_700' f32]
+
+PROBE graph sconv drop k=328 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 328 before dispatch 520 MUL 'node_720' f32]
+
+PROBE graph sconv drop k=336 barriers=358 detected=1 differing=309248 worst_rel_l2=2.455e-01 [barrier 336 before dispatch 532 ADD 'node_736' f32]
+
+PROBE graph sconv drop k=343 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 343 before dispatch 545 MUL 'node_755' f32]
+
+PROBE graph sconv drop k=351 barriers=358 detected=1 differing=348160 worst_rel_l2=2.461e-01 [barrier 351 before dispatch 557 ADD 'node_771' f32]
+
+PROBE graph sconv drop k=359 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 359 before dispatch 569 CONT ' (cont)' f32]
+
+PROBE graph sconv rd_f16_vs_rd_f32_info output=subdiv n=5056 rel_l2=0.000e+00 finite=1
+
+PROBE graph sconv rd_f16_vs_rd_f32_info output=h1 n=647168 rel_l2=0.000e+00 finite=1
+
+PROBE graph sconv rd_f16_vs_rd_f32_info output=x n=161792 rel_l2=0.000e+00 finite=1
+
+PROBE graph sconv SUMMARY weights=f16 reference=host (dumped: 6 outputs, 6.2 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=16/48 detected nodes=789 dispatches=571 barriers=359/570 status=0/0/0/0 wall_s=2.9 L=632 neighbours=6200/17064
+
+RESULT: PASS (graph sconv)
+
+ggml_test: rd stats graphs=99 nodes=46026 dispatches=32859 skipped=13167 barriers=21270 failed_graphs=0 last{nodes=789 dispatches=571 barriers=359 skipped=218} pipelines=17 set0_created=16 slots_created=571 coop_yields=2 waits=99 faults=0 params_bytes=8411904 set_bytes=165558984 get_bytes=177209856 copies=0 clears=99 buffers_live=0 bytes_live=0
+
+== graph_sconv: done in 2.9 s, frames=57 pumps=57 vm_ms=2879.2 waits=54 coops=2 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph sconv rd_native nodes=789 dispatches=571 barriers=359 (barrier_all: 570) host_us(entry..submit)=4271 frames=1 run_ms=54.5 status=0/0/0
+   PROBE graph sconv rd_f16_vs_rd_f32_info output=subdiv n=5056 rel_l2=0.000e+00 finite=1
+   PROBE graph sconv rd_f16_vs_rd_f32_info output=h1 n=647168 rel_l2=0.000e+00 finite=1
+   PROBE graph sconv rd_f16_vs_rd_f32_info output=x n=161792 rel_l2=0.000e+00 finite=1
+   PROBE graph sconv SUMMARY weights=f16 reference=host (dumped: 6 outputs, 6.2 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=16/48 detected nodes=789 dispatches=571 barriers=359/570 status=0/0/0/0 wall_s=2.9 L=632 neighbours=6200/17064
+   RESULT: PASS (graph sconv)
+   rd: graphs=99 nodes=46026 dispatches=32859 skipped=13167 barriers=21270 failed_graphs=0 last{nodes=789 dispatches=571 barriers=359 skipped=218} pipelines=17 set0_created=16 slots_created=571 coop_yields=2 waits=99 faults=0 params_bytes=8411904 set_bytes=165558984 get_bytes=177209856 copies=0 clears=99 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=99 submits=99 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 6 files 6512128 bytes to <checkout>/build/graph-dumps/graph_sconv in 0.0 s
+   oracle: ggml_graph_oracle.exe --graph=sconv --dump=<checkout>/build/graph-dumps/graph_sconv --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_sconv.txt --ref=cpu --check=vulkan
+== graph_sconv oracle: exited in 302.0 s
+   ORACLE graph=sconv ref=cpu check=vulkan vk=precise dump=<checkout>/build/graph-dumps/graph_sconv
+   ORACLE cpu_native status=0 nodes=789 ms=72120.4
+   ORACLE cpu_native rerun status=0 ms=137545.6 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=789 ms=47194.3
+   ORACLE cpu_f32 rerun status=0 ms=41096.0 repeat=bit-identical
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=789 ms=2311.7
+   ORACLE vulkan_native rerun status=0 ms=28.3 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=789 ms=536.3
+   ORACLE vulkan_f32 rerun status=0 ms=13.2 repeat=bit-identical
+   PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=subdiv n=5056 rel_l2=2.735e-04 finite=1
+   PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=h1 n=647168 rel_l2=2.741e-04 finite=1
+   PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=x n=161792 rel_l2=1.648e-04 finite=1
+   PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=subdiv n=5056 rel_l2=4.522e-07 finite=1
+   PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=h1 n=647168 rel_l2=4.839e-07 finite=1
+   PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=x n=161792 rel_l2=3.321e-07 finite=1
+   ORACLE check vulkan vs cpu: native 2.741e-04 f32 4.839e-07
+   ORACLE sconv SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=2.741e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.826e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=4.826e-07 rel_l2(cpu_f16,cpu_f32)=2.741e-04 rel_l2(rd_f16,vulkan_f16)=4.575e-07 rel_l2(rd_f32,vulkan_f32)=4.575e-07 ref_ms=72120/47194 inputs=bit-identical wall_s=302.0
+   RESULT: PASS (oracle sconv)
+== graph_dit8: STARTED probe graph
+PROBE graph dit rd_native nodes=103 dispatches=70 barriers=62 (barrier_all: 69) host_us(entry..submit)=1111 frames=1 run_ms=10.4 status=0/0/0
+
+PROBE graph dit drop k=1 barriers=61 detected=1 differing=786422 worst_rel_l2=4.013e-03 [barrier 1 before dispatch 2 MUL 'node_3' f32]
+
+PROBE graph dit drop k=2 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 2 before dispatch 3 ADD 'node_4' f32]
+
+PROBE graph dit drop k=3 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 3 before dispatch 4 ADD 'node_6' f32]
+
+PROBE graph dit drop k=4 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 4 before dispatch 5 MUL_MAT 'node_7' f32]
+
+PROBE graph dit drop k=6 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 6 before dispatch 7 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=7 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 7 before dispatch 8 RMS_NORM 'node_12' f32]
+
+PROBE graph dit drop k=8 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 8 before dispatch 9 MUL 'node_13' f32]
+
+PROBE graph dit drop k=10 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 10 before dispatch 12 NEG 'node_18' f32]
+
+PROBE graph dit drop k=11 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 11 before dispatch 14 CONCAT 'node_21' f32]
+
+PROBE graph dit drop k=12 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 12 before dispatch 15 MUL 'node_23' f32]
+
+PROBE graph dit drop k=13 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 13 before dispatch 16 ADD 'node_24' f32]
+
+PROBE graph dit drop k=15 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 15 before dispatch 18 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=16 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 19 RMS_NORM 'node_30' f32]
+
+PROBE graph dit drop k=17 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 17 before dispatch 20 MUL 'node_31' f32]
+
+PROBE graph dit drop k=19 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 19 before dispatch 23 NEG 'node_36' f32]
+
+PROBE graph dit drop k=20 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 20 before dispatch 25 CONCAT 'node_39' f32]
+
+PROBE graph dit drop k=21 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 21 before dispatch 26 MUL 'node_41' f32]
+
+PROBE graph dit drop k=23 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 23 before dispatch 28 CONT ' (permuted) (cont)' f32]
+
+PROBE graph dit drop k=24 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 24 before dispatch 29 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=25 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 25 before dispatch 30 CONT ' (view) (cont) (reshaped) (permuted) (cont)' f32]
+
+PROBE graph dit drop k=26 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 26 before dispatch 31 FLASH_ATTN_EXT 'node_50' f32]
+
+PROBE graph dit drop k=28 barriers=61 detected=1 differing=786422 worst_rel_l2=8.874e-03 [barrier 28 before dispatch 33 ADD 'node_53' f32]
+
+PROBE graph dit drop k=29 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 29 before dispatch 34 MUL 'node_55' f32]
+
+PROBE graph dit drop k=30 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 30 before dispatch 35 ADD 'node_56' f32]
+
+PROBE graph dit drop k=32 barriers=61 detected=1 differing=178176 worst_rel_l2=1.263e-02 [barrier 32 before dispatch 39 MUL 'node_60' f32]
+
+PROBE graph dit drop k=33 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 33 before dispatch 40 ADD 'node_61' f32]
+
+PROBE graph dit drop k=34 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 34 before dispatch 41 MUL_MAT 'node_62' f32]
+
+PROBE graph dit drop k=36 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 36 before dispatch 43 RMS_NORM 'node_65' f32]
+
+PROBE graph dit drop k=37 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 37 before dispatch 44 MUL 'node_66' f32]
+
+PROBE graph dit drop k=38 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 38 before dispatch 45 CONT ' (permuted) (cont)' f32]
+
+PROBE graph dit drop k=39 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 39 before dispatch 46 MUL_MAT 'node_69' f32]
+
+PROBE graph dit drop k=41 barriers=61 detected=1 differing=786394 worst_rel_l2=6.875e-04 [barrier 41 before dispatch 48 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=42 barriers=61 detected=1 differing=786432 worst_rel_l2=1.550e-01 [barrier 42 before dispatch 49 RMS_NORM 'node_74' f32]
+
+PROBE graph dit drop k=43 barriers=61 detected=1 differing=786432 worst_rel_l2=1.509e-01 [barrier 43 before dispatch 50 MUL 'node_75' f32]
+
+PROBE graph dit drop k=45 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 45 before dispatch 52 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=46 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 46 before dispatch 53 CONT ' (view) (cont) (reshaped) (permuted) (cont)' f32]
+
+PROBE graph dit drop k=47 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 47 before dispatch 54 FLASH_ATTN_EXT 'node_83' f32]
+
+PROBE graph dit drop k=49 barriers=61 detected=1 differing=786432 worst_rel_l2=2.199e-02 [barrier 49 before dispatch 56 ADD 'node_86' f32]
+
+PROBE graph dit drop k=50 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 50 before dispatch 57 ADD 'node_87' f32]
+
+PROBE graph dit drop k=51 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 51 before dispatch 58 ADD 'node_88' f32]
+
+PROBE graph dit drop k=52 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 52 before dispatch 59 NORM 'node_89' f32]
+
+PROBE graph dit drop k=54 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 54 before dispatch 61 ADD 'node_92' f32]
+
+PROBE graph dit drop k=55 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 55 before dispatch 62 ADD 'node_94' f32]
+
+PROBE graph dit drop k=56 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 56 before dispatch 63 MUL_MAT 'node_95' f32]
+
+PROBE graph dit drop k=58 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 58 before dispatch 65 GELU 'node_97' f32]
+
+PROBE graph dit drop k=59 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 59 before dispatch 66 MUL_MAT 'node_98' f32]
+
+PROBE graph dit drop k=60 barriers=61 detected=1 differing=786432 worst_rel_l2=3.846e-03 [barrier 60 before dispatch 67 ADD 'node_99' f32]
+
+PROBE graph dit drop k=62 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 62 before dispatch 69 ADD 'node_102' f32]
+
+PROBE graph dit rd_bf16_vs_rd_f32_info output=block_out n=786432 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+
+PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 9.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=8/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=4.4
+
+RESULT: PASS (graph dit:8)
+
+ggml_test: rd stats graphs=153 nodes=51588 dispatches=36639 skipped=14949 barriers=24577 failed_graphs=0 last{nodes=103 dispatches=70 barriers=62 skipped=33} pipelines=22 set0_created=24 slots_created=571 coop_yields=2 waits=153 faults=0 params_bytes=9379584 set_bytes=441785032 get_bytes=516948480 copies=0 clears=153 buffers_live=0 bytes_live=0
+
+== graph_dit8: done in 4.4 s, frames=55 pumps=55 vm_ms=4376.2 waits=54 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph dit rd_native nodes=103 dispatches=70 barriers=62 (barrier_all: 69) host_us(entry..submit)=1111 frames=1 run_ms=10.4 status=0/0/0
+   PROBE graph dit rd_bf16_vs_rd_f32_info output=block_out n=786432 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 9.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=8/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=4.4
+   RESULT: PASS (graph dit:8)
+   rd: graphs=153 nodes=51588 dispatches=36639 skipped=14949 barriers=24577 failed_graphs=0 last{nodes=103 dispatches=70 barriers=62 skipped=33} pipelines=22 set0_created=24 slots_created=571 coop_yields=2 waits=153 faults=0 params_bytes=9379584 set_bytes=441785032 get_bytes=516948480 copies=0 clears=153 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=153 submits=153 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 3 files 9437184 bytes to <checkout>/build/graph-dumps/graph_dit8 in 0.0 s
+   oracle: ggml_graph_oracle.exe --graph=dit:8 --dump=<checkout>/build/graph-dumps/graph_dit8 --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_dit8.txt --ref=vulkan --check=cpu
+== graph_dit8 oracle: exited in 10.8 s
+   ORACLE graph=dit:8 ref=vulkan check=cpu vk=precise dump=<checkout>/build/graph-dumps/graph_dit8
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=103 ms=36.1
+   ORACLE vulkan_native rerun status=0 ms=6.8 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=103 ms=13.8
+   ORACLE vulkan_f32 rerun status=0 ms=6.9 repeat=bit-identical
+   ORACLE cpu_native status=0 nodes=103 ms=2701.9
+   ORACLE cpu_native rerun status=0 ms=3420.0 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=103 ms=1601.3
+   ORACLE cpu_f32 rerun status=0 ms=1865.2 repeat=bit-identical
+   PROBE graph dit:8 cpu_bf16_vs_vulkan_bf16_oracle_check output=block_out n=786432 rel_l2=5.565e-04 rel_l2_of_branch=0.001033 finite=1
+   PROBE graph dit:8 cpu_f32_vs_vulkan_f32_oracle_check output=block_out n=786432 rel_l2=4.507e-05 rel_l2_of_branch=0.000084 finite=1
+   ORACLE check cpu vs vulkan: native 5.565e-04 f32 4.507e-05
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=786432)
+   ORACLE dit:8 SUMMARY ref=vulkan(precise) weights=bf16 rel_l2(rd_bf16,vulkan_bf16)=8.766e-04 (<=1e-3: yes) rel_l2(rd_f32,vulkan_f32)=3.475e-07 (<=1e-4: yes) info rel_l2(rd_bf16,vulkan_f32)=3.475e-07 rel_l2(vulkan_bf16,vulkan_f32)=8.766e-04 rel_l2(rd_bf16,cpu_bf16)=9.311e-04 rel_l2(rd_f32,cpu_f32)=4.507e-05 ref_ms=36/14 inputs=bit-identical wall_s=10.8
+   RESULT: PASS (oracle dit:8)
+== graph_dit: STARTED probe graph
+PROBE graph dit rd_native nodes=103 dispatches=70 barriers=62 (barrier_all: 69) host_us(entry..submit)=972 frames=1 run_ms=82.0 status=0/0/0
+
+PROBE graph dit drop k=1 barriers=61 detected=1 differing=6291341 worst_rel_l2=2.869e-03 [barrier 1 before dispatch 2 MUL 'node_3' f32]
+
+PROBE graph dit drop k=2 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 2 before dispatch 3 ADD 'node_4' f32]
+
+PROBE graph dit drop k=3 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 3 before dispatch 4 ADD 'node_6' f32]
+
+PROBE graph dit drop k=4 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 4 before dispatch 5 MUL_MAT 'node_7' f32]
+
+PROBE graph dit drop k=6 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 6 before dispatch 7 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=7 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 7 before dispatch 8 RMS_NORM 'node_12' f32]
+
+PROBE graph dit drop k=8 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 8 before dispatch 9 MUL 'node_13' f32]
+
+PROBE graph dit drop k=10 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 10 before dispatch 12 NEG 'node_18' f32]
+
+PROBE graph dit drop k=11 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 11 before dispatch 14 CONCAT 'node_21' f32]
+
+PROBE graph dit drop k=12 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 12 before dispatch 15 MUL 'node_23' f32]
+
+PROBE graph dit drop k=13 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 13 before dispatch 16 ADD 'node_24' f32]
+
+PROBE graph dit drop k=15 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 15 before dispatch 18 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=16 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 19 RMS_NORM 'node_30' f32]
+
+PROBE graph dit drop k=17 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 17 before dispatch 20 MUL 'node_31' f32]
+
+PROBE graph dit drop k=19 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 19 before dispatch 23 NEG 'node_36' f32]
+
+PROBE graph dit drop k=20 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 20 before dispatch 25 CONCAT 'node_39' f32]
+
+PROBE graph dit drop k=21 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 21 before dispatch 26 MUL 'node_41' f32]
+
+PROBE graph dit drop k=23 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 23 before dispatch 28 CONT ' (permuted) (cont)' f32]
+
+PROBE graph dit drop k=24 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 24 before dispatch 29 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=25 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 25 before dispatch 30 CONT ' (view) (cont) (reshaped) (permuted) (cont)' f32]
+
+PROBE graph dit drop k=26 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 26 before dispatch 31 FLASH_ATTN_EXT 'node_50' f32]
+
+PROBE graph dit drop k=28 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 28 before dispatch 33 ADD 'node_53' f32]
+
+PROBE graph dit drop k=29 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 29 before dispatch 34 MUL 'node_55' f32]
+
+PROBE graph dit drop k=30 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 30 before dispatch 35 ADD 'node_56' f32]
+
+PROBE graph dit drop k=32 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 32 before dispatch 39 MUL 'node_60' f32]
+
+PROBE graph dit drop k=33 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 33 before dispatch 40 ADD 'node_61' f32]
+
+PROBE graph dit drop k=34 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 34 before dispatch 41 MUL_MAT 'node_62' f32]
+
+PROBE graph dit drop k=36 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 36 before dispatch 43 RMS_NORM 'node_65' f32]
+
+PROBE graph dit drop k=37 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 37 before dispatch 44 MUL 'node_66' f32]
+
+PROBE graph dit drop k=38 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 38 before dispatch 45 CONT ' (permuted) (cont)' f32]
+
+PROBE graph dit drop k=39 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 39 before dispatch 46 MUL_MAT 'node_69' f32]
+
+PROBE graph dit drop k=41 barriers=61 detected=1 differing=6291175 worst_rel_l2=6.881e-04 [barrier 41 before dispatch 48 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=42 barriers=61 detected=1 differing=6291456 worst_rel_l2=1.544e-01 [barrier 42 before dispatch 49 RMS_NORM 'node_74' f32]
+
+PROBE graph dit drop k=43 barriers=61 detected=1 differing=6291453 worst_rel_l2=1.523e-01 [barrier 43 before dispatch 50 MUL 'node_75' f32]
+
+PROBE graph dit drop k=45 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 45 before dispatch 52 CONT ' (view) (cont)' f32]
+
+PROBE graph dit drop k=46 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 46 before dispatch 53 CONT ' (view) (cont) (reshaped) (permuted) (cont)' f32]
+
+PROBE graph dit drop k=47 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 47 before dispatch 54 FLASH_ATTN_EXT 'node_83' f32]
+
+PROBE graph dit drop k=49 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 49 before dispatch 56 ADD 'node_86' f32]
+
+PROBE graph dit drop k=50 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 50 before dispatch 57 ADD 'node_87' f32]
+
+PROBE graph dit drop k=51 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 51 before dispatch 58 ADD 'node_88' f32]
+
+PROBE graph dit drop k=52 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 52 before dispatch 59 NORM 'node_89' f32]
+
+PROBE graph dit drop k=54 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 54 before dispatch 61 ADD 'node_92' f32]
+
+PROBE graph dit drop k=55 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 55 before dispatch 62 ADD 'node_94' f32]
+
+PROBE graph dit drop k=56 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 56 before dispatch 63 MUL_MAT 'node_95' f32]
+
+PROBE graph dit drop k=58 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 58 before dispatch 65 GELU 'node_97' f32]
+
+PROBE graph dit drop k=59 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 59 before dispatch 66 MUL_MAT 'node_98' f32]
+
+PROBE graph dit drop k=60 barriers=61 detected=1 differing=1048576 worst_rel_l2=1.573e-03 [barrier 60 before dispatch 67 ADD 'node_99' f32]
+
+PROBE graph dit drop k=62 barriers=61 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 62 before dispatch 69 ADD 'node_102' f32]
+
+PROBE graph dit rd_bf16_vs_rd_f32_info output=block_out n=6291456 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+
+PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 72.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=5/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=14.6
+
+RESULT: PASS (graph dit)
+
+ggml_test: rd stats graphs=207 nodes=57150 dispatches=40419 skipped=16731 barriers=27884 failed_graphs=0 last{nodes=103 dispatches=70 barriers=62 skipped=33} pipelines=22 set0_created=32 slots_created=571 coop_yields=2 waits=207 faults=0 params_bytes=10347264 set_bytes=798751432 get_bytes=3234857472 copies=0 clears=207 buffers_live=0 bytes_live=0
+
+== graph_dit: done in 14.6 s, frames=55 pumps=55 vm_ms=14584.2 waits=54 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph dit rd_native nodes=103 dispatches=70 barriers=62 (barrier_all: 69) host_us(entry..submit)=972 frames=1 run_ms=82.0 status=0/0/0
+   PROBE graph dit rd_bf16_vs_rd_f32_info output=block_out n=6291456 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 72.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=5/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=14.6
+   RESULT: PASS (graph dit)
+   rd: graphs=207 nodes=57150 dispatches=40419 skipped=16731 barriers=27884 failed_graphs=0 last{nodes=103 dispatches=70 barriers=62 skipped=33} pipelines=22 set0_created=32 slots_created=571 coop_yields=2 waits=207 faults=0 params_bytes=10347264 set_bytes=798751432 get_bytes=3234857472 copies=0 clears=207 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=207 submits=207 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 3 files 75497472 bytes to <checkout>/build/graph-dumps/graph_dit in 0.1 s
+   oracle: ggml_graph_oracle.exe --graph=dit --dump=<checkout>/build/graph-dumps/graph_dit --out=<checkout>/project/../gates/3-ggml-rd/graph/oracle-graph_dit.txt --ref=vulkan --check=cpu
+== graph_dit oracle: exited in 24.9 s
+   ORACLE graph=dit ref=vulkan check=cpu vk=precise dump=<checkout>/build/graph-dumps/graph_dit
+   ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+   ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+   ORACLE vulkan uses device 0
+   ORACLE vulkan_native status=0 nodes=103 ms=1145.5
+   ORACLE vulkan_native rerun status=0 ms=43.1 repeat=bit-identical
+   ORACLE vulkan_f32 status=0 nodes=103 ms=44.4
+   ORACLE vulkan_f32 rerun status=0 ms=42.2 repeat=bit-identical
+   ORACLE cpu_native status=0 nodes=103 ms=4291.4
+   ORACLE cpu_native rerun status=0 ms=5743.5 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=103 ms=6032.9
+   ORACLE cpu_f32 rerun status=0 ms=5941.8 repeat=bit-identical
+   PROBE graph dit cpu_bf16_vs_vulkan_bf16_oracle_check output=block_out n=6291456 rel_l2=5.567e-04 rel_l2_of_branch=0.001033 finite=1
+   PROBE graph dit cpu_f32_vs_vulkan_f32_oracle_check output=block_out n=6291456 rel_l2=4.507e-05 rel_l2_of_branch=0.000084 finite=1
+   ORACLE check cpu vs vulkan: native 5.567e-04 f32 4.507e-05
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=6291456)
+   ORACLE dit SUMMARY ref=vulkan(precise) weights=bf16 rel_l2(rd_bf16,vulkan_bf16)=8.764e-04 (<=1e-3: yes) rel_l2(rd_f32,vulkan_f32)=3.137e-07 (<=1e-4: yes) info rel_l2(rd_bf16,vulkan_f32)=3.137e-07 rel_l2(vulkan_bf16,vulkan_f32)=8.764e-04 rel_l2(rd_bf16,cpu_bf16)=9.304e-04 rel_l2(rd_f32,cpu_f32)=4.507e-05 ref_ms=1145/44 inputs=bit-identical wall_s=24.8
+   RESULT: PASS (oracle dit)
+== verdicts
+PASS graph_qwen: G3.graph Qwen3 decoder layer (f16): ggml-rd vs host ggml-cpu rel-L2 <= 1e-3, f32 arm <= 1e-4, elision == barrier-all bit for bit, dropped barrier detected
+PASS graph_sconv: G3.graph sparse-conv level (f16), vs host ggml-cpu: the same criteria
+PASS graph_dit8: G3.graph DiT block at 512 tokens (bf16), vs ggml-vulkan: the same criteria
+PASS graph_dit: G3.graph DiT block (bf16), vs ggml-vulkan: the same criteria
+PASS rule 4: no sync in its submit's frame (rule4_same_frame_syncs=0)
+close: CLOSED permanent_slots=0
+wall_s=380.6
+RESULT: PASS
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

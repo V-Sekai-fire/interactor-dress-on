@@ -1,0 +1,26 @@
+PROBE cost decode model: 28 layers, 926.9 MiB of weights and caches on RD0
+PROBE cost decode step=0 nodes=2135 dispatches=1265 barriers=1123 frames=4 build_us=7384 alloc_us=5606 set_us=13 host_us=29028 (pack 3926, prepare 15782, upload 68, record 5289, submit 3963) host_us_per_node=13.60 host_us_per_dispatch=22.95 wait_us=158449 read_us=906 step_total_us=201386 gpu_us=100737.0
+PROBE cost decode step=1 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7425 alloc_us=5722 set_us=11 host_us=10695 (pack 3695, prepare 274, upload 122, record 3594, submit 3010) host_us_per_node=5.01 host_us_per_dispatch=8.45 wait_us=99116 read_us=1076 step_total_us=124045 gpu_us=97109.1
+PROBE cost decode step=2 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7431 alloc_us=5710 set_us=12 host_us=10633 (pack 3745, prepare 270, upload 56, record 3641, submit 2921) host_us_per_node=4.98 host_us_per_dispatch=8.41 wait_us=22261 read_us=503 step_total_us=46550 gpu_us=21427.0
+PROBE cost decode step=3 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7366 alloc_us=5694 set_us=16 host_us=10548 (pack 3754, prepare 271, upload 54, record 3559, submit 2910) host_us_per_node=4.94 host_us_per_dispatch=8.34 wait_us=9451 read_us=405 step_total_us=33480 gpu_us=9170.0
+PROBE cost decode step=4 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7367 alloc_us=5681 set_us=11 host_us=10587 (pack 3717, prepare 265, upload 52, record 3601, submit 2952) host_us_per_node=4.96 host_us_per_dispatch=8.37 wait_us=9472 read_us=406 step_total_us=33524 gpu_us=9185.9
+PROBE cost decode step=5 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7438 alloc_us=5682 set_us=11 host_us=10746 (pack 3795, prepare 274, upload 60, record 3594, submit 3023) host_us_per_node=5.03 host_us_per_dispatch=8.49 wait_us=9426 read_us=404 step_total_us=33707 gpu_us=9210.0
+PROBE cost decode(profile2) step=6 nodes=2135 dispatches=1265 barriers=1123 frames=1 build_us=7439 alloc_us=5655 set_us=12 host_us=11637 (pack 4229, prepare 263, upload 53, record 4063, submit 3029) host_us_per_node=5.45 host_us_per_dispatch=9.20 wait_us=9417 read_us=241 step_total_us=34401 gpu_us=9186.1
+PROBE cost decode profile2 dispatches=1265 total_us=11637 pack_us=4229 prepare_us=263 upload_us=53 record_us=4063 submit_us=3029 (per reading 0.12 us; 3 readings per dispatch in this run)
+PROBE cost decode kernel=mul_mat_vec_f16_f32        dispatches=  197 barriers_before=  169 pack_us/dispatch=   3.92 record_us/dispatch=   3.16
+PROBE cost decode kernel=cpy_b32                    dispatches=  224 barriers_before=  168 pack_us/dispatch=   3.08 record_us/dispatch=   2.79
+PROBE cost decode kernel=concat_b32                 dispatches=  168 barriers_before=  168 pack_us/dispatch=   3.21 record_us/dispatch=   3.19
+PROBE cost decode kernel=repeat_b32                 dispatches=  169 barriers_before=  112 pack_us/dispatch=   3.04 record_us/dispatch=   2.82
+PROBE cost decode kernel=mul_f32                    dispatches=  141 barriers_before=  141 pack_us/dispatch=   2.41 record_us/dispatch=   3.21
+PROBE cost decode kernel=rms_norm_f32_t64           dispatches=  113 barriers_before=  113 pack_us/dispatch=   2.86 record_us/dispatch=   3.10
+PROBE cost decode kernel=mul_mat_vec_f32_f32        dispatches=   56 barriers_before=   56 pack_us/dispatch=   3.91 record_us/dispatch=   2.98
+PROBE cost decode kernel=rope_neox_f32              dispatches=   56 barriers_before=   56 pack_us/dispatch=   3.18 record_us/dispatch=   2.86
+PROBE cost decode kernel=add_f32                    dispatches=   56 barriers_before=   56 pack_us/dispatch=   2.07 record_us/dispatch=   3.27
+PROBE cost decode kernel=soft_max_f32_t64           dispatches=   28 barriers_before=   28 pack_us/dispatch=   3.00 record_us/dispatch=   2.75
+PROBE cost decode kernel=silu_f32                   dispatches=   28 barriers_before=   28 pack_us/dispatch=   1.86 record_us/dispatch=   3.29
+PROBE cost decode kernel=scale_f32                  dispatches=   28 barriers_before=   28 pack_us/dispatch=   2.11 record_us/dispatch=   3.00
+PROBE cost decode kernel=get_rows_f16               dispatches=    1 barriers_before=    0 pack_us/dispatch=  15.00 record_us/dispatch=  14.00
+PROBE cost decode SUMMARY steps=5 nodes=2135 dispatches/graph=1265 barriers/graph=1123 frames/graph=1 (cold 4) host_us=10633 (cold 29028; pack 3745 prepare 271 upload 56 record 3594 submit 2952) host_us/node=4.98 host_us/dispatch=8.41 build_us=7425 alloc_us=5694 wait_us=9472 read_us=406 step_us=33707 gpu_ms=9.21
+PROBE cost decode host_clock_us_per_reading=0.12
+RESULT: PASS (cost decode:5)
+ggml_test: rd stats graphs=104 nodes=60106 dispatches=41098 skipped=19008 barriers=28733 failed_graphs=0 last{nodes=2135 dispatches=1265 barriers=1123 skipped=870} pipelines=18 set0_created=44 slots_created=1265 coop_yields=5 waits=104 faults=0 params_bytes=10521088 set_bytes=314446108 get_bytes=175773088 copies=351 clears=97 buffers_live=0 bytes_live=0

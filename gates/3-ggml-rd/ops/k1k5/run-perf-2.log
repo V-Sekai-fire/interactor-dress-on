@@ -1,0 +1,5 @@
+ROW 2
+PERF SILU [3072,514,1,1] (skin-tokens x56) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=1579008 bytes_per_dispatch=12632064 OK
+perf 2: 1/1 rows OK
+RESULT: PASS (perf 2)
+ggml_test: rd stats graphs=48 nodes=1956 dispatches=1956 skipped=0 barriers=1908 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=33 slots_created=256 coop_yields=1 waits=48 faults=15 params_bytes=500736 set_bytes=629890320 get_bytes=629886208 copies=0 clears=3 buffers_live=0 bytes_live=0

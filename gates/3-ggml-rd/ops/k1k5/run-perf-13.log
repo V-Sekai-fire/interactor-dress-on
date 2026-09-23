@@ -1,0 +1,5 @@
+ROW 13
+PERF DIAG_MASK_INF [514,514,16,1] (skin-tokens x56) reps=64 iters=5 warmup=1 dispatches=64 barriers=63 elements=4227136 bytes_per_dispatch=33817088 OK
+perf 13: 1/1 rows OK
+RESULT: PASS (perf 13)
+ggml_test: rd stats graphs=114 nodes=9204 dispatches=9204 skipped=0 barriers=9090 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=8 set0_created=44 slots_created=256 coop_yields=1 waits=114 faults=15 params_bytes=2356224 set_bytes=629890320 get_bytes=629886208 copies=0 clears=14 buffers_live=0 bytes_live=0

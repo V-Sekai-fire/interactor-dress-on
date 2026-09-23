@@ -1,0 +1,28 @@
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+ggml_graph_qwen -> STARTED probe graph
+  status: DONE frames=46 pumps=46 vm_ms=1777.5 waits=45 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=21/39 detected nodes=76 dispatches=45 barriers=39/44 status=0/0/0/0 wall_s=1.8
+  RESULT: PASS (graph qwen)
+  ggml_graph_dump -> DUMPED 11 files 54272 bytes to user://graph-dump
+ggml_cost_decode -> STARTED probe cost
+  status: DONE frames=13 pumps=13 vm_ms=4013.2 waits=7 coops=5 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE cost decode SUMMARY steps=5 nodes=2135 dispatches/graph=1265 barriers/graph=1123 frames/graph=1 (cold 5) host_us=10483 (cold 34651; pack 3748 prepare 272 upload 59 record 3769 submit 2620) host_us/node=4.91 host_us/dispatch=8.29 build_us=7480 alloc_us=5748 wait_us=9245 read_us=226 step_us=33306 gpu_ms=9.14
+  RESULT: PASS (cost decode:5)
+ggml_cost_dit -> STARTED probe cost
+  status: DONE frames=9 pumps=9 vm_ms=8694.1 waits=5 coops=3 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE cost dit SUMMARY steps=3 nodes=3107 dispatches/graph=2115 barriers/graph=1903 frames/graph=1 (cold 4) host_us=16063 (cold 39797; pack 5185 prepare 408 upload 90 record 6109 submit 4301) host_us/node=5.17 host_us/dispatch=7.59 build_us=10642 alloc_us=9441 wait_us=1320879 read_us=228 step_us=1357291 gpu_ms=1319.01
+  RESULT: PASS (cost dit:3)
+ggml_graph_sconv -> STARTED probe graph
+  status: DONE frames=55 pumps=55 vm_ms=2700.4 waits=54 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE graph sconv SUMMARY weights=f16 reference=host (dumped: 6 outputs, 6.2 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=17/48 detected nodes=789 dispatches=571 barriers=359/570 status=0/0/0/0 wall_s=2.7 L=632 neighbours=6200/17064
+  RESULT: PASS (graph sconv)
+  ggml_graph_dump -> DUMPED 6 files 6512128 bytes to user://graph-dump
+ggml_graph_dit -> STARTED probe graph
+  status: DONE frames=55 pumps=55 vm_ms=4516.8 waits=54 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+  PROBE graph dit SUMMARY weights=bf16 reference=host (dumped: 3 outputs, 9.0 MiB) info rel_l2(rd_bf16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=9/48 detected nodes=103 dispatches=70 barriers=62/69 status=0/0/0/0 wall_s=4.5
+  RESULT: PASS (graph dit:8)
+  ggml_graph_dump -> DUMPED 3 files 9437184 bytes to user://graph-dump
+rule4: rule4_same_frame_syncs=0
+close: CLOSED permanent_slots=0
+wall_s=22.8
+RESULT: PASS

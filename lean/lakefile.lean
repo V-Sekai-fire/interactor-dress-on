@@ -50,6 +50,13 @@ lean_exe emit_drape where
 lean_exe emit_fit where
   root := `EmitFit
 
+-- The ggml-rd op kernels (Cut 3): Ggml.SlangCodegen.*, one family per
+-- module, all on the fixed layout of Ggml.SlangCodegen.Common.
+lean_lib Ggml
+
+lean_exe emit_ggml where
+  root := `EmitGgml
+
 -- Iterative-deepening witness search over the plausible ladder. Shares
 -- the `Level` shape (walkSteps / finBound / numInst) that witness-cpp
 -- mirrors on the C++ side, so a property stated here and a property

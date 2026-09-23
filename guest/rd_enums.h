@@ -23,4 +23,9 @@ constexpr int UNIFORM_TYPE_STORAGE_BUFFER = 8;
 // @GlobalScope.Error: OK is 0. buffer_update returns one.
 constexpr int GODOT_OK = 0;
 
+// RenderingDevice.MemoryType: MEMORY_TEXTURES=0 MEMORY_BUFFERS=1 MEMORY_TOTAL=2
+// (get_memory_usage's argument).
+constexpr int MEMORY_BUFFERS = 1;
+constexpr int MEMORY_TOTAL = 2;
+
 } // namespace rdc

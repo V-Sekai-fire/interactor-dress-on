@@ -1,0 +1,24 @@
+ORACLE graph=dit:8 ref=vulkan check=cpu vk=default dump=build/graph-dumps/graph_dit8
+ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+ORACLE vulkan uses device 0
+ORACLE vulkan_native status=0 nodes=103 ms=30.7
+ORACLE vulkan_native rerun status=0 ms=2.8 repeat=bit-identical
+ORACLE vulkan_f32 status=0 nodes=103 ms=30.1
+ORACLE vulkan_f32 rerun status=0 ms=2.8 repeat=bit-identical
+ORACLE cpu_native status=0 nodes=103 ms=1262.6
+ORACLE cpu_native rerun status=0 ms=1286.0 repeat=bit-identical
+ORACLE cpu_f32 status=0 nodes=103 ms=1020.1
+ORACLE cpu_f32 rerun status=0 ms=1285.0 repeat=bit-identical
+PROBE graph dit:8 cpu_bf16_vs_vulkan_bf16_oracle_check output=block_out n=786432 rel_l2=5.867e-04 rel_l2_of_branch=0.001090 finite=1
+PROBE graph dit:8 cpu_f32_vs_vulkan_f32_oracle_check output=block_out n=786432 rel_l2=1.100e-03 rel_l2_of_branch=0.002043 finite=1
+ORACLE check cpu vs vulkan: native 5.867e-04 f32 1.100e-03
+PROBE graph dit:8 vulkan_bf16_vs_vulkan_f32_info output=block_out n=786432 rel_l2=1.409e-03 rel_l2_of_branch=0.002617 finite=1
+ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=786432)
+PROBE graph dit:8 rd_bf16_vs_vulkan_bf16 output=block_out n=786432 rel_l2=8.795e-04 rel_l2_of_branch=0.001633 finite=1
+PROBE graph dit:8 rd_f32_vs_vulkan_f32 output=block_out n=786432 rel_l2=1.099e-03 rel_l2_of_branch=0.002041 finite=1
+PROBE graph dit:8 rd_bf16_vs_vulkan_f32_info output=block_out n=786432 rel_l2=1.099e-03 rel_l2_of_branch=0.002041 finite=1
+PROBE graph dit:8 rd_bf16_vs_cpu_bf16_info output=block_out n=786432 rel_l2=9.311e-04 rel_l2_of_branch=0.001729 finite=1
+PROBE graph dit:8 rd_f32_vs_cpu_f32_info output=block_out n=786432 rel_l2=4.507e-05 rel_l2_of_branch=0.000084 finite=1
+ORACLE dit:8 SUMMARY ref=vulkan(default) weights=bf16 rel_l2(rd_bf16,vulkan_bf16)=8.795e-04 (<=1e-3: yes) rel_l2(rd_f32,vulkan_f32)=1.099e-03 (<=1e-4: NO) info rel_l2(rd_bf16,vulkan_f32)=1.099e-03 rel_l2(vulkan_bf16,vulkan_f32)=1.409e-03 rel_l2(rd_bf16,cpu_bf16)=9.311e-04 rel_l2(rd_f32,cpu_f32)=4.507e-05 ref_ms=31/30 inputs=bit-identical wall_s=5.7
+RESULT: FAIL (oracle dit:8)

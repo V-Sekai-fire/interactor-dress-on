@@ -1,0 +1,5 @@
+ROW 8
+PERF SIGMOID [1,16384,1,1] (skin-tokens x212) reps=256 iters=5 warmup=1 dispatches=256 barriers=255 elements=16384 bytes_per_dispatch=131072 OK
+perf 8: 1/1 rows OK
+RESULT: PASS (perf 8)
+ggml_test: rd stats graphs=84 nodes=6084 dispatches=6084 skipped=0 barriers=6000 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=8 set0_created=39 slots_created=256 coop_yields=1 waits=84 faults=15 params_bytes=1557504 set_bytes=629890320 get_bytes=629886208 copies=0 clears=9 buffers_live=0 bytes_live=0

@@ -26,6 +26,9 @@
 //                    order the spans, and increments are lost; the probe
 //                    PASSes when they are (the hazard is still there, and
 //                    read-write sources are what avoid it).
+//   conv_perf <shape|all>  (probe_conv.cpp) the census' hottest IM2COL and
+//                    CONV_3D shapes: host-timed graphs of 1 and 9 copies,
+//                    and 4096 sampled outputs against a reference.
 #pragma once
 
 #include <string>

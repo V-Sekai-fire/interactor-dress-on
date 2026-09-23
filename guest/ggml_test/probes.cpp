@@ -19,6 +19,9 @@
 
 namespace probes {
 
+// probe_conv.cpp (family K7): the census' IM2COL and CONV_3D shapes, timed.
+bool conv_perf(ggml_backend_t be, const std::string &which);
+
 namespace {
 
 struct Args {
@@ -306,6 +309,13 @@ void job(void *) {
 		files(g_args.arg);
 	} else if (name == "alias") {
 		alias(g_args.arg != "ro");
+	} else if (name == "conv_perf") {
+		ggml_backend_t be = rd_backend();
+		const bool ok = be != nullptr && conv_perf(be, g_args.arg);
+		if (be != nullptr) {
+			ggml_backend_free(be);
+		}
+		result(ok, "conv_perf");
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -318,8 +328,8 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias") {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias)";
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "conv_perf") {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, conv_perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

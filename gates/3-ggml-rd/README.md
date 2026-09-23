@@ -123,6 +123,83 @@ the 16.7M-element cases.
     machine path, and two builds in different directories are byte
     identical.
 
+## Family K7: IM2COL and CONV_3D
+
+**Result: G3.ops PASS for IM2COL and CONV_3D** (`ops-k7/results.txt`:
+RESULT: PASS, RTX 4090). `test-backend-ops -o IM2COL,CONV_3D -b RD0` in the
+guest: **350/350 OK** (IM2COL 92, CONV_3D 258), 0 FAIL, **0 not supported**,
+so every census row (IM2COL f32 image -> f16 columns with an f16 kernel;
+CONV_3D f16 kernel x f32 input) runs on the GPU. The same 350 pass with a
+barrier after every dispatch. The control `GGML_RD_FAULT=1` (src1, the
+image or input, read one element off) fails **350/350**. The earlier probes
+and rule 4 (`rule4_same_frame_syncs=0`, `permanent_slots=0`) pass in the
+same run.
+
+Kernels (`lean/Ggml/SlangCodegen/Conv.lean`), one thread per output, no
+barriers, no groupshared (so no Serial sibling):
+
+| kernel | op | what |
+|---|---|---|
+| `im2col_f32` | IM2COL -> f32 | one thread per column element, 2-D and 1-D, stride/padding/dilation from op_params, the image through its strides |
+| `im2col_f16` | IM2COL -> f16 | one thread per 32-bit word of a contiguous dst (two halves; a half outside dst keeps the old bits), f32 -> f16 rounded to nearest even in integer arithmetic |
+| `conv3d_f32` | CONV_3D, f32 kernel | the IC x KD x KH x KW window summed in f32 in ggml-cpu's order; params read once, offsets advanced per loop level |
+| `conv3d_f16` | CONV_3D, f16 kernel | the same, the kernel read as f16 halves of `uint` words and the input rounded to f16 first, as ggml-cpu's im2col-into-f16 does |
+
+| level | verdict | numbers |
+|---|---|---|
+| L0 | **PASS** | the four kernels' whole texts pinned by `native_decide`, `im2col_at` shared verbatim by both IM2COL kernels, and `f32_to_f16`'s integer steps on 12 boundary values (65504, the 65520 tie to inf, 2^-14, 2^-24, the 2^-25 tie to 0, ties to even, NaN -> 0x7E00); `gen.sh` check finds the committed emission identical (`kernels/lean-build.log`). |
+| L1 | **PASS** | spirv-val and the fixed layout for all six kernels; the cpp emits compile for riscv64 (`kernels/l1.log`). |
+| L2 | **PASS** | 44 K7 cases (20 IM2COL, 24 CONV_3D) of 85, all within threshold: every IM2COL case bit-exact, f16 columns included (the stride/padding/dilation sweep, 1-D, Whisper's [3000,128] conv, odd-length f16 output, a permuted image, the census' 512x512x3 DINO patch embedding); CONV_3D NMSE <= 2.7e-13 against 5e-4 (the sweep, dilation, the asymmetric 5x1x3 kernel, a 1x1x1 kernel, a permuted input, both census shapes). Control: swapped strides detected in 40 of the 44, the 4 no-ops being CONV_3D kernels whose swapped strides are equal (KH = 1) or never used (1x1x1) (`kernels/l2-control.log`). |
+| L3 | **PASS** | 350/350 OK, barrier-all 350/350, fault 350/350 FAIL, 129 s of ops_main (the in-guest ggml-cpu reference dominates). Rule 8: `main.gd`'s K7 presets (`ggml_ops_conv`, `ggml_ops_conv_fault`, `ggml_probe_conv_perf`) through `project/probe_ggml_wrappers_k7.gd`: conv_perf PASS, 350/350, rule 4 at 0 (`ops-k7/wrappers.txt`). ADD,MUL on this ELF: unchanged, 100 OK, 90 not supported, fault 54/54. |
+| perf | **PASS** | `conv_perf` probe (`guest/ggml_test/probe_conv.cpp`) on the census' hottest shapes, see below; 4096 sampled outputs of each checked (f16 columns bit for bit, CONV_3D NMSE <= 1.9e-13). |
+
+GPU time per op on the RTX 4090, from the gate run (vsync off; host
+`Time.get_ticks_usec()` around 10 graph computes of 1 and of 17 independent
+copies, after at least 300 ms of untimed ones; per_op = the slope):
+
+| census shape | kernel | outputs | MACs | per op | one-op graph, frame included |
+|---|---|---|---|---|---|
+| IM2COL 512x512x3, 16x16 stride 16 -> [768,32,32] f16 (Pixal3D DINO) | im2col_f16 | 786,432 | - | 0.006 ms | 0.50 ms |
+| CONV_3D 16^3 x 8 -> 512, 3^3, f16 kernel (Pixal3D ss_dec, 19 per run) | conv3d_f16 | 2,097,152 | 453 M | 0.81 ms | 1.23 ms |
+| CONV_3D 64^3 x 32 -> 1, 3^3, f16 kernel (Pixal3D ss_dec) | conv3d_f16 | 262,144 | 226 M | 0.55 ms | 0.91 ms |
+
+The warm-up matters: the same probe without it (5 timed computes after 1)
+read 1.48 and 0.71 ms, and 2.14 and 1.11 ms before the params words were
+hoisted into locals and the offsets advanced per loop level. Those runs
+paid the GPU's clock ramp, so only their order is comparable. Under
+`main.gd` (`ops-k7/wrappers.txt`, vsync on) every graph takes one 16.7 ms
+frame whatever it holds, so the slope there is noise: the gate is the
+measurement. What the inner loop still pays is the exact f16 rounding of
+the input (ggml-cpu's semantics), once per multiply-add in a
+one-thread-per-output kernel.
+
+What K7 found:
+
+1. **slangc's C++ `f32tof16` rounds ties away from zero** (it adds the
+   first dropped bit and ignores the rest), and SPIR-V leaves a half
+   conversion's rounding to the driver. ggml rounds to nearest even. The
+   kernels round in integer arithmetic (`f32_to_f16`), so f16 columns are
+   bit-identical to ggml-cpu on both targets (L2 and the probe).
+2. **A half-precision store would need 16-bit storage and `Float16`**
+   (LeanSlang: slangc declares both for a `half` buffer). `im2col_f16`
+   writes `uint` words instead, one thread per word; the packer launches
+   one thread per word from dst's first half to its last, so an odd offset
+   or length is handled and nothing outside dst changes.
+3. **IM2COL reads src0 for its shape only**, so the L2 swap-nb control on
+   src0 changes no address; an `L2Case` now names the source the control
+   swaps (`control_src`, 1 for IM2COL). And a swapped stride can point far
+   outside the harness's memory block: the harness builds the emits with
+   `SLANG_ENABLE_BOUND_ZERO_INDEX` (an out-of-range index reads element 0,
+   as a robust Vulkan device reads zeros), so the control fails a case
+   instead of the process.
+
+Run it: `godot --path project --script gate_ggml_rd.gd --rendering-driver
+vulkan --xr-mode off ++ --ops=IM2COL,CONV_3D --fault-ops=IM2COL,CONV_3D
+--out=ops-k7 --probe=conv_perf:all` (the gate's user arguments are new:
+`--ops`, `--fault-ops`, `--out`, `--probe`, so an op family gates its own
+ops into its own folder; with none, the gate runs as before, with `OPS`
+now `ADD,MUL,IM2COL,CONV_3D`).
+
 ## How ggml-rd works
 
 - **One params table, no push constants.** Every dispatch of a graph owns a
@@ -167,6 +244,7 @@ the 16.7M-element cases.
 lean/Ggml.lean                          Ggml.kernels / Ggml.controls: one import + one ++ line per family
 lean/Ggml/SlangCodegen/Common.lean      the fixed layout, the params words, helpers, entry1D, paramsHeader
 lean/Ggml/SlangCodegen/Binary.lean      ADD/MUL f32 with broadcast: the reference kernel (+ its control)
+lean/Ggml/SlangCodegen/Conv.lean        IM2COL (f32, f16 columns) and CONV_3D (f32, f16 kernel), family K7
 lean/EmitGgml.lean                      lake exe emit_ggml <outDir> [<params header>]
 kernels/ggml/kernels.txt                kernel names; a kernel's id is its line index
 kernels/ggml/controls.txt               control kernels, gates only
@@ -180,8 +258,10 @@ guest/ggml-rd/rd_kernels.cpp            pipelines, the params table, slot sets, 
 guest/ggml-rd/rd_pack.{h,cpp}           the packer core (no RenderingDevice; the L2 harness links it)
 guest/ggml-rd/ggml_rd_params.h          generated from Common.lean, committed
 guest/ggml-rd/ops/<op>.cpp              one packer file per op family; ops/binary.cpp is the template
+                                        (ops/im2col.cpp, ops/conv3d.cpp: K7)
 guest/pump/, guest/fiber/               the pump protocol on Gate 0F's fiber
 guest/ggml_test/                        ggml_test.elf: test-backend-ops and the probes on the pump
+                                        (probe_conv.cpp: K7's timed census shapes)
 project/infer_host.gd                   the host side of the pump
 project/gate_ggml_rd.gd                 this gate (OPS lists the ops under test)
 tests/ggml_rd_kernels/                  L2: main.cpp, l2.h, cases/<family>.cpp, build.sh
@@ -215,13 +295,15 @@ tests/ggml_rd_kernels/                  L2: main.cpp, l2.h, cases/<family>.cpp, 
    template.
 5. **L2.** `tests/ggml_rd_kernels/cases/<family>.cpp` with `L2_CASES`
    (~20 shapes: permuted, broadcast, odd sizes; test-backend-ops thresholds;
-   `cases/binary.cpp` is the template), then
+   `cases/binary.cpp` is the template; set `control_src = 1` when the op
+   reads src0 for its shape only), then
    `tests/ggml_rd_kernels/build.sh`: `l2.log` and `l2-control.log` PASS
    (each checkout builds in its own `C:/b/ggml-rd-l2-<hash>`).
 6. **L0, L1.** `gates/3-ggml-rd/kernels/l0.sh` and `l1.sh` PASS.
 7. **L3.** `./build.sh`, add the op to `OPS` in `project/gate_ggml_rd.gd`
    (the lead merges that line), run the gate: 0 FAIL, and the per-op line
-   shows the op's cases OK.
+   shows the op's cases OK. `++ --ops=<yours> --fault-ops=<yours>
+   --out=ops-<family>` gates only your ops, into your own folder.
 
 Rules a kernel must keep:
 - A source and the destination are usually the same RD buffer, bound twice.

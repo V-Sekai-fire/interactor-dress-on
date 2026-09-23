@@ -27,13 +27,25 @@
 # Results: gates/3-ggml-rd/ops/results.txt (results-headless.txt headless),
 # each run's full output in run-<name>.log beside it; the last line is
 # RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
+#
+# An op family runs the same gate on its own ops, into its own folder,
+# with user arguments after `++`:
+#   ... --script gate_ggml_rd.gd --rendering-driver vulkan --xr-mode off ++ \
+#       --ops=IM2COL,CONV_3D --fault-ops=IM2COL,CONV_3D --out=ops-k7 --probe=conv_perf:all
+#   --ops=<list>        test-backend-ops -o for ops_main and ops_barrier_all (default OPS)
+#   --fault-ops=<list>  -o for the GGML_RD_FAULT=1 control (default ADD); every case must FAIL
+#   --out=<folder>      under gates/3-ggml-rd/ (default ops)
+#   --probe=<name>:<arg>  one more probe run (repeatable), which must print RESULT: PASS
 extends SceneTree
 
 const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
-const OPS := "ADD,MUL"
-const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
+const OPS := "ADD,MUL,IM2COL,CONV_3D"
+var OUT_DIR := "res://../gates/3-ggml-rd/ops/"
+var _ops := OPS
+var _fault_ops := "ADD"
+var _extra_probes: Array = []
 const WALL_S := 1800.0
 # The device memory ggml-rd reports as total (free = total - allocated):
 # Godot has no call for it, so the host states it (24 GiB here).
@@ -74,8 +86,21 @@ func _strip_ansi(t: String) -> String:
 	re.compile("\u001b\\[[0-9;]*m")
 	return re.sub(t, "", true)
 
+func _parse_user_args() -> void:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--ops="):
+			_ops = a.trim_prefix("--ops=")
+		elif a.begins_with("--fault-ops="):
+			_fault_ops = a.trim_prefix("--fault-ops=")
+		elif a.begins_with("--out="):
+			OUT_DIR = "res://../gates/3-ggml-rd/%s/" % a.trim_prefix("--out=")
+		elif a.begins_with("--probe="):
+			var pa := a.trim_prefix("--probe=").split(":", true, 1)
+			_extra_probes.append(["probe_%s" % pa[0], "probe", pa[0], pa[1] if pa.size() > 1 else "", ""])
+
 func _initialize() -> void:
 	_t0 = Time.get_ticks_msec()
+	_parse_user_args()
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	_rd = RenderingServer.create_local_rendering_device()
@@ -114,10 +139,11 @@ func _initialize() -> void:
 			["probe_files", "probe", "files", probe_file, ""],
 			["probe_alias_rw", "probe", "alias", "rw", ""],
 			["probe_alias_ro_control", "probe", "alias", "ro", ""],
-			["ops_main", "ops", "-o %s -b RD0" % OPS, ""],
-			["ops_barrier_all", "ops", "-o %s -b RD0" % OPS, "GGML_RD_BARRIER_ALL=1"],
-			["ops_fault", "ops", "-o ADD -b RD0", "GGML_RD_FAULT=1"],
+			["ops_main", "ops", "-o %s -b RD0" % _ops, ""],
+			["ops_barrier_all", "ops", "-o %s -b RD0" % _ops, "GGML_RD_BARRIER_ALL=1"],
+			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 		]
+		_runs.append_array(_extra_probes)
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
@@ -254,7 +280,7 @@ func _checks() -> void:
 		var r = _results.get(n, {})
 		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
 				and str(r.get("backend_line", "")).ends_with("OK"),
-				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, OPS, r.get("ok", 0),
+				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, _ops, r.get("ok", 0),
 				r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
 	var m = _results.get("ops_main", {})
 	var b = _results.get("ops_barrier_all", {})
@@ -262,8 +288,10 @@ func _checks() -> void:
 			"barrier elision and barrier-after-every-dispatch pass the same cases")
 	var f = _results.get("ops_fault", {})
 	_verdict(f.get("state", "") == "done" and f.get("fail", 0) > 0 and f.get("ok", -1) == 0,
-			"control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case: FAIL=%d OK=%d (%s)" % [
-			f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
+			"control: GGML_RD_FAULT=1 (a source read one element off) fails every %s case: FAIL=%d OK=%d (%s)" % [
+			_fault_ops, f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
+	for p in _extra_probes:
+		_verdict(_probe_pass(p[0]), "%s %s" % [p[0], p[3]])
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
 	var re := RegEx.new()
 	re.compile("rule4_same_frame_syncs=(\\d+)")

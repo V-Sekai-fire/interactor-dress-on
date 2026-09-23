@@ -10,4 +10,4 @@ tools/oxrsys/
 lean/.lake/
 
 # Gate 3 writes this probe input at run time.
-/gates/3-ggml-rd/ops/upload_probe.f32
+/gates/3-ggml-rd/*/upload_probe.f32

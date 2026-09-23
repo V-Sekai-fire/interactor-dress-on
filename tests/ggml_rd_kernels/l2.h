@@ -26,6 +26,9 @@ struct L2Case {
 	std::function<ggml_tensor *(ggml_context *ctx)> build;
 	float lo = -1.0f, hi = 1.0f; // leaves are uniform in [lo, hi)
 	double max_nmse = 1e-7; // test-backend-ops' default for these ops
+	// The source whose nb1 and nb2 the swap-nb control swaps: 0, or 1 for
+	// an op that reads src0 for its shape only (IM2COL).
+	int control_src = 0;
 };
 
 using L2Maker = void (*)(std::vector<L2Case> &out);

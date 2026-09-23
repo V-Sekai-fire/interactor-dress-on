@@ -49,4 +49,8 @@ target_include_directories(ggml_rd_l2 PRIVATE
 	${ROOT}/kernels/ggml/cpp
 	${ROOT}/guest/avbd/slang-rt
 )
+# An emit's out-of-range index reads element 0 instead of leaving the block
+# (as a robust Vulkan device reads zeros): a control's swapped strides can
+# point far past the memory, and must then fail a case, not the process.
+target_compile_definitions(ggml_rd_l2 PRIVATE SLANG_ENABLE_BOUND_ZERO_INDEX)
 target_link_libraries(ggml_rd_l2 PRIVATE ggml ggml-cpu ggml-base -static)

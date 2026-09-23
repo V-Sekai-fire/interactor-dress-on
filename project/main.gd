@@ -423,6 +423,10 @@ func ggml_probe_chain() -> String: return ggml_probe_start("chain", "256", "")
 func ggml_probe_independent() -> String: return ggml_probe_start("independent", "64", "")
 func ggml_probe_alias_rw() -> String: return ggml_probe_start("alias", "rw", "")
 func ggml_probe_alias_ro() -> String: return ggml_probe_start("alias", "ro", "")  # the control: must lose counts
+# Family K7 (IM2COL, CONV_3D).
+func ggml_ops_conv() -> String: return ggml_ops_start("-o IM2COL,CONV_3D -b RD0", "")
+func ggml_ops_conv_fault() -> String: return ggml_ops_start("-o IM2COL,CONV_3D -b RD0", "GGML_RD_FAULT=1")  # must FAIL
+func ggml_probe_conv_perf() -> String: return ggml_probe_start("conv_perf", "all", "")
 func ggml_probe_files() -> String:
 	var path := ProjectSettings.globalize_path("user://ggml_upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)

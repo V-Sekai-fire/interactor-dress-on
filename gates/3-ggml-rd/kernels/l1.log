@@ -1,6 +1,6 @@
-# ggml-rd L1, 2026-09-23T06:41:33Z, 2026.13.1-1-g84792eb15
-== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 
-layout ok: add_f32, mul_f32
+# ggml-rd L1, 2026-09-23T07:38:03Z, 2026.13.1-1-g84792eb15
+== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 im2col_f32 im2col_f16 conv3d_f32 conv3d_f16 
+layout ok: add_f32, mul_f32, im2col_f32, im2col_f16, conv3d_f32, conv3d_f16
 PASS layout
 == negative: add_f32 at slangc's default -O1 with -preserve-params (must fail)
 layout error: add_f32_o1: SPIR-V layout differs: missing ['s2'], extra [], wrong []
@@ -11,4 +11,8 @@ PASS saxpby is refused
 == cpp emits compiled for riscv64 (clang version 23.1.1 (https://github.com/llvm/llvm-project 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
 PASS riscv64 add_f32 (3784 bytes of object)
 PASS riscv64 mul_f32 (3784 bytes of object)
+PASS riscv64 im2col_f32 (4232 bytes of object)
+PASS riscv64 im2col_f16 (5520 bytes of object)
+PASS riscv64 conv3d_f32 (4912 bytes of object)
+PASS riscv64 conv3d_f16 (6288 bytes of object)
 RESULT: PASS

@@ -1,6 +1,7 @@
 import LeanSlang
 import Ggml.SlangCodegen.Common
 import Ggml.SlangCodegen.Binary
+import Ggml.SlangCodegen.Conv
 
 /-!
 # `Ggml` — the ggml-rd op kernels (Lean → Slang → spirv | cpp)
@@ -17,6 +18,7 @@ namespace Ggml
 
 def kernels : List (String × LeanSlang.SlangShaderModule) :=
   Ggml.SlangCodegen.Binary.kernels
+  ++ Ggml.SlangCodegen.Conv.kernels
 
 /-- Control kernels: deliberately off the fixed layout, for gates only
     (kernels/ggml/controls.txt). -/

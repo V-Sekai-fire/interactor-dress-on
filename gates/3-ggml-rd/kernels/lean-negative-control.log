@@ -1,4 +1,4 @@
-# ggml-rd L0 negative controls, 2026-09-23T06:41:27Z
+# ggml-rd L0 negative controls, 2026-09-23T07:37:54Z
 == (1) native_decide on add_f32's pin with numthreads 256 -> 128 (must be rejected)
 <tmp>/NegGgml.lean:6:2: error: Tactic `native_decide` evaluated that the proposition
   LeanSlang.emit addF32 = expectedAdd.replace "[numthreads(256, 1, 1)]" "[numthreads(128, 1, 1)]"

@@ -1,16 +1,16 @@
-# ggml-rd L0, 2026-09-23T06:41:19Z
+# ggml-rd L0, 2026-09-23T07:37:38Z
 == lake build Ggml
-Build completed successfully (13 jobs).
+Build completed successfully (14 jobs).
 PASS lake build Ggml
 == kernels/ggml/gen.sh (check mode: Lean's emission vs the committed files)
 == emitting Slang from Lean at <checkout>/lean ==
-== 2 kernels, 1 control(s) and the params header match Lean ==
+== 6 kernels, 1 control(s) and the params header match Lean ==
 == slangc -target cpp ==
 == slangc -target spirv -O0 -preserve-params (+ reflection), spirv-val ==
 == fixed-layout check + kernel table ==
-wrote <checkout>/kernels/ggml/GgmlKernelTable.inc: 2 kernels, all on the fixed layout
+wrote <checkout>/kernels/ggml/GgmlKernelTable.inc: 6 kernels, all on the fixed layout
 == embedding SPIR-V ==
-embedded 2 kernels, 8408 bytes -> <tmp>/build/ggml_kernels.inc
+embedded 6 kernels, 44396 bytes -> <tmp>/build/ggml_kernels.inc
 == controls: compiled alike, the layout check must refuse each ==
 control ctl_add_f32_rosrc: refused by the layout check, as it must be
 embedded 1 kernels, 4240 bytes -> <tmp>/build/ggml_controls.inc

@@ -1,40 +1,20 @@
-# Gate 3 (G3.ops): ggml's test-backend-ops in the guest (ggml_test.elf),
-# ggml-rd on the GPU against the in-guest ggml-cpu, plus the ggml-rd probes.
+# Gate 3, K8: the serial-sibling A/B. test-backend-ops -o FLASH_ATTN_EXT -b RD0
+# in the guest (ggml_test.elf) with GGML_RD_SERIAL=1, so ggml-rd dispatches the
+# _serial kernels (one thread per query row, no groupshared; the ones the host
+# L2 test runs through their cpp emits) instead of the tiled ones on the GPU.
+# Both must pass the same cases; gate_ggml_rd.gd runs the tiled ones.
 #
-#   godot --path project --script gate_ggml_rd.gd --rendering-driver vulkan --xr-mode off
-#   godot --headless --path project --script gate_ggml_rd.gd      (the no-device control)
+#   godot --path project --script gate_ggml_rd_serial.gd --rendering-driver vulkan --xr-mode off
 #
-# Frame-driven: the host owns a local RenderingDevice, attaches it to the
-# guest, and advances each job with InferHost.pump_frame() once per frame
-# (WAIT_GPU after every submit, so every sync lands a frame after its
-# submit: AGENTS.md rule 4). Runs, in order:
-#   probe chain        256 in-place ADDs on one tensor, one graph: exact, 255 barriers
-#   probe chain        the same under GGML_RD_BARRIER_ALL=1
-#   probe independent  64 ADD/MULs into separate outputs: exact, 0 barriers
-#   probe independent  the same under GGML_RD_BARRIER_ALL=1: 63 barriers
-#   probe files        READ + UPLOAD of a host file into an RD buffer, x + x
-#   probe alias rw     x += 1 in place x1000 across barriers, read-write sources: exact
-#   probe alias ro     the same with the read-only-source control kernel: must lose counts
-#   ops main           test-backend-ops -o <OPS> -b RD0: 0 FAIL, every case OK or not supported
-#   ops barrier_all    the same under GGML_RD_BARRIER_ALL=1: 0 FAIL
-#   ops fault          -o ADD with GGML_RD_FAULT=1 (a source offset +1): the
-#                      control, it must FAIL
-# and then the rule-4 counter (syncs in their submit's frame) must be 0.
-# Headless (no RenderingDevice): one run, -o ADD -b RD0, which must print
-# "no RD device" and test no RD0 case: the flat control that separates
-# "the GPU path is not there" from "the kernels are wrong".
-#
-# Results: gates/3-ggml-rd/ops/results.txt (results-headless.txt headless),
-# each run's full output in run-<name>.log beside it; the last line is
-# RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
+# Results: gates/3-ggml-rd/ops/fa-serial/results.txt (last line RESULT) and
+# run-ops_serial.log beside it. Quits on a wall clock whatever it is doing.
 extends SceneTree
 
 const InferHost := preload("res://infer_host.gd")
-# The ops under test, as test-backend-ops -o takes them. An op family adds
-# its ops here (the lead merges this line); ADD stays the fault control.
-const OPS := "ADD,MUL,FLASH_ATTN_EXT"
-const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
-const WALL_S := 3600.0
+# The ops whose packers have _serial siblings (GGML_RD_SERIAL=1 selects them).
+const OPS := "FLASH_ATTN_EXT"
+const OUT_DIR := "res://../gates/3-ggml-rd/ops/fa-serial/"
+const WALL_S := 1800.0
 # The device memory ggml-rd reports as total (free = total - allocated):
 # Godot has no call for it, so the host states it (24 GiB here).
 const TOTAL_MB := 24576
@@ -103,38 +83,10 @@ func _initialize() -> void:
 	_say("attach: %s" % a)
 	_host = InferHost.new(_sb, _rd, "ggml_pump")
 	if _headless:
-		_runs = [["ops_no_device", "ops", "-o ADD -b RD0", ""]]
-	else:
-		var probe_file := _write_probe_file()
-		_runs = [
-			["probe_chain", "probe", "chain", "256", ""],
-			["probe_chain_barrier_all", "probe", "chain", "256", "GGML_RD_BARRIER_ALL=1"],
-			["probe_independent", "probe", "independent", "64", ""],
-			["probe_independent_barrier_all", "probe", "independent", "64", "GGML_RD_BARRIER_ALL=1"],
-			["probe_files", "probe", "files", probe_file, ""],
-			["probe_alias_rw", "probe", "alias", "rw", ""],
-			["probe_alias_ro_control", "probe", "alias", "ro", ""],
-			["ops_main", "ops", "-o %s -b RD0" % OPS, ""],
-			["ops_barrier_all", "ops", "-o %s -b RD0" % OPS, "GGML_RD_BARRIER_ALL=1"],
-			["ops_fault", "ops", "-o ADD -b RD0", "GGML_RD_FAULT=1"],
-		]
-
-# 4096 f32s with a spread of values (and -0, a tiny normal, the largest
-# finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
-func _write_probe_file() -> String:
-	var path := ProjectSettings.globalize_path(OUT_DIR + "upload_probe.f32")
-	var f := FileAccess.open(path, FileAccess.WRITE)
-	for i in 4096:
-		var v := 0.5 * i - 7.25
-		if i == 1:
-			v = -0.0
-		elif i == 2:
-			v = 1.0e-30
-		elif i == 3:
-			v = 3.4028234e38
-		f.store_float(v)
-	f.close()
-	return path
+		_verdict(false, "no RenderingDevice (run with --rendering-driver vulkan, not --headless)")
+		_finish()
+		return
+	_runs = [["ops_serial", "ops", "-o %s -b RD0" % OPS, "GGML_RD_SERIAL=1"]]
 
 func _process(_delta: float) -> bool:
 	if _done:
@@ -238,35 +190,14 @@ func _probe_pass(name: String) -> bool:
 
 func _checks() -> void:
 	_say("== verdicts")
-	if _headless:
-		var r = _results.get("ops_no_device", {})
-		var t: String = r.get("text", "")
-		_verdict(r.get("state", "") == "done" and t.contains("no RD device") and t.contains("Testing 1 devices")
-				and not t.contains("Backend RD0:") and r.get("ok", -1) == 0,
-				"headless control: 'no RD device', 1 device (CPU), no RD0 case run")
-		return
-	for n in ["probe_chain", "probe_chain_barrier_all", "probe_independent", "probe_independent_barrier_all", "probe_files"]:
-		_verdict(_probe_pass(n), "%s" % n)
-	_verdict(_probe_pass("probe_alias_rw"), "probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact")
-	_verdict(_probe_pass("probe_alias_ro_control"),
-			"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
-	for n in ["ops_main", "ops_barrier_all"]:
-		var r = _results.get(n, {})
-		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
-				and str(r.get("backend_line", "")).ends_with("OK"),
-				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, OPS, r.get("ok", 0),
-				r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
-	var m = _results.get("ops_main", {})
-	var b = _results.get("ops_barrier_all", {})
-	_verdict(m.get("ok", -1) == b.get("ok", -2) and m.get("unsupported", -1) == b.get("unsupported", -2),
-			"barrier elision and barrier-after-every-dispatch pass the same cases")
-	var f = _results.get("ops_fault", {})
-	_verdict(f.get("state", "") == "done" and f.get("fail", 0) > 0 and f.get("ok", -1) == 0,
-			"control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case: FAIL=%d OK=%d (%s)" % [
-			f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
+	var r = _results.get("ops_serial", {})
+	_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
+			and str(r.get("backend_line", "")).ends_with("OK"),
+			"ops_serial: test-backend-ops -o %s -b RD0 with GGML_RD_SERIAL=1: OK=%d FAIL=%d not_supported=%d (%s)" % [
+			OPS, r.get("ok", 0), r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
 	var re := RegEx.new()
-	re.compile("rule4_same_frame_syncs=(\\d+)")
+	re.compile("rule4_same_frame_syncs=([0-9]+)")
 	var mm := re.search(stats)
 	_verdict(mm != null and int(mm.get_string(1)) == 0, "rule 4: no sync in its submit's frame (%s)" % (mm.get_string(0) if mm else "?"))
 

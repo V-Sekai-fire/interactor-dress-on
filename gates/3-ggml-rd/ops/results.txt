@@ -1,52 +1,54 @@
-# Gate 3 G3.ops, 2026-09-23T06:41:53, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+# Gate 3 G3.ops, 2026-09-23T07:37:27, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
 attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
-== probe_chain: done in 0.1 s, frames=3 pumps=3 vm_ms=100.1 waits=1 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+== probe_chain: done in 0.1 s, frames=3 pumps=3 vm_ms=61.5 waits=1 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
    PROBE chain n=256 status=0 nodes=256 dispatches=256 barriers=255 exact=256/256 x[0]=256 x[255]=256 barrier_all=0
    RESULT: PASS (chain)
    rd: graphs=1 nodes=256 dispatches=256 skipped=0 barriers=255 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=1 set0_created=1 slots_created=256 coop_yields=1 waits=1 faults=0 params_bytes=65536 set_bytes=2048 get_bytes=1024 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=1 submits=1 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== probe_chain_barrier_all: done in 0.0 s, frames=2 pumps=2 vm_ms=9.2 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+== probe_chain_barrier_all: done in 0.0 s, frames=2 pumps=2 vm_ms=8.4 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
    PROBE chain n=256 status=0 nodes=256 dispatches=256 barriers=255 exact=256/256 x[0]=256 x[255]=256 barrier_all=1
    RESULT: PASS (chain)
    rd: graphs=2 nodes=512 dispatches=512 skipped=0 barriers=510 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=1 set0_created=2 slots_created=256 coop_yields=1 waits=2 faults=0 params_bytes=131072 set_bytes=4096 get_bytes=2048 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=2 submits=2 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== probe_independent: done in 0.1 s, frames=2 pumps=2 vm_ms=60.5 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+== probe_independent: done in 0.0 s, frames=2 pumps=2 vm_ms=36.5 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
    PROBE independent n=64 status=0 dispatches=64 barriers=0 (want 0) exact=64000/64000 barrier_all=0
    RESULT: PASS (independent)
    rd: graphs=3 nodes=576 dispatches=576 skipped=0 barriers=510 failed_graphs=0 last{nodes=64 dispatches=64 barriers=0 skipped=0} pipelines=2 set0_created=3 slots_created=256 coop_yields=1 waits=3 faults=0 params_bytes=147456 set_bytes=12096 get_bytes=258048 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=3 submits=3 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== probe_independent_barrier_all: done in 0.0 s, frames=2 pumps=2 vm_ms=39.2 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+== probe_independent_barrier_all: done in 0.0 s, frames=2 pumps=2 vm_ms=35.6 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
    PROBE independent n=64 status=0 dispatches=64 barriers=63 (want 63) exact=64000/64000 barrier_all=1
    RESULT: PASS (independent)
    rd: graphs=4 nodes=640 dispatches=640 skipped=0 barriers=573 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=2 set0_created=4 slots_created=256 coop_yields=1 waits=4 faults=0 params_bytes=163840 set_bytes=20096 get_bytes=514048 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=4 submits=4 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== probe_files: done in 0.0 s, frames=2 pumps=4 vm_ms=4.3 waits=1 coops=0 reads=1 read_bytes=16384 uploads=1 upload_bytes=16384
+== probe_files: done in 0.0 s, frames=2 pumps=4 vm_ms=4.0 waits=1 coops=0 reads=1 read_bytes=16384 uploads=1 upload_bytes=16384
    PROBE files path=<checkout>/project/../gates/3-ggml-rd/ops/upload_probe.f32 read_bytes=16384 upload_offset=512 upload_exact=4096/4096 x+x_exact=4096/4096 status=0
    RESULT: PASS (files)
    rd: graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=36480 get_bytes=546816 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=5 submits=5 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== probe_alias_rw: done in 0.0 s, frames=2 pumps=2 vm_ms=14.0 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+== probe_alias_rw: done in 0.0 s, frames=2 pumps=2 vm_ms=17.2 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
    PROBE alias rw kernel=add_f32 rounds=1000 barriers=999 elements=4096 exact=4096/4096 min=1000 max=1000 mean=1000.0 (want 1000)
    RESULT: PASS (alias rw)
    rd: graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=69248 get_bytes=563200 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=6 submits=6 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== probe_alias_ro_control: done in 0.0 s, frames=2 pumps=2 vm_ms=31.4 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
-   PROBE alias ro kernel=ctl_add_f32_rosrc rounds=1000 barriers=999 elements=4096 exact=0/4096 min=23 max=95 mean=35.4 (want 1000)
+== probe_alias_ro_control: done in 0.0 s, frames=2 pumps=2 vm_ms=9.0 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE alias ro kernel=ctl_add_f32_rosrc rounds=1000 barriers=999 elements=4096 exact=0/4096 min=25 max=109 mean=54.4 (want 1000)
    RESULT: PASS (alias ro (control))
    rd: graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=102016 get_bytes=579584 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=7 submits=7 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== ops_main: done in 149.0 s, frames=101 pumps=101 vm_ms=148938.2 waits=100 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
-   cases: OK=100 FAIL=0 not_supported=90 | 100/100 tests passed | Backend RD0: OK
+== ops_main: done in 882.5 s, frames=251 pumps=251 vm_ms=882393.8 waits=250 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=250 FAIL=0 not_supported=5087 | 250/250 tests passed | Backend RD0: OK
    ADD: OK=54 FAIL=0 not_supported=45
    MUL: OK=46 FAIL=0 not_supported=45
-   rd: graphs=519 nodes=1341 dispatches=814 skipped=527 barriers=646 failed_graphs=0 last{nodes=35 dispatches=16 barriers=15 skipped=19} pipelines=2 set0_created=105 slots_created=256 coop_yields=1 waits=105 faults=0 params_bytes=208384 set_bytes=815871592 get_bytes=1433562128 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=107 submits=107 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== ops_barrier_all: done in 149.2 s, frames=101 pumps=101 vm_ms=149135.0 waits=100 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
-   cases: OK=100 FAIL=0 not_supported=90 | 100/100 tests passed | Backend RD0: OK
+   FLASH_ATTN_EXT: OK=150 FAIL=0 not_supported=4997
+   rd: graphs=1719 nodes=2541 dispatches=964 skipped=1577 barriers=646 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=6 set0_created=255 slots_created=256 coop_yields=1 waits=255 faults=0 params_bytes=246784 set_bytes=1743885928 get_bytes=2128301072 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=257 submits=257 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== ops_barrier_all: done in 705.2 s, frames=252 pumps=252 vm_ms=705044.7 waits=250 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=250 FAIL=0 not_supported=5087 | 250/250 tests passed | Backend RD0: OK
    ADD: OK=54 FAIL=0 not_supported=45
    MUL: OK=46 FAIL=0 not_supported=45
-   rd: graphs=1033 nodes=2041 dispatches=987 skipped=1054 barriers=719 failed_graphs=0 last{nodes=35 dispatches=16 barriers=15 skipped=19} pipelines=2 set0_created=205 slots_created=256 coop_yields=1 waits=205 faults=0 params_bytes=252672 set_bytes=1631641168 get_bytes=2866544672 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=207 submits=207 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
-== ops_fault: done in 76.7 s, frames=56 pumps=56 vm_ms=76712.1 waits=54 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   FLASH_ATTN_EXT: OK=150 FAIL=0 not_supported=4997
+   rd: graphs=3433 nodes=4441 dispatches=1287 skipped=3154 barriers=719 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=6 set0_created=505 slots_created=256 coop_yields=2 waits=505 faults=0 params_bytes=329472 set_bytes=3487669840 get_bytes=4256022560 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=507 submits=507 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== ops_fault: done in 64.9 s, frames=56 pumps=56 vm_ms=64846.0 waits=54 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
    cases: OK=0 FAIL=54 not_supported=45 | 0/54 tests passed | Backend RD0: FAIL
    ADD: OK=0 FAIL=54 not_supported=45
-   failed: [ADD] ERR = 1.712485981 > 0.000000100   ADD(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
-   failed: [ADD] ERR = 0.141541743 > 0.000000100   ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
-   failed: [ADD] ERR = 1.006366390 > 0.000000100   ADD(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
-   failed: [ADD] ERR = 0.925256712 > 0.000000100   ADD(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
-   failed: [ADD] ERR = 0.955425877 > 0.000000100   ADD(type=f32,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
-   rd: graphs=1304 nodes=2464 dispatches=1099 skipped=1365 barriers=777 failed_graphs=0 last{nodes=35 dispatches=16 barriers=15 skipped=19} pipelines=2 set0_created=259 slots_created=256 coop_yields=2 waits=259 faults=112 params_bytes=281344 set_bytes=2040240916 get_bytes=3724112456 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=261 submits=261 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   failed: [ADD] ERR = 0.218360955 > 0.000000100   ADD(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+   failed: [ADD] ERR = 0.198029339 > 0.000000100   ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+   failed: [ADD] ERR = 0.997766477 > 0.000000100   ADD(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+   failed: [ADD] ERR = 0.644659648 > 0.000000100   ADD(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+   failed: [ADD] ERR = 1.204393571 > 0.000000100   ADD(type=f32,ne=[10,5,4,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): FAIL
+   rd: graphs=3704 nodes=4864 dispatches=1399 skipped=3465 barriers=777 failed_graphs=0 last{nodes=35 dispatches=16 barriers=15 skipped=19} pipelines=6 set0_created=559 slots_created=256 coop_yields=3 waits=559 faults=112 params_bytes=358144 set_bytes=3896269588 get_bytes=5113590344 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=561 submits=561 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
 == verdicts
 PASS probe_chain
 PASS probe_chain_barrier_all
@@ -55,11 +57,11 @@ PASS probe_independent_barrier_all
 PASS probe_files
 PASS probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact
 PASS probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)
-PASS ops_main: test-backend-ops -o ADD,MUL -b RD0: OK=100 FAIL=0 not_supported=90 (Backend RD0: OK)
-PASS ops_barrier_all: test-backend-ops -o ADD,MUL -b RD0: OK=100 FAIL=0 not_supported=90 (Backend RD0: OK)
+PASS ops_main: test-backend-ops -o ADD,MUL,FLASH_ATTN_EXT -b RD0: OK=250 FAIL=0 not_supported=5087 (Backend RD0: OK)
+PASS ops_barrier_all: test-backend-ops -o ADD,MUL,FLASH_ATTN_EXT -b RD0: OK=250 FAIL=0 not_supported=5087 (Backend RD0: OK)
 PASS barrier elision and barrier-after-every-dispatch pass the same cases
 PASS control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case: FAIL=54 OK=0 (Backend RD0: FAIL)
 PASS rule 4: no sync in its submit's frame (rule4_same_frame_syncs=0)
 close: CLOSED permanent_slots=0
-wall_s=376.0
+wall_s=1653.7
 RESULT: PASS

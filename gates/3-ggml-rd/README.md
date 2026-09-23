@@ -1,6 +1,7 @@
 # Gate 3 — ggml-rd: ggml over RenderingDevice, kernels from Lean
 
-**Result: G3.ops PASS for ADD and MUL.** `ops/results.txt`: RESULT: PASS.
+**Result: G3.ops PASS for ADD and MUL, and for FLASH_ATTN_EXT (K8, its own
+section below).** `ops/results.txt`: RESULT: PASS.
 ggml's own `test-backend-ops -o ADD,MUL -b RD0`, run inside the guest
 (`ggml_test.elf`) against the in-guest ggml-cpu, reports **100/100 tests
 passed, 0 FAIL, `Backend RD0: OK`**; the 90 f16 cases report "not supported"
@@ -223,6 +224,17 @@ tests/ggml_rd_kernels/                  L2: main.cpp, l2.h, cases/<family>.cpp, 
    (the lead merges that line), run the gate: 0 FAIL, and the per-op line
    shows the op's cases OK.
 
+A kernel with groupshared memory and workgroup barriers has no cpp emit
+(slangc refuses the barrier on the cpp target, E36107). Give it a
+`<k>_serial` sibling in the same Lean module (one thread per output row, no
+groupshared, the same arithmetic), list both in kernels.txt, and have the
+packer pick the sibling under `GGML_RD_SERIAL=1`: gen.sh then skips the
+tiled kernel's cpp and requires the sibling, the L2 harness (which sets the
+switch) runs the sibling, and the same switch is the GPU A/B
+(`ops/flash_attn_ext.cpp` and `project/gate_ggml_rd_serial.gd` are the
+example). Census shapes that test-backend-ops' own list misses go in
+`guest/ggml_test/census_cases.inc`.
+
 Rules a kernel must keep:
 - A source and the destination are usually the same RD buffer, bound twice.
   In place (dst is src0) a thread must read what it needs before it writes;
@@ -231,6 +243,75 @@ Rules a kernel must keep:
 - f16 output: declare `dst` as `half`, or write two halves per word from one
   thread; the cpp target has no InterlockedAnd/Or.
 - Group counts <= 65535 per dimension; `grid_1d` splits 1-D launches.
+
+## K8: FLASH_ATTN_EXT (no mask)
+
+**Result: PASS.** ggml's test-backend-ops in the guest, `-o FLASH_ATTN_EXT
+-b RD0`: **150/150 OK, 0 FAIL**, including the 6 census cases (D = 128,
+H = 12, f32 Q/K/V, no mask, prec F32: Lk = 5, 1029, 4096, 912; Lq up to
+912). The same 150 pass with `GGML_RD_SERIAL=1` (the serial siblings on the
+GPU, `ops/fa-serial/`). The not-supported cases are masks, sinks, head sizes
+other than 64 and 128, and K/V types other than f32/f16 (bf16, quantized, or
+K and V of different types), none of which the census uses.
+
+| check | verdict | numbers |
+|---|---|---|
+| L0 | **PASS** | `lean/Ggml/SlangCodegen/FlashAttn.lean`: 8 kernels, the f32 tiled D = 64 and D = 128 and the f32 serial D = 64 pinned in full, the other five pinned as text relations of those (f16 = the f32 text with `uint` K/V, `ld_f16_*` reads and Q rounded to f16; serial D = 128 = D = 64 with wider loops), groupshared 43,264 bytes at D = 128 (<= 48 KiB). |
+| L1 | **PASS** | all 8 pass spirv-val and the fixed-layout check; the 4 serial emits compile for riscv64; the 4 tiled kernels have no cpp (slangc refuses workgroup barriers on the cpp target, E36107), which gen.sh and l1.sh now require and report. |
+| L2 | **PASS** | 21 FA cases vs native ggml-cpu (`cases/flash_attn_ext.cpp`: D 64/128, f32/f16 K/V, GQA in dims 2 and 3, permuted Q/K/V, K/V as views of a longer cache, softcap, prec DEFAULT, Lk = 2, 5, 31, 32, 33, 113 ... 1029, N = 1, 3, 15, 16, 17, 75, FA then ADD), NMSE <= 5e-4 (f32 K/V: <= 4.3e-13; f16: <= 2.1e-5, ggml-cpu accumulates f16 V in f16). Control: Q's nb1/nb2 swapped is caught in 19/19 FA cases where it moves an address (2 have N = 1). |
+| L3 | **PASS** | `ops/results.txt`: ADD,MUL,FLASH_ATTN_EXT 250 OK (FLASH_ATTN_EXT 150), 0 FAIL, the same 250 with a barrier after every dispatch, the fault control 54/54 ADD FAIL, rule 4 0, 1654 s; headless control PASS. ops_main took 883 s, 150 more frames than ADD,MUL alone: the in-guest reference is the cost. |
+| A/B | **PASS** | `ops/fa-serial/results.txt` (`project/gate_ggml_rd_serial.gd`): the same run with `GGML_RD_SERIAL=1`, the 4 serial pipelines on the GPU: 150 OK, 0 FAIL, 762 s, rule 4 0. |
+
+**The kernel.** One work group = 16 queries of one head, 128 threads as 16
+rows × 8 lanes; K/V tiles of 32 keys in groupshared; each lane scores 4 keys
+of its row, then every lane of the row runs the online softmax (running max
+and sum) over the 32 scores and accumulates its own D/8 output columns in
+registers (unrolled in Lean). Scale and softcap come from op_params (the
+scale divided by the softcap on the host, as ggml-cpu does); grouped-query
+attention is the ratio words 55-58. With f16 K, Q is rounded to f16 first,
+as ggml-cpu's `vec_dot_type` does. The `_serial` sibling does the same
+arithmetic per query row in one thread, without groupshared; it is what the
+host L2 harness runs (`GGML_RD_SERIAL=1`, set by the harness), and on the
+GPU it is the A/B.
+
+**Timing** (`perf/fa.txt`, `project/perf_ggml_fa.gd`, RTX 4090 shared with
+other agents' runs): a one-node graph computed repeatedly, one submit and one
+WAIT_GPU per frame; the median interval between WAIT_GPUs is an upper bound
+on the node's GPU time (the Lq = 16, Lk = 5 floor is 0.72 ms).
+
+| shape (D = 128, H = 12, f32, no mask) | census calls | tiled, median ms | TFLOP/s | serial, median ms |
+|---|---|---|---|---|
+| Lq = Lk = 4096 (the hottest) | 60 | 29.3 (min 28.1) | 3.5 | 75.0 |
+| Lq = 4096, Lk = 1029 | - | 12.5 | 2.1 | - |
+| Lq = 912, Lk = 1029 | 30 | 2.34 | 2.5 | 8.79 |
+| Lq = Lk = 912 | 30 | 2.29 | 2.2 | - |
+| Lq = 4096, Lk = 5 (proj cross-attention) | per block | 0.84 (floor 0.72) | - | - |
+
+The tiled kernel runs at 3-4 TFLOP/s f32 at the hottest shape, about 4-5 %
+of the 4090's f32 peak: it is latency-bound (43 KiB of groupshared leaves 2
+groups of 4 warps per SM, 3 barriers per 32 keys), not bound by shared-memory
+bandwidth (about 6 ms of LDS traffic at 4096 × 4096). The next steps, if
+G3.cost puts FA on the critical path: float4 groupshared rows (4x fewer LDS
+instructions), Q held in registers with a subgroup reduction of the
+partial dot products (drops the Q tile, raising occupancy), and 64-key tiles.
+
+**Shared changes K8 made** (for the lead's merge):
+- `kernels/ggml/gen.sh`: a kernel whose Slang has
+  `GroupMemoryBarrierWithGroupSync` gets no cpp emit, and kernels.txt must
+  list its `<k>_serial` sibling; `gates/3-ggml-rd/kernels/l1.sh` skips its
+  riscv64 compile and checks the sibling instead.
+- `tests/ggml_rd_kernels`: `gen_host_kernels.py` writes runners only for
+  kernels with an emit; `main.cpp` sets `GGML_RD_SERIAL=1`.
+- `vendor/ggml/tests/test-backend-ops.cpp`: a third guarded edit,
+  `GGML_GUEST_EXTRA_EVAL_CASES` includes `guest/ggml_test/census_cases.inc`
+  at the end of the eval list (upstream tests f32 K/V only at head sizes 64
+  and 72); CITATION.cff says so. Other families can add their census shapes
+  there.
+- `guest/ggml_test`: the `fa_perf` probe; `GGML_RD_SERIAL` is one of the
+  switches a job's env resets.
+- `project/gate_ggml_rd.gd`: `OPS` gains FLASH_ATTN_EXT, and `WALL_S` goes
+  from 1800 to 3600 s (FLASH_ATTN_EXT's in-guest reference alone is about
+  720 s per run, and the gate runs it twice).
 
 ## Regression: the shared layers
 

@@ -9,8 +9,10 @@ server (--rp_serve_api), one GPU (docker --gpus device=N, nvidia-smi numbering) 
 weights mounted read-only at /runpod-volume/models (the network volume's place). Then,
 through POST /runsync exactly as a client would send jobs: health, predict on the alpha
 image smoke.py uses (seed 42, 4 views, 1024 cascade), extract on the returned state. The
-USD layer is checked as smoke.py checks it (UsdGeom.Mesh, points, faces, normals, upAxis Y,
-metersPerUnit 1). Wall times, the cold start (docker run -> the worker answering), the
+.usdz is checked by smoke.py's own check_usdz (package rules, one UsdGeom.Mesh and its
+counts, the bound UsdPreviewSurface, textures inside the package, UsdValidation, base64
+within 18 MB), and the extract's whole /runsync response must be within RunPod's 20 MB.
+Wall times, the cold start (docker run -> the worker answering), the
 request/response sizes RunPod's gateway would carry, and nvidia-smi's peak on that GPU go
 to runs/<tag>.json and runs/<tag>.log; the container log to runs/<tag>-container.log.
 --stub runs the server with WEFTSPUN_STUB=1 and no GPU (the contract only).
@@ -21,6 +23,7 @@ import argparse
 import base64
 import json
 import subprocess
+import sys
 import threading
 import time
 from pathlib import Path
@@ -32,6 +35,9 @@ RUNS = HERE / "runs"
 SERVICE = HERE.parents[1] / "services" / "pixal3d"
 DEFAULT_IMAGE = SERVICE / "src" / "pixal3d" / "assets" / "images" / "17_img.png"
 MB = 1e6
+RESULT_CAP = 20_000_000  # RunPod's /runsync result limit
+sys.path.insert(0, str(SERVICE))
+from smoke import check_usdz  # noqa: E402
 
 
 def gpu_poll(gpu: str, peak: dict, stop: threading.Event) -> None:
@@ -140,30 +146,20 @@ def main() -> int:
 
         ext, dt, req_b, resp_b = runsync({"route": "extract", "state": pred["state"]})
         result["extract"] = {"wall_s": dt, "request_bytes": req_b, "response_bytes": resp_b,
-                             "glb_b64_bytes": len(ext["glb"]), "layer_b64_bytes": len(ext["layer"]),
-                             **{k: ext.get(k) for k in ("seconds", "vram_peak_mib")}}
+                             "usd_b64_bytes": len(ext["usd_b64"]),
+                             **{k: ext.get(k) for k in ("format", "texture_size", "usd_files", "seconds",
+                                                        "vram_peak_mib", "usdz_seconds")}}
         log(f"extract {dt:.1f} s, request {req_b / MB:.2f} MB, response {resp_b / MB:.2f} MB "
-            f"(glb b64 {len(ext['glb']) / MB:.2f} MB, USD layer b64 {len(ext['layer']) / MB:.2f} MB), "
-            f"server {result['extract']}")
-        usda = RUNS / f"{name}-layer.usda"
-        usda.write_bytes(base64.b64decode(ext["layer"]))
-        (RUNS / f"{name}-output.glb").write_bytes(base64.b64decode(ext["glb"]))
-
-        from pxr import Usd, UsdGeom
-        stage = Usd.Stage.Open(str(usda))
-        meshes = [UsdGeom.Mesh(p) for p in stage.Traverse() if p.IsA(UsdGeom.Mesh)]
-        pts = sum(len(m.GetPointsAttr().Get() or []) for m in meshes)
-        faces = sum(len(m.GetFaceVertexCountsAttr().Get() or []) for m in meshes)
-        result["usd"] = {"bytes": usda.stat().st_size, "upAxis": UsdGeom.GetStageUpAxis(stage),
-                         "metersPerUnit": UsdGeom.GetStageMetersPerUnit(stage), "meshes": len(meshes),
-                         "points": pts, "faces": faces,
-                         "normals": all(m.GetNormalsAttr().HasValue() for m in meshes)}
-        log(f"USD {result['usd']}")
-        ok = result["usd"]["upAxis"] == "Y" and result["usd"]["metersPerUnit"] == 1.0
+            f"(usdz b64 {len(ext['usd_b64']) / MB:.2f} MB), server {result['extract']}")
+        usdz = RUNS / f"{name}-asset.usdz"
+        usdz.write_bytes(base64.b64decode(ext["usd_b64"]))
+        rep = result["usdz"] = check_usdz(usdz)  # the GLB stays inside the container
+        if resp_b > RESULT_CAP:
+            rep["problems"].append(f"extract response {resp_b} B over RunPod's {RESULT_CAP} B")
+        log(f"USDZ {rep}")
+        ok = not rep["problems"] and ext.get("format") == "usdz"
         if a.stub:
             ok = ok and pred.get("stub") is True and ext.get("stub") is True
-        else:
-            ok = ok and len(meshes) > 0 and pts > 0 and faces > 0
         rc = 0 if ok else 1
     except Exception as exc:
         log(f"FAIL {type(exc).__name__}: {exc}")

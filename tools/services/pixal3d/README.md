@@ -7,17 +7,44 @@ the interchange) running natively on Windows 11 under pixi. No Docker, no WSL.
 pixi install            # torch 2.8.0+cu128, triton-windows, the Windows wheels below
 pixi run fetch          # clone the pinned sources into src/, apply patches/, fetch + verify weights
 pixi run check          # imports + one real kernel from each CUDA extension
-pixi run smoke-stub     # WEFTSPUN_STUB=1: the HTTP + USD contract, no GPU, no weights
-pixi run smoke          # real: POST /predict then /extract, USD layer with a UsdGeom.Mesh
+pixi run smoke-stub     # WEFTSPUN_STUB=1: the HTTP + USDZ contract, no GPU, no weights
+pixi run smoke          # real: POST /predict then /extract, one .usdz checked by check_usdz
 pixi run serve          # the service on HOST:PORT (default 127.0.0.1:8000)
+python smoke.py --texture-sizes 2048,1536,1024 --name real-sweep   # one extract per size
+python smoke.py --usdz FILE [--glb FILE]                            # check a package on disk
 ```
 
-API (unchanged from the service repo): `POST /predict {image, seed, fov, resolution,
-nviews, view_resolution}` -> `{state, views, cameras, camera_params, seconds,
-vram_peak_mib}`; `POST /extract {state, decimation_target, texture_size}` -> `{glb,
-layer, seconds, vram_peak_mib}`, `layer` being a base64 `.usda` whose
-`/Asset/Geometry/Mesh_*` prims carry the mesh (points, faceVertexCounts/Indices,
-vertex normals, primvars:st; upAxis Y, metersPerUnit 1).
+API: `POST /predict {image, seed, fov, resolution, nviews, view_resolution}` ->
+`{state, views, cameras, camera_params, seconds, vram_peak_mib}` (unchanged from the
+service repo). `POST /extract {state, decimation_target, texture_size}` -> **one
+.usdz**: `{usd_b64, format: "usdz", usd_bytes, usd_files, texture_size, glb_path,
+usdz_seconds, stub, seconds, vram_peak_mib}`. `texture_size` defaults to **1536**
+(upstream 2048; below). The GLB is no longer in the response: the server keeps it on
+its own disk at `glb_path`, for debugging only. The `glb` and `layer` keys are gone, so
+a client still reading them fails with a KeyError rather than taking a zip for text.
+
+The package (`patches/service-win.patch`, `_to_usdz`), stored uncompressed and
+64-byte aligned as usdz requires (`Sdf.ZipFileWriter`):
+
+| file | holds |
+|---|---|
+| `asset.usdc` (first, the root layer; binary crate) | `/Asset` (default prim; upAxis Y, metersPerUnit 1); `/Asset/Geometry/Mesh_0`, a UsdGeom.Mesh in the GLB's frame: points, faceVertexCounts/Indices, vertex normals, `primvars:st` (vertex); `/Asset/Materials/Material_0`, a UsdPreviewSurface bound with MaterialBindingAPI: `diffuseColor` <- base color `.rgb` (sRGB), `roughness` <- metallicRoughness `.g`, `metallic` <- `.b` (raw), glTF factors as the UsdUVTexture `scale`, `st` from a UsdPrimvarReader_float2; a normal, occlusion or emissive map would be wired the same way (o_voxel writes none) |
+| `textures/material0_base_color.png` | the GLB's base color texels, RGB: the material is glTF `OPAQUE`, whose alpha "is ignored", and the alpha channel was 18% of that PNG (9.03 -> 7.40 MB at 2048) |
+| `textures/material0_metallic_roughness.png` | the GLB's metallicRoughness texels (R 0, G roughness, B metallic) |
+
+`smoke.py`'s `check_usdz` (also used by tools/runpod/pixal3d/local_test.py) passes a
+package when: the first file is a `.usdc` crate and every file is stored and 64-byte
+aligned; the stage has upAxis Y, metersPerUnit 1, a default prim and exactly one
+UsdGeom.Mesh whose counts agree (3 indices a face, every index below the point count,
+one normal and one st a point); the mesh is bound to a UsdPreviewSurface whose
+diffuseColor, metallic and roughness come from UsdUVTexture nodes; every texture's file
+resolves inside the package (`asset.usdz[textures/...]`) and opens as a PNG; every
+registered UsdValidation validator reports no error; and the base64 is at most 18 MB
+(RunPod's result cap is 20 MB). On the desk it also compares the package with the GLB
+at `glb_path` (`compare_glb`): points, faces, st and the RGB texels of each texture must
+be equal, and st must be (u, 1 - v) of the GLB's raw TEXCOORD_0 (glTF's uv origin is
+the image's top left, USD's st origin its bottom left). Each check is shown to fire on
+a package broken for it in gates/7-pixal3d/usdz (controls.log).
 
 ## What had to change for Windows
 
@@ -105,7 +132,9 @@ TRELLIS.2's flow models, not Pixal3D's.
 
 ## Results (2026-09-23, RTX 3090 24 GB, driver 616.92)
 
-`runs/` keeps the logs and JSON; the GLB/USD/PNG outputs are gitignored.
+`runs/` keeps the logs and JSON; the GLB/USD/USDZ/PNG outputs are gitignored. The
+`smoke` and `smoke-stub` rows here are the GLB + .usda contract; their `runs/real.*` and
+`runs/stub.*` are in commit ba2c3b8 (the USDZ runs below replaced them).
 
 | run | result |
 |---|---|
@@ -119,5 +148,48 @@ torch allocation 13,233 MiB; MoGe-3 camera_angle_x 0.727 rad, distance 1.314.
 /extract 43.3 s wall, peak 5,966 MiB; GLB 18.4 MB. USD layer 25.2 MB, one
 UsdGeom.Mesh: 195,434 points, 198,046 triangles, vertex normals, primvars:st.
 nvidia-smi peak on the GPU: 18,285 MiB used (3 MiB before). The 4090 was taken by
-the VoxHammer service during this run, so the 3090 carried it; the 4090 number
-is not measured.
+the VoxHammer service during this run, so the 3090 carried it.
+
+## USDZ result (2026-09-23, RTX 4090 24 GB, `CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=1`)
+
+Why the change: one /extract answered with the GLB (18.2 MB, 24.31 MB as base64)
+beside a text `.usda` layer (26.18 MB, 34.90 MB as base64), 59.21 MB of JSON, three
+times RunPod's 20 MB result cap (tools/runpod/pixal3d/README.md). Written as a USDC
+crate the same geometry is 6.6-7.0 MB (points, normals and st are float arrays the
+crate stores raw; the index arrays it compresses), and one package carries the
+textures the .usda never had.
+
+**Texture sweep** (`runs/real-sweep.*`: one predict, then one extract per size on the
+same state; same image, seed 42):
+
+| texture_size | .usdz | base64 | asset.usdc (share) | base color PNG | metallicRoughness PNG | textures (share) | points / faces |
+|---|---|---|---|---|---|---|---|
+| 2048 (upstream) | 14,856,491 B | **19,808,656 B: over 18 MB** | 6,990,358 (47.1%) | 7,177,571 | 687,966 | 7,865,537 (52.9%) | 198,661 / 203,652 |
+| **1536** | 11,703,016 B | 15,604,024 B | 7,000,038 (59.8%) | 4,302,632 | 399,792 | 4,702,424 (40.2%) | 198,887 / 204,294 |
+| 1024 | 9,237,038 B | 12,316,052 B | 6,991,166 (75.7%) | 2,063,541 | 181,723 | 2,245,264 (24.3%) | 198,672 / 203,688 |
+
+The zip adds 40-66 B a file. So `texture_size` defaults to 1536, the largest of the
+three that fits: 56% of 2048's texels (2.36 M vs 4.19 M), base color PNG 7.18 -> 4.30
+MB, base64 19.81 -> 15.60 MB, 2.4 MB under the budget. The mesh is not touched
+(`decimation_target` stays 210,000); the point counts above differ by < 0.2% only
+because extract is not deterministic on one state. A request may still name 2048;
+through RunPod that result is over budget, and the worker's handler fails a result over
+20 MB loudly instead of letting the gateway drop it. Other sizes of the base color at
+2048, measured on the desk's earlier GLB: RGBA as the GLB has it 9,029,105 B, RGB
+7,400,611 B, RGB with PIL `optimize` 7,173,372 B (1.2 s more), so neither the alpha
+drop nor harder PNG compression alone brings 2048 under 18 MB.
+
+**Default run** (`pixi run smoke`, `runs/real.*`): PASS in 258.4 s. Load 147.7 s,
+/predict 60.3 s (the sweep had just filled Triton's cache; the sweep's first predict
+took 189.7 s), torch peak 13,233 MiB. /extract 43.7 s wall (41.9 s decode + bake,
+peak 6,377 MiB; `_to_usdz` 1.53 s of it). The package: **11,138,085 B, base64
+14,850,780 B, the whole JSON response 14,851,171 B** (was 59.21 MB): `asset.usdc`
+6,564,022 B (58.9%), textures 4,573,519 B (41.1%: base color 4,203,037, metallicRoughness
+370,482), 1536 x 1536 each. One UsdGeom.Mesh, 185,772 points, 197,448 triangles,
+vertex normals, st; bound to a UsdPreviewSurface reading both textures, which resolve
+inside the package; UsdValidation reports nothing; `compare_glb` against the kept GLB
+(13,830,080 B): points, faces and st identical (max |diff| 0), base color and
+metallicRoughness RGB texels identical; st is (u, 1 - v) of the GLB's raw TEXCOORD_0
+(that check came after this run: gates/7-pixal3d/usdz/recheck.log). nvidia-smi peak on
+the 4090 20,779 MiB (2,184 MiB before, the desktop). `smoke-stub` (`runs/stub.*`, a
+textured quad through the same writer, compare_glb included) PASS in 6.4 s.

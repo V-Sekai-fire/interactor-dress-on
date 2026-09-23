@@ -11,7 +11,9 @@ to that server over loopback, and the job's result is the server's JSON body:
 
 The route is removed from the input; everything else is the request body of that route,
 unchanged (tools/services/pixal3d/README.md). A non-200 answer becomes {"error": ...},
-which RunPod reports as a failed job. If the server could not start, or has died, every
+which RunPod reports as a failed job; so does an answer over RunPod's 20 MB result cap
+(PIXAL3D_RESULT_CAP), which the gateway would otherwise drop, leaving the client with no
+output at all. If the server could not start, or has died, every
 job fails with the reason and asks RunPod to replace the worker (refresh_worker).
 
 One GPU per worker: the server gets the caller's CUDA_VISIBLE_DEVICES, else "0" (the one
@@ -35,6 +37,8 @@ SERVICE = Path(__file__).resolve().parents[2] / "services" / "pixal3d"
 PORT = int(os.environ.get("PIXAL3D_PORT", "18000"))
 BASE = f"http://127.0.0.1:{PORT}"
 READY_TIMEOUT_S = float(os.environ.get("PIXAL3D_READY_TIMEOUT", "1200"))
+# RunPod's /runsync result limit (bytes); above it the gateway refuses the job-done call
+RESULT_CAP = int(os.environ.get("PIXAL3D_RESULT_CAP", "20000000"))
 ROUTES = {"health": ("GET", "/health"), "predict": ("POST", "/predict"), "extract": ("POST", "/extract")}
 
 _server: subprocess.Popen | None = None
@@ -108,6 +112,9 @@ def handler(job: dict) -> dict:
     if r.status_code != 200:
         detail = (out.get("error") or out.get("detail") or out) if isinstance(out, dict) else out
         return {"error": f"{path}: HTTP {r.status_code}: {detail}"}
+    if len(r.content) > RESULT_CAP:  # RunPod would drop it and the client get nothing
+        return {"error": f"{path}: result {len(r.content)} B is over RunPod's {RESULT_CAP} B result cap "
+                         "(lower texture_size or decimation_target)"}
     return out
 
 

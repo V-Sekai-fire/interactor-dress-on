@@ -11,7 +11,7 @@ forks `fetch.py --src` clones at their pinned commits, and the ~27 GB of weights
 from a network volume at run time.
 
 Files: `Dockerfile` (+ `Dockerfile.dockerignore`), `handler.py` (the worker),
-`local_test.py` (the desk test below), `runs/` (its evidence; GLB/USD/PNG ignored).
+`local_test.py` (the desk test below), `runs/` (its evidence; GLB/USD/USDZ/PNG ignored).
 
 Sources (AGENTS.md rule 1): every service dependency is an org fork or PyPI /
 download.pytorch.org, as the lock records (tools/services/pixal3d). The image itself
@@ -36,9 +36,9 @@ Nothing here has been created; these are the settings to enter.
 | Idle timeout | 300 s | a cold start costs 3.3-4.3 min (below) and the first predict another ~2 min of Triton compiles; the default 5 s would put most extracts on a fresh worker |
 | Execution timeout | 900 s | measured on a 3090: 187.5-198.8 s for the first predict on a worker, 86.0 s warm, 43.0-45.3 s for an extract; slower cards (L4) need headroom |
 | FlashBoot | on | the cold start is model load (~27 GB read) plus Triton compiles |
-| Container disk | 25 GB | the image is 10.24 GB; each extract leaves ~45 MB (GLB + USD) under /tmp; Triton and HF module caches |
+| Container disk | 25 GB | the image is 10.24 GB; each extract leaves ~36 MB under /tmp (the GLB, the .usdz and its unpacked files, at texture_size 1536); Triton and HF module caches |
 | Network volume | attach one holding `models/` (below), >= 35 GB, in a data center with the GPUs above | RunPod mounts it at `/runpod-volume`; the image sets `MODELS_DIR=/runpod-volume/models` |
-| Environment variables | none required | the image sets `MODELS_DIR`, `HF_HUB_OFFLINE=1`, `ATTN_BACKEND=sdpa`, `CUDA_DEVICE_ORDER=PCI_BUS_ID`. Optional: `PIXAL3D_READY_TIMEOUT` (s, default 1200), `PIXAL3D_PORT` (default 18000), `MODELS_DIR` |
+| Environment variables | none required | the image sets `MODELS_DIR`, `HF_HUB_OFFLINE=1`, `ATTN_BACKEND=sdpa`, `CUDA_DEVICE_ORDER=PCI_BUS_ID`. Optional: `PIXAL3D_READY_TIMEOUT` (s, default 1200), `PIXAL3D_PORT` (default 18000), `PIXAL3D_RESULT_CAP` (B, default 20,000,000), `MODELS_DIR` |
 
 ### The network volume
 
@@ -69,20 +69,29 @@ unchanged (tools/services/pixal3d/README.md). The job's output is the route's JS
 {"input": {"route": "predict", "image": "<base64 PNG (RGBA or RGB), a data: URI, or an http(s) URL>",
            "seed": 42, "resolution": 1024, "nviews": 4, "fov": -1.0, "view_resolution": 512}}
 {"input": {"route": "extract", "state": "<output.state of the predict>",
-           "decimation_target": 210000, "texture_size": 2048}}
+           "decimation_target": 210000, "texture_size": 1536}}
 ```
 
 - `health` -> `{"status": "ok", "ready": true, "stub": false}`
 - `predict` -> `{"state", "views": [base64 PNG], "cameras", "camera_params", "seed",
   "stub", "seconds", "vram_peak_mib"}`; `state` is the latent the client sends back.
-- `extract` -> `{"glb": base64, "layer": base64 .usda, "stub", "seconds",
-  "vram_peak_mib"}`; the layer's `/Asset/Geometry/Mesh_*` prims are UsdGeom.Mesh
-  (points, faceVertexCounts/Indices, vertex normals, primvars:st; upAxis Y,
-  metersPerUnit 1).
+- `extract` -> `{"usd_b64": base64 .usdz, "format": "usdz", "usd_bytes",
+  "usd_files": {file in the package: bytes}, "texture_size", "glb_path", "usdz_seconds",
+  "stub", "seconds", "vram_peak_mib"}`. One package: `asset.usdc` (the root layer; a
+  UsdGeom.Mesh `/Asset/Geometry/Mesh_0` with points, faceVertexCounts/Indices, vertex
+  normals, primvars:st; upAxis Y, metersPerUnit 1; bound to a UsdPreviewSurface) and
+  its textures as PNG (`textures/material0_base_color.png`,
+  `textures/material0_metallic_roughness.png`); tools/services/pixal3d/README.md has
+  the layout. `texture_size` defaults to 1536, which keeps the result under the cap
+  (below). The GLB is not returned: `glb_path` names it inside the container, for
+  debugging. Before this change the result was `{"glb", "layer": base64 .usda, ...}`.
 - Errors: a bad route, a 4xx/5xx from the service (e.g. `/predict: HTTP 400:
   resolution must be 512 or 1024, got 777`), or a server that did not start or died
   (`pixal3d service unavailable: ...`, plus `refresh_worker` so RunPod replaces the
-  worker) come back as `{"error": ...}`, which RunPod reports as a FAILED job.
+  worker) come back as `{"error": ...}`, which RunPod reports as a FAILED job. So does
+  a result over `PIXAL3D_RESULT_CAP` (`/extract: result N B is over RunPod's 20000000 B
+  result cap (lower texture_size or decimation_target)`), which the gateway would
+  otherwise drop with no output at all (gates/7-pixal3d/usdz/handler_cap.log).
 
 ### Payload sizes (measured, 3090 run below)
 
@@ -91,14 +100,16 @@ unchanged (tools/services/pixal3d/README.md). The job's output is the route's JS
 | predict request (17_img.png as base64) | 1.99 MB | 10 MB `/run`, 20 MB `/runsync` |
 | predict response (state 4.41 MB + 4 views) | 4.91 MB | 20 MB |
 | extract request (the state) | 4.41 MB | 10 MB / 20 MB |
-| **extract response** (GLB 24.31 MB + USD layer **34.90 MB**, base64) | **59.21 MB** | **20 MB** |
+| extract response before (GLB 24.31 MB + USD layer 34.90 MB, base64) | 59.21 MB | **20 MB** |
+| **extract response now** (one .usdz, 11.14 MB, base64 14.85 MB; native run, 4090) | **14.85 MB** | **20 MB** |
 
-The extract result is ~3x RunPod's result cap (RunPod's docs: 10 MB `/run`, 20 MB
-`/runsync`; above ~20 MB the gateway refuses the worker's job-done call and the
-client gets no output). The USD layer alone is 26.18 MB raw, 34.90 MB base64, for
-202,134 points / 208,950 triangles. Not redesigned here: the options are returning the
-USD only, compressing it (usdc), a lower `decimation_target`, or writing the result
-to storage and returning a link.
+The GLB + .usda result was ~3x RunPod's result cap (RunPod's docs: 10 MB `/run`, 20 MB
+`/runsync`; above ~20 MB the gateway refuses the worker's job-done call and the client
+gets no output): the .usda alone was 26.18 MB raw, 34.90 MB base64, for 202,134 points /
+208,950 triangles. Now the result is one .usdz whose layer is a USDC crate (6.6-7.0 MB
+for that size of mesh) and whose textures are baked at 1536 instead of 2048: at 2048
+the package is 19.81 MB as base64, over the 18 MB kept under the cap
+(gates/7-pixal3d/usdz; tools/services/pixal3d/README.md, "USDZ result").
 
 ## Local test (the desk, 2026-09-23)
 

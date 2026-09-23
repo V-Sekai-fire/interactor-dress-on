@@ -2,5 +2,6 @@
 /.pixi/
 /runs/*.glb
 /runs/*.usda
+/runs/*.usdz
 /runs/*.png
 __pycache__/

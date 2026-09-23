@@ -1,31 +1,197 @@
 diff --git a/server.py b/server.py
-index af7adf1..ae03787 100644
+index af7adf1..781157a 100644
 --- a/server.py
 +++ b/server.py
-@@ -92,10 +92,53 @@ def _validate_extract(job_input: dict) -> dict:
+@@ -8,7 +8,8 @@ for the latent-state + preview-render flow).
+ 
+   POST /predict  -- image -> latent state + nvdiffrast preview renders
+                     (+ cameras). No GLB decode happens here.
+-  POST /extract  -- latent state -> GLB + USD layer. The one decode.
++  POST /extract  -- latent state -> one .usdz (USDC layer + PNG textures).
++                    The one decode.
+ 
+ The split is the decode-only latent contract: a latent consumer (e.g. a
+ VoxHammer edit over the same TRELLIS.2-backbone slat family) takes `state`
+@@ -19,8 +20,9 @@ adaptation pass backpropagates through.
+ Environment: python 3.10 + torch 2.6 cu124 + upstream requirements-hfdemo.txt
+ (prebuilt wheels: flash_attn_3, nvdiffrast, o_voxel, cumesh, flex_gemm).
+ 
+-RFD 0053 makes OpenUSD the internal format, thus a result carries a USD
+-layer beside the GLB that ships.
++RFD 0053 makes OpenUSD the internal format. interactor-dress-on
++(service-win.patch): the result is one .usdz package, and the GLB the decode
++writes stays on the server's disk (glb_path) for debugging.
+ """
+ 
+ import base64
+@@ -37,6 +39,13 @@ os.environ.setdefault("ATTN_BACKEND", "flash_attn")
+ # a mesh above this, thus it fails every later stage.
+ MAX_MESH_VERTICES = 210000
+ 
++# interactor-dress-on (service-win.patch): the baked texture's edge, in texels,
++# when a request names none. At upstream's 2048 the .usdz of a 199k-point mesh
++# is 14.86 MB, 19.81 MB as base64: over the 18 MB kept under RunPod's 20 MB
++# result cap. 1536 makes it 11.70 / 15.60 MB (gates/7-pixal3d/usdz). A request
++# may still name 2048.
++TEXTURE_SIZE = 1536
++
+ # WEFTSPUN_STUB=1 skips the model and answers with the same shape, so the
+ # server contract is testable in Docker with no GPU and no 24 GB download.
+ STUB = os.environ.get("WEFTSPUN_STUB") == "1"
+@@ -88,30 +97,237 @@ def _validate_extract(job_input: dict) -> dict:
+     return {
+         "state": job_input["state"],
+         "decimation_target": decimation,
+-        "texture_size": int(job_input.get("texture_size", 2048)),
++        "texture_size": int(job_input.get("texture_size", TEXTURE_SIZE)),
      }
  
  
-+def _add_meshes(stage, glb: Path) -> int:
+-def _to_usd(glb: Path, work: Path) -> Path:
+-    """Writes the base USD layer for this asset (RFD 0053). The GLB is an
+-    asset-path attribute, not a `references` arc -- plain usd-core reads no
+-    glTF, and a reference would fail to resolve."""
++# interactor-dress-on (service-win.patch): /extract answers with ONE .usdz. Its
++# first file, the package's root layer, is asset.usdc (USD's binary crate: 6.9 MB
++# for a 195k-point mesh whose .usda text was 25.2 MB); the textures of the GLB's
++# materials follow as PNG files under textures/. A usdz stores every file
++# uncompressed at a 64-byte aligned offset; Sdf.ZipFileWriter writes it so.
++USDZ_LAYER = "asset.usdc"
++
++
++def _texture_png(image, keep_alpha: bool) -> bytes:
++    """One glTF texture as PNG bytes, the GLB's own pixels. The alpha channel of
++    an OPAQUE material is dropped: glTF ignores it ("any alpha value is
++    ignored"), and it was 18% of the base color PNG (9.03 -> 7.40 MB at 2048)."""
++    import io
++
++    import numpy as np
++    from PIL import Image
++
++    img = image if isinstance(image, Image.Image) else Image.fromarray(np.asarray(image))
++    if img.mode not in ("L", "LA", "RGB", "RGBA"):
++        img = img.convert("RGBA" if "A" in img.getbands() else "RGB")
++    if not keep_alpha and img.mode in ("LA", "RGBA"):
++        img = img.convert(img.mode[:-1])
++    buf = io.BytesIO()
++    img.save(buf, format="PNG")
++    return buf.getvalue()
++
++
++def _add_material(stage, index: int, material, files: dict):
++    """glTF metallic-roughness -> a UsdPreviewSurface Material under
++    /Asset/Materials. Each texture the GLB carries (base color, sRGB; the
++    metallicRoughness map, raw, roughness in G and metallic in B as glTF packs
++    them; normal, occlusion, emissive when present -- o_voxel writes the first
++    two) is a UsdUVTexture reading primvars:st, its glTF factor as the texture's
++    scale; without a texture the factor is the constant. The PNGs go into
++    `files` (path inside the package -> bytes)."""
++    import numpy as np
++    import trimesh
++    from pxr import Gf, Sdf, UsdShade
++
++    if not isinstance(material, trimesh.visual.material.PBRMaterial):
++        if not hasattr(material, "to_pbr"):
++            return None
++        material = material.to_pbr()
++
++    def floats(value, default):
++        if value is None:
++            return list(default)
++        v = np.asarray(value).reshape(-1)
++        if v.dtype == np.uint8:  # trimesh keeps colour factors as uint8
++            v = v / 255.0
++        return [float(x) for x in v[: len(default)]] + list(default[len(v):])
++
++    base_factor = floats(material.baseColorFactor, (1.0, 1.0, 1.0, 1.0))
++    metallic = 1.0 if material.metallicFactor is None else float(material.metallicFactor)
++    roughness = 1.0 if material.roughnessFactor is None else float(material.roughnessFactor)
++    emissive = floats(material.emissiveFactor, (0.0, 0.0, 0.0))
++    alpha_mode = str(material.alphaMode or "OPAQUE").upper()
++    T = Sdf.ValueTypeNames
++
++    path = f"/Asset/Materials/Material_{index}"
++    mat = UsdShade.Material.Define(stage, path)
++    surface = UsdShade.Shader.Define(stage, f"{path}/PreviewSurface")
++    surface.CreateIdAttr("UsdPreviewSurface")
++    mat.CreateSurfaceOutput().ConnectToSource(surface.ConnectableAPI(), "surface")
++    reader = UsdShade.Shader.Define(stage, f"{path}/StReader")
++    reader.CreateIdAttr("UsdPrimvarReader_float2")
++    reader.CreateInput("varname", T.String).Set("st")
++    reader.CreateOutput("result", T.Float2)
++
++    def texture(name, image, color_space, keep_alpha, scale, bias=None):
++        rel = f"textures/material{index}_{name}.png"
++        files[rel] = _texture_png(image, keep_alpha)
++        tex = UsdShade.Shader.Define(stage, f"{path}/{name}")
++        tex.CreateIdAttr("UsdUVTexture")
++        tex.CreateInput("file", T.Asset).Set(Sdf.AssetPath(rel))
++        tex.CreateInput("st", T.Float2).ConnectToSource(reader.ConnectableAPI(), "result")
++        tex.CreateInput("sourceColorSpace", T.Token).Set(color_space)
++        tex.CreateInput("wrapS", T.Token).Set("repeat")  # glTF's default sampler
++        tex.CreateInput("wrapT", T.Token).Set("repeat")
++        tex.CreateInput("scale", T.Float4).Set(Gf.Vec4f(*scale))
++        if bias is not None:
++            tex.CreateInput("bias", T.Float4).Set(Gf.Vec4f(*bias))
++        return tex
++
++    def connect(input_name, input_type, tex, channel, channel_type):
++        tex.CreateOutput(channel, channel_type)
++        surface.CreateInput(input_name, input_type).ConnectToSource(tex.ConnectableAPI(), channel)
++
++    blended = alpha_mode != "OPAQUE"
++    if material.baseColorTexture is not None:
++        bc = texture("base_color", material.baseColorTexture, "sRGB", blended, base_factor)
++        connect("diffuseColor", T.Color3f, bc, "rgb", T.Float3)
++        if blended:
++            connect("opacity", T.Float, bc, "a", T.Float)
++    else:
++        surface.CreateInput("diffuseColor", T.Color3f).Set(Gf.Vec3f(*base_factor[:3]))
++        if blended:
++            surface.CreateInput("opacity", T.Float).Set(base_factor[3])
++    if alpha_mode == "MASK":
++        cutoff = getattr(material, "alphaCutoff", None)
++        surface.CreateInput("opacityThreshold", T.Float).Set(0.5 if cutoff is None else float(cutoff))
++    if material.metallicRoughnessTexture is not None:
++        mr = texture("metallic_roughness", material.metallicRoughnessTexture, "raw", False,
++                     (1.0, roughness, metallic, 1.0))
++        connect("roughness", T.Float, mr, "g", T.Float)
++        connect("metallic", T.Float, mr, "b", T.Float)
++    else:
++        surface.CreateInput("roughness", T.Float).Set(roughness)
++        surface.CreateInput("metallic", T.Float).Set(metallic)
++    if material.normalTexture is not None:  # tangent space, +Y up in both
++        nt = texture("normal", material.normalTexture, "raw", False, (2.0, 2.0, 2.0, 1.0), (-1.0, -1.0, -1.0, 0.0))
++        connect("normal", T.Normal3f, nt, "rgb", T.Float3)
++    if material.occlusionTexture is not None:
++        oc = texture("occlusion", material.occlusionTexture, "raw", False, (1.0, 1.0, 1.0, 1.0))
++        connect("occlusion", T.Float, oc, "r", T.Float)
++    if material.emissiveTexture is not None:
++        em = texture("emissive", material.emissiveTexture, "sRGB", False, (*emissive, 1.0))
++        connect("emissiveColor", T.Color3f, em, "rgb", T.Float3)
++    elif any(emissive):
++        surface.CreateInput("emissiveColor", T.Color3f).Set(Gf.Vec3f(*emissive))
++    return mat
++
++
++def _add_meshes(stage, scene, files: dict) -> int:
 +    """interactor-dress-on (service-win.patch): OpenUSD is the interchange, so the
 +    layer carries the geometry itself -- one UsdGeom.Mesh per glTF primitive, in
 +    the GLB's own frame (Y up, meters: extract() already rotated it), with vertex
-+    normals and the UV set as primvars:st. Returns the number of meshes."""
++    normals and the UV set as primvars:st -- and each mesh is bound to its glTF
++    material as a UsdPreviewSurface (_add_material). Returns the number of meshes."""
 +    import numpy as np
 +    import trimesh
-+    from pxr import Gf, Sdf, UsdGeom, Vt
++    from pxr import Gf, Sdf, UsdGeom, UsdShade, Vt
 +
-+    try:
-+        scene = trimesh.load(str(glb), force="scene")
-+    except Exception:
-+        return 0
++    materials = {}
 +    count = 0
 +    for node in scene.graph.nodes_geometry:
 +        transform, geom_name = scene.graph[node]
-+        mesh = scene.geometry[geom_name]
-+        if not isinstance(mesh, trimesh.Trimesh) or len(mesh.faces) == 0:
++        source = scene.geometry[geom_name]
++        if not isinstance(source, trimesh.Trimesh) or len(source.faces) == 0:
 +            continue
-+        mesh = mesh.copy()
++        mesh = source.copy()
 +        mesh.apply_transform(transform)
 +        prim = UsdGeom.Mesh.Define(stage, f"/Asset/Geometry/Mesh_{count}")
 +        points = np.asarray(mesh.vertices, dtype=np.float32)
@@ -41,38 +207,87 @@ index af7adf1..ae03787 100644
 +        prim.CreateExtentAttr(Vt.Vec3fArray([Gf.Vec3f(*points.min(0).tolist()), Gf.Vec3f(*points.max(0).tolist())]))
 +        uv = getattr(mesh.visual, "uv", None)
 +        if uv is not None and len(uv) == len(points):
++            # trimesh keeps UVs with the origin at the bottom left (it flips
++            # glTF's V on load), which is USD's st convention
 +            st = UsdGeom.PrimvarsAPI(prim).CreatePrimvar(
 +                "st", Sdf.ValueTypeNames.TexCoord2fArray, UsdGeom.Tokens.vertex)
 +            st.Set(Vt.Vec2fArray.FromNumpy(np.asarray(uv, np.float32)))
++        material = getattr(source.visual, "material", None)
++        if material is not None:
++            if id(material) not in materials:
++                materials[id(material)] = _add_material(stage, len(materials), material, files)
++            if materials[id(material)] is not None:
++                UsdShade.MaterialBindingAPI.Apply(prim.GetPrim()).Bind(materials[id(material)])
++        prim.CreateDoubleSidedAttr(bool(getattr(material, "doubleSided", False)))
 +        count += 1
 +    return count
 +
 +
- def _to_usd(glb: Path, work: Path) -> Path:
-     """Writes the base USD layer for this asset (RFD 0053). The GLB is an
-     asset-path attribute, not a `references` arc -- plain usd-core reads no
--    glTF, and a reference would fail to resolve."""
-+    glTF, and a reference would fail to resolve. The geometry itself is
-+    written as UsdGeom.Mesh prims under /Asset/Geometry (interactor-dress-on)."""
++def _to_usdz(glb: Path, work: Path) -> tuple:
++    """Writes this asset (RFD 0053) as one .usdz package: the root layer
++    asset.usdc (/Asset, the default prim, upAxis Y, metersPerUnit 1;
++    /Asset/Geometry/Mesh_* bound to /Asset/Materials/Material_*), then its
++    textures. The GLB is not in the package: plain usd-core reads no glTF, so
++    the layer names only its format. Returns (the package, {file in the
++    package: bytes})."""
++    import trimesh
      from pxr import Sdf, Usd, UsdGeom
  
-     layer = work / "layer.usda"
-@@ -104,12 +147,13 @@ def _to_usd(glb: Path, work: Path) -> Path:
+-    layer = work / "layer.usda"
++    pkg = work / "usdz"
++    pkg.mkdir(exist_ok=True)
++    layer = pkg / USDZ_LAYER
+     stage = Usd.Stage.CreateNew(str(layer))
+     UsdGeom.SetStageUpAxis(stage, UsdGeom.Tokens.y)
      UsdGeom.SetStageMetersPerUnit(stage, 1.0)
      root = UsdGeom.Xform.Define(stage, "/Asset")
      stage.SetDefaultPrim(root.GetPrim())
 -    geometry = stage.DefinePrim("/Asset/Geometry")
+-    geometry.CreateAttribute("weftspun:sourceAsset", Sdf.ValueTypeNames.Asset).Set(
+-        Sdf.AssetPath(glb.name)
+-    )
 +    geometry = UsdGeom.Xform.Define(stage, "/Asset/Geometry").GetPrim()
-     geometry.CreateAttribute("weftspun:sourceAsset", Sdf.ValueTypeNames.Asset).Set(
-         Sdf.AssetPath(glb.name)
-     )
      geometry.CreateAttribute("weftspun:sourceFormat", Sdf.ValueTypeNames.Token).Set("gltf")
      geometry.CreateAttribute("weftspun:stage", Sdf.ValueTypeNames.Token).Set("image_to_mesh")
-+    _add_meshes(stage, glb)
++    files = {}
++    # a GLB that does not load is an error, not an empty asset
++    _add_meshes(stage, trimesh.load(str(glb), force="scene"), files)
      stage.GetRootLayer().Save()
-     return layer
+-    return layer
++    for rel, data in files.items():
++        (pkg / rel).parent.mkdir(parents=True, exist_ok=True)
++        (pkg / rel).write_bytes(data)
++    usdz = work / "asset.usdz"
++    writer = Sdf.ZipFileWriter.CreateNew(str(usdz))
++    writer.AddFile(str(layer), USDZ_LAYER)  # the first file is the root layer
++    for rel in files:
++        writer.AddFile(str(pkg / rel), rel)
++    writer.Save()
++    return usdz, {USDZ_LAYER: layer.stat().st_size, **{rel: len(data) for rel, data in files.items()}}
++
++
++def _stub_glb(path: Path) -> None:
++    """WEFTSPUN_STUB: a textured unit quad (4x4 base color RGBA and
++    metallicRoughness), so the no-GPU contract runs the whole USDZ path."""
++    import numpy as np
++    import trimesh
++    from PIL import Image
++
++    rng = np.random.default_rng(0)
++    material = trimesh.visual.material.PBRMaterial(
++        baseColorTexture=Image.fromarray(rng.integers(0, 256, (4, 4, 4), dtype=np.uint8)),
++        metallicRoughnessTexture=Image.fromarray(rng.integers(0, 256, (4, 4, 3), dtype=np.uint8)),
++        metallicFactor=1.0, roughnessFactor=1.0, alphaMode="OPAQUE")
++    quad = trimesh.Trimesh(
++        vertices=[[-0.5, 0, 0.5], [0.5, 0, 0.5], [0.5, 0, -0.5], [-0.5, 0, -0.5]],
++        faces=[[0, 1, 2], [0, 2, 3]],
++        visual=trimesh.visual.TextureVisuals(uv=[[0, 0], [1, 0], [1, 1], [0, 1]], material=material),
++        process=False)
++    quad.export(str(path))
  
-@@ -137,8 +181,13 @@ def predict(job_input: dict) -> dict:
+ 
+ def _b64(data: bytes) -> str:
+@@ -137,8 +353,13 @@ def predict(job_input: dict) -> dict:
              "stub": True,
          }
  
@@ -86,7 +301,7 @@ index af7adf1..ae03787 100644
      result = worker_entry.generate(
          str(image_path),
          seed=args["seed"],
-@@ -154,6 +203,8 @@ def predict(job_input: dict) -> dict:
+@@ -154,29 +375,50 @@ def predict(job_input: dict) -> dict:
          "camera_params": result["camera_params"],
          "seed": args["seed"],
          "stub": False,
@@ -95,9 +310,16 @@ index af7adf1..ae03787 100644
      }
  
  
-@@ -166,17 +217,27 @@ def extract(job_input: dict) -> dict:
+ def extract(job_input: dict) -> dict:
+-    """latent state -> GLB + USD layer. The one decode."""
++    """latent state -> one .usdz (the GLB stays on disk). The one decode."""
+     args = _validate_extract(job_input)
+     work = Path(tempfile.mkdtemp())
+     glb = work / "output.glb"
+ 
      if STUB:
-         glb.write_bytes(bytes([0x67, 0x6C, 0x54, 0x46, 0x02]) + b"stub")
+-        glb.write_bytes(bytes([0x67, 0x6C, 0x54, 0x46, 0x02]) + b"stub")
++        _stub_glb(glb)
      else:
 +        import time
 +
@@ -114,17 +336,36 @@ index af7adf1..ae03787 100644
          )
 +        measured = {"seconds": time.perf_counter() - t0,
 +                    "vram_peak_mib": torch.cuda.max_memory_allocated() / 2**20}
++
++    import time
  
-     layer = _to_usd(glb, work)
+-    layer = _to_usd(glb, work)
 -    return {"glb": _b64(glb.read_bytes()), "layer": _b64(layer.read_bytes()), "stub": STUB}
-+    out = {"glb": _b64(glb.read_bytes()), "layer": _b64(layer.read_bytes()), "stub": STUB}
++    t_usdz = time.perf_counter()
++    usdz, files = _to_usdz(glb, work)
++    data = usdz.read_bytes()
++    # interactor-dress-on (service-win.patch): one .usdz instead of GLB + .usda
++    # (59.21 MB of base64 for one asset, 3x RunPod's 20 MB result cap). The
++    # GLB is kept on the server's disk for debugging only.
++    out = {"usd_b64": _b64(data), "format": "usdz", "usd_bytes": len(data), "usd_files": files,
++           "texture_size": args["texture_size"], "glb_path": str(glb),
++           "usdz_seconds": time.perf_counter() - t_usdz, "stub": STUB}
 +    if not STUB:
 +        out.update(measured)
 +    return out
  
  
  def load() -> None:
-@@ -238,4 +299,4 @@ if __name__ == "__main__":
+@@ -210,7 +452,7 @@ def build_app():
+     class ExtractRequest(BaseModel):
+         state: str
+         decimation_target: int = MAX_MESH_VERTICES
+-        texture_size: int = 2048
++        texture_size: int = TEXTURE_SIZE
+ 
+     @app.get("/health")
+     def health():
+@@ -238,4 +480,4 @@ if __name__ == "__main__":
      import uvicorn
  
      load()

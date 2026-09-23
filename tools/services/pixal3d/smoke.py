@@ -1,10 +1,15 @@
 """Smoke tests for the win-64 Pixal3D service. Every mode runs under a wall clock and
-writes its evidence to runs/ (kept in git; the GLB/USD outputs are not).
+writes its evidence to runs/ (kept in git; the GLB/USDZ/PNG outputs are not).
 
   pixi run check        imports + one real kernel from each CUDA extension
-  pixi run smoke-stub   WEFTSPUN_STUB=1 server: the HTTP/USD contract, no GPU, no weights
+  pixi run smoke-stub   WEFTSPUN_STUB=1 server: the HTTP/USDZ contract, no GPU, no weights
   pixi run smoke        real server: POST /predict then /extract on an alpha image,
-                        -> USD layer with a UsdGeom.Mesh; wall times and VRAM
+                        -> one .usdz (check_usdz); wall times and VRAM
+  python smoke.py --texture-sizes 2048,1536,1024
+                        the same, one extract per texture size on one predict (a sweep:
+                        sizes are recorded, only the server default must fit the budget)
+  python smoke.py --usdz FILE [--glb FILE]
+                        check_usdz on a package on disk (and compare_glb against its GLB)
 """
 
 import argparse
@@ -12,6 +17,7 @@ import base64
 import json
 import os
 import socket
+import struct
 import subprocess
 import sys
 import threading
@@ -21,6 +27,216 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 RUNS = HERE / "runs"
 DEFAULT_IMAGE = HERE / "src" / "pixal3d" / "assets" / "images" / "17_img.png"
+# RunPod carries a job result of at most 20 MB (/runsync); the base64 .usdz must
+# leave room for the rest of the JSON.
+B64_BUDGET = 18_000_000
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def check_usdz(path, budget_b64=B64_BUDGET):
+    """Checks one /extract result, a .usdz on disk, and returns a report whose
+    "problems" list is empty when it passes:
+      - package: the first file is the root layer, a .usdc (crate, "PXR-USDC"); every
+        file is stored uncompressed at a 64-byte aligned offset (the usdz rules);
+      - stage: upAxis Y, metersPerUnit 1, a default prim, exactly one UsdGeom.Mesh
+        whose counts agree (3 indices per face, every index < points, one normal and
+        one st per point);
+      - material: the mesh is bound (MaterialBindingAPI) to a Material whose surface is
+        a UsdPreviewSurface with diffuseColor, metallic and roughness read from
+        UsdUVTexture nodes; every texture's file resolves inside the package and is a
+        PNG PIL opens;
+      - UsdValidation: every registered validator, no error;
+      - size: the base64 of the package within budget_b64 (None: recorded only)."""
+    import io
+
+    from PIL import Image
+    from pxr import Sdf, Usd, UsdGeom, UsdShade, UsdValidation
+
+    path = Path(path)
+    size = path.stat().st_size
+    rep = {"bytes": size, "b64_bytes": 4 * ((size + 2) // 3), "budget_b64": budget_b64}
+    problems = rep["problems"] = []
+
+    zf = Sdf.ZipFile.Open(str(path))
+    names = list(zf.GetFileNames()) if zf else []
+    rep["files"] = {}
+    for n in names:
+        info = zf.GetFileInfo(n)
+        rep["files"][n] = info.size
+        if info.compressionMethod != 0:
+            problems.append(f"{n}: compressed (method {info.compressionMethod})")
+        if info.dataOffset % 64:
+            problems.append(f"{n}: data at offset {info.dataOffset}, not 64-byte aligned")
+    if not names or not names[0].endswith(".usdc"):
+        problems.append(f"first file in the package is not a .usdc layer: {names[:1]}")
+    elif bytes(zf.GetFile(names[0])[:8]) != b"PXR-USDC":
+        problems.append(f"{names[0]} is not a USD crate")
+    layer_bytes = sum(v for k, v in rep["files"].items() if k.endswith((".usdc", ".usda", ".usd")))
+    tex_bytes = sum(v for k, v in rep["files"].items() if k.endswith(".png"))
+    rep["share"] = {"layer": layer_bytes / size, "textures": tex_bytes / size,
+                    "zip_overhead": (size - layer_bytes - tex_bytes) / size}
+
+    try:
+        stage = Usd.Stage.Open(str(path))
+    except Exception as exc:
+        problems.append(f"the stage does not open: {str(exc).strip().splitlines()[0][:300]}")
+        return rep
+    rep["upAxis"] = UsdGeom.GetStageUpAxis(stage)
+    rep["metersPerUnit"] = UsdGeom.GetStageMetersPerUnit(stage)
+    rep["defaultPrim"] = str(stage.GetDefaultPrim().GetPath()) if stage.GetDefaultPrim() else None
+    if rep["upAxis"] != "Y" or rep["metersPerUnit"] != 1.0 or not rep["defaultPrim"]:
+        problems.append(f"stage metadata: upAxis {rep['upAxis']}, metersPerUnit {rep['metersPerUnit']}, "
+                        f"defaultPrim {rep['defaultPrim']}")
+    meshes = [UsdGeom.Mesh(p) for p in stage.Traverse() if p.IsA(UsdGeom.Mesh)]
+    rep["meshes"] = len(meshes)
+    if len(meshes) != 1:
+        problems.append(f"{len(meshes)} UsdGeom.Mesh prims, expected 1")
+    rep["points"] = rep["faces"] = 0
+    rep["textures"] = {}
+    for m in meshes:
+        pts = m.GetPointsAttr().Get() or []
+        counts = m.GetFaceVertexCountsAttr().Get() or []
+        idx = m.GetFaceVertexIndicesAttr().Get() or []
+        normals = m.GetNormalsAttr().Get() or []
+        st = UsdGeom.PrimvarsAPI(m).GetPrimvar("st")
+        st_vals = st.Get() if st else None
+        rep["points"] += len(pts)
+        rep["faces"] += len(counts)
+        name = m.GetPath().name
+        if not len(pts) or not len(counts):
+            problems.append(f"{name}: empty ({len(pts)} points, {len(counts)} faces)")
+        if set(counts) - {3} or len(idx) != 3 * len(counts) or (len(idx) and max(idx) >= len(pts)):
+            problems.append(f"{name}: face counts/indices disagree with {len(pts)} points")
+        if len(normals) != len(pts) or m.GetNormalsInterpolation() != UsdGeom.Tokens.vertex:
+            problems.append(f"{name}: {len(normals)} normals ({m.GetNormalsInterpolation()}) for {len(pts)} points")
+        if st_vals is None or len(st_vals) != len(pts) or st.GetInterpolation() != UsdGeom.Tokens.vertex:
+            problems.append(f"{name}: primvars:st missing or not one per point")
+
+        material, _ = UsdShade.MaterialBindingAPI(m.GetPrim()).ComputeBoundMaterial()
+        if not material:
+            problems.append(f"{name}: no material bound")
+            continue
+        rep["material"] = str(material.GetPath())
+        surface = material.ComputeSurfaceSource()[0]
+        if not surface or surface.GetIdAttr().Get() != "UsdPreviewSurface":
+            problems.append(f"{rep['material']}: surface is not a UsdPreviewSurface")
+            continue
+        wired = {}
+        for inp in surface.GetInputs():
+            src = inp.GetConnectedSources()[0]
+            if src:
+                tex = UsdShade.Shader(src[0].source.GetPrim())
+                if tex.GetIdAttr().Get() == "UsdUVTexture":
+                    wired[inp.GetBaseName()] = f"{tex.GetInput('file').Get().path}:{src[0].sourceName}"
+        rep["wired"] = wired
+        for need in ("diffuseColor", "metallic", "roughness"):
+            if need not in wired:
+                problems.append(f"{rep['material']}: {need} is not read from a texture")
+        for prim in Usd.PrimRange(material.GetPrim()):
+            shader = UsdShade.Shader(prim)
+            if not shader or shader.GetIdAttr().Get() != "UsdUVTexture":
+                continue
+            asset = shader.GetInput("file").Get()
+            # resolved inside this package: <package>.usdz[<path>]
+            inside = asset.resolvedPath.endswith(f"{path.name}[{asset.path}]")
+            entry = rep["textures"][asset.path] = {"resolves_in_package": inside}
+            if not inside:
+                problems.append(f"{asset.path}: does not resolve inside the package ({asset.resolvedPath!r})")
+            if asset.path not in names:
+                problems.append(f"{asset.path}: not a file in the package")
+                continue
+            raw = bytes(zf.GetFile(asset.path))
+            entry["bytes"] = len(raw)
+            if not raw.startswith(PNG_SIGNATURE):
+                problems.append(f"{asset.path}: not a PNG")
+                continue
+            img = Image.open(io.BytesIO(raw))
+            img.load()
+            entry["size"], entry["mode"] = list(img.size), img.mode
+            entry["colorSpace"] = shader.GetInput("sourceColorSpace").Get()
+
+    registry = UsdValidation.ValidationRegistry()
+    errors = [e for e in UsdValidation.ValidationContext(registry.GetOrLoadAllValidators()).Validate(stage)
+              if not e.HasNoError()]
+    rep["validation"] = [f"{e.GetType()} {e.GetName()}: {e.GetMessage()}" for e in errors]
+    for e in errors:
+        if e.GetType() == UsdValidation.ValidationErrorType.Error:
+            problems.append(f"UsdValidation {e.GetName()}: {e.GetMessage()}")
+    rep["fits_budget"] = budget_b64 is None or rep["b64_bytes"] <= budget_b64
+    if not rep["fits_budget"]:
+        problems.append(f"base64 {rep['b64_bytes']} B over the {budget_b64} B budget")
+    return rep
+
+
+def compare_glb(usdz, glb):
+    """The package against the GLB it was made from (the server keeps the GLB on its
+    disk): same points, faces, UVs; the same RGB texels in every texture. Returns
+    (report, problems)."""
+    import io
+
+    import numpy as np
+    import trimesh
+    from PIL import Image
+    from pxr import Sdf, Usd, UsdGeom
+
+    problems = []
+    scene = trimesh.load(str(glb), force="scene")
+    tm = []
+    for node in scene.graph.nodes_geometry:  # in the scene's frame, as the server writes it
+        transform, geom_name = scene.graph[node]
+        if isinstance(scene.geometry[geom_name], trimesh.Trimesh):
+            tm.append(scene.geometry[geom_name].copy())
+            tm[-1].apply_transform(transform)
+    stage = Usd.Stage.Open(str(usdz))
+    um = [UsdGeom.Mesh(p) for p in stage.Traverse() if p.IsA(UsdGeom.Mesh)]
+    if len(tm) != 1 or len(um) != 1:
+        return {"glb_meshes": len(tm), "usd_meshes": len(um)}, ["compare_glb expects one mesh each"]
+    t, u = tm[0], um[0]
+    pts = np.asarray(u.GetPointsAttr().Get(), np.float64)
+    idx = np.asarray(u.GetFaceVertexIndicesAttr().Get()).reshape(-1, 3)
+    st = np.asarray(UsdGeom.PrimvarsAPI(u).GetPrimvar("st").Get(), np.float64)
+    rep = {"points_max_abs": float(np.abs(pts - t.vertices).max()) if pts.shape == t.vertices.shape else None,
+           "faces_equal": bool(idx.shape == t.faces.shape and (idx == t.faces).all()),
+           "st_max_abs": float(np.abs(st - t.visual.uv).max()) if st.shape == t.visual.uv.shape else None}
+    if rep["points_max_abs"] is None or rep["points_max_abs"] > 1e-6:
+        problems.append(f"points differ from the GLB: {rep['points_max_abs']}")
+    if not rep["faces_equal"]:
+        problems.append("faces differ from the GLB")
+    if rep["st_max_abs"] is None or rep["st_max_abs"] > 1e-6:
+        problems.append(f"st differs from the GLB UVs: {rep['st_max_abs']}")
+    # the convention, from the GLB's own bytes rather than trimesh's reading of them:
+    # glTF puts uv (0,0) at the image's top left, USD puts st (0,0) at its bottom left
+    raw = Path(glb).read_bytes()
+    n_json = struct.unpack_from("<I", raw, 12)[0]
+    gltf = json.loads(raw[20:20 + n_json])
+    binary = raw[20 + n_json + 8:]
+    prim = gltf["meshes"][0]["primitives"][0]
+    if len(gltf["meshes"]) == 1 and len(gltf["meshes"][0]["primitives"]) == 1 and "TEXCOORD_0" in prim["attributes"]:
+        acc = gltf["accessors"][prim["attributes"]["TEXCOORD_0"]]
+        view = gltf["bufferViews"][acc["bufferView"]]
+        uv = np.frombuffer(binary, np.float32, acc["count"] * 2,
+                           view.get("byteOffset", 0) + acc.get("byteOffset", 0)).reshape(-1, 2)
+        flip = np.abs(st - np.stack([uv[:, 0], 1 - uv[:, 1]], 1)).max() if st.shape == uv.shape else None
+        rep["st_vs_gltf_uv_flipped_max_abs"] = None if flip is None else float(flip)
+        if flip is None or flip > 1e-6:
+            problems.append(f"st is not (u, 1 - v) of the GLB's TEXCOORD_0: {flip}")
+    zf = Sdf.ZipFile.Open(str(usdz))
+    mat = t.visual.material
+    for slot, name in (("baseColorTexture", "base_color"), ("metallicRoughnessTexture", "metallic_roughness"),
+                       ("normalTexture", "normal")):
+        src = getattr(mat, slot, None)
+        if src is None:
+            continue
+        rel = f"textures/material0_{name}.png"
+        if rel not in zf.GetFileNames():
+            problems.append(f"{rel} missing for the GLB's {slot}")
+            continue
+        a = np.asarray(src.convert("RGB"))
+        b = np.asarray(Image.open(io.BytesIO(bytes(zf.GetFile(rel)))).convert("RGB"))
+        rep[f"{name}_rgb_equal"] = bool(a.shape == b.shape and (a == b).all())
+        if not rep[f"{name}_rgb_equal"]:
+            problems.append(f"{rel}: RGB texels differ from the GLB's {slot}")
+    return rep, problems
 
 
 def log(fh, *a):
@@ -143,11 +359,11 @@ def gpu_poll(samples, stop):
             break
 
 
-def service(fh, stub, image, wall, resolution):
+def service(fh, stub, image, wall, resolution, texture_sizes=(None,), tag=None):
     import requests
 
     RUNS.mkdir(exist_ok=True)
-    tag = "stub" if stub else "real"
+    tag = tag or ("stub" if stub else "real")
     port = free_port()
     env = dict(os.environ, PORT=str(port), HOST="127.0.0.1")
     if stub:
@@ -198,35 +414,49 @@ def service(fh, stub, image, wall, resolution):
         for i, v in enumerate(pred["views"][:4]):
             (RUNS / f"{tag}-view{i}.png").write_bytes(base64.b64decode(v))
 
-        t0 = time.perf_counter()
-        r = requests.post(base + "/extract", json={"state": pred["state"]},
-                          timeout=max(1, deadline - time.perf_counter()))
-        r.raise_for_status()
-        ext = r.json()
-        result["extract_wall_s"] = time.perf_counter() - t0
-        result["extract_server"] = {k: ext.get(k) for k in ("seconds", "vram_peak_mib")}
-        glb = RUNS / f"{tag}-output.glb"
-        usda = RUNS / f"{tag}-layer.usda"
-        glb.write_bytes(base64.b64decode(ext["glb"]))
-        usda.write_bytes(base64.b64decode(ext["layer"]))
-        log(fh, f"/extract {result['extract_wall_s']:.1f}s glb {glb.stat().st_size} B layer "
-                f"{usda.stat().st_size} B server {result['extract_server']}")
-
-        from pxr import Usd, UsdGeom
-        stage = Usd.Stage.Open(str(usda))
-        meshes = [UsdGeom.Mesh(p) for p in stage.Traverse() if p.IsA(UsdGeom.Mesh)]
-        pts = sum(len(m.GetPointsAttr().Get() or []) for m in meshes)
-        tris = sum(len(m.GetFaceVertexCountsAttr().Get() or []) for m in meshes)
-        result["usd"] = {"upAxis": UsdGeom.GetStageUpAxis(stage),
-                         "metersPerUnit": UsdGeom.GetStageMetersPerUnit(stage),
-                         "meshes": len(meshes), "points": pts, "faces": tris,
-                         "normals": all(m.GetNormalsAttr().HasValue() for m in meshes)}
-        log(fh, f"USD {result['usd']}")
-        ok = result["usd"]["upAxis"] == "Y" and result["usd"]["metersPerUnit"] == 1.0
+        ok = True
+        result["extract"] = {}
+        for ts in texture_sizes:  # None: the server's default, what a client gets
+            label = "default" if ts is None else str(ts)
+            body = {"state": pred["state"]} if ts is None else {"state": pred["state"], "texture_size": ts}
+            t0 = time.perf_counter()
+            r = requests.post(base + "/extract", json=body, timeout=max(1, deadline - time.perf_counter()))
+            r.raise_for_status()
+            ext = r.json()
+            wall_s = time.perf_counter() - t0
+            usdz = RUNS / (f"{tag}-asset.usdz" if ts is None else f"{tag}-asset-t{ts}.usdz")
+            usdz.write_bytes(base64.b64decode(ext["usd_b64"]))
+            # a sweep's named sizes are measurements; the default must fit the budget
+            rep = check_usdz(usdz, B64_BUDGET if ts is None else None)
+            rep["fits_budget"] = rep["b64_bytes"] <= B64_BUDGET
+            if Path(ext.get("glb_path", "")).is_file():  # same machine: the kept GLB
+                glb = RUNS / (usdz.stem.replace("-asset", "-output") + ".glb")
+                glb.write_bytes(Path(ext["glb_path"]).read_bytes())
+                rep["glb_bytes"] = glb.stat().st_size
+                rep["compare_glb"], more = compare_glb(usdz, glb)
+                rep["problems"] += more
+            if ext.get("format") != "usdz" or len(ext["usd_b64"]) != rep["b64_bytes"]:
+                rep["problems"].append(f"response format {ext.get('format')!r}, usd_b64 {len(ext['usd_b64'])} B")
+            if set(ext) & {"glb", "layer"}:
+                rep["problems"].append(f"response still carries {sorted(set(ext) & {'glb', 'layer'})}")
+            if stub and ext.get("stub") is not True:
+                rep["problems"].append("stub server answered stub=false")
+            result["extract"][label] = x = {
+                "wall_s": wall_s, "response_bytes": len(r.content), "texture_size": ext.get("texture_size"),
+                **{k: ext.get(k) for k in ("seconds", "vram_peak_mib", "usdz_seconds", "usd_bytes", "usd_files")},
+                "usdz": rep}
+            log(fh, f"/extract texture_size {ext.get('texture_size')} ({label}) {wall_s:.1f}s: usdz {rep['bytes']} B, "
+                    f"base64 {rep['b64_bytes']} B (budget {B64_BUDGET}: {'fits' if rep['fits_budget'] else 'OVER'}), "
+                    f"response {len(r.content)} B; files {rep['files']}; share {rep['share']}")
+            log(fh, f"  USDZ meshes {rep['meshes']} points {rep['points']} faces {rep['faces']} "
+                    f"material {rep.get('material')} wired {rep.get('wired')} textures {rep['textures']}")
+            log(fh, f"  validation {rep['validation']} compare_glb {rep.get('compare_glb')} server "
+                    f"{ {k: x[k] for k in ('seconds', 'vram_peak_mib', 'usdz_seconds')} }")
+            for p in rep["problems"]:
+                log(fh, f"  PROBLEM {p}")
+            ok = ok and not rep["problems"]
         if stub:
-            ok = ok and pred.get("stub") is True and ext.get("stub") is True
-        else:
-            ok = ok and len(meshes) > 0 and pts > 0 and tris > 0
+            ok = ok and pred.get("stub") is True
         rc = 0 if ok else 1
     except Exception as exc:
         log(fh, f"FAIL {type(exc).__name__}: {exc}")
@@ -262,11 +492,24 @@ if __name__ == "__main__":
     ap.add_argument("--image", default=str(DEFAULT_IMAGE))
     ap.add_argument("--resolution", type=int, default=1024)
     ap.add_argument("--wall", type=float, default=1800.0, help="seconds, for the whole run")
+    ap.add_argument("--texture-sizes", default="",
+                    help="comma list: one extract per size on one predict; 'default' = the server's")
+    ap.add_argument("--name", default=None, help="evidence name under runs/ (default check|stub|real)")
+    ap.add_argument("--usdz", default=None, help="check a .usdz on disk instead of running a server")
+    ap.add_argument("--glb", default=None, help="with --usdz: the GLB it was made from (compare_glb)")
     a = ap.parse_args()
+    if a.usdz:
+        rep = check_usdz(a.usdz)
+        if a.glb:
+            rep["compare_glb"], more = compare_glb(a.usdz, a.glb)
+            rep["problems"] += more
+        print(json.dumps(rep, indent=2))
+        sys.exit(1 if rep["problems"] else 0)
+    sizes = [None if s.strip() == "default" else int(s) for s in a.texture_sizes.split(",") if s.strip()]
     RUNS.mkdir(exist_ok=True)
-    name = "check" if a.imports_only else ("stub" if a.stub else "real")
+    name = a.name or ("check" if a.imports_only else ("stub" if a.stub else "real"))
     with open(RUNS / f"{name}.log", "w") as fh:
         if a.imports_only:
             sys.path[:0] = [str(HERE / "src" / d) for d in ("pixal3d", "moge", "flexgemm2-pkg")]
             sys.exit(imports_only(fh))
-        sys.exit(service(fh, a.stub, a.image, a.wall, a.resolution))
+        sys.exit(service(fh, a.stub, a.image, a.wall, a.resolution, sizes or [None], name))

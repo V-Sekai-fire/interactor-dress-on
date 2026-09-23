@@ -1,5 +1,6 @@
-health {'status': 'ok', 'ready': True, 'stub': True} after 1.2s (model load included)
+health {'status': 'ok', 'ready': True, 'stub': True} after 1.7s (model load included)
 /predict 0.0s state 9 B views 4 server {'seconds': None, 'vram_peak_mib': None, 'camera_params': None}
-/extract 1.7s glb 9 B layer 303 B server {'seconds': None, 'vram_peak_mib': None}
-USD {'upAxis': 'Y', 'metersPerUnit': 1.0, 'meshes': 0, 'points': 0, 'faces': 0, 'normals': True}
-PASS stub in 3.2s; nvidia-smi max used {'NVIDIA GeForce RTX 3090': 33, 'NVIDIA GeForce RTX 4090': 2710} (before {'NVIDIA GeForce RTX 3090': 33, 'NVIDIA GeForce RTX 4090': 2709})
+/extract texture_size 1536 (default) 2.3s: usdz 3586 B, base64 4784 B (budget 18000000: fits), response 5099 B; files {'asset.usdc': 2628, 'textures/material0_base_color.png': 120, 'textures/material0_metallic_roughness.png': 120}; share {'layer': 0.7328499721137758, 'textures': 0.06692693809258227, 'zip_overhead': 0.20022308979364195}
+  USDZ meshes 1 points 4 faces 2 material /Asset/Materials/Material_0 wired {'diffuseColor': 'textures/material0_base_color.png:rgb', 'metallic': 'textures/material0_metallic_roughness.png:b', 'roughness': 'textures/material0_metallic_roughness.png:g'} textures {'textures/material0_base_color.png': {'resolves_in_package': True, 'bytes': 120, 'size': [4, 4], 'mode': 'RGB', 'colorSpace': 'sRGB'}, 'textures/material0_metallic_roughness.png': {'resolves_in_package': True, 'bytes': 120, 'size': [4, 4], 'mode': 'RGB', 'colorSpace': 'raw'}}
+  validation [] compare_glb {'points_max_abs': 0.0, 'faces_equal': True, 'st_max_abs': 0.0, 'st_vs_gltf_uv_flipped_max_abs': 0.0, 'base_color_rgb_equal': True, 'metallic_roughness_rgb_equal': True} server {'seconds': None, 'vram_peak_mib': None, 'usdz_seconds': 0.3142161999930977}
+PASS stub in 6.4s; nvidia-smi max used {'NVIDIA GeForce RTX 3090': 21, 'NVIDIA GeForce RTX 4090': 2369} (before {'NVIDIA GeForce RTX 3090': 21, 'NVIDIA GeForce RTX 4090': 2173})

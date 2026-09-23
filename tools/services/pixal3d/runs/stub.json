@@ -1,34 +1,98 @@
 {
   "mode": "stub",
-  "port": 63321,
-  "load_s": 1.1856973999965703,
-  "predict_wall_s": 0.027513400003954303,
+  "port": 52436,
+  "load_s": 1.7176911999995355,
+  "predict_wall_s": 0.03818409999803407,
   "predict_server": {
     "seconds": null,
     "vram_peak_mib": null,
     "camera_params": null
   },
-  "extract_wall_s": 1.7128004999976838,
-  "extract_server": {
-    "seconds": null,
-    "vram_peak_mib": null
-  },
-  "usd": {
-    "upAxis": "Y",
-    "metersPerUnit": 1.0,
-    "meshes": 0,
-    "points": 0,
-    "faces": 0,
-    "normals": true
+  "extract": {
+    "default": {
+      "wall_s": 2.3330204999947455,
+      "response_bytes": 5099,
+      "texture_size": 1536,
+      "seconds": null,
+      "vram_peak_mib": null,
+      "usdz_seconds": 0.3142161999930977,
+      "usd_bytes": 3586,
+      "usd_files": {
+        "asset.usdc": 2628,
+        "textures/material0_base_color.png": 120,
+        "textures/material0_metallic_roughness.png": 120
+      },
+      "usdz": {
+        "bytes": 3586,
+        "b64_bytes": 4784,
+        "budget_b64": 18000000,
+        "problems": [],
+        "files": {
+          "asset.usdc": 2628,
+          "textures/material0_base_color.png": 120,
+          "textures/material0_metallic_roughness.png": 120
+        },
+        "share": {
+          "layer": 0.7328499721137758,
+          "textures": 0.06692693809258227,
+          "zip_overhead": 0.20022308979364195
+        },
+        "upAxis": "Y",
+        "metersPerUnit": 1.0,
+        "defaultPrim": "/Asset",
+        "meshes": 1,
+        "points": 4,
+        "faces": 2,
+        "textures": {
+          "textures/material0_base_color.png": {
+            "resolves_in_package": true,
+            "bytes": 120,
+            "size": [
+              4,
+              4
+            ],
+            "mode": "RGB",
+            "colorSpace": "sRGB"
+          },
+          "textures/material0_metallic_roughness.png": {
+            "resolves_in_package": true,
+            "bytes": 120,
+            "size": [
+              4,
+              4
+            ],
+            "mode": "RGB",
+            "colorSpace": "raw"
+          }
+        },
+        "material": "/Asset/Materials/Material_0",
+        "wired": {
+          "diffuseColor": "textures/material0_base_color.png:rgb",
+          "metallic": "textures/material0_metallic_roughness.png:b",
+          "roughness": "textures/material0_metallic_roughness.png:g"
+        },
+        "validation": [],
+        "fits_budget": true,
+        "glb_bytes": 1640,
+        "compare_glb": {
+          "points_max_abs": 0.0,
+          "faces_equal": true,
+          "st_max_abs": 0.0,
+          "st_vs_gltf_uv_flipped_max_abs": 0.0,
+          "base_color_rgb_equal": true,
+          "metallic_roughness_rgb_equal": true
+        }
+      }
+    }
   },
   "gpu_mem_used_mib_max": {
-    "NVIDIA GeForce RTX 3090": 33,
-    "NVIDIA GeForce RTX 4090": 2710
+    "NVIDIA GeForce RTX 3090": 21,
+    "NVIDIA GeForce RTX 4090": 2369
   },
   "gpu_mem_used_mib_before": {
-    "NVIDIA GeForce RTX 3090": 33,
-    "NVIDIA GeForce RTX 4090": 2709
+    "NVIDIA GeForce RTX 3090": 21,
+    "NVIDIA GeForce RTX 4090": 2173
   },
-  "total_wall_s": 3.1715827000007266,
+  "total_wall_s": 6.426600099999632,
   "pass": true
 }

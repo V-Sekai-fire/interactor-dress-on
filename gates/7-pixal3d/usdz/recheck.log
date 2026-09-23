@@ -1,0 +1,16 @@
+real-asset.usdz: 11138085 B, base64 14850780 B, layer 0.589 textures 0.411; 185772 points 197448 faces; {'material0_base_color.png': ([1536, 1536], 4203037), 'material0_metallic_roughness.png': ([1536, 1536], 370482)}
+  wired {'diffuseColor': 'textures/material0_base_color.png:rgb', 'metallic': 'textures/material0_metallic_roughness.png:b', 'roughness': 'textures/material0_metallic_roughness.png:g'}; validation []
+  compare_glb {'points_max_abs': 0.0, 'faces_equal': True, 'st_max_abs': 0.0, 'st_vs_gltf_uv_flipped_max_abs': 0.0, 'base_color_rgb_equal': True, 'metallic_roughness_rgb_equal': True}
+  problems []
+real-sweep-asset-t2048.usdz: 14856491 B, base64 19808656 B, layer 0.471 textures 0.529; 198661 points 203652 faces; {'material0_base_color.png': ([2048, 2048], 7177571), 'material0_metallic_roughness.png': ([2048, 2048], 687966)}
+  wired {'diffuseColor': 'textures/material0_base_color.png:rgb', 'metallic': 'textures/material0_metallic_roughness.png:b', 'roughness': 'textures/material0_metallic_roughness.png:g'}; validation []
+  compare_glb {'points_max_abs': 0.0, 'faces_equal': True, 'st_max_abs': 0.0, 'st_vs_gltf_uv_flipped_max_abs': 0.0, 'base_color_rgb_equal': True, 'metallic_roughness_rgb_equal': True}
+  problems ['base64 19808656 B over the 18000000 B budget']
+real-sweep-asset-t1536.usdz: 11703016 B, base64 15604024 B, layer 0.598 textures 0.402; 198887 points 204294 faces; {'material0_base_color.png': ([1536, 1536], 4302632), 'material0_metallic_roughness.png': ([1536, 1536], 399792)}
+  wired {'diffuseColor': 'textures/material0_base_color.png:rgb', 'metallic': 'textures/material0_metallic_roughness.png:b', 'roughness': 'textures/material0_metallic_roughness.png:g'}; validation []
+  compare_glb {'points_max_abs': 0.0, 'faces_equal': True, 'st_max_abs': 0.0, 'st_vs_gltf_uv_flipped_max_abs': 0.0, 'base_color_rgb_equal': True, 'metallic_roughness_rgb_equal': True}
+  problems []
+real-sweep-asset-t1024.usdz: 9237038 B, base64 12316052 B, layer 0.757 textures 0.243; 198672 points 203688 faces; {'material0_base_color.png': ([1024, 1024], 2063541), 'material0_metallic_roughness.png': ([1024, 1024], 181723)}
+  wired {'diffuseColor': 'textures/material0_base_color.png:rgb', 'metallic': 'textures/material0_metallic_roughness.png:b', 'roughness': 'textures/material0_metallic_roughness.png:g'}; validation []
+  compare_glb {'points_max_abs': 0.0, 'faces_equal': True, 'st_max_abs': 0.0, 'st_vs_gltf_uv_flipped_max_abs': 0.0, 'base_color_rgb_equal': True, 'metallic_roughness_rgb_equal': True}
+  problems []

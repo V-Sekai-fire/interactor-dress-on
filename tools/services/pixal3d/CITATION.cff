@@ -11,10 +11,15 @@ abstract: >-
   patches/service-win.patch (interactor-pixal3d-image-to-textured-mesh
   @61df29e): worker_entry.py loads MoGe-3 (moge.model.v3, default
   Ruicheng/moge-3-vitl) instead of MoGe-2, and takes the MoGe and DINOv3
-  weights from PIXAL3D_MOGE / PIXAL3D_DINO; server.py writes the geometry
-  into the USD layer as UsdGeom.Mesh prims under /Asset/Geometry (points,
+  weights from PIXAL3D_MOGE / PIXAL3D_DINO; server.py's /extract answers
+  with one .usdz instead of the GLB and a .usda layer: a USDC root layer with
+  the geometry as UsdGeom.Mesh prims under /Asset/Geometry (points,
   faceVertexCounts/Indices, vertex normals, primvars:st, extent; stage upAxis
-  Y, metersPerUnit 1) beside the GLB asset path it already wrote, reports
+  Y, metersPerUnit 1), each bound to a UsdPreviewSurface material built from
+  the GLB's glTF material, whose textures are PNG files in the package
+  (Sdf.ZipFileWriter: stored, 64-byte aligned); the GLB stays on the server's
+  disk; texture_size defaults to 1536 (upstream 2048) so the result fits
+  RunPod's 20 MB cap; the stub writes a textured quad GLB; it reports
   per-call seconds and torch peak VRAM, and takes HOST from the environment;
   worker_entry.generate renders its preview views through render_frames with
   an EnvMap (app.py's forest.exr) and keeps the 'shaded' image, because

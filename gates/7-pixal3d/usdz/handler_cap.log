@@ -1,0 +1,14 @@
+[pixal3d-worker] starting C:\Users\ernest.lee\AppData\Local\Temp\claude\C--interactor-dress-on\5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5\scratchpad\ido-usdz\tools\services\pixal3d\serve.py on http://127.0.0.1:51582, CUDA_VISIBLE_DEVICES=0, MODELS_DIR=None
+INFO:     Started server process [20808]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:51582 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51584 - "GET /health HTTP/1.1" 200 OK
+[pixal3d-worker] server ready in 1.6 s: {'status': 'ok', 'ready': True, 'stub': True}
+INFO:     127.0.0.1:51590 - "POST /extract HTTP/1.1" 200 OK
+[pixal3d-worker] extract -> HTTP 200 in 2.0 s
+ok   cap 20000000 B: keys ['format', 'glb_path', 'stub', 'texture_size', 'usd_b64', 'usd_bytes', 'usd_files', 'usdz_seconds'], usd_b64 4784 B
+INFO:     127.0.0.1:51595 - "POST /extract HTTP/1.1" 200 OK
+[pixal3d-worker] extract -> HTTP 200 in 0.0 s
+ok   cap 1000 B: {'error': "/extract: result 5100 B is over RunPod's 1000 B result cap (lower texture_size or decimation_target)"}
+PASS

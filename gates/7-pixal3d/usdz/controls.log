@@ -1,0 +1,43 @@
+ok   good (the server's package): 0 problem(s)
+ok   deflated zip: 8 problem(s)
+       asset.usdc: compressed (method 8)
+       asset.usdc: data at offset 40, not 64-byte aligned
+       textures/material0_base_color.png: compressed (method 8)
+       textures/material0_base_color.png: data at offset 1741, not 64-byte aligned
+       textures/material0_metallic_roughness.png: compressed (method 8)
+       textures/material0_metallic_roughness.png: data at offset 1930, not 64-byte aligned
+       asset.usdc is not a USD crate
+       the stage does not open: Error in 'pxrInternal_v0_26_8__pxrReserved__::Sdf_UsdzResolver::OpenAsset' at line 220 in file D:\a\OpenUSD\OpenUSD\pxr\usd\sdf\usdzResolver.cpp : 'Cannot open asset.usdc in C:\Users\ernest.lee\AppData\Local\Temp\tmphn4e2m__\deflated.usdz: compressed files are not supported'
+ok   stored, unaligned: 9 problem(s)
+       asset.usdc: data at offset 41, not 64-byte aligned
+       textures/material0_base_color.png: data at offset 2733, not 64-byte aligned
+       textures/material0_metallic_roughness.png: data at offset 2925, not 64-byte aligned
+       UsdValidation ByteMisalignment: File 'asset.usdc' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 41.
+       UsdValidation ByteMisalignment: File 'textures/material0_base_color.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2733.
+       UsdValidation ByteMisalignment: File 'textures/material0_metallic_roughness.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2925.
+       UsdValidation ByteMisalignment: File 'asset.usdc' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 41.
+       UsdValidation ByteMisalignment: File 'textures/material0_base_color.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2733.
+       UsdValidation ByteMisalignment: File 'textures/material0_metallic_roughness.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2925.
+       validation: UsdValidation.ValidationErrorType.Error ByteMisalignment: File 'asset.usdc' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 41.
+       validation: UsdValidation.ValidationErrorType.Error ByteMisalignment: File 'textures/material0_base_color.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2733.
+       validation: UsdValidation.ValidationErrorType.Error ByteMisalignment: File 'textures/material0_metallic_roughness.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2925.
+       validation: UsdValidation.ValidationErrorType.Error ByteMisalignment: File 'asset.usdc' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 41.
+       validation: UsdValidation.ValidationErrorType.Error ByteMisalignment: File 'textures/material0_base_color.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2733.
+       validation: UsdValidation.ValidationErrorType.Error ByteMisalignment: File 'textures/material0_metallic_roughness.png' in package 'C:/Users/ernest.lee/AppData/Local/Temp/tmphn4e2m__/unaligned.usdz' has an invalid offset 2925.
+Warning: in _EnqueueDependency at line 149 of D:\a\OpenUSD\OpenUSD\pxr\usd\usdUtils\assetLocalization.cpp -- Failed to resolve reference @textures/material0_metallic_roughness.png@ with computed asset path @textures/material0_metallic_roughness.png@ found in layer @C:\Users\ernest.lee\AppData\Local\Temp\tmphn4e2m__\missing.usdz@.
+Warning: in _EnqueueDependency at line 149 of D:\a\OpenUSD\OpenUSD\pxr\usd\usdUtils\assetLocalization.cpp -- Failed to resolve reference @textures/material0_metallic_roughness.png@ with computed asset path @textures/material0_metallic_roughness.png@ found in layer @C:\Users\ernest.lee\AppData\Local\Temp\tmphn4e2m__\missing.usdz@.
+Warning: in _EnqueueDependency at line 149 of D:\a\OpenUSD\OpenUSD\pxr\usd\usdUtils\assetLocalization.cpp -- Failed to resolve reference @textures/material0_metallic_roughness.png@ with computed asset path @textures/material0_metallic_roughness.png@ found in layer @C:\Users\ernest.lee\AppData\Local\Temp\tmphn4e2m__\missing.usdz@.
+ok   texture missing: 3 problem(s)
+       textures/material0_metallic_roughness.png: does not resolve inside the package ('')
+       textures/material0_metallic_roughness.png: not a file in the package
+       UsdValidation UnresolvableDependency: Found unresolvable external dependency 'textures/material0_metallic_roughness.png'.
+       validation: UsdValidation.ValidationErrorType.Error UnresolvableDependency: Found unresolvable external dependency 'textures/material0_metallic_roughness.png'.
+ok   material unbound: 2 problem(s)
+       Mesh_0: no material bound
+       UsdValidation InvalidMaterialCollection: Invalid number of targets on material binding </Asset/Geometry/Mesh_0.material:binding>
+       validation: UsdValidation.ValidationErrorType.Error InvalidMaterialCollection: Invalid number of targets on material binding </Asset/Geometry/Mesh_0.material:binding>
+ok   usda root layer: 1 problem(s)
+       first file in the package is not a .usdc layer: ['asset.usda']
+ok   over budget: 1 problem(s)
+       base64 4784 B over the 1000 B budget
+PASS

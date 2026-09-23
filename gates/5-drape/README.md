@@ -197,8 +197,13 @@ target. The loss is MATCH_TRAJECTORY with K = 20.
 | 0.539770 (printed) | 0.012444 | 0.0014124 |
 | 0.5397702 | 0.0130591 | 0.0015085 |
 
-- Moving μ by 7e-9 moves dL/dμ by 4.4% and the loss by 0.6%. Moving it by
-  2e-7 moves the loss by 6.5%.
+- Moving μ by 9.7e-9 (μ₀ to float32 μ₀) moves dL/dμ by 4.4% and the loss by
+  0.6%; moving it by 4.4e-9 (μ₀ to 0.5397702) moves dL/dμ by 7.8% and the
+  loss by 6.5%; the 2e-7 pair (μ₀ vs the printed 0.539770) moves the loss by
+  only 0.26%. The flat controls show the sensitivity; they do not by
+  themselves account for the misses (G2 is 4.4× LBFGSpp's own float32
+  movement; backwardLog's 0.01153 lies below all four points, and cpu and rd
+  differ by 7.8% at μ₀). G2 and G5 stay open.
 - Across these four points dL/dμ spans 7.5% of its mean, and backwardLog's
   0.01153 sits 5.0% below that span.
 - In native mode, dL/dμ comes from the friction events of the last 20 steps,

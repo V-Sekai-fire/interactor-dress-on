@@ -120,7 +120,8 @@ our own, no host DLL. The GPU is reachable only through Godot's
   index 0 on the next): check the adapter line in the log. The native
   references ran on the 4090; the drape is bit-identical on the 3090.
 - DiffCloth's sphere demo is chaotic after its self-collision onset (step
-  ~70): a 7e-9 change of mu moves the 350-step loss by 9% and dL/dmu by 7%.
+  ~70): a 9.7e-9 change of mu (mu0 vs float32(mu0)) moves the 350-step
+  dL/dmu by 4.4%, and a 4.4e-9 change moves it by 7.8% and the loss by 6.5%.
   Compare with the native run at its exact seed-1 mu, 0.5397701956236457
   (`kNativeSphereMu0`), never the printed 0.539770; at the exact value every
   printed per-step statistic matches native to step 70 (gates/5-drape/trace).

@@ -29,7 +29,17 @@ abstract: >-
   fallback used to return an already-freed block (Gate 4: "Possible
   double-free" in ~Delaunay3d); that is fixed where it lives, in
   vendor/sandbox-api (see its CITATION.cff), so the carve-from-malloc
-  workaround this subset carried is gone.
+  workaround this subset carried is gone. mesh/mesh_reorder.cpp
+  Hilbert_vcmp (the BRIO/Hilbert insertion order of every Delaunay here)
+  breaks ties on a coordinate by the vertex index, a strict total order:
+  reorder_split's std::nth_element leaves tied elements in an unspecified
+  order, and libc++ and libstdc++ leave them differently, so points sharing
+  a coordinate (a skirt panel's boundary: ring samples at one height, seam
+  samples in one plane) were inserted in another order in the guest than
+  natively, MingCurve got Geogram's Delaunay faces in another order (1263
+  both ways), and DMWT tiled one panel differently (Gate 4 skirt_tube:
+  1304 against 1307 welded vertices). Untied inputs sort as before; the
+  other nine Gate 4 checks read the same numbers.
 type: software
 authors:
   - family-names: Lévy

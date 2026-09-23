@@ -39,6 +39,7 @@ struct Params {
 	double split_closed = 1;
 	double merge_eps = 0.02;
 	double mirror = 0;
+	double boundary = 0;
 };
 
 struct SketcherDeleter {
@@ -73,6 +74,7 @@ CassieSketcher *sketcher() {
 	}
 	CassieSketcher *sk = g_sk.get();
 	sk->set_split_closed_strokes(g_p.split_closed != 0);
+	sk->set_boundary_strokes(g_p.boundary != 0);
 	sk->get_sketch_graph()->set_merge_epsilon(real_t(g_p.merge_eps));
 	sk->get_surface_manager()->set_target_edge_length(real_t(g_p.target_edge_length));
 	Ref<CassieSketchContext> ctx = sk->get_sketch_context();
@@ -227,9 +229,12 @@ std::string set_param(const std::string &name, double value) {
 			slot = &g_p.merge_eps;
 		} else if (name == "mirror") {
 			slot = &g_p.mirror;
+		} else if (name == "boundary") {
+			slot = &g_p.boundary;
 		}
 		if (slot == nullptr) {
-			return fail("unknown param '" + name + "' (snap_radius, surface_offset, target_edge_length, split_closed, merge_eps, mirror)");
+			return fail("unknown param '" + name +
+					"' (snap_radius, surface_offset, target_edge_length, split_closed, merge_eps, mirror, boundary)");
 		}
 		if (!std::isfinite(value)) {
 			return fail(name + " must be finite");
@@ -253,6 +258,8 @@ double get_param(const std::string &name) {
 		return g_p.merge_eps;
 	} else if (name == "mirror") {
 		return g_p.mirror;
+	} else if (name == "boundary") {
+		return g_p.boundary;
 	}
 	return NAN;
 }
@@ -300,11 +307,19 @@ std::string pen_end(int id) {
 		const Ref<CassieSketchGraph> g = sk->get_sketch_graph();
 		g_counts.edges = g->get_edge_count();
 		g_counts.nodes = g->get_node_count();
-		g_counts.cycles = int(g->find_cycles().size());
-		return fmt("ok=%d valid=%d closed=%d new_patches=%d patches=%d edges=%d nodes=%d cycles=%d",
+		// cycles: the face cycles that bound surface; openings: those made
+		// only of boundary strokes (no patch).
+		const Array cycles = g->find_cycles();
+		g_counts.cycles = 0;
+		g_counts.openings = 0;
+		for (int i = 0; i < cycles.size(); ++i) {
+			(g->is_opening(cycles[i]) ? g_counts.openings : g_counts.cycles) += 1;
+		}
+		return fmt("ok=%d valid=%d closed=%d new_patches=%d patches=%d edges=%d nodes=%d cycles=%d openings=%d",
 				int(bool(r.get("ok", false))), int(bool(r.get("is_valid", false))),
 				int(fs.is_valid() && fs->is_closed_loop()), int(np.size()),
-				sk->get_surface_manager()->get_patch_count(), g_counts.edges, g_counts.nodes, g_counts.cycles);
+				sk->get_surface_manager()->get_patch_count(), g_counts.edges, g_counts.nodes, g_counts.cycles,
+				g_counts.openings);
 	});
 }
 
@@ -625,6 +640,45 @@ void topology(BuiltMesh &m) {
 	}
 }
 
+// The patch each remeshed triangle belongs to: the input patch nearest its
+// centroid (CassieSurfacePatch::project over that patch's input triangles).
+// The remesh holds the seams between patches as features, so no triangle
+// straddles one and its centroid lies on its own patch. One patch: its id.
+std::vector<int32_t> nearest_patch_ids(const std::vector<float> &in_v, const std::vector<int32_t> &in_f,
+		const std::vector<int32_t> &in_ids, const std::vector<float> &out_v, const std::vector<int32_t> &out_f) {
+	std::map<int32_t, std::vector<int32_t>> by_id;
+	for (size_t t = 0; t + 2 < in_f.size(); t += 3) {
+		std::vector<int32_t> &tri = by_id[in_ids[t / 3]];
+		tri.insert(tri.end(), { in_f[t], in_f[t + 1], in_f[t + 2] });
+	}
+	std::vector<int32_t> out(out_f.size() / 3, by_id.size() == 1 ? by_id.begin()->first : -1);
+	if (by_id.size() < 2) {
+		return out;
+	}
+	std::vector<std::pair<int32_t, Ref<CassieSurfacePatch>>> patches;
+	for (const auto &kv : by_id) {
+		patches.emplace_back(kv.first, patch_from_arrays(in_v, kv.second));
+	}
+	for (size_t t = 0; t + 2 < out_f.size(); t += 3) {
+		Vector3 c;
+		for (int k = 0; k < 3; ++k) {
+			const float *p = &out_v[3 * size_t(out_f[t + k])];
+			c += Vector3(p[0], p[1], p[2]);
+		}
+		c /= real_t(3);
+		double best = 1e30;
+		for (const auto &p : patches) {
+			const Dictionary d = p.second->project(c);
+			const double dist = bool(d.get("on_surface", false)) ? double(d.get("distance", 1e30)) : 1e30;
+			if (dist < best) {
+				best = dist;
+				out[t / 3] = p.first;
+			}
+		}
+	}
+	return out;
+}
+
 bool remesh(BuiltMesh &m, double target, std::string &err) {
 	pmp::SurfaceMesh mesh;
 	const size_t nv = m.vertices.size() / 3;
@@ -632,20 +686,33 @@ bool remesh(BuiltMesh &m, double target, std::string &err) {
 	for (size_t i = 0; i < nv; ++i) {
 		vh[i] = mesh.add_vertex(pmp::Point(m.vertices[3 * i], m.vertices[3 * i + 1], m.vertices[3 * i + 2]));
 	}
+	auto fpatch = mesh.face_property<int32_t>("f:patch", -1);
 	for (size_t t = 0; t + 2 < m.triangles.size(); t += 3) {
-		mesh.add_triangle(vh[size_t(m.triangles[t])], vh[size_t(m.triangles[t + 1])], vh[size_t(m.triangles[t + 2])]);
+		const pmp::Face f =
+				mesh.add_triangle(vh[size_t(m.triangles[t])], vh[size_t(m.triangles[t + 1])], vh[size_t(m.triangles[t + 2])]);
+		if (f.is_valid() && t / 3 < m.patch_ids.size()) {
+			fpatch[f] = m.patch_ids[t / 3];
+		}
 	}
 	// The boundary is the seam to the next stage: hold it as a feature so the
-	// remesh splits it but never moves it off its polyline.
+	// remesh splits it but never moves it off its polyline. The seams between
+	// two patches are curvenet curves too, and are held the same way, so every
+	// remeshed triangle stays on one patch (nearest_patch_ids).
 	auto efeature = mesh.edge_property<bool>("e:feature", false);
 	auto vfeature = mesh.vertex_property<bool>("v:feature", false);
 	for (pmp::Edge e : mesh.edges()) {
-		if (mesh.is_boundary(e)) {
+		bool feature = mesh.is_boundary(e);
+		if (!feature) {
+			feature = fpatch[mesh.face(mesh.halfedge(e, 0))] != fpatch[mesh.face(mesh.halfedge(e, 1))];
+		}
+		if (feature) {
 			efeature[e] = true;
 			vfeature[mesh.vertex(e, 0)] = true;
 			vfeature[mesh.vertex(e, 1)] = true;
 		}
 	}
+	const std::vector<float> in_v = m.vertices;
+	const std::vector<int32_t> in_f = m.triangles, in_ids = m.patch_ids;
 	try {
 		pmp::uniform_remeshing(mesh, pmp::Scalar(target), 10, true);
 	} catch (const std::exception &e) {
@@ -666,7 +733,7 @@ bool remesh(BuiltMesh &m, double target, std::string &err) {
 			m.triangles.push_back(int32_t(v.idx()));
 		}
 	}
-	m.patch_ids.assign(m.triangles.size() / 3, -1);
+	m.patch_ids = nearest_patch_ids(in_v, in_f, in_ids, m.vertices, m.triangles);
 	return true;
 }
 

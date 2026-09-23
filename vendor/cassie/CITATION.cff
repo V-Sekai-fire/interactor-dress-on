@@ -48,6 +48,31 @@ abstract: >-
   never produced a patch: find_cycles reported the two-edge cycle and the
   surface manager got an empty boundary (Gate 4 pen_sphere: 1 cycle, 0
   patches).
+  (6) CassieSketchGraph::_crossings counts the whole stretch beside a knot
+  two polylines share as the endpoint merge, not a crossing: from two ends
+  that meet within merge_epsilon (one node once add_stroke merges them),
+  _knot_zone grows along both polylines while each next segment stays
+  within the proximity of the other's. Upstream exempted only a hit on both
+  first or last segments (s < 0.05 / > 0.95), which holds while the
+  proximity is well under the sample spacing. The sketcher bakes a stroke to
+  33 samples (a 0.64 m half ring: 2 cm segments) and passes proximity
+  max(snap 0.01, merge_eps 0.02 to 0.05), so hits on the second and third
+  segments beside a knot were split as T-junctions: edges trimmed short of
+  their knot, or a dangling node 2 to 6.5 cm from it (Cut 8's scripted
+  skirt: 5 or 6 knots, degrees 3,3,2,3,1, where there are 4 of degree 3).
+  (7) Boundary strokes. CassieSketcher::boundary_strokes is a pen mode
+  captured at begin_stroke; add_stroke_intersecting(..., p_boundary) marks
+  the stroke's graph edges (CassieSketchGraphEdge::boundary, kept by the
+  slices of a split edge); CassieSketchGraph::is_opening is true when every
+  edge of a cycle is a boundary edge, and CassieSurfaceManager::update gives
+  such a cycle no patch. find_cycles reports every face cycle of the
+  network, so a closed network is surfaced closed: a skirt's waist ring, hem
+  ring and two seams bound 2 panels and the 2 caps over the waist and the
+  hem, and the caps came out as patches (adaptation 5 surfaces two-edge
+  cycles, which the Lean port of Unity's walk refused). Whether a ring is a
+  cap or an opening is the author's intent, not the network's; drawing the
+  rings as boundary strokes says it. apply_remote_samples uses the mode
+  current when it runs (the stroke packet does not carry it).
 type: software
 authors:
   - name: V-Sekai-fire

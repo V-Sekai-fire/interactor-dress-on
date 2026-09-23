@@ -4,13 +4,13 @@ Two parts. **Gate 4 (the stage)**: `curvenet.elf` runs Cassie's pen → curvenet
 
 ## Gate 4: curvenet.elf against its flat control
 
-**Result: PASS** (`results.txt`, `run.log`). The guest ran all 9 checks in `guest/curvenet/checks.cpp` and every one passed. The native `cassie_checks.exe` runs the same two TUs (`native-checks.log`, `native-build.log`). Guest and native agree on all 9: same verdicts, same integer outputs, same float signatures. A second pass in the same guest produced byte-identical lines. `llvm-nm -C curvenet.elf` finds 13,521 symbols and 0 `Eigen::`.
+**Result: PASS** (`results.txt`, `run.log`). The guest ran all 10 checks in `guest/curvenet/checks.cpp` and every one passed. The native `cassie_checks.exe` runs the same two TUs (`native-checks.log`, `native-build.log`). Guest and native agree on all 10: same verdicts, same integer outputs, same float signatures. A second pass in the same guest produced byte-identical lines. `llvm-nm -C curvenet.elf` finds 13,587 symbols and 0 `Eigen::`.
 
 How the gate was run:
 
 ```
 tests/native/curvenet/build.sh                     # native; writes native-checks.log
-BUILD_DIR=build/rv64 ./build.sh                    # riscv64; installs project/curvenet.elf
+BUILD_DIR=build/rv64 BUILD_FIT=0 BUILD_TARGETS=curvenet ./build.sh   # riscv64; installs project/curvenet.elf
 godot --path project --headless --import           # first run after adding the ELF
 godot --path project --script gate_curvenet.gd --rendering-driver vulkan --xr-mode off > ../gates/4-curvenet/run.log 2>&1
 godot --path project --script probe_curvenet_wrappers.gd --rendering-driver vulkan --xr-mode off > ../gates/4-curvenet/wrappers.log 2>&1
@@ -20,31 +20,37 @@ Every check has a negative control, and each control must come out differently f
 
 | check | ints (guest = native) | guest ms | what it shows (control) |
 |---|---|---|---|
-| beautify_determinism | 18,1,1 | 4.1 | identical strokes give the same 18 floats (control: a 0.05 bump differs) |
-| curvenet_extract | 1,0 | 0.9 | triangle → 1 cycle (control: open path → 0) |
-| patch_pipeline | 3596,0 | 1219 | triangle cycle → 3596 patch triangles (control: one-edge graph → 0) |
-| crossing_split | 9,9,1,9474,1,1,0,3 | 1153 | 3 overshooting strokes → 9 edges, 9 nodes, 1 cycle, 9474 tris; edge 0 is untouched and keeps its id, crossed edge 1 is replaced (control: `add_stroke` → 0 cycles over 3 edges) |
-| constraint_solver | 3,1,1 | 1.4 | mirror pins take 0.05 → 0.00000 (control: the raw input fails the 5e-3 tolerance) |
-| pen_sphere | 1,65,65,1,3954,1,3944,2,2,0,0 | 1143 | one closed stroke 1 cm off an r=0.5 icosphere(3): all 65 samples snapped to [0.499, 0.5025] → 1 patch → `mesh_build` 1 loop (3954 tris; PMP remesh 0.02: 3944 tris, 1 loop) → `curvenet_build` 2 curves, 2 knots (controls: 270° arc → 0 patches; split_closed=0 → 0) |
-| extractor_cube | 12,8,8,0 | 14.4 | cube → 12 curves, 8 knots, all 8 of degree 3 (control: icosphere(3) → at most 1 curve; it gives 0) |
-| delaunay_small_scale | 1,12,12,0 | 0.5 | a 1 mm polygon 1 m from the origin (n=11, h=8) → 12 = 2n−2−h triangles (control: collinear points refused) |
+| beautify_determinism | 18,1,1 | 3.3 | identical strokes give the same 18 floats (control: a 0.05 bump differs) |
+| curvenet_extract | 1,0 | 0.7 | triangle → 1 cycle (control: open path → 0) |
+| patch_pipeline | 3596,0 | 1074 | triangle cycle → 3596 patch triangles (control: one-edge graph → 0) |
+| crossing_split | 9,9,1,9474,1,1,0,3 | 995 | 3 overshooting strokes → 9 edges, 9 nodes, 1 cycle, 9474 tris; edge 0 is untouched and keeps its id, crossed edge 1 is replaced (control: `add_stroke` → 0 cycles over 3 edges) |
+| constraint_solver | 3,1,1 | 1.2 | mirror pins take 0.05 → 0.00000 (control: the raw input fails the 5e-3 tolerance) |
+| pen_sphere | 1,65,65,1,3954,1,3944,2,2,0,0 | 894 | one closed stroke 1 cm off an r=0.5 icosphere(3): all 65 samples snapped to [0.499, 0.5025] → 1 patch → `mesh_build` 1 loop (3954 tris; PMP remesh 0.02: 3944 tris, 1 loop) → `curvenet_build` 2 curves, 2 knots (controls: 270° arc → 0 patches; split_closed=0 → 0) |
+| extractor_cube | 12,8,8,0 | 14.0 | cube → 12 curves, 8 knots, all 8 of degree 3 (control: icosphere(3) → at most 1 curve; it gives 0) |
+| delaunay_small_scale | 1,12,12,0 | 0.4 | a 1 mm polygon 1 m from the origin (n=11, h=8) → 12 = 2n−2−h triangles (control: collinear points refused) |
 | mesh_weld | 4,5,2,1,1,4,1,2,2 | 0.1 | two triangles in two parts weld into V=4, E=5, F=2: 1 component, 1 loop of 4, Euler 1 (control: weld_eps=0 → 2 components, 2 loops) |
+| skirt_tube | 4,6,4,4,6,2,2,2,2,0,1,2,0,2,0,0,2,0,0,1,2,0,2,0,0,2,0,0,0,0,4,2,2 | 1208 | Cut 8's scripted skirt on a capped cylinder (r 0.15; rings of r 0.16 at y 0.9 and 0.5 snap onto it), the four half rings drawn as boundary strokes: 4 knots, 6 edges; 4 knots of degree 3, 6 curves; 2 cycles and 2 openings, 2 patches, both panels (each touches both rings and both seams), one per side. `mesh_build(0, 1e-5)` and `(0.02, 1e-5)` each: 1 component, 2 loops, Euler 0, both loops at a ring, no directed edge used twice, 0 inward triangles, patch ids 0 and 1, none unassigned, none on the wrong side of the seams (controls: back seam dropped → 0 patches, 0 panels; rings drawn as ordinary strokes → 4 patches, 2 of them caps). Ints: nodes, edges, knots, degree-3 knots, curves, cycles, openings, patches, panels, sum of sides; per mesh_build: components, loops, Euler, loops at a ring, twice-used directed edges, inward, ids, unassigned, wrong side; controls: patches and panels, then patches, panels and caps |
 
-- **Speed.** The 9 checks take 451 ms natively and 3.54 s in the guest, about 7.8× (this run shared the machine with other builds; the first run read 444 ms and 2.96 s, 6.7×).
+- **Speed.** The 10 checks take 634 ms natively and 4.19 s in the guest, about 6.6×.
 - **The pen, driven the way a host drives it** (Godot `SphereMesh` body rewound to wire winding by `util/mesh_wire.gd`, signed volume +0.52):
-  - `cn_set_body`: 94 ms.
-  - 65 samples: 3.6 ms, 56 µs per `pen_point`.
-  - `pen_end` (host-timed over 3 strokes): min 524 ms, median 552 ms, max 559 ms.
-  - `pen_demo_circle`'s `pen_stroke`, the first stroke in a fresh process, took 1.46 s (`wrappers.log`). That is one vmcall for the whole stroke (`pen_begin`, 64 `pen_point`s and `pen_end`) plus the first call's warm-up, not a `pen_end` alone. The scripted pen's `pen_end` in the same process took 555 ms.
-  - `mesh_build(0, 1e-5)`: 26 ms. `mesh_build(0.02, 1e-5)` with the PMP remesh: 417 ms.
+  - `cn_set_body`: 90 ms.
+  - 65 samples: 3.4–5.0 ms, 53–78 µs per `pen_point`.
+  - `pen_end` (host-timed over 3 strokes): min 492 ms, median 493 ms, max 503 ms.
+  - `pen_demo_circle`'s `pen_stroke`, the first stroke in a fresh process, took 1.36 s (`wrappers.log`). That is one vmcall for the whole stroke (`pen_begin`, 64 `pen_point`s and `pen_end`) plus the first call's warm-up, not a `pen_end` alone. The scripted pen's `pen_end` in the same process took 487 ms.
+  - The patch: 2062 vertices, 3988 triangles (3998 before cut-4-tube; see (c) below). `mesh_build(0, 1e-5)`: 24.5 ms. `mesh_build(0.02, 1e-5)` with the PMP remesh: 357 ms, 3980 triangles, every one patch 0.
   - `curvenet_build`: 1.0 ms. `curvenet_extract` on the cube: 1.8 ms.
   - Every buffer decodes on the host: 1 loop of 134 vertices, an area-weighted normal of +Y (0.999999), so the mesh is CCW-outward, 2 curves with both ends on knots, and the cube gives 12 curves and 8 knots.
-- **Budget.** No call came near `execution_timeout` (8000 × 2^20 instructions). The heaviest vmcall was `check_all` at 2.4 s. So `pen_end` stays a single call: it needs no job and no state machine (`guest/jobs.h` is unused here). At about 0.5 s it is a hitch if it runs on the frame thread; a `WorkerThreadPool` host call is the next step if that hitch matters.
-- **Heap** (`get_heap_usage`, `memory_max` 512 MB): 75 KB after load, 392 KB after the checks, 1.64 MB after the body, 3 strokes, 2 mesh builds and a curvenet.
+- **The skirt, driven the way a host drives it** (step 4b; Godot `CylinderMesh` r 0.15, y 0.3 to 1.1, rewound; signed volume 0.0565 = πr²h):
+  - the four half rings with `cn_set_param("boundary", 1)`, the two seams with 0. `pen_end` takes 0.7–5.1 ms for the first five strokes (no patch yet: the half rings close only openings) and 220.5 ms for the back seam, which closes both panels.
+  - 4 knots, 6 edges, 2 cycles, 2 openings, 2 patches (+x, y 0.500 to 0.900; −x, y 0.499 to 0.901).
+  - `mesh_build(0, 1e-5)`: 13.3 ms, 1332 vertices, 2568 triangles, 1 component, 2 boundary loops at mean y 0.9 and 0.5, Euler 0, patch ids {0: 1274, 1: 1294}. `mesh_build(0.02, 1e-5)`: 477 ms, 1315 vertices, 2534 triangles, the same topology, ids {0: 1262, 1: 1272}.
+  - `curvenet_build`: 1.5 ms, 6 curves, knots of degree [3, 3, 3, 3].
+- **Budget.** No call came near `execution_timeout` (8000 × 2^20 instructions). The heaviest vmcall was `curvenet_checks` (`check_all`, `wrappers.log`) at 3.37 s. So `pen_end` stays a single call: it needs no job and no state machine (`guest/jobs.h` is unused here). At 0.2 to 1 s it is a hitch if it runs on the frame thread; a `WorkerThreadPool` host call is the next step if that hitch matters.
+- **Heap** (`get_heap_usage`, `memory_max` 512 MB): 75 KB after load, 82 KB after the checks, 1.64 MB after the body, 3 strokes, 2 mesh builds and a curvenet.
 - **FAIL paths answer instead of unwinding.** An unknown param gives `FAIL: unknown param ...`. An out-of-range index gives `FAIL: triangles[1] = 1 out of range [0, 1)`.
 - **Rule 8, enforced.** Step 7 of `gate_curvenet.gd` reads every `ADD_API_FUNCTION` in `guest/curvenet/main.cpp` (23) and fails unless each one's name is passed as a string literal by a public `project/main.gd` function, and every such wrapper (19) has only default arguments. Two controls run the same audit on an edited copy of `main.gd`: with the `cn_get_param` wrapper removed it reports exactly that one missing, and with `patch_vertices(i: int)` it reports exactly that one argument without a default. The compiled script must also expose all 19 with no required argument.
   - `pen_begin`, `pen_point` and `pen_end` with no arguments replay a scripted stroke (`pen_demo_circle`'s circle, 65 samples) one sample at a time, as a tracked pen would deliver it. `pen_point(count = 0)` sends the rest of the stroke; `pen_end(id = -1)` ends the scripted stroke.
-  - `wrappers.log` calls 17 of the wrappers once each, the scripted pen included: `cn_reset`, `pen_begin` (id 1), `pen_point` (64 samples, 5.0 ms), `pen_end` (1 patch), then `patch_count` reads 1.
+  - `wrappers.log` calls 17 of the wrappers once each, the scripted pen included: `cn_reset`, `pen_begin` (id 1), `pen_point` (64 samples, 3.5 ms), `pen_end` (1 patch), then `patch_count` reads 1.
 
 ### The API and the godot-lite split
 
@@ -52,11 +58,52 @@ Every check has a negative control, and each control must come out differently f
 - `curvenet_api.cpp` and `checks.cpp` see Cassie on godot-lite and never `api.hpp`. They form `curvenet_core`, which links into both the ELF and `cassie_checks.exe`.
 - The wire format is `guest/common/mesh_wire.h` ↔ `project/util/mesh_wire.gd`: body-local Godot frame, metres, CCW-outward triangles. Godot's own front faces are clockwise, so the `.gd` side rewinds them.
 - Entry points: `cn_reset/cn_set_param/cn_get_param/cn_set_body`, `pen_begin/pen_point/pen_end/pen_stroke`, `patch_count/patch_vertices/patch_indices`, `curvenet_build/curvenet_extract/curvenet_curves/curvenet_knots`, `mesh_build/mesh_vertices/mesh_indices/mesh_boundary_loops/mesh_patch_ids`, and `check/check_all/check_names`.
+- Params (`cn_set_param`): `snap_radius`, `surface_offset`, `target_edge_length`, `split_closed`, `merge_eps`, `mirror`, and `boundary`, a pen mode: a stroke begun while it is 1 is a boundary stroke, the edge of an opening such as a skirt's waist or hem, and a cycle made only of boundary strokes gets no patch. `pen_end` answers `cycles=` (the face cycles that bound surface) and `openings=` (those made only of boundary strokes).
 - `mesh_build` does four things:
   - merges the active patches;
   - orients each patch away from the body, using the body normal at the point nearest the patch centroid;
   - welds on a grid within `weld_eps` (≤ 0: no weld);
-  - with `target_edge_length > 0`, runs PMP `uniform_remeshing` with the boundary marked `e:feature`/`v:feature`.
+  - with `target_edge_length > 0`, runs PMP `uniform_remeshing` with the boundary and the seams between patches marked `e:feature`/`v:feature`. `mesh_patch_ids` names each triangle's patch, after a remesh too: the patch nearest the triangle's centroid.
+
+### The skirt is an open tube (cut-4-tube)
+
+Cut 8's scripted skirt (`project/xr/pen_source_scripted.gd` on cut-8) draws a waist ring and a hem ring, each as two half rings from the front (+z) to the back (−z), then a front and a back seam. curvenet.elf surfaced the caps over the waist and the hem instead of the two panels, and the stroke ends did not always meet in shared knots (cut-8's `orders.txt`: 5 knots of degree 3, 3, 2, 3, 1; meshes of 2 components, or 17 loops). There were two causes, one per symptom, and the new check found a third.
+
+**(a) Stroke ends that meet did not merge into one knot.** The fault was endpoint-to-edge, not endpoint-to-endpoint. `add_stroke`'s endpoint merge (`_find_or_create_node`, within `merge_eps`) works. The crossing detector that runs before it did the damage.
+- `_crossings` treats a shared endpoint as a merge, not a crossing, only when the closest pair lies on both polylines' first or last segment (s < 0.05 or > 0.95). That rule holds while the proximity is well below the sample spacing.
+- The sketcher bakes every stroke to 33 samples: 2 cm segments on a 0.64 m half ring, 1.3 cm on a 0.43 m seam. It passes proximity = max(snap 0.01, `merge_eps` 0.02 to 0.05).
+- So a stroke that only starts at an existing knot also came within the proximity of the other edge's second or third segment, and that counted as a T-junction. Its split point, the midpoint of the closest pair, lay 1 to 6.5 cm from the knot.
+- Within `merge_eps` the split point merged back into the knot and left the edge's polyline trimmed short of its node. Beyond it, it became a node of its own, of degree 1. On FoxGirl, rings then seams at `merge_eps` 0.05 left two extra knots, 6.55 cm from the back hem knot and 5.3 cm above the front one; seams first at the default 0.02 left a fifth 2.14 cm from the back waist knot.
+- **Fix (Cassie adaptation 6).** The stretch beside a shared knot counts as the endpoint merge. From two ends that meet within `merge_eps`, `_knot_zone` grows along both polylines while each next segment stays within the proximity of the other's. Hits inside that zone are not crossings. A stroke that leaves a knot and crosses the other curve further on still splits there.
+- Every order now gives 4 knots of degree 3 and 6 curves: the four orders × `merge_eps` 0.02 and 0.05 on FoxGirl, the check's cylinder, and the host step. The other 9 checks read the same numbers.
+
+**(b) Why the caps and not the panels.** With the knots merged, `find_cycles` finds all four faces of the network (V − E + F = 4 − 6 + 4 = 2, a tube closed at both ends): the 2 panels and 2 two-edge caps.
+- **Cassie surfaces every face its walk closes.** Unity CASSIE's `CycleDetection.DetectCycle` closes a cycle when it gets back to its start segment with `cycle.Count > 1`, so two-segment cycles count. It refuses only a segment already in two cycles (`g.ExistingCyclesCount(currentSegment) >= 2`, the manifold guard); every edge here borders exactly two faces. `SurfaceManager.AddPatch` surfaces whatever cycle it is handed. An unwanted patch is the user's to delete (`Graph.ManualDeletePatch`). This port does the same, and adaptation 5 surfaces two-edge cycles for closed strokes.
+- **Before the fix, only the caps survived.** A ring's two half rings meet end to end and merge, so its cap always closed, while every panel ran through a broken knot. After (a), all four faces were surfaced, a closed bolster: the check's control reads 4 patches.
+- **Whether a ring bounds a cap or an opening is the author's intent; the network cannot say it.** The same 6 curves bound the open tube, a sack with one cap, and the closed bolster.
+- **Fix (Cassie adaptation 7): boundary strokes.**
+  - `cn_set_param("boundary", 1)` is a pen mode, `CassieSketcher::boundary_strokes`, captured at `pen_begin`. A stroke begun in it marks its graph edges as boundary edges, and the slices of a split edge keep the mark.
+  - A cycle made only of boundary edges is an opening (`CassieSketchGraph::is_opening`), and `CassieSurfaceManager::update` gives it no patch.
+  - It is the declarative form of CASSIE's delete-patch: stated when the ring is drawn, the same in every stroke order, and not undone when the manager re-surfaces after the next stroke.
+- **Rejected.** A rule that a cycle needs 3 or more edges (the Lean model of the walk has it; Unity closes at 2) hides a cap only while its ring is drawn as exactly two halves. A ring split at three knots gives a three-edge cap, and a ring drawn as one closed stroke becomes a two-edge cycle by design (pen_sphere). Choosing faces automatically, such as "the basis that uses every seam" or the fewest faces that cover every curve, would also drop the lid of a wire cube or the disk of a closed stroke.
+
+**(c) Guest ≠ native on the skirt (Geogram).** skirt_tube first read the same ints in the guest and natively but different floats: 1304 welded vertices against 1307.
+- **Where it diverged.** A temporary stage-fingerprint check (not committed) found these bit-identical in both: the strokes, the curves, the graph polylines, the cycle boundaries and MingCurve's edge-protected points. The first difference was the order of the Delaunay faces MingCurve hands DMWT, 1263 of them both ways. DMWT then tiled one panel differently: 84 faces both ways, but different ones.
+- **Why.** The Delaunay insertion order is BRIO plus a Hilbert sort, whose splits are `std::nth_element` on one coordinate. The skirt's boundary points tie on coordinates exactly: ring samples snap to one height, seam samples to one plane. The standard leaves the order of tied elements to the implementation, and libc++ and libstdc++ order them differently.
+- **Fix (Geogram, `mesh/mesh_reorder.cpp` `Hilbert_vcmp`).** Ties are broken on the vertex index, a strict total order. Inputs without ties sort as before.
+- **Effect.** skirt_tube now matches bit for bit, and the other 9 checks read the same numbers. The host pen step's `SphereMesh` stroke, whose 64 samples snap to one height, went from 3998 to 3988 triangles. An A/B build of the same ELF with only the tie-break reverted gives 3998 again.
+
+**`mesh_patch_ids` after a remesh answered −1 for every triangle** (the verifier's 3986/3986; the header even documented it). The remesh now holds the seams between patches as features, like the boundary, and gives each remeshed triangle the patch nearest its centroid (`CassieSurfacePatch::project` over each input patch's triangles; with one patch, that patch). skirt_tube checks the result: 0 unassigned and 0 on the wrong side of the seams after the 0.02 remesh. `wrappers.log` now reads `{ 0: 3980 }` where it read `{ -1: 3986 }`.
+
+**FoxGirl** (`skirt-foxgirl.txt`, `skirt_foxgirl_probe.gd`). The scripted skirt on the Cut 8 fixture (waist r 0.2047 at y 0.9528, hem r 0.2305 at y 0.5249) ran through this curvenet.elf in the four stroke orders cut-8's probe tried, at `merge_eps` 0.02 and 0.05, with the rings as boundary strokes.
+- **All 8 runs:** 4 knots of degree 3, 6 curves, 2 cycles and 2 openings, 2 panels (+x and −x, y 0.52 to 0.95). `mesh_build(0.03, 0.005)` and `(0, 1e-5)` each give 1 component, 2 loops at mean y 0.525 and 0.952–0.953, Euler 0, and patch ids 0 and 1.
+- **Controls:** rings drawn as ordinary strokes → 4 patches (the caps are back); the back seam dropped → 0 patches.
+- **Guest `pen_end`:** 1.03–1.04 s for the stroke that closes both panels, 0.79–0.87 s for one panel.
+- **How it was run.** The probe needs cut-8's fixture and pen source. They were copied in untracked from cut-8 at df66f0ca2 and removed afterwards.
+
+**For Cut 8.** `pen_source_scripted.gd`, or the pen bridge, sets `cn_set_param("boundary", 1)` for the four half rings and 0 for the seams. Gate 8's "2 cycles and 2 patches" holds as written, because openings are counted separately. Its dropped-seam control reads 0 cycles and 0 patches.
+
+**Vendored record.** `CITATION.cff` gains Cassie adaptations 6 and 7 and the Geogram tie-break, and `tools/vendor/patches/{cassie,geogram}.patch` are regenerated. Both vendoring scripts, run from pristine c165a519d2 with the new patches, reproduce the edited trees: 318 files compared, 0 differing. With the previous patches, exactly the 6 edited files differ.
 
 ### What it took: five bugs, each fixed in its vendored subset
 

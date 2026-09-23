@@ -141,7 +141,11 @@ our own, no host DLL. The GPU is reachable only through Godot's
   iterations while inputs, LDLT and the libm the solver calls are bitwise
   equal (`gates/6-fit`, 6.0); SimpleBVH's Morton sort, which has such ties,
   is the *likely* cause (hypothesis: no call site instrumented yet). Test an
-  index tie-break before relying on it.
+  index tie-break before relying on it. Confirmed at one call site: Geogram's
+  Hilbert sort (`nth_element` on one coordinate) inserted a skirt panel's
+  tied boundary points in another order, DMWT tiled the panel differently,
+  and an index tie-break in `Hilbert_vcmp` made curvenet.elf bit-identical to
+  its native control again (`gates/4-curvenet/README.md`, skirt (c)).
 - **Guest out-of-memory is not `std::bad_alloc`.** Below the heap floor a
   failed allocation is a `Protection fault` at the malloc ecall (the vmcall
   aborts) or a segfault that kills Godot (exit 139), and the heap's meminfo

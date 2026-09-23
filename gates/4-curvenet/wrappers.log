@@ -8,31 +8,33 @@ ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds 
 [dress-on] sandbox loaded dress_on.elf
 [dress-on] sandbox loaded drape.elf
 [dress-on] sandbox loaded curvenet.elf
-check_names() -> host_us=102 beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld
-cn_get_param() -> host_us=36 0.03
-curvenet_extract_demo() -> host_us=2538 ok extract curves=12 knots=8 intersections=8 needs_setup=0
-pen_demo_circle() -> host_us=102575 ok body vertices=2210 triangles=4096 | host_us=176 ok | host_us=1463326 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
-patch_count() -> host_us=16 1
-patch_vertices() -> patch 0: 2067 vertices
-patch_indices() -> patch 0: 3998 triangles
-mesh_build() -> host_us=392885 ok patches=1 vertices=2061 triangles=3986 loops=1 components=1 euler=1 | wire: 2061 vertices, 1 boundary loops
-mesh_patch_ids() -> 3986 triangles, per patch { -1: 3986 }
-mesh_array_mesh() -> ArrayMesh, 1 surface(s), 2061 vertices
-curvenet_build() -> host_us=1158 ok sketch curves=2 knots=2 intersections=0 needs_setup=2 | wire: 2 curves, 2 knots
-cn_reset() -> host_us=911 ok
-pen_begin() -> host_us=196 id=1 samples=65
-pen_point() -> host_us=5015 sent=64 left=0 ok
-pen_end() -> host_us=554961 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+[dress-on] no res://fit.elf (build.sh with BUILD_FIT=1, then --import)
+check_names() -> host_us=99 beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld skirt_tube
+cn_get_param() -> host_us=38 0.03
+curvenet_extract_demo() -> host_us=2336 ok extract curves=12 knots=8 intersections=8 needs_setup=0
+pen_demo_circle() -> host_us=92387 ok body vertices=2210 triangles=4096 | host_us=132 ok | host_us=1362852 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 openings=0
 patch_count() -> host_us=12 1
-curvenet_checks() -> host_us=2416051 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+patch_vertices() -> patch 0: 2062 vertices
+patch_indices() -> patch 0: 3988 triangles
+mesh_build() -> host_us=365505 ok patches=1 vertices=2058 triangles=3980 loops=1 components=1 euler=1 | wire: 2058 vertices, 1 boundary loops
+mesh_patch_ids() -> 3980 triangles, per patch { 0: 3980 }
+mesh_array_mesh() -> ArrayMesh, 1 surface(s), 2058 vertices
+curvenet_build() -> host_us=1182 ok sketch curves=2 knots=2 intersections=0 needs_setup=2 | wire: 2 curves, 2 knots
+cn_reset() -> host_us=1178 ok
+pen_begin() -> host_us=173 id=1 samples=65
+pen_point() -> host_us=3466 sent=64 left=0 ok
+pen_end() -> host_us=486615 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 openings=0
+patch_count() -> host_us=13 1
+curvenet_checks() -> host_us=3367278 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
 PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
 PASS patch_pipeline ints=3596,0 fsig=34695a7b254c4b6d/5640 :: cycle -> 3596 triangles; one-edge graph -> 0 (control)
 PASS crossing_split ints=9,9,1,9474,1,1,0,3 fsig=6c7da88789b6406c/14610 :: 9 edges, 9 nodes, 1 cycle(s), 9474 triangles; far edge 0 kept yes, crossed edge 1 replaced yes; add_stroke -> 0 cycles over 3 edges (control)
 PASS constraint_solver ints=3,1,1 fsig=cab1750c8fa84e50/9 :: mirror pins pulled anchors 0.05000 -> 0.00000 (tol 0.00500); raw input fails the tolerance: yes (control caught)
-PASS pen_sphere ints=1,65,65,1,3954,1,3944,2,2,0,0 fsig=63a4eb50bc1212a1/6229 :: closed stroke -> 1 patch, 65/65 samples snapped; mesh 3954 tris 1 loop, remeshed 3944 tris 1 loop; curvenet 2 curves 2 knots; 270-degree arc -> 0 patches, split_closed=0 -> 0 (controls) [ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 | ok patches=1 vertices=2040 triangles=3944 loops=1 components=1 euler=1 | ok sketch curves=2 knots=2 intersections=0 needs_setup=2]
+PASS pen_sphere ints=1,65,65,1,3954,1,3944,2,2,0,0 fsig=63a4eb50bc1212a1/6229 :: closed stroke -> 1 patch, 65/65 samples snapped; mesh 3954 tris 1 loop, remeshed 3944 tris 1 loop; curvenet 2 curves 2 knots; 270-degree arc -> 0 patches, split_closed=0 -> 0 (controls) [ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 openings=0 | ok patches=1 vertices=2040 triangles=3944 loops=1 components=1 euler=1 | ok sketch curves=2 knots=2 intersections=0 needs_setup=2]
 PASS extractor_cube ints=12,8,8,0 fsig=2a63f21c7c5ac8ca/386 :: cube -> 12 curves, 8 knots, 8 of degree >= 3; icosphere(3) -> 0 curves (control) [ok extract curves=12 knots=8 intersections=8 needs_setup=0]
 PASS delaunay_small_scale ints=1,12,12,0 fsig=e40b63138f3b8d90/36 :: 1 mm polygon, n=11 h=8 -> 12 triangles (2n-2-h = 12); collinear -> refused (control)
 PASS mesh_weld ints=4,5,2,1,1,4,1,2,2 fsig=befa41736e14ece3/12 :: welded: V=4 E=5 F=2, 1 component, 1 loop of 4, Euler 1; weld_eps=0 -> 2 components, 2 loops (control)
-checks: 9/9
+PASS skirt_tube ints=4,6,4,4,6,2,2,2,2,0,1,2,0,2,0,0,2,0,0,1,2,0,2,0,0,2,0,0,0,0,4,2,2 fsig=a0e119dda587faae/7858 :: rings as boundary strokes -> 4 knots (4 of degree 3), 6 curves, 2 cycles + 2 openings, 2 patches, 2 panels (one per side: yes); mesh: 1 component, 2 loops at the rings, Euler 0, 0 directed edges used twice, 0 inward, 2 patch ids (0 unassigned, 0 on the wrong side); remeshed: 1 component, 2 loops at the rings, Euler 0, 2 ids, 0 unassigned, 0 on the wrong side; back seam dropped -> 0 panels (0 patches), rings not boundary -> 4 patches, 2 caps (controls) [ok=1 valid=1 closed=0 new_patches=2 patches=2 edges=6 nodes=4 cycles=2 openings=2 | ok patches=2 vertices=1307 triangles=2518 loops=2 components=1 euler=0 | ok patches=2 vertices=1292 triangles=2488 loops=2 components=1 euler=0 | ok sketch curves=6 knots=4 intersections=4 needs_setup=0 | ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=5 nodes=4 cycles=0 openings=2 | ok=1 valid=1 closed=0 new_patches=2 patches=4 edges=6 nodes=4 cycles=4 openings=0]
+checks: 10/10
 WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
    at: cleanup (core/object/object.cpp:2536)

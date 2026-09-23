@@ -1,0 +1,28 @@
+Demo Name:SPHERE
+Collision:ON
+Self-Collision:ON
+Wind:OFF
+BackwardSolver:Jacobi
+Total Particles:625
+Fabric Name:sphereFabric
+======Backward iters =====
+Total Jacobi iters:0
+Jacobi total converged:0
+Total backward props:350
+Total Jacobi iters:0
+Jacobi total converged:0
+Total backward props:350
+Total Jacobi iters:0
+Jacobi total converged:0
+Total backward props:350
+======Forward Runtime (unit, [s])=====
+iter0:24.52816100
+iter1:21.14083000
+iter2:30.51006100
+======Backward Runtime (unit, [s])=====
+iter0:0.00000000
+iter1:0.00000000
+iter2:0.00000000
+Total Forward Time:76.179052
+Total Backward Time:0.000000
+Total Time:76.179052

@@ -1,0 +1,97 @@
+# lbfgsb trace rosen_n2 (LBFGSpp 0.3.0 LBFGSBSolver<double>, MoreThuente)
+problem rosen_n2
+n 2
+param m 10 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 1e-10 max_iterations 0 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
+niter 21
+nfev 27
+status converged-grad
+f_final 0.0505960984
+pg_final 3.46887661e-08
+iter 0 nfev 1 f 75.4 pginf 2.7
+x 2 -1.2 0.6
+L 0
+U 1 1
+iter 1 nfev 2 f 32.8 pginf 2.1
+x 2 -0.2 0.6
+L 0
+U 1 1
+iter 2 nfev 3 f 19.0351348 pginf 1.96284087
+x 2 -0.208878763 0.462840869
+L 0
+U 0
+iter 3 nfev 4 f 1.56319531 pginf 1.74964207
+x 2 -0.249642069 0.0583336763
+L 0
+U 0
+iter 4 nfev 5 f 1.53530627 pginf 1.73891974
+x 2 -0.238919742 0.059042603
+L 0
+U 0
+iter 5 nfev 6 f 1.37151076 pginf 1.54052515
+x 2 -0.162620824 0.0405251545
+L 0
+U 0
+iter 6 nfev 8 f 0.978740897 pginf 1.47853167
+x 2 0.021468329 -0.0141050525
+L 0
+U 0
+iter 7 nfev 10 f 0.956153575 pginf 1.37635904
+x 2 0.0530596896 -0.0215686032
+L 0
+U 0
+iter 8 nfev 11 f 0.918355313 pginf 1.06407801
+x 2 0.0764896414 -0.0197391628
+L 0
+U 0
+iter 9 nfev 12 f 0.720785409 pginf 1.09772542
+x 2 0.211839079 0.0133182652
+L 0
+U 0
+iter 10 nfev 13 f 0.554868326 pginf 0.541822471
+x 2 0.264391028 0.0581775289
+L 0
+U 0
+iter 11 nfev 15 f 0.470636145 pginf 1.18234741
+x 2 0.339249764 0.0966390418
+L 0
+U 0
+iter 12 nfev 16 f 0.347275936 pginf 1.97263911
+x 2 0.472639112 0.197088219
+L 0
+U 0
+iter 13 nfev 17 f 0.233766038 pginf 0.981332051
+x 2 0.518667949 0.273583163
+L 0
+U 0
+iter 14 nfev 19 f 0.177367256 pginf 0.266739257
+x 2 0.580594142 0.333260743
+L 0
+U 0
+iter 15 nfev 21 f 0.149337072 pginf 2.13258741
+x 2 0.632587408 0.388189743
+L 0
+U 0
+iter 16 nfev 22 f 0.125292505 pginf 2.18583076
+x 2 0.685830757 0.454057328
+L 0
+U 0
+iter 17 nfev 23 f 0.0835933686 pginf 2.23193608
+x 2 0.731936075 0.524897551
+L 0
+U 0
+iter 18 nfev 24 f 0.0506707594 pginf 0.268952605
+x 2 0.776085667 0.6
+L 0
+U 1 1
+iter 19 nfev 25 f 0.0506045361 pginf 0.0903294041
+x 2 0.775343471 0.6
+L 0
+U 1 1
+iter 20 nfev 26 f 0.0505960984 pginf 9.64983306e-05
+x 2 0.775530072 0.6
+L 0
+U 1 1
+iter 21 nfev 27 f 0.0505960984 pginf 3.46887661e-08
+x 2 0.775530271 0.6
+L 0
+U 1 1

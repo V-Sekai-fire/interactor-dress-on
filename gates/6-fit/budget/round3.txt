@@ -1,0 +1,6 @@
+psd-al --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true
+psd-red --set /solver/nonlinear/Newton/force_psd_projection=true
+psd-hg --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true --set '/solver/contact/CCD/broad_phase="hash_grid"'
+psd-e040 --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true --set '/garment_mesh_path="gates/6-fit/budget/pen-0.04.mesh.obj"'
+psd-lim1 --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true --set /solver/nonlinear/line_search/max_step_size_limiter=1
+psd-gn003 --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true --set /solver/nonlinear/grad_norm=0.03

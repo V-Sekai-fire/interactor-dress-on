@@ -1,0 +1,15 @@
+# fit_native --set /garment_mesh_path="gates/6-fit/budget/pen-0.05.mesh.obj" (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 417 v / 698 f, skeleton 15 v / 14 b, no-fit 0, float32 yes, harness file opens 5
+[2026-09-23 05:07:31.240] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 4.16587s (iters=21 f=0.0109749 Δf=0.0153325 ‖∇f‖=0.51554 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=5.73363e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:07:31.240] [polyfem] [debug] [timing][SparseNewton] assembly: 5.19e-01s; linear_solve: 1.64e-01s
+[2026-09-23 05:07:31.240] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 3.97e-02s; linear_solve: 8.64e-03s
+begin: ok  wall 0.32 s  cpu 0.31 s
+normalisation: target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326) source_scale 1.5276081186803154
+phase 0 (substep 0, AL): ok  newton 21  minimize 1  post_steps 22  energy 0.010974885659693734  |grad| 0.51554  status 4  wall 5.30 s  cpu 5.30 s
+[2026-09-23 05:07:41.489] [polyfem] [info] [SparseNewton][Backtracking] Finished: Gradient vector norm too small took 9.31992s (iters=61 f=0.0191295 Δf=2.01071e-06 ‖∇f‖=0.00516107 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.55521e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:07:41.489] [polyfem] [debug] [timing][SparseNewton] assembly: 9.01e-01s; linear_solve: 2.96e-01s
+[2026-09-23 05:07:41.489] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 1.17e+00s; linear_solve: 2.42e-01s
+phase 1 (substep 0, reduced): ok  newton 61  minimize 1  post_steps 62  energy 0.019129476186556953  |grad| 0.00516107  status 4  wall 10.18 s  cpu 10.16 s
+final: phases 2/2  newton 82  post_steps 84  intersections none
+time: begin+phases wall 15.85 s, cpu 15.81 s; process cpu 15.86 s; peak working set 44.1 MB
+sdf grid: voxel 0.01  bricks 517 (264704 voxels)  2.04 MB  distance queries 264704  winding queries 264704  fill 1.15 s

@@ -1,0 +1,11 @@
+bp-hg --set '/solver/contact/CCD/broad_phase="hash_grid"'
+bp-sh --set '/solver/contact/CCD/broad_phase="spatial_hash"'
+bp-sap --set '/solver/contact/CCD/broad_phase="sweep_and_prune"'
+gn-003 --set /solver/nonlinear/grad_norm=0.03
+gn-010 --set /solver/nonlinear/grad_norm=0.1
+red-cap100 --set /solver/nonlinear/max_iterations=100 --set /solver/nonlinear/allow_out_of_iterations=true
+al-cap25 --set /solver/augmented_lagrangian/nonlinear/max_iterations=25
+ccdtol-1e2 --set /solver/contact/CCD/tolerance=0.01
+lim-1 --set /solver/nonlinear/line_search/max_step_size_limiter=1
+e040 --set '/garment_mesh_path="gates/6-fit/budget/pen-0.04.mesh.obj"'
+e050 --set '/garment_mesh_path="gates/6-fit/budget/pen-0.05.mesh.obj"'

@@ -1,0 +1,14 @@
+# fit_native --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true --set /garment_mesh_path="gates/6-fit/budget/pen-0.04.mesh.obj" (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 585 v / 1034 f, skeleton 15 v / 14 b, no-fit 0, float32 yes, harness file opens 5
+[2026-09-23 05:21:03.407] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 11.1654s (iters=33 f=0.0150363 Δf=0.00164011 ‖∇f‖=0.954695 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=9.097e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:21:03.407] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 2.29e+00s; linear_solve: 5.82e-01s
+begin: ok  wall 0.89 s  cpu 0.48 s
+normalisation: target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326) source_scale 1.5276081186803154
+phase 0 (substep 0, AL): ok  newton 33  minimize 1  post_steps 34  energy 0.015036279574287784  |grad| 0.954695  status 4  wall 16.64 s  cpu 11.39 s
+[2026-09-23 05:22:13.447] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 68.4028s (iters=331 f=0.0147675 Δf=4.38254e-07 ‖∇f‖=0.0062049 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.555e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:22:13.447] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 6.20e+00s; linear_solve: 1.48e+00s
+[2026-09-23 05:22:13.447] [polyfem] [debug] [timing][SparseRegularizedNewton (reg_weight=1)] assembly: 1.83e+01s; linear_solve: 4.26e+00s
+phase 1 (substep 0, reduced): ok  newton 331  minimize 1  post_steps 332  energy 0.014767501921385057  |grad| 0.0062049  status 4  wall 69.96 s  cpu 63.95 s
+final: phases 2/2  newton 364  post_steps 366  intersections none
+time: begin+phases wall 87.54 s, cpu 75.86 s; process cpu 75.92 s; peak working set 54.0 MB
+sdf grid: voxel 0.01  bricks 829 (424448 voxels)  3.27 MB  distance queries 424448  winding queries 424448  fill 2.36 s

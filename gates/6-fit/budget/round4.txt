@@ -1,0 +1,5 @@
+psd-e050 --set /solver/nonlinear/Newton/force_psd_projection=true --set '/garment_mesh_path="gates/6-fit/budget/pen-0.05.mesh.obj"'
+oracle-base --setup tools/native/foxgirl_oracle.json
+oracle-psd --setup tools/native/foxgirl_oracle.json --set /solver/nonlinear/Newton/force_psd_projection=true
+psd-gn003-e050 --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/nonlinear/grad_norm=0.03 --set '/garment_mesh_path="gates/6-fit/budget/pen-0.05.mesh.obj"'
+oracle-psd-gn003 --setup tools/native/foxgirl_oracle.json --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/nonlinear/grad_norm=0.03

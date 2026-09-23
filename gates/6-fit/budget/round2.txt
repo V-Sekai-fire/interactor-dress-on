@@ -1,0 +1,7 @@
+al-w4 --set /solver/augmented_lagrangian/initial_weight=4
+al-w16 --set /solver/augmented_lagrangian/initial_weight=16
+al-w100 --set /solver/augmented_lagrangian/initial_weight=100
+psd --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/augmented_lagrangian/nonlinear/Newton/force_psd_projection=true
+al-cap40 --set /solver/augmented_lagrangian/nonlinear/max_iterations=40
+fd-1e5 --set /solver/nonlinear/advanced/f_delta=1e-5 --set /solver/nonlinear/advanced/f_delta_step_tol=3
+fd-3e6 --set /solver/nonlinear/advanced/f_delta=3e-6 --set /solver/nonlinear/advanced/f_delta_step_tol=3

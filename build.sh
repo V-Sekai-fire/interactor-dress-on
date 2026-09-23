@@ -8,6 +8,9 @@
 #   BUILD_FIT=0 ./build.sh    # skip fit.elf (cloth-fit / PolyFEM, the long part)
 #   BUILD_DIR=C:/b/ido6-zb FIT_MARCH=rv64gc_zba_zbb_zbs_zbc FIT_ELF=fit_zb BUILD_TARGETS=fit_zb ./build.sh
 #                             # Gate 6.P's ISA A/B: project/fit_zb.elf, the solver at another -march
+#   BUILD_DIR=C:/b/ido6c-guest FIT_ELF=fit_prof FIT_INSTRET_CLOCK=ON BUILD_TARGETS=fit_prof ./build.sh
+#                             # the fit budget's profiling build: every clock reads instret
+#                             # (guest/fit/fit_clock.cpp), so polysolve's [timing] lines count instructions
 #
 # fit.elf needs the org forks (tools/fit/prepare_forks.sh, run here) and the
 # CPM packages cloth-fit pulls without a fork (CPM_SOURCE_CACHE, default
@@ -90,7 +93,8 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		-DCMAKE_BUILD_TYPE=Release \
 		${GGML_SRC:+-DGGML_SRC="$GGML_SRC"} \
 		-DDRESS_ON_WITH_FIT="$WITH_FIT" \
-		${FIT_MARCH:+-DFIT_MARCH="$FIT_MARCH"} ${FIT_ELF:+-DFIT_ELF="$FIT_ELF"}
+		${FIT_MARCH:+-DFIT_MARCH="$FIT_MARCH"} ${FIT_ELF:+-DFIT_ELF="$FIT_ELF"} \
+		${FIT_INSTRET_CLOCK:+-DFIT_INSTRET_CLOCK="$FIT_INSTRET_CLOCK"}
 elif ! grep -q "^DRESS_ON_WITH_FIT:BOOL=$WITH_FIT\$" "$BUILD/CMakeCache.txt"; then
 	cmake -B "$BUILD" -DDRESS_ON_WITH_FIT="$WITH_FIT"
 fi

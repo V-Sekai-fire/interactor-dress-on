@@ -1,0 +1,16 @@
+# fit_native --set /garment_mesh_path="gates/6-fit/budget/pen-0.04.mesh.obj" (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 585 v / 1034 f, skeleton 15 v / 14 b, no-fit 0, float32 yes, harness file opens 5
+[2026-09-23 05:07:26.056] [polyfem] [error] [SparseProjectedNewton][Backtracking] Reached iteration limit (limit=50)
+[2026-09-23 05:07:30.688] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 4.55043s (iters=30 f=0.0130959 Δf=0.00626718 ‖∇f‖=0.750637 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=1.69866e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:07:30.688] [polyfem] [debug] [timing][SparseNewton] assembly: 6.36e-01s; linear_solve: 3.16e-01s
+[2026-09-23 05:07:30.688] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 3.86e-01s; linear_solve: 1.00e-01s
+begin: ok  wall 0.32 s  cpu 0.31 s
+normalisation: target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326) source_scale 1.5276081186803154
+phase 0 (substep 0, AL): ok  newton 80  minimize 2  post_steps 82  energy 0.013095946468382934  |grad| 0.750637  status 4  wall 18.04 s  cpu 17.91 s
+[2026-09-23 05:07:52.757] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 21.1149s (iters=122 f=0.0147679 Δf=2.42646e-06 ‖∇f‖=0.0065444 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.54991e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:07:52.757] [polyfem] [debug] [timing][SparseNewton] assembly: 2.73e+00s; linear_solve: 1.18e+00s
+[2026-09-23 05:07:52.757] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 2.01e+00s; linear_solve: 5.06e-01s
+phase 1 (substep 0, reduced): ok  newton 122  minimize 1  post_steps 123  energy 0.014767885788165364  |grad| 0.0065444  status 4  wall 22.00 s  cpu 21.84 s
+final: phases 2/2  newton 202  post_steps 205  intersections none
+time: begin+phases wall 40.39 s, cpu 40.11 s; process cpu 40.14 s; peak working set 51.0 MB
+sdf grid: voxel 0.01  bricks 553 (283136 voxels)  2.18 MB  distance queries 283136  winding queries 283136  fill 1.20 s

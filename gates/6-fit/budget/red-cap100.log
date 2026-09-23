@@ -1,0 +1,18 @@
+# fit_native --set /solver/nonlinear/max_iterations=100 --set /solver/nonlinear/allow_out_of_iterations=true (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 932 v / 1728 f, skeleton 15 v / 14 b, no-fit 0, float32 yes, harness file opens 5
+[2026-09-23 05:06:32.724] [polyfem] [error] [SparseNewton][Backtracking] Finished: Iteration limit reached took 17.8273s (iters=50 f=2.94656 Δf=0.0364141 ‖∇f‖=88.9604 ‖Δx‖=11.8918 Δx⋅∇f(x)=-4.92706) (stopping criteria: iters=50 f=9.09912e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:06:32.724] [polyfem] [debug] [timing][SparseNewton] assembly: 2.31e+00s; linear_solve: 1.51e+00s
+[2026-09-23 05:06:43.531] [polyfem] [error] [SparseProjectedNewton][Backtracking] Finished: Iteration limit reached took 10.7004s (iters=50 f=0.135493 Δf=0.127282 ‖∇f‖=23.598 ‖Δx‖=1.20855 Δx⋅∇f(x)=-0.199917) (stopping criteria: iters=50 f=9.09912e-311 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:06:43.531] [polyfem] [debug] [timing][SparseNewton] assembly: 1.75e+00s; linear_solve: 1.23e+00s
+[2026-09-23 05:06:43.531] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 8.94e-01s; linear_solve: 3.72e-01s
+begin: ok  wall 0.32 s  cpu 0.33 s
+normalisation: target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326) source_scale 1.5276081186803154
+phase 0 (substep 0, AL): ok  newton 100  minimize 2  post_steps 102  energy 0.044120391971148823  |grad| 23.598  status 1  wall 29.86 s  cpu 29.69 s
+[2026-09-23 05:07:12.004] [polyfem] [error] [SparseNewton][Backtracking] Finished: Iteration limit reached took 27.3339s (iters=100 f=0.0127859 Δf=2.47706e-05 ‖∇f‖=0.621113 ‖Δx‖=0.992144 Δx⋅∇f(x)=-0.000478434) (stopping criteria: iters=100 f=1.55266e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:07:12.004] [polyfem] [debug] [timing][SparseNewton] assembly: 2.84e+00s; linear_solve: 1.62e+00s
+[2026-09-23 05:07:12.004] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 3.75e+00s; linear_solve: 1.29e+00s
+[2026-09-23 05:07:12.004] [polyfem] [debug] [timing][SparseRegularizedNewton (reg_weight=1)] assembly: 1.06e+00s; linear_solve: 3.42e-01s
+phase 1 (substep 0, reduced): ok  newton 100  minimize 1  post_steps 101  energy 0.012782610924118566  |grad| 0.621113  status 1  wall 28.40 s  cpu 28.28 s
+final: phases 2/2  newton 200  post_steps 203  intersections none
+time: begin+phases wall 58.63 s, cpu 58.36 s; process cpu 58.39 s; peak working set 77.0 MB
+sdf grid: voxel 0.01  bricks 851 (435712 voxels)  3.36 MB  distance queries 435712  winding queries 435712  fill 1.79 s

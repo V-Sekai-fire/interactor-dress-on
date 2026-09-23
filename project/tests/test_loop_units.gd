@@ -40,6 +40,7 @@ func _initialize() -> void:
 	_skeleton()
 	_pen()
 	_topo()
+	_fit_budget()
 	_say("%d checks, %d failed" % [_n, _fails])
 	_say("RESULT: %s" % ("PASS" if _fails == 0 else "FAIL"))
 	_out.close()
@@ -202,6 +203,44 @@ func _topo() -> void:
 		two.append(t + shift)
 	_ok("control: two tubes -> two components, four loops", MeshTopo.components(v2.size() / 3, two) == 2
 			and MeshTopo.boundary_loops(two).size() == 4)
+
+# The fit budget's text edits on fixtures/foxgirl/fit_config.json (pipeline
+# _fit_budget): the result parses, carries each edit once, and leaves every
+# integer an integer (a GDScript JSON round trip would not).
+func _fit_budget() -> void:
+	var Pipeline = load("res://stages/pipeline.gd")
+	var cfg := FileAccess.get_file_as_string("res://fixtures/foxgirl/fit_config.json")
+	_ok("fit_config.json reads", not cfg.is_empty())
+	var p = Pipeline.new()
+	p.opts = Pipeline.DEFAULTS.duplicate(true)
+	var r: Dictionary = p._fit_budget(cfg)
+	_ok("default budget edits apply", not r.has("error"), str(r.get("error", r.get("note", ""))))
+	var j = JSON.parse_string(str(r.get("text", "")))
+	_ok("edited config parses", typeof(j) == TYPE_DICTIONARY)
+	if typeof(j) != TYPE_DICTIONARY:
+		return
+	var al: Dictionary = j.solver.augmented_lagrangian
+	_ok("incremental_steps 1, an integer literal", int(j.incremental_steps) == 1
+			and str(r.text).find('"incremental_steps": 1,') >= 0)
+	_ok("solver.nonlinear.Newton: force_psd_projection (the AL's nonlinear inherits it)",
+			j.solver.nonlinear.Newton.get("force_psd_projection", false) == true
+			and j.solver.nonlinear.Newton.use_psd_projection == true, str(j.solver.nonlinear.Newton))
+	_ok("AL nonlinear untouched", not al.nonlinear.has("Newton") and al.nonlinear.grad_norm == 1
+			and al.nonlinear.max_iterations == 50, str(al.nonlinear))
+	_ok("max_iterations stay integer literals", str(r.text).find('"max_iterations": 50') >= 0
+			and str(r.text).find('"max_iterations": 5000') >= 0 and str(r.text).find('"max_iterations": 200') >= 0)
+	p.opts.fit_grad_norm = 0.03
+	var rg: Dictionary = p._fit_budget(cfg)
+	var jg = JSON.parse_string(str(rg.get("text", "")))
+	_ok("fit_grad_norm 0.03: the reduced solve's grad_norm, not the AL's", not rg.has("error") and typeof(jg) == TYPE_DICTIONARY
+			and is_equal_approx(float(jg.solver.nonlinear.grad_norm), 0.03)
+			and float(jg.solver.augmented_lagrangian.nonlinear.grad_norm) == 1.0, str(rg.get("note", rg.get("error", ""))))
+	p.opts.fit_grad_norm = -1.0
+	p.opts.fit_force_psd = false
+	var r0: Dictionary = p._fit_budget(cfg)
+	_ok("control: fit_force_psd off leaves Newton as fit_config.json has it", not r0.has("error")
+			and str(r0.text).find("force_psd_projection") < 0 and str(r0.text) == cfg.replace('"incremental_steps": 2', '"incremental_steps": 1'))
+	p.free()
 
 func _weld(v: PackedFloat32Array, f: PackedInt32Array) -> Dictionary:
 	var at := {}

@@ -1,0 +1,16 @@
+# fit_native --set /solver/contact/CCD/broad_phase="hash_grid" (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 932 v / 1728 f, skeleton 15 v / 14 b, no-fit 0, float32 yes, harness file opens 5
+[2026-09-23 05:05:32.343] [polyfem] [error] [SparseNewton][Backtracking] Reached iteration limit (limit=50)
+[2026-09-23 05:05:38.904] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 6.49396s (iters=29 f=0.004035 Δf=0.00174269 ‖∇f‖=0.65413 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=1.6976e-312 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:05:38.904] [polyfem] [debug] [timing][SparseNewton] assembly: 9.66e-01s; linear_solve: 7.57e-01s
+[2026-09-23 05:05:38.904] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 8.08e-01s; linear_solve: 3.52e-01s
+begin: ok  wall 0.37 s  cpu 0.39 s
+normalisation: target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326) source_scale 1.5276081186803154
+phase 0 (substep 0, AL): ok  newton 79  minimize 2  post_steps 81  energy 0.0040349995176697266  |grad| 0.65413  status 4  wall 37.82 s  cpu 37.48 s
+[2026-09-23 05:06:13.041] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 33.2162s (iters=129 f=0.0112325 Δf=3.31429e-06 ‖∇f‖=0.00670413 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=0 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:06:13.041] [polyfem] [debug] [timing][SparseNewton] assembly: 4.33e+00s; linear_solve: 2.35e+00s
+[2026-09-23 05:06:13.041] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 5.83e+00s; linear_solve: 1.99e+00s
+phase 1 (substep 0, reduced): ok  newton 129  minimize 1  post_steps 130  energy 0.011232450676545982  |grad| 0.00670413  status 4  wall 34.07 s  cpu 33.84 s
+final: phases 2/2  newton 208  post_steps 211  intersections none
+time: begin+phases wall 72.31 s, cpu 71.77 s; process cpu 71.81 s; peak working set 178.6 MB
+sdf grid: voxel 0.01  bricks 475 (243200 voxels)  1.87 MB  distance queries 243200  winding queries 243200  fill 1.09 s

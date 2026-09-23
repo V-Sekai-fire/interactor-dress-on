@@ -33,8 +33,14 @@
 #                          the fit budget (defaults 1 and -1); -1 keeps
 #                          fit_config.json's (2; AL 50 / Newton 5000). A cap
 #                          below the config's makes the reduced solve throw
+#   --fit-force-psd=0|1    Newton's force_psd_projection in both solves (default 1,
+#                          the fit budget, gates/6-fit/budget; 0 = fit_config.json's)
+#   --fit-grad-norm=g      the reduced solve's grad_norm (default: fit_config.json's 0.01)
 #   --fit-from=<obj>       with fit as a fixture: these vertices are the fit
-#                          (every run that fits writes <out>.fitted.obj)
+#                          (every run that fits writes <out>.fitted.obj; every
+#                          run that meshes writes <out>.mesh.obj, fit.elf's input)
+#   --fit-elf=res://x.elf  another fit ELF (fit_prof.elf: the instruction-clock
+#                          build of gates/6-fit/budget)
 #
 # PASS (loop): pen copy == vendor/xr-grid; 2 cycles, 2 openings (the waist and
 # hem rings, drawn as boundary strokes) and 2 patches; the mesh
@@ -193,6 +199,10 @@ func _opts() -> Dictionary:
 		o.fit_incremental_steps = int(_arg("fit-incremental-steps"))
 	if _args.has("fit-max-iterations"):
 		o.fit_max_iterations = int(_arg("fit-max-iterations"))
+	if _args.has("fit-force-psd"):
+		o.fit_force_psd = _arg("fit-force-psd") not in ["0", "false", "off"]
+	if _args.has("fit-grad-norm"):
+		o.fit_grad_norm = float(_arg("fit-grad-norm"))
 	if _arg("gate", "loop") == "pen":
 		o.stop_after = "MESH"
 	return o
@@ -216,6 +226,9 @@ func _process(_dt: float) -> bool:
 				return false
 			_main.pipeline.state_changed.connect(_on_state)
 			_main.pipeline.progress.connect(func(t: String): _say("      " + t))
+			if _args.has("fit-elf"):
+				# e.g. res://fit_prof.elf, the fit budget's instruction-clock build
+				_say("fit elf: " + str(_main.fit.fit_configure_with(_main.fit.fit_memory_mib, _arg("fit-elf"))))
 			_say("stages: " + _main.dress_on_stages())
 			var w = _main.get_node_or_null("World")
 			_say("view: %s" % ("XR " + str(w.xr_runtime) if w != null and w.xr_on else "flat"))
@@ -275,6 +288,20 @@ func _evaluate() -> void:
 	var img: Image = (_spectator if _spectator != null else root).get_texture().get_image()
 	if img != null and img.save_png(png) == OK:
 		shot = "%s (%dx%d)" % [png.get_file(), img.get_width(), img.get_height()]
+	if p.data.has("garment"):
+		# The authored garment as it goes into FIT_BEGIN (body space, the
+		# float32 values fit.elf gets): fit_native's input for the fit
+		# budget (gates/6-fit/budget).
+		var mo := FileAccess.open(_out_path.get_basename() + ".mesh.obj", FileAccess.WRITE)
+		if mo != null:
+			var mv: PackedFloat32Array = p.data.garment.vertices
+			var mt: PackedInt32Array = p.data.garment.triangles
+			mo.store_line("# curvenet mesh_build output (body space) of Gate 8 run %s, mesh_edge %s" % [_out_path.get_file(), str(p.opts.mesh_edge)])
+			for i in range(0, mv.size(), 3):
+				mo.store_line("v %.9f %.9f %.9f" % [mv[i], mv[i + 1], mv[i + 2]])
+			for i in range(0, mt.size(), 3):
+				mo.store_line("f %d %d %d" % [mt[i] + 1, mt[i + 1] + 1, mt[i + 2] + 1])
+			mo.close()
 	if p.data.has("fitted") and p.data.has("garment") and not p.data.get("fit_fixture", false):
 		var fo := FileAccess.open(_out_path.get_basename() + ".fitted.obj", FileAccess.WRITE)
 		if fo != null:

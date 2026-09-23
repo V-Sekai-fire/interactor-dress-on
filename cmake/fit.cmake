@@ -149,3 +149,11 @@ target_compile_options(${FIT_ELF} PRIVATE -ffp-contract=off)
 # the driver must not try.
 target_link_options(${FIT_ELF} PRIVATE
     "-Wl,--wrap=open,--wrap=open64,--wrap=openat,--wrap=openat64,--wrap=fopen,--wrap=fopen64")
+# FIT_INSTRET_CLOCK: the profiling build (guest/fit/fit_clock.cpp): every clock
+# reads the retired-instruction counter, so polysolve's [timing] lines count
+# instructions. Build it under another FIT_ELF (fit_prof), never as fit.elf.
+option(FIT_INSTRET_CLOCK "clocks read instret (profiling build)" OFF)
+if(FIT_INSTRET_CLOCK)
+    target_sources(${FIT_ELF} PRIVATE "${FIT_REPO}/guest/fit/fit_clock.cpp")
+    target_link_options(${FIT_ELF} PRIVATE "-Wl,--wrap=clock_gettime")
+endif()

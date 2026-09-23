@@ -1,0 +1,19 @@
+# fit_native --setup tools/native/foxgirl_oracle.json --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/nonlinear/grad_norm=0.03 (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 2682 v / 5220 f, skeleton 15 v / 14 b, no-fit 2005, float32 yes, harness file opens 7
+[2026-09-23 05:28:38.015] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 10.8734s (iters=10 f=0.000486032 Δf=0.000449835 ‖∇f‖=0.25002 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=1.12699e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:28:38.015] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 2.79e+00s; linear_solve: 1.50e+00s
+begin: ok  wall 0.55 s  cpu 0.53 s
+normalisation: target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248) source_scale 0.90869314092562126
+phase 0 (substep 0, AL): ok  newton 10  minimize 1  post_steps 11  energy 0.00048603156308044793  |grad| 0.25002  status 4  wall 12.61 s  cpu 11.75 s
+[2026-09-23 05:28:43.761] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 5.07372s (iters=8 f=0.000699569 Δf=2.3483e-05 ‖∇f‖=0.0184315 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.71012e-310 Δf=0 ‖∇f‖=0.03 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:28:43.761] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 2.34e+00s; linear_solve: 1.20e+00s
+phase 1 (substep 0, reduced): ok  newton 8  minimize 1  post_steps 9  energy 0.00069956914238684779  |grad| 0.0184315  status 4  wall 5.64 s  cpu 5.36 s
+[2026-09-23 05:28:55.221] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 10.9219s (iters=7 f=0.000655496 Δf=0.00308457 ‖∇f‖=0.946117 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=50 f=1.64306e-310 Δf=0 ‖∇f‖=1 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:28:55.221] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 1.97e+00s; linear_solve: 1.04e+00s
+phase 2 (substep 1, AL): ok  newton 7  minimize 1  post_steps 8  energy 0.00065549590027699344  |grad| 0.946117  status 4  wall 11.57 s  cpu 10.98 s
+[2026-09-23 05:29:17.404] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 21.6183s (iters=30 f=0.00163183 Δf=1.05947e-05 ‖∇f‖=0.0145048 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.55033e-310 Δf=0 ‖∇f‖=0.03 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:29:17.404] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 9.40e+00s; linear_solve: 5.55e+00s
+phase 3 (substep 1, reduced): ok  newton 30  minimize 1  post_steps 31  energy 0.0016318265220914799  |grad| 0.0145048  status 4  wall 22.07 s  cpu 20.36 s
+final: phases 4/4  newton 55  post_steps 59  intersections none
+time: begin+phases wall 52.51 s, cpu 49.06 s; process cpu 49.16 s; peak working set 171.5 MB
+sdf grid: voxel 0.01  bricks 220 (112640 voxels)  0.87 MB  distance queries 112640  winding queries 112640  fill 0.74 s

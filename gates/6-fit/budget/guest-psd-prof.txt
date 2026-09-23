@@ -1,0 +1,36 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T05:25:45
+args: --gate=loop --out=C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6c/gates/6-fit/budget/guest-psd-prof.txt --wallclock=3600 --allow-fixture=infer,rig --fit-elf=res://fit_prof.elf
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+fit elf: OK fit sandbox res://fit_prof.elf memory_max 2048 MiB execution_timeout 2500000
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              122 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                 13 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR             861 ms  vm     749.1 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               787 ms  vm     775.4 ms  heap 3.1 MiB  frames 1286  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN         2891 ms  vm    2888.2 ms  heap 8.3 MiB  frames 4750  OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+      fit_step: host_ms=267560 OK phase 0 (substep 0, AL): newton 50 minimize 1 post_steps 51 energy 0.0089990401469356614 |grad| 5.45156 status 0 io_attempts 0 instructions 239666806853 heap_used 29.7 MiB heap_free 1608.7 MiB chunks 60784
+      fit_step: host_ms=345066 OK phase 1 (substep 0, reduced): newton 100 minimize 1 post_steps 101 energy 0.011233598165391394 |grad| 0.00854109 status 4 io_attempts 0 instructions 386371817804 heap_used 31.6 MiB heap_free 1606.8 MiB chunks 60784
+STATE FIT_RUN         612632 ms  vm  612627.0 ms  heap 31.6 MiB  frames 1025338  2 phases | phase 2/2 done newton 150 energy 0.011233598165391394 |grad| 0.00854109 status 4 io_attempts 0 io_total 0 last_instructions 386371817804 heap_used 31.6 MiB heap_free 1606.8 MiB chunks 60784
+STATE FIT_READ             3 ms  vm       0.1 ms  heap 31.6 MiB  frames 1  932 v
+STATE CHECK              987 ms  vm     986.6 ms  heap 31.6 MiB  frames 1  OK none | control (one vertex pushed inside): OK INTERSECTS edge (5357,5936) face (3074,3548,2588)
+STATE DRAPE              452 ms  vm     433.1 ms  heap 2.7 MiB  frames 1  QUEUED forward 100 on rd | body mesh, 64 pins, scale 10.0
+STATE DRAPE_COLLECT     2183 ms  vm    2017.3 ms  heap 29.5 MiB  frames 301  IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892202 friction_events=64708 projections=32400 self_pushes=455 wall_ms=2178.4 ms/step=21.784 | 932 finite vertices after RUNNING 399/400
+=> DONE 
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS pipeline: DONE 
+PASS cycles: cycles=2 (want 2)
+PASS openings: openings=2 (want 2: the waist and the hem)
+PASS patches: patches=2 (want 2: the front and back panels)
+INFO curvenet: curves=6 knots=4 degrees=[3, 3, 3, 3] edges=6 (4 knots of degree 3 have 6 edges)
+PASS mesh: 932 v 1728 f, 2 loops, 1 components
+PASS intersections: OK none
+PASS intersections control: one vertex pushed inside: OK INTERSECTS edge (5357,5936) face (3074,3548,2588)
+PASS drape: 100 steps queued, { "status": "IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.892202 friction_events=64708 projections=32400 self_pushes=455 wall_ms=2178.4 ms/step=21.784", "last_running": "RUNNING 399/400", "ticks": 301, "vertices": 932, "finite": true }
+PASS screenshot: guest-psd-prof.png (1152x648)
+wall 625.0 s, frames 1031697
+RESULT: PASS FIXTURE:infer,rig
+drape rd_close: CLOSED device=freed permanent_slots=0

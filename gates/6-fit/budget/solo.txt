@@ -1,0 +1,3 @@
+solo-base
+solo-psd --set /solver/nonlinear/Newton/force_psd_projection=true
+solo-psd-gn003 --set /solver/nonlinear/Newton/force_psd_projection=true --set /solver/nonlinear/grad_norm=0.03

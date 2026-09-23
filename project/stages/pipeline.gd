@@ -84,6 +84,13 @@ const DEFAULTS := {
 	# cut-6 oracle setup).
 	"fit_incremental_steps": 1,
 	"fit_max_iterations": -1,
+	# Newton's force_psd_projection in the AL and the reduced solve (the fit
+	# budget, gates/6-fit/budget/README.md): plain Newton on this nonconvex
+	# energy takes CCD-clipped steps and the AL's minimizes run to their cap;
+	# the projected Hessian's directions let the AL converge in one minimize.
+	"fit_force_psd": true,
+	"fit_grad_norm": -1.0,    # the reduced solve's grad_norm; -1 keeps fit_config.json's 0.01
+	                          # (0.03 with fit_force_psd: 99 Newton native, measured, not the default)
 	"drape_steps": 100,
 	"drape_backend": "auto",
 	"drape_scale": 10.0,      # body metres -> drape units: cut-5's capsule has DiffCloth's fixed 0.1-unit
@@ -670,6 +677,16 @@ func _fit_budget(cfg: String) -> Dictionary:
 		# augmented_lagrangian.nonlinear.max_iterations, then solver.nonlinear.max_iterations
 		edits.append([r'("grad_norm"\s*:\s*1,\s*"max_iterations"\s*:\s*)\d+', str(cap)])
 		edits.append([r'("min_step_size"\s*:\s*[0-9.e+-]+\s*[}],\s*"max_iterations"\s*:\s*)\d+', str(cap)])
+	var gn: float = float(opts.get("fit_grad_norm", -1.0))
+	if gn > 0.0:
+		# solver.nonlinear.grad_norm (the reduced solve's stop; the AL's own is 1)
+		edits.append([r'("grad_norm"\s*:\s*)0\.01\b', str(gn)])
+	if bool(opts.get("fit_force_psd", false)):
+		# solver.nonlinear.Newton.force_psd_projection (an insertion: the key is
+		# not in fit_config.json). Both solves get it: the driver's init_args
+		# merges augmented_lagrangian.nonlinear over solver.nonlinear
+		# (optimize.cpp:1418-1428), so the AL's Newton inherits it.
+		edits.append([r'("nonlinear"\s*:\s*[{]\s*"Newton"\s*:\s*[{])', '"force_psd_projection": true, '])
 	var notes := []
 	for e in edits:
 		var re := RegEx.new()

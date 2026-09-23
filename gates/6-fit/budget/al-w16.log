@@ -1,0 +1,15 @@
+# fit_native --set /solver/augmented_lagrangian/initial_weight=16 (rc 0)
+inputs: avatar 5128 v / 10171 f, garment 932 v / 1728 f, skeleton 15 v / 14 b, no-fit 0, float32 yes, harness file opens 5
+[2026-09-23 05:14:55.098] [polyfem] [error] [SparseNewton][Backtracking] Reached iteration limit (limit=50)
+[2026-09-23 05:15:16.384] [polyfem] [error] [SparseNewton][Backtracking] Reached iteration limit (limit=50)
+[2026-09-23 05:15:37.626] [polyfem] [error] [SparseNewton][Backtracking] Reached iteration limit (limit=50)
+begin: ok  wall 1.80 s  cpu 0.56 s
+normalisation: target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326) source_scale 1.5276081186803154
+phase 0 (substep 0, AL): ok  newton 150  minimize 3  post_steps 153  energy 0.059717556363090459  |grad| 24.4873  status 0  wall 93.19 s  cpu 47.30 s
+[2026-09-23 05:16:29.308] [polyfem] [info] [SparseProjectedNewton][Backtracking] Finished: Gradient vector norm too small took 49.9924s (iters=107 f=0.0116405 Δf=3.27378e-06 ‖∇f‖=0.00988939 ‖Δx‖=nan Δx⋅∇f(x)=nan) (stopping criteria: iters=5000 f=1.55521e-310 Δf=0 ‖∇f‖=0.01 ‖Δx‖=0 Δx⋅∇f(x)=-0)
+[2026-09-23 05:16:29.308] [polyfem] [debug] [timing][SparseNewton] assembly: 5.24e+00s; linear_solve: 2.79e+00s
+[2026-09-23 05:16:29.308] [polyfem] [debug] [timing][SparseProjectedNewton] assembly: 1.16e+01s; linear_solve: 3.76e+00s
+phase 1 (substep 0, reduced): ok  newton 107  minimize 1  post_steps 108  energy 0.011640476165713527  |grad| 0.00988939  status 4  wall 51.59 s  cpu 36.92 s
+final: phases 2/2  newton 257  post_steps 261  intersections none
+time: begin+phases wall 146.77 s, cpu 84.83 s; process cpu 84.88 s; peak working set 66.2 MB
+sdf grid: voxel 0.01  bricks 427 (218624 voxels)  1.68 MB  distance queries 218624  winding queries 218624  fill 1.82 s

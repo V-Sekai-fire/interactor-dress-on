@@ -101,7 +101,9 @@ func _process(_delta: float) -> bool:
 			_finish()
 			return true
 		_cur = _runs.pop_front()
-		_host.reset()
+		# rule 10: a job that runs ggml-cpu gets the 5-minute cap per vmcall.
+		_host.reset(InferHost.ggml_runs_cpu("ggml_ops_start" if _cur[1] == "ops" else "ggml_probe_start",
+				"" if _cur[1] == "ops" else _cur[2]))
 		_run_t0 = Time.get_ticks_msec()
 		var r: String
 		if _cur[1] == "ops":

@@ -30,7 +30,14 @@
 #   ops fault move     the same control on the data-movement ops that read the
 #                      source it moves (DUP, CONT, GET_ROWS, CONCAT, REPEAT; a
 #                      CPY's src1 is its destination): every case must FAIL
+#   ops cpu cap control  AGENTS.md rule 10's control, always last: -o MUL_MAT
+#                      with the per-vmcall ggml-cpu cap lowered to 8 units; a
+#                      pump overruns it, and the run must end as an error
+#                      naming execution_timeout (a timeout is a FAIL)
 # and then the rule-4 counter (syncs in their submit's frame) must be 0.
+# Every job that runs ggml-cpu (the ops runs and probe census) has each pump
+# vmcall capped at InferHost.GGML_CPU_TIMEOUT_UNITS (~5 min, rule 10); the
+# ggml-rd-only probes keep the Sandbox's 1,000,000.
 # Headless (no RenderingDevice): one run, -o ADD -b RD0, which must print
 # "no RD device" and test no RD0 case: the flat control that separates
 # "the GPU path is not there" from "the kernels are wrong".
@@ -109,6 +116,9 @@ const FAULT_MOVE_PARAMS := "^(?!type=i32,)"
 # The device memory ggml-rd reports as total (free = total - allocated):
 # Godot has no call for it, so the host states it (24 GiB here).
 const TOTAL_MB := 24576
+# Rule 10's control: the ggml-cpu cap lowered to 8 units (8.4e6 instructions,
+# ~11 ms), which the first pumps of test-backend-ops overrun.
+const CPU_CAP_CONTROL_UNITS := 8
 
 var _sb = null
 var _rd: RenderingDevice = null
@@ -196,6 +206,8 @@ func _initialize() -> void:
 	var a := str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB))
 	_say("attach: %s" % a)
 	_host = InferHost.new(_sb, _rd, "ggml_pump")
+	_say("rule 10: ggml-cpu jobs capped at execution_timeout=%d units per vmcall (~300 s), ggml-rd-only jobs at %d" % [
+			InferHost.GGML_CPU_TIMEOUT_UNITS, int(_sb.execution_timeout)])
 	if _headless:
 		_runs = [["ops_no_device", "ops", "-o ADD -b RD0", ""]]
 	else:
@@ -218,6 +230,8 @@ func _initialize() -> void:
 			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],
 		]
 		_runs.append_array(_extra_probes)
+		# Last: a killed vmcall abandons the job's fiber, so no job can follow it.
+		_runs.append(["ops_cpu_cap_control", "ops", "-o MUL_MAT -b RD0", ""])
 		for ua in OS.get_cmdline_user_args():
 			if ua.begins_with("runs="):
 				var keep := ua.trim_prefix("runs=").split(",")
@@ -254,13 +268,17 @@ func _process(_delta: float) -> bool:
 			_finish()
 			return true
 		_cur = _runs.pop_front()
-		_host.reset()
+		_host.cpu_timeout_units = InferHost.GGML_CPU_TIMEOUT_UNITS
+		_host.reset(InferHost.ggml_runs_cpu("ggml_ops_start" if _cur[1] == "ops" else "ggml_probe_start",
+				"" if _cur[1] == "ops" else _cur[2]))
 		_run_t0 = Time.get_ticks_msec()
 		var r: String
 		if _cur[1] == "ops":
 			r = str(_sb.vmcall("ggml_ops_start", _cur[2], _cur[3]))
 		else:
 			r = str(_sb.vmcall("ggml_probe_start", _cur[2], _cur[3], _cur[4]))
+		if _cur[0] == "ops_cpu_cap_control":
+			_host.cpu_timeout_units = CPU_CAP_CONTROL_UNITS # applied from the first pump on
 		if not r.begins_with("STARTED"):
 			_verdict(false, "%s would not start: %s" % [_cur[0], r])
 			_cur = null
@@ -283,7 +301,7 @@ func _end_run(st: String) -> void:
 	_say("== %s: %s in %.1f s, %s" % [name, st, ms / 1000.0, _host.summary()])
 	if st == "error":
 		_say("   error: %s" % _host.text)
-	var res := {"state": st, "ms": ms, "text": text, "stats": stats}
+	var res := {"state": st, "ms": ms, "text": text, "stats": stats, "error": _host.text if st == "error" else ""}
 	if _cur[1] == "ops":
 		res.merge(_parse_ops(text))
 		_say("   cases: OK=%d FAIL=%d not_supported=%d | %s | %s" % [res.ok, res.fail, res.unsupported,
@@ -416,6 +434,10 @@ func _checks() -> void:
 	_verdict(fm.get("state", "") == "done" and fm.get("fail", 0) > 0 and fm.get("ok", -1) == 0,
 			"control: GGML_RD_FAULT=1 fails every %s case but i32: FAIL=%d OK=%d (%s)" % [FAULT_MOVE_OPS,
 			fm.get("fail", 0), fm.get("ok", 0), fm.get("backend_line", "")])
+	var cc = _results.get("ops_cpu_cap_control", {})
+	_verdict(cc.get("state", "") == "error" and str(cc.get("error", "")).contains("killed by execution_timeout"),
+			"control (rule 10): a ggml-cpu pump over its cap (%d units here; %d, ~5 min, in the other ggml-cpu runs) ends the run as FAIL: %s" % [
+			CPU_CAP_CONTROL_UNITS, InferHost.GGML_CPU_TIMEOUT_UNITS, str(cc.get("error", "(not run)"))])
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
 	var re := RegEx.new()
 	re.compile("rule4_same_frame_syncs=(\\d+)")

@@ -92,7 +92,8 @@ func _process(_delta: float) -> bool:
 			_finish()
 			return true
 		_cur = _runs.pop_front()
-		_host.reset()
+		# rule 10: the census rows run ggml-cpu, capped at 5 minutes per vmcall.
+		_host.reset(InferHost.ggml_runs_cpu("ggml_probe_start", _cur[0]))
 		var r := str(_sb.vmcall("ggml_probe_start", _cur[0], _cur[1], _cur[2]))
 		if not r.begins_with("STARTED"):
 			_verdict(false, "%s %s would not start: %s" % [_cur[0], _cur[1], r])

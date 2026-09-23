@@ -1,0 +1,3 @@
+PROBE alias rw kernel=add_f32 rounds=1000 barriers=999 elements=4096 exact=4096/4096 min=1000 max=1000 mean=1000.0 (want 1000)
+RESULT: PASS (alias rw)
+ggml_test: rd stats graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=69248 get_bytes=563200 copies=0 clears=0 buffers_live=0 bytes_live=0

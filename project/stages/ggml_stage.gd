@@ -10,7 +10,9 @@
 # always lands a frame after its submit (rule 4). gate_ggml_rd.gd is the
 # gate. Every entry point has a wrapper of its own name with its arguments
 # defaulted, and the gate's runs have presets; start one, then poll
-# ggml_job_status() until it is not RUNNING.
+# ggml_job_status() until it is not RUNNING. A job that runs ggml-cpu
+# (test-backend-ops, the census probe) has every vmcall capped at ~5 minutes
+# (rule 10, InferHost.GGML_CPU_TIMEOUT_UNITS).
 extends Node
 
 const InferHost := preload("res://infer_host.gd")
@@ -32,29 +34,32 @@ func ggml_attach(total_mb: int = GGML_TOTAL_MB) -> String:
 	_ggml.memory_max = 2048  # before program= (Gate 0F): whole test tensors live in the heap
 	_ggml.program = load("res://ggml_test.elf")
 	_ggml.references_max = 65536
-	_ggml.execution_timeout = 1000000  # host calls are charged against it (Gate 0F finding 6)
+	# Host calls are charged against it (Gate 0F finding 6); a ggml-cpu job
+	# gets InferHost's 5-minute cap per vmcall instead (rule 10).
+	_ggml.execution_timeout = 1000000
 	_ggml_rd = RenderingServer.create_local_rendering_device()
 	var r := str(_ggml.vmcall("ggml_attach", _ggml_rd, total_mb))
 	_ggml_host = InferHost.new(_ggml, _ggml_rd, "ggml_pump")
 	_ggml_host.state = "done"
 	return r
 
-func _ggml_started(r: String) -> String:
+func _ggml_started(r: String, runs_cpu: bool) -> String:
 	if r.begins_with("STARTED"):
-		_ggml_host.reset()
+		_ggml_host.reset(runs_cpu)
 	return r
 
 func ggml_ops_start(args: String = "-o ADD,MUL -b RD0", env: String = "") -> String:
 	var e := "" if _ggml != null else ggml_attach()
 	if _ggml == null:
 		return e
-	return _ggml_started(str(_ggml.vmcall("ggml_ops_start", args, env)))
+	return _ggml_started(str(_ggml.vmcall("ggml_ops_start", args, env)), InferHost.ggml_runs_cpu("ggml_ops_start"))
 
 func ggml_probe_start(name: String = "chain", arg: String = "256", env: String = "") -> String:
 	var e := "" if _ggml != null else ggml_attach()
 	if _ggml == null:
 		return e
-	return _ggml_started(str(_ggml.vmcall("ggml_probe_start", name, arg, env)))
+	return _ggml_started(str(_ggml.vmcall("ggml_probe_start", name, arg, env)),
+			InferHost.ggml_runs_cpu("ggml_probe_start", name))
 
 # One pump, at most once per frame; _process calls it too.
 func ggml_pump() -> String:

@@ -1,0 +1,8 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: Godot RenderingDevice (NVIDIA GeForce RTX 4090)
+  Device memory: 24576 MB (24576 MB free)
+

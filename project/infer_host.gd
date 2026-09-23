@@ -31,10 +31,36 @@ const ERROR := 6
 const KIND_NAMES := ["NONE", "WAIT_GPU", "READ", "UPLOAD", "COOP", "DONE", "ERROR"]
 const UPLOAD_CHUNK := 64 * 1024 * 1024
 
+# AGENTS.md rule 10: every ggml-cpu run has a hard ~5-minute cap, and a
+# timeout is a FAIL. In the guest the cap is the Sandbox's execution_timeout,
+# set before every pump vmcall of a job that runs ggml-cpu (reset(true)).
+# execution_timeout counts units of 2^20 instructions (Gate 0F probe 5), and
+# the guest retires ~0.75e9 instructions/s (gates/6-fit: 0.71-0.76 G/s at
+# rv64gc), so 300 s is 300 x 0.75e9 / 2^20 = 214,577 units (2.25e11
+# instructions). Host calls are charged against the same budget (Gate 0F
+# finding 6: 0.2-0.5M instructions each), which only stops a call sooner.
+# A ggml-rd-only job keeps the Sandbox's own budget: the RD path is not
+# capped here and pays nothing for it.
+const GGML_CPU_TIMEOUT_UNITS := 214577
+
+# Which ggml_test.elf jobs run ggml-cpu in the guest: every test-backend-ops
+# run (its reference backend is the in-guest ggml-cpu) and the census probe
+# (its rows against ggml-cpu). The other probes, graph and cost runs are
+# ggml-rd only, and ggml-rd has no CPU fallback (an op it does not support
+# is refused, never computed on ggml-cpu).
+static func ggml_runs_cpu(start_fn: String, probe: String = "") -> bool:
+	return start_fn == "ggml_ops_start" or (start_fn == "ggml_probe_start" and probe == "census")
+
 var sb = null                  # the Sandbox running the job
 var rd: RenderingDevice = null # the device the guest adopted (may be null)
 var pump_method := "ggml_pump"
 var cap_bytes := 512 * 1024 * 1024
+# This job runs ggml-cpu (reset(true)): every pump vmcall gets
+# execution_timeout = cpu_timeout_units. A gate's control may lower it.
+var cpu_job := false
+var cpu_timeout_units := GGML_CPU_TIMEOUT_UNITS
+var _base_timeout := 0   # the Sandbox's own execution_timeout, for ggml-rd-only jobs
+var _timeouts0 := 0      # sb.monitor_execution_timeouts when the job started
 
 # "running", "done" or "error"; text is the ERROR reason.
 var state := "running"
@@ -66,8 +92,17 @@ func _init(p_sb, p_rd: RenderingDevice, p_method := "ggml_pump") -> void:
 	sb = p_sb
 	rd = p_rd
 	pump_method = p_method
+	if sb != null:
+		_base_timeout = int(sb.execution_timeout)
 
-func reset() -> void:
+# Start of a job. runs_cpu: the job runs ggml-cpu in the guest
+# (ggml_runs_cpu()), so each of its vmcalls is capped at cpu_timeout_units;
+# otherwise the Sandbox's own execution_timeout is put back.
+func reset(runs_cpu := false) -> void:
+	cpu_job = runs_cpu
+	if sb != null:
+		sb.execution_timeout = cpu_timeout_units if cpu_job else _base_timeout
+		_timeouts0 = int(sb.monitor_execution_timeouts)
 	state = "running"
 	text = ""
 	last_kind = NONE
@@ -100,6 +135,8 @@ func pump_frame() -> String:
 		if not _up.is_empty() or state != "running":
 			return state
 	while true:
+		if cpu_job:
+			sb.execution_timeout = cpu_timeout_units # rule 10, per ggml-cpu vmcall
 		var t0 := Time.get_ticks_usec()
 		var r = sb.vmcall(pump_method, _feed)
 		var t1 := Time.get_ticks_usec()
@@ -110,6 +147,10 @@ func pump_frame() -> String:
 		pumps += 1
 		_feed = PackedByteArray()
 		if typeof(r) != TYPE_ARRAY or r.size() < 3:
+			if int(sb.monitor_execution_timeouts) > _timeouts0:
+				return _fail("%s killed by execution_timeout (%d units%s) after %.1f s: FAIL" % [pump_method,
+						int(sb.execution_timeout), ", the ggml-cpu cap of AGENTS.md rule 10" if cpu_job else "",
+						(t1 - t0) / 1e6])
 			return _fail("%s returned %s (the vmcall failed or was killed)" % [pump_method, str(r)])
 		var hdr: PackedInt64Array = r[0]
 		last_kind = hdr[0]
@@ -122,6 +163,7 @@ func pump_frame() -> String:
 			return state
 		elif last_kind == DONE:
 			state = "done"
+			_restore_timeout()
 			return state
 		elif last_kind == ERROR:
 			return _fail(str(r[1]))
@@ -148,7 +190,14 @@ func pump_frame() -> String:
 func _fail(why: String) -> String:
 	state = "error"
 	text = why
+	_restore_timeout()
 	return state
+
+# The job is over: the calls that follow (ggml_output, ggml_rd_stats, ...)
+# run no ggml-cpu and get the Sandbox's own budget back.
+func _restore_timeout() -> void:
+	if cpu_job and sb != null:
+		sb.execution_timeout = _base_timeout
 
 func _read(path: String, off: int, n: int):
 	var f := FileAccess.open(path, FileAccess.READ)

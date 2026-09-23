@@ -67,6 +67,14 @@ silent fixture.
    `tools/oxrsys/build/windows/runtime/oxrsys-runtime.json`; its Qt simulator
    shows the stream); the system default and SteamVR's settings are not ours to
    flip.
+10. **Guest inference runs on ggml-rd.** ggml-cpu only where a measured
+    profile shows it much faster, per graph and recorded (like rule 5).
+    Every ggml-cpu run has a hard ~5-minute timeout, and a timeout is a
+    FAIL: on the host `timeout 300`; in the guest the Sandbox's
+    `execution_timeout`, set for every vmcall of a job that runs ggml-cpu
+    (`infer_host.gd`, `GGML_CPU_TIMEOUT_UNITS`). Chaining resumable
+    sub-5-minute jobs is allowed but frowned upon: a last resort, documented
+    in the gate's README.
 
 ## Facts that cost time (do not relearn)
 
@@ -221,11 +229,14 @@ silent fixture.
   memcpy/memset/memmove/memcmp, fault above that ("Protection fault").
   `rdc::Device` splits buffer_update and staged reads, the pump splits READ,
   and `vendor/sandbox-api` splits the mem* wrappers.
-- **Guest inference is ggml-rd only.** The guest CPU (rv64gc, one thread)
-  runs ggml-cpu at ~0.1 GFLOP/s: a 4096-token DiT block's two reference arms
-  would be hours (the parked Gate 3 run stalled there). In the guest, graphs
-  run on ggml-rd with zero CPU fallback in release gates; the in-guest
-  ggml-cpu is only G3.ops' single-op reference. Oracles for anything bigger
+- **Why rule 10:** the guest CPU (rv64gc, one thread) runs ggml-cpu at
+  ~0.1 GFLOP/s: a 4096-token DiT block's two reference arms would be hours
+  (the parked Gate 3 run stalled there). ggml-rd has no CPU fallback (an op
+  it does not support is refused, never sent to ggml-cpu), and no graph has
+  a recorded profile that moves it to ggml-cpu; the in-guest ggml-cpu is
+  only G3.ops' single-op reference (test-backend-ops, the census probe),
+  each vmcall capped at 214,577 units (300 s at ~0.75 G instructions/s).
+  Oracles for anything bigger
   run on the HOST: the guest dumps its outputs (`main.gd`'s
   `ggml_graph_dump`, `project/graph_dump.gd`) and `tests/ggml_graph_oracle`
   rebuilds the same net from the same seeds (`guest/ggml_test/graph_nets.cpp`,

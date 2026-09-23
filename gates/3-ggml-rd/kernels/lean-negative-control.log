@@ -1,9 +1,14 @@
-# ggml-rd L0 negative controls, 2026-09-23T06:41:27Z
+# ggml-rd L0 negative controls, 2026-09-23T07:44:36Z
 == (1) native_decide on add_f32's pin with numthreads 256 -> 128 (must be rejected)
 <tmp>/NegGgml.lean:6:2: error: Tactic `native_decide` evaluated that the proposition
   LeanSlang.emit addF32 = expectedAdd.replace "[numthreads(256, 1, 1)]" "[numthreads(128, 1, 1)]"
 is false
 PASS the changed pin is rejected
+== (1b) native_decide on norm_f32's pin with the first tree step 128u -> 127u (must be rejected)
+<tmp>/NegGgmlNorm.lean:6:2: error: Tactic `native_decide` evaluated that the proposition
+  LeanSlang.emit normF32 = expectedNorm.replace "sh[(t + 128u)]" "sh[(t + 127u)]"
+is false
+PASS the changed norm pin is rejected
 == (2) gen.sh check against a copy of kernels/ggml whose add_f32.slang says 255u for 256u (must fail)
 == emitting Slang from Lean at <checkout>/lean ==
 DIFF: Lean emits a different slang/add_f32.slang:

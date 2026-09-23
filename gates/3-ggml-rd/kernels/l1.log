@@ -1,6 +1,6 @@
-# ggml-rd L1, 2026-09-23T06:41:33Z, 2026.13.1-1-g84792eb15
-== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 
-layout ok: add_f32, mul_f32
+# ggml-rd L1, 2026-09-23T07:36:20Z, 2026.13.1-1-g84792eb15
+== fixed-layout check on the built kernels (must pass): add_f32 mul_f32 norm_f32 norm_f32_serial rms_norm_f32 rms_norm_f32_serial mean_f32 mean_f32_serial soft_max_f32 soft_max_f32_serial norm_f32_t64 norm_f32_t64_serial rms_norm_f32_t64 rms_norm_f32_t64_serial soft_max_f32_t64 soft_max_f32_t64_serial 
+layout ok: add_f32, mul_f32, norm_f32, norm_f32_serial, rms_norm_f32, rms_norm_f32_serial, mean_f32, mean_f32_serial, soft_max_f32, soft_max_f32_serial, norm_f32_t64, norm_f32_t64_serial, rms_norm_f32_t64, rms_norm_f32_t64_serial, soft_max_f32_t64, soft_max_f32_t64_serial
 PASS layout
 == negative: add_f32 at slangc's default -O1 with -preserve-params (must fail)
 layout error: add_f32_o1: SPIR-V layout differs: missing ['s2'], extra [], wrong []
@@ -11,4 +11,18 @@ PASS saxpby is refused
 == cpp emits compiled for riscv64 (clang version 23.1.1 (https://github.com/llvm/llvm-project 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
 PASS riscv64 add_f32 (3784 bytes of object)
 PASS riscv64 mul_f32 (3784 bytes of object)
+SKIP riscv64 norm_f32 (group-shared: no cpp target; norm_f32_serial is its cpp sibling)
+PASS riscv64 norm_f32_serial (5272 bytes of object)
+SKIP riscv64 rms_norm_f32 (group-shared: no cpp target; rms_norm_f32_serial is its cpp sibling)
+PASS riscv64 rms_norm_f32_serial (4560 bytes of object)
+SKIP riscv64 mean_f32 (group-shared: no cpp target; mean_f32_serial is its cpp sibling)
+PASS riscv64 mean_f32_serial (4056 bytes of object)
+SKIP riscv64 soft_max_f32 (group-shared: no cpp target; soft_max_f32_serial is its cpp sibling)
+PASS riscv64 soft_max_f32_serial (5328 bytes of object)
+SKIP riscv64 norm_f32_t64 (group-shared: no cpp target; norm_f32_t64_serial is its cpp sibling)
+PASS riscv64 norm_f32_t64_serial (5104 bytes of object)
+SKIP riscv64 rms_norm_f32_t64 (group-shared: no cpp target; rms_norm_f32_t64_serial is its cpp sibling)
+PASS riscv64 rms_norm_f32_t64_serial (4480 bytes of object)
+SKIP riscv64 soft_max_f32_t64 (group-shared: no cpp target; soft_max_f32_t64_serial is its cpp sibling)
+PASS riscv64 soft_max_f32_t64_serial (5040 bytes of object)
 RESULT: PASS

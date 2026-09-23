@@ -4,3 +4,17 @@
 # GgmlKernelTable.inc, so ids are per build, never stored.
 add_f32
 mul_f32
+norm_f32
+norm_f32_serial
+rms_norm_f32
+rms_norm_f32_serial
+mean_f32
+mean_f32_serial
+soft_max_f32
+soft_max_f32_serial
+norm_f32_t64
+norm_f32_t64_serial
+rms_norm_f32_t64
+rms_norm_f32_t64_serial
+soft_max_f32_t64
+soft_max_f32_t64_serial

@@ -26,6 +26,9 @@ struct L2Case {
 	std::function<ggml_tensor *(ggml_context *ctx)> build;
 	float lo = -1.0f, hi = 1.0f; // leaves are uniform in [lo, hi)
 	double max_nmse = 1e-7; // test-backend-ops' default for these ops
+	// The output does not depend on the source values (SOFT_MAX of a one-element
+	// row is 1): the swapped-stride control cannot change it, so counts it NOOP.
+	bool value_blind = false;
 };
 
 using L2Maker = void (*)(std::vector<L2Case> &out);

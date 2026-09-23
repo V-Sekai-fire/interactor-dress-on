@@ -244,7 +244,8 @@ int main(int argc, char **argv) {
 			control == SWAP_NB ? "swap-nb" : "none");
 	int passed = 0, failed = 0, detected = 0, noop = 0;
 	for (const L2Case &c : cases) {
-		const Outcome o = run_case(c, control);
+		Outcome o = run_case(c, control);
+		o.swap_noop = o.swap_noop || c.value_blind;
 		if (control == NONE) {
 			std::printf("%s %s\n", o.ok ? "OK  " : "FAIL", o.line.c_str());
 			(o.ok ? passed : failed)++;
@@ -257,6 +258,7 @@ int main(int argc, char **argv) {
 			std::printf("%s %s\n", o.ok ? "MISSED  " : "DETECTED", o.line.c_str());
 			(o.ok ? failed : detected)++;
 		}
+		std::fflush(stdout); // a crashing case still leaves the ones before it in the log
 	}
 	bool pass;
 	if (control == NONE) {

@@ -9,6 +9,8 @@
 #   lean-negative-control.log  the controls, each must FAIL:
 #                              (1) a pin with one character changed
 #                                  (numthreads 256 -> 128) under native_decide;
+#                              (1b) norm_f32's pin with its tree's first
+#                                  step 128 -> 127 (the K3/K4 row kernels);
 #                              (2) gen.sh's check against a slang/ with one
 #                                  character changed (256u -> 255u), run on a
 #                                  copy of kernels/ggml so nothing committed is
@@ -51,6 +53,20 @@ EOF
 		echo "FAIL the changed pin was accepted"; nrc=1
 	else
 		echo "PASS the changed pin is rejected"
+	fi
+	echo "== (1b) native_decide on norm_f32's pin with the first tree step 128u -> 127u (must be rejected)"
+	cat > "$TMP/NegGgmlNorm.lean" <<'EOF2'
+import Ggml.SlangCodegen.Norm
+open Ggml.SlangCodegen.Norm
+
+example : LeanSlang.emit normF32 =
+    expectedNorm.replace "sh[(t + 128u)]" "sh[(t + 127u)]" := by
+  native_decide
+EOF2
+	if ( cd "$LEAN" && lake env lean "$TMP/NegGgmlNorm.lean" 2>&1 ); then
+		echo "FAIL the changed norm pin was accepted"; nrc=1
+	else
+		echo "PASS the changed norm pin is rejected"
 	fi
 	echo "== (2) gen.sh check against a copy of kernels/ggml whose add_f32.slang says 255u for 256u (must fail)"
 	mkdir -p "$TMP/tree/kernels" "$TMP/tree/guest/ggml-rd"

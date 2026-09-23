@@ -30,6 +30,9 @@ struct L2Case {
 	// Optional: fill leaf t yourself (e.g. i32 positions) and return true;
 	// return false to leave it to the uniform [lo, hi) fill.
 	std::function<bool(ggml_tensor *t, std::mt19937 &rng)> init;
+	// The output does not depend on the source values (SOFT_MAX of a one-element
+	// row is 1): the swapped-stride control cannot change it, so counts it NOOP.
+	bool value_blind = false;
 };
 
 using L2Maker = void (*)(std::vector<L2Case> &out);

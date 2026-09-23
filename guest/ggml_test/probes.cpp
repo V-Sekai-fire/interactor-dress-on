@@ -22,6 +22,9 @@
 
 namespace probes {
 
+// probes_rows.cpp: NORM/RMS_NORM/SOFT_MAX GPU time on the census's shapes.
+bool rows_perf(ggml_backend_t be, const std::string &arg);
+
 namespace {
 
 struct Args {
@@ -448,6 +451,12 @@ void job(void *) {
 		perf(g_args.arg); // K2's data-movement set; other perf sets are census rows
 	} else if (census::known(name)) {
 		census::run(name, g_args.arg.empty() ? "all" : g_args.arg);
+	} else if (name == "rows_perf") {
+		ggml_backend_t be = rd_backend();
+		result(be != nullptr && rows_perf(be, g_args.arg), "rows_perf");
+		if (be != nullptr) {
+			ggml_backend_free(be);
+		}
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -460,8 +469,8 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "perf" && !census::known(name)) {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias, census, perf)";
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "perf" && name != "rows_perf" && !census::known(name)) {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, census, perf, rows_perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

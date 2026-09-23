@@ -92,6 +92,16 @@ rm -rf "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 mkdir -p "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 echo "== slangc -target cpp =="
 for k in $KERNELS; do
+	# slangc's cpp target rejects groupshared + GroupMemoryBarrierWithGroupSync
+	# (E36107). Such a kernel has no cpp emit; its `<k>_serial` sibling in
+	# kernels.txt (the same arithmetic, one thread per group) stands in for it
+	# in the host tests (tests/ggml_rd_kernels/gen_host_kernels.py).
+	if grep -q '^groupshared ' "$HERE/slang/$k.slang"; then
+		case " $KERNELS " in
+			*" ${k}_serial "*) rm -f "$HERE/cpp/${k}_emit.cpp"; echo "$k: group-shared, no cpp (host tests run ${k}_serial)"; continue ;;
+			*) echo "error: $k uses groupshared and kernels.txt has no ${k}_serial for the cpp target" >&2; exit 1 ;;
+		esac
+	fi
 	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -preserve-params \
 		-o "cpp/${k}_emit.cpp" "slang/$k.slang" 2>&1 | grep -v "has been renamed to 'main_0'" || true )
 	[ -s "$HERE/cpp/${k}_emit.cpp" ] || { echo "error: no cpp for $k" >&2; exit 1; }

@@ -34,11 +34,15 @@
 # each run's full output in run-<name>.log beside it; the last line is
 # RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
 #
-# User arguments (after `--`) let an op family run its own ops without
-# touching the lead's evidence:
-#   --ops=SILU,GELU      the ops of ops_main / ops_barrier_all (default OPS)
-#   --fault-ops=SILU     the ops of the fault control (default ADD)
-#   --out=<name>         results in gates/3-ggml-rd/ops/<name>/ (default ops/)
+# User arguments (after `--`) override the defaults, so an op family runs
+# its own ops into its own evidence folder without editing this file:
+#   --ops=NORM,RMS_NORM   the ops of "ops main" and "ops barrier_all" (OPS)
+#   --fault=NORM          the ops of the fault control (FAULT_OPS; also
+#                         spelled --fault-ops=)
+#   --out=<name>          results in gates/3-ggml-rd/ops/<name>/; with a
+#                         slash, a folder from the checkout (OUT_DIR)
+#   --probe=rows_perf[:arg]  one more probe after the ops runs (repeatable);
+#                            it must print RESULT: PASS
 extends SceneTree
 
 const InferHost := preload("res://infer_host.gd")
@@ -46,6 +50,7 @@ const InferHost := preload("res://infer_host.gd")
 # its ops here (the lead merges this line); ADD stays the fault control.
 # GGML_GATE_OPS in the environment replaces the list for one run.
 const OPS := "ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT"
+const FAULT_OPS := "ADD"
 const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
 const WALL_S := 3600.0
 # The data-movement ops whose fault control is meaningful (GGML_RD_FAULT moves
@@ -73,8 +78,9 @@ var _run_t0 := 0
 var _headless := false
 var _results := {}
 var _ops := OPS
-var _fault_ops := "ADD"
+var _fault_ops := FAULT_OPS
 var _out_dir := OUT_DIR
+var _extra_probes: Array = []
 
 func _clean(t: String) -> String:
 	var root := ProjectSettings.globalize_path("res://").trim_suffix("/")
@@ -102,11 +108,19 @@ func _initialize() -> void:
 	_t0 = Time.get_ticks_msec()
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--ops="):
-			_ops = a.substr(6)
+			_ops = a.trim_prefix("--ops=")
 		elif a.begins_with("--fault-ops="):
-			_fault_ops = a.substr(12)
+			_fault_ops = a.trim_prefix("--fault-ops=")
+		elif a.begins_with("--fault="):
+			_fault_ops = a.trim_prefix("--fault=")
+		elif a.begins_with("--probe="):
+			var pa := a.trim_prefix("--probe=").split(":", true, 1)
+			var parg: String = pa[1] if pa.size() > 1 else ""
+			_extra_probes.append(["probe_" + pa[0] + ("_" + parg if parg != "" else ""), "probe", pa[0], parg, ""])
 		elif a.begins_with("--out="):
-			_out_dir = OUT_DIR + a.substr(6) + "/"
+			# A bare name lands under ops/; a path is taken from the checkout.
+			var o := a.trim_prefix("--out=").trim_suffix("/")
+			_out_dir = ("res://../" + o + "/") if o.contains("/") else (OUT_DIR + o + "/")
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	_rd = RenderingServer.create_local_rendering_device()
@@ -154,6 +168,7 @@ func _initialize() -> void:
 			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],
 		]
+		_runs.append_array(_extra_probes)
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
@@ -284,6 +299,8 @@ func _checks() -> void:
 	for n in ["probe_chain", "probe_chain_barrier_all", "probe_independent", "probe_independent_barrier_all", "probe_files"]:
 		_verdict(_probe_pass(n), "%s" % n)
 	_verdict(_probe_pass("probe_alias_rw"), "probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact")
+	for x in _extra_probes:
+		_verdict(_probe_pass(x[0]), "%s %s" % [x[0], x[3]])
 	_verdict(_probe_pass("probe_alias_ro_control"),
 			"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
 	_verdict(_probe_pass("probe_perf") and _probe_pass("probe_perf_barrier_all"),

@@ -31,6 +31,11 @@
 //                    graph of K copies against one of 1, per op = the
 //                    difference / (K - 1). Numbers, no threshold: RESULT PASS
 //                    when every case was timed.
+//   rows_perf        (probes_rows.cpp) the GPU time per op of NORM, RMS_NORM
+//                    and SOFT_MAX on the census's hottest shapes, from
+//                    in-place chains of 1 and N ops timed on the host clock;
+//                    rows_perf sweep: 64- vs 256-thread NORM/RMS_NORM kernels
+//                    over row lengths 32..1024 (ops/rows.h's kShortRow).
 #pragma once
 
 #include <string>

@@ -27,3 +27,17 @@ concat_b32
 concat_b16
 repeat_b32
 repeat_b16
+norm_f32
+norm_f32_serial
+rms_norm_f32
+rms_norm_f32_serial
+mean_f32
+mean_f32_serial
+soft_max_f32
+soft_max_f32_serial
+norm_f32_t64
+norm_f32_t64_serial
+rms_norm_f32_t64
+rms_norm_f32_t64_serial
+soft_max_f32_t64
+soft_max_f32_t64_serial

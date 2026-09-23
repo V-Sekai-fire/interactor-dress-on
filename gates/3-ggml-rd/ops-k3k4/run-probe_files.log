@@ -1,0 +1,3 @@
+PROBE files path=<checkout>/project/../gates/3-ggml-rd/ops-k3k4/upload_probe.f32 read_bytes=16384 upload_offset=512 upload_exact=4096/4096 x+x_exact=4096/4096 status=0
+RESULT: PASS (files)
+ggml_test: rd stats graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=36480 get_bytes=546816 copies=0 clears=0 buffers_live=0 bytes_live=0

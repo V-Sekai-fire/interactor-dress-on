@@ -40,6 +40,20 @@ static const KernelDesc kKernels[] = {
 	{ "concat_b16", { 256, 1, 1 } },
 	{ "repeat_b32", { 256, 1, 1 } },
 	{ "repeat_b16", { 256, 1, 1 } },
+	{ "norm_f32", { 256, 1, 1 } },
+	{ "norm_f32_serial", { 1, 1, 1 } },
+	{ "rms_norm_f32", { 256, 1, 1 } },
+	{ "rms_norm_f32_serial", { 1, 1, 1 } },
+	{ "mean_f32", { 256, 1, 1 } },
+	{ "mean_f32_serial", { 1, 1, 1 } },
+	{ "soft_max_f32", { 256, 1, 1 } },
+	{ "soft_max_f32_serial", { 1, 1, 1 } },
+	{ "norm_f32_t64", { 64, 1, 1 } },
+	{ "norm_f32_t64_serial", { 1, 1, 1 } },
+	{ "rms_norm_f32_t64", { 64, 1, 1 } },
+	{ "rms_norm_f32_t64_serial", { 1, 1, 1 } },
+	{ "soft_max_f32_t64", { 64, 1, 1 } },
+	{ "soft_max_f32_t64_serial", { 1, 1, 1 } },
 };
 static const uint32_t kKernelCount = sizeof(kKernels) / sizeof(kKernels[0]);
 

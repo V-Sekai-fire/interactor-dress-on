@@ -1,0 +1,150 @@
+# Gate 3 G3.ops, 2026-09-23T07:45:06, Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090
+attach: attached device=NVIDIA GeForce RTX 4090 total_mb=24576
+== probe_chain: done in 0.1 s, frames=3 pumps=3 vm_ms=68.5 waits=1 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE chain n=256 status=0 nodes=256 dispatches=256 barriers=255 exact=256/256 x[0]=256 x[255]=256 barrier_all=0
+   RESULT: PASS (chain)
+   rd: graphs=1 nodes=256 dispatches=256 skipped=0 barriers=255 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=1 set0_created=1 slots_created=256 coop_yields=1 waits=1 faults=0 params_bytes=65536 set_bytes=2048 get_bytes=1024 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=1 submits=1 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_chain_barrier_all: done in 0.0 s, frames=2 pumps=2 vm_ms=9.4 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE chain n=256 status=0 nodes=256 dispatches=256 barriers=255 exact=256/256 x[0]=256 x[255]=256 barrier_all=1
+   RESULT: PASS (chain)
+   rd: graphs=2 nodes=512 dispatches=512 skipped=0 barriers=510 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=1 set0_created=2 slots_created=256 coop_yields=1 waits=2 faults=0 params_bytes=131072 set_bytes=4096 get_bytes=2048 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=2 submits=2 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_independent: done in 0.0 s, frames=2 pumps=2 vm_ms=32.9 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE independent n=64 status=0 dispatches=64 barriers=0 (want 0) exact=64000/64000 barrier_all=0
+   RESULT: PASS (independent)
+   rd: graphs=3 nodes=576 dispatches=576 skipped=0 barriers=510 failed_graphs=0 last{nodes=64 dispatches=64 barriers=0 skipped=0} pipelines=2 set0_created=3 slots_created=256 coop_yields=1 waits=3 faults=0 params_bytes=147456 set_bytes=12096 get_bytes=258048 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=3 submits=3 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_independent_barrier_all: done in 0.0 s, frames=2 pumps=2 vm_ms=32.9 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE independent n=64 status=0 dispatches=64 barriers=63 (want 63) exact=64000/64000 barrier_all=1
+   RESULT: PASS (independent)
+   rd: graphs=4 nodes=640 dispatches=640 skipped=0 barriers=573 failed_graphs=0 last{nodes=64 dispatches=64 barriers=63 skipped=0} pipelines=2 set0_created=4 slots_created=256 coop_yields=1 waits=4 faults=0 params_bytes=163840 set_bytes=20096 get_bytes=514048 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=4 submits=4 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_files: done in 0.0 s, frames=2 pumps=4 vm_ms=3.5 waits=1 coops=0 reads=1 read_bytes=16384 uploads=1 upload_bytes=16384
+   PROBE files path=<checkout>/project/../gates/3-ggml-rd/ops-k3k4/upload_probe.f32 read_bytes=16384 upload_offset=512 upload_exact=4096/4096 x+x_exact=4096/4096 status=0
+   RESULT: PASS (files)
+   rd: graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=36480 get_bytes=546816 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=5 submits=5 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_alias_rw: done in 0.0 s, frames=2 pumps=2 vm_ms=12.5 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE alias rw kernel=add_f32 rounds=1000 barriers=999 elements=4096 exact=4096/4096 min=1000 max=1000 mean=1000.0 (want 1000)
+   RESULT: PASS (alias rw)
+   rd: graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=69248 get_bytes=563200 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=6 submits=6 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_alias_ro_control: done in 0.0 s, frames=2 pumps=2 vm_ms=7.6 waits=1 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE alias ro kernel=ctl_add_f32_rosrc rounds=1000 barriers=999 elements=4096 exact=0/4096 min=20 max=134 mean=44.0 (want 1000)
+   RESULT: PASS (alias ro (control))
+   rd: graphs=5 nodes=641 dispatches=641 skipped=0 barriers=573 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0} pipelines=2 set0_created=5 slots_created=256 coop_yields=1 waits=5 faults=0 params_bytes=164096 set_bytes=102016 get_bytes=579584 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=7 submits=7 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== ops_main: done in 19.6 s, frames=80 pumps=80 vm_ms=19527.0 waits=79 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=79 FAIL=0 not_supported=191 | 79/79 tests passed | Backend RD0: OK
+   NORM: OK=30 FAIL=0 not_supported=0
+   RMS_NORM: OK=21 FAIL=0 not_supported=0
+   SOFT_MAX: OK=21 FAIL=0 not_supported=191
+   MEAN: OK=7 FAIL=0 not_supported=0
+   rd: graphs=400 nodes=1036 dispatches=720 skipped=316 barriers=573 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=9 set0_created=84 slots_created=256 coop_yields=1 waits=84 faults=0 params_bytes=184320 set_bytes=71371552 get_bytes=169317660 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=86 submits=86 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== ops_barrier_all: done in 18.8 s, frames=80 pumps=80 vm_ms=18750.8 waits=79 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=79 FAIL=0 not_supported=191 | 79/79 tests passed | Backend RD0: OK
+   NORM: OK=30 FAIL=0 not_supported=0
+   RMS_NORM: OK=21 FAIL=0 not_supported=0
+   SOFT_MAX: OK=21 FAIL=0 not_supported=191
+   MEAN: OK=7 FAIL=0 not_supported=0
+   rd: graphs=795 nodes=1431 dispatches=799 skipped=632 barriers=573 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=9 set0_created=163 slots_created=256 coop_yields=1 waits=163 faults=0 params_bytes=204544 set_bytes=142641088 get_bytes=338055736 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=165 submits=165 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== ops_fault: done in 18.3 s, frames=73 pumps=73 vm_ms=18251.7 waits=72 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=0 FAIL=72 not_supported=191 | 0/72 tests passed | Backend RD0: FAIL
+   NORM: OK=0 FAIL=30 not_supported=0
+   RMS_NORM: OK=0 FAIL=21 not_supported=0
+   SOFT_MAX: OK=0 FAIL=21 not_supported=191
+   failed: [NORM] ERR = 1.945461909 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,noncontig_rows=0): FAIL
+   failed: [RMS_NORM] ERR = 1.974299231 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,inplace=0): FAIL
+   failed: [NORM] ERR = 1.966171049 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000000,noncontig_rows=0): FAIL
+   failed: [RMS_NORM] ERR = 2.054501085 > 0.000000100   RMS_NORM(type=f32,ne=[64,5,4,3],v=1,eps=0.000000,inplace=0): FAIL
+   failed: [NORM] ERR = 2.038515061 > 0.000000100   NORM(type=f32,ne=[64,5,4,3],v=0,eps=0.000000,noncontig_rows=1): FAIL
+   rd: graphs=1155 nodes=1791 dispatches=871 skipped=920 barriers=573 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=9 set0_created=235 slots_created=256 coop_yields=1 waits=235 faults=72 params_bytes=222976 set_bytes=213490936 get_bytes=505537052 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=237 submits=237 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_rows_perf_sweep: done in 15.6 s, frames=933 pumps=933 vm_ms=15175.9 waits=928 coops=4 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE rows_perf threads=64 op=NORM ne=[32,262144,1,1] p=1e-06 chain=74 t1_us=560 tN_us=38218 per_op_us=515.9 GBps=260 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[32,262144,1,1] p=1e-06 chain=74 t1_us=2337 tN_us=144310 per_op_us=1944.8 GBps=69 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[64,131072,1,1] p=1e-06 chain=74 t1_us=424 tN_us=22385 per_op_us=300.8 GBps=446 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[64,131072,1,1] p=1e-06 chain=74 t1_us=1337 tN_us=68952 per_op_us=926.2 GBps=145 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[128,65536,1,1] p=1e-06 chain=296 t1_us=555 tN_us=55657 per_op_us=186.8 GBps=719 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[128,65536,1,1] p=1e-06 chain=74 t1_us=567 tN_us=40460 per_op_us=546.5 GBps=246 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[256,32768,1,1] p=1e-06 chain=296 t1_us=244 tN_us=21692 per_op_us=72.7 GBps=1846 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[256,32768,1,1] p=1e-06 chain=296 t1_us=498 tN_us=76765 per_op_us=258.5 GBps=519 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[512,16384,1,1] p=1e-06 chain=296 t1_us=700 tN_us=24707 per_op_us=81.4 GBps=1649 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[512,16384,1,1] p=1e-06 chain=296 t1_us=570 tN_us=40082 per_op_us=133.9 GBps=1002 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[1024,8192,1,1] p=1e-06 chain=1024 t1_us=585 tN_us=31247 per_op_us=30.0 GBps=4478 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[1024,8192,1,1] p=1e-06 chain=296 t1_us=355 tN_us=23139 per_op_us=77.2 GBps=1738 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[2048,4096,1,1] p=1e-06 chain=296 t1_us=374 tN_us=21135 per_op_us=70.4 GBps=1907 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[2048,4096,1,1] p=1e-06 chain=1024 t1_us=585 tN_us=51265 per_op_us=49.5 GBps=2709 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[4096,2048,1,1] p=1e-06 chain=296 t1_us=316 tN_us=21285 per_op_us=71.1 GBps=1888 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[4096,2048,1,1] p=1e-06 chain=1024 t1_us=417 tN_us=53648 per_op_us=52.0 GBps=2579 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[16384,512,1,1] p=1e-06 chain=296 t1_us=389 tN_us=33603 per_op_us=112.6 GBps=1192 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[16384,512,1,1] p=1e-06 chain=1024 t1_us=268 tN_us=69206 per_op_us=67.4 GBps=1992 check=ok (sweep)
+   PROBE rows_perf threads=64 op=NORM ne=[65536,128,1,1] p=1e-06 chain=74 t1_us=614 tN_us=32999 per_op_us=443.6 GBps=303 check=ok (sweep)
+   PROBE rows_perf threads=256 op=NORM ne=[65536,128,1,1] p=1e-06 chain=296 t1_us=307 tN_us=34408 per_op_us=115.6 GBps=1161 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[32,262144,1,1] p=1e-06 chain=99 t1_us=515 tN_us=35030 per_op_us=352.2 GBps=286 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[32,262144,1,1] p=1e-06 chain=99 t1_us=1493 tN_us=122099 per_op_us=1230.7 GBps=82 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[64,131072,1,1] p=1e-06 chain=99 t1_us=423 tN_us=22333 per_op_us=223.6 GBps=450 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[64,131072,1,1] p=1e-06 chain=99 t1_us=504 tN_us=64972 per_op_us=657.8 GBps=153 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[128,65536,1,1] p=1e-06 chain=396 t1_us=403 tN_us=59072 per_op_us=148.5 GBps=678 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[128,65536,1,1] p=1e-06 chain=99 t1_us=465 tN_us=37310 per_op_us=376.0 GBps=268 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[256,32768,1,1] p=1e-06 chain=1024 t1_us=398 tN_us=51063 per_op_us=49.5 GBps=2033 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[256,32768,1,1] p=1e-06 chain=396 t1_us=505 tN_us=64737 per_op_us=162.6 GBps=619 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[512,16384,1,1] p=1e-06 chain=1024 t1_us=738 tN_us=41460 per_op_us=39.8 GBps=2529 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[512,16384,1,1] p=1e-06 chain=396 t1_us=305 tN_us=34531 per_op_us=86.6 GBps=1162 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[1024,8192,1,1] p=1e-06 chain=1024 t1_us=532 tN_us=46401 per_op_us=44.8 GBps=2245 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[1024,8192,1,1] p=1e-06 chain=396 t1_us=392 tN_us=21464 per_op_us=53.3 GBps=1887 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[2048,4096,1,1] p=1e-06 chain=396 t1_us=575 tN_us=21909 per_op_us=54.0 GBps=1864 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[2048,4096,1,1] p=1e-06 chain=1024 t1_us=255 tN_us=42825 per_op_us=41.6 GBps=2419 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[4096,2048,1,1] p=1e-06 chain=396 t1_us=491 tN_us=22281 per_op_us=55.2 GBps=1825 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[4096,2048,1,1] p=1e-06 chain=1024 t1_us=375 tN_us=47503 per_op_us=46.1 GBps=2185 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[16384,512,1,1] p=1e-06 chain=396 t1_us=479 tN_us=38472 per_op_us=96.2 GBps=1047 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[16384,512,1,1] p=1e-06 chain=396 t1_us=591 tN_us=21374 per_op_us=52.6 GBps=1913 check=ok (sweep)
+   PROBE rows_perf threads=64 op=RMS_NORM ne=[65536,128,1,1] p=1e-06 chain=99 t1_us=471 tN_us=33104 per_op_us=333.0 GBps=302 check=ok (sweep)
+   PROBE rows_perf threads=256 op=RMS_NORM ne=[65536,128,1,1] p=1e-06 chain=396 t1_us=470 tN_us=38220 per_op_us=95.6 GBps=1053 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[32,262144,1,1] p=1 chain=74 t1_us=562 tN_us=37764 per_op_us=509.6 GBps=263 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[32,262144,1,1] p=1 chain=74 t1_us=2284 tN_us=140628 per_op_us=1895.1 GBps=71 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[64,131072,1,1] p=1 chain=74 t1_us=461 tN_us=22800 per_op_us=306.0 GBps=439 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[64,131072,1,1] p=1 chain=74 t1_us=1215 tN_us=74211 per_op_us=999.9 GBps=134 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[128,65536,1,1] p=1 chain=296 t1_us=447 tN_us=58117 per_op_us=195.5 GBps=687 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[128,65536,1,1] p=1 chain=74 t1_us=511 tN_us=40588 per_op_us=549.0 GBps=244 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[256,32768,1,1] p=1 chain=296 t1_us=261 tN_us=21280 per_op_us=71.3 GBps=1884 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[256,32768,1,1] p=1 chain=296 t1_us=518 tN_us=76358 per_op_us=257.1 GBps=522 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[512,16384,1,1] p=1 chain=1024 t1_us=263 tN_us=49383 per_op_us=48.0 GBps=2795 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[512,16384,1,1] p=1 chain=296 t1_us=584 tN_us=40366 per_op_us=134.9 GBps=995 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[1024,8192,1,1] p=1 chain=1024 t1_us=234 tN_us=50176 per_op_us=48.8 GBps=2749 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[1024,8192,1,1] p=1 chain=296 t1_us=262 tN_us=22719 per_op_us=76.1 GBps=1763 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[2048,4096,1,1] p=1 chain=296 t1_us=215 tN_us=21640 per_op_us=72.6 GBps=1848 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[2048,4096,1,1] p=1 chain=1024 t1_us=248 tN_us=51721 per_op_us=50.3 GBps=2668 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[4096,2048,1,1] p=1 chain=296 t1_us=342 tN_us=21425 per_op_us=71.5 GBps=1878 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[4096,2048,1,1] p=1 chain=1024 t1_us=464 tN_us=54369 per_op_us=52.7 GBps=2547 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[16384,512,1,1] p=1 chain=296 t1_us=443 tN_us=35085 per_op_us=117.4 GBps=1143 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[16384,512,1,1] p=1 chain=1024 t1_us=455 tN_us=68791 per_op_us=66.8 GBps=2009 check=ok (sweep)
+   PROBE rows_perf threads=64 op=SOFT_MAX ne=[65536,128,1,1] p=1 chain=74 t1_us=460 tN_us=33311 per_op_us=450.0 GBps=298 check=ok (sweep)
+   PROBE rows_perf threads=256 op=SOFT_MAX ne=[65536,128,1,1] p=1 chain=296 t1_us=465 tN_us=36019 per_op_us=120.5 GBps=1114 check=ok (sweep)
+   RESULT: PASS (rows_perf)
+   rd: graphs=2083 nodes=134687 dispatches=133767 skipped=920 barriers=132541 failed_graphs=0 last{nodes=296 dispatches=296 barriers=295 skipped=0} pipelines=9 set0_created=351 slots_created=1024 coop_yields=5 waits=1163 faults=72 params_bytes=34244352 set_bytes=213490936 get_bytes=505538908 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=1165 submits=1165 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== probe_rows_perf: done in 2.1 s, frames=153 pumps=153 vm_ms=2065.8 waits=152 coops=0 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE rows_perf op=RMS_NORM ne=[896,512,1,1] p=1.19209e-07 chain=1024 t1_us=386 tN_us=6295 per_op_us=5.8 GBps=953 check=ok (Skin-Tokens RMS_NORM x21947)
+   PROBE rows_perf op=RMS_NORM ne=[128,8,514,1] p=1e-06 chain=1024 t1_us=462 tN_us=8846 per_op_us=8.2 GBps=771 check=ok (Skin-Tokens q/k RMS_NORM x21560)
+   PROBE rows_perf op=SOFT_MAX ne=[512,512,8,1] p=1 chain=1024 t1_us=519 tN_us=16723 per_op_us=15.8 GBps=2118 check=ok (Skin-Tokens attention SOFT_MAX x11542)
+   PROBE rows_perf op=NORM ne=[512,54000,1,1] p=1e-05 chain=88 t1_us=531 tN_us=42581 per_op_us=483.3 GBps=915 check=ok (Skin-Tokens NORM x1964)
+   PROBE rows_perf op=SOFT_MAX ne=[54000,512,8,1] p=1 chain=4 t1_us=7128 tN_us=27209 per_op_us=6693.7 GBps=529 check=ok (Skin-Tokens SOFT_MAX, rows > 16384, x4)
+   PROBE rows_perf op=RMS_NORM ne=[128,12,4096,1] p=1e-12 chain=528 t1_us=478 tN_us=37501 per_op_us=70.3 GBps=1075 check=ok (Pixal3D ss_flow q/k RMS_NORM x240)
+   PROBE rows_perf op=NORM ne=[1536,4096,1,1] p=1e-06 chain=1024 t1_us=289 tN_us=50522 per_op_us=49.1 GBps=2050 check=ok (Pixal3D ss_flow NORM x182)
+   PROBE rows_perf op=NORM ne=[1024,1029,1,1] p=1e-05 chain=1024 t1_us=473 tN_us=14102 per_op_us=13.3 GBps=1265 check=ok (Pixal3D DINO NORM x80)
+   PROBE rows_perf op=SOFT_MAX ne=[1029,1029,16,1] p=0.125 chain=144 t1_us=476 tN_us=28569 per_op_us=196.5 GBps=1380 check=ok (Pixal3D DINO SOFT_MAX x24)
+   PROBE rows_perf op=NORM ne=[32,64,64,64] p=1e-05 chain=74 t1_us=738 tN_us=42314 per_op_us=569.5 GBps=236 check=ok (Pixal3D ss_dec NORM x12)
+   PROBE rows_perf op=NORM ne=[128,32,32,32] p=1e-05 chain=596 t1_us=478 tN_us=43248 per_op_us=71.9 GBps=934 check=ok (Pixal3D ss_dec NORM x14)
+   RESULT: PASS (rows_perf)
+   rd: graphs=2235 nodes=167879 dispatches=166959 skipped=920 barriers=165581 failed_graphs=0 last{nodes=596 dispatches=596 barriers=595 skipped=0} pipelines=9 set0_created=370 slots_created=1024 coop_yields=5 waits=1315 faults=72 params_bytes=42741504 set_bytes=213490936 get_bytes=505539212 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=1317 submits=1317 recoveries=0 permanent_slots=0 | 29 of 29 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== verdicts
+PASS probe_chain
+PASS probe_chain_barrier_all
+PASS probe_independent
+PASS probe_independent_barrier_all
+PASS probe_files
+PASS probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact
+PASS probe_rows_perf_sweep sweep
+PASS probe_rows_perf 
+PASS probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)
+PASS ops_main: test-backend-ops -o NORM,RMS_NORM,MEAN,SOFT_MAX -b RD0: OK=79 FAIL=0 not_supported=191 (Backend RD0: OK)
+PASS ops_barrier_all: test-backend-ops -o NORM,RMS_NORM,MEAN,SOFT_MAX -b RD0: OK=79 FAIL=0 not_supported=191 (Backend RD0: OK)
+PASS barrier elision and barrier-after-every-dispatch pass the same cases
+PASS control: GGML_RD_FAULT=1 (a source read one element off) fails every NORM,RMS_NORM,SOFT_MAX case: FAIL=72 OK=0 (Backend RD0: FAIL)
+PASS rule 4: no sync in its submit's frame (rule4_same_frame_syncs=0)
+close: CLOSED permanent_slots=0
+wall_s=75.4
+RESULT: PASS

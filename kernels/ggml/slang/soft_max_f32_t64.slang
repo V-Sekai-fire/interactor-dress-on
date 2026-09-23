@@ -1,0 +1,129 @@
+struct Slot {
+  uint base;
+  uint pad0;
+  uint pad1;
+  uint pad2;
+};
+
+groupshared float sh[64];
+
+[[vk::binding(0, 0)]]
+StructuredBuffer<uint> params;
+[[vk::binding(1, 0)]]
+RWStructuredBuffer<float> s0;
+[[vk::binding(2, 0)]]
+RWStructuredBuffer<uint> s1;
+[[vk::binding(3, 0)]]
+RWStructuredBuffer<uint> s2;
+[[vk::binding(4, 0)]]
+RWStructuredBuffer<float> dst;
+[[vk::binding(0, 1)]]
+ConstantBuffer<Slot> slot;
+
+uint pw(uint k) {
+  return params[(slot.base + k)];
+}
+
+float pf(uint k) {
+  return asfloat(pw(k));
+}
+
+uint off4(uint w, uint i0, uint i1, uint i2, uint i3) {
+  return ((((pw((w + 8u)) + (i0 * pw((w + 4u)))) + (i1 * pw((w + 5u)))) + (i2 * pw((w + 6u)))) + (i3 * pw((w + 7u))));
+}
+
+[shader("compute")] [numthreads(64, 1, 1)]
+void main(uint3 gid : SV_GroupID, uint3 lid : SV_GroupThreadID) {
+  uint row = ((gid.y * pw(54u)) + gid.x);
+  if ((row >= pw(55u))) {
+    return;
+  }
+  uint t = lid.x;
+  uint n = pw(10u);
+  uint r1 = (row % pw(11u));
+  uint rr = (row / pw(11u));
+  uint r2 = (rr % pw(12u));
+  uint r3 = (rr / pw(12u));
+  uint xb = off4(10u, 0u, r1, r2, r3);
+  uint xs = pw(14u);
+  uint yb = off4(1u, 0u, r1, r2, r3);
+  uint ys = pw(5u);
+  float scale = pf(37u);
+  float acc_mx = asfloat(0xFF800000u);
+  uint i_mx = t;
+  while ((i_mx < n)) {
+    float x = s0[(xb + (i_mx * xs))];
+    acc_mx = max(acc_mx, (x * scale));
+    i_mx = (i_mx + 64u);
+  }
+  sh[t] = acc_mx;
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 32u)) {
+    sh[t] = max(sh[t], sh[(t + 32u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 16u)) {
+    sh[t] = max(sh[t], sh[(t + 16u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 8u)) {
+    sh[t] = max(sh[t], sh[(t + 8u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 4u)) {
+    sh[t] = max(sh[t], sh[(t + 4u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 2u)) {
+    sh[t] = max(sh[t], sh[(t + 2u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 1u)) {
+    sh[t] = max(sh[t], sh[(t + 1u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  float mx = sh[0u];
+  GroupMemoryBarrierWithGroupSync();
+  float acc_sume = 0.0f;
+  uint i_sume = t;
+  while ((i_sume < n)) {
+    float x = s0[(xb + (i_sume * xs))];
+    acc_sume = (acc_sume + exp(((x * scale) - mx)));
+    i_sume = (i_sume + 64u);
+  }
+  sh[t] = acc_sume;
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 32u)) {
+    sh[t] = (sh[t] + sh[(t + 32u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 16u)) {
+    sh[t] = (sh[t] + sh[(t + 16u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 8u)) {
+    sh[t] = (sh[t] + sh[(t + 8u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 4u)) {
+    sh[t] = (sh[t] + sh[(t + 4u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 2u)) {
+    sh[t] = (sh[t] + sh[(t + 2u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  if ((t < 1u)) {
+    sh[t] = (sh[t] + sh[(t + 1u)]);
+  }
+  GroupMemoryBarrierWithGroupSync();
+  float sume = sh[0u];
+  GroupMemoryBarrierWithGroupSync();
+  float inv = (1.0f / sume);
+  uint j = t;
+  while ((j < n)) {
+    float x = s0[(xb + (j * xs))];
+    dst[(yb + (j * ys))] = (exp(((x * scale) - mx)) * inv);
+    j = (j + 64u);
+  }
+}

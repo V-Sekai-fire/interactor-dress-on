@@ -145,6 +145,7 @@ add_stage_elf(ggml_test
 	guest/ggml_test/main.cpp
 	guest/ggml_test/probes.cpp
 	guest/ggml_test/census.cpp
+	guest/ggml_test/probes_rows.cpp
 	vendor/ggml/tests/test-backend-ops.cpp
 )
 set_source_files_properties(vendor/ggml/tests/test-backend-ops.cpp PROPERTIES

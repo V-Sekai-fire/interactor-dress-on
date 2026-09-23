@@ -6,6 +6,7 @@
 //                                 changes an address must FAIL
 //
 // The last line is "RESULT: PASS" or "RESULT: FAIL".
+#include <cfloat>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -120,10 +121,19 @@ void fill(ggml_tensor *t, std::mt19937 &rng, float lo, float hi) {
 	}
 }
 
-// test-backend-ops: mse(a, b) / mse(a, 0), a the backend under test.
+bool isinf_or_max(float f) {
+	return std::isinf(f) || f == FLT_MAX || f == -FLT_MAX;
+}
+
+// test-backend-ops: mse(a, b) / mse(a, 0), a the backend under test. An
+// element where both are infinite (or +-FLT_MAX) with one sign is skipped:
+// test-backend-ops accepts it, and inf - inf would make the sum NaN.
 double nmse(const std::vector<float> &a, const std::vector<float> &b) {
 	double ab = 0.0, a0 = 0.0;
 	for (size_t i = 0; i < a.size(); ++i) {
+		if (isinf_or_max(a[i]) && isinf_or_max(b[i]) && std::signbit(a[i]) == std::signbit(b[i])) {
+			continue;
+		}
 		ab += double(a[i] - b[i]) * double(a[i] - b[i]);
 		a0 += double(a[i]) * double(a[i]);
 	}
@@ -157,7 +167,9 @@ Outcome run_case(const L2Case &c, Control control) {
 	std::mt19937 rng(1234567u);
 	for (ggml_tensor *t = ggml_get_first_tensor(ctx); t != nullptr; t = ggml_get_next_tensor(ctx, t)) {
 		if (t->op == GGML_OP_NONE && t->view_src == nullptr && t->data != nullptr) {
-			fill(t, rng, c.lo, c.hi);
+			if (!(c.init && c.init(t, rng))) {
+				fill(t, rng, c.lo, c.hi);
+			}
 		}
 	}
 	Mem mem{ static_cast<uint8_t *>(ggml_get_mem_buffer(ctx)), mem_size };
@@ -200,6 +212,18 @@ Outcome run_case(const L2Case &c, Control control) {
 			if (w[W_SRC0 + T_NB + 1] != w[W_SRC0 + T_NB + 2] && indexed) {
 				o.swap_noop = false;
 			}
+			// Swapped strides can reach past the memory block (a [1,16384]
+			// row read with a 16384-element stride on dim 1); the emits do
+			// not bound-check, so such a dispatch is not run: the swap is
+			// caught before it reads.
+			uint64_t last = w[W_SRC0 + T_OFF];
+			for (int k = 0; k < 4; ++k) {
+				last += uint64_t(w[W_SRC0 + T_NE + k] ? w[W_SRC0 + T_NE + k] - 1 : 0) * w[W_SRC0 + T_NB + k];
+			}
+			if ((last + 1) * ggml_type_size(node->src[0]->type) > mem.bytes) {
+				why = "swapped strides reach past the buffer";
+				break;
+			}
 		}
 		if (!run_kernel(p.kernel, w, mem.base, mem.bytes, p.groups)) {
 			why = "no host runner for kernel " + std::to_string(p.kernel);
@@ -212,8 +236,14 @@ Outcome run_case(const L2Case &c, Control control) {
 	bool finite_match = true;
 	for (size_t i = 0; i < ref.size(); ++i) {
 		exact += std::memcmp(&emu[i], &ref[i], 4) == 0;
-		if (std::isnan(emu[i]) != std::isnan(ref[i])) {
-			finite_match = false;
+		// test-backend-ops: no NaN on either side; an infinity only against
+		// an infinity of the same sign.
+		if (std::isnan(emu[i]) || std::isnan(ref[i])) {
+			finite_match = finite_match && std::isnan(emu[i]) && std::isnan(ref[i]);
+		} else if (isinf_or_max(emu[i]) || isinf_or_max(ref[i])) {
+			if (!(isinf_or_max(emu[i]) && isinf_or_max(ref[i]) && std::signbit(emu[i]) == std::signbit(ref[i]))) {
+				finite_match = false;
+			}
 		}
 	}
 	const double err = nmse(emu, ref);

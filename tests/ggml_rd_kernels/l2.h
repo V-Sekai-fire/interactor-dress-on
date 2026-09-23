@@ -15,6 +15,7 @@
 #pragma once
 
 #include <functional>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -26,6 +27,9 @@ struct L2Case {
 	std::function<ggml_tensor *(ggml_context *ctx)> build;
 	float lo = -1.0f, hi = 1.0f; // leaves are uniform in [lo, hi)
 	double max_nmse = 1e-7; // test-backend-ops' default for these ops
+	// Optional: fill leaf t yourself (e.g. i32 positions) and return true;
+	// return false to leave it to the uniform [lo, hi) fill.
+	std::function<bool(ggml_tensor *t, std::mt19937 &rng)> init;
 };
 
 using L2Maker = void (*)(std::vector<L2Case> &out);

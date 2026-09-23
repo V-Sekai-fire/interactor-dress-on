@@ -1,0 +1,617 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate 4 (curvenet.elf), 2026-09-23T17:50:44, Godot 4.7.2-stable (official)
+load curvenet.elf: 50.0 ms; execution_timeout=8000 memory_max=32 heap=75312
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+--- checks
+PASS check_names: 10 checks (beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld skirt_tube)
+guest beautify_determinism         3.5 ms heap=    76080  PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+guest curvenet_extract             0.6 ms heap=    76080  PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000001E26CC + 0x2de: _ZN3mwt4DMWT9buildListEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	001E29AA] [SP	0063C380] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063C5A0] [SR1	00000000] 
+[A0	00000002] [A1	006D66D0] [A2	00000008] [A3	0068306C] [A4	006832FC] 
+[A5	0066D4C8] [A6	FFFFFFFF] [A7	000001E0] [SR2	00000002] [SR3	000003B4] 
+[SR4	0000004F] [SR5	00000278] [SR6	0000004F] [SR7	00659AD0] [SR8	00000160] 
+[SR9	006D3428] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest patch_pipeline              24.9 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CAD0] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0002F490] 
+[A0	00000070] [A1	00000000] [A2	001783A0] [A3	00000074] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0000004F] [SR7	00659AD0] [SR8	00000160] 
+[SR9	0063CCE0] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest crossing_split               5.2 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E579C + 0x004: sys_string_ops
+-> [1] 0x00000000000E582A + 0x024: _ZNK6String4utf8B5cxx11Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE57A0] 00000073 ecall
+>>> Machine registers:
+[PC	e57a0] [RA	000E584E] [SP	0063CD90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CDB8] [SR1	0063CDC8] 
+[A0	00000007] [A1	00000000] [A2	00000000] [A3	0063CDB8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	0000020E] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0000004F] [SR7	00659AD0] [SR8	00000160] 
+[SR9	0063CCE0] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest constraint_solver            4.9 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x0000000000179C64 + 0x050: _ZN2cn12_GLOBAL__N_19icosphereEfiRSt6vectorIfSaIfEERS1_IiSaIiEE
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00179CB4] [SP	0063C750] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0064F930] 
+[A0	00000120] [A1	00000001] [A2	001783A0] [A3	00000065] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000A] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0000004F] [SR7	00659AD0] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest pen_sphere                   5.3 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000001748CA + 0x02c: _ZN2cn12_GLOBAL__N_114extractor_cubeEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	001748F6] [SP	0063CAB0] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0064F930] 
+[A0	00000060] [A1	001748CA] [A2	001783A0] [A3	00000065] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0000004F] [SR7	00659AD0] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest extractor_cube               5.3 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E579C + 0x004: sys_string_ops
+-> [1] 0x00000000000E582A + 0x024: _ZNK6String4utf8B5cxx11Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE57A0] 00000073 ecall
+>>> Machine registers:
+[PC	e57a0] [RA	000E584E] [SP	0063CD90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CDB8] [SR1	0063CDC8] 
+[A0	00000007] [A1	00000000] [A2	00000000] [A3	0063CDB8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	0000020E] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0000004F] [SR7	00659AD0] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest delaunay_small_scale         5.0 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000001757F0 + 0x022: _ZN2cn12_GLOBAL__N_19mesh_weldEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00175812] [SP	0063CA20] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0064F930] 
+[A0	00000024] [A1	001757F0] [A2	001783A0] [A3	00000064] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	00000009] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0000004F] [SR7	00659AD0] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	00000071] [SR11	0000013C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest mesh_weld                    5.7 ms heap=   681552  <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x0000000000175D54 + 0x192: _ZN2cn12_GLOBAL__N_110skirt_tubeEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00175EE6] [SP	0063C560] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	00000003] [SR1	00000000] 
+[A0	0000000C] [A1	00000000] [A2	00000003] [A3	00000000] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000C] [SR3	00000000] 
+[SR4	0063CDD8] [SR5	00000000] [SR6	00000002] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+guest skirt_tube                   4.8 ms heap=   681552  <null>
+--- compare
+PASS native-checks.log: 10 check lines, guest 10
+same  beautify_determinism   verdict PASS/PASS ints 18,1,1 fsig guest b16d0e78d4430640/18 native b16d0e78d4430640/18
+same  curvenet_extract       verdict PASS/PASS ints 1,0 fsig guest 9c1101467e8a059a/9 native 9c1101467e8a059a/9
+FAIL: patch_pipeline: unparsable (guest false, native true)
+FAIL: crossing_split: unparsable (guest false, native true)
+FAIL: constraint_solver: unparsable (guest false, native true)
+FAIL: pen_sphere: unparsable (guest false, native true)
+FAIL: extractor_cube: unparsable (guest false, native true)
+FAIL: delaunay_small_scale: unparsable (guest false, native true)
+FAIL: mesh_weld: unparsable (guest false, native true)
+FAIL: skirt_tube: unparsable (guest false, native true)
+FAIL guest vs native: verdicts and integer outputs identical in 2/10 checks
+FAIL guest vs native: float signatures identical in 2/10 checks
+--- repeat
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E579C + 0x004: sys_string_ops
+-> [1] 0x00000000000E582A + 0x024: _ZNK6String4utf8B5cxx11Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE57A0] 00000073 ecall
+>>> Machine registers:
+[PC	e57a0] [RA	000E584E] [SP	0063CD90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CDB8] [SR1	0063CDC8] 
+[A0	00000007] [A1	00000000] [A2	00000000] [A3	0063CDB8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	0000020E] [SR2	0000000C] [SR3	00000000] 
+[SR4	0063CDD8] [SR5	00000000] [SR6	00000002] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+differs on repeat: beautify_determinism
+  first:  PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+  second: <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E579C + 0x004: sys_string_ops
+-> [1] 0x00000000000E582A + 0x024: _ZNK6String4utf8B5cxx11Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE57A0] 00000073 ecall
+>>> Machine registers:
+[PC	e57a0] [RA	000E584E] [SP	0063CD90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CDB8] [SR1	0063CDC8] 
+[A0	00000007] [A1	00000000] [A2	00000000] [A3	0063CDB8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	0000020E] [SR2	0000000C] [SR3	00000000] 
+[SR4	0063CDD8] [SR5	00000000] [SR6	00000002] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+differs on repeat: curvenet_extract
+  first:  PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
+  second: <null>
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028D336 + 0x014: _ZN3gdl5ArrayC1Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028D34A] [SP	0063CAA0] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CB30] [SR1	0064F930] 
+[A0	00000050] [A1	00000001] [A2	001783A0] [A3	00000065] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CAD0] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0002F490] 
+[A0	00000070] [A1	00000000] [A2	001783A0] [A3	00000074] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	00000000] 
+[SR9	0063CCE0] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E579C + 0x004: sys_string_ops
+-> [1] 0x00000000000E582A + 0x024: _ZNK6String4utf8B5cxx11Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE57A0] 00000073 ecall
+>>> Machine registers:
+[PC	e57a0] [RA	000E584E] [SP	0063CD90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CDB8] [SR1	0063CDC8] 
+[A0	00000007] [A1	00000000] [A2	00000000] [A3	0063CDB8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	0000020E] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	00000000] 
+[SR9	0063CCE0] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x0000000000179C64 + 0x050: _ZN2cn12_GLOBAL__N_19icosphereEfiRSt6vectorIfSaIfEERS1_IiSaIiEE
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00179CB4] [SP	0063C750] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0064F930] 
+[A0	00000120] [A1	00000001] [A2	001783A0] [A3	00000065] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000A] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000001748CA + 0x02c: _ZN2cn12_GLOBAL__N_114extractor_cubeEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	001748F6] [SP	0063CAB0] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0064F930] 
+[A0	00000060] [A1	001748CA] [A2	001783A0] [A3	00000065] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E579C + 0x004: sys_string_ops
+-> [1] 0x00000000000E582A + 0x024: _ZNK6String4utf8B5cxx11Ev
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE57A0] 00000073 ecall
+>>> Machine registers:
+[PC	e57a0] [RA	000E584E] [SP	0063CD90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CDB8] [SR1	0063CDC8] 
+[A0	00000007] [A1	00000000] [A2	00000000] [A3	0063CDB8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	0000020E] [SR2	0000000E] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000001757F0 + 0x022: _ZN2cn12_GLOBAL__N_19mesh_weldEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00175812] [SP	0063CA20] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CC98] [SR1	0064F930] 
+[A0	00000024] [A1	001757F0] [A2	001783A0] [A3	00000064] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	00000009] [SR3	0063CD38] 
+[SR4	0063CDD8] [SR5	0063CDB8] [SR6	0063CCE0] [SR7	00000040] [SR8	0063CB70] 
+[SR9	0063CCE0] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL5check6String (0xe2e16)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x0000000000175D54 + 0x192: _ZN2cn12_GLOBAL__N_110skirt_tubeEv
+-> [-] 0xe2e16 + 0x0: _ZL5check6String
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00175EE6] [SP	0063C560] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	00000003] [SR1	00000000] 
+[A0	0000000C] [A1	00000000] [A2	00000003] [A3	00000000] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0000000C] [SR3	00000000] 
+[SR4	0063CDD8] [SR5	00000000] [SR6	00000002] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+FAIL repeat in the same guest: 8/10 check lines byte-identical
+--- failpaths
+[] Exception when calling:
+  _ZL12cn_set_param6Stringd (0xe255e)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000000E323E + 0x04a: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7reserveEm
+-> [-] 0xe255e + 0x0: _ZL12cn_set_param6Stringd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	000E3288] [SP	0063CC90] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CD10] [SR1	0000001E] 
+[A0	0000001F] [A1	FFFFFFFF] [A2	0000000C] [A3	0063CD90] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	000001E0] [SR2	0063CD20] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+FAIL cn_set_param(no_such_param) -> <null>
+[] Exception when calling:
+  _ZL16curvenet_extract11PackedArrayIfES_IiEiddd (0xe2af6)
+Backtrace:
+-> [0] 0x00000000000E5E5E + 0x004: sys_vfetch
+-> [1] 0x00000000000E51AA + 0x024: _ZNK11PackedArrayIfE5fetchEv
+-> [-] 0xe2af6 + 0x0: _ZL16curvenet_extract11PackedArrayIfES_IiEiddd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE5E62] 00000073 ecall
+>>> Machine registers:
+[PC	e5e62] [RA	000E51CE] [SP	0063CCE0] [GP	0032D768] [TP	0033D760] 
+[LR	000006C0] [TMP1	00000001] [TMP2	00000278] [SR0	0063CD20] [SR1	000000C8] 
+[A0	00000000] [A1	0063CD20] [A2	00000000] [A3	000000C8] [A4	00000000] 
+[A5	00000000] [A6	FFFFFFFF] [A7	00000207] [SR2	0063CD20] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000040] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000010B] [TMP6	0000041F] 
+
+FAIL curvenet_extract(out-of-range index) -> <null>
+[] Exception when calling:
+  _ZL10mesh_builddd (0xe2c84)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000010421C + 0x06a: _ZN2cn12_GLOBAL__N_13fmtB5cxx11EPKcz
+-> [-] 0xe2c84 + 0x0: _ZL10mesh_builddd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	00104286] [SP	0063C9F0] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	0063CDC0] [SR1	00000040] 
+[A0	00000041] [A1	0063CBF8] [A2	00000000] [A3	00000000] [A4	FFFFFFFF] 
+[A5	00000040] [A6	25252525] [A7	000001E0] [SR2	0063CDD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+FAIL mesh_build with no patches -> <null>
+--- pen
+PASS body: SphereMesh r=0.5 rewound to wire winding, 2210 vertices 4224 triangles, signed volume 0.5216 (4/3 pi r^3 = 0.5236; > 0 is CCW-outward)
+[] Exception when calling:
+  _ZL11cn_set_body11PackedArrayIfES_IiE (0xe2660)
+Backtrace:
+-> [0] 0x00000000000E5E5E + 0x004: sys_vfetch
+-> [1] 0x00000000000E51AA + 0x024: _ZNK11PackedArrayIfE5fetchEv
+-> [-] 0xe2660 + 0x0: _ZL11cn_set_body11PackedArrayIfES_IiE
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE5E62] 00000073 ecall
+>>> Machine registers:
+[PC	e5e62] [RA	000E51CE] [SP	0063CD60] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	0063CDA0] [SR1	00000040] 
+[A0	00000000] [A1	0063CDA0] [A2	00000000] [A3	00000000] [A4	FFFFFFFF] 
+[A5	00000040] [A6	25252525] [A7	00000207] [SR2	0063CDD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+cn_set_body: 6.0 ms  <null>
+[] Exception when calling:
+  _ZL8cn_resetv (0xe2506)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe2506 + 0x0: _ZL8cn_resetv
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CCC0] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	00000000] [SR1	0063CDC0] 
+[A0	000000B0] [A1	00000000] [A2	0063CDC0] [A3	0032DB78] [A4	00000000] 
+[A5	00000040] [A6	25252525] [A7	000001E0] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL9pen_begindddd (0xe2722)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe2722 + 0x0: _ZL9pen_begindddd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CD00] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	00000000] [SR1	0063CDC0] 
+[A0	000000B0] [A1	00000000] [A2	0063CDC0] [A3	0032DB78] [A4	00000000] 
+[A5	00000040] [A6	25252525] [A7	000001E0] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+SCRIPT ERROR: Invalid call. Nonexistent 'int' constructor.
+   at: _pen (res://gate_curvenet.gd:230)
+   GDScript backtrace (most recent call first):
+       [0] _pen (res://gate_curvenet.gd:230)
+       [1] _process (res://gate_curvenet.gd:116)
+--- skirt
+PASS body: CylinderMesh r=0.15 y 0.3..1.1 rewound to wire winding, 1302 vertices 2304 triangles, signed volume 0.0565 (pi r^2 h = 0.0565)
+[] Exception when calling:
+  _ZL11cn_set_body11PackedArrayIfES_IiE (0xe2660)
+Backtrace:
+-> [0] 0x00000000000E5E5E + 0x004: sys_vfetch
+-> [1] 0x00000000000E51AA + 0x024: _ZNK11PackedArrayIfE5fetchEv
+-> [-] 0xe2660 + 0x0: _ZL11cn_set_body11PackedArrayIfES_IiE
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE5E62] 00000073 ecall
+>>> Machine registers:
+[PC	e5e62] [RA	000E51CE] [SP	0063CD60] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	0063CDA0] [SR1	0063CDC0] 
+[A0	00000000] [A1	0063CDA0] [A2	00000000] [A3	0032DB78] [A4	00000000] 
+[A5	00000040] [A6	25252525] [A7	00000207] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL8cn_resetv (0xe2506)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe2506 + 0x0: _ZL8cn_resetv
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CCC0] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	00000000] [SR1	0063CDC0] 
+[A0	000000B0] [A1	00000000] [A2	0063CDC0] [A3	0032DB78] [A4	00000000] 
+[A5	00000040] [A6	25252525] [A7	000001E0] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL12cn_set_param6Stringd (0xe255e)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe255e + 0x0: _ZL12cn_set_param6Stringd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CC60] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	00000000] [SR1	00000008] 
+[A0	000000B0] [A1	00000000] [A2	0063CDA8] [A3	00000079] [A4	00000000] 
+[A5	00000000] [A6	25252525] [A7	000001E0] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL9pen_begindddd (0xe2722)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x000000000028BC9A + 0x014: _ZnwmN3gdl16DefaultAllocatorE
+-> [-] 0xe2722 + 0x0: _ZL9pen_begindddd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	0028BCAE] [SP	0063CD00] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	00000000] [SR1	00000008] 
+[A0	000000B0] [A1	00000000] [A2	0063CDA8] [A3	00000079] [A4	00000000] 
+[A5	00000000] [A6	25252525] [A7	000001E0] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+SCRIPT ERROR: Invalid call. Nonexistent 'int' constructor.
+   at: _skirt (res://gate_curvenet.gd:316)
+   GDScript backtrace (most recent call first):
+       [0] _skirt (res://gate_curvenet.gd:316)
+       [1] _process (res://gate_curvenet.gd:116)
+--- extract
+[] Exception when calling:
+  _ZL16curvenet_extract11PackedArrayIfES_IiEiddd (0xe2af6)
+Backtrace:
+-> [0] 0x00000000000E5E5E + 0x004: sys_vfetch
+-> [1] 0x00000000000E51AA + 0x024: _ZNK11PackedArrayIfE5fetchEv
+-> [-] 0xe2af6 + 0x0: _ZL16curvenet_extract11PackedArrayIfES_IiEiddd
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE5E62] 00000073 ecall
+>>> Machine registers:
+[PC	e5e62] [RA	000E51CE] [SP	0063CCE0] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	0063CD20] [SR1	000000C8] 
+[A0	00000000] [A1	0063CD20] [A2	00000000] [A3	000000C8] [A4	00000000] 
+[A5	00000000] [A6	25252525] [A7	00000207] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CD20] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+[] Exception when calling:
+  _ZL15curvenet_curvesv (0xe2be4)
+Backtrace:
+-> [0] 0x00000000000E3A50 + 0x004: __wrap_malloc
+-> [1] 0x00000000000FF5F2 + 0x064: _ZN2cn15curvenet_curvesEv
+-> [-] 0xe2be4 + 0x0: _ZL15curvenet_curvesv
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE3A54] 00000073 ecall
+>>> Machine registers:
+[PC	e3a54] [RA	000FF656] [SP	0063CD00] [GP	0032D768] [TP	0033D760] 
+[LR	0001EFA2] [TMP1	0001EFD8] [TMP2	00000278] [SR0	0063CE20] [SR1	000000C8] 
+[A0	00000004] [A1	0063CD20] [A2	00000000] [A3	000000C8] [A4	00000000] 
+[A5	00000000] [A6	25252525] [A7	000001E0] [SR2	0032DAD0] [SR3	0063CD90] 
+[SR4	0063CDF0] [SR5	00000000] [SR6	00000002] [SR7	00000000] [SR8	00000000] 
+[SR9	0000000C] [SR10	FFFFFFFF] [SR11	00000005] [TMP3	00000000] [TMP4	00000000] 
+[TMP5	0063C8A8] [TMP6	0000041F] 
+
+SCRIPT ERROR: Invalid type in function 'curves' in base 'GDScript'. Cannot convert argument 1 from Nil to PackedFloat32Array.
+   at: _extract (res://gate_curvenet.gd:373)
+   GDScript backtrace (most recent call first):
+       [0] _extract (res://gate_curvenet.gd:373)
+       [1] _process (res://gate_curvenet.gd:116)
+--- nm
+PASS llvm-nm -C curvenet.elf: 13608 symbols, 0 Eigen:: (must be 0), 27 CassieSketcher:: (control: > 0)
+--- wrappers
+PASS rule 8: 23 ADD_API_FUNCTION in guest/curvenet/main.cpp, main.gd 22203 bytes, curvenet_stage.gd 8929 bytes
+PASS rule 8: every curvenet entry point has a main.gd wrapper (23/23; 19 wrappers)
+PASS rule 8: every wrapper argument has a default
+PASS rule 8 control: main.gd without the cn_get_param delegate -> missing ["curvenet:cn_get_param"]
+PASS rule 8 control: patch_vertices(i: int) -> no default ["patch_vertices(i: int)"]
+PASS project/main.gd compiles; its 19 wrappers take no required argument: cn_reset, pen_demo_circle, cn_set_param, cn_get_param, cn_set_body_sphere, pen_begin, pen_point, pen_end, patch_count, patch_vertices, patch_indices, curvenet_build, curvenet_extract_demo, mesh_build, mesh_array_mesh, mesh_patch_ids, curvenet_check, curvenet_checks, check_names
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

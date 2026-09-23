@@ -239,6 +239,10 @@ func fit_avbd_start(garment_v: PackedFloat32Array, tris: PackedInt32Array, fit_v
 	var q := drape_fit(int(p.steps), float(p.tol))
 	return {"steps": steps, "queued": q}
 
+# AlignTest.lean's oracle through the vendored sinew_align, in the guest.
+func drape_sinew_align_test() -> String:
+	return _dv("drape_sinew_align_test")
+
 # The drape's own material after a fit (the DRAPE state loads a fresh scene,
 # which takes g_cfg as it stands): iters 16, kBend 1e-5 and h 1/180 back.
 func fit_avbd_restore() -> Array:

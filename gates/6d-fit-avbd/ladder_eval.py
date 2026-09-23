@@ -49,31 +49,49 @@ def stats(d):
     return "mean %.2f p50 %.2f p95 %.2f max %.2f" % (d.mean(), np.median(d), np.percentile(d, 95), d.max())
 
 
-def kabsch(src, dst):
-    """The best rigid transform src -> dst (rotation as a 3x3 matrix, Kabsch /
-    Umeyama with the scale fixed at 1): R, t with dst ~ src @ R.T + t."""
-    cs, ct = src.mean(0), dst.mean(0)
-    a, b = src - cs, dst - ct
-    U, _, Vt = np.linalg.svd(b.T @ a)
-    d = np.ones(3)
-    if np.linalg.det(U) * np.linalg.det(Vt) < 0:
-        d[2] = -1.0
-    R = U @ np.diag(d) @ Vt
+SINEW_CLI = os.environ.get("SINEW_ALIGN_CLI") or os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "..", "build", "sinew-align", "sinew_align_cli.exe")
+
+
+def sinew_rotation(src, dst, about_y=False):
+    """The best rotation src -> dst from the org's fitter (vendor/sinew-align's
+    sinew_align_cli: Align.lean's rodrigues / ns30 / kabsch), a 3x3 matrix
+    with dst - ct ~= R (src - cs); about_y restricts it to a rotation about
+    y (the CLI lifts the centred x-z pairs to 3D with y = 0). Returns R, t
+    with dst ~ src @ R.T + t. No rotation is fitted in Python (rule 11 and
+    the user's rule that the org's fitter is the fitter)."""
+    import subprocess
+    import tempfile
+    if not os.path.exists(SINEW_CLI):
+        raise SystemExit("sinew_align_cli not built: bash vendor/sinew-align/build.sh (or SINEW_ALIGN_CLI=...)")
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, newline="\n") as f:
+        for d, s in zip(dst, src):
+            f.write("%.10f %.10f %.10f %.10f %.10f %.10f\n" % (d[0], d[1], d[2], s[0], s[1], s[2]))
+        path = f.name
+    try:
+        out = subprocess.run([SINEW_CLI, path] + (["--about-y"] if about_y else []), capture_output=True, text=True,
+                             check=True).stdout
+    finally:
+        os.unlink(path)
+    vals = {}
+    for line in out.splitlines():
+        t = line.split()
+        if t and t[0] in ("R", "ct", "cs"):
+            vals[t[0]] = [float(x) for x in t[1:]]
+    R = np.array(vals["R"]).reshape(3, 3)
+    ct, cs = np.array(vals["ct"]), np.array(vals["cs"])
     return R, ct - R @ cs
+
+
+def kabsch(src, dst):
+    """The best rigid transform src -> dst (the org's fitter, scale fixed at 1)."""
+    return sinew_rotation(src, dst, about_y=False)
 
 
 def rot_y(src, dst):
-    """The best rotation about y (+ translation) src -> dst, as the 3x3
-    matrix built from the least-squares 2x2 [[c, s], [-s, c]] in the x-z
-    plane (c, s normalised from the sums, never an angle)."""
-    cs, ct = src.mean(0), dst.mean(0)
-    a, b = src - cs, dst - ct
-    c = (a[:, 0] * b[:, 0] + a[:, 2] * b[:, 2]).sum()
-    s = (a[:, 2] * b[:, 0] - a[:, 0] * b[:, 2]).sum()
-    n = np.hypot(c, s)
-    c, s = c / n, s / n
-    R = np.array([[c, 0.0, s], [0.0, 1.0, 0.0], [-s, 0.0, c]])
-    return R, ct - R @ cs
+    """The best rotation about y (+ translation) src -> dst (the org's fitter
+    on the x-z pairs)."""
+    return sinew_rotation(src, dst, about_y=True)
 
 
 def rot_summary(R):

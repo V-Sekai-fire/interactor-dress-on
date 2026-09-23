@@ -143,6 +143,7 @@ func drape_config(key: String = "iters", value: float = 16.0) -> String: return 
 func drape_forward(steps: int = 100) -> String: return drape.drape_forward(steps)
 func drape_fit_set(verts: PackedInt32Array = PackedInt32Array(), params: PackedFloat32Array = PackedFloat32Array(), anchor: PackedInt32Array = PackedInt32Array()) -> String: return drape.drape_fit_set(verts, params, anchor)
 func drape_fit(max_steps: int = 300, tol: float = 0.0005) -> String: return drape.drape_fit(max_steps, tol)
+func drape_sinew_align_test() -> String: return drape.drape_sinew_align_test()
 func drape_target(kind: String = "trajectory", verts: PackedInt32Array = PackedInt32Array(),
 		positions: PackedFloat32Array = PackedFloat32Array(), frame: int = -1) -> String:
 	return drape.drape_target(kind, verts, positions, frame)

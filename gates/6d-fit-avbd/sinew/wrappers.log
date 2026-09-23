@@ -1,3 +1,12 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
 node path: /root/Main
 PASS flat control: guest/main.cpp has 8 entry points
 PASS flat control: guest/probes/main.cpp has 37 entry points
@@ -40,3 +49,5 @@ PASS dress_on_status -> IDLE t=0.0s
 PASS ggml_job_status -> IDLE
 PASS ggml_rd_stats -> IDLE
 RESULT: PASS
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

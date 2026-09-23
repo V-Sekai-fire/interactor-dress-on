@@ -25,8 +25,10 @@
 #include "body_mesh.h"
 #include "drape_jobs.h"
 #include "drape_scene.h"
+#include "drape_session.h"
 #include "jobs.h"
 #include "lbfgsb.h"
+#include "similarity.h" // brings sinew_align.h in, as extern "C"
 #include "lbfgsb_jobs.h"
 
 // This stage's device, held across vmcalls.
@@ -920,6 +922,65 @@ static Variant drape_job_names_api() {
 	return text(drape_job_names());
 }
 
+// The org's rotation fitter (vendor/sinew-align, the C port of sinew-mocap/
+// solve's Align.lean) that the fit phase's similarity rest update uses,
+// checked in the guest against AlignTest.lean's oracle: the 120-degree
+// rotation of the unit quaternion (0.5, 0.5, 0.5, 0.5), as a matrix,
+// recovered from (R b, b) pairs at N=5 (the covariance + ns30 path), N=2
+// and N=1 (rodrigues), each to 1e-4 (the Lean test's bound); also the
+// similarity fit's scale on the same pairs scaled by 0.7.
+static Variant drape_sinew_align_test() {
+	// Math.lean's quatToMat of (0.5, 0.5, 0.5, 0.5): the cyclic permutation
+	// x -> y -> z -> x, row-major.
+	const double w = 0.5, x = 0.5, y = 0.5, z = 0.5;
+	const double R[9] = { 1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w), 2 * (x * y + z * w),
+		1 - 2 * (x * x + z * z), 2 * (y * z - x * w), 2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y) };
+	const double srcs[15] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0.3, -0.7, 0.5 };
+	double tg[15];
+	for (int i = 0; i < 5; ++i) {
+		for (int r = 0; r < 3; ++r) {
+			tg[3 * i + r] = R[3 * r] * srcs[3 * i] + R[3 * r + 1] * srcs[3 * i + 1] + R[3 * r + 2] * srcs[3 * i + 2];
+		}
+	}
+	auto err = [&](const double *rec, size_t n) {
+		double e = 0.0;
+		for (size_t i = 0; i < n; ++i) {
+			for (int r = 0; r < 3; ++r) {
+				const double d = tg[3 * i + r] - (rec[3 * r] * srcs[3 * i] + rec[3 * r + 1] * srcs[3 * i + 1] +
+														 rec[3 * r + 2] * srcs[3 * i + 2]);
+				e = std::max(e, std::abs(d));
+			}
+		}
+		return e;
+	};
+	double r5[9], r2[9], r1[9];
+	sinew_align(tg, srcs, 5, r5);
+	sinew_align(tg, srcs, 2, r2);
+	sinew_align(tg + 3, srcs + 3, 1, r1);
+	const double e5 = err(r5, 5), e2 = err(r2, 2);
+	double e1 = 0.0;
+	for (int r = 0; r < 3; ++r) {
+		const double d = tg[3 + r] - (r1[3 * r] * srcs[3] + r1[3 * r + 1] * srcs[4] + r1[3 * r + 2] * srcs[5]);
+		e1 = std::max(e1, std::abs(d));
+	}
+	// similarity_fit on the same pairs, the targets scaled by 0.7.
+	float sf[15], df[15];
+	for (int i = 0; i < 15; ++i) {
+		sf[i] = float(srcs[i]);
+		df[i] = float(0.7 * tg[i]);
+	}
+	Similarity S;
+	const bool ok = similarity_fit(sf, df, 5, S);
+	double eR = 0.0;
+	for (int i = 0; i < 9; ++i) {
+		eR = std::max(eR, std::abs(S.R[i] - R[i]));
+	}
+	const bool pass = e5 < 1e-4 && e2 < 1e-4 && e1 < 1e-4 && ok && std::abs(S.s - 0.7) < 1e-5 && eR < 1e-5;
+	return text(drape_fmt("%s sinew_align oracle (AlignTest.lean, 120 deg): N=5 err %.3g N=2 err %.3g N=1 err %.3g "
+						  "(want < 1e-4); similarity_fit s=%.7f (want 0.7) max|R-Rtrue|=%.3g rotated=%d",
+			pass ? "PASS" : "FAIL", e5, e2, e1, S.s, eR, int(S.rotated)));
+}
+
 // Shutdown: drop every job and session (each solver frees the RIDs it made),
 // then free the device. Refused while a submit is in flight, so it never
 // syncs in a submit's frame; tick to the verdict first.
@@ -975,6 +1036,8 @@ int main() {
 	ADD_API_FUNCTION(drape_queue_forward, "String", "int steps", "Queue steps (0 rewinds to the initial state)");
 	ADD_API_FUNCTION(drape_fit_set, "String", "PackedInt32Array verts, PackedFloat32Array params, PackedInt32Array anchor",
 			"The fit set: vertices pulled to the body collider's surface at kFit x vertex area; params = [kFit, gap, refresh, similarity, restEvery, settle, kAnchor]; anchor = the loop whose centre is held at its source position");
+	ADD_API_FUNCTION(drape_sinew_align_test, "String", "",
+			"AlignTest.lean's oracle through the vendored sinew_align: a 120-degree rotation recovered at N=5, 2, 1");
 	ADD_API_FUNCTION(drape_queue_fit, "String", "int max_steps, double tol",
 			"Queue the fit phase (gravity off, targets refreshed) until the largest move per step is under tol");
 	ADD_API_FUNCTION(drape_set_target, "String", "String kind, PackedInt32Array verts, PackedFloat32Array positions, int frame",

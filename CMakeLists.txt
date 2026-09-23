@@ -72,7 +72,7 @@ add_stage_elf(dress_on guest/main.cpp)
 add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp
 	guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp guest/drape/body_mesh.cpp
 	guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/lbfgsb_jobs.cpp guest/drape/vec_cpu.cpp
-	guest/drape/vec_rd.cpp guest/drape/inverse_jobs.cpp)
+	guest/drape/vec_rd.cpp guest/drape/inverse_jobs.cpp vendor/sinew-align/sinew_align.c)
 # The drape driver ports DiffCloth arithmetic that ran on x86-64 without FMA;
 # rv64gc has fused multiply-add, which clang would contract into.
 set_source_files_properties(guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp
@@ -82,7 +82,10 @@ set_source_files_properties(guest/drape/drape_jobs.cpp guest/drape/drape_scene.c
 # vec_rd.cpp includes ${CMAKE_BINARY_DIR}/drape_kernels.inc (kernels/drape/gen.sh).
 set_source_files_properties(guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/vec_cpu.cpp
 	PROPERTIES COMPILE_OPTIONS "-ffp-contract=off")
-target_include_directories(drape PRIVATE guest guest/drape)
+# The org's rotation fitter (vendor/sinew-align, Align.lean's C port) for the
+# fit phase's similarity rest update; its unit test runs in the guest as
+# drape_sinew_align_test.
+target_include_directories(drape PRIVATE guest guest/drape vendor/sinew-align)
 target_link_libraries(drape PRIVATE avbd)
 
 # ggml (vendor/ggml, V-Sekai-fire/ggml @04b55bba): static, riscv64 at rv64gc,

@@ -1,36 +1,14 @@
-# lake exe csr_falsify in lean/ of cut-l
-# 2026-09-23T00:23:01Z
-✔ [21/44] Built Plausible:c.o (337ms)
-ℹ [22/44] Replayed Cloth.Avbd.CsrProperties
+# lake exe csr_falsify in lean/
+# 2026-09-23T02:03:27Z
+ℹ [20/44] Replayed Cloth.Avbd.CsrProperties
 info: Cloth/Avbd/CsrProperties.lean:84:0: Unable to find a counter-example
 info: Cloth/Avbd/CsrProperties.lean:87:0: Unable to find a counter-example
 info: Cloth/Avbd/CsrProperties.lean:90:0: Unable to find a counter-example
-ℹ [23/44] Replayed Cloth.Avbd.ColoringProperties
+ℹ [22/44] Replayed Cloth.Avbd.ColoringProperties
 info: Cloth/Avbd/ColoringProperties.lean:83:0: Unable to find a counter-example
 info: Cloth/Avbd/ColoringProperties.lean:86:0: Unable to find a counter-example
 info: Cloth/Avbd/ColoringProperties.lean:89:0: Unable to find a counter-example
 info: Cloth/Avbd/ColoringProperties.lean:92:0: Unable to find a counter-example
-✔ [24/44] Built Plausible.Functions:c.o (1.1s)
-✔ [25/44] Built Plausible.Tactic:c.o (1.1s)
-✔ [26/44] Built Cloth.Avbd.CsrProperties:c.o (508ms)
-✔ [27/44] Built Cloth.Avbd.ColoringProperties:c.o (508ms)
-✔ [28/44] Built PlausibleWitnessDag:c.o (3.1s)
-✔ [29/44] Built Cloth.Avbd.AdjacencyKwise:c.o (3.8s)
-✔ [30/44] Built Cloth.Avbd.AdjacencySpring:c.o (3.8s)
-✔ [31/44] Built Plausible.Random:c.o (3.8s)
-✔ [32/44] Built Plausible.Gen:c.o (3.8s)
-✔ [33/44] Built Plausible.Arbitrary:c.o (3.8s)
-✔ [34/44] Built Plausible.Shrinkable:c.o (3.8s)
-✔ [35/44] Built Plausible.Sampleable:c.o (3.8s)
-✔ [36/44] Built Plausible.Testable:c.o (3.8s)
-✔ [37/44] Built Plausible.Attr:c.o (3.8s)
-✔ [38/44] Built Plausible.ArbitraryFueled:c.o (3.8s)
-✔ [39/44] Built Plausible.DeriveArbitrary:c.o (3.8s)
-✔ [40/44] Built Plausible.DeriveShrinkable:c.o (3.8s)
-✔ [41/44] Built Cloth.Avbd.Coloring:c.o (3.8s)
-✔ [42/44] Built CsrFalsify (3.7s)
-✔ [43/44] Built CsrFalsify:c.o (143ms)
-✔ [44/44] Built csr_falsify:exe (1.0s)
 [csr-falsifiability] witness idx=0 mesh=(2, [[0, 1]])
 [csr-falsifiability] { query := "role-dropping CSR build is caught by rolesAddressTheRightVertex",
   level := 0,
@@ -39,4 +17,4 @@ info: Cloth/Avbd/ColoringProperties.lean:92:0: Unable to find a counter-example
 [coloring-falsifiability] { query := "all-one-color coloring is caught by separationHolds",
   level := 0,
   outcome := PlausibleWitnessDag.Outcome.found 0 }
-# exit 0  wall 9 s
+# exit 0  wall 1 s

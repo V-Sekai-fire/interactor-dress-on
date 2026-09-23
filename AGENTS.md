@@ -18,7 +18,7 @@ our own, no host DLL. The GPU is reachable only through Godot's
    org's repo or fork (`ggml`, `cloth-fit`, `pixal3d-ggml`, `entities-godot`,
    `godot-sandbox`, `transport-xr-grid`, `transport-godot-mcp`,
    `interactor-mujoco-sandbox-demo`, `skin-tokens-ggml`; for `lean/`:
-   `lean-slang`, `plausible`, `plausible-witness-dag`). If only a `V-Sekai/`
+   `contract-lean-slang`, `plausible`, `plausible-witness-dag`). If only a `V-Sekai/`
    or upstream copy exists, ask before forking it in. Push only to org remotes.
 2. **One source, two targets: Lean → Slang → `cpp` | `spirv`.** Kernels are
    generated from `lean/` (a squashed git subtree of cloth-dynamics' `lean/`,
@@ -85,9 +85,17 @@ our own, no host DLL. The GPU is reachable only through Godot's
   for 425 commits; the clone keeps the split refs out of the real checkout),
   then `git subtree pull --prefix=lean <clone> lean-split --squash` here. Keep
   the V-Sekai-fire URLs in `lean/lakefile.lean` and `lake-manifest.json` when
-  resolving. `lake build` from an empty `lean/.lake` takes ~134 s (three
-  packages fetched and built), ~94 s with a built LeanSlang copied into
-  `lean/.lake/packages` (`gates/lean/`); `lean/.lake/` is ignored.
+  resolving. `lake build` from an empty `lean/.lake` takes 50-134 s (three
+  packages fetched and built; `gates/lean/`); `lean/.lake/` is ignored.
+  After `gates/lean/verify.sh`, `git status` must show only its logs.
+- LeanSlang is `V-Sekai-fire/contract-lean-slang` (the renamed `lean-slang`;
+  the old URL redirects, but pin the canonical one) at branch `emit-fp`,
+  **pinned by SHA** (e0e96da), not `main`. `emit-fp` is v0.0.6 plus `half`,
+  `double`, `litHalf`, `litInt` and `cast`, additive, so the AVBD emission is
+  byte-identical. `main` adds a libslang FFI `extern_lib` as a default target
+  (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
+  Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
+  `lake update LeanSlang` (only that package; the other revs must not move).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 

@@ -159,7 +159,7 @@ static std::vector<std::string> split_ws(const std::string &s) {
 
 // "K=V K2=V2": set for this job; the GGML_RD_* switches not named are unset.
 static void apply_env(const std::string &env) {
-	for (const char *k : { "GGML_RD_FAULT", "GGML_RD_BARRIER_ALL", "GGML_RD_MAX_BUFFER_MB" }) {
+	for (const char *k : { "GGML_RD_FAULT", "GGML_RD_BARRIER_ALL", "GGML_RD_MAX_BUFFER_MB", "GGML_RD_ROW_THREADS" }) {
 		unsetenv(k);
 	}
 	for (const std::string &kv : split_ws(env)) {

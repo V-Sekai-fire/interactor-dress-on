@@ -231,6 +231,14 @@ Rules a kernel must keep:
 - f16 output: declare `dst` as `half`, or write two halves per word from one
   thread; the cpp target has no InterlockedAnd/Or.
 - Group counts <= 65535 per dimension; `grid_1d` splits 1-D launches.
+- Group-shared memory and barriers: slangc's cpp target rejects them
+  (E36107), so a kernel `<k>` that uses them lists a sibling `<k>_serial`
+  in kernels.txt, with the same params and grid, one thread per group, and
+  the same arithmetic in the same order. `gen.sh` then emits no cpp for
+  `<k>`, and the host tests run `<k>_serial` in its place. `Rows.lean`
+  (families K3/K4) is the template; `ops-k3k4/README.md` has its gate.
+- A family runs the gate on its own ops, into its own folder:
+  `gate_ggml_rd.gd -- --ops=<OPS> --fault=<ops> --out=gates/3-ggml-rd/ops-<family> [--probe=<name>[:arg]]`.
 
 ## Regression: the shared layers
 

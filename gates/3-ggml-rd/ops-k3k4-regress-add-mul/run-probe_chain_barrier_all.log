@@ -1,0 +1,3 @@
+PROBE chain n=256 status=0 nodes=256 dispatches=256 barriers=255 exact=256/256 x[0]=256 x[255]=256 barrier_all=1
+RESULT: PASS (chain)
+ggml_test: rd stats graphs=2 nodes=512 dispatches=512 skipped=0 barriers=510 failed_graphs=0 last{nodes=256 dispatches=256 barriers=255 skipped=0} pipelines=1 set0_created=2 slots_created=256 coop_yields=1 waits=2 faults=0 params_bytes=131072 set_bytes=4096 get_bytes=2048 copies=0 clears=0 buffers_live=0 bytes_live=0

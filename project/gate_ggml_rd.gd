@@ -24,6 +24,14 @@
 # "no RD device" and test no RD0 case: the flat control that separates
 # "the GPU path is not there" from "the kernels are wrong".
 #
+# User arguments (after `--`) override the defaults, so an op family runs
+# its own ops into its own evidence folder without editing this file:
+#   --ops=NORM,RMS_NORM   the ops of "ops main" and "ops barrier_all" (OPS)
+#   --fault=NORM          the ops of the fault control (FAULT_OPS)
+#   --out=gates/3-ggml-rd/ops-k3k4   the results folder, from the checkout (OUT_DIR)
+#   --probe=rows_perf[:arg]  one more probe after the ops runs (repeatable);
+#                            it must print RESULT: PASS
+#
 # Results: gates/3-ggml-rd/ops/results.txt (results-headless.txt headless),
 # each run's full output in run-<name>.log beside it; the last line is
 # RESULT: PASS or RESULT: FAIL. Quits on a wall clock whatever it is doing.
@@ -33,6 +41,7 @@ const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
 const OPS := "ADD,MUL"
+const FAULT_OPS := "ADD"
 const OUT_DIR := "res://../gates/3-ggml-rd/ops/"
 const WALL_S := 1800.0
 # The device memory ggml-rd reports as total (free = total - allocated):
@@ -51,6 +60,10 @@ var _cur = null
 var _run_t0 := 0
 var _headless := false
 var _results := {}
+var _ops := OPS
+var _fault_ops := FAULT_OPS
+var _out_dir := OUT_DIR
+var _extra_probes: Array = []
 
 func _clean(t: String) -> String:
 	var root := ProjectSettings.globalize_path("res://").trim_suffix("/")
@@ -76,13 +89,24 @@ func _strip_ansi(t: String) -> String:
 
 func _initialize() -> void:
 	_t0 = Time.get_ticks_msec()
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--ops="):
+			_ops = a.trim_prefix("--ops=")
+		elif a.begins_with("--fault="):
+			_fault_ops = a.trim_prefix("--fault=")
+		elif a.begins_with("--probe="):
+			var pa := a.trim_prefix("--probe=").split(":", true, 1)
+			var parg: String = pa[1] if pa.size() > 1 else ""
+			_extra_probes.append(["probe_" + pa[0] + ("_" + parg if parg != "" else ""), "probe", pa[0], parg, ""])
+		elif a.begins_with("--out="):
+			_out_dir = "res://../" + a.trim_prefix("--out=").trim_suffix("/") + "/"
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	_rd = RenderingServer.create_local_rendering_device()
 	_headless = _rd == null
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var name := "results-headless.txt" if _headless else "results.txt"
-	_out = FileAccess.open(ProjectSettings.globalize_path(OUT_DIR + name), FileAccess.WRITE)
+	_out = FileAccess.open(ProjectSettings.globalize_path(_out_dir + name), FileAccess.WRITE)
 	_say("# Gate 3 G3.ops, %s, Godot %s, %s, %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _headless else RenderingServer.get_video_adapter_name()])
@@ -114,15 +138,16 @@ func _initialize() -> void:
 			["probe_files", "probe", "files", probe_file, ""],
 			["probe_alias_rw", "probe", "alias", "rw", ""],
 			["probe_alias_ro_control", "probe", "alias", "ro", ""],
-			["ops_main", "ops", "-o %s -b RD0" % OPS, ""],
-			["ops_barrier_all", "ops", "-o %s -b RD0" % OPS, "GGML_RD_BARRIER_ALL=1"],
-			["ops_fault", "ops", "-o ADD -b RD0", "GGML_RD_FAULT=1"],
+			["ops_main", "ops", "-o %s -b RD0" % _ops, ""],
+			["ops_barrier_all", "ops", "-o %s -b RD0" % _ops, "GGML_RD_BARRIER_ALL=1"],
+			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 		]
+		_runs.append_array(_extra_probes)
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
 func _write_probe_file() -> String:
-	var path := ProjectSettings.globalize_path(OUT_DIR + "upload_probe.f32")
+	var path := ProjectSettings.globalize_path(_out_dir + "upload_probe.f32")
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	for i in 4096:
 		var v := 0.5 * i - 7.25
@@ -171,7 +196,7 @@ func _end_run(st: String) -> void:
 	var name: String = _cur[0]
 	var ms := Time.get_ticks_msec() - _run_t0
 	var text := _strip_ansi(str(_sb.vmcall("ggml_output")))
-	var lf := FileAccess.open(ProjectSettings.globalize_path(OUT_DIR + "run-%s.log" % name), FileAccess.WRITE)
+	var lf := FileAccess.open(ProjectSettings.globalize_path(_out_dir + "run-%s.log" % name), FileAccess.WRITE)
 	lf.store_string(_clean(text))
 	lf.close()
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
@@ -248,13 +273,15 @@ func _checks() -> void:
 	for n in ["probe_chain", "probe_chain_barrier_all", "probe_independent", "probe_independent_barrier_all", "probe_files"]:
 		_verdict(_probe_pass(n), "%s" % n)
 	_verdict(_probe_pass("probe_alias_rw"), "probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact")
+	for x in _extra_probes:
+		_verdict(_probe_pass(x[0]), "%s %s" % [x[0], x[3]])
 	_verdict(_probe_pass("probe_alias_ro_control"),
 			"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
 	for n in ["ops_main", "ops_barrier_all"]:
 		var r = _results.get(n, {})
 		_verdict(r.get("state", "") == "done" and r.get("fail", -1) == 0 and r.get("ok", 0) > 0
 				and str(r.get("backend_line", "")).ends_with("OK"),
-				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, OPS, r.get("ok", 0),
+				"%s: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [n, _ops, r.get("ok", 0),
 				r.get("fail", -1), r.get("unsupported", 0), r.get("backend_line", "")])
 	var m = _results.get("ops_main", {})
 	var b = _results.get("ops_barrier_all", {})
@@ -262,7 +289,7 @@ func _checks() -> void:
 			"barrier elision and barrier-after-every-dispatch pass the same cases")
 	var f = _results.get("ops_fault", {})
 	_verdict(f.get("state", "") == "done" and f.get("fail", 0) > 0 and f.get("ok", -1) == 0,
-			"control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case: FAIL=%d OK=%d (%s)" % [
+			"control: GGML_RD_FAULT=1 (a source read one element off) fails every %s case: FAIL=%d OK=%d (%s)" % [_fault_ops, 
 			f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
 	var stats := str(_sb.vmcall("ggml_rd_stats"))
 	var re := RegEx.new()

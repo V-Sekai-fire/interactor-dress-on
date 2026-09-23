@@ -19,6 +19,9 @@
 
 namespace probes {
 
+// probes_rows.cpp: NORM/RMS_NORM/SOFT_MAX GPU time on the census's shapes.
+bool rows_perf(ggml_backend_t be, const std::string &arg);
+
 namespace {
 
 struct Args {
@@ -306,6 +309,12 @@ void job(void *) {
 		files(g_args.arg);
 	} else if (name == "alias") {
 		alias(g_args.arg != "ro");
+	} else if (name == "rows_perf") {
+		ggml_backend_t be = rd_backend();
+		result(be != nullptr && rows_perf(be, g_args.arg), "rows_perf");
+		if (be != nullptr) {
+			ggml_backend_free(be);
+		}
 	}
 	std::printf("ggml_test: rd stats %s\n", ggml_backend_rd_stats().c_str());
 	std::fflush(stdout);
@@ -318,8 +327,8 @@ void set_device(rdc::Device *dev) {
 }
 
 bool start(const std::string &name, const std::string &arg, std::string &err) {
-	if (name != "chain" && name != "independent" && name != "files" && name != "alias") {
-		err = "unknown probe '" + name + "' (chain, independent, files, alias)";
+	if (name != "chain" && name != "independent" && name != "files" && name != "alias" && name != "rows_perf") {
+		err = "unknown probe '" + name + "' (chain, independent, files, alias, rows_perf)";
 		return false;
 	}
 	g_args = Args{ name, arg };

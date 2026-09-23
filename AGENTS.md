@@ -308,6 +308,24 @@ state fails loudly, never a silent fixture.
   as an absolute threshold keeps 2^-52 in the float32 kernels (`dblEps`), not
   FLT_EPSILON: the sphere demo's gradients are ~1e-5, so fpp = g.g ~ 1e-10,
   and FLT_EPSILON there shrank the first Cauchy step to nothing.
+- `fit_check_intersections` tests the garment against the avatar **where the
+  current phase's alpha puts it**. Right after `fit_begin` (alpha 0) that is
+  cloth-fit's start avatar: with the config's `shrink_normal_distance` 0 the
+  body collapsed onto its skeleton, which no garment hits (a vertex pushed
+  onto the pelvis answered `OK none`). A check without running the phases
+  needs `"shrink_normal_distance": 1e-6` in the setup JSON (the real body
+  0.65 um inside its own skin); the loop's avbd CHECK inserts it
+  (`pipeline.gd _fit_elf_begin(true)`). The check also reports garment
+  self-intersections (edge and face ids >= the avatar's vertex count).
+- GDScript's `String %` has no `%g` (`%s`, `%d`, `%f`, `%v`, ...): the whole
+  line comes back unformatted, with an error on stderr only.
+- cloth-fit's fit is a **conformal shrink**: SimilarityForm lets every element
+  scale isotropically, so the PolyFEM fit of the authored skirt hugs the hips
+  by scaling the whole garment ~0.72 (hem +13 cm, gates/6d-fit-avbd). An
+  AVBD membrane holds the authored rest lengths: pulled to the body it
+  buckles (self-intersections from k_v ~ 30 per vertex) and keeps the length.
+  The drape's fit mode re-fits the rest as one global similarity every
+  refresh (`similarity.h`, Umeyama) for that reason.
 - test-backend-ops cannot fail an op on values where its output holds
   infinities: `nmse()` sums `-inf - -inf = NaN`, and `NaN > max_err` is
   false (DIAG_MASK_INF passes with every source read one element off).

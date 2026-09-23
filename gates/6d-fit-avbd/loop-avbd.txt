@@ -1,0 +1,33 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, 2026-09-23T12:59:01
+args: --gate=loop --fit-mode=avbd --out=../gates/6d-fit-avbd/loop-avbd.txt --wallclock=600 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=avbd
+STATE INFER               88 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1125 ms  vm    1065.9 ms  heap 2.9 MiB  frames 7  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               592 ms  vm     583.2 ms  heap 3.1 MiB  frames 697  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+STATE FIT_BEGIN          356 ms  vm     351.6 ms  heap 2.7 MiB  frames 1  FIT(avbd): QUEUED fit 300 on rd | 932 fit vertices (0 nofit), k 60.0 gap 0.0 iters 32 steps <= 300 tol 0.0005 refresh 1 kBend 0.00001 | fit.elf fit_begin STARTED on the worker (for CHECK)
+STATE FIT_RUN          13265 ms  vm   12448.4 ms  heap 77.2 MiB  frames 901  IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00213 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1308 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0093 sim_s=0.6946 sim_rot_deg=2.605 y=6.4996..9.5814 finite=yes projections=150193 self_pushes=3333 wall_ms=13262.3 ms/step=44.208
+STATE FIT_READ             3 ms  vm       0.1 ms  heap 77.2 MiB  frames 1  FIT(avbd) 932 v
+STATE CHECK              848 ms  vm    2879.3 ms  heap 8.3 MiB  frames 1  OK none | control (one vertex pushed inside): OK INTERSECTS edge (5334,5634) face (2803,2624,2881)
+STATE DRAPE              170 ms  vm     150.4 ms  heap 2.7 MiB  frames 1  QUEUED forward 100 on rd | body mesh, 64 pins, scale 10.0
+STATE DRAPE_COLLECT     2823 ms  vm    2546.6 ms  heap 23.9 MiB  frames 256  IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.723820 friction_events=53338 projections=22627 self_pushes=84 wall_ms=2817.7 ms/step=28.177 | 932 finite vertices after RUNNING 354/355
+=> DONE 
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+PASS pipeline: DONE 
+PASS cycles: cycles=2 (want 2)
+PASS openings: openings=2 (want 2: the waist and the hem)
+PASS patches: patches=2 (want 2: the front and back panels)
+INFO curvenet: curves=6 knots=4 degrees=[3, 3, 3, 3] edges=6 (4 knots of degree 3 have 6 edges)
+PASS mesh: 932 v 1728 f, 2 loops, 1 components
+PASS intersections: OK none
+PASS intersections control: one vertex pushed inside: OK INTERSECTS edge (5334,5634) face (2803,2624,2881)
+PASS drape: 100 steps queued, { "status": "IDLE DONE forward rd steps=100 (+100 of 100) finite=yes ymin=5.723820 friction_events=53338 projections=22627 self_pushes=84 wall_ms=2817.7 ms/step=28.177", "last_running": "RUNNING 354/355", "ticks": 256, "vertices": 932, "finite": true }
+PASS screenshot: loop-avbd.png (1152x648)
+wall 20.5 s, frames 1877
+RESULT: PASS FIXTURE:infer,rig
+drape rd_close: CLOSED device=freed permanent_slots=0

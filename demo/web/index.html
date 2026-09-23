@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SkinTokens · LocalAI</title>
+  <link rel="stylesheet" href="/app.css?v=20260901-2">
+</head>
+<body>
+<main>
+  <aside>
+    <header>
+      <div class="eyebrow">SKINTOKENS · GGML</div>
+      <h1><span>S</span> Rig any mesh</h1>
+      <p>Generate a complete skeleton and skin weights, or predict new skin weights for an armature you already have.</p>
+    </header>
+
+    <fieldset class="segmented mode" aria-label="Generation mode">
+      <label><input type="radio" name="mode" value="rig" checked><span>Skeleton + skin</span></label>
+      <label><input type="radio" name="mode" value="skin"><span>Skin weights only</span></label>
+    </fieldset>
+
+    <section id="rigPanel" class="workflow">
+      <div class="card">
+        <h2>Unrigged mesh</h2>
+        <p class="hint">Upload a triangle mesh. SkinTokens will generate its skeleton and learned vertex weights.</p>
+        <label class="file"><input id="rigMesh" type="file" accept=".glb,model/gltf-binary"><b>Choose mesh GLB</b><small id="rigMeshName">No file selected</small></label>
+      </div>
+      <div class="card">
+        <h2>Driving motion <span class="optional">optional</span></h2>
+        <p class="hint">Add an animated Kimodo SOMA30 GLB to transfer its body motion onto the generated, mesh-fitted skeleton. Different generated hand branches remain neutral.</p>
+        <div class="file-row"><label class="file"><input id="rigMotion" type="file" accept=".glb,model/gltf-binary"><b>Choose SOMA30 animation GLB</b><small id="rigMotionName">No motion selected</small></label><button id="clearRigMotion" type="button" hidden>Clear</button></div>
+        <div id="rigMotionInfo" class="inspection" hidden></div>
+      </div>
+    </section>
+
+    <section id="skinPanel" class="workflow" hidden>
+      <fieldset class="segmented layout" aria-label="Skeleton input layout">
+        <label><input type="radio" name="layout" value="embedded" checked><span>One rigged GLB</span></label>
+        <label><input type="radio" name="layout" value="separate"><span>Separate files</span></label>
+      </fieldset>
+
+      <div id="embeddedPanel" class="card">
+        <h2>Mesh + armature</h2>
+        <p class="hint">The existing weights may be present; SkinTokens replaces them.</p>
+        <label class="file"><input id="asset" type="file" accept=".glb,model/gltf-binary"><b>Choose rigged GLB</b><small id="assetName">No file selected</small></label>
+        <div id="assetInfo" class="inspection" hidden></div>
+      </div>
+
+      <div id="separatePanel" hidden>
+        <div class="card">
+          <h2>Character mesh</h2>
+          <label class="file"><input id="skinMesh" type="file" accept=".glb,model/gltf-binary"><b>Choose mesh GLB</b><small id="skinMeshName">No file selected</small></label>
+        </div>
+        <div class="card">
+          <h2>Skeleton or animation</h2>
+          <p class="hint">Kimodo animation GLBs can be used directly.</p>
+          <label class="file"><input id="skeleton" type="file" accept=".glb,model/gltf-binary"><b>Choose skeleton GLB</b><small id="skeletonName">No file selected</small></label>
+          <div id="skeletonInfo" class="inspection" hidden></div>
+        </div>
+        <label class="check card">
+          <input id="articulatedFit" type="checkbox">
+          <span><b>Articulated pose fitting</b><small>Experimental: reposes recognized arm chains only when they do not already align with the mesh, using length-preserving two-bone IK. Leave off for the default global scale and translation.</small></span>
+        </label>
+      </div>
+
+      <label id="retargetOption" class="check card" hidden>
+        <input id="retarget" type="checkbox">
+        <span><b>Retarget SOMA30 to Mixamo52</b><small>A SOMA30 hierarchy was detected. Leave this off to preserve it.</small></span>
+      </label>
+    </section>
+
+    <label class="check card">
+      <input id="postprocess" type="checkbox">
+      <span><b>Surface-locality postprocess</b><small>Optionally suppress learned influences that are distant across the mesh surface. Upstream defaults this off.</small></span>
+    </label>
+
+    <button id="generate">Generate rig</button>
+    <div id="status" class="status">Ready</div>
+    <div class="notice">Generation runs the released TokenRig and SkinVAE weights locally through GGML. Uploaded files remain in this demo's local output gallery.</div>
+
+    <section class="card example" id="giraffeExample" hidden>
+      <h2>Official SkinTokens giraffe</h2>
+      <p>Inspect the upstream exemplar and its learned result.</p>
+      <div class="example-actions">
+        <button id="giraffeInput" hidden>Input mesh</button>
+        <button id="giraffeResult" hidden>Learned rig</button>
+      </div>
+    </section>
+
+    <section class="history"><h2>Past generations</h2><div id="history">Loading…</div></section>
+  </aside>
+
+  <section class="stage">
+    <canvas id="view"></canvas>
+    <div class="empty" id="empty">Upload a GLB or choose a completed generation</div>
+    <div class="compare-labels" id="compareLabels" hidden><span id="meshLabel">Mesh</span><span id="skeletonLabel">Skeleton</span></div>
+    <div class="joint-hover" id="jointHover" hidden></div>
+    <div class="divergence" id="divergence" hidden></div>
+    <div class="controls">
+      <button class="animation-control" id="play" hidden>Pause</button>
+      <button class="animation-control" id="rest" hidden>Rest pose</button>
+      <button id="reset">Reset view</button>
+      <button id="compareMotion" hidden>Hide comparison</button>
+      <a id="download" download="skintokens-result.glb" hidden>Download GLB</a>
+      <a id="nativeDownload" download="skintokens-native-rig.glb" hidden>Native rig</a>
+      <input class="animation-control" id="timeline" type="range" min="0" max="1" step=".001" value="0" hidden>
+      <span class="animation-control" id="time" hidden>0:00 / 0:00</span>
+    </div>
+  </section>
+</main>
+<a class="localai" href="https://localai.io" target="_blank" rel="noreferrer" aria-label="LocalAI"><img src="/localai.png" alt="LocalAI"></a>
+<script src="/app.js?v=20260901-2"></script>
+</body>
+</html>

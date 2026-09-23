@@ -2,7 +2,8 @@
 // G3.graph and G3.cost: the smallest set of functions that builds the graphs
 // the gate runs, with the apps' op sequences unchanged. Weights and inputs
 // are asked for by name through a lookup, as the apps ask their loaded
-// models; the gate hands out random tensors instead (probe_graph.cpp).
+// models; the gate hands out random tensors instead (graph_nets.cpp,
+// compiled into the guest probe and the host oracle alike).
 //
 //   qwen::   skin-tokens-ggml src/qwen.cpp @097a0cc (rms, linear, repeat_kv,
 //            repeat_kv_batched, cache_view, qwen_graph_evaluator::decode_layer

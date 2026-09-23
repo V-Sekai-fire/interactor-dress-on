@@ -1,5 +1,7 @@
-PROBE graph sconv rd_native nodes=789 dispatches=571 barriers=359 (barrier_all: 570) host_us(entry..submit)=4271 frames=1 run_ms=54.5 status=0/0/0
-PROBE graph sconv drop k=1 barriers=358 detected=1 differing=814016 worst_rel_l2=2.886e-01 [barrier 1 before dispatch 4 SILU 'node_10' f32]
+PROBE graph sconv cpu_native status=0 nodes=789 host_ms=214385 frames=571
+PROBE graph sconv cpu_f32 status=0 nodes=789 host_ms=119926 frames=571
+PROBE graph sconv rd_native nodes=789 dispatches=571 barriers=359 (barrier_all: 570) host_us(entry..submit)=4233 frames=1 status=0/0/0
+PROBE graph sconv drop k=1 barriers=358 detected=1 differing=814016 worst_rel_l2=2.805e-01 [barrier 1 before dispatch 4 SILU 'node_10' f32]
 PROBE graph sconv drop k=8 barriers=358 detected=1 differing=697639 worst_rel_l2=6.371e-02 [barrier 8 before dispatch 12 ADD 'node_20' f32]
 PROBE graph sconv drop k=16 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 16 before dispatch 26 MUL_MAT 'node_40' f32]
 PROBE graph sconv drop k=23 barriers=358 detected=1 differing=814016 worst_rel_l2=8.681e-02 [barrier 23 before dispatch 37 ADD 'node_55' f32]
@@ -47,9 +49,18 @@ PROBE graph sconv drop k=336 barriers=358 detected=1 differing=309248 worst_rel_
 PROBE graph sconv drop k=343 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 343 before dispatch 545 MUL 'node_755' f32]
 PROBE graph sconv drop k=351 barriers=358 detected=1 differing=348160 worst_rel_l2=2.461e-01 [barrier 351 before dispatch 557 ADD 'node_771' f32]
 PROBE graph sconv drop k=359 barriers=358 detected=0 differing=0 worst_rel_l2=0.000e+00 [barrier 359 before dispatch 569 CONT ' (cont)' f32]
-PROBE graph sconv rd_f16_vs_rd_f32_info output=subdiv n=5056 rel_l2=0.000e+00 finite=1
-PROBE graph sconv rd_f16_vs_rd_f32_info output=h1 n=647168 rel_l2=0.000e+00 finite=1
-PROBE graph sconv rd_f16_vs_rd_f32_info output=x n=161792 rel_l2=0.000e+00 finite=1
-PROBE graph sconv SUMMARY weights=f16 reference=host (dumped: 6 outputs, 6.2 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=16/48 detected nodes=789 dispatches=571 barriers=359/570 status=0/0/0/0 wall_s=2.9 L=632 neighbours=6200/17064
+PROBE graph sconv rd_f16_vs_cpu_f16 output=subdiv n=5056 rel_l2=2.754e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=h1 n=647168 rel_l2=2.743e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=x n=161792 rel_l2=1.654e-04 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=subdiv n=5056 rel_l2=4.458e-07 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=h1 n=647168 rel_l2=4.715e-07 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=x n=161792 rel_l2=3.241e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=subdiv n=5056 rel_l2=4.458e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=h1 n=647168 rel_l2=4.715e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=x n=161792 rel_l2=3.241e-07 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=subdiv n=5056 rel_l2=2.754e-04 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=h1 n=647168 rel_l2=2.743e-04 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=x n=161792 rel_l2=1.654e-04 finite=1
+PROBE graph sconv SUMMARY weights=f16 rel_l2(rd_f16,cpu_f16)=2.754e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.715e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=4.715e-07 rel_l2(cpu_f16,cpu_f32)=2.754e-04 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=16/48 detected dispatches=571 barriers=359/570 wall_s=339.5 L=632 neighbours=6200/17064
 RESULT: PASS (graph sconv)
-ggml_test: rd stats graphs=99 nodes=46026 dispatches=32859 skipped=13167 barriers=21270 failed_graphs=0 last{nodes=789 dispatches=571 barriers=359 skipped=218} pipelines=17 set0_created=16 slots_created=571 coop_yields=2 waits=99 faults=0 params_bytes=8411904 set_bytes=165558984 get_bytes=177209856 copies=0 clears=99 buffers_live=0 bytes_live=0
+ggml_test: rd stats graphs=97 nodes=45161 dispatches=32243 skipped=12918 barriers=20872 failed_graphs=0 last{nodes=789 dispatches=571 barriers=359 skipped=218} pipelines=17 set0_created=16 slots_created=571 coop_yields=2 waits=97 faults=0 params_bytes=8254208 set_bytes=165558984 get_bytes=173923072 copies=0 clears=97 buffers_live=0 bytes_live=0

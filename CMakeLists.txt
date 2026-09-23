@@ -148,6 +148,7 @@ add_stage_elf(ggml_test
 	guest/ggml_test/probes_rows.cpp
 	guest/ggml_test/probe_conv.cpp
 	guest/ggml_test/probe_graph.cpp
+	guest/ggml_test/graph_nets.cpp
 	guest/ggml_test/app_graphs/app_graphs.cpp
 	vendor/ggml/tests/test-backend-ops.cpp
 )

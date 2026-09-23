@@ -22,6 +22,7 @@
 //    so ggml's spinning barriers would never be released.
 #include <api.hpp>
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -226,6 +227,23 @@ static Variant ggml_pump(PackedArray<uint8_t> in) {
 	return pump::step(in);
 }
 
+// The last G3.graph run's ggml-rd outputs, for the host oracle
+// (project/gate_ggml_graph.gd, main.gd's ggml_graph_dump): "name bytes" lines.
+static Variant ggml_dump_list() {
+	return Variant(String(probes::graph_dump_list()));
+}
+
+// Bytes [offset, offset + bytes) of dump entry `index`, at most 8 MiB (a
+// PackedByteArray made from guest memory faults above 16 MiB, finding 3).
+static Variant ggml_dump_chunk(int64_t index, int64_t offset, int64_t bytes) {
+	size_t n = size_t(std::min<int64_t>(std::max<int64_t>(bytes, 0), int64_t(8) << 20));
+	const uint8_t *p = probes::graph_dump_chunk(size_t(std::max<int64_t>(index, 0)), size_t(std::max<int64_t>(offset, 0)), n);
+	if (p == nullptr || n == 0) {
+		return Variant(PackedArray<uint8_t>(std::vector<uint8_t>()));
+	}
+	return Variant(PackedArray<uint8_t>(p, n));
+}
+
 // Everything printed since the job started.
 static Variant ggml_output() {
 	std::fflush(stdout);
@@ -264,6 +282,8 @@ int main() {
 	ADD_API_FUNCTION(ggml_probe_start, "String", "String name, String arg, String env", "Start a ggml-rd probe on the pump");
 	ADD_API_FUNCTION(ggml_pump, "Array", "PackedByteArray data", "Resume the job once: [header, text, rid]");
 	ADD_API_FUNCTION(ggml_output, "String", "", "What the job printed");
+	ADD_API_FUNCTION(ggml_dump_list, "String", "", "The last G3.graph run's outputs: name bytes lines");
+	ADD_API_FUNCTION(ggml_dump_chunk, "PackedByteArray", "int index, int offset, int bytes", "Bytes of one dumped output (<= 8 MiB)");
 	ADD_API_FUNCTION(ggml_rd_stats, "String", "", "ggml-rd and rd_compute counters");
 	ADD_API_FUNCTION(ggml_rd_close, "String", "", "Release ggml-rd's RD objects");
 	halt();

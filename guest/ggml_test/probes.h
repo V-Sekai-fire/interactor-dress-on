@@ -50,9 +50,11 @@
 //                    CONV_3D shapes: host-timed graphs of 1 and 9 copies,
 //                    and 4096 sampled outputs against a reference.
 //   graph <qwen|dit|sconv>  (probe_graph.cpp) G3.graph: the apps' own graph
-//                    builders on random weights, ggml-rd vs the in-guest
-//                    ggml-cpu; barrier elision vs barrier-all bit for bit; the
-//                    dropped-barrier control.
+//                    builders on random weights on ggml-rd only; the outputs
+//                    are dumped for the host oracle (tests/ggml_graph_oracle:
+//                    ggml-vulkan / host ggml-cpu), never compared with the
+//                    in-guest ggml-cpu; barrier elision vs barrier-all bit
+//                    for bit; the dropped-barrier control.
 //   cost <decode|dit>  (probe_graph.cpp) G3.cost: host us per graph and per
 //                    node, dispatches, barriers and frames per graph, GPU time.
 //   fa_perf <lq,lk,reps>  FLASH_ATTN_EXT at a census shape (D = 128, 12
@@ -62,6 +64,8 @@
 //                    a double reference.
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <string>
 
 namespace rdc {
@@ -73,5 +77,12 @@ namespace probes {
 // The device the alias probe records on directly (the one ggml-rd uses).
 void set_device(rdc::Device *dev);
 bool start(const std::string &name, const std::string &arg, std::string &err);
+
+// The last G3.graph run's ggml-rd outputs, for the host oracle: one
+// "<arm>/<output> <bytes>" line per entry (f32 little-endian), and a pointer
+// to bytes [offset, offset + bytes) of entry `index` (bytes clamped to the
+// entry; nullptr past its end).
+std::string graph_dump_list();
+const uint8_t *graph_dump_chunk(size_t index, size_t offset, size_t &bytes);
 
 } // namespace probes

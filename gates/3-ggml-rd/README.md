@@ -28,15 +28,23 @@ detail is in the sections below; their own evidence folders (`ops/k1k5`,
 **G3.graph PASS, G3.cost measured** (`graph/results.txt`, section
 [G3.graph and G3.cost](#g3graph-and-g3cost-the-apps-own-graphs)): the
 apps' own graph builders (skin-tokens-ggml, pixal3d-ggml, copied into
-`guest/ggml_test/app_graphs/`) on random weights: a Qwen3 decoder layer
-(f16) at rel-L2 2.1e-4 from the in-guest ggml-cpu, a sparse-conv level
-(f16) at 2.8e-4, a 4096 x 1536 DiT block (bf16) at @DIT_NAT@ (limit 1e-3),
-all from ggml-cpu's own rounding of activations to the weight type: with
-the weights widened to f32 the three read 9.2e-6, 4.7e-7 and @DIT_F32@ (limit
-1e-4). Barrier elision is bit-identical to a barrier after every dispatch on
-all three; dropping one barrier elision placed changed the output in 17 of
-39, 16 of 48 and @DIT_DROP@ runs (the rest are races that did not happen, see
-finding 3 there). A skin-tokens decode step (28 layers) costs 10.6 ms of
+`guest/ggml_test/app_graphs/`) on random weights, **run in the guest on
+ggml-rd only**, their outputs dumped to the host and compared there with a
+host-native oracle built from the same builders and seeds
+(`tests/ggml_graph_oracle`): a Qwen3 decoder layer (f16) at rel-L2 2.10e-4
+from host ggml-cpu, a sparse-conv level (f16) at 2.74e-4, and the full
+4096 x 1536 DiT block (bf16) at 8.76e-4 from ggml-vulkan on the RTX 4090
+(limit 1e-3; 8.77e-4 at 8^3 tokens), every gap the reference's own
+rounding of activations to the weight type: with the weights widened to
+f32 the three read 9.2e-6, 4.8e-7 and 3.1e-7 (limit 1e-4). Barrier elision
+is bit-identical to a barrier after every dispatch on all of them; dropping
+one barrier elision placed changed the output in 20 of 39, 16 of 48 and 5 of
+48 runs (the rest are races that did not happen, see finding 3 there). **No
+graph reference runs on the in-guest ggml-cpu any more** (AGENTS.md Facts:
+guest inference is ggml-rd only, oracles on the host): the parked run's
+in-guest reference took 334 s for the sparse level and stalled for hours on
+the DiT block (`graph/parked-in-guest-ref/`); the whole G3.graph run now
+takes 381 s, 302 of them host ggml-cpu on the sparse level. A skin-tokens decode step (28 layers) costs 10.6 ms of
 ggml-rd host time (4.98 us per node, 8.4 per dispatch), 9.2 ms of GPU and
 one frame; a Pixal3D flow forward (30 blocks) 16.9 ms of host time
 (5.4 us per node) and 1.32 s of GPU, one frame.
@@ -84,14 +92,15 @@ kernels/ggml/gen.sh --update                 # re-emit the kernels from lean/ af
 | rule 8 | `main.gd`'s wrappers, as MCP calls them | **PASS** | `ops/wrappers.txt` (`project/probe_ggml_wrappers.gd`): `ggml_attach`, the chain/files/alias presets and a short fault run through `ggml_ops_start`, each pumped by `main.gd`'s own `_process`; a second `ggml_pump` in the start frame does not pump again; `ggml_rd_close` ends at `permanent_slots=0`, rule-4 counter 0 over 23 submits. |
 | control | headless, no RenderingDevice | **PASS** | `no RD device`, `Testing 1 devices`, no RD0 case run, 0.5 s. Without `--xr-mode off` the headless process hangs after OpenXR fails to start and never runs the script: twice, killed at 900 s and at 300 s (`ops/run-headless-xr-default-hung.log` is the second). AGENTS.md's `--xr-mode off` holds for headless runs too. |
 | regression | Stage 1, Stage 2, Gate 0F, Gate 4 and lean on the rebuilt ELFs | **PASS** | `regression/`: see below. |
-| G3.graph | the apps' graphs, RD vs in-guest ggml-cpu | **PASS** | Qwen3 layer 2.10e-4 (f16) / 9.2e-6 (f32 arm); sparse-conv level 2.75e-4 / 4.7e-7; DiT block @DIT_NAT@ (bf16) / @DIT_F32@; elision bit-identical to barrier-all and to itself on all three; the dropped-barrier control detected in 17/39, 16/48, @DIT_DROP@ runs. |
+| G3.graph | the apps' graphs, guest ggml-rd vs a HOST oracle | **PASS** | Qwen3 layer 2.10e-4 (f16) / 9.2e-6 (f32 arm) vs host ggml-cpu; sparse-conv level 2.74e-4 / 4.8e-7 vs host ggml-cpu; DiT block 4096 x 1536 8.76e-4 (bf16) / 3.1e-7 vs ggml-vulkan (8^3 tokens: 8.77e-4 / 3.5e-7); the dumped inputs bit-identical to the oracle's; elision bit-identical to barrier-all and to itself on all four; the dropped-barrier control detected in 20/39, 16/48, 8/48, 5/48 runs. Oracle checks: ggml-vulkan vs host ggml-cpu 5.57e-4 / 4.5e-5 on the DiT block (both sizes), 2.09e-4 / 1.4e-5 (Qwen), 2.74e-4 / 4.8e-7 (sparse). Control: ggml-vulkan in its default mode misses the f32 arm (1.10e-3 > 1e-4). |
 | G3.cost | host us per node, dispatches, frames, GPU per graph | **measured** | decode step: 2135 nodes, 1265 dispatches, 1123 barriers, 1 frame, 10.6 ms host (4.98 us/node), 9.2 ms GPU; flow forward: 3107 nodes, 2115 dispatches, 1903 barriers, 1 frame, 16.9 ms host (5.43 us/node), 1.32 s GPU. |
-| rule 8 | `main.gd`'s G3 presets | **PASS** | `graph/wrappers.txt` (`project/probe_ggml_wrappers_graph.gd`): `ggml_graph_qwen`, `ggml_cost_decode`, `ggml_cost_dit`, `ggml_graph_sconv`, `ggml_graph_dit` (8^3 tokens) each RESULT: PASS through `main.gd`'s own pump; rule 4 at 0, `permanent_slots=0`. |
+| rule 8 | `main.gd`'s G3 presets | **PASS** | `graph/wrappers.txt` (`project/probe_ggml_wrappers_graph.gd`): `ggml_graph_qwen`, `ggml_cost_decode`, `ggml_cost_dit`, `ggml_graph_sconv`, `ggml_graph_dit` (8^3 tokens) each RESULT: PASS through `main.gd`'s own pump, and each graph's outputs leave through `ggml_graph_dump` (no arguments; the new guest entry points `ggml_dump_list`/`ggml_dump_chunk` behind it); rule 4 at 0, `permanent_slots=0`, 22.8 s (1273 s with the in-guest reference). |
 
-The in-guest reference dominates the time: ops_main is 125-164 s of
+The in-guest reference dominates G3.ops' time: ops_main is 125-164 s of
 vmcalls over 101 frames (five runs on a shared machine), most of it
-ggml-cpu at rv64gc on the 16.7M-element cases; G3.graph's DiT block
-reference is @DIT_CPU_TOTAL@.
+ggml-cpu at rv64gc on the 16.7M-element cases. That is where it stops:
+G3.ops' single-op cases are the only in-guest ggml-cpu reference; every
+graph is compared on the host (G3.graph below).
 
 ## What this cut found (and fixed)
 
@@ -425,33 +434,57 @@ now `ADD,MUL,IM2COL,CONV_3D`).
 
 ## G3.graph and G3.cost: the apps' own graphs
 
-**Result: G3.graph PASS on all three graphs, G3.cost measured.**
-`graph/results.txt` (2026-09-23, RTX 4090, `project/gate_ggml_graph.gd`):
-the graphs are built by the apps' own builder functions, copied into
+**Result: G3.graph PASS on all three graphs (the DiT block at 4096 and at
+512 tokens), G3.cost measured.** `graph/results.txt` (2026-09-23, RTX 4090,
+`gates/3-ggml-rd/graph/run.sh` -> `project/gate_ggml_graph.gd`): the graphs
+are built by the apps' own builder functions, copied into
 `guest/ggml_test/app_graphs/` (skin-tokens-ggml `src/qwen.cpp` @097a0cc,
 pixal3d-ggml `trellis2.cpp` @1c22f5e; `CITATION.cff` names each function and
-the adaptations), on random weights, in `ggml_test.elf`:
+the adaptations), on random weights. **The guest runs them on ggml-rd only**
+(`ggml_test.elf`); the reference is computed on the host by
+`tests/ggml_graph_oracle`, which compiles the same builders and the same
+net code (`guest/ggml_test/graph_nets.cpp`, shared by both) against a
+host-native build of the vendored ggml (V-Sekai-fire/ggml @04b55bba) with
+ggml-cpu and ggml-vulkan:
 
-| graph (builder) | shape, weights | nodes / dispatches | barriers: elided / all | rel-L2, native weights (limit 1e-3) | rel-L2, f32 arm (limit 1e-4) | elision vs barrier-all, repeat | dropped-barrier control | in-guest reference |
-|---|---|---|---|---|---|---|---|---|
-| Qwen3 decoder layer (`decode_layer`) | skin-tokens: hidden 896, 16/8 heads, 128, MLP 2048; 2 beams, KV cache past 514; f16 | 76 / 45 | 39 / 44 | **2.10e-4** (layer out 6.7e-5, new K/V cache rows 2.0-2.1e-4) | **9.2e-6** | bit-identical, bit-identical | 17 of 39 detected | 1.0 s + 0.8 s |
-| sparse-conv level (`shape_dec_run`, level 1) | C 256 (prev 512, next 128), 2 ConvNeXt blocks + child head + up part A, L = 632 shell voxels (6200 of 17064 neighbour slots real); f16 | 789 / 571 | 359 / 570 | **2.75e-4** (subdiv, h1; x 1.7e-4) | **4.7e-7** | bit-identical, bit-identical | 16 of 48 detected | 214 s + 120 s |
-| DiT block (`trellis2_ss_flow_forward`'s block + Pixal3D's `proj_linear`) | 4096 tokens x 1536, 12 heads, MLP 8192, cross-attention over 5 global tokens, proj [1024, 4096]; bf16 | @DIT_NODES@ | @DIT_BARRIERS@ | **@DIT_NAT@** | **@DIT_F32@** | bit-identical, bit-identical | @DIT_DROP@ detected | @DIT_CPU@ |
+| graph (builder) | shape, weights | nodes / dispatches | barriers: elided / all | host oracle (check) | rel-L2, native weights (limit 1e-3) | rel-L2, f32 arm (limit 1e-4) | elision vs barrier-all, repeat | dropped-barrier control | guest run / oracle |
+|---|---|---|---|---|---|---|---|---|---|
+| Qwen3 decoder layer (`decode_layer`) | skin-tokens: hidden 896, 16/8 heads, 128, MLP 2048; 2 beams, KV cache past 514; f16 | 76 / 45 | 39 / 44 | ggml-cpu, 16 threads (ggml-vulkan) | **2.10e-4** (layer out 6.7e-5, new K/V cache rows 2.0-2.1e-4) | **9.2e-6** | bit-identical, bit-identical | 20 of 39 detected | 2.0 s / 9.8 s |
+| sparse-conv level (`shape_dec_run`, level 1) | C 256 (prev 512, next 128), 2 ConvNeXt blocks + child head + up part A, L = 632 shell voxels (6200 of 17064 neighbour slots real); f16 | 789 / 571 | 359 / 570 | ggml-cpu (ggml-vulkan) | **2.74e-4** (subdiv, h1; x 1.6e-4) | **4.8e-7** | bit-identical, bit-identical | 16 of 48 detected | 2.9 s / 302 s |
+| DiT block, 8^3 tokens | 512 tokens, otherwise as below | 103 / 70 | 62 / 69 | ggml-vulkan, precise (ggml-cpu) | **8.77e-4** | **3.5e-7** | bit-identical, bit-identical | 8 of 48 detected | 4.4 s / 10.8 s |
+| DiT block (`trellis2_ss_flow_forward`'s block + Pixal3D's `proj_linear`) | 4096 tokens x 1536, 12 heads, MLP 8192, cross-attention over 5 global tokens, proj [1024, 4096]; bf16 | 103 / 70 | 62 / 69 | ggml-vulkan, precise (ggml-cpu) | **8.76e-4** (residual branch 1.63e-3) | **3.1e-7** | bit-identical, bit-identical | 5 of 48 detected | 14.6 s / 24.8 s |
 
 Every arm is built by the builder from scratch on its backend (ggml's
 gallocr allocates it, as the apps do), and every leaf is filled from a seed of
-its name, so both backends get the same bytes: weights uniform within
+its name, so both sides get the same bytes: weights uniform within
 PyTorch `nn.Linear`'s 1/sqrt(fan_in), norm gains in [0.8, 1.2], inputs in
 [-1, 1], the RoPE tables, neighbour indices and masks computed as the apps
-compute them. rel-L2 is ||rd - cpu|| / ||cpu|| over each output; the table
-gives the worst output. Per graph:
+compute them. The oracle checks that: the block input the guest dumped is
+bit-identical to the one it built (all four graphs). rel-L2 is
+||rd - ref|| / ||ref|| over each output; the table gives the worst output.
+Per graph:
 
-- **native arm**: the weights in the model's type (f16; bf16 for the DiT, the
-  type of the chibifire Pixal3D GGUFs); ggml-rd against the in-guest ggml-cpu
-  (rv64gc, one thread, one node per pump: the CPU backend's abort callback
-  yields COOP, so no reference vmcall runs a whole graph).
-- **f32 arm**: the same weight values (rounded through f16/bf16) stored as
-  f32, the f32 kernels on both sides.
+- **the guest** (`probe_graph.cpp`): the native arm (the weights in the
+  model's type: f16; bf16 for the DiT, the type of the chibifire Pixal3D
+  GGUFs) and the f32 arm (the same weight values, rounded through f16/bf16,
+  stored as f32) on ggml-rd; both arms' outputs stay in the guest heap and
+  leave through `ggml_dump_list`/`ggml_dump_chunk` (8 MiB chunks, finding 3),
+  which `project/graph_dump.gd` writes under `build/graph-dumps/<run>/`.
+  The guest runs no reference: its ggml-cpu (rv64gc, one thread, about
+  0.1 GFLOP/s) took 334 s for the sparse level's two reference arms and
+  never finished the 4096-token DiT block's (about 440 GFLOP each, hours),
+  which is where the previous run was parked (`graph/parked-in-guest-ref/`).
+- **the oracle** (`tests/ggml_graph_oracle`, a child process of the gate,
+  polled each frame): rebuilds both arms on the reference backend (host
+  ggml-cpu for the Qwen layer and the sparse level, ggml-vulkan on the RTX
+  4090 for the DiT block), and on the other one as a check, then compares:
+  rd native vs ref native (limit 1e-3), rd f32 vs ref f32 (limit 1e-4), and
+  the info rows (`graph/oracle-graph_*.txt`). **ggml-vulkan is an oracle
+  only**: it compiles its own GLSL with glslc, never ships and never runs in
+  the guest, so AGENTS.md rule 2 (shipped kernels come from Lean) does not
+  apply to it. It runs "precise" (`GGML_VK_DISABLE_F16`, `_COOPMAT`,
+  `_COOPMAT2`, `_BFLOAT16`, `_INTEGER_DOT_PRODUCT`): f32 accumulation from
+  f32 shared memory.
 - **elision**: on the native RD net, a run with elision, one with
   `GGML_RD_BARRIER_ALL=1` and a second elision run are compared bit for bit,
   every output. Before every RD run the graph's compute buffers (gallocr's)
@@ -465,47 +498,66 @@ gives the worst output. Per graph:
 
 What G3.graph found:
 
-1. **The native-weight gap is ggml-cpu's rounding, not ggml-rd's.** ggml-cpu
-   converts a matmul's activations (src1) to the weight's `vec_dot_type`
-   (f16, bf16) before the dot product; ggml-rd widens the weights on load
-   and keeps the activations f32 (K6). The arms separate the two: ggml-rd's
-   native-weight outputs sit as close to ggml-cpu's f32 arm (Qwen 9.2e-6,
-   sparse 4.7e-7, DiT @DIT_X@) as ggml-rd's own f32 arm does (the same
-   figures to four digits in every output), and ggml-cpu's native arm is as
-   far from its own f32 arm (2.09e-4, 2.75e-4, @DIT_CC@) as ggml-rd is from
-   it. For bf16 that rounding (8 significant bits) alone is @DIT_CC@ of the
-   block's output, @DIT_BRANCH@ of its residual branch (output minus input):
-   the 1e-3 limit is a limit on the reference here, and it holds with
-   @DIT_MARGIN@ to spare. At 216 and 512 tokens (dev runs and rule 8) the
-   same comparison read 9.31e-4 and 9.31e-4.
-2. **Barrier elision is exact on the apps' graphs, and saves little.** Every
+1. **The native-weight gap is the reference's rounding, not ggml-rd's.**
+   ggml-cpu converts a matmul's activations (src1) to the weight's
+   `vec_dot_type` (f16, bf16) before the dot product, and ggml-vulkan does
+   the same for bf16 weights (src1 is converted to bf16 for its bf16 x bf16
+   matmul); ggml-rd widens the weights on load and keeps the activations
+   f32 (K6). The arms separate the two: ggml-rd's native-weight outputs are
+   bit-identical to its own f32 arm (0 in every graph), sit as close to the
+   reference's f32 arm (Qwen 9.2e-6, sparse 4.8e-7, DiT 3.1e-7) as that arm
+   does, and the reference's native arm is as far from its own f32 arm
+   (2.09e-4, 2.74e-4, 8.76e-4) as ggml-rd is from it. For bf16 that rounding
+   (8 significant bits) alone is 8.76e-4 of the 4096-token block's output
+   and 1.63e-3 of its residual branch (output minus input): the 1e-3 limit
+   is a limit on the reference here, and it holds with 12% to spare, at
+   every size (8.77e-4 at 512 tokens; 9.31e-4 against ggml-cpu's rounding at
+   216 and 512 tokens).
+2. **The oracle is checked against the other host backend, and only the
+   precise ggml-vulkan is exact enough for the f32 arm.** Precise
+   ggml-vulkan and ggml-rd agree to 3.1e-7 (4096 tokens) and 3.5e-7 (512) on
+   the DiT block's f32 arm; host ggml-cpu is 4.5e-5 from both GPUs there
+   (its GELU reads an f16 table, `GGML_GELU_FP16`, the likely cause; not
+   isolated), and ggml-vulkan vs ggml-cpu on the native arm is 5.57e-4 at
+   both sizes (two different bf16 roundings of the activations). On the
+   Qwen layer ggml-vulkan vs ggml-cpu reads 2.09e-4 / 1.4e-5, on the sparse
+   level 2.74e-4 / 4.8e-7. The control: ggml-vulkan in its default mode
+   (f16 accumulation for f16 matmuls, coopmat2's f16 conversion of f32
+   operands on the RTX 4090) is 1.10e-3 from ggml-rd's f32 arm on the 8^3
+   block and FAILs the 1e-4 limit (`graph/oracle-control-vk-default-dit8.txt`).
+3. **Barrier elision is exact on the apps' graphs, and saves little.** Every
    output of every graph is bit-identical with and without elision, and two
    elision runs are bit-identical (the kernels are deterministic: no atomics,
    fixed reduction orders). The apps' graphs are chains: elision drops 5 of
    44 barriers in the Qwen layer, 211 of 570 in the sparse level (the 27
-   independent get_rows/mask/mul_mat gathers of a conv), @DIT_SAVED@ in the
-   DiT block.
-3. **A dropped barrier is a race; the comparison catches it when it
-   happens, and it does not always happen.** 17 of 39 (Qwen), 16 of 48
-   (sparse), @DIT_DROP@ (DiT) single dropped barriers changed the output.
-   The ones that did not are of three kinds, all visible in
-   `run-graph_*.log`: the guarded write stores what the buffer already held
-   (the KV-cache CPY writes the same row into a persistent leaf every run,
-   so the CONCATs that read it see the right bytes either way: all 6 CONCAT
-   drops in the Qwen layer); a write-after-read hazard (gallocr reuses a
-   buffer; the later writer only corrupts a reader it overtakes); and a
-   short producer that finishes before its consumer is scheduled (in the
-   sparse level only the barriers before the accumulating ADDs, 15 of 17,
-   show, never the ones before the mask MUL or the MUL_MAT). The same drop
-   is detected in one run and not in another (Qwen: 19 of 39 in a dev run,
-   17 here). So a missing barrier cannot be tested for by running; it is
-   prevented by construction (elision places one on every byte-range
-   RAW/WAR/WAW overlap, and barrier-all is the reference it must match).
-   The detected ones changed the output by rel-L2 8.2e-3 or more in the
-   Qwen and sparse runs, but a DiT dev run had one at 6.8e-4, under the 1e-3
-   tolerance: bit-identity, not a tolerance, is the check that catches them.
+   independent get_rows/mask/mul_mat gathers of a conv), 7 of 69 in the DiT
+   block.
+4. **A dropped barrier is a race; the comparison catches it when it
+   happens, and it does not always happen.** 20 of 39 (Qwen), 16 of 48
+   (sparse), 8 of 48 and 5 of 48 (DiT, 512 and 4096 tokens) single dropped
+   barriers changed the output. The ones that did not are of three kinds,
+   all visible in `run-graph_*.log`: the guarded write stores what the
+   buffer already held (the KV-cache CPY writes the same row into a
+   persistent leaf every run, so the CONCATs that read it see the right
+   bytes either way: all 6 CONCAT drops in the Qwen layer); a
+   write-after-read hazard (gallocr reuses a buffer; the later writer only
+   corrupts a reader it overtakes); and a short producer that finishes
+   before its consumer is scheduled (in the sparse level only the barriers
+   before the accumulating ADDs show, never the ones before the mask MUL or
+   the MUL_MAT). The same drop is detected in one run and not in another
+   (Qwen: 17, 19, 20 and 21 of 39 over four runs; DiT: 9, 8 and 5 of 48,
+   the 4096-token block the fewest). So a missing barrier cannot be
+   tested for by running; it is prevented by construction (elision places
+   one on every byte-range RAW/WAR/WAW overlap, and barrier-all is the
+   reference it must match). The detected ones changed the output by rel-L2
+   8.2e-3 or more in the Qwen and sparse runs, but a DiT dev run had one at
+   6.8e-4, under the 1e-3 tolerance: bit-identity, not a tolerance, is the
+   check that catches them.
 
-**G3.cost** (`graph/run-cost_*.log`, RD only, the same run): the graph as
+**G3.cost** (`graph/parked-in-guest-ref/run-cost_*.log`, RD only: the
+cost probes never ran a reference, so the parked run's numbers stand; the
+rule-8 rerun on this build reads the same, 10.5 ms and 16.1 ms of host
+time, `graph/wrappers.txt`): the graph as
 the app builds it every call (a context, the graph, a gallocr, the inputs,
 `ggml_backend_graph_compute`, the output read), 5 (decode) or 3 (DiT) timed
 calls after a cold one, then one call profiled per dispatch. Host
@@ -557,18 +609,20 @@ graph). What that means for the apps:
 
 Run it:
 ```
-godot --path project --script gate_ggml_graph.gd --rendering-driver vulkan --xr-mode off   # graph/results.txt
+tests/ggml_graph_oracle/build.sh             # the host oracle, once (C:/b/...; ggml-vulkan.cpp alone is ~20 min of clang -O3)
+gates/3-ggml-rd/graph/run.sh                 # builds the oracle if needed, runs the gate: graph/results.txt
+gates/3-ggml-rd/graph/run.sh runs=graph_qwen,graph_sconv,graph_dit8,graph_dit   # this run
 godot --path project --script probe_ggml_wrappers_graph.gd --rendering-driver vulkan --xr-mode off   # graph/wrappers.txt (rule 8)
+<oracle>.exe --graph=dit:8 --dump=build/graph-dumps/graph_dit8 --ref=vulkan --vk=default --check=cpu   # the default-mode control
 ```
-User arguments after `++`: `runs=graph_qwen,cost_decode` (only those),
-`--dit=dit:8` (the DiT block at 8^3 tokens), `--out=<folder>`, `--wall=<s>`.
-The in-guest reference is the cost: ggml-cpu at rv64gc runs 0.08 GFLOP/s
-(bf16, f16 weights) to 0.13 GFLOP/s (f32), so the DiT block's two reference
-arms (about 440 GFLOP each) take @DIT_CPU_TOTAL@, and the gate runs them
-last. The gate's Sandbox has `memory_max` 3600 MB (the DiT reference holds
-its weights, gallocr's buffer and ggml-cpu's work buffer) and
-`execution_timeout` 4000000 (one reference node, the MLP's 103 GFLOP matmul,
-is one vmcall of about @DIT_MLP_S@ s).
+User arguments after `++` (run.sh passes its own through): `runs=...`
+(only those; verdicts for those only), `--dit=dit:8` (graph_dit at 8^3
+tokens), `--out=<folder>`, `--dump=<dir>`, `--wall=<s>` (default 3600),
+`--oracle=<exe>` (run.sh sets it; without it every graph run FAILs). The
+oracle gets 1200 s per graph and is killed past it. The gate's Sandbox keeps
+`memory_max` 3600 MB (the DiT block's RD outputs, 25 MB per output at 4096
+tokens, several runs of them for the bit comparisons) and
+`execution_timeout` 4000000.
 
 ## How ggml-rd works
 

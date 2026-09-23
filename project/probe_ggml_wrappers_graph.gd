@@ -1,7 +1,8 @@
 # Rule 8 smoke for G3.graph and G3.cost: main.gd's presets (ggml_graph_qwen,
 # ggml_cost_decode, ggml_cost_dit, ggml_graph_sconv, ggml_graph_dit) called
 # with no arguments, pumped by main.gd's own _process; each must print
-# RESULT: PASS, and rule 4 must end at 0. Quits on a 2400 s wall clock.
+# RESULT: PASS, each graph run's outputs must leave through ggml_graph_dump
+# (no arguments), and rule 4 must end at 0. Quits on a 2400 s wall clock.
 #
 #   godot --path project --script probe_ggml_wrappers_graph.gd --rendering-driver vulkan --xr-mode off
 #   ... ++ fast      only ggml_graph_qwen, ggml_cost_decode and ggml_cost_dit
@@ -54,6 +55,13 @@ func _process(_d: float) -> bool:
 			_say("  " + l.strip_edges())
 		if l.begins_with("RESULT: PASS"):
 			ok = true
+	# A graph run's outputs leave through main.gd's ggml_graph_dump (for the
+	# host oracle): it must write every output.
+	if _cur.begins_with("ggml_graph_"):
+		var d: String = _main.ggml_graph_dump()
+		_say("  ggml_graph_dump -> " + d.replace(OS.get_user_data_dir() + "/", "user://"))
+		if not d.begins_with("DUMPED"):
+			ok = false
 	if not ok:
 		_rc = 1
 	_cur = ""

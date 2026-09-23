@@ -447,12 +447,24 @@ func ggml_ops_flash_attn() -> String: return ggml_ops_start("-o FLASH_ATTN_EXT -
 func ggml_probe_fa_perf() -> String: return ggml_probe_start("fa_perf", "4096,4096,20", "")  # D=128, 12 heads, f32
 func ggml_ops_all() -> String: return ggml_ops_start("-o ADD,MUL,CPY,DUP,CONT,GET_ROWS,CONCAT,REPEAT,MUL_MAT,FLASH_ATTN_EXT,IM2COL,CONV_3D,NORM,RMS_NORM,MEAN,SOFT_MAX,SILU,GELU,GELU_ERF,SIGMOID,NEG,SCALE,DIAG_MASK_INF,ROPE -b RD0", "")
 # G3.graph and G3.cost (gate_ggml_graph.gd): the apps' own graphs on random
-# weights, ggml-rd vs the in-guest ggml-cpu, and the per-graph cost. The DiT
-# block runs at 8^3 tokens here (this Sandbox's 2 GB heap); the gate runs
-# 16^3 = 4096 with a 3.6 GB one.
+# weights on ggml-rd only (the guest runs no CPU reference), and the
+# per-graph cost. A graph run's outputs go to the host with ggml_graph_dump;
+# tests/ggml_graph_oracle compares them there (ggml-vulkan / host ggml-cpu).
+# The DiT block runs at 8^3 tokens here (this Sandbox's 2 GB heap); the gate
+# runs 16^3 = 4096 with a 3.6 GB one.
 func ggml_graph_qwen() -> String: return ggml_probe_start("graph", "qwen", "")
 func ggml_graph_sconv() -> String: return ggml_probe_start("graph", "sconv", "")
 func ggml_graph_dit() -> String: return ggml_probe_start("graph", "dit:8", "")
+# The last graph run's dumped outputs ("name bytes" lines).
+func ggml_dump_list() -> String:
+	return str(_ggml.vmcall("ggml_dump_list")) if _ggml != null else "IDLE"
+# Write them for the oracle: user://graph-dump/<arm>/<output>.f32.
+func ggml_graph_dump() -> String:
+	if _ggml == null:
+		return "IDLE"
+	if _ggml_host != null and _ggml_host.state == "running":
+		return "BUSY a job is running"
+	return preload("res://graph_dump.gd").save(_ggml, ProjectSettings.globalize_path("user://graph-dump"))
 func ggml_cost_decode() -> String: return ggml_probe_start("cost", "decode:5", "")
 func ggml_cost_dit() -> String: return ggml_probe_start("cost", "dit:3", "")
 func ggml_probe_files() -> String:

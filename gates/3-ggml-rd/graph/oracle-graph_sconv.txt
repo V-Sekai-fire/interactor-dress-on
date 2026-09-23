@@ -1,0 +1,39 @@
+ORACLE graph=sconv ref=cpu check=vulkan vk=precise dump=<checkout>/build/graph-dumps/graph_sconv
+ORACLE cpu_native status=0 nodes=789 ms=72120.4
+ORACLE cpu_native rerun status=0 ms=137545.6 repeat=bit-identical
+ORACLE cpu_f32 status=0 nodes=789 ms=47194.3
+ORACLE cpu_f32 rerun status=0 ms=41096.0 repeat=bit-identical
+ORACLE vulkan device 0: NVIDIA GeForce RTX 4090
+ORACLE vulkan device 1: NVIDIA GeForce RTX 3090
+ORACLE vulkan uses device 0
+ORACLE vulkan_native status=0 nodes=789 ms=2311.7
+ORACLE vulkan_native rerun status=0 ms=28.3 repeat=bit-identical
+ORACLE vulkan_f32 status=0 nodes=789 ms=536.3
+ORACLE vulkan_f32 rerun status=0 ms=13.2 repeat=bit-identical
+PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=subdiv n=5056 rel_l2=2.735e-04 finite=1
+PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=h1 n=647168 rel_l2=2.741e-04 finite=1
+PROBE graph sconv vulkan_f16_vs_cpu_f16_oracle_check output=x n=161792 rel_l2=1.648e-04 finite=1
+PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=subdiv n=5056 rel_l2=4.522e-07 finite=1
+PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=h1 n=647168 rel_l2=4.839e-07 finite=1
+PROBE graph sconv vulkan_f32_vs_cpu_f32_oracle_check output=x n=161792 rel_l2=3.321e-07 finite=1
+ORACLE check vulkan vs cpu: native 2.741e-04 f32 4.839e-07
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=subdiv n=5056 rel_l2=2.736e-04 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=h1 n=647168 rel_l2=2.741e-04 finite=1
+PROBE graph sconv cpu_f16_vs_cpu_f32_info output=x n=161792 rel_l2=1.648e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=subdiv n=5056 rel_l2=2.736e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=h1 n=647168 rel_l2=2.741e-04 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f16 output=x n=161792 rel_l2=1.648e-04 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=subdiv n=5056 rel_l2=4.571e-07 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=h1 n=647168 rel_l2=4.826e-07 finite=1
+PROBE graph sconv rd_f32_vs_cpu_f32 output=x n=161792 rel_l2=3.315e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=subdiv n=5056 rel_l2=4.571e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=h1 n=647168 rel_l2=4.826e-07 finite=1
+PROBE graph sconv rd_f16_vs_cpu_f32_info output=x n=161792 rel_l2=3.315e-07 finite=1
+PROBE graph sconv rd_f16_vs_vulkan_f16_info output=subdiv n=5056 rel_l2=4.540e-07 finite=1
+PROBE graph sconv rd_f16_vs_vulkan_f16_info output=h1 n=647168 rel_l2=4.575e-07 finite=1
+PROBE graph sconv rd_f16_vs_vulkan_f16_info output=x n=161792 rel_l2=3.081e-07 finite=1
+PROBE graph sconv rd_f32_vs_vulkan_f32_info output=subdiv n=5056 rel_l2=4.540e-07 finite=1
+PROBE graph sconv rd_f32_vs_vulkan_f32_info output=h1 n=647168 rel_l2=4.575e-07 finite=1
+PROBE graph sconv rd_f32_vs_vulkan_f32_info output=x n=161792 rel_l2=3.081e-07 finite=1
+ORACLE sconv SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=2.741e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=4.826e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=4.826e-07 rel_l2(cpu_f16,cpu_f32)=2.741e-04 rel_l2(rd_f16,vulkan_f16)=4.575e-07 rel_l2(rd_f32,vulkan_f32)=4.575e-07 ref_ms=72120/47194 inputs=bit-identical wall_s=302.0
+RESULT: PASS (oracle sconv)

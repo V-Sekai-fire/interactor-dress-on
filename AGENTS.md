@@ -166,6 +166,24 @@ our own, no host DLL. The GPU is reachable only through Godot's
   memcpy/memset/memmove/memcmp, fault above that ("Protection fault").
   `rdc::Device` splits buffer_update and staged reads, the pump splits READ,
   and `vendor/sandbox-api` splits the mem* wrappers.
+- **Guest inference is ggml-rd only.** The guest CPU (rv64gc, one thread)
+  runs ggml-cpu at ~0.1 GFLOP/s: a 4096-token DiT block's two reference arms
+  would be hours (the parked Gate 3 run stalled there). In the guest, graphs
+  run on ggml-rd with zero CPU fallback in release gates; the in-guest
+  ggml-cpu is only G3.ops' single-op reference. Oracles for anything bigger
+  run on the HOST: the guest dumps its outputs (`main.gd`'s
+  `ggml_graph_dump`, `project/graph_dump.gd`) and `tests/ggml_graph_oracle`
+  rebuilds the same net from the same seeds (`guest/ggml_test/graph_nets.cpp`,
+  compiled for both) on host ggml-vulkan (the GPU, large graphs) or host
+  ggml-cpu (small ones). ggml-vulkan is an oracle only (its glslc shaders
+  never ship; rule 2 is about shipped kernels) and must run with f16,
+  coopmat, coopmat2, bf16 and integer dot off (`--vk=precise`): by default
+  its f32 arm is 1.1e-3 off (f16 accumulation, coopmat2's f16 conversion).
+  Host ggml-cpu is not an exact f32 reference either: 4.5e-5 from both GPUs
+  on the DiT block's f32 arm, where ggml-rd and precise ggml-vulkan agree to
+  3.5e-7 (its GELU reads an f16 table, `GGML_GELU_FP16` in ggml-cpu's
+  `vec.h`, the likely cause; not isolated). `ggml-vulkan.cpp` takes ~20 min to compile with
+  llvm-mingw clang -O3: build the oracle once, outside the checkout (C:/b).
 - With unboxed arguments (the default) declare an Object parameter as
   `Object`, never `Variant`: the host passes a bare handle, and a Variant
   parameter reads it as a pointer (it arrives as Nil).

@@ -9,6 +9,9 @@ import Ggml.SlangCodegen.Concat
 import Ggml.SlangCodegen.Repeat
 import Ggml.SlangCodegen.Norm
 import Ggml.SlangCodegen.SoftMax
+import Ggml.SlangCodegen.MulMatTiled
+import Ggml.SlangCodegen.MulMatVec
+import Ggml.SlangCodegen.MulMatSerial
 
 /-!
 # `Ggml` — the ggml-rd op kernels (Lean → Slang → spirv | cpp)
@@ -33,6 +36,8 @@ def kernels : List (String × LeanSlang.SlangShaderModule) :=
   ++ Ggml.SlangCodegen.Repeat.kernels
   ++ Ggml.SlangCodegen.Norm.kernels
   ++ Ggml.SlangCodegen.SoftMax.kernels
+  ++ Ggml.SlangCodegen.MulMatTiled.kernels ++ Ggml.SlangCodegen.MulMatVec.kernels
+  ++ Ggml.SlangCodegen.MulMatSerial.kernels
 
 /-- Control kernels: deliberately off the fixed layout, for gates only
     (kernels/ggml/controls.txt). -/

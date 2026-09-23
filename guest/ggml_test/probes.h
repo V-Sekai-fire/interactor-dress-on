@@ -36,6 +36,16 @@
 //                    in-place chains of 1 and N ops timed on the host clock;
 //                    rows_perf sweep: 64- vs 256-thread NORM/RMS_NORM kernels
 //                    over row lengths 32..1024 (ops/rows.h's kShortRow).
+//   mm_perf <all|labels>  MUL_MAT on the census's hottest shapes and the
+//                    4096 x 1536 x 1024 benchmark (f16, bf16, f32): per shape,
+//                    a short and a long graph of r1 < r2 independent
+//                    MUL_MATs over the same operands, each timed on the HOST
+//                    clock (Time.get_ticks_usec) from graph_compute to its
+//                    synchronize (a frame later, rule 4), best of 3; the
+//                    per-op time is the difference over r2 - r1, which
+//                    cancels the frame and the packing. Every shape's last
+//                    output is checked against a double sum over the same
+//                    inputs (3 columns x first and last batch): nmse < 1e-8.
 #pragma once
 
 #include <string>

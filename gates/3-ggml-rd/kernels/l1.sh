@@ -6,9 +6,14 @@
 #     -O1, which drops the unused s2 from the SPIR-V while the reflection
 #     JSON still lists it; and kernels/avbd's saxpby, another layout;
 #   - every cpp emit compiled for riscv64 by the guest's clang (the x86
-#     compile is the L2 harness, tests/ggml_rd_kernels); a group-shared
-#     kernel has none (slangc's cpp target rejects it) and is listed as SKIP,
-#     its _serial sibling compiled in its place.
+#     compile is the L2 harness, tests/ggml_rd_kernels); a kernel that shares group memory has
+#     none (slangc's cpp target rejects it) and is listed as SKIP, its
+#     sibling compiled in its place;
+#   - the cpp siblings (kernels/ggml/cpp_siblings.txt), two controls that
+#     must fail: slangc -target cpp on mul_mat_tiled_f16_f32 (its group
+#     barrier, E36107: why the sibling exists), and the table check given a
+#     pair whose thread groups differ (the host would run the sibling over
+#     the wrong grid).
 # Writes l1.log beside this script; the last line is RESULT: PASS or FAIL.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,6 +25,8 @@ SYSROOT="${RISCV64_SYSROOT:-/c/contract-manifest/3-interactor/mujoco-sandbox-dem
 CLANG="${RV_CLANG:-$HOME/scoop/apps/llvm/current/bin/clang++}"
 TABLE="$ROOT/kernels/ggml/gen_ggml_kernel_table.py"
 KERNELS=$(grep -v '^#' "$ROOT/kernels/ggml/kernels.txt" | grep -v '^[[:space:]]*$' | tr '\n' ' ')
+# Kernels with a cpp sibling (kernels/ggml/cpp_siblings.txt) have no cpp emit.
+GPU_ONLY=$(grep -v '^#' "$ROOT/kernels/ggml/cpp_siblings.txt" | awk 'NF { print $1 }' | tr '\n' ' ')
 TMP="$(mktemp -d)"
 rc=0
 {
@@ -37,9 +44,26 @@ rc=0
 		-reflection-json "$TMP/saxpby.refl.json" -o "$TMP/saxpby.spv" slang/saxpby.slang )
 	if python "$TABLE" --spv-dir "$TMP" --check-only saxpby; then echo "FAIL saxpby passed the check"; rc=1; else echo "PASS saxpby is refused"; fi
 
+	echo "== negative: slangc -target cpp on a kernel with a group barrier, mul_mat_tiled_f16_f32 (must fail)"
+	if ( cd "$ROOT/kernels/ggml" && "$SLANGC" -target cpp -stage compute -entry main -preserve-params \
+		-o "$TMP/tiled_emit.cpp" slang/mul_mat_tiled_f16_f32.slang ) > "$TMP/tiled_cpp.log" 2>&1; then
+		echo "FAIL slangc emitted cpp for a kernel with GroupMemoryBarrierWithGroupSync"; rc=1
+	else
+		echo "PASS refused: $(grep -o 'error.E[0-9]*.: [a-z ]*' "$TMP/tiled_cpp.log" | head -1), at $(grep -o "see using of '[A-Za-z]*'" "$TMP/tiled_cpp.log" | head -1)"
+	fi
+
+	echo "== negative: a cpp_siblings pair with different thread groups, mul_mat_tiled_f16_f32 -> mul_mat_serial_vec_f16_f32 (must fail)"
+	echo "mul_mat_tiled_f16_f32 mul_mat_serial_vec_f16_f32" > "$TMP/bad_siblings.txt"
+	if python "$TABLE" --spv-dir "$BUILD/spv-ggml" --siblings "$TMP/bad_siblings.txt" --out "$TMP/table.inc" $KERNELS; then
+		echo "FAIL the mismatched pair passed"; rc=1
+	else
+		echo "PASS the mismatched pair is refused"
+	fi
+
 	echo "== cpp emits compiled for riscv64 ($("$CLANG" --version | head -1))"
 	for k in $KERNELS; do
-		if [ ! -f "$ROOT/kernels/ggml/cpp/${k}_emit.cpp" ] && grep -q '^groupshared ' "$ROOT/kernels/ggml/slang/$k.slang"; then
+		case " $GPU_ONLY " in *" $k "*) echo "SKIP riscv64 $k (GPU-only: cpp_siblings.txt names its sibling)"; continue ;; esac
+		if [ ! -f "$ROOT/kernels/ggml/cpp/${k}_emit.cpp" ] && grep -q '^groupshared \|GroupMemoryBarrierWithGroupSync' "$ROOT/kernels/ggml/slang/$k.slang"; then
 			echo "SKIP riscv64 $k (group-shared: no cpp target; ${k}_serial is its cpp sibling)"
 			continue
 		fi

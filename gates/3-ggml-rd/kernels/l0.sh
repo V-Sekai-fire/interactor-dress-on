@@ -11,6 +11,8 @@
 #                                  (numthreads 256 -> 128) under native_decide;
 #                              (1b) norm_f32's pin with its tree's first
 #                                  step 128 -> 127 (the K3/K4 row kernels);
+#                              (1c) MulMatTiled's pin with the group-memory row
+#                                  padding changed (As[16][65] -> [16][64]);
 #                              (2) gen.sh's check against a slang/ with one
 #                                  character changed (256u -> 255u), run on a
 #                                  copy of kernels/ggml so nothing committed is
@@ -67,6 +69,21 @@ EOF2
 		echo "FAIL the changed norm pin was accepted"; nrc=1
 	else
 		echo "PASS the changed norm pin is rejected"
+	fi
+	echo "== (1c) native_decide on mul_mat_tiled_f16_f32's pin with As[16][65] -> As[16][64] (must be rejected)"
+	cat > "$TMP/NegGgmlMm.lean" <<'EOF'
+import Ggml.SlangCodegen.MulMatTiled
+open Ggml.SlangCodegen.MulMatTiled
+open Ggml.SlangCodegen.MulMat
+
+example : LeanSlang.emit (shader .f16 .f32) =
+    expected.replace "groupshared float As[16][65];" "groupshared float As[16][64];" := by
+  native_decide
+EOF
+	if ( cd "$LEAN" && lake env lean "$TMP/NegGgmlMm.lean" 2>&1 ); then
+		echo "FAIL the changed pin was accepted"; nrc=1
+	else
+		echo "PASS the changed pin is rejected"
 	fi
 	echo "== (2) gen.sh check against a copy of kernels/ggml whose add_f32.slang says 255u for 256u (must fail)"
 	mkdir -p "$TMP/tree/kernels" "$TMP/tree/guest/ggml-rd"

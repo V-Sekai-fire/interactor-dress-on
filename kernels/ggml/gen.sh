@@ -27,6 +27,11 @@
 # six descriptors, so the table step reads the SPIR-V and refuses a kernel
 # that differs. The driver compiles SPIR-V with its own optimiser.
 #
+# cpp_siblings.txt pairs a kernel that shares group memory with its serial
+# sibling (slangc -target cpp rejects the barrier, E36107): no cpp is
+# emitted for the kernel (the sibling's cpp stands in for it on the host),
+# and the table step checks each pair.
+#
 # Kernels are the names in kernels.txt, in order: a kernel's id (params
 # word 0) is its line index. Relative slangc paths (as kernels/avbd/gen.sh)
 # keep the committed cpp independent of where the checkout lives.
@@ -52,6 +57,9 @@ esac
 
 KERNELS=$(grep -v '^#' "$HERE/kernels.txt" | grep -v '^[[:space:]]*$' | tr '\n' ' ')
 CONTROLS=$(grep -v '^#' "$HERE/controls.txt" | grep -v '^[[:space:]]*$' | tr '\n' ' ')
+SIBLINGS="$HERE/cpp_siblings.txt"
+GPU_ONLY=$(grep -v '^#' "$SIBLINGS" | awk 'NF { print $1 }' | tr '\n' ' ')
+gpu_only() { case " $GPU_ONLY " in *" $1 "*) return 0 ;; esac; return 1; }
 
 if [ "$MODE" != none ]; then
 	command -v lake >/dev/null 2>&1 || { echo "error: lake not on PATH (or pass --no-emit)" >&2; exit 1; }
@@ -92,14 +100,18 @@ rm -rf "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 mkdir -p "$BUILD/spv-ggml" "$BUILD/spv-ggml-controls"
 echo "== slangc -target cpp =="
 for k in $KERNELS; do
-	# slangc's cpp target rejects groupshared + GroupMemoryBarrierWithGroupSync
-	# (E36107). Such a kernel has no cpp emit; its `<k>_serial` sibling in
-	# kernels.txt (the same arithmetic, one thread per group) stands in for it
-	# in the host tests (tests/ggml_rd_kernels/gen_host_kernels.py).
-	if grep -q '^groupshared ' "$HERE/slang/$k.slang"; then
+	# slangc's cpp target rejects GroupMemoryBarrierWithGroupSync (E36107), so
+	# a kernel that shares group memory has no cpp emit. Its host stand-in is
+	# either its cpp_siblings.txt sibling (same thread group and grid) or its
+	# `<k>_serial` sibling in kernels.txt (tests/ggml_rd_kernels/gen_host_kernels.py).
+	if gpu_only "$k"; then
+		rm -f "$HERE/cpp/${k}_emit.cpp" # its cpp_siblings.txt sibling runs on the host
+		continue
+	fi
+	if grep -q '^groupshared \|GroupMemoryBarrierWithGroupSync' "$HERE/slang/$k.slang"; then
 		case " $KERNELS " in
-			*" ${k}_serial "*) rm -f "$HERE/cpp/${k}_emit.cpp"; echo "$k: group-shared, no cpp (host tests run ${k}_serial)"; continue ;;
-			*) echo "error: $k uses groupshared and kernels.txt has no ${k}_serial for the cpp target" >&2; exit 1 ;;
+			*" ${k}_serial "*) rm -f "$HERE/cpp/${k}_emit.cpp"; echo "$k: group-shared, no cpp (the host runs ${k}_serial)"; continue ;;
+			*) echo "error: $k shares group memory and has neither a cpp_siblings.txt pair nor a ${k}_serial in kernels.txt" >&2; exit 1 ;;
 		esac
 	fi
 	( cd "$HERE" && "$SLANGC" -target cpp -stage compute -entry main -preserve-params \
@@ -113,7 +125,8 @@ for k in $KERNELS; do
 	"$SPIRV_VAL" --target-env vulkan1.2 "$BUILD/spv-ggml/$k.spv"
 done
 echo "== fixed-layout check + kernel table =="
-"$PY" "$HERE/gen_ggml_kernel_table.py" --spv-dir "$BUILD/spv-ggml" --out "$HERE/GgmlKernelTable.inc" $KERNELS
+"$PY" "$HERE/gen_ggml_kernel_table.py" --spv-dir "$BUILD/spv-ggml" --siblings "$SIBLINGS" \
+	--out "$HERE/GgmlKernelTable.inc" $KERNELS
 echo "== embedding SPIR-V =="
 # The reflection JSON sits beside each .spv; embed_spv takes only *.spv.
 "$PY" "$HERE/../embed_spv.py" --namespace ggml_kernels "$BUILD/spv-ggml" "$BUILD/ggml_kernels.inc"

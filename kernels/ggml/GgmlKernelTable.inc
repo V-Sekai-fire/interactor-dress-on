@@ -54,6 +54,22 @@ static const KernelDesc kKernels[] = {
 	{ "rms_norm_f32_t64_serial", { 1, 1, 1 } },
 	{ "soft_max_f32_t64", { 64, 1, 1 } },
 	{ "soft_max_f32_t64_serial", { 1, 1, 1 } },
+	{ "mul_mat_tiled_f32_f32", { 16, 16, 1 } },
+	{ "mul_mat_tiled_f16_f32", { 16, 16, 1 } },
+	{ "mul_mat_tiled_bf16_f32", { 16, 16, 1 } },
+	{ "mul_mat_tiled_f16_f16", { 16, 16, 1 } },
+	{ "mul_mat_vec_f32_f32", { 32, 8, 1 } },
+	{ "mul_mat_vec_f16_f32", { 32, 8, 1 } },
+	{ "mul_mat_vec_bf16_f32", { 32, 8, 1 } },
+	{ "mul_mat_vec_f16_f16", { 32, 8, 1 } },
+	{ "mul_mat_serial_tiled_f32_f32", { 16, 16, 1 } },
+	{ "mul_mat_serial_tiled_f16_f32", { 16, 16, 1 } },
+	{ "mul_mat_serial_tiled_bf16_f32", { 16, 16, 1 } },
+	{ "mul_mat_serial_tiled_f16_f16", { 16, 16, 1 } },
+	{ "mul_mat_serial_vec_f32_f32", { 32, 8, 1 } },
+	{ "mul_mat_serial_vec_f16_f32", { 32, 8, 1 } },
+	{ "mul_mat_serial_vec_bf16_f32", { 32, 8, 1 } },
+	{ "mul_mat_serial_vec_f16_f16", { 32, 8, 1 } },
 };
 static const uint32_t kKernelCount = sizeof(kKernels) / sizeof(kKernels[0]);
 

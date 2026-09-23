@@ -12,15 +12,16 @@ addon and GPU rendering. No engine fork, no engine module, no GDExtension of
 our own, no host DLL. The GPU is reachable only through Godot's
 `RenderingDevice`, via `guest/rd_compute` (Stage 1, measured).
 
-**One scoped exception (user, 2026-09-23): Stage 7, image → mesh, is a
-host-native GDExtension** (`gdext/infer_image`, godot-cpp from
-`V-Sekai-fire/godot-cpp`) wrapping pixal3d-ggml on ggml's Vulkan backend,
-with the Pixal3D weights and its auxiliary networks (NAF, MoGe-3,
-BiRefNet_HR-matting). It exists because the guest route (ggml-rd + a
-weight-streaming infer.elf) cost more than the week's budget allowed. It is
-the only native plugin: curvenet, fit and drape stay guest ELFs, and the
-rig (Stage 4b) stays on ggml-rd. The binary is built, not committed; its
-sha256 goes into the gate logs.
+**One scoped exception (user, 2026-09-23): Stage 7 calls out.** Image →
+mesh and 3D editing are not in the sandbox: the loop calls the org's
+Pixal3D and VoxHammer model services over HTTP
+(`V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh`,
+`interactor-voxhammer-{image,text}-mesh-editing`; `POST /predict`, `/extract`)
+from GDScript, and loads the returned GLB with Godot's own GLTF importer.
+The services run from **pixi** environments (not Docker). No GDExtension,
+no host DLL: curvenet, fit and drape stay guest ELFs, the rig (4b) stays on
+ggml-rd. Without a reachable service the INFER state fails loudly, never a
+silent fixture.
 
 ## Rules
 

@@ -88,10 +88,35 @@ target_link_libraries(cassie_core PUBLIC
 	$<TARGET_NAME_IF_EXISTS:godot_lite>
 )
 
+# ---- The stage's API and Gate 4's checks ----------------------------------------
+# guest/curvenet/curvenet_api.h is std types only; these two TUs are the only
+# ones that see both it and Cassie (with the godot-lite prelude). The same
+# library links into curvenet.elf and into the native cassie_checks.exe.
+add_library(curvenet_core STATIC EXCLUDE_FROM_ALL
+	"${DRESS_ON_ROOT}/guest/curvenet/curvenet_api.cpp"
+	"${DRESS_ON_ROOT}/guest/curvenet/checks.cpp"
+)
+target_include_directories(curvenet_core PUBLIC "${DRESS_ON_ROOT}/guest/curvenet" "${DRESS_ON_ROOT}/guest/common")
+target_compile_options(curvenet_core PRIVATE
+	"SHELL:-include ${DRESS_ON_ROOT}/guest/godot_lite/gdl_prelude.h"
+	${CURVENET_STRICT_FP}
+)
+target_link_libraries(curvenet_core PUBLIC cassie_core)
+
+# ---- curvenet.elf ----------------------------------------------------------------
+# Only where the sandbox toolchain defined add_stage_elf (CMakeLists.txt); the
+# native tree stops at curvenet_core. main.cpp includes api.hpp and
+# curvenet_api.h, nothing of Cassie's.
+if(COMMAND add_stage_elf AND NOT CURVENET_KERNELS_PENDING)
+	add_stage_elf(curvenet "${DRESS_ON_ROOT}/guest/curvenet/main.cpp")
+	target_include_directories(curvenet PRIVATE "${DRESS_ON_ROOT}/guest/curvenet")
+	target_link_libraries(curvenet PRIVATE curvenet_core)
+endif()
+
 # ---- Compile check -------------------------------------------------------------
-# Scratch target until curvenet.elf exists: every curvenet library, built for
-# whatever toolchain configured this tree (riscv64 via build.sh's toolchain
-# file; the host via tests/native/curvenet). Not part of the default build.
+# Every curvenet library, built for whatever toolchain configured this tree
+# (riscv64 via build.sh's toolchain file; the host via tests/native/curvenet).
+# Not part of the default build.
 add_custom_target(curvenet_compile_check)
 add_dependencies(curvenet_compile_check godot_lite geogram_subset pmp_subset mwt_subset cassie_core)
 if(NOT CURVENET_KERNELS_PENDING)

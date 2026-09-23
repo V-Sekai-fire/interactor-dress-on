@@ -128,6 +128,14 @@ our own, no host DLL. The GPU is reachable only through Godot's
   `lake update LeanSlang` (only that package; the other revs must not move).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
+- godot-sandbox's guest heap wraps only malloc/calloc/realloc/free; its
+  `memalign`/`posix_memalign`/`aligned_alloc` fallback returns an
+  already-freed block when 16 tries at > 16-byte alignment miss (a
+  "Possible double-free" later). Vendored code that aligns (Geogram) carves
+  from plain `malloc` instead (Gate 4).
+- A native flat control built with llvm-mingw links libc++; the guest links
+  libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
+  between them from the same seed: use the engine's raw output (Gate 4).
 
 ## Conventions
 

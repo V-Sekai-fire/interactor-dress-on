@@ -9,7 +9,10 @@
 # 2. list the symbols cassie_core references that no library defines -- with
 #    the kernels built (the default) there are none; with
 #    CURVENET_KERNELS_PENDING=ON exactly the five dispatchers' entry points;
-# 3. run curvenet_smoke, and curvenet_kernels_smoke when the kernels are built.
+# 3. run curvenet_smoke, and curvenet_kernels_smoke when the kernels are built;
+# 4. with the kernels built, run cassie_checks (Gate 4's checks, the flat
+#    control for curvenet.elf) into gates/4-curvenet/native-checks.log, which
+#    project/gate_curvenet.gd compares the guest against.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,4 +61,15 @@ cmake --build "$OUT" --target curvenet_smoke
 if [ "$PENDING" != ON ]; then
 	cmake --build "$OUT" --target curvenet_kernels_smoke
 	"$OUT/curvenet_kernels_smoke"
+fi
+if [ "$PENDING" != ON ]; then
+	cmake --build "$OUT" --target cassie_checks
+	LOG="$ROOT/gates/4-curvenet/native-checks.log"
+	rc=0
+	{
+		echo "# cassie_checks (native, $("${CXX:-clang++}" --version | head -1))"
+		"$OUT/cassie_checks" 2>&1 || rc=$?
+	} >"$LOG"
+	cat "$LOG"
+	[ "$rc" -eq 0 ] || { echo "error: cassie_checks failed (exit $rc)" >&2; exit 1; }
 fi

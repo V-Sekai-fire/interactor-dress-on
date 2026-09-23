@@ -12,7 +12,11 @@ abstract: >-
   reproduces the tree from the pinned commit. Local adaptation
   (tools/vendor/patches/mwt.patch): DMWT.cpp includes <climits> for
   INT_MAX, which it used to receive through the Godot-typed
-  delaunay_geogram.h that the Cassie subset rewrote include-free.
+  delaunay_geogram.h that the Cassie subset rewrote include-free; and
+  Point3::pertube draws 0..9999 as mt19937's raw output modulo 10000
+  instead of through std::uniform_int_distribution, whose algorithm
+  differs between libc++ (the native flat control) and libstdc++ (the
+  guest), so degenerate input was perturbed differently on each.
 type: software
 authors:
   - family-names: Zou

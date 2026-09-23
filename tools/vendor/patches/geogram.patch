@@ -1,5 +1,136 @@
+diff --git a/vendor/geogram-subset/geogram/basic/algorithm.h b/vendor/geogram-subset/geogram/basic/algorithm.h
+index 5d776a5e7..3861fd415 100644
+--- a/vendor/geogram-subset/geogram/basic/algorithm.h
++++ b/vendor/geogram-subset/geogram/basic/algorithm.h
+@@ -208,9 +208,21 @@ namespace GEO {
+     inline void random_shuffle(
+         const ITERATOR& begin, const ITERATOR& end
+     ) {
+-	std::random_device rng;
+-	std::mt19937 urng(rng());
+-	std::shuffle(begin, end, urng);
++	// interactor-dress-on: a fixed seed instead of std::random_device,
++	// and Fisher-Yates on the engine's raw output instead of std::shuffle.
++	// BRIO insertion order (mesh_reorder.cpp) goes through here, so a
++	// degenerate (cospherical) point set -- a closed stroke drawn on a
++	// sphere -- came out of Delaunay with a different triangulation on
++	// every call, in every process and on every peer. std::shuffle's
++	// algorithm is the standard library's own (libc++ and libstdc++ differ),
++	// mt19937's output sequence is fixed by the standard. The shuffle only
++	// has to break spatial coherence, not be unpredictable.
++	std::mt19937 urng(0x9e3779b9u);
++	const auto n = end - begin;
++	for(auto i = n - 1; i > 0; --i) {
++	    const auto j = decltype(i)(urng() % (unsigned long long)(i + 1));
++	    std::iter_swap(begin + i, begin + j);
++	}
+     }
+ 
+ }
+diff --git a/vendor/geogram-subset/geogram/basic/memory.h b/vendor/geogram-subset/geogram/basic/memory.h
+index b7098f669..e20229582 100644
+--- a/vendor/geogram-subset/geogram/basic/memory.h
++++ b/vendor/geogram-subset/geogram/basic/memory.h
+@@ -325,22 +325,27 @@ namespace GEO {
+         inline void* aligned_malloc(
+             size_t size, size_t alignment = GEO_MEMORY_ALIGNMENT
+         ) {
+-#if   defined(GEO_OS_ANDROID)
+-            // Alignment not supported under Android.
+-            geo_argused(alignment);
+-            return malloc(size);
+-#elif defined(GEO_COMPILER_INTEL)
+-            return _mm_malloc(size, alignment);
+-#elif defined(GEO_COMPILER_GCC) || defined(GEO_COMPILER_CLANG)
+-            void* result;
+-            return posix_memalign(&result, alignment, size) == 0
+-                ? result : nullptr;
+-#elif defined(GEO_COMPILER_MSVC)
+-            return _aligned_malloc(size, alignment);
+-#else
+-            geo_argused(alignment);
+-            return malloc(size);
+-#endif
++            // interactor-dress-on: aligned blocks carved out of plain
++            // malloc, the base pointer stored just below the block, on every
++            // platform. In curvenet.elf only malloc/calloc/realloc/free
++            // reach the sandbox's heap; godot-sandbox's posix_memalign
++            // fallback (docker/api/native.cpp memalign) retries malloc for a
++            // 64-byte-aligned block and, when 16 tries miss, returns the
++            // last block it already freed -- Geogram then double-frees it
++            // (Gate 4: "Possible double-free" in ~Delaunay3d). This pair
++            // never asks anyone else for alignment.
++            if(alignment < sizeof(void*)) {
++                alignment = sizeof(void*);
++            }
++            void* base = malloc(size + alignment + sizeof(void*));
++            if(base == nullptr) {
++                return nullptr;
++            }
++            const size_t addr = reinterpret_cast<size_t>(base) + sizeof(void*);
++            const size_t aligned = (addr + alignment - 1) & ~(alignment - 1);
++            void** result = reinterpret_cast<void**>(aligned);
++            result[-1] = base;
++            return result;
+         }
+ 
+         /**
+@@ -351,18 +356,10 @@ namespace GEO {
+          * \note Memory alignment is not supported under Android.
+          */
+         inline void aligned_free(void* p) {
+-#if   defined(GEO_OS_ANDROID)
+-            // Alignment not supported under Android.
+-            free(p);
+-#elif defined(GEO_COMPILER_INTEL)
+-            _mm_free(p);
+-#elif defined(GEO_COMPILER_GCC_FAMILY)
+-            free(p);
+-#elif defined(GEO_COMPILER_MSVC)
+-            _aligned_free(p);
+-#else
+-            free(p);
+-#endif
++            // interactor-dress-on: the base pointer aligned_malloc stored.
++            if(p != nullptr) {
++                free(reinterpret_cast<void**>(p)[-1]);
++            }
+         }
+ 
+         /**
+diff --git a/vendor/geogram-subset/geogram/basic/numeric.cpp b/vendor/geogram-subset/geogram/basic/numeric.cpp
+index 17bbd0c09..1132dff91 100644
+--- a/vendor/geogram-subset/geogram/basic/numeric.cpp
++++ b/vendor/geogram-subset/geogram/basic/numeric.cpp
+@@ -72,18 +72,21 @@ namespace GEO {
+             random_engine = std::mt19937_64();
+         }
+ 
++        // interactor-dress-on: the engine's raw output (fixed by the
++        // standard) instead of std::uniform_*_distribution, whose algorithms
++        // are the standard library's own: libc++ (the native flat control)
++        // and libstdc++ (the guest) drew different numbers from the same
++        // seed.
+         int32 random_int32() {
+-            return std::uniform_int_distribution<int32>(
+-		0, std::numeric_limits<int32>::max()
+-	    )(random_engine);
++            return int32(random_engine() >> 33);
+         }
+ 
+         float32 random_float32() {
+-            return std::uniform_real_distribution<float32>(0, 1)(random_engine);
++            return float32(random_engine() >> 40) * (1.0f / 16777216.0f);
+         }
+ 
+         float64 random_float64() {
+-            return std::uniform_real_distribution<float64>(0, 1)(random_engine);
++            return float64(random_engine() >> 11) * (1.0 / 9007199254740992.0);
+         }
+     }
+ }
 diff --git a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
-index ab4f257..c2c8f09 100644
+index ab4f2573a..c2c8f09c0 100644
 --- a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
 +++ b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
 @@ -139,6 +139,12 @@ namespace GEO {

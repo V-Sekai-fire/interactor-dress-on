@@ -1,0 +1,200 @@
+[1/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/algorithm.cpp.obj
+[2/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/numeric.cpp.obj
+[3/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/geometry.cpp.obj
+[4/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/counted.cpp.obj
+[5/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/life_cycle.cpp.obj
+[6/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/assert.cpp.obj
+[7/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/process_unix.cpp.obj
+[8/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/factory.cpp.obj
+[9/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/packed_arrays.cpp.obj
+[10/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/b_stream.cpp.obj
+[11/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/environment.cpp.obj
+[12/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/line_stream.cpp.obj
+[13/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/common.cpp.obj
+[14/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/debug_stream.cpp.obj
+[15/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/attributes.cpp.obj
+[16/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/command_line_args.cpp.obj
+[17/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/file_system.cpp.obj
+[18/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/logger.cpp.obj
+[19/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/string.cpp.obj
+[20/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/process.cpp.obj
+[21/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/command_line.cpp.obj
+[22/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/delaunay/periodic.cpp.obj
+[23/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/quaternion.cpp.obj
+[24/147] Building CXX object CMakeFiles/geogram_subset.dir/a0bbbfb46ef65a80519449b9c780ae02/bibliography/embedded_references.cpp.obj
+[25/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/stopwatch.cpp.obj
+[26/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/basic/process_win.cpp.obj
+[27/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/lbfgs_optimizers.cpp.obj
+[28/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/basic/progress.cpp.obj
+[29/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/delaunay/delaunay_nn.cpp.obj
+[30/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/delaunay/LFS.cpp.obj
+[31/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/bibliography/bibliography.cpp.obj
+[32/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/delaunay/delaunay.cpp.obj
+[33/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/delaunay/delaunay_2d.cpp.obj
+[34/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/numerics/PCK.cpp.obj
+[35/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/expansion_nt.cpp.obj
+[36/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/delaunay/delaunay_3d.cpp.obj
+[37/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_api.c.obj
+[38/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_arpack.c.obj
+[39/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_cholmod.c.obj
+[40/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/multi_precision.cpp.obj
+[41/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_context.c.obj
+[42/147] Building C object CMakeFiles/geogram_subset.dir/a0bbbfb46ef65a80519449b9c780ae02/third_party/OpenNL/nl_iterative_solvers.c.obj
+[43/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/matrix_util.cpp.obj
+[44/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_blas.c.obj
+[45/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_cuda.c.obj
+[46/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/exact_geometry.cpp.obj
+[47/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_mkl.c.obj
+[48/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/optimizer.cpp.obj
+[49/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_matrix.c.obj
+[50/147] Building C object CMakeFiles/geogram_subset.dir/a0bbbfb46ef65a80519449b9c780ae02/third_party/OpenNL/nl_preconditioners.c.obj
+[51/147] Building CXX object CMakeFiles/godot_lite.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/guest/godot_lite/core/os/memory.cpp.obj
+[52/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_superlu.c.obj
+[53/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/delaunay/CDT_2d.cpp.obj
+[54/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/guest/godot_lite/core/error/error_macros.cpp.obj
+[55/147] Building C object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/third_party/OpenNL/nl_os.c.obj
+[56/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/points/principal_axes.cpp.obj
+[57/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/points/colocate.cpp.obj
+[58/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/delaunay/periodic_delaunay_3d.cpp.obj
+[59/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/points/kd_tree.cpp.obj
+[60/147] Building CXX object CMakeFiles/godot_lite.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/guest/godot_lite/core/object/object.cpp.obj
+[61/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/math_funcs.cpp.obj
+[62/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/points/nn_search.cpp.obj
+[63/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/geometry_3d.cpp.obj
+[64/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/guest/godot_lite/core/variant/callable.cpp.obj
+[65/147] Building CXX object CMakeFiles/godot_lite.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/guest/godot_lite/core/variant/array.cpp.obj
+[66/147] Building CXX object CMakeFiles/godot_lite.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/guest/godot_lite/core/string/ustring.cpp.obj
+[67/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/godot-core-subset/core/math/aabb.cpp.obj
+[68/147] Building CXX object CMakeFiles/geogram_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/geogram-subset/geogram/mesh/mesh.cpp.obj
+[69/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/guest/godot_lite/core/variant/dictionary.cpp.obj
+[70/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/numerics/predicates.cpp.obj
+[71/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/godot-core-subset/core/math/basis.cpp.obj
+[72/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/godot-core-subset/core/math/plane.cpp.obj
+[73/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/guest/godot_lite/scene/resources/mesh.cpp.obj
+[74/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/quaternion.cpp.obj
+[75/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/templates/hashfuncs.cpp.obj
+[76/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/godot-core-subset/core/math/vector2.cpp.obj
+[77/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/vector2i.cpp.obj
+[78/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/vector3i.cpp.obj
+[79/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/godot-core-subset/core/math/vector3.cpp.obj
+[80/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/dynamic_bvh.cpp.obj
+[81/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/EdgeInfo.cpp.obj
+[82/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/core/math/transform_3d.cpp.obj
+[83/147] Building CXX object CMakeFiles/godot_lite.dir/008ba9e38d0c985edceb14c4cb46a0c0/guest/godot_lite/core/variant/variant.cpp.obj
+[84/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/TriangleInfo.cpp.obj
+[85/147] Building CXX object CMakeFiles/pmp_subset.dir/856a9199c0f71e71392c33890afef25f/pmp/algorithms/distance_point_triangle.cpp.obj
+[86/147] Building CXX object CMakeFiles/pmp_subset.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/pmp-subset/pmp/algorithms/features.cpp.obj
+[87/147] Building CXX object CMakeFiles/pmp_subset.dir/856a9199c0f71e71392c33890afef25f/pmp/algorithms/differential_geometry.cpp.obj
+[88/147] Building CXX object CMakeFiles/cassie_kernels.dir/1eb475333ceb2918a7d8ab8bb9dd1ac0/curve_casteljau_dispatch.cpp.obj
+[89/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/DMWT_dot.cpp.obj
+[90/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/Vector3.cpp.obj
+[91/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/Point3.cpp.obj
+[92/147] Building CXX object CMakeFiles/pmp_subset.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/pmp-subset/pmp/algorithms/normals.cpp.obj
+[93/147] Building CXX object CMakeFiles/pmp_subset.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/pmp-subset/pmp/algorithms/utilities.cpp.obj
+[94/147] Building CXX object CMakeFiles/godot_lite.dir/1e92eea0f30498a4b8e6deb12e21efab/godot-core-subset/scene/resources/curve.cpp.obj
+[95/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/DMWT.cpp.obj
+[96/147] Building CXX object CMakeFiles/pmp_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/pmp-subset/pmp/algorithms/triangulation.cpp.obj
+[97/147] Building CXX object CMakeFiles/cassie_kernels.dir/1eb475333ceb2918a7d8ab8bb9dd1ac0/curve_generate_bezier_dispatch.cpp.obj
+[98/147] Building CXX object CMakeFiles/cassie_kernels.dir/c3037790aff99a68cddc2f0ca2bdffbc/slang_dispatch/curve_newton_dispatch.cpp.obj
+[99/147] Building CXX object CMakeFiles/cassie_kernels.dir/8e39109fe951803f1bf369d4e8fd71a3/solver/slang_dispatch/spmv_dispatch.cpp.obj
+[100/147] Building CXX object CMakeFiles/cassie_kernels.dir/c3037790aff99a68cddc2f0ca2bdffbc/slang_dispatch/curve_rdp_dispatch.cpp.obj
+[101/147] Linking CXX static library libgodot_lite.a
+[102/147] Building CXX object CMakeFiles/pmp_subset.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/pmp-subset/pmp/algorithms/remeshing.cpp.obj
+[103/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/MingCurve.cpp.obj
+[104/147] Linking CXX static library libcassie_kernels.a
+[105/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/cassie_beautifier_params.cpp.obj
+[106/147] Building CXX object CMakeFiles/pmp_subset.dir/1e92eea0f30498a4b8e6deb12e21efab/pmp-subset/pmp/algorithms/decimation.cpp.obj
+[107/147] Building CXX object CMakeFiles/mwt_subset.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/mwt/DelaunayFaces.cpp.obj
+[108/147] Building CXX object CMakeFiles/mwt_subset.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/vendor/cassie/src/delaunay_geogram.cpp.obj
+[109/147] Building CXX object CMakeFiles/cassie_core.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/vendor/cassie/src/cassie_beautifier.cpp.obj
+[110/147] Building CXX object CMakeFiles/pmp_subset.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/vendor/pmp-subset/pmp/surface_mesh.cpp.obj
+[111/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/cassie_stroke_packet.cpp.obj
+[112/147] Building CXX object CMakeFiles/cassie_core.dir/e5f22bd03d33475510d3f67f0cf3b63f/cassie_intersection_constraint.cpp.obj
+[113/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/constraints/cassie_constraint.cpp.obj
+[114/147] Linking CXX static library libpmp_subset.a
+[115/147] Building CXX object CMakeFiles/cassie_core.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/vendor/cassie/src/cassie_sketcher.cpp.obj
+[116/147] Building CXX object CMakeFiles/cassie_core.dir/e5f22bd03d33475510d3f67f0cf3b63f/cassie_mirror_plane_constraint.cpp.obj
+[117/147] Building CXX object CMakeFiles/cassie_core.dir/9f88a28fd471155f14cd13937ac1dbbc/src/constraints/cassie_surface_constraint.cpp.obj
+[118/147] Building CXX object CMakeFiles/cassie_core.dir/8e39109fe951803f1bf369d4e8fd71a3/constraints/cassie_intersection_finder.cpp.obj
+[119/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/solver/cassie_eigen.cpp.obj
+[120/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/sketch/cassie_curvenet_knot.cpp.obj
+[121/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/curves/rdp_simplify.cpp.obj
+[122/147] Building CXX object CMakeFiles/cassie_core.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/vendor/cassie/src/cassie_remesh.cpp.obj
+[123/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/polygon_triangulation.cpp.obj
+[124/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/sketch/cassie_final_stroke.cpp.obj
+[125/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/curves/cassie_curve_fit.cpp.obj
+[126/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/sketch/cassie_polar.cpp.obj
+[127/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/cassie_triangulator.cpp.obj
+[128/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/sketch/cassie_curvenet.cpp.obj
+[129/147] Building CXX object CMakeFiles/cassie_core.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/vendor/cassie/src/refine.cpp.obj
+[130/147] Building CXX object CMakeFiles/cassie_core.dir/9f88a28fd471155f14cd13937ac1dbbc/src/sketch/cassie_curvenet_extractor.cpp.obj
+[131/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/sketch/cassie_input_stroke.cpp.obj
+[132/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/sketch/cassie_surface_patch.cpp.obj
+[133/147] Building CXX object CMakeFiles/cassie_core.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/vendor/cassie/src/solver/cassie_pcg.cpp.obj
+[134/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/solver/fidelity_energy.cpp.obj
+[135/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/sketch/cassie_surface_manager.cpp.obj
+[136/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/solver/position_constraint.cpp.obj
+[137/147] Building CXX object CMakeFiles/cassie_core.dir/9f88a28fd471155f14cd13937ac1dbbc/src/solver/self_intersection_constraint.cpp.obj
+[138/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/solver/tangent_constraint.cpp.obj
+[139/147] Building CXX object CMakeFiles/cassie_core.dir/008ba9e38d0c985edceb14c4cb46a0c0/vendor/cassie/src/solver/g1_constraint.cpp.obj
+[140/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/solver/on_surface_energy.cpp.obj
+[141/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/solver/planarity_constraint.cpp.obj
+[142/147] Building CXX object CMakeFiles/cassie_core.dir/9f88a28fd471155f14cd13937ac1dbbc/src/solver/cassie_constraint_solver.cpp.obj
+[143/147] Building CXX object CMakeFiles/cassie_core.dir/1e92eea0f30498a4b8e6deb12e21efab/cassie/src/sketch/cassie_sketch_graph.cpp.obj
+[144/147] Building CXX object CMakeFiles/geogram_subset.dir/4aa44cf6449ebdab84f7f1666bdb8007/geogram/mesh/mesh_reorder.cpp.obj
+[145/147] Linking CXX static library libgeogram_subset.a
+[146/147] Linking CXX static library libmwt_subset.a
+[147/147] Linking CXX static library libcassie_core.a
+curvenet: 141 library TUs compiled natively (OFF = CURVENET_KERNELS_PENDING)
+cassie_core: 0 symbols unresolved by the curvenet libraries:
+[1/3] Building CXX object CMakeFiles/curvenet_smoke.dir/smoke_main.cpp.obj
+[2/3] Building CXX object CMakeFiles/curvenet_smoke.dir/smoke_geogram.cpp.obj
+[3/3] Linking CXX executable curvenet_smoke.exe
+geogram BDEL2d: square 2 cells, colinear 0 cells
+cassie delaunay_triangulate_2d_raw: square 2 faces, colinear 0 faces
+PASS BDEL2d triangulates a square into 2 cells
+PASS control: BDEL2d leaves 4 colinear points with 0 cells
+PASS delaunay_triangulate_2d_raw: square -> 2 faces
+PASS control: delaunay_triangulate_2d_raw: colinear -> 0 faces
+triangle: 3 edges added, 3 nodes, 3 edges, 1 cycles, first cycle 3 edges
+PASS triangle: 3 nodes, 3 edges
+PASS triangle: >= 1 cycle, first walks 3 edges
+open path: 3 nodes, 2 edges, 0 cycles
+PASS control: an open path of 2 strokes has 0 cycles
+curvenet smoke: OK (0 failed)
+[1/2] Building CXX object CMakeFiles/curvenet_kernels_smoke.dir/smoke_kernels.cpp.obj
+[2/2] Linking CXX executable curvenet_kernels_smoke.exe
+casteljau u=0.5: split (2, 1.5, 0)
+PASS curve_casteljau: split at u=0.5 is (2, 1.5, 0), ld == ra
+PASS curve_casteljau: la == P0, rd == P3
+PASS control: curve_casteljau at u=0.25 cuts at B(0.25), not (2, 1.5, 0)
+rdp: colinear keeps 2, bumped keeps 3 (keep[2] = 1)
+PASS curve_rdp: 5 colinear points keep 2
+PASS control: curve_rdp keeps the lifted middle point (3)
+newton: exact u moved by 7.45058e-09; offset u error 0.05 -> 0.00464868
+PASS curve_newton: exact parameters are a fixed point
+PASS control: curve_newton pulls u+0.05 back by >10x
+generate_bezier: |P1 - fit| 2.6656e-07, |P2 - fit| 5.3312e-07
+PASS curve_generate_bezier: recovers P1, P2 from 9 exact samples
+PASS control: curve_generate_bezier on a straight chord does not give P1
+spmv: (5, 6, 13)
+PASS spmv: A x = (5, 6, 13)
+PASS control: spmv without A[2][0] gives y[2] = 12
+curvenet kernel smoke: OK (0 failed)
+[1/5] Building CXX object CMakeFiles/cassie_checks.dir/checks_main.cpp.obj
+[2/5] Building CXX object CMakeFiles/curvenet_core.dir/acd97be49daf8d26982f4d273079aead/scratchpad/ido-4/guest/curvenet/checks.cpp.obj
+[3/5] Building CXX object CMakeFiles/curvenet_core.dir/2fd8d7362f1099e3a1bf8805d10765c2/ido-4/guest/curvenet/curvenet_api.cpp.obj
+[4/5] Linking CXX static library libcurvenet_core.a
+[5/5] Linking CXX executable cassie_checks.exe
+# cassie_checks (native, clang version 23.1.1 (https://github.com/llvm/llvm-project.git 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
+cassie_checks: 444.2 ms
+PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
+PASS patch_pipeline ints=3596,0 fsig=34695a7b254c4b6d/5640 :: cycle -> 3596 triangles; one-edge graph -> 0 (control)
+PASS crossing_split ints=9,9,1,9474,1,1,0,3 fsig=6c7da88789b6406c/14610 :: 9 edges, 9 nodes, 1 cycle(s), 9474 triangles; far edge 0 kept yes, crossed edge 1 replaced yes; add_stroke -> 0 cycles over 3 edges (control)
+PASS constraint_solver ints=3,1,1 fsig=cab1750c8fa84e50/9 :: mirror pins pulled anchors 0.05000 -> 0.00000 (tol 0.00500); raw input fails the tolerance: yes (control caught)
+PASS pen_sphere ints=1,65,65,1,3954,1,3944,2,2,0,0 fsig=63a4eb50bc1212a1/6229 :: closed stroke -> 1 patch, 65/65 samples snapped; mesh 3954 tris 1 loop, remeshed 3944 tris 1 loop; curvenet 2 curves 2 knots; 270-degree arc -> 0 patches, split_closed=0 -> 0 (controls) [ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 | ok patches=1 vertices=2040 triangles=3944 loops=1 components=1 euler=1 | ok sketch curves=2 knots=2 intersections=0 needs_setup=2]
+PASS extractor_cube ints=12,8,8,0 fsig=2a63f21c7c5ac8ca/386 :: cube -> 12 curves, 8 knots, 8 of degree >= 3; icosphere(3) -> 0 curves (control) [ok extract curves=12 knots=8 intersections=8 needs_setup=0]
+PASS delaunay_small_scale ints=1,12,12,0 fsig=e40b63138f3b8d90/36 :: 1 mm polygon, n=11 h=8 -> 12 triangles (2n-2-h = 12); collinear -> refused (control)
+PASS mesh_weld ints=4,5,2,1,1,4,1,2,2 fsig=befa41736e14ece3/12 :: welded: V=4 E=5 F=2, 1 component, 1 loop of 4, Euler 1; weld_eps=0 -> 2 components, 2 loops (control)
+checks: 9/9

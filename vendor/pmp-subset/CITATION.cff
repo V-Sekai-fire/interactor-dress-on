@@ -18,6 +18,12 @@ abstract: >-
   Eigen members; remeshing.cpp drops the curvature.h include and the
   adaptive-sizing block of preprocessing() (adaptive_remeshing aborts with
   a message; uniform_remeshing, the path Cassie uses, is unchanged).
+  And, unconditionally: tangential_smoothing falls back to
+  weighted_centroid when minimize_squared_areas' 3x3 system is singular,
+  as upstream's catch of the SolverException did; the fork's
+  -fno-exceptions patch had made that an abort, which every planar patch
+  hits (a flat one-ring's squared-area matrix has rank 2; Gate 4: an
+  8-point planar circle aborted CassieTriangulator in refine_patch).
 type: software
 authors:
   - name: the Polygon Mesh Processing Library developers

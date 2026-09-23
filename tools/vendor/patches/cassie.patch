@@ -1,5 +1,5 @@
 diff --git a/vendor/cassie/src/cassie_sketcher.cpp b/vendor/cassie/src/cassie_sketcher.cpp
-index f1207ba..fcf8475 100644
+index f1207ba0d..fcf84751a 100644
 --- a/vendor/cassie/src/cassie_sketcher.cpp
 +++ b/vendor/cassie/src/cassie_sketcher.cpp
 @@ -210,9 +210,28 @@ Dictionary CassieSketcher::_run_chain_locally(
@@ -55,7 +55,7 @@ index f1207ba..fcf8475 100644
  	ADD_SIGNAL(MethodInfo("stroke_committed",
  			PropertyInfo(Variant::OBJECT, "final_stroke",
 diff --git a/vendor/cassie/src/cassie_sketcher.h b/vendor/cassie/src/cassie_sketcher.h
-index 98a257a..fa29b8e 100644
+index 98a257ad6..fa29b8e0b 100644
 --- a/vendor/cassie/src/cassie_sketcher.h
 +++ b/vendor/cassie/src/cassie_sketcher.h
 @@ -90,6 +90,10 @@ class CassieSketcher : public Node3D {
@@ -80,7 +80,7 @@ index 98a257a..fa29b8e 100644
  	Ref<CassieSurfaceManager> get_surface_manager() const { return surface_manager; }
  	Ref<CassieSketchContext> get_sketch_context() const { return sketch_context; }
 diff --git a/vendor/cassie/src/delaunay_geogram.cpp b/vendor/cassie/src/delaunay_geogram.cpp
-index 3586e95..de75c03 100644
+index 3586e95c3..de75c035e 100644
 --- a/vendor/cassie/src/delaunay_geogram.cpp
 +++ b/vendor/cassie/src/delaunay_geogram.cpp
 @@ -30,61 +30,38 @@
@@ -242,7 +242,7 @@ index 3586e95..de75c03 100644
  }
  
 diff --git a/vendor/cassie/src/delaunay_geogram.h b/vendor/cassie/src/delaunay_geogram.h
-index 170db44..560938a 100644
+index 170db449d..560938a18 100644
 --- a/vendor/cassie/src/delaunay_geogram.h
 +++ b/vendor/cassie/src/delaunay_geogram.h
 @@ -30,71 +30,23 @@
@@ -328,8 +328,47 @@ index 170db44..560938a 100644
  bool delaunay_triangulate_2d_raw(const double *p_xy_coords, int n_points,
  		int **out_face_indices, int *out_face_count);
  
+diff --git a/vendor/cassie/src/sketch/cassie_sketch_graph.cpp b/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
+index e00beeb83..af6044db4 100644
+--- a/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
++++ b/vendor/cassie/src/sketch/cassie_sketch_graph.cpp
+@@ -1004,9 +1004,13 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
+ 		real_t p_target_edge_length) const {
+ 	PackedVector3Array out;
+ 	const int N = p_cycle_edge_ids.size();
+-	if (N < 3 || p_target_edge_length <= 0) {
++	// interactor-dress-on: two-edge cycles too (a closed stroke split in
++	// two by CassieSketcher::split_closed_strokes), which find_cycles
++	// reports and this used to refuse (N < 3), so they never became patches.
++	if (N < 2 || p_target_edge_length <= 0) {
+ 		return out;
+ 	}
++	int prev_exit = -1;
+ 	for (int i = 0; i < N; ++i) {
+ 		const int eid = p_cycle_edge_ids[i];
+ 		Ref<CassieSketchGraphEdge> edge = get_edge(eid);
+@@ -1025,13 +1029,18 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
+ 		const int na = next_edge->get_node_a_id();
+ 		const int nb = next_edge->get_node_b_id();
+ 		int exit_nid = -1;
+-		if (a == na || a == nb) {
++		if ((a == na || a == nb) && (b == na || b == nb) && a != b) {
++			// Both ends shared with the next edge (a two-edge cycle): enter
++			// where the previous edge left off, else at node a.
++			exit_nid = (prev_exit == a) ? b : (prev_exit == b ? a : b);
++		} else if (a == na || a == nb) {
+ 			exit_nid = a;
+ 		} else if (b == na || b == nb) {
+ 			exit_nid = b;
+ 		} else {
+ 			continue;
+ 		}
++		prev_exit = exit_nid;
+ 		const int entry_nid = edge->get_opposite(exit_nid);
+ 		const bool reversed = (entry_nid == b);
+ 
 diff --git a/vendor/cassie/src/sketch/cassie_surface_patch.cpp b/vendor/cassie/src/sketch/cassie_surface_patch.cpp
-index 7443669..5d8b802 100644
+index 74436698b..5d8b80257 100644
 --- a/vendor/cassie/src/sketch/cassie_surface_patch.cpp
 +++ b/vendor/cassie/src/sketch/cassie_surface_patch.cpp
 @@ -374,7 +374,7 @@ Dictionary CassieSurfacePatch::project(const Vector3 &p_pos) const {
@@ -342,7 +381,7 @@ index 7443669..5d8b802 100644
  
  Vector3i CassieSurfacePatch::get_triangle_indices(int p_idx) const {
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
-index 3746c8b..cfec0dc 100644
+index 3746c8b7d..cfec0dc5e 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_casteljau_dispatch.cpp
 @@ -30,8 +30,8 @@
@@ -391,7 +430,7 @@ index 3746c8b..cfec0dc 100644
  	auto store = [](float dst[3], const Vector<float, 3> &src) {
  		dst[0] = src.x;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
-index 481c9f5..c9ac473 100644
+index 481c9f58f..c9ac47347 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_generate_bezier_dispatch.cpp
 @@ -34,7 +34,23 @@
@@ -429,7 +468,7 @@ index 481c9f5..c9ac473 100644
  	for (int k = 0; k < 4; ++k) {
  		r_out_ctrl_xyz[k * 3 + 0] = out_scratch[k].x;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
-index 170dc39..ae9536b 100644
+index 170dc398e..ae9536bd2 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_newton_dispatch.cpp
 @@ -34,7 +34,23 @@
@@ -467,7 +506,7 @@ index 170dc39..ae9536b 100644
  	delete[] in_packed;
  }
 diff --git a/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
-index ddaae22..46c02ea 100644
+index ddaae225b..46c02eac5 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/curve_rdp_dispatch.cpp
 @@ -34,7 +34,23 @@
@@ -505,7 +544,7 @@ index ddaae22..46c02ea 100644
  	delete[] in_packed;
  	return out_count_scratch;
 diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
-index 0750044..52a2f06 100644
+index 0750044de..52a2f06c4 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
 +++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.cpp
 @@ -30,17 +30,15 @@
@@ -567,7 +606,7 @@ index 0750044..52a2f06 100644
  	}
  }
 diff --git a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
-index 93d4e00..59a995e 100644
+index 93d4e00c5..59a995eb9 100644
 --- a/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
 +++ b/vendor/cassie/src/solver/slang_dispatch/spmv_dispatch.h
 @@ -32,7 +32,7 @@

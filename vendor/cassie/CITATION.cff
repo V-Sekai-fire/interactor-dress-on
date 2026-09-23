@@ -42,6 +42,12 @@ abstract: >-
   stroke enters the sketch graph as two half polylines through
   add_stroke_intersecting, so it bounds a two-edge cycle instead of a
   self-loop edge that yields no patch.
+  (5) CassieSketchGraph::sample_cycle_boundary samples two-edge cycles
+  (it refused N < 3) and, where both of an edge's ends are shared with the
+  next edge, walks on from where the previous edge left off. Without it (4)
+  never produced a patch: find_cycles reported the two-edge cycle and the
+  surface manager got an empty boundary (Gate 4 pen_sphere: 1 cycle, 0
+  patches).
 type: software
 authors:
   - name: V-Sekai-fire

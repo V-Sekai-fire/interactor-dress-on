@@ -37,3 +37,10 @@ if(NOT CURVENET_KERNELS_PENDING)
 	target_compile_options(curvenet_kernels_smoke PRIVATE ${CURVENET_STRICT_FP})
 	target_link_libraries(curvenet_kernels_smoke PRIVATE cassie_kernels)
 endif()
+
+# Gate 4's flat control: guest/curvenet/checks.cpp and curvenet_api.cpp (the
+# curvenet_core library curvenet.elf links) as a host executable.
+if(NOT CURVENET_KERNELS_PENDING)
+	add_executable(cassie_checks ${CMAKE_CURRENT_LIST_DIR}/checks_main.cpp)
+	target_link_libraries(cassie_checks PRIVATE curvenet_core)
+endif()

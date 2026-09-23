@@ -68,11 +68,14 @@ inline void reset_perturb_rng(unsigned seed = 0u)
 
 inline void Point3::pertube(double ptb)
 {
-	std::uniform_int_distribution<int> d(0, 9999);
+	// interactor-dress-on: 0..9999 from mt19937's raw output (fixed by the
+	// standard) instead of std::uniform_int_distribution, whose algorithm
+	// libc++ and libstdc++ implement differently, so the native flat
+	// control and the guest perturbed degenerate input differently.
 	auto& rng = perturb_rng();
-	x += ptb * d(rng);
-	y += ptb * d(rng);
-	z += ptb * d(rng);
+	x += ptb * double(rng() % 10000u);
+	y += ptb * double(rng() % 10000u);
+	z += ptb * double(rng() % 10000u);
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Point3& p)

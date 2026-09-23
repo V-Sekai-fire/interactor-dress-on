@@ -72,18 +72,21 @@ namespace GEO {
             random_engine = std::mt19937_64();
         }
 
+        // interactor-dress-on: the engine's raw output (fixed by the
+        // standard) instead of std::uniform_*_distribution, whose algorithms
+        // are the standard library's own: libc++ (the native flat control)
+        // and libstdc++ (the guest) drew different numbers from the same
+        // seed.
         int32 random_int32() {
-            return std::uniform_int_distribution<int32>(
-		0, std::numeric_limits<int32>::max()
-	    )(random_engine);
+            return int32(random_engine() >> 33);
         }
 
         float32 random_float32() {
-            return std::uniform_real_distribution<float32>(0, 1)(random_engine);
+            return float32(random_engine() >> 40) * (1.0f / 16777216.0f);
         }
 
         float64 random_float64() {
-            return std::uniform_real_distribution<float64>(0, 1)(random_engine);
+            return float64(random_engine() >> 11) * (1.0 / 9007199254740992.0);
         }
     }
 }

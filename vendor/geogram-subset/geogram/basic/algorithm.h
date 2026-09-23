@@ -208,9 +208,21 @@ namespace GEO {
     inline void random_shuffle(
         const ITERATOR& begin, const ITERATOR& end
     ) {
-	std::random_device rng;
-	std::mt19937 urng(rng());
-	std::shuffle(begin, end, urng);
+	// interactor-dress-on: a fixed seed instead of std::random_device,
+	// and Fisher-Yates on the engine's raw output instead of std::shuffle.
+	// BRIO insertion order (mesh_reorder.cpp) goes through here, so a
+	// degenerate (cospherical) point set -- a closed stroke drawn on a
+	// sphere -- came out of Delaunay with a different triangulation on
+	// every call, in every process and on every peer. std::shuffle's
+	// algorithm is the standard library's own (libc++ and libstdc++ differ),
+	// mt19937's output sequence is fixed by the standard. The shuffle only
+	// has to break spatial coherence, not be unpredictable.
+	std::mt19937 urng(0x9e3779b9u);
+	const auto n = end - begin;
+	for(auto i = n - 1; i > 0; --i) {
+	    const auto j = decltype(i)(urng() % (unsigned long long)(i + 1));
+	    std::iter_swap(begin + i, begin + j);
+	}
     }
 
 }

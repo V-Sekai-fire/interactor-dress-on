@@ -16,7 +16,19 @@ abstract: >-
   commit. Local adaptation (tools/vendor/patches/geogram.patch):
   delaunay/delaunay.cpp registers the "BDEL2d" and "BPOW2d" creators again
   (the fork dropped them with delaunay_2d.cpp), so Cassie's
-  delaunay_triangulate_2d_raw can create a Delaunay2d.
+  delaunay_triangulate_2d_raw can create a Delaunay2d. Determinism (Gate 4
+  compares the guest with a native build bit for bit): basic/algorithm.h
+  random_shuffle (the BRIO insertion order) seeds a fixed mt19937 instead
+  of std::random_device and shuffles by Fisher-Yates on its raw output
+  instead of std::shuffle, and basic/numeric.cpp random_int32/float32/
+  float64 map mt19937_64's raw output instead of std::uniform_*_distribution
+  -- a cospherical boundary (a closed stroke on a sphere) triangulated
+  differently on every call, and libc++ and libstdc++ draw different
+  numbers from the same engine. Allocation: basic/memory.h
+  aligned_malloc/aligned_free carve aligned blocks out of plain malloc
+  (base pointer stored below the block) instead of posix_memalign, whose
+  godot-sandbox fallback returns an already-freed block when 16 tries at
+  64-byte alignment miss (Gate 4: "Possible double-free" in ~Delaunay3d).
 type: software
 authors:
   - family-names: Lévy

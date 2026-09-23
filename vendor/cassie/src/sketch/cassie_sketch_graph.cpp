@@ -1004,9 +1004,13 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
 		real_t p_target_edge_length) const {
 	PackedVector3Array out;
 	const int N = p_cycle_edge_ids.size();
-	if (N < 3 || p_target_edge_length <= 0) {
+	// interactor-dress-on: two-edge cycles too (a closed stroke split in
+	// two by CassieSketcher::split_closed_strokes), which find_cycles
+	// reports and this used to refuse (N < 3), so they never became patches.
+	if (N < 2 || p_target_edge_length <= 0) {
 		return out;
 	}
+	int prev_exit = -1;
 	for (int i = 0; i < N; ++i) {
 		const int eid = p_cycle_edge_ids[i];
 		Ref<CassieSketchGraphEdge> edge = get_edge(eid);
@@ -1025,13 +1029,18 @@ PackedVector3Array CassieSketchGraph::sample_cycle_boundary(
 		const int na = next_edge->get_node_a_id();
 		const int nb = next_edge->get_node_b_id();
 		int exit_nid = -1;
-		if (a == na || a == nb) {
+		if ((a == na || a == nb) && (b == na || b == nb) && a != b) {
+			// Both ends shared with the next edge (a two-edge cycle): enter
+			// where the previous edge left off, else at node a.
+			exit_nid = (prev_exit == a) ? b : (prev_exit == b ? a : b);
+		} else if (a == na || a == nb) {
 			exit_nid = a;
 		} else if (b == na || b == nb) {
 			exit_nid = b;
 		} else {
 			continue;
 		}
+		prev_exit = exit_nid;
 		const int entry_nid = edge->get_opposite(exit_nid);
 		const bool reversed = (entry_nid == b);
 

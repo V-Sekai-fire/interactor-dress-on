@@ -13,8 +13,8 @@ generated from Lean (`lean/` → Slang → `cpp` | `spirv`).
 **One scoped exception: Stage 7 calls out.** Image → mesh (Pixal3D) and 3D
 editing (VoxHammer) run as the org's HTTP model services, launched from
 **pixi** environments, and hand their result back as **OpenUSD** layers with
-real geometry. The loop reads USD in the guest (Gate 0G is testing OpenUSD as
-a sandbox ELF, the org's `flow-*` importer). See [AGENTS.md](AGENTS.md).
+real geometry. The loop reads USD in the guest: Gate 0G shows OpenUSD runs as
+a sandbox ELF, so the org's `flow-*` importer can become one. See [AGENTS.md](AGENTS.md).
 
 ## Where it stands
 
@@ -39,7 +39,7 @@ evidence (logs, a README that states the result, a flat control).
 | [0E](gates/0e-mcp/) | Drive the guest over transport-godot-mcp | **PASS** — `call_method(/root/Main, …)` |
 | [0F](gates/0f-runtime/) | What does the sandbox runtime allow? | **PASS 33 / FAIL 5 (expected)** — no guest filesystem (host uploads instead); heap = 0.8 × `memory_max` < 4 GiB; worker-thread vmcalls; a fiber across vmcalls; 4 GiB RD buffers; shared descriptor sets need `slangc -O0 -preserve-params`; a buffer bound read-only and read-write in one span loses writes |
 | [lean](gates/lean/) | Is `lean/` (the vendored emitter tree) the one kernel source? | **PASS** — AVBD emission byte-identical; LeanSlang = `V-Sekai-fire/contract-lean-slang` emit-fp (half, double, exact literals) |
-| 0G | Can OpenUSD (the org's `flow-*` USD importer) run as a sandbox ELF? | **running** (branch `gate-0g`) |
+| [0G](gates/0g-openusd/) | Can OpenUSD (the org's `flow-*` USD importer) run as a sandbox ELF? | **PASS** — static OpenUSD 26.05 + oneTBB at rv64gc (a 4-file riscv64/plugin patch), a 31.8 MB probe ELF; plugins registered from memory; USDA and USDC load from bytes, 9/9 equal to host usd-core, corrupt input fails cleanly; hand the guest USDC (6.7 ms vs 836 ms) |
 
 ## Stages
 

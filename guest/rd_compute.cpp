@@ -168,7 +168,9 @@ bool Device::fail(const char *why) {
 	// name some other Variant in a later call. Moving it to permanent storage
 	// gives it an index (negative) valid until free_rid()/forget().
 	Variant p = v;
-	p.make_permanent();
+	if (permanent_rids_) {
+		p.make_permanent();
+	}
 	::RID r = as_rid(p);
 	if (r.index == 0) {
 		fail("null RID");
@@ -263,6 +265,11 @@ static PackedByteArray bytes_or_zeros(size_t bytes, const void *data) {
 ::RID Device::storage_buffer(size_t bytes, const void *data) {
 	step_ = "storage_buffer_create";
 	return rid_or_fail(rd_.call(nm(N_STORAGE_BUFFER_CREATE), int64_t(bytes), bytes_or_zeros(bytes, data)));
+}
+
+::RID Device::storage_buffer_uninit(size_t bytes) {
+	step_ = "storage_buffer_create";
+	return rid_or_fail(rd_.call(nm(N_STORAGE_BUFFER_CREATE), int64_t(bytes), PackedByteArray(std::vector<uint8_t>{})));
 }
 
 ::RID Device::uniform_buffer(size_t bytes, const void *data) {

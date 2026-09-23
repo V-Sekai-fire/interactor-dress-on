@@ -31,7 +31,10 @@ abstract: >-
   v0.0.6 plus the half and double scalars and the litHalf, litInt and cast
   expressions (additive; the AVBD emission is byte-identical), and not to
   main, whose libslang FFI extern_lib default target breaks lake exe on
-  Windows. No Lean source is modified.
+  Windows. No upstream Lean source is modified. Added here, not upstream:
+  Probes.* (HalfLoad, Set0), Probes.lean, EmitProbes.lean and the Probes
+  lib and emit_probes exe in lakefile.lean, the Gate 0F probe kernels of
+  interactor-dress-on (gates/0f-runtime).
 type: software
 authors:
   - name: K. S. Ernest (Fire) Lee

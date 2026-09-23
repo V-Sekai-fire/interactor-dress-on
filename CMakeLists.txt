@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 project(interactor_dress_on C CXX)
 
+# The fiber's context switch is a .S file; clang assembles it, and needs the
+# same target triple as C (the toolchain file only sets C and CXX).
+if(CMAKE_C_COMPILER_TARGET AND NOT CMAKE_ASM_COMPILER_TARGET)
+	set(CMAKE_ASM_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
+endif()
+enable_language(ASM)
+
 # The guest ELF. It builds against the vendored godot-sandbox guest API and
 # nothing else; the riscv64 sysroot comes in through the toolchain file that
 # build.sh passes. If this file ever needs another dependency to *link*, the
@@ -51,3 +58,41 @@ add_stage_elf(dress_on guest/main.cpp)
 add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp)
 target_include_directories(drape PRIVATE guest guest/drape)
 target_link_libraries(drape PRIVATE avbd)
+
+# Gate 0F: probes.elf, the sandbox runtime probes (gates/0f-runtime). One ELF,
+# its own Sandbox, sharing only rd_compute. Its kernels come from
+# Lean (lean/ `lake exe emit_probes`) through kernels/probes/gen.sh into
+# ${CMAKE_BINARY_DIR}/probes_kernels.inc.
+add_stage_elf(probes
+	guest/probes/main.cpp
+	guest/probes/zfh_probe.cpp
+	guest/fiber/fiber.cpp
+	guest/fiber/fiber_riscv64.S
+)
+target_include_directories(probes PRIVATE guest guest/probes ${CMAKE_BINARY_DIR})
+# The Zfh control arm: this one TU may emit half-precision instructions.
+set_source_files_properties(guest/probes/zfh_probe.cpp PROPERTIES COMPILE_OPTIONS "-march=rv64gc_zfh")
+
+# Probe 15: ggml-cpu in the guest at rv64gc, static, one thread, no OpenMP.
+# Cut 3 vendors V-Sekai-fire/ggml at vendor/ggml; until then point GGML_SRC
+# at a checkout of it (build.sh passes $GGML_SRC through). The probe TUs
+# themselves build at sandbox-api's -march=rv64gcv_zba_zbb_zbs_zbc; ggml's own
+# CMake gives its libraries -march=rv64gc.
+set(GGML_SRC "${CMAKE_SOURCE_DIR}/vendor/ggml" CACHE PATH "V-Sekai-fire/ggml source tree for probes.elf")
+if(EXISTS "${GGML_SRC}/CMakeLists.txt")
+	foreach(opt GGML_NATIVE GGML_BACKEND_DL BUILD_SHARED_LIBS GGML_OPENMP GGML_LLAMAFILE
+			GGML_RVV GGML_RV_ZFH GGML_RV_ZVFH GGML_RV_ZICBOP GGML_RV_ZIHINTPAUSE GGML_RV_ZVFBFWMA
+			GGML_BUILD_TESTS GGML_BUILD_EXAMPLES GGML_CCACHE)
+		set(${opt} OFF CACHE BOOL "" FORCE)
+	endforeach()
+	add_subdirectory(${GGML_SRC} ggml EXCLUDE_FROM_ALL)
+	# clang predefines __riscv_v_intrinsic for every riscv64 target, V or not,
+	# and ggml-cpu keys its RVV paths on that macro alone; at rv64gc they then
+	# fail on vfloat32m8_t. Undefine it so the scalar paths are compiled.
+	target_compile_options(ggml-cpu PRIVATE -U__riscv_v_intrinsic)
+	target_sources(probes PRIVATE guest/probes/ggml_probe.cpp)
+	target_compile_definitions(probes PRIVATE PROBES_WITH_GGML=1)
+	target_link_libraries(probes PRIVATE ggml ggml-cpu ggml-base)
+else()
+	message(STATUS "probes.elf: no ggml at GGML_SRC=${GGML_SRC}; probe 15 reports SKIP")
+endif()

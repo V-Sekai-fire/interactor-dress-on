@@ -22,6 +22,12 @@ require plausible from git
 lean_exe emit_shaders where
   root := `EmitShaders
 
+-- Gate 0F probe kernels (interactor-dress-on gates/0f-runtime).
+lean_lib Probes
+
+lean_exe emit_probes where
+  root := `EmitProbes
+
 -- Iterative-deepening witness search over the plausible ladder. Shares
 -- the `Level` shape (walkSteps / finBound / numInst) that witness-cpp
 -- mirrors on the C++ side, so a property stated here and a property

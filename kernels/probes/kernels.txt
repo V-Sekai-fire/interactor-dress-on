@@ -1,0 +1,11 @@
+# Gate 0F probe kernels, all emitted by lean/ `lake exe emit_probes`:
+#   saxpby       Cloth.SlangCodegen.Saxpby (the AVBD kernel)
+#   half_load    Probes.HalfLoad (restates LeanSlang emit-fp's TestFp.halfLoadShader)
+#   probe_add    Probes.Set0.add     dst = src0 + src1
+#   probe_scale  Probes.Set0.scale   dst = src0 * alpha
+#   probe_acc    Probes.Set0.acc     dst = dst + src0 (in place, one RW binding)
+saxpby
+half_load
+probe_add
+probe_scale
+probe_acc

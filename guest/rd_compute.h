@@ -61,6 +61,9 @@ public:
 	// Use a device the host owns instead. It is not freed by close().
 	void adopt(const Object &rd);
 	bool ok() const { return rd_.is_valid(); }
+	// The device as an Object, to hand to the host (a plain Object's id is
+	// valid across vmcalls; Gate 0F times host buffer_update on it).
+	const Object &object() const { return rd_; }
 	// Free the device if open() created it. The RIDs made on it are the
 	// owners' to free first (free_rid releases their permanent slots too);
 	// permanent_slots() says how many are still held.
@@ -75,6 +78,11 @@ public:
 	// `data` is null. Godot leaves an uninitialised buffer's contents undefined
 	// and a readback of "whatever was there" is not a result.
 	::RID storage_buffer(size_t bytes, const void *data = nullptr);
+	// The one exception: a storage buffer created WITHOUT contents, for sizes
+	// whose zero-filled PackedByteArray cannot exist in the guest heap (a
+	// 4 GiB buffer). Its contents are undefined until buffer_clear() or a
+	// write covers them (Gate 0F probe 12).
+	::RID storage_buffer_uninit(size_t bytes);
 	::RID uniform_buffer(size_t bytes, const void *data = nullptr);
 	// Refused by Godot while a compute list is being recorded; call it before
 	// list_begin(). (That is why params blocks live in per-site buffers.)
@@ -125,6 +133,10 @@ public:
 	// Permanent Variant slots this device's RIDs hold now (made by every
 	// returned RID, released by free_rid/forget). A leak shows up here.
 	int64_t permanent_slots() const { return permanent_live_; }
+	// Gate hook, never for production: false returns RIDs as the host scoped
+	// them, valid for the current vmcall only, which is what Gate 0F probe 11b
+	// shows failing across calls. Default true.
+	void set_permanent_rids(bool on) { permanent_rids_ = on; }
 	int64_t submits() const { return submits_; }
 
 	// The last step attempted, and the error text if one failed.
@@ -145,6 +157,7 @@ private:
 	int64_t submit_frame_ = -1;
 	int64_t same_frame_syncs_ = 0, syncs_ = 0, submits_ = 0;
 	int64_t permanent_live_ = 0;
+	bool permanent_rids_ = true;
 };
 
 } // namespace rdc

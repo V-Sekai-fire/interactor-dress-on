@@ -17,11 +17,13 @@ our own, no host DLL. The GPU is reachable only through Godot's
 1. **Stay inside github.com/V-Sekai-fire.** Every dependency comes from the
    org's repo or fork (`ggml`, `cloth-fit`, `pixal3d-ggml`, `entities-godot`,
    `godot-sandbox`, `transport-xr-grid`, `transport-godot-mcp`,
-   `interactor-mujoco-sandbox-demo`, `skin-tokens-ggml`). If only a `V-Sekai/`
+   `interactor-mujoco-sandbox-demo`, `skin-tokens-ggml`; for `lean/`:
+   `lean-slang`, `plausible`, `plausible-witness-dag`). If only a `V-Sekai/`
    or upstream copy exists, ask before forking it in. Push only to org remotes.
 2. **One source, two targets: Lean → Slang → `cpp` | `spirv`.** Kernels are
-   generated from `cloth-dynamics/lean` by `lake exe emit_shaders`
-   (`kernels/avbd/gen.sh`); `slangc -target cpp` is the in-guest CPU path
+   generated from `lean/` (a squashed git subtree of cloth-dynamics' `lean/`,
+   cited in `lean/CITATION.cff`) by `lake exe emit_shaders`
+   (`kernels/avbd/gen.sh`; `CLOTH_LEAN` overrides the path); `slangc -target cpp` is the in-guest CPU path
    (`AvbdCpu`), `slangc -target spirv` is the GPU path (`AvbdRd` over
    `rd_compute`). Never copy prebuilt kernels in; never hand-write a kernel
    that Lean could emit. Optimizers too: L-BFGS-B is written in Lean→Slang, not
@@ -78,6 +80,14 @@ our own, no host DLL. The GPU is reachable only through Godot's
 - Cross-compile: `build.sh` (riscv64 clang from scoop, lld, the org's
   `riscv64-sysroot` via `RISCV64_SYSROOT`). First Godot run after adding an
   ELF: `godot --path project --headless --import`.
+- `lean/` is a subtree. To take upstream changes, split in a **scratch clone**
+  of cloth-dynamics (`git subtree split --prefix=lean -b lean-split`, ~2 min
+  for 425 commits; the clone keeps the split refs out of the real checkout),
+  then `git subtree pull --prefix=lean <clone> lean-split --squash` here. Keep
+  the V-Sekai-fire URLs in `lean/lakefile.lean` and `lake-manifest.json` when
+  resolving. `lake build` from an empty `lean/.lake` takes ~134 s (three
+  packages fetched and built), ~94 s with a built LeanSlang copied into
+  `lean/.lake/packages` (`gates/lean/`); `lean/.lake/` is ignored.
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 

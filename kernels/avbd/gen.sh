@@ -6,7 +6,7 @@
 #   kernels/avbd/gen.sh --from <dir>    # use .slang already emitted into <dir>
 #
 # One source, two targets, exactly as the org's guest-avbd does it:
-#   Lean (cloth-dynamics/lean, `lake exe emit_shaders`)  ->  slang/<k>.slang   (committed)
+#   Lean (lean/, `lake exe emit_shaders`)                ->  slang/<k>.slang   (committed)
 #     slangc -target cpp    ->  cpp/<k>_emit.cpp                                (committed)
 #     slangc -target spirv  ->  <build>/spv/<k>.spv + .refl.json               (build artefact)
 #       gen_avbd_kernel_table.py  ->  AvbdKernelTable.inc                       (committed)
@@ -18,7 +18,7 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
-LEAN="${CLOTH_LEAN:-/c/cloth-dynamics-standalone/lean}"
+LEAN="${CLOTH_LEAN:-$ROOT/lean}"
 BUILD="${BUILD_DIR:-$ROOT/build}"
 SLANGC="${SLANGC:-slangc}"
 command -v "$SLANGC" >/dev/null 2>&1 || SLANGC="$HOME/scoop/apps/vulkan/current/Bin/slangc"

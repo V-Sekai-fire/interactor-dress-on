@@ -3,6 +3,8 @@ open Lake DSL
 
 package Cloth where
 
+-- Every dependency is pinned in a V-Sekai-fire repo or fork
+-- (interactor-dress-on AGENTS.md rule 1).
 require LeanSlang from git
   "https://github.com/V-Sekai-fire/lean-slang.git" @ "v0.0.5"
 
@@ -13,7 +15,7 @@ require LeanSlang from git
 -- project's lean-toolchain, which was bumped to v4.30.0 precisely so
 -- plausible-witness-dag's ladder could be adopted below.
 require plausible from git
-  "https://github.com/leanprover-community/plausible" @ "v4.30.0"
+  "https://github.com/V-Sekai-fire/plausible" @ "v4.30.0"
 
 @[default_target] lean_lib Cloth where
 
@@ -25,7 +27,7 @@ lean_exe emit_shaders where
 -- mirrors on the C++ side, so a property stated here and a property
 -- stated there escalate the same way.
 require «plausible-witness-dag» from git
-  "https://github.com/fire/plausible-witness-dag" @ "main"
+  "https://github.com/V-Sekai-fire/plausible-witness-dag" @ "160b94c9c6eed3bb9ebffce919fc6f989dcafba8"
 
 lean_exe csr_falsify where
   root := `CsrFalsify

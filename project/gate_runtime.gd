@@ -6,7 +6,8 @@
 # Frame-driven: each probe is a step that _process advances until it says it
 # is done, so the probes that need frames (a vmcall on a Thread, the fiber's
 # one-resume-per-frame job) get real frames. Every probe prints PASS / FAIL /
-# INFO / DEFERRED lines with its control; results stream to
+# INFO / DEFERRED lines with its control (probe 16, set-0 sharing and in-place
+# ops, was added with the corrections); results stream to
 # gates/0f-runtime/results.txt (stdout is buffered when redirected). The run
 # quits on a wall clock in every branch.
 extends SceneTree
@@ -37,7 +38,13 @@ func _say(line: String) -> void:
 
 func _v(num: int, name: String, verdict: String, detail: String) -> void:
 	_counts[verdict] = _counts.get(verdict, 0) + 1
-	_say("P%02d %-14s %-8s %s" % [num, name, verdict, detail])
+	_say("P%02d %-14s %-8s %s" % [num, name, verdict, _clean(detail)])
+
+# The checkout's absolute path is replaced by <project>, so the committed
+# results do not name the machine or the worktree.
+func _clean(t: String) -> String:
+	var root := ProjectSettings.globalize_path("res://").trim_suffix("/")
+	return t.replace(root, "<project>").replace(root.replace("/", "\\"), "<project>")
 
 func _sb(refs := 4096):
 	var sb = ClassDB.instantiate("Sandbox")
@@ -70,7 +77,7 @@ func _initialize() -> void:
 	_steps = [
 		[1, _p01_exceptions], [2, _p02_fenv], [3, _p03_files], [4, _p04_threads],
 		[5, _p05_timeout], [9, _p09_echo], [10, _p10_heap],
-		[11, _p11_fiber], [12, _p12_big_buffers], [13, _p13_refs], [14, _p14_f16],
+		[11, _p11_fiber], [11, _p11b_rid], [12, _p12_big_buffers], [13, _p13_refs], [14, _p14_f16], [16, _p16_set0],
 		[15, _p15_ggml], [7, _p07_thread_vmcall], [8, _p08_two_sandboxes], [6, _p06_memory],
 	]
 
@@ -94,6 +101,7 @@ func _finish() -> void:
 	_say("SUMMARY: PASS=%d FAIL=%d INFO=%d DEFERRED=%d wall_s=%.1f" % [_counts.PASS, _counts.FAIL,
 		_counts.INFO, _counts.DEFERRED, (Time.get_ticks_msec() - _t0) / 1000.0])
 	if _gpu != null:
+		_gpu.vmcall("p_rd_close")
 		_gpu.free()
 		_gpu = null
 	if _out != null:
@@ -186,23 +194,47 @@ func _p05_timeout() -> bool:
 		var d1 := _us() - t1
 		var killed: bool = sb.monitor_execution_timeouts == before + 1
 		killed_all = killed_all and killed
-		rows.append("lim=%d killed=%s host_ms=%.1f ret=%s ~iter=%.2fe9" % [lim, killed, d1 / 1000.0, str(rr), _spin_per_s * d1 / 1e6 / 1e9])
+		rows.append("lim=%d killed=%s host_ms=%.1f ret=%s ~iter_at_first_call_rate=%.2fe9" % [lim, killed, d1 / 1000.0, str(rr), _spin_per_s * d1 / 1e6 / 1e9])
 	_v(5, "timeout", "PASS" if killed_all else "FAIL", "busy loop 1e12 at execution_timeout lim: " + "; ".join(rows))
 	sb.execution_timeout = def_to
 	var after = sb.vmcall("p_spin", 10)
 	_v(5, "timeout", "PASS" if after == _lcg(10) else "FAIL", "sandbox usable after a kill: p_spin(10) -> %s" % str(after))
-	# The default limit against ~2 s of work.
-	var n2 := int(_spin_per_s * 2.0)
+	# The default limit against ~2 s of work. The rate above is the first
+	# call's; later calls run several times faster (the first run's "~2 s"
+	# took 342 ms), so measure a warm rate first.
+	var nw := 50000000
+	var tw := _us()
+	sb.vmcall("p_spin", nw)
+	var warm_per_s := nw / ((_us() - tw) / 1e6)
+	_v(5, "timeout", "INFO", "rate: first call %.1f M iter/s, warm %.1f M iter/s" % [_spin_per_s / 1e6, warm_per_s / 1e6])
+	var n2 := int(warm_per_s * 2.0)
 	var b2: int = sb.monitor_execution_timeouts
 	var t2 := _us()
 	var r2 = sb.vmcall("p_spin", n2)
 	var d2 := _us() - t2
-	_v(5, "timeout", "INFO", "default execution_timeout=%d vs p_spin(%d) (~2 s): killed=%s host_ms=%.0f" % [
+	_v(5, "timeout", "INFO", "default execution_timeout=%d vs p_spin(%d) (2 s at the warm rate): killed=%s host_ms=%.0f" % [
 		def_to, n2, sb.monitor_execution_timeouts > b2, d2 / 1000.0])
 	sb.free()
 	return true
 
 # --- 6. memory_max ladder ---------------------------------------------------------
+#
+# Every arm is a fresh Sandbox with memory_max set BEFORE program=: setting it
+# after program= only reloads the program when the value grows (a lower value
+# is ignored), so a limit below the current one can only be tested fresh.
+
+func _mem_arm(limit: int, mb: int, when := "before") -> String:
+	var sb = ClassDB.instantiate("Sandbox")
+	if when == "before":
+		sb.memory_max = limit
+	sb.program = _elf
+	if when == "after":
+		sb.memory_max = limit
+	var r = sb.vmcall("p_alloc", mb)
+	sb.free()
+	if r == null:
+		return "null/trap"
+	return str(r).split(" ")[0]
 
 func _p06_memory() -> bool:
 	if not _st.has("init"):
@@ -219,62 +251,57 @@ func _p06_memory() -> bool:
 		order.free()
 		_v(6, "memory_max", "INFO", "default memory_max=%d (MiB) before program=, %d after; set 2048 then program= -> reads %d (%s)" % [
 			def_before, def_after, kept, "RESET by loading" if kept != 2048 else "kept"])
-		_st.xs = [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
+		_st.xs = [64, 128, 256, 512, 1024, 2048]
 		_st.k = 0
 		_st.max_ok = 0
-		_st.max_ok_before = 0
 		_st.all_ctrl = true
 		return false
-	if _st.k >= _st.xs.size():
-		# The ceiling: memory_max >= 4096 fails to load ("Native heap exceeds
-		# 32-bit address range"), so probe just under it.
-		var rows := []
-		var top := 0
-		for x in [3072, 3584, 3968]:
-			var sb = ClassDB.instantiate("Sandbox")
-			sb.program = _elf
-			sb.memory_max = 4095
-			var r = sb.vmcall("p_alloc", x)
-			if str(r).begins_with("ok"):
-				top = x
-			rows.append("%d -> %s" % [x, str(r).split(" ")[0] if r != null else "null/trap"])
-			sb.free()
-		var tiny = ClassDB.instantiate("Sandbox")
-		tiny.program = _elf
-		tiny.memory_max = 32
-		var tiny_r = tiny.vmcall("p_alloc", 256)
-		var tiny_r2 = tiny.vmcall("p_alloc", 512)
-		tiny.free()
-		_v(6, "memory_max", "INFO", "at memory_max=4095: %s; at memory_max=32: 256 MiB -> %s, 512 MiB -> %s (a floor above the setting)" % [
-			", ".join(rows), str(tiny_r).split(" ")[0], str(tiny_r2).split(" ")[0]])
-		_v(6, "memory_max", "PASS" if _st.max_ok > 0 and _st.all_ctrl else "FAIL",
-			"max usable allocation %d MiB (2X ladder, set after program=), %d MiB just under the 4 GiB ceiling; set before program= = %d MiB; X/2 arm refused for every X >= 512: %s" % [
-			_st.max_ok, top, _st.max_ok_before, _st.all_ctrl])
-		return true
-	var x: int = _st.xs[_st.k]
-	_st.k += 1
-	var arms := []
-	for arm in [["after", x / 2], ["after", x * 2], ["before", x * 2]]:
-		var sb = ClassDB.instantiate("Sandbox")
-		if arm[0] == "before":
-			sb.memory_max = arm[1]
-		sb.program = _elf
-		if arm[0] == "after":
-			sb.memory_max = arm[1]
+	if _st.k < _st.xs.size():
+		# Allocate-and-touch X MiB under a limit of 2X (must succeed) and X/2
+		# (must be refused), each in a fresh Sandbox.
+		var x: int = _st.xs[_st.k]
+		_st.k += 1
 		var t := _us()
-		var r = sb.vmcall("p_alloc", x)
+		var big := _mem_arm(x * 2, x)
 		var dt := _us() - t
-		var ok := str(r).begins_with("ok")
-		arms.append("%s lim=%d -> %s (%.0f ms)" % [arm[0], arm[1], str(r).split(" ")[0] if r != null else "null/trap", dt / 1000.0])
-		if arm[1] == x / 2 and ok and x >= 512:
-			_st.all_ctrl = false
-		if arm[1] == x * 2 and ok and arm[0] == "after":
+		var small := _mem_arm(x / 2, x)
+		if big == "ok":
 			_st.max_ok = x
-		if arm[1] == x * 2 and ok and arm[0] == "before":
-			_st.max_ok_before = x
-		sb.free()
-	_v(6, "memory_max", "INFO", "X=%d MiB: %s" % [x, "; ".join(arms)])
-	return false
+		if small == "ok":
+			_st.all_ctrl = false
+		_v(6, "memory_max", "INFO", "X=%d MiB, fresh sandboxes, limit set before program=: limit 2X=%d -> %s (%.0f ms); control limit X/2=%d -> %s" % [
+			x, x * 2, big, dt / 1000.0, x / 2, small])
+		return false
+	# The ceiling. The heap is 0.8 x memory_max and must end below 4 GiB, so
+	# the largest limit that loads is just under 5120, and the most that can
+	# be allocated is just under 0.8 x the limit.
+	var rows := []
+	var top := 0
+	var top_lim := 0
+	var rule_ok := true
+	for lim in [4096, 5000, 5100, 5110, 5112, 5114, 5116, 5118, 5119, 5120, 6144]:
+		var heap := int(lim * 0.8)
+		var under := _mem_arm(lim, heap - 1)
+		var over := _mem_arm(lim, heap + 1)
+		rows.append("%d: %d MiB %s, %d MiB %s" % [lim, heap - 1, under, heap + 1, over])
+		if under == "ok":
+			top = max(top, heap - 1)
+			top_lim = lim
+		if under == "ok" and over == "ok":
+			rule_ok = false
+		if lim >= 5120 and under == "ok":
+			rule_ok = false
+	_v(6, "memory_max", "INFO", "ceiling, fresh sandbox per arm, allocating 0.8 x limit -/+ 1 MiB: " + "; ".join(rows))
+	# Setting memory_max after program= : growing reloads, lowering is ignored.
+	var grow := _mem_arm(2048, 1024, "after")
+	var lower_before := _mem_arm(32, 256, "before")
+	var lower_after := _mem_arm(32, 256, "after")
+	_v(6, "memory_max", "INFO", "set after program=: 2048 then alloc 1024 MiB -> %s (growing applies); 32 then alloc 256 MiB -> %s (lowering is IGNORED: %s); 32 set before program= -> %s" % [
+		grow, lower_after, "yes" if lower_after == "ok" else "no", lower_before])
+	_v(6, "memory_max", "PASS" if _st.max_ok == 2048 and _st.all_ctrl and rule_ok and top > 3900 else "FAIL",
+		"2X ladder ok to %d MiB; X/2 control refused at every X: %s; largest allocation %d MiB at memory_max=%d; heap = 0.8 x limit below 4 GiB holds: %s" % [
+		_st.max_ok, _st.all_ctrl, top, top_lim, rule_ok])
+	return true
 
 # --- 7. vmcall on a GDScript Thread -------------------------------------------------
 
@@ -509,63 +536,91 @@ func _p12_big_buffers() -> bool:
 	return true
 
 # --- 13. references_max under 10k dispatches ------------------------------------------------------
+#
+# references_max only grows: a Sandbox reserves that many scoped slots and a
+# lower value set later is not applied. So every arm is a fresh Sandbox, and
+# its setup goes one counter per vmcall (refs_setup_one), which keeps each
+# setup call far below 100 references; only then does the 10k-dispatch
+# recording meet the limit on its own.
 
-func _refs_once(sb, n: int, aliased := false) -> Array:
-	sb.vmcall("refs_setup")
+func _refs_run(sb, n: int, aliased := false) -> Array:
 	var to0: int = sb.monitor_execution_timeouts
 	var ex0: int = sb.monitor_exceptions
 	var t := _us()
 	var r := str(sb.vmcall("refs_run", n, aliased))
 	var dt := _us() - t
 	var ok := r.find("counters=%d,%d,%d,%d " % [n / 4, n / 4, n / 4, n / 4]) >= 0
-	var why := "" if ok else " killed_by=%s" % ("execution_timeout" if sb.monitor_execution_timeouts > to0 else
+	var killed: bool = sb.monitor_execution_timeouts > to0 or sb.monitor_exceptions > ex0
+	var why := "" if not killed else " killed_by=%s" % ("execution_timeout" if sb.monitor_execution_timeouts > to0 else
 		("exception (references?)" if sb.monitor_exceptions > ex0 else "?"))
-	if not ok:
-		sb.vmcall("p_list_end") # the killed call left its compute list open
 	return [ok, "n=%d host_ms=%.0f %s%s" % [n, dt / 1000.0, r, why]]
 
+func _refs_fresh(refs: int, timeout: int):
+	var f = ClassDB.instantiate("Sandbox")
+	f.program = _elf
+	if refs > 0:
+		f.references_max = refs
+	if timeout > 0:
+		f.execution_timeout = timeout
+	var setup := []
+	for k in 4:
+		setup.append(str(f.vmcall("refs_setup_one", k)))
+	return [f, setup]
+
 func _p13_refs() -> bool:
-	var sb = _gpu_sb()
-	var s = sb.vmcall("refs_setup")
-	if str(s) != "ok":
-		_v(13, "references", "FAIL", "refs_setup: %s" % str(s))
-		return true
-	var def_to: int = sb.execution_timeout
 	# At the default execution_timeout: how many host calls fit in one vmcall?
-	sb.references_max = 65536
+	var fr = _refs_fresh(65536, -1)
+	var sb = fr[0]
+	var def_to: int = sb.execution_timeout
 	var ladder := []
 	for n in [1000, 2000, 4000, 10000]:
-		ladder.append(_refs_once(sb, n)[1])
+		sb.vmcall("refs_setup")
+		var res := _refs_run(sb, n)
+		ladder.append(res[1])
+		if not res[0]:
+			# The killed call left its compute list open: every later
+			# buffer_update is refused until it is ended (finding 2).
+			var refused := str(sb.vmcall("refs_setup"))
+			var ended := str(sb.vmcall("p_list_end"))
+			var again := str(sb.vmcall("refs_setup"))
+			_v(13, "references", "PASS" if refused.begins_with("FAIL buffer_update refused") and again == "ok" else "FAIL",
+				"a vmcall killed mid-recording (n=%d at the default budget) leaves its compute list open: next buffer_update -> %s | p_list_end -> %s | then -> %s" % [
+				n, refused, ended, again])
 	_v(13, "references", "INFO", "at default execution_timeout=%d, references_max=65536 (each dispatch = 4 host calls + a barrier per 4): %s" % [def_to, " | ".join(ladder)])
-	# The references_max question proper, with the instruction budget out of the way.
+	# The aliased shape (saxpby, y and dst the same buffer): see probe 16.
 	sb.execution_timeout = 1000000
-	for refs in [4096, 65536]:
-		sb.references_max = refs
-		var res := _refs_once(sb, 10000)
-		_v(13, "references", "PASS" if res[0] else "FAIL",
-			"execution_timeout=1000000 references_max=%d: 10000 dispatches x 3 binds + 2499 barriers, one submit: %s" % [refs, res[1]])
-	sb.references_max = 65536
-	var al := _refs_once(sb, 10000, true)
-	_v(13, "references", "INFO", "same, but +1 done in place (y and dst the same buffer in one set): %s -> %s" % [
+	sb.vmcall("refs_setup")
+	var al := _refs_run(sb, 10000, true)
+	_v(13, "references", "INFO", "same, +1 done in place (saxpby y at b2 read-only and dst at b3 read-write, one buffer): %s -> %s" % [
 		"exact" if al[0] else "COUNTS LOST across barriers", al[1]])
-	sb.references_max = 100
-	var c := _refs_once(sb, 10000)
-	_v(13, "references", "INFO", "references_max=100 (default), same recording: %s -> %s" % [
-		"trips" if not c[0] else "does NOT trip: binds, dispatches and barriers hold no references", c[1]])
-	# Control: the shapes that do consume references -- buffers and uniform
-	# sets created in one call (refs_setup: 12 sets, 28 buffers; refs_usets:
-	# 256 sets) -- on fresh sandboxes. arm = [label, set before program=,
-	# set after program=, set after refs_setup] (-1 = leave alone).
+	sb.free()
+	# The references_max question proper: fresh sandbox per arm, the budget
+	# raised out of the way, setup one counter per call.
+	for refs in [100, 4096, 65536]:
+		var fa = _refs_fresh(refs, 1000000)
+		var f = fa[0]
+		var setup_ok: bool = fa[1] == ["ok", "ok", "ok", "ok"]
+		var res := _refs_run(f, 10000) if setup_ok else [false, "setup: " + str(fa[1])]
+		_v(13, "references", "PASS" if res[0] else "FAIL",
+			"fresh sandbox, references_max=%d (reads %d), execution_timeout=1000000: 10000 dispatches x 3 binds + 2499 barriers, one submit: %s" % [
+			refs, f.references_max, res[1]])
+		f.free()
+	# Control: the shapes that do consume references -- 4 counters' buffers and
+	# uniform sets created in one call (refs_setup: 12 sets, 28 buffers), 256
+	# sets in one call (refs_usets) -- on fresh sandboxes.
+	# arm = [label, set before program=, set after program=, set after the setup]
 	var rows := []
 	var got := {}
 	for arm in [["default", -1, -1, -1], ["100 after", -1, 100, -1], ["4096 after", -1, 4096, -1],
-			["4096 before", 4096, -1, -1], ["4096 then 100 live", -1, 4096, 100]]:
+			["4096 before", 4096, -1, -1], ["65536 then 100", -1, 65536, -1], ["4096 then 100 live", -1, 4096, 100]]:
 		var f = ClassDB.instantiate("Sandbox")
 		if arm[1] > 0:
 			f.references_max = arm[1]
 		f.program = _elf
 		if arm[2] > 0:
 			f.references_max = arm[2]
+		if arm[0] == "65536 then 100":
+			f.references_max = 100
 		f.execution_timeout = 1000000
 		var r1 := str(f.vmcall("refs_setup"))
 		if r1 != "ok":
@@ -577,10 +632,8 @@ func _p13_refs() -> bool:
 		rows.append("%s (reads %d): setup %s, 256 sets %s" % [arm[0], f.references_max, "ok" if r1 == "ok" else "TRIPS",
 			r2 if r2 == "-" else ("ok" if got[arm[0]][1] else "TRIPS")])
 		f.free()
-	var ctrl_ok: bool = not got["default"][0] and not got["100 after"][0] and got["4096 after"][1]
-	_v(13, "references", "PASS" if ctrl_ok else "FAIL", "control, object-creating calls: " + " | ".join(rows))
-	sb.references_max = 4096
-	sb.execution_timeout = def_to
+	var ctrl_ok: bool = not got["default"][0] and not got["100 after"][0] and got["4096 after"][1] and got["65536 then 100"][0]
+	_v(13, "references", "PASS" if ctrl_ok else "FAIL", "control, object-creating calls in one vmcall (a lowered value is not applied): " + " | ".join(rows))
 	return true
 
 # --- 14. f16 storage read on the GPU ---------------------------------------------------------------
@@ -600,6 +653,74 @@ func _p14_f16() -> bool:
 		"Lean half_load (StructuredBuffer<half> -> float*2) on 64 halves vs CPU decode: %s" % r)
 	return true
 
+# --- 11b. a RID held across vmcalls -----------------------------------------------------------------
+
+func _p11b_rid() -> bool:
+	# Its own Sandbox: the non-permanent arm leaves a stray buffer behind.
+	var sb = _sb(4096)
+	var rows := []
+	var ok_perm := false
+	var bad_scoped := false
+	for perm in [true, false]:
+		var e0: int = sb.monitor_exceptions
+		var h := str(sb.vmcall("rid_hold", perm))
+		var u = sb.vmcall("rid_use")
+		var us := "null (the vmcall threw)" if u == null else str(u)
+		rows.append("permanent=%s: hold -> %s | next vmcall -> %s, exceptions +%d" % [perm, h, us, sb.monitor_exceptions - e0])
+		if perm:
+			ok_perm = h.ends_with("same_call_read=exact") and us.ends_with(" exact")
+		else:
+			bad_scoped = h.ends_with("same_call_read=exact") and not us.ends_with(" exact")
+	sb.vmcall("p_rd_close")
+	sb.free()
+	_v(11, "rid_permanence", "PASS" if ok_perm and bad_scoped else "FAIL",
+		"a RID kept in a guest static: exact in a later vmcall only when made permanent (rdc::Device does it); without, it resolves wrongly: %s" % " || ".join(rows))
+	return true
+
+# --- 16. set-0 uniform sets shared across pipelines; in-place ops across barriers --------------------
+
+func _p16_set0() -> bool:
+	var sb = _gpu_sb()
+	var def_to: int = sb.execution_timeout
+	sb.execution_timeout = 1000000
+	var pres := str(sb.vmcall("set0_share", ""))
+	var strip := str(sb.vmcall("set0_share", "_stripped"))
+	var o1pp := str(sb.vmcall("set0_share", "_o1pp"))
+	var ok_p := pres.find("add_own_set=256/256") >= 0 and pres.find("scale_under_add_set=256/256") >= 0 \
+		and pres.find("inplace_b1_b4_one_dispatch=256/256") >= 0
+	_v(16, "set0_shared", "PASS" if ok_p else "FAIL",
+		"Lean probe_add/probe_scale (b0 params, b1-b3 sources, b4 dst), slangc -O0 -preserve-params: a set built for probe_add, bound under probe_scale: %s" % pres)
+	var ok_s := strip.find("scale_under_add_set=256/256") < 0 and strip.find("scale_own_set=256/256") >= 0
+	_v(16, "set0_shared", "PASS" if ok_s else "FAIL",
+		"control, slangc -O0 without -preserve-params (unused sources dropped, layouts differ): %s" % strip)
+	_v(16, "set0_shared", "INFO",
+		"slangc -preserve-params at the default -O1 (the optimiser drops the unused sources anyway): %s -> %s" % [o1pp,
+		"shared set works" if o1pp.find("scale_under_add_set=256/256") >= 0 else "shared set REFUSED, as without the flag"])
+	# In place across barriers: 1000 rounds of +1 over 4096 elements, one
+	# compute list, a barrier after every round, twice per shape.
+	var names := ["aliased", "rw_only", "pingpong", "ro_then_rw", "rw_then_ro"]
+	var exact := {}
+	for mode in 5:
+		var rows := []
+		var all_exact := true
+		for rep in 2:
+			var t := _us()
+			var r := str(sb.vmcall("inplace_run", mode, 1000))
+			var dt := _us() - t
+			rows.append("%s (%.0f ms)" % [r, dt / 1000.0])
+			all_exact = all_exact and r.find("exact=4096/4096 ") >= 0
+		exact[names[mode]] = all_exact
+		_v(16, "inplace", "INFO", "%s: %s" % [names[mode], " | ".join(rows)])
+	# The finding: a buffer seen read-only first in a compute list is tracked
+	# as read-only for the whole list, so its writes order nothing after them.
+	var hazard: bool = not exact["aliased"] and not exact["ro_then_rw"]
+	var controls: bool = exact["rw_only"] and exact["pingpong"] and exact["rw_then_ro"]
+	_v(16, "inplace", "PASS" if controls else "FAIL",
+		"controls exact (same buffer bound read-write only; ping-pong; read-write binding first in the list): %s. Loss when the buffer is first bound read-only in the list (aliased b1+b4, or read by an earlier dispatch in the same list): %s" % [
+		controls, "REPRODUCED" if hazard else "not reproduced"])
+	sb.execution_timeout = def_to
+	return true
+
 # --- 15. ggml-cpu in the guest ------------------------------------------------------------------------
 
 func _fields(line: String) -> Dictionary:
@@ -615,6 +736,9 @@ func _p15_ggml() -> bool:
 	var t := _us()
 	var r := str(sb.vmcall("ggml_probe", 256))
 	var dt := _us() - t
+	var t2 := _us()
+	var r2 := str(sb.vmcall("ggml_probe", 256))
+	var dt2 := _us() - t2
 	var host := FileAccess.get_file_as_string(GGML_HOST).strip_edges()
 	if host.is_empty():
 		_v(15, "ggml_cpu", "FAIL", "no host-native line at %s (run gates/0f-runtime/ggml_host/build.sh); guest: %s" % [GGML_HOST, r])
@@ -632,8 +756,9 @@ func _p15_ggml() -> bool:
 			var rel: float = abs(gv - hv) / max(abs(hv), 1e-300)
 			worst = max(worst, rel)
 		ok = ok and worst <= 1e-6
-		_v(15, "ggml_cpu", "PASS" if ok else "FAIL", "256^3 f16xf32 mul_mat + soft_max, 1 thread, rv64gc: worst rel diff vs host-native %s (<= 1e-6), guest host_ms=%.0f | guest %s | host %s" % [
-			str(worst), dt / 1000.0, r, host])
+		ok = ok and r2 == r
+		_v(15, "ggml_cpu", "PASS" if ok else "FAIL", "256^3 f16xf32 mul_mat + soft_max, 1 thread, rv64gc: worst rel diff vs host-native %s (<= 1e-6), guest host_ms=%.0f first call, %.0f second (same result: %s) | guest %s | host %s" % [
+			str(worst), dt / 1000.0, dt2 / 1000.0, r2 == r, r, host])
 	sb.free()
 	# Control: a TU compiled with Zfh.
 	var z = _sb()

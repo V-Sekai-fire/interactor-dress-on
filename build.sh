@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Build the guest ELFs (one per stage: dress_on, drape) for the RISC-V
-# sandbox and drop them into project/.
+# Build the guest ELFs (one per stage: dress_on, drape; and Gate 0F's
+# probes) for the RISC-V sandbox and drop them into project/.
 #
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
+#   GGML_SRC=<V-Sekai-fire/ggml checkout> ./build.sh   # probes.elf's probe 15, until vendor/ggml
 #
 # Needs: cmake, ninja, a clang++ with a riscv64 target (auto-located if the
 # bare clang++ is mingw-only), and the riscv64 glibc sysroot from the org's
@@ -51,7 +52,8 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh" --no-emit
 fi
 
-# The Gate 0F probe kernel (saxpby), same pattern; PROBES_EMIT=1 re-emits it.
+# The Gate 0F probe kernels, same pattern; PROBES_EMIT=1 re-emits them from
+# lean/ and fails if they differ from the committed kernels/probes/slang/.
 if [ "${PROBES_EMIT:-0}" = 1 ]; then
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/probes/gen.sh"
 else
@@ -62,7 +64,8 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 	cmake -S "$HERE" -B "$BUILD" -G Ninja \
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
 		-DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
-		-DCMAKE_BUILD_TYPE=Release
+		-DCMAKE_BUILD_TYPE=Release \
+		${GGML_SRC:+-DGGML_SRC="$GGML_SRC"}
 fi
 cmake --build "$BUILD"
 ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/probes.elf"

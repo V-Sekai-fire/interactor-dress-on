@@ -1,15 +1,18 @@
 # Host-native control for Gate 0F probe 15 (see ../README.md).
 #
-#   cmake -S gates/0f-runtime/ggml_host -B C:/b/ggml-host-0f -G Ninja \
+#   cmake -S gates/0f-runtime/ggml_host -B <build dir> -G Ninja \
 #     -DCMAKE_C_COMPILER=x86_64-w64-mingw32-clang -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-clang++ \
-#     -DGGML_SRC=C:/contract-manifest/2-contract/ggml
+#     -DGGML_SRC=<a V-Sekai-fire/ggml checkout; default vendor/ggml>
+#
+# The first run built it from V-Sekai-fire/ggml @04b55bba (ggml_host.txt).
 #
 # Same ggml options as the guest, except the ISA ones, which are the host's
 # defaults with GGML_NATIVE=OFF.
 cmake_minimum_required(VERSION 3.16)
 project(ggml_host_0f C CXX)
 
-set(GGML_SRC "C:/contract-manifest/2-contract/ggml" CACHE PATH "ggml source tree")
+get_filename_component(REPO "${CMAKE_CURRENT_SOURCE_DIR}/../../.." ABSOLUTE)
+set(GGML_SRC "${REPO}/vendor/ggml" CACHE PATH "V-Sekai-fire/ggml source tree")
 set(GGML_NATIVE OFF CACHE BOOL "" FORCE)
 set(GGML_BACKEND_DL OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)

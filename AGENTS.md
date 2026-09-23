@@ -68,8 +68,17 @@ our own, no host DLL. The GPU is reachable only through Godot's
 - The render graph does **not** order same-buffer dispatches inside one
   compute list; `compute_list_add_barrier` is mandatory between dependent
   dispatches (it is `end()+begin()`+rebind, there is no cheaper form).
+- Each span between barriers is one graph command, and it keeps a buffer's
+  **first** usage only (release builds drop a second one silently). A buffer
+  first bound read-only and then written in the same span is recorded as
+  read-only, and later spans race its writes (Gate 0F finding 4: 0 of 4096
+  exact). Bind a written buffer read-write first; never alias a read-only
+  source binding with the read-write destination for an in-place op.
 - `buffer_update` is refused inside a compute list; `RDUniform` binds whole
-  buffers; every buffer is created with contents (zeros if none).
+  buffers; every buffer is created with contents (zeros if none), except
+  `rdc::Device::storage_buffer_uninit` for sizes a zero array cannot reach
+  (4 GiB−256), which must be `buffer_clear`ed. `buffer_get_data` stages the
+  whole buffer; read big buffers through `buffer_copy` into a small one.
 - A guest static can hold the RenderingDevice across vmcalls (handle = engine
   instance id in unrestricted mode); RefCounted helpers are per-call only.
 - An RID (any handle a host call returns) is a per-vmcall scoped Variant: the
@@ -80,7 +89,15 @@ our own, no host DLL. The GPU is reachable only through Godot's
 - The guest clock is not a clock (it jumps between time bases). Time on the
   host, around the vmcall.
 - `Sandbox.references_max` defaults to 100; ~30 uniform sets in one call trip
-  it. Host scripts set 4096 (or more).
+  it. Host scripts set 4096 (or more). It only grows: a lower value set later
+  reads back but is not applied. Recording on permanent RIDs uses none.
+- `Sandbox.memory_max` (MiB, default 512): the heap is 0.8 x it and must end
+  below 4 GiB, so ~5112 is the most that loads (~4088 MiB of heap). Set it
+  before `program=`; after `program=` only a larger value is applied.
+- The guest has no filesystem (`openat` → EBADF); every byte comes through
+  the host. `fesetround` is accepted and ignored.
+- `slangc -preserve-params` keeps unused bindings only at `-O0`; at the
+  default `-O1` the optimiser strips them again (Gate 0F finding 9).
 - godot-sandbox caches an Object call's method name in a 32-slot direct-mapped
   cache keyed by the guest ADDRESS of the name string; two hot names in one
   slot evict each other and each call re-resolves (~2-5 ms). It is decided

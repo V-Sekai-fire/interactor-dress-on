@@ -1,0 +1,20 @@
+$ kernels/probes/gen.sh   (check mode: Lean emits, compare with slang/)
+== emitting the probe kernels from Lean at <repo>/lean ==
+== 5 kernels match Lean ==
+embedded 11 kernels, 15256 bytes -> <repo>/build/probes_kernels.inc
+exit 0
+
+$ negative control: slang/half_load.slang tampered (2.000000 -> 3.000000), then kernels/probes/gen.sh
+== emitting the probe kernels from Lean at <repo>/lean ==
+DIFF: Lean emits a different slang/half_load.slang:
+9c9
+<   o[i] = (float(w[i]) * 3.000000);
+---
+>   o[i] = (float(w[i]) * 2.000000);
+error: 1 committed probe kernel(s) differ from the Lean emission; rerun with --update and review
+exit 1
+
+$ slangc 2026.13.1: bindings kept in probe_scale (unused src1, src2) per flag set
+probe_scale.spv: params Binding 0,dst Binding 4,src0 Binding 1,src1 Binding 2,src2 Binding 3,
+probe_scale_stripped.spv: params Binding 0,dst Binding 4,src0 Binding 1,
+probe_scale_o1pp.spv: params Binding 0,dst Binding 4,src0 Binding 1,

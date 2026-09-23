@@ -160,6 +160,13 @@ func big_buffer(bytes: int = 256 << 20, direct: bool = false) -> String: return 
 func refs_setup() -> String: return _pv("refs_setup")
 func refs_run(n: int = 1000, aliased: bool = false) -> String: return _pv("refs_run", [n, aliased])
 func refs_usets(n: int = 16) -> String: return _pv("refs_usets", [n])
+func refs_setup_one(k: int = 0) -> String: return _pv("refs_setup_one", [k])
+func rid_hold(permanent: bool = true) -> String: return _pv("rid_hold", [permanent])
+func rid_use() -> String: return _pv("rid_use") # a later vmcall than rid_hold
+func set0_share(variant: String = "") -> String: return _pv("set0_share", [variant]) # "", "_stripped" or "_o1pp"
+# mode: 0 aliased, 1 rw_only, 2 pingpong, 3 ro_then_rw, 4 rw_then_ro
+func inplace_run(mode: int = 0, rounds: int = 1000) -> String: return _pv("inplace_run", [mode, rounds])
+func p_rd_close() -> String: return _pv("p_rd_close")
 func p_list_end() -> String: return _pv("p_list_end")
 func f16_read() -> String:
 	var h := PackedByteArray()

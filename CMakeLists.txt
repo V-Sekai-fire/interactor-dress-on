@@ -60,8 +60,9 @@ target_include_directories(drape PRIVATE guest guest/drape)
 target_link_libraries(drape PRIVATE avbd)
 
 # Gate 0F: probes.elf, the sandbox runtime probes (gates/0f-runtime). One ELF,
-# its own Sandbox, sharing only rd_compute. Its one kernel (saxpby) comes from
-# Lean through kernels/probes/gen.sh into ${CMAKE_BINARY_DIR}/probes_kernels.inc.
+# its own Sandbox, sharing only rd_compute. Its kernels come from
+# Lean (lean/ `lake exe emit_probes`) through kernels/probes/gen.sh into
+# ${CMAKE_BINARY_DIR}/probes_kernels.inc.
 add_stage_elf(probes
 	guest/probes/main.cpp
 	guest/probes/zfh_probe.cpp
@@ -73,13 +74,11 @@ target_include_directories(probes PRIVATE guest guest/probes ${CMAKE_BINARY_DIR}
 set_source_files_properties(guest/probes/zfh_probe.cpp PROPERTIES COMPILE_OPTIONS "-march=rv64gc_zfh")
 
 # Probe 15: ggml-cpu in the guest at rv64gc, static, one thread, no OpenMP.
-# Until Cut 3 vendors it at vendor/ggml, the org checkout is used.
-if(EXISTS "${CMAKE_SOURCE_DIR}/vendor/ggml/CMakeLists.txt")
-	set(PROBES_GGML_DEFAULT "${CMAKE_SOURCE_DIR}/vendor/ggml")
-else()
-	set(PROBES_GGML_DEFAULT "C:/contract-manifest/2-contract/ggml")
-endif()
-set(GGML_SRC "${PROBES_GGML_DEFAULT}" CACHE PATH "ggml source tree for probes.elf")
+# Cut 3 vendors V-Sekai-fire/ggml at vendor/ggml; until then point GGML_SRC
+# at a checkout of it (build.sh passes $GGML_SRC through). The probe TUs
+# themselves build at sandbox-api's -march=rv64gcv_zba_zbb_zbs_zbc; ggml's own
+# CMake gives its libraries -march=rv64gc.
+set(GGML_SRC "${CMAKE_SOURCE_DIR}/vendor/ggml" CACHE PATH "V-Sekai-fire/ggml source tree for probes.elf")
 if(EXISTS "${GGML_SRC}/CMakeLists.txt")
 	foreach(opt GGML_NATIVE GGML_BACKEND_DL BUILD_SHARED_LIBS GGML_OPENMP GGML_LLAMAFILE
 			GGML_RVV GGML_RV_ZFH GGML_RV_ZVFH GGML_RV_ZICBOP GGML_RV_ZIHINTPAUSE GGML_RV_ZVFBFWMA

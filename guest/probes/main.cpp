@@ -257,22 +257,23 @@ static Variant p_release() {
 // The RenderingDevice, opened by the guest and held across vmcalls. p_rd()
 // hands the same Object to the host so GDScript can time buffer_update on it
 // (the path weights will take: host FileAccess -> rd.buffer_update).
+//
+// Every RenderingDevice call goes through rdc::Device (AGENTS.md: the host's
+// 32-slot method-name cache is keyed by the name's guest address, and
+// rd_compute places its names so they do not collide). rdc::Device also makes
+// every RID it returns permanent: a returned RID is a per-vmcall scoped
+// Variant (probe 11b shows what happens without that).
 
-static Object g_rd{ uint64_t(0) };
 static rdc::Device g_dev;
 
 static bool ensure_rd(std::string &err) {
-	if (g_rd.is_valid()) {
+	if (g_dev.ok()) {
 		return true;
 	}
-	Object rs("RenderingServer");
-	Variant v = rs.call("create_local_rendering_device");
-	if (v.get_type() != Variant::OBJECT) {
-		err = "FAIL create_local_rendering_device: not an Object (headless?)";
+	if (!g_dev.open()) {
+		err = g_dev.error();
 		return false;
 	}
-	g_rd = v.as_object();
-	g_dev.adopt(g_rd);
 	return true;
 }
 
@@ -281,21 +282,7 @@ static Variant p_rd() {
 	if (!ensure_rd(err)) {
 		return text(err);
 	}
-	return Variant(g_rd);
-}
-
-// A RID the host returns is a *scoped* Variant index, valid for the current
-// vmcall only; held across vmcalls it names whatever the next call scoped at
-// that index (probe 11's first run: "RID idx=3 is not known/scoped", then a
-// PackedByteArray where a RID was expected). Moving it to permanent storage
-// is what lets a guest static hold GPU objects between vmcalls.
-static ::RID keep(::RID r) {
-	if (!r.index) {
-		return r;
-	}
-	Variant v(r);
-	v.make_permanent();
-	return v.operator ::RID();
+	return Variant(g_dev.object());
 }
 
 // saxpby: set 0 = { b0 params UBO {n, alpha, beta}, b1 x, b2 y, b3 dst }.
@@ -317,8 +304,8 @@ static bool ensure_saxpby(std::string &err) {
 		err = "FAIL saxpby not embedded";
 		return false;
 	}
-	g_sax.shader = keep(g_dev.shader_from_spirv(k->bytes, k->size));
-	g_sax.pipeline = g_sax.shader.index ? keep(g_dev.compute_pipeline(g_sax.shader)) : ::RID();
+	g_sax.shader = (g_dev.shader_from_spirv(k->bytes, k->size));
+	g_sax.pipeline = g_sax.shader.index ? (g_dev.compute_pipeline(g_sax.shader)) : ::RID();
 	if (!g_sax.pipeline.index) {
 		err = g_dev.error();
 		return false;
@@ -341,14 +328,14 @@ struct Counter {
 static bool make_counter(Counter &c, std::string &err) {
 	const SaxParams p{ 1, 1.0f, 1.0f, 0 };
 	const float one = 1.0f;
-	c.params = keep(g_dev.uniform_buffer(sizeof p, &p));
-	c.ones = keep(g_dev.storage_buffer(4, &one));
-	c.dst = keep(g_dev.storage_buffer(4));
+	c.params = (g_dev.uniform_buffer(sizeof p, &p));
+	c.ones = (g_dev.storage_buffer(4, &one));
+	c.dst = (g_dev.storage_buffer(4));
 	if (!c.params.index || !c.ones.index || !c.dst.index) {
 		err = g_dev.error();
 		return false;
 	}
-	c.set = keep(g_dev.uniform_set(g_sax.shader,
+	c.set = (g_dev.uniform_set(g_sax.shader,
 			{ { 0, rdc::UNIFORM_TYPE_UNIFORM_BUFFER, c.params }, { 1, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.ones },
 					{ 2, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.dst }, { 3, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.dst } }));
 	if (!c.set.index) {
@@ -519,13 +506,12 @@ static Variant big_buffer(int64_t bytes, bool direct) {
 	const uint32_t n = uint32_t(bytes / 4);
 	std::string r = "bytes=" + std::to_string(bytes);
 
-	Variant vb = g_rd.call("storage_buffer_create", bytes, PackedByteArray(std::vector<uint8_t>{}));
-	::RID buf = vb.operator ::RID();
+	::RID buf = g_dev.storage_buffer_uninit(size_t(bytes));
 	if (!buf.index) {
-		return text(r + " FAIL storage_buffer_create (empty) returned null");
+		return text(r + " FAIL storage_buffer_create (empty): " + g_dev.error());
 	}
-	Variant e = g_rd.call("buffer_clear", buf, int64_t(0), bytes);
-	r += " clear_err=" + std::to_string(int64_t(e));
+	const bool cleared = g_dev.buffer_clear(buf, 0, size_t(bytes));
+	r += std::string(" clear_err=") + (cleared ? "0" : "1");
 
 	// Seed the last element; the kernel then writes it as 2*x + 1*y = 3*seed.
 	const float seed = 1.5f;
@@ -559,7 +545,7 @@ static Variant big_buffer(int64_t bytes, bool direct) {
 	::RID stage = g_dev.storage_buffer(16);
 	const int64_t offs[3] = { bytes - 4, (bytes / 2) & ~int64_t(3), 0 };
 	for (int i = 0; i < 3; ++i) {
-		g_rd.call("buffer_copy", buf, stage, offs[i], int64_t(4 * i), int64_t(4));
+		g_dev.buffer_copy(buf, stage, 4, size_t(offs[i]), size_t(4 * i));
 	}
 	const float last = read_f32(stage, 0);
 	const float mid = read_f32(stage, 4);
@@ -596,14 +582,14 @@ static bool g_rc_ok = false;
 static bool make_pingpong(PingPong &c, std::string &err) {
 	const SaxParams p{ 1, 1.0f, 1.0f, 0 };
 	const float one = 1.0f;
-	c.params = keep(g_dev.uniform_buffer(sizeof p, &p));
-	c.ones = keep(g_dev.storage_buffer(4, &one));
-	c.a = keep(g_dev.storage_buffer(4));
-	c.b = keep(g_dev.storage_buffer(4));
-	c.set_ab = keep(g_dev.uniform_set(g_sax.shader,
+	c.params = (g_dev.uniform_buffer(sizeof p, &p));
+	c.ones = (g_dev.storage_buffer(4, &one));
+	c.a = (g_dev.storage_buffer(4));
+	c.b = (g_dev.storage_buffer(4));
+	c.set_ab = (g_dev.uniform_set(g_sax.shader,
 			{ { 0, rdc::UNIFORM_TYPE_UNIFORM_BUFFER, c.params }, { 1, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.ones },
 					{ 2, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.a }, { 3, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.b } }));
-	c.set_ba = keep(g_dev.uniform_set(g_sax.shader,
+	c.set_ba = (g_dev.uniform_set(g_sax.shader,
 			{ { 0, rdc::UNIFORM_TYPE_UNIFORM_BUFFER, c.params }, { 1, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.ones },
 					{ 2, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.b }, { 3, rdc::UNIFORM_TYPE_STORAGE_BUFFER, c.a } }));
 	if (!c.set_ab.index || !c.set_ba.index) {
@@ -613,24 +599,43 @@ static bool make_pingpong(PingPong &c, std::string &err) {
 	return true;
 }
 
-static Variant refs_setup() {
+static bool g_rc_made[4] = {};
+
+// Counter k (aliased and ping-pong), made on first use, then zeroed. One per
+// call keeps each vmcall's scoped references small (probe 13 at 100).
+static std::string refs_one(int k) {
 	std::string err;
 	if (!ensure_saxpby(err)) {
-		return text(err);
+		return err;
 	}
-	if (!g_rc_ok) {
-		for (int k = 0; k < 4; ++k) {
-			if (!make_counter(g_rc[k], err) || !make_pingpong(g_pp[k], err)) {
-				return text(err);
-			}
+	if (!g_rc_made[k]) {
+		if (!make_counter(g_rc[k], err) || !make_pingpong(g_pp[k], err)) {
+			return err;
 		}
-		g_rc_ok = true;
+		g_rc_made[k] = true;
 	}
+	g_rc_ok = g_rc_made[0] && g_rc_made[1] && g_rc_made[2] && g_rc_made[3];
 	const float z = 0.0f;
+	if (!g_dev.buffer_update(g_rc[k].dst, 0, 4, &z) || !g_dev.buffer_update(g_pp[k].a, 0, 4, &z) ||
+			!g_dev.buffer_update(g_pp[k].b, 0, 4, &z)) {
+		return "FAIL buffer_update refused: " + g_dev.error();
+	}
+	return "ok";
+}
+
+static Variant refs_setup_one(int64_t k) {
+	if (k < 0 || k > 3) {
+		return text("FAIL k in [0, 3]");
+	}
+	return text(refs_one(int(k)));
+}
+
+static Variant refs_setup() {
 	for (int k = 0; k < 4; ++k) {
-		g_dev.buffer_update(g_rc[k].dst, 0, 4, &z);
-		g_dev.buffer_update(g_pp[k].a, 0, 4, &z);
-		g_dev.buffer_update(g_pp[k].b, 0, 4, &z);
+		const std::string r = refs_one(k);
+		if (r != "ok") {
+			return text(r);
+		}
 	}
 	return text("ok");
 }
@@ -785,11 +790,345 @@ static Variant refs_usets(int64_t n) {
 // the compute list open, and every later list_begin/buffer_update on the
 // device is refused until it is ended.
 static Variant p_list_end() {
-	if (!g_rd.is_valid()) {
+	if (!g_dev.ok()) {
 		return text("no device");
 	}
 	g_dev.list_end();
 	return text("list ended");
+}
+
+// ---------------------------------------------------------------------------
+// 11b. A RID kept in a guest static across vmcalls, with and without
+// permanence. rid_hold() makes a 16-byte buffer and keeps its RID; rid_use(),
+// a later vmcall, reads it back. Without permanence the RID is the host's
+// per-call scoped index, and the later call resolves it to something else or
+// nothing (the first fiber run's failure). The non-permanent buffer cannot be
+// freed afterwards (its RID no longer names it); it leaks 16 bytes by design.
+
+static ::RID g_held;
+static bool g_held_perm = true;
+static const float kHeld[4] = { 1.25f, 2.5f, 3.75f, 5.0f };
+
+static Variant rid_hold(bool permanent) {
+	std::string err;
+	if (!ensure_rd(err)) {
+		return text(err);
+	}
+	if (g_held.index && g_held_perm) {
+		g_dev.free_rid(g_held);
+	}
+	g_dev.set_permanent_rids(permanent);
+	g_held = g_dev.storage_buffer(sizeof kHeld, kHeld);
+	g_dev.set_permanent_rids(true);
+	g_held_perm = permanent;
+	// Same call: the RID works either way.
+	std::vector<uint8_t> now = g_dev.buffer_get(g_held, 0, 16);
+	const bool same_call_ok = now.size() == 16 && std::memcmp(now.data(), kHeld, 16) == 0;
+	return text("held index=" + std::to_string(g_held.index) + " permanent=" + (permanent ? "yes" : "no") +
+			" same_call_read=" + (same_call_ok ? "exact" : "WRONG"));
+}
+
+static Variant rid_use() {
+	if (!g_held.index) {
+		return text("FAIL nothing held");
+	}
+	const int64_t idx = g_held.index;
+	std::vector<uint8_t> got = g_dev.buffer_get(g_held, 0, 16);
+	const bool exact = got.size() == 16 && std::memcmp(got.data(), kHeld, 16) == 0;
+	if (g_held_perm) {
+		g_dev.free_rid(g_held);
+	}
+	g_held = ::RID();
+	return text("index=" + std::to_string(idx) + " later_call_read bytes=" + std::to_string(got.size()) + " " +
+			(exact ? "exact" : "WRONG"));
+}
+
+// ---------------------------------------------------------------------------
+// 16. One set-0 uniform set under several pipelines (-preserve-params), and
+// in-place ops across barriers. The kernels are Lean's Probes.Set0 (layout:
+// b0 params, b1-b3 sources, b4 destination); gen.sh embeds each compiled with
+// -preserve-params and, as the control, without (<name>_stripped).
+
+struct ProbeParams {
+	uint32_t n;
+	float alpha;
+	uint32_t pad[2];
+};
+
+struct Kern {
+	::RID shader, pipeline;
+};
+
+static bool make_kern(const std::string &name, Kern &k, std::string &err) {
+	const avbd_kernels::Entry *e = avbd_kernels::find(name.c_str());
+	if (!e) {
+		err = "FAIL " + name + " not embedded";
+		return false;
+	}
+	k.shader = g_dev.shader_from_spirv(e->bytes, e->size);
+	k.pipeline = k.shader.index ? g_dev.compute_pipeline(k.shader) : ::RID();
+	if (!k.pipeline.index) {
+		err = "FAIL " + name + ": " + g_dev.error();
+		return false;
+	}
+	return true;
+}
+
+static void free_kern(Kern &k) {
+	g_dev.free_rid(k.pipeline);
+	g_dev.free_rid(k.shader);
+	k = Kern{};
+}
+
+static std::vector<float> read_floats(::RID buf, size_t n) {
+	std::vector<uint8_t> b = g_dev.buffer_get(buf, 0, n * 4);
+	std::vector<float> f(n, -1.0f);
+	if (b.size() >= n * 4) {
+		std::memcpy(f.data(), b.data(), n * 4);
+	}
+	return f;
+}
+
+static std::vector<rdc::Binding> set0(::RID params, ::RID s0, ::RID s1, ::RID s2, ::RID dst) {
+	return { { 0, rdc::UNIFORM_TYPE_UNIFORM_BUFFER, params }, { 1, rdc::UNIFORM_TYPE_STORAGE_BUFFER, s0 },
+		{ 2, rdc::UNIFORM_TYPE_STORAGE_BUFFER, s1 }, { 3, rdc::UNIFORM_TYPE_STORAGE_BUFFER, s2 },
+		{ 4, rdc::UNIFORM_TYPE_STORAGE_BUFFER, dst } };
+}
+
+static void run_one(const Kern &k, ::RID set, uint32_t n) {
+	g_dev.list_begin();
+	g_dev.bind_pipeline(k.pipeline);
+	g_dev.bind_uniform_set(set);
+	g_dev.dispatch(rdc::Device::groups_for(n, 64));
+	g_dev.list_end();
+	g_dev.submit();
+	g_dev.sync(); // a probe, not a frame loop: timed as one call by the host
+}
+
+static std::string count_exact(const std::vector<float> &got, const std::vector<float> &want) {
+	int ok = 0;
+	for (size_t i = 0; i < got.size(); ++i) {
+		ok += bitsf(got[i]) == bitsf(want[i]);
+	}
+	return std::to_string(ok) + "/" + std::to_string(got.size());
+}
+
+static Variant set0_share(String variant_s) {
+	std::string err;
+	if (!ensure_rd(err)) {
+		return text(err);
+	}
+	// "" = -O0 -preserve-params, "_stripped" = -O0, "_o1pp" = -O1 -preserve-params
+	const std::string suffix = variant_s.utf8();
+	if (suffix != "" && suffix != "_stripped" && suffix != "_o1pp") {
+		return text("FAIL variant is \"\", \"_stripped\" or \"_o1pp\"");
+	}
+	Kern add, scale;
+	if (!make_kern("probe_add" + suffix, add, err) || !make_kern("probe_scale" + suffix, scale, err)) {
+		free_kern(add);
+		return text(err);
+	}
+	const uint32_t n = 256;
+	std::vector<float> x(n), y(n), zero(n, 0.0f), sum(n), x3(n);
+	for (uint32_t i = 0; i < n; ++i) {
+		x[i] = float(i) + 1.0f;
+		y[i] = 1000.0f + float(i);
+		sum[i] = x[i] + y[i];
+		x3[i] = x[i] * 3.0f;
+	}
+	const ProbeParams pp{ n, 3.0f, { 0, 0 } };
+	::RID params = g_dev.uniform_buffer(sizeof pp, &pp);
+	::RID X = g_dev.storage_buffer(n * 4, x.data());
+	::RID Y = g_dev.storage_buffer(n * 4, y.data());
+	::RID Z = g_dev.storage_buffer(n * 4);
+	::RID D = g_dev.storage_buffer(n * 4);
+	std::string r = "kernels=probe_add" + suffix + ",probe_scale" + suffix;
+
+	// A set built against probe_add, used by probe_add and then by probe_scale.
+	::RID set = g_dev.uniform_set(add.shader, set0(params, X, Y, Z, D));
+	if (!set.index) {
+		r += " set_for_add=REFUSED(" + g_dev.error() + ")";
+	} else {
+		run_one(add, set, n);
+		r += " add_own_set=" + count_exact(read_floats(D, n), sum);
+		run_one(scale, set, n);
+		const std::vector<float> d = read_floats(D, n);
+		r += " scale_under_add_set=" + count_exact(d, x3);
+		r += std::string(d == sum ? " (D unchanged: the dispatch was refused)" : "");
+	}
+	// The same kernel with a set built against its own shader: the arithmetic
+	// works whatever the layout question says.
+	g_dev.buffer_clear(D, 0, n * 4);
+	::RID own = g_dev.uniform_set(scale.shader, set0(params, X, Y, Z, D));
+	if (own.index) {
+		run_one(scale, own, n);
+		r += " scale_own_set=" + count_exact(read_floats(D, n), x3);
+	} else {
+		r += " scale_own_set=REFUSED(" + g_dev.error() + ")";
+	}
+	// In place, one dispatch: X bound read-only at b1 and read-write at b4.
+	::RID ip = g_dev.uniform_set(scale.shader, set0(params, X, Y, Z, X));
+	if (ip.index) {
+		run_one(scale, ip, n);
+		r += " inplace_b1_b4_one_dispatch=" + count_exact(read_floats(X, n), x3);
+	} else {
+		r += " inplace=REFUSED(" + g_dev.error() + ")";
+	}
+	g_dev.free_rid(ip);
+	g_dev.free_rid(own);
+	g_dev.free_rid(set);
+	for (::RID b : { params, X, Y, Z, D }) {
+		g_dev.free_rid(b);
+	}
+	free_kern(scale);
+	free_kern(add);
+	return text(r);
+}
+
+// rounds of "+1 on every element", one compute list, a barrier after every
+// round, one submit. Each thread touches only its own element, so no
+// dispatch races with itself; any loss is between rounds.
+//   0 aliased     probe_add, X at b1 (read-only) and b4 (read-write): X = X + 1
+//   1 rw_only     probe_acc, X at b4 only: X = X + 1 (same arithmetic)
+//   2 pingpong    probe_add, A -> B then B -> A
+//   3 ro_then_rw  per round: probe_scale reads X (b1) into a scratch S, then
+//                 probe_acc adds 1 to X (b4); X is first seen read-only in
+//                 the list (between two barriers)
+//   4 rw_then_ro  the same two dispatches, probe_acc first
+static Variant inplace_run(int64_t mode, int64_t rounds) {
+	std::string err;
+	if (!ensure_rd(err)) {
+		return text(err);
+	}
+	static const char *kNames[5] = { "aliased", "rw_only", "pingpong", "ro_then_rw", "rw_then_ro" };
+	if (mode < 0 || mode > 4 || rounds < 1) {
+		return text("FAIL mode in [0, 4], rounds >= 1");
+	}
+	Kern add, acc, scale;
+	if (!make_kern("probe_add", add, err) || !make_kern("probe_acc", acc, err) || !make_kern("probe_scale", scale, err)) {
+		free_kern(acc);
+		free_kern(add);
+		return text(err);
+	}
+	const uint32_t n = 4096;
+	const std::vector<float> ones(n, 1.0f);
+	const ProbeParams pp{ n, 1.0f, { 0, 0 } };
+	::RID params = g_dev.uniform_buffer(sizeof pp, &pp);
+	::RID O = g_dev.storage_buffer(n * 4, ones.data());
+	::RID A = g_dev.storage_buffer(n * 4);
+	::RID B = g_dev.storage_buffer(n * 4);
+	::RID Z = g_dev.storage_buffer(n * 4);
+	// Modes 3 and 4 read X into a scratch S. One S would chain every round
+	// through S's own write-after-write; 16 in rotation leave 16 consecutive
+	// rounds ordered by X alone.
+	const int kS = 16;
+	::RID S[kS] = {};
+	::RID sS[kS] = {};
+	::RID s1 = ::RID(), s2 = ::RID();
+	const Kern *k1 = nullptr, *k2 = nullptr;
+	switch (mode) {
+		case 0:
+			s1 = g_dev.uniform_set(add.shader, set0(params, A, O, Z, A));
+			k1 = &add;
+			break;
+		case 1:
+			s1 = g_dev.uniform_set(acc.shader, set0(params, O, Z, Z, A));
+			k1 = &acc;
+			break;
+		case 2:
+			s1 = g_dev.uniform_set(add.shader, set0(params, A, O, Z, B));
+			s2 = g_dev.uniform_set(add.shader, set0(params, B, O, Z, A));
+			k1 = &add;
+			k2 = &add;
+			break;
+		case 3:
+		case 4:
+			for (int j = 0; j < kS; ++j) {
+				S[j] = g_dev.storage_buffer(n * 4);
+				sS[j] = g_dev.uniform_set(scale.shader, set0(params, A, Z, Z, S[j]));
+			}
+			s2 = g_dev.uniform_set(acc.shader, set0(params, O, Z, Z, A));
+			s1 = sS[0];
+			k1 = &scale;
+			k2 = &acc;
+			break;
+	}
+	std::string r = std::string("mode=") + kNames[mode] + " rounds=" + std::to_string(rounds) + " elems=" + std::to_string(n);
+	if (!s1.index || (k2 && !s2.index)) {
+		r += " FAIL uniform_set: " + g_dev.error();
+	} else {
+		const uint32_t groups = rdc::Device::groups_for(n, 64);
+		g_dev.list_begin();
+		for (int64_t i = 0; i < rounds; ++i) {
+			if (mode == 2) {
+				// round i: A -> B on even rounds, B -> A on odd ones
+				g_dev.bind_pipeline(add.pipeline);
+				g_dev.bind_uniform_set(i % 2 == 0 ? s1 : s2);
+				g_dev.dispatch(groups);
+			} else if (mode >= 3) {
+				// 3: read X (scale into S[i % 16]) then write X (acc)
+				// 4: write X (acc) then read X (scale into S[i % 16])
+				for (int step = 0; step < 2; ++step) {
+					const bool read_step = (step == 0) == (mode == 3);
+					g_dev.bind_pipeline(read_step ? scale.pipeline : acc.pipeline);
+					g_dev.bind_uniform_set(read_step ? sS[i % kS] : s2);
+					g_dev.dispatch(groups);
+				}
+			} else {
+				g_dev.bind_pipeline(k1->pipeline);
+				g_dev.bind_uniform_set(s1);
+				g_dev.dispatch(groups);
+			}
+			if (i + 1 < rounds) {
+				g_dev.barrier();
+			}
+		}
+		g_dev.list_end();
+		g_dev.submit();
+		g_dev.sync();
+		const ::RID out = (mode == 2 && rounds % 2 == 1) ? B : A;
+		const std::vector<float> got = read_floats(out, n);
+		int exact = 0;
+		float lo = 1e30f, hi = -1e30f;
+		for (float v : got) {
+			exact += v == float(rounds);
+			lo = v < lo ? v : lo;
+			hi = v > hi ? v : hi;
+		}
+		char b[160];
+		std::snprintf(b, sizeof b, " exact=%d/%u min=%g max=%g expect=%lld", exact, n, lo, hi, (long long)rounds);
+		r += b;
+	}
+	g_dev.free_rid(s2);
+	if (mode < 3) {
+		g_dev.free_rid(s1);
+	}
+	for (int j = 0; j < kS; ++j) {
+		g_dev.free_rid(sS[j]);
+		g_dev.free_rid(S[j]);
+	}
+	for (::RID b : { params, O, A, B, Z }) {
+		g_dev.free_rid(b);
+	}
+	free_kern(scale);
+	free_kern(acc);
+	free_kern(add);
+	return text(r);
+}
+
+// Free the guest's device (and with it every buffer on it) before the host
+// frees this Sandbox; the gate's fresh-sandbox arms would leak one each.
+static Variant p_rd_close() {
+	if (!g_dev.ok()) {
+		return text("no device");
+	}
+	g_dev.close();
+	g_sax = Saxpby{};
+	g_rc_ok = false;
+	for (bool &m : g_rc_made) {
+		m = false;
+	}
+	return text("closed");
 }
 
 // ---------------------------------------------------------------------------
@@ -833,7 +1172,13 @@ int main() {
 	ADD_API_FUNCTION(big_buffer, "String", "int bytes, bool direct", "Empty buffer + clear + whole-buffer saxpby + readback");
 	ADD_API_FUNCTION(refs_usets, "String", "int n", "Create and free n uniform sets in one call");
 	ADD_API_FUNCTION(p_list_end, "String", "", "End a compute list a failed call left open");
+	ADD_API_FUNCTION(p_rd_close, "String", "", "Free the guest's RenderingDevice");
 	ADD_API_FUNCTION(refs_setup, "String", "", "Four +1 counters for refs_run");
+	ADD_API_FUNCTION(refs_setup_one, "String", "int k", "Counter k for refs_run, one per call");
+	ADD_API_FUNCTION(rid_hold, "String", "bool permanent", "Create a buffer and keep its RID in a static");
+	ADD_API_FUNCTION(rid_use, "String", "", "Read the kept RID's buffer in a later vmcall");
+	ADD_API_FUNCTION(set0_share, "String", "String variant", "One uniform set under two pipelines, and in place");
+	ADD_API_FUNCTION(inplace_run, "String", "int mode, int rounds", "rounds of +1 in place across barriers");
 	ADD_API_FUNCTION(refs_run, "String", "int n, bool aliased", "n dispatches x 3 binds, barrier every 4th, one submit");
 	ADD_API_FUNCTION(f16_read, "String", "PackedByteArray halves", "64 halves through the Lean half_load kernel");
 	ADD_API_FUNCTION(ggml_probe, "String", "int n", "ggml-cpu n^3 f16xf32 mul_mat + soft_max checksum");

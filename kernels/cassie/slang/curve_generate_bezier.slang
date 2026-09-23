@@ -48,7 +48,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
   float epsilon = (0.000010 * seg_length);
   float alpha_a = 0.000000;
   float alpha_b = 0.000000;
-  uint fallback = ((abs(det) < 0.000000) ? 1u : 0u);
+  uint fallback = ((abs(det) < 1.0e-12f) ? 1u : 0u);
   if ((fallback == 0u)) {
     alpha_a = (det_y / det);
     alpha_b = (det_x / det);

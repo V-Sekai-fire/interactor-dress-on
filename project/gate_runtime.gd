@@ -7,7 +7,8 @@
 # is done, so the probes that need frames (a vmcall on a Thread, the fiber's
 # one-resume-per-frame job) get real frames. Every probe prints PASS / FAIL /
 # INFO / DEFERRED lines with its control (probe 16, set-0 sharing and in-place
-# ops, was added with the corrections); results stream to
+# ops, was added with the corrections; probe 17, aligned allocation, with Cut
+# 4's memalign fix); results stream to
 # gates/0f-runtime/results.txt (stdout is buffered when redirected). The run
 # quits on a wall clock in every branch.
 extends SceneTree
@@ -76,7 +77,7 @@ func _initialize() -> void:
 		return
 	_steps = [
 		[1, _p01_exceptions], [2, _p02_fenv], [3, _p03_files], [4, _p04_threads],
-		[5, _p05_timeout], [9, _p09_echo], [10, _p10_heap],
+		[5, _p05_timeout], [9, _p09_echo], [10, _p10_heap], [17, _p17_memalign],
 		[11, _p11_fiber], [11, _p11b_rid], [12, _p12_big_buffers], [13, _p13_refs], [14, _p14_f16], [16, _p16_set0],
 		[15, _p15_ggml], [7, _p07_thread_vmcall], [8, _p08_two_sandboxes], [6, _p06_memory],
 	]
@@ -439,6 +440,44 @@ func _p10_heap() -> bool:
 	var ok: bool = abs(delta - 64 * 1048576) <= 1048576 and abs(u2 - u0) <= 1048576 and sb.monitor_heap_usage == u2
 	_v(10, "heap", "PASS" if ok else "FAIL", "before: %s | %s: %s (delta %.2f MiB) | %s: %s" % [h0, str(r1), h1, delta / 1048576.0, str(r2), h2])
 	sb.free()
+	return true
+
+# --- 17. aligned allocation ----------------------------------------------------------------------
+# godot-sandbox's memalign fallback (vendor/sandbox-api native.cpp) returned
+# an already-freed block when 16 malloc tries missed a > 16-byte alignment.
+# 1000 blocks at each of 64/128/4096 alignment through all four aligned entry
+# points, frees and reallocs interleaved: none misaligned, overlapping or
+# corrupted, and the heap back to where it started. Control, in a fresh
+# Sandbox: the same sequence through a copy of the old fallback must return
+# freed blocks and so produce overlaps.
+
+func _kv(line: String) -> Dictionary:
+	var d := {}
+	for tok in line.split(" "):
+		var kv := tok.split("=")
+		if kv.size() == 2:
+			d[kv[0]] = int(kv[1])
+	return d
+
+func _p17_memalign() -> bool:
+	var sb = _sb()
+	var warm := str(sb.vmcall("p_memalign", 10, false)) # first-call statics out of the heap delta
+	var u0: int = sb.get_heap_usage()
+	var t := _us()
+	var r := str(sb.vmcall("p_memalign", 1000, false))
+	var us := _us() - t
+	var u1: int = sb.get_heap_usage()
+	sb.free()
+	var d := _kv(r)
+	var ok: bool = d.get("made", 0) == 3000 and d.get("misaligned", -1) == 0 and d.get("overlaps", -1) == 0 \
+			and d.get("corrupt", -1) == 0 and d.get("nulls", -1) == 0 and u1 == u0
+	_v(17, "memalign", "PASS" if ok else "FAIL", "%s | heap %d -> %d after a warm-up (%s) | %.1f ms" % [r, u0, u1, warm.get_slice(" ", 2), us / 1000.0])
+	var c = _sb()
+	var rc := str(c.vmcall("p_memalign", 1000, true))
+	c.free()
+	var dc := _kv(rc)
+	var bug: bool = dc.get("exhausted", 0) > 0 and (dc.get("overlaps", 0) > 0 or dc.get("corrupt", 0) > 0)
+	_v(17, "memalign", "PASS" if bug else "FAIL", "control, the old fallback: %s" % rc)
 	return true
 
 # --- GPU sandbox --------------------------------------------------------------------------------

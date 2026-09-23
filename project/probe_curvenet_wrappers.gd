@@ -5,9 +5,12 @@
 #   godot --path project --script probe_curvenet_wrappers.gd --rendering-driver vulkan --xr-mode off > ../gates/4-curvenet/wrappers.log 2>&1
 extends SceneTree
 
+# The scripted pen (cn_reset, pen_begin, pen_point, pen_end) replays
+# pen_demo_circle's stroke sample by sample on the body pen_demo_circle set.
 # curvenet_checks runs last: its pen_sphere check resets the stage.
-const WRAPPERS := ["curvenet_extract_demo", "pen_demo_circle", "patch_count", "mesh_build", "mesh_array_mesh",
-		"curvenet_build", "curvenet_checks"]
+const WRAPPERS := ["check_names", "cn_get_param", "curvenet_extract_demo", "pen_demo_circle", "patch_count",
+		"patch_vertices", "patch_indices", "mesh_build", "mesh_patch_ids", "mesh_array_mesh", "curvenet_build",
+		"cn_reset", "pen_begin", "pen_point", "pen_end", "patch_count", "curvenet_checks"]
 
 var _main: Node
 var _t0 := 0

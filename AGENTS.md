@@ -120,19 +120,28 @@ our own, no host DLL. The GPU is reachable only through Godot's
   After `gates/lean/verify.sh`, `git status` must show only its logs.
 - LeanSlang is `V-Sekai-fire/contract-lean-slang` (the renamed `lean-slang`;
   the old URL redirects, but pin the canonical one) at branch `emit-fp`,
-  **pinned by SHA** (e0e96da), not `main`. `emit-fp` is v0.0.6 plus `half`,
-  `double`, `litHalf`, `litInt` and `cast`, additive, so the AVBD emission is
-  byte-identical. `main` adds a libslang FFI `extern_lib` as a default target
+  **pinned by SHA** (60532ae), not `main`. `emit-fp` is v0.0.6 plus `half`,
+  `double`, `litHalf`, `litInt`, `cast` and `litFloatExact`/`litDoubleExact`,
+  additive, so the AVBD emission is byte-identical. `litFloat` prints six
+  decimals (1e-12 emits as 0.000000): any literal that is not a multiple of
+  1e-6 must use `litFloatExact` (binary32) or `litDoubleExact`. `main` adds a libslang FFI `extern_lib` as a default target
   (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
   Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
   `lake update LeanSlang` (only that package; the other revs must not move).
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
-- godot-sandbox's guest heap wraps only malloc/calloc/realloc/free; its
-  `memalign`/`posix_memalign`/`aligned_alloc` fallback returns an
-  already-freed block when 16 tries at > 16-byte alignment miss (a
-  "Possible double-free" later). Vendored code that aligns (Geogram) carves
-  from plain `malloc` instead (Gate 4).
+- godot-sandbox's guest heap has no aligned entry point (malloc/calloc/
+  realloc/free are syscalls into a host heap that keeps its bookkeeping
+  outside guest memory and hands out 16-byte alignment). Upstream's
+  `memalign` fallback (behind `posix_memalign`, `aligned_alloc`, aligned
+  `new`) returned an already-freed block whenever 16 malloc tries missed a
+  > 16-byte alignment: nearly always at 4096, sometimes at 64 (Gate 4's
+  "Possible double-free" in Geogram). Fixed in `vendor/sandbox-api`'s
+  `native.cpp`: over-allocate, return the aligned address, and map it back
+  to the host block in a side table that the wrapped `free`/`realloc`
+  consult (a header below the block cannot work: the host only frees the
+  pointer it returned). Gate 0F probe 17 checks it; re-vendoring
+  sandbox-api must keep that patch, or the bug returns silently.
 - A native flat control built with llvm-mingw links libc++; the guest links
   libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
   between them from the same seed: use the engine's raw output (Gate 4).

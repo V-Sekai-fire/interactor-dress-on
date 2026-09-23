@@ -1,5 +1,5 @@
 # cassie_checks (native, clang version 23.1.1 (https://github.com/llvm/llvm-project.git 6dfe1677ab8dffbc6ec13d53a1e0215d75147689))
-cassie_checks: 444.2 ms
+cassie_checks: 451.3 ms
 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
 PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
 PASS patch_pipeline ints=3596,0 fsig=34695a7b254c4b6d/5640 :: cycle -> 3596 triangles; one-edge graph -> 0 (control)

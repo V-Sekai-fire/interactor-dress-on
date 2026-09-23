@@ -129,7 +129,7 @@ private def mainEntry : SlangFunctionDecl :=
       , .declInit f "alpha_a" (.litFloat 0.0)
       , .declInit f "alpha_b" (.litFloat 0.0)
       , .declInit u "fallback"
-          (.ternary (.bin "<" (.call "abs" [.var "det"]) (.litFloat 1.0e-12))
+          (.ternary (.bin "<" (.call "abs" [.var "det"]) (.litFloatExact 1.0e-12))
             (.litUint 1) (.litUint 0))
       , .ifNoElse (.bin "==" (.var "fallback") (.litUint 0))
           [ .assign (.var "alpha_a") (.bin "/" (.var "det_y") (.var "det"))
@@ -162,5 +162,15 @@ def shader : SlangShaderModule :=
 
 example : shader.entryPointNames = ["main"] := by native_decide
 example : shader.entryPoints.length = 1 := by native_decide
+
+-- interactor-dress-on: the singular-determinant guard carries its real
+-- epsilon. The module wrote `.litFloat 1.0e-12`, which LeanSlang prints with
+-- six decimals as `0.000000`: the guard read `abs(det) < 0.0f`, never true,
+-- so collinear samples divided by det = 0. `litFloatExact` prints the
+-- shortest binary32 decimal. The whole emitted line is pinned.
+example : ((LeanSlang.emit shader).splitOn
+    "uint fallback = ((abs(det) < 1.0e-12f) ? 1u : 0u);").length = 2 := by native_decide
+example : emitExpr (.litFloatExact 1.0e-12) = "1.0e-12f" := by native_decide
+example : emitExpr (.litFloat 1.0e-12) = "0.000000" := by native_decide
 
 end Cassie.CurveGenerateBezier

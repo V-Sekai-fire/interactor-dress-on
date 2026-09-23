@@ -6,7 +6,7 @@ package Cloth where
 -- Every dependency is pinned in a V-Sekai-fire repo or fork
 -- (interactor-dress-on AGENTS.md rule 1).
 require LeanSlang from git
-  "https://github.com/V-Sekai-fire/contract-lean-slang.git" @ "e0e96da4ba8116a3dcfd860f6732d29eee13fe24"
+  "https://github.com/V-Sekai-fire/contract-lean-slang.git" @ "60532aef8ed70cc669ecab481182d0636c9e1ac3"
 
 -- Property testing for the AVBD specs (Cloth.Avbd.*). The existing
 -- `native_decide` examples pin single fixtures; plausible quantifies

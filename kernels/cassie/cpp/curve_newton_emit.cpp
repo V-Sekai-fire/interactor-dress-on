@@ -4431,7 +4431,7 @@ void _main_0(void* _S1, void* entryPointParams_0, void* globalParams_1)
 #line 42
         float u_new_0;
 
-        if((F32_abs((den_0))) < 0.0f)
+        if((F32_abs((den_0))) < 9.99999971718068537e-10f)
         {
 
 #line 44

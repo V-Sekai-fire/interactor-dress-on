@@ -158,7 +158,7 @@ private def mainEntry : SlangFunctionDecl :=
           -- u' = (|den| < ε) ? u : u − num / den
           , .declInit f "abs_den" (.call "abs" [.var "den"])
           , .declInit f "u_new"
-              (.ternary (.bin "<" (.var "abs_den") (.litFloat 1.0e-9))
+              (.ternary (.bin "<" (.var "abs_den") (.litFloatExact 1.0e-9))
                 (.var "u")
                 (.bin "-" (.var "u") (.bin "/" (.var "num") (.var "den"))))
           , .assign (.index (.var "out_u") (.var "i")) (.var "u_new") ]
@@ -172,5 +172,13 @@ def shader : SlangShaderModule :=
 
 example : shader.entryPointNames = ["main"] := by native_decide
 example : shader.entryPoints.length = 1 := by native_decide
+
+-- interactor-dress-on: the |den| guard carries its real epsilon. The module
+-- wrote `.litFloat 1.0e-9`, printed `0.000000`, so `abs_den < 0.0f` never
+-- held and den = 0 stepped u to inf/NaN. `litFloatExact` prints the shortest
+-- binary32 decimal. The whole emitted line is pinned.
+example : ((LeanSlang.emit shader).splitOn
+    "float u_new = ((abs_den < 1.0e-9f) ? u : (u - (num / den)));").length = 2 := by native_decide
+example : emitExpr (.litFloatExact 1.0e-9) = "1.0e-9f" := by native_decide
 
 end Cassie.CurveNewton

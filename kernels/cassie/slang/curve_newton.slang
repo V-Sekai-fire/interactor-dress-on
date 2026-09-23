@@ -41,7 +41,7 @@ void main(uint3 tid : SV_DispatchThreadID) {
     float num = dot(e, q1);
     float den = (dot(q1, q1) + dot(e, q2));
     float abs_den = abs(den);
-    float u_new = ((abs_den < 0.000000) ? u : (u - (num / den)));
+    float u_new = ((abs_den < 1.0e-9f) ? u : (u - (num / den)));
     out_u[i] = u_new;
   }
   return;

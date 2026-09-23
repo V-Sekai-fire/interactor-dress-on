@@ -20,7 +20,8 @@
 # 5. mesh -> curvenet on a cube through the wire (12 curves, 8 knots).
 # 6. llvm-nm -C curvenet.elf: 0 Eigen:: symbols (control: Cassie's own
 #    symbols are there, so the table was read).
-# 7. project/main.gd has the rule-8 no-argument wrappers.
+# 7. rule 8: every ADD_API_FUNCTION in guest/curvenet/main.cpp has a
+#    project/main.gd wrapper, all its arguments defaulted (with controls).
 #
 # No GPU: the stage never opens a RenderingDevice. One step per frame; quits
 # on a 300 s wall clock whatever step it is in. Results stream to
@@ -31,7 +32,6 @@ const MeshWire := preload("res://util/mesh_wire.gd")
 const OUT_DIR := "res://../gates/4-curvenet/"
 const WALL_S := 300.0
 const STEPS := ["checks", "compare", "repeat", "failpaths", "pen", "extract", "nm", "wrappers"]
-const WRAPPERS := ["pen_demo_circle", "curvenet_checks", "curvenet_build", "mesh_build", "curvenet_extract_demo"]
 
 var _sb = null
 var _out: FileAccess
@@ -300,15 +300,120 @@ func _nm() -> void:
 	_check(eigen == 0 and cassie > 0, "llvm-nm -C curvenet.elf: %d symbols, %d Eigen:: (must be 0), %d CassieSketcher:: (control: > 0)" % [total, eigen, cassie])
 
 # --- 7. rule 8 --------------------------------------------------------------------------
+# Every ADD_API_FUNCTION in guest/curvenet/main.cpp must be reached by a public
+# project/main.gd function that passes its name as a string literal ("name"),
+# and every such wrapper's parameters must all have defaults. Read from the
+# source text, so a wrapper that only exists as a helper call is not counted.
+# Controls: the same audit on main.gd with one wrapper deleted, and with one
+# default stripped, must each report exactly that.
+
+func _api_names(cpp: String) -> PackedStringArray:
+	var re := RegEx.new()
+	re.compile("(?m)^\\s*ADD_API_FUNCTION\\(\\s*(\\w+)\\s*,")
+	var out := PackedStringArray()
+	for m in re.search_all(cpp):
+		out.append(m.get_string(1))
+	return out
+
+# Top-level funcs of a GDScript source: [{name, params: PackedStringArray, body}].
+func _gd_funcs(src: String) -> Array:
+	var funcs := []
+	var cur = null
+	for line in src.split("\n"):
+		if line.begins_with("func ") or line.begins_with("static func "):
+			var open := line.find("(")
+			var name := line.substr(line.find("func ") + 5, open - line.find("func ") - 5).strip_edges()
+			# the parameter list, up to the matching parenthesis
+			var depth := 0
+			var close := -1
+			for i in range(open, line.length()):
+				var ch := line[i]
+				if ch == "(" or ch == "[" or ch == "{":
+					depth += 1
+				elif ch == ")" or ch == "]" or ch == "}":
+					depth -= 1
+					if depth == 0:
+						close = i
+						break
+			var params := PackedStringArray()
+			var inner := line.substr(open + 1, close - open - 1)
+			var d := 0
+			var start := 0
+			for i in inner.length():
+				var ch := inner[i]
+				if ch == "(" or ch == "[" or ch == "{":
+					d += 1
+				elif ch == ")" or ch == "]" or ch == "}":
+					d -= 1
+				elif ch == "," and d == 0:
+					params.append(inner.substr(start, i - start).strip_edges())
+					start = i + 1
+			if not inner.substr(start).strip_edges().is_empty():
+				params.append(inner.substr(start).strip_edges())
+			cur = {"name": name, "params": params, "body": line + "\n"}
+			funcs.append(cur)
+		elif line.begins_with("#"):
+			continue # a column-0 comment neither ends a body nor counts in one
+		elif cur != null and (line.is_empty() or line.begins_with("\t") or line.begins_with(" ")):
+			cur.body += line + "\n"
+		else:
+			cur = null
+	return funcs
+
+# [missing api names, "wrapper(param)" entries without a default, wrapper names]
+func _audit(api: PackedStringArray, gd_src: String) -> Array:
+	var funcs := _gd_funcs(gd_src)
+	var missing := []
+	var nodefault := []
+	var wrappers := {}
+	for n in api:
+		var found := false
+		for f in funcs:
+			if f.name.begins_with("_"):
+				continue
+			if f.body.contains("\"%s\"" % n):
+				found = true
+				wrappers[f.name] = f
+		if not found:
+			missing.append(n)
+	for w in wrappers:
+		for p in wrappers[w].params:
+			if not p.contains("="):
+				nodefault.append("%s(%s)" % [w, p])
+	return [missing, nodefault, wrappers.keys()]
+
+func _read(path: String) -> String:
+	var f := FileAccess.open(ProjectSettings.globalize_path(path), FileAccess.READ)
+	if f == null:
+		return ""
+	var t := f.get_as_text()
+	f.close()
+	return t.replace("\r", "")
 
 func _wrappers() -> void:
+	var api := _api_names(_read("res://../guest/curvenet/main.cpp"))
+	var gd := _read("res://main.gd")
+	if not _check(api.size() > 0 and not gd.is_empty(), "rule 8: %d ADD_API_FUNCTION in guest/curvenet/main.cpp, main.gd %d bytes" % [api.size(), gd.length()]):
+		return
+	var a := _audit(api, gd)
+	_check(a[0].is_empty(), "rule 8: every curvenet entry point has a main.gd wrapper (%d/%d; %d wrappers)%s" % [
+			api.size() - a[0].size(), api.size(), a[2].size(), "" if a[0].is_empty() else " missing: %s" % ", ".join(a[0])])
+	_check(a[1].is_empty(), "rule 8: every wrapper argument has a default%s" % ["" if a[1].is_empty() else " (no default: %s)" % ", ".join(a[1])])
+	# controls: delete the cn_get_param wrapper; strip patch_vertices' default
+	var no_get := gd.replace("\"cn_get_param\"", "\"cn_get_param_x\"")
+	var c1 := _audit(api, no_get)
+	_check(c1[0] == ["cn_get_param"], "rule 8 control: main.gd without the cn_get_param wrapper -> missing %s" % str(c1[0]))
+	var no_def := gd.replace("func patch_vertices(i: int = 0)", "func patch_vertices(i: int)")
+	var c2 := _audit(api, no_def)
+	_check(c2[1] == ["patch_vertices(i: int)"], "rule 8 control: patch_vertices(i: int) -> no default %s" % str(c2[1]))
+	# the wrappers actually load: every one is a method of the compiled script
 	var s: Script = load("res://main.gd")
 	var have := {}
 	for m in s.get_script_method_list():
-		have[m.name] = m.args.size()
-	var missing := []
-	for w in WRAPPERS:
-		if not have.has(w):
-			missing.append(w)
-	_check(missing.is_empty(), "project/main.gd has the no-argument wrappers %s%s" % [", ".join(WRAPPERS),
-			"" if missing.is_empty() else " (missing: %s)" % ", ".join(missing)])
+		have[m.name] = m.args.size() - m.default_args.size()
+	var bad := []
+	for w in a[2]:
+		if have.get(w, -1) != 0:
+			bad.append(w)
+	_check(bad.is_empty(), "project/main.gd compiles; its %d wrappers take no required argument: %s%s" % [a[2].size(), ", ".join(a[2]),
+			"" if bad.is_empty() else " (missing or with required args: %s)" % ", ".join(bad)])

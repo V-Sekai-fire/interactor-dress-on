@@ -1,17 +1,30 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
-Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
 
-[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
 [dress-on] sandbox loaded dress_on.elf
 [dress-on] sandbox loaded drape.elf
 [dress-on] sandbox loaded curvenet.elf
-curvenet_extract_demo() -> host_us=2358 ok extract curves=12 knots=8 intersections=8 needs_setup=0
-pen_demo_circle() -> host_us=85233 ok body vertices=2210 triangles=4096 | host_us=123 ok | host_us=1228921 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
-patch_count() -> host_us=19 1
-mesh_build() -> host_us=322216 ok patches=1 vertices=2061 triangles=3986 loops=1 components=1 euler=1 | wire: 2061 vertices, 1 boundary loops
+check_names() -> host_us=102 beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld
+cn_get_param() -> host_us=36 0.03
+curvenet_extract_demo() -> host_us=2538 ok extract curves=12 knots=8 intersections=8 needs_setup=0
+pen_demo_circle() -> host_us=102575 ok body vertices=2210 triangles=4096 | host_us=176 ok | host_us=1463326 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+patch_count() -> host_us=16 1
+patch_vertices() -> patch 0: 2067 vertices
+patch_indices() -> patch 0: 3998 triangles
+mesh_build() -> host_us=392885 ok patches=1 vertices=2061 triangles=3986 loops=1 components=1 euler=1 | wire: 2061 vertices, 1 boundary loops
+mesh_patch_ids() -> 3986 triangles, per patch { -1: 3986 }
 mesh_array_mesh() -> ArrayMesh, 1 surface(s), 2061 vertices
-curvenet_build() -> host_us=908 ok sketch curves=2 knots=2 intersections=0 needs_setup=2 | wire: 2 curves, 2 knots
-curvenet_checks() -> host_us=2107579 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+curvenet_build() -> host_us=1158 ok sketch curves=2 knots=2 intersections=0 needs_setup=2 | wire: 2 curves, 2 knots
+cn_reset() -> host_us=911 ok
+pen_begin() -> host_us=196 id=1 samples=65
+pen_point() -> host_us=5015 sent=64 left=0 ok
+pen_end() -> host_us=554961 ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+patch_count() -> host_us=12 1
+curvenet_checks() -> host_us=2416051 PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
 PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
 PASS patch_pipeline ints=3596,0 fsig=34695a7b254c4b6d/5640 :: cycle -> 3596 triangles; one-edge graph -> 0 (control)
 PASS crossing_split ints=9,9,1,9474,1,1,0,3 fsig=6c7da88789b6406c/14610 :: 9 edges, 9 nodes, 1 cycle(s), 9474 triangles; far edge 0 kept yes, crossed edge 1 replaced yes; add_stroke -> 0 cycles over 3 edges (control)

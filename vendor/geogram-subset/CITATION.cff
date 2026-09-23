@@ -24,11 +24,12 @@ abstract: >-
   float64 map mt19937_64's raw output instead of std::uniform_*_distribution
   -- a cospherical boundary (a closed stroke on a sphere) triangulated
   differently on every call, and libc++ and libstdc++ draw different
-  numbers from the same engine. Allocation: basic/memory.h
-  aligned_malloc/aligned_free carve aligned blocks out of plain malloc
-  (base pointer stored below the block) instead of posix_memalign, whose
-  godot-sandbox fallback returns an already-freed block when 16 tries at
-  64-byte alignment miss (Gate 4: "Possible double-free" in ~Delaunay3d).
+  numbers from the same engine. basic/memory.h is upstream's again:
+  aligned_malloc reaches posix_memalign in the guest, whose godot-sandbox
+  fallback used to return an already-freed block (Gate 4: "Possible
+  double-free" in ~Delaunay3d); that is fixed where it lives, in
+  vendor/sandbox-api (see its CITATION.cff), so the carve-from-malloc
+  workaround this subset carried is gone.
 type: software
 authors:
   - family-names: Lévy

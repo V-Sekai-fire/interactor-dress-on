@@ -4481,7 +4481,7 @@ void _main_0(void* _S1, void* entryPointParams_0, void* globalParams_1)
     uint32_t fallback_0;
 
 
-    if((F32_abs((det_0))) < 0.0f)
+    if((F32_abs((det_0))) < 9.999999960041972e-13f)
     {
 
 #line 51

@@ -9,6 +9,7 @@
 
 #include <api.hpp>
 
+#include <algorithm>
 #include <atomic>
 #include <cerrno>
 #include <cfenv>
@@ -197,6 +198,186 @@ static Variant p_alloc(int64_t mb) {
 	}
 	std::free(p);
 	return text("ok mb=" + std::to_string(mb) + " pages=" + std::to_string(bytes / 4096) + " sum=" + std::to_string(sum));
+}
+
+// ---------------------------------------------------------------------------
+// 17. Aligned allocation. godot-sandbox's memalign fallback (vendored
+// docker/api/native.cpp) used to return an already-freed block when 16
+// malloc tries missed the alignment. n blocks at each of 64, 128 and 4096
+// alignment, through posix_memalign, aligned_alloc, memalign and aligned
+// operator new in turn, each filled with its own tag byte; a third of the
+// steps free a random live block and every seventh reallocs one (which
+// leaves it a plain block). At the end every live block must be aligned,
+// intact (its tag in every byte) and disjoint from every other; then all are
+// freed. upstream=true runs the same sequence through a copy of the old
+// fallback as the control: it counts the calls that returned a freed block
+// ("exhausted") and never frees those, so the host heap is not asked to
+// free them twice.
+
+extern "C" void *memalign(size_t alignment, size_t size);
+
+static void *memalign_upstream(size_t alignment, size_t size, bool &exhausted) {
+	exhausted = false;
+	if (alignment <= 16) {
+		return std::malloc(size);
+	}
+	void *list[16];
+	size_t i = 0;
+	void *result = nullptr;
+	for (i = 0; i < 16; i++) {
+		result = std::malloc(size);
+		list[i] = result;
+		const bool aligned = ((uintptr_t)result % alignment) == 0;
+		if (result && aligned) {
+			break;
+		} else if (result) {
+			std::free(result);
+			list[i] = std::malloc(16);
+		} else {
+			result = nullptr;
+			break;
+		}
+	}
+	for (size_t j = 0; j < i; j++) {
+		std::free(list[j]);
+	}
+	exhausted = (i == 16);
+	return result;
+}
+
+struct AlignedBlock {
+	uintptr_t a;
+	size_t n;
+	size_t align; // 1 after a realloc
+	int kind; // 0 posix_memalign, 1 aligned_alloc, 2 memalign, 3 aligned new, 4 plain (realloc'd)
+	uint8_t tag;
+	bool poisoned; // upstream control: returned already freed
+};
+
+static bool block_intact(const AlignedBlock &b) {
+	const uint8_t *p = reinterpret_cast<const uint8_t *>(b.a);
+	for (size_t i = 0; i < b.n; i++) {
+		if (p[i] != b.tag) {
+			return false;
+		}
+	}
+	return true;
+}
+
+static void block_free(const AlignedBlock &b) {
+	if (b.poisoned) {
+		return;
+	}
+	if (b.kind == 3) {
+		::operator delete(reinterpret_cast<void *>(b.a), std::align_val_t(b.align));
+	} else {
+		std::free(reinterpret_cast<void *>(b.a));
+	}
+}
+
+static Variant p_memalign(int64_t n, bool upstream) {
+	static const size_t aligns[3] = { 64, 128, 4096 };
+	uint64_t s = 0x9E3779B97F4A7C15ull;
+	auto rnd = [&s]() {
+		s = s * 6364136223846793005ull + 1442695040888963407ull;
+		return uint32_t(s >> 33);
+	};
+	std::vector<AlignedBlock> live;
+	live.reserve(size_t(n) * 3);
+	int64_t made = 0, freed = 0, reallocs = 0, nulls = 0, misaligned = 0, exhausted = 0, corrupt = 0;
+	uint8_t tag = 0;
+	for (size_t al : aligns) {
+		for (int64_t i = 0; i < n; i++) {
+			size_t sz = 1 + rnd() % (al == 4096 ? 6000 : 700);
+			const int kind = upstream ? 2 : int(i % 4);
+			void *p = nullptr;
+			bool ex = false;
+			if (upstream) {
+				p = memalign_upstream(al, sz, ex);
+			} else if (kind == 0) {
+				if (posix_memalign(&p, al, sz) != 0) {
+					p = nullptr;
+				}
+			} else if (kind == 1) {
+				sz = (sz + al - 1) / al * al; // C11: a multiple of the alignment
+				p = aligned_alloc(al, sz);
+			} else if (kind == 2) {
+				p = memalign(al, sz);
+			} else {
+				p = ::operator new(sz, std::align_val_t(al));
+			}
+			if (p == nullptr) {
+				nulls++;
+				continue;
+			}
+			made++;
+			exhausted += ex ? 1 : 0;
+			if (uintptr_t(p) % al != 0) {
+				misaligned++;
+			}
+			tag = uint8_t(tag == 255 ? 1 : tag + 1);
+			std::memset(p, tag, sz);
+			live.push_back({ uintptr_t(p), sz, al, kind, tag, ex });
+			const uint32_t r = rnd();
+			if (r % 3 == 0 && !live.empty()) {
+				const size_t j = rnd() % live.size();
+				if (!live[j].poisoned) {
+					corrupt += block_intact(live[j]) ? 0 : 1;
+					block_free(live[j]);
+					live[j] = live.back();
+					live.pop_back();
+					freed++;
+				}
+			} else if (!upstream && r % 7 == 1 && !live.empty()) {
+				const size_t j = rnd() % live.size();
+				AlignedBlock &b = live[j];
+				if (b.kind != 3) {
+					corrupt += block_intact(b) ? 0 : 1;
+					const size_t nn = b.n + 1 + rnd() % 300;
+					void *q = std::realloc(reinterpret_cast<void *>(b.a), nn);
+					if (q == nullptr) {
+						nulls++;
+					} else {
+						const uint8_t *qp = static_cast<const uint8_t *>(q);
+						for (size_t k = 0; k < b.n; k++) {
+							if (qp[k] != b.tag) {
+								corrupt++;
+								break;
+							}
+						}
+						std::memset(q, b.tag, nn);
+						b.a = uintptr_t(q);
+						b.n = nn;
+						b.align = 1;
+						b.kind = 4;
+						reallocs++;
+					}
+				}
+			}
+		}
+	}
+	int64_t intact_bad = 0;
+	for (const AlignedBlock &b : live) {
+		intact_bad += block_intact(b) ? 0 : 1;
+	}
+	std::vector<AlignedBlock> sorted = live;
+	std::sort(sorted.begin(), sorted.end(), [](const AlignedBlock &x, const AlignedBlock &y) { return x.a < y.a; });
+	int64_t overlaps = 0;
+	for (size_t k = 1; k < sorted.size(); k++) {
+		if (sorted[k - 1].a + sorted[k - 1].n > sorted[k].a) {
+			overlaps++;
+		}
+	}
+	const size_t at_end = live.size();
+	for (const AlignedBlock &b : live) {
+		block_free(b);
+	}
+	return text(std::string(upstream ? "upstream" : "fixed") + " n=" + std::to_string(n) +
+			" made=" + std::to_string(made) + " freed_midway=" + std::to_string(freed) +
+			" reallocs=" + std::to_string(reallocs) + " live_at_end=" + std::to_string(at_end) +
+			" misaligned=" + std::to_string(misaligned) + " overlaps=" + std::to_string(overlaps) +
+			" corrupt=" + std::to_string(corrupt + intact_bad) + " nulls=" + std::to_string(nulls) +
+			" exhausted=" + std::to_string(exhausted));
 }
 
 // ---------------------------------------------------------------------------
@@ -1154,6 +1335,7 @@ int main() {
 	ADD_API_FUNCTION(p_threads, "String", "", "hardware_concurrency, spawn and join");
 	ADD_API_FUNCTION(p_spin, "int", "int n", "n LCG steps; returns the state");
 	ADD_API_FUNCTION(p_alloc, "String", "int mb", "malloc, touch and free mb MiB");
+	ADD_API_FUNCTION(p_memalign, "String", "int n, bool upstream", "n aligned blocks at 64/128/4096, interleaved frees; overlap check");
 	ADD_API_FUNCTION(echo_f, "float", "float x", "Echo a float");
 	ADD_API_FUNCTION(echo_i, "int", "int x", "Echo an int");
 	ADD_API_FUNCTION(echo_b, "bool", "bool x", "Echo a bool");

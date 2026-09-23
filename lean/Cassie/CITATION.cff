@@ -23,7 +23,20 @@ abstract: >-
   their six native_decide examples hold, and the cpp slangc lowers from their
   emission matches the module's thirdparty/avbd/*.cpu.cpp line for line
   outside the prelude and #line directives
-  (gates/4-curvenet/kernel-parity.log), so the Slang is unchanged.
+  (gates/4-curvenet/kernel-parity.log), so the Slang is unchanged. One
+  behaviour change since: two guards now fire. CurveGenerateBezier's
+  singular-determinant guard (abs(det) < 1.0e-12) and CurveNewton's |den|
+  guard (abs_den < 1.0e-9) were .litFloat, which LeanSlang prints with six
+  decimals, so both emitted as "< 0.000000" and could never hold: det = 0
+  (collinear samples) gave alpha = det_y / 0 instead of the seg_length / 3
+  fallback, and den = 0 stepped u to inf or NaN. The module's prebuilt
+  modules/cassie/thirdparty/avbd/curve_generate_bezier.cpu.cpp and
+  curve_newton.cpu.cpp at c165a519d2 carry the same bug ("< 0.0f"), so the
+  CASSIE module as shipped never fires them either. They are now
+  .litFloatExact (LeanSlang emit-fp 60532ae), emitted as 1.0e-12f and
+  1.0e-9f and pinned by native_decide to the whole emitted line; the
+  kernel-parity check against the prebuilt files now differs on exactly
+  those two lines.
 type: software
 authors:
   - name: K. S. Ernest (iFire) Lee

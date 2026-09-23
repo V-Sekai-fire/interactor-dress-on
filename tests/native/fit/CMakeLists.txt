@@ -22,6 +22,16 @@
 #                         (gates/6-fit/sdf/spline_ref.h); native only, the
 #                         control the kernel is held to bit for bit
 #              pending    SdfSpline.cpp with FIT_KERNELS_PENDING (throws)
+#
+# FIT_TBB selects what TBB::tbb is for ipc-toolkit and scalable-ccd:
+#   serial   cmake/tbb_serial.cmake, the header-only one-thread stand-in
+#            fit.elf links (guest/fit/tbb_serial); no oneTBB is built. The
+#            default for FIT_SDF=sdfgrid with guest numerics, so fit_native
+#            is fit.elf's code down to the thread layer.
+#   onetbb   oneTBB 2021.9 through ipc-toolkit's recipe, held to one thread
+#            by fit_native's global_control. The default otherwise: OpenVDB
+#            and the upstream-numerics control (POLYFEM_THREADING=TBB) need
+#            the real one.
 cmake_minimum_required(VERSION 3.25)
 
 # As cloth-fit's top level: tight-inclusion must not find AVX (it would add
@@ -61,6 +71,21 @@ endif()
 # Dependencies through cloth-fit's own recipes; the org forks come in via
 # CPM_<pkg>_SOURCE (build.sh), polysolve from the patched worktree.
 list(APPEND CMAKE_MODULE_PATH "${CF}/cmake/recipes" "${CF}/cmake/polyfem")
+
+if(FIT_SDF STREQUAL "sdfgrid" AND FIT_NUMERICS STREQUAL "guest")
+    set(_fit_tbb_default serial)
+else()
+    set(_fit_tbb_default onetbb)
+endif()
+set(FIT_TBB "${_fit_tbb_default}" CACHE STRING "TBB::tbb: serial (the fit.elf stand-in) | onetbb")
+set_property(CACHE FIT_TBB PROPERTY STRINGS serial onetbb)
+if(FIT_TBB STREQUAL "serial")
+    if(FIT_SDF STREQUAL "openvdb" OR FIT_NUMERICS STREQUAL "upstream")
+        message(FATAL_ERROR "FIT_TBB=serial needs FIT_SDF=sdfgrid and FIT_NUMERICS=guest (OpenVDB and POLYFEM_THREADING=TBB need oneTBB)")
+    endif()
+    # Before any recipe that would pull oneTBB (they return when TBB::tbb exists).
+    include("${REPO}/cmake/tbb_serial.cmake")
+endif()
 include(polyfem_cpm_cache)
 
 set(POLYSOLVE_WITH_CHOLMOD OFF CACHE BOOL "" FORCE)

@@ -57,3 +57,4 @@ compare fit-out-sdfk64/garment_final.obj vs cf-up-out1/step_garment_252.obj: 268
   per-vertex: max 4.74707 voxels (vertex 1329), mean 2.77192, p99 4.48315  [max 4.747065e-02 m]
   hausdorff (vertex-sampled, point to surface): 4.51922 voxels (A->B 4.34909, B->A 4.51922)
 cmp fit-out-sdf64 fit-out-sdfk64 garment_final.f64: identical (FIT_SDF_SAMPLER=kernel, the Lean emit, vs =reference; sha256 ab9fb211ccb2ffcd7e176112ff09a6de7ee870d52e180325ec66fcc686e33504), garment_final.obj identical, phases.tsv identical in every column but wall/cpu
+cmp fit-out-sdfk64 fit-out-tbbs64 garment_final.f64: identical (FIT_TBB=serial, guest/fit/tbb_serial as fit.elf links it, vs oneTBB 2021.9 held to one thread; sha256 ab9fb211ccb2ffcd7e176112ff09a6de7ee870d52e180325ec66fcc686e33504), garment_final.obj identical, phases.tsv identical in every column but wall/cpu, 177 Newton (24/36/50/67), 0 oneTBB symbols in fit_native.exe (1485 tbb::detail/r1 in the oneTBB build)

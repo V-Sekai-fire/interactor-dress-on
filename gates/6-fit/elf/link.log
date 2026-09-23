@@ -1,0 +1,70 @@
+fit.elf: 6936208 bytes, sha256 f11ce4ca4c12ddcf904633817b0f97bee9bd17d2a5087b46fe91890373dabcdf
+symbols: 16406
+
+== sections (llvm-size -A) ==
+.note.ABI-tag                 32     66216
+.note.package                116     66248
+.rodata                   334912     66368
+.gcc_except_table         226166    401280
+.eh_frame_hdr              78524    627448
+.eh_frame                 501136    705976
+.text                    3174358   1211208
+.tdata                       112   4389664
+.tbss                        104   4389776
+.preinit_array                 8   4389776
+.fini_array                   16   4389784
+.init_array                  480   4389800
+.data.rel.ro               82560   4390280
+.got                       12032   4472840
+.relro_padding               248   4484872
+.data                       7548   4488968
+.tm_clone_table                0   4496520
+.sdata                         8   4496520
+.bss                       48976   4496544
+.riscv.attributes            249         0
+.comment                     352         0
+.gnu.warning.dlopen          130         0
+.gnu.warning.dlmopen         131         0
+Total                    4468198
+
+== arch attribute (merged over every object) ==
+Value: rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0_zcd1p0_zba1p0_zbb1p0_zbc1p0_zbkc1p0_zbs1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvl128b1p0_zvl32b1p0_zvl64b1p0
+
+== must be present ==
+  Eigen::                                         2192
+  polysolve::                                      813
+  polyfem::                                        668
+  ipc::                                            964
+  igl::                                            458
+  spdlog::                                        1010
+  nlohmann::                                       481
+  fit::FitDriver                                    36
+  polyfem::solver::SdfGrid                          27
+  polyfem::solver::sdf_spline::hessian_batch         1
+  main_0_Thread                                      1
+  __wrap_open                                        4
+  __wrap_open64                                      1
+  __wrap_openat                                      2
+  __wrap_openat64                                    1
+  __wrap_fopen                                       2
+  __wrap_fopen64                                     1
+
+== must be absent ==
+  tbb::detail                                        0
+  tbb::v1                                            0
+  r1::                                               0
+  tbbmalloc                                          0
+  scalable_malloc                                    0
+  openvdb                                            0
+  Imath                                              0
+  boost::                                            0
+  filib                                              0
+  __real_open                                        0
+  __real_fopen                                       0
+
+== tbb:: symbols: the serial stand-in's inline templates only ==
+  30 tbb::blocked_range
+  24 tbb::blocked_range2d
+  21 tbb::enumerable_thread_specific
+  21 tbb::ets_key_usage_type
+  60 tbb::serial_detail::one_slot

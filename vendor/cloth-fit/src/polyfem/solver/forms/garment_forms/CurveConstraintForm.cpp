@@ -517,10 +517,10 @@ namespace polyfem::solver
 				for (int j = 0; j < coordinates.size(); j++)
 				{
 					Eigen::Vector3d y = coordinates[j];
-					double err = abs(x(dim) + y(dim));
+					double err = std::abs(x(dim) + y(dim));
 					for (int d = 0; d < 3; d++)
 						if (d != dim)
-							err += abs(x(d) - y(d));
+							err += std::abs(x(d) - y(d));
 					if (err < tol * bbox_size)
 					{
 						max_err = std::max(max_err, err);

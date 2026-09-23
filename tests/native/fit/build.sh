@@ -10,6 +10,7 @@
 #   FIT_SDF           openvdb (default, interim) | sdfgrid
 #   FIT_SDF_SAMPLER   sdfgrid only: kernel (default, the Lean emit) | reference (control) | pending
 #   FIT_NUMERICS      guest (default) | upstream (the oracle's numerics, a control)
+#   FIT_TBB           serial (default for sdfgrid + guest: fit.elf's stand-in) | onetbb
 #   CPM_SOURCE_CACHE  CPM cache for packages without an org fork (default C:/b/cpm-native)
 #   LLVM_MINGW        toolchain (default ~/llvm-mingw/llvm-mingw-20260826-ucrt-x86_64)
 #   FIT_JOBS          ninja -j (default 8: the desk is shared)
@@ -38,7 +39,7 @@ if [ ! -f "$BUILD/build.ninja" ]; then
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DFIT_SDF="$FIT_SDF"     -DFIT_SDF_SAMPLER="${FIT_SDF_SAMPLER:-kernel}" \
-    -DFIT_NUMERICS="${FIT_NUMERICS:-guest}" \
+    -DFIT_NUMERICS="${FIT_NUMERICS:-guest}"     ${FIT_TBB:+-DFIT_TBB="$FIT_TBB"} \
     -DCMAKE_PREFIX_PATH="$PREFIX/Library" \
     -DPython3_EXECUTABLE="$(cygpath -m "$(command -v python)")" \
     -DCMAKE_C_COMPILER="$LLVM_MINGW/bin/x86_64-w64-mingw32-clang.exe" \

@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
-# Build the guest ELFs (one per stage: dress_on, drape) for the RISC-V
+# Build the guest ELFs (one per stage: dress_on, drape, fit) for the RISC-V
 # sandbox and drop them into project/.
 #
 #   ./build.sh                # configure (once) + build
 #   RISCV64_SYSROOT=... ./build.sh
+#   BUILD_FIT=0 ./build.sh    # skip fit.elf (cloth-fit / PolyFEM, the long part)
+#
+# fit.elf needs the org forks (tools/fit/prepare_forks.sh, run here) and the
+# CPM packages cloth-fit pulls without a fork (CPM_SOURCE_CACHE, default
+# C:/b/cpm-native, the cache the native fit build fills). project/fit.elf is
+# not committed; its sha256 goes into the gate logs.
 #
 # Needs: cmake, ninja, a clang++ with a riscv64 target (auto-located if the
 # bare clang++ is mingw-only), and the riscv64 glibc sysroot from the org's
@@ -51,11 +57,25 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/avbd/gen.sh" --no-emit
 fi
 
+BUILD_FIT="${BUILD_FIT:-1}"
+if [ "$BUILD_FIT" = 0 ]; then WITH_FIT=OFF; else WITH_FIT=ON; fi
+if [ "$WITH_FIT" = ON ]; then
+	bash "$HERE/tools/fit/prepare_forks.sh"
+	export CPM_SOURCE_CACHE="${CPM_SOURCE_CACHE:-C:/b/cpm-native}"
+fi
+
 if [ ! -f "$BUILD/build.ninja" ]; then
 	cmake -S "$HERE" -B "$BUILD" -G Ninja \
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
 		-DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
-		-DCMAKE_BUILD_TYPE=Release
+		-DCMAKE_BUILD_TYPE=Release \
+		-DDRESS_ON_WITH_FIT="$WITH_FIT"
+elif ! grep -q "^DRESS_ON_WITH_FIT:BOOL=$WITH_FIT\$" "$BUILD/CMakeCache.txt"; then
+	cmake -B "$BUILD" -DDRESS_ON_WITH_FIT="$WITH_FIT"
 fi
-cmake --build "$BUILD"
+cmake --build "$BUILD" -- -j "${BUILD_JOBS:-8}"
 ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf"
+if [ "$WITH_FIT" = ON ]; then
+	ls -la "$HERE/project/fit.elf"
+	sha256sum "$HERE/project/fit.elf"
+fi

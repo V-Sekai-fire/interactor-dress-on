@@ -342,7 +342,9 @@ namespace polyfem::solver
         {
             curves_.push_back(curve.head(curve.size()-1));
         }
-        bones.resize(curves_.size());
+        // Zeroed: a curve with no bone within 60 degrees of its normal keeps
+        // bone 0 (upstream left it uninitialised; fit.elf, see CITATION.cff).
+        bones.setZero(curves_.size());
         relative_positions.resize(curves_.size());
         for (int j = 0; j < curves_.size(); j++)
         {
@@ -531,7 +533,9 @@ namespace polyfem::solver
         {
             curves_.push_back(curve.head(curve.size()-1));
         }
-        bones.resize(curves_.size());
+        // Zeroed: a curve with no bone within 60 degrees of its normal keeps
+        // bone 0 (upstream left it uninitialised; fit.elf, see CITATION.cff).
+        bones.setZero(curves_.size());
         relative_positions.resize(curves_.size());
 
         for (int j = 0; j < curves_.size(); j++)
@@ -586,7 +590,7 @@ namespace polyfem::solver
                 sdirec = (source_skeleton_v_.row(skeleton_edges_(i, 1)) - source_skeleton_v_.row(skeleton_edges_(i, 0))).normalized();
 
                 // if (tmp(0) < closest_dist && is_bone_available(skeleton_edges_.rows(), edge))
-                if (abs(sdirec.dot(curve_normal)) > 0.5 && tmp(0) < closest_dist)
+                if (std::abs(sdirec.dot(curve_normal)) > 0.5 && tmp(0) < closest_dist)
                 {
                     closest_dist = tmp(0);
                     bones(j) = i;

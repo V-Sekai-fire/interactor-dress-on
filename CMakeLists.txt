@@ -51,3 +51,8 @@ add_stage_elf(dress_on guest/main.cpp)
 add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp)
 target_include_directories(drape PRIVATE guest guest/drape)
 target_link_libraries(drape PRIVATE avbd)
+
+# The fit stage (Cut 6): cloth-fit's garment solve (PolyFEM) with the
+# Lean SDF sampler. Last, because it sets directory-wide guest numerics for
+# the targets it creates. DRESS_ON_WITH_FIT=OFF (build.sh BUILD_FIT=0) skips it.
+include(cmake/fit.cmake)

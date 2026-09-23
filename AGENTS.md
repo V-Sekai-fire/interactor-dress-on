@@ -109,6 +109,13 @@ our own, no host DLL. The GPU is reachable only through Godot's
   (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
   Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
   `lake update LeanSlang` (only that package; the other revs must not move).
+- The guest heap also caps **live allocations**: `Sandbox.allocations_max`
+  defaults to 10000 ("Too many arena chunks"). fit.elf holds ~79k after
+  `fit_begin`; main.gd sets 4,000,000 before `program=`.
+- Unqualified `abs(double)` binds to C's `int abs` under the guest's
+  libstdc++ (clang `-Wabsolute-value`) but to the double overload under
+  llvm-mingw's libc++, so native and guest silently differ. Treat that
+  warning as an error in anything shared between them.
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
 

@@ -12,6 +12,8 @@ The sub-gates have their own pages:
 - `driver/` is the driver port. It is bitwise equal to upstream when built
   with upstream's numerics, using the OpenVDB FitForm.
 - `foxgirl/` holds this page's logs: the SdfGrid FitForm end to end.
+- `elf/` is fit.elf itself: its hash and link check, the serial TBB stand-in,
+  and a Godot smoke run of phase 0.
 
 Nothing on this page ran in the guest, in Godot, or on the GPU.
 
@@ -204,8 +206,14 @@ Native guest numerics are bitwise reproducible, so a fixed target exists.
 
 - **Energy per form.** Split the final energy by form for the
   upstream-numerics SdfGrid control, to say which term holds the +62%.
-- **The same run in the guest.** fit.elf in the sandbox is Cut 6's next step:
-  guest vs native, the heap ladder, and the worker-thread vmcall.
+- **The same run in the guest.** fit.elf now builds (6.9 MB, no oneTBB, no
+  OpenVDB) and runs phase 0 in Godot on a worker Thread (`elf/`): 596 s
+  against 28.9 s natively, 122.9 MiB heap, 0 file opens. Its trace matches
+  native f32 through Newton iteration 7, then parts at 2e-13 relative and
+  ends phase 0 at 34 Newton against 41. Still open: all four phases, the
+  guest-vs-native verdict (or the fallback to the five-part criterion), the
+  heap ladder, and which last bit moves first (libm or the GDScript OBJ
+  parse).
 
 ## Reproduce
 

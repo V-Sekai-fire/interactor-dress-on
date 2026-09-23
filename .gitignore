@@ -12,3 +12,5 @@ lean/.lake/
 /build-native/
 /.cpm-cache-native/
 /tools/native/.pixi/
+/project/fit.elf
+/project/fit.elf.uid

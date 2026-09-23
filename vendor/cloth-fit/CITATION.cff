@@ -67,6 +67,16 @@ abstract: >-
   (tests/native/fit) opens no file between FitDriver::begin and its last
   phase, and built with upstream's numerics reproduces the 1-thread oracle
   bitwise.
+  libstdc++ portability for fit.elf (Cut 6): three unqualified abs() calls
+  on doubles (CurveCenterTargetForm.cpp bone selection, CurveConstraintForm.cpp
+  symmetric-vertex error) become std::abs. Under llvm-mingw's libc++ they
+  already resolved to the double overload; under the guest's glibc +
+  libstdc++ they bound to C's int abs (clang -Wabsolute-value), so no bone
+  passed the 60-degree test and the curve-center targets came from
+  uninitialised memory. CurveCenterTargetForm's bones vector is zeroed where
+  it was only resized (a curve with no qualifying bone keeps bone 0, which is
+  what the native runs read). fit_native is bitwise unchanged by both
+  (garment_final.f64 sha256 ab9fb211...).
 type: software
 authors:
   - name: Zizhou Huang

@@ -72,3 +72,4 @@ driver store's `nv-vk64.json` is the Windows ICD); Gate 0H V2 covered it.
 | full job through the handler, 4090, fit.elf | AUTHOR 2 cycles / 2 openings; MESH 932 v; **FIT 329 Newton, 1601 s**; **CHECK `OK none`** (push-vertex control INTERSECTS); **DRAPE FAILED** at its first call: `Too many arena chunks (fa0)` in drape.elf — the same Linux-only 4000-chunk default as curvenet in run 1 |
 | fix | `stages/sandbox_util.gd` gives every stage `allocations_max` 1,000,000 (fit keeps 4,000,000); curvenet's own override removed |
 | MESH + DRAPE, fit as fixture | **DRAPE 100 steps, finite**, 119 ms/step through dzn (40.6 ms on the same card natively on Windows), 0 arena faults |
+| full job through the handler after the fix, 4090 via dzn | **`RESULT: PASS FIXTURE:infer,rig`** in 1760 s: CHECK `OK none` (control INTERSECTS), DRAPE 100 finite steps, 0 arena faults. The Linux loop image passes the whole loop on a GPU before anything goes to RunPod |

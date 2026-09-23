@@ -1,0 +1,95 @@
+diff --git a/hubconf.py b/hubconf.py
+index 614da1a..2d7b084 100644
+--- a/hubconf.py
++++ b/hubconf.py
+@@ -1,11 +1,11 @@
+-dependencies = ["torch", "natten"]
++dependencies = ["torch"]
+ 
+ import torch
+ 
+ from src.model.naf import NAF
+ 
+ 
+-def naf(pretrained: bool = True, device="cpu"):
++def naf(pretrained: bool = True, device="cpu", checkpoint_path=None):
+     """
+     NAF (Neighborhood Attention Filtering) model for feature upsampling.
+     VFM-agnostic upsampler that works with any Vision Foundation Model without retraining.
+@@ -18,7 +18,10 @@ def naf(pretrained: bool = True, device="cpu"):
+         pip install natten -f https://shi-labs.com/natten/wheels
+     """
+     model = NAF().to(device)
+-    if pretrained:
++    if checkpoint_path is not None:
++        # interactor-dress-on: pinned local weights (models/NAF/naf_release.pth)
++        model.load_state_dict(torch.load(checkpoint_path, map_location=device))
++    elif pretrained:
+         checkpoint = "https://github.com/valeoai/NAF/releases/download/model/naf_release.pth"
+         model.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=True, map_location=device))
+     return model
+diff --git a/src/layers/attentions.py b/src/layers/attentions.py
+index 4e6129d..6c2115f 100755
+--- a/src/layers/attentions.py
++++ b/src/layers/attentions.py
+@@ -3,12 +3,40 @@ import torch.nn as nn
+ import torch.nn.functional as F
+ from einops import rearrange
+ 
+-try:
+-    NATTEN_RECENT = False
+-    from natten.functional import na2d_av, na2d_qk
+-except:
+-    NATTEN_RECENT = True
+-    from natten import na2d
++# interactor-dress-on (tools/services/pixal3d/patches/naf-na2d-block.patch):
++# no NATTEN build exists for win-64, so the cross-scale attention runs as
++# na2d_block, the exact pure-torch form proven in
++# gates/7-pixal3d/aux-models/naf_ref.py (max |diff| vs NATTEN <= 4.6e-7).
++NATTEN_RECENT = True
++
++
++def na2d_block(q, k_lr, v_lr, kernel_size, scale=None, block_chunk=1024):
++    """K/V are the low-res maps; every hi-res query in low-res block (bi, bj)
++    attends to the same kh x kw low-res window starting at
++    clamp(bi - kh//2, 0, hk - kh). q [B,H,W,N,D] -> [B,H,W,N,Dv]."""
++    B, H, W, N, D = q.shape
++    _, hk, wk, _, Dv = v_lr.shape
++    dh, dw = H // hk, W // wk
++    assert dh * hk == H and dw * wk == W, "na2d_block needs an integer upsample factor"
++    kh, kw = kernel_size
++    scale = D ** -0.5 if scale is None else scale
++    dev = q.device
++    sh = (torch.arange(hk, device=dev) - kh // 2).clamp(0, hk - kh)
++    sw = (torch.arange(wk, device=dev) - kw // 2).clamp(0, wk - kw)
++    wh = sh[:, None] + torch.arange(kh, device=dev)
++    ww = sw[:, None] + torch.arange(kw, device=dev)
++    idx = (wh[:, None, :, None] * wk + ww[None, :, None, :]).reshape(hk * wk, kh * kw)
++    qb = q.reshape(B, hk, dh, wk, dw, N, D).permute(0, 1, 3, 5, 2, 4, 6).reshape(B, hk * wk, N, dh * dw, D)
++    kf = k_lr.reshape(B, hk * wk, N, D)
++    vf = v_lr.reshape(B, hk * wk, N, Dv)
++    out = torch.empty(B, hk * wk, N, dh * dw, Dv, dtype=q.dtype, device=dev)
++    for s in range(0, hk * wk, block_chunk):
++        ii = idx[s:s + block_chunk]
++        kg = kf[:, ii].permute(0, 1, 3, 2, 4)
++        vg = vf[:, ii].permute(0, 1, 3, 2, 4)
++        a = (qb[:, s:s + block_chunk] @ kg.transpose(-1, -2) * scale).softmax(-1)
++        out[:, s:s + block_chunk] = a @ vg
++    return out.reshape(B, hk, wk, N, dh, dw, Dv).permute(0, 1, 4, 2, 5, 3, 6).reshape(B, H, W, N, Dv)
+ 
+ from src.layers.rope import RoPE
+ 
+@@ -57,6 +85,13 @@ class CrossAttention(nn.Module):
+         self.dilation = dilation
+ 
+         q = rearrange(q, "b (n d) h w -> b h w n d", n=self.num_heads)
++        if not return_weights and hq % hk == 0 and wq % wk == 0:
++            # nearest-exact upsample by an integer factor is block-constant, so
++            # the low-res K/V are the whole information (see na2d_block).
++            k = rearrange(k, "b (n d) h w -> b h w n d", n=self.num_heads).to(q.dtype)
++            v = rearrange(v, "b (n d) h w -> b h w n d", n=self.num_heads).to(q.dtype)
++            out = na2d_block(q, k, v, self.kernel_size, scale=self.scale)
++            return rearrange(out, "b h w n d -> b (n d) h w")
+         k = self._resize(k, size=(hq, wq), dtype=q.dtype)
+         v = self._resize(v, size=(hq, wq), dtype=q.dtype)
+ 

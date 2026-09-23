@@ -1,0 +1,13 @@
+diff --git a/flex_gemm/config.py b/flex_gemm/config.py
+index 9ff7a52..662a29f 100644
+--- a/flex_gemm/config.py
++++ b/flex_gemm/config.py
+@@ -32,7 +32,7 @@ analysis but bloats ``autotune_cache.json`` significantly. Off by default."""
+ 
+ AUTOTUNE_CACHE_PATH = os.environ.get(
+     'FLEX_GEMM_AUTOTUNE_CACHE_PATH',
+-    os.path.expanduser('~/.flex_gemm/autotune_cache.json')
++    os.path.expanduser('~/.flex_gemm2/autotune_cache.json')  # interactor-dress-on: imported as flex_gemm2 beside flex_gemm 0.0.1
+ )
+ 
+ IS_CUDA_EXTENSION_AVAILABLE = None

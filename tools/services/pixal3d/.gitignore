@@ -1,0 +1,6 @@
+/src/
+/.pixi/
+/runs/*.glb
+/runs/*.usda
+/runs/*.png
+__pycache__/

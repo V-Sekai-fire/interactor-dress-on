@@ -1,0 +1,5 @@
+health {'status': 'ok', 'ready': True, 'stub': True} after 1.1s (model load included)
+/predict 0.0s state 9 B views 4 server {'seconds': None, 'vram_peak_mib': None, 'camera_params': None}
+/extract 1.2s glb 9 B layer 303 B server {'seconds': None, 'vram_peak_mib': None}
+USD {'upAxis': 'Y', 'metersPerUnit': 1.0, 'meshes': 0, 'points': 0, 'faces': 0, 'normals': True}
+PASS stub in 2.6s; nvidia-smi max used {'NVIDIA GeForce RTX 3090': 3, 'NVIDIA GeForce RTX 4090': 1688} (before {'NVIDIA GeForce RTX 3090': 3, 'NVIDIA GeForce RTX 4090': 1632})

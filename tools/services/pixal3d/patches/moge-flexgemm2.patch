@@ -1,0 +1,26 @@
+diff --git a/moge/model/modules/flex_sparse_blocks.py b/moge/model/modules/flex_sparse_blocks.py
+index f36a123..531f5c5 100644
+--- a/moge/model/modules/flex_sparse_blocks.py
++++ b/moge/model/modules/flex_sparse_blocks.py
+@@ -5,7 +5,7 @@ import torch
+ import torch.nn as nn
+ import torch.nn.functional as F
+ 
+-from flex_gemm.nn import (
++from flex_gemm2.nn import (  # interactor-dress-on: FlexGEMM 2.0 under its own name (moge-flexgemm2.patch)
+     SubmanifoldConv3d,
+     SparsePool3d,
+     SparseUpsample3d,
+diff --git a/moge/model/modules/sparse_unet.py b/moge/model/modules/sparse_unet.py
+index 21bdf9c..10f6754 100644
+--- a/moge/model/modules/sparse_unet.py
++++ b/moge/model/modules/sparse_unet.py
+@@ -11,7 +11,7 @@ from .flex_sparse_blocks import (
+     NearestUp,
+ )
+ from ..utils import wrap_module_with_gradient_checkpointing, wrap_module_with_autocast
+-from flex_gemm.ops import NeighborCache
++from flex_gemm2.ops import NeighborCache  # interactor-dress-on: FlexGEMM 2.0 under its own name (moge-flexgemm2.patch)
+ 
+ 
+ class Sparse3DUNet(nn.Module):

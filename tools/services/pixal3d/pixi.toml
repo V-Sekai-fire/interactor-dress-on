@@ -1,0 +1,80 @@
+# Pixal3D image -> textured mesh, as a native win-64 service (no Docker, no WSL).
+#
+# The service code is V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh, cloned
+# by `pixi run fetch` into ./src at a pinned commit with ./patches applied (see
+# CITATION.cff). The CUDA extensions are not built here: they are the community
+# Windows wheels visualbruno/ComfyUI-Trellis2 ships for Torch 2.8.0 + cu128,
+# pinned to one commit of that repo; README.md lists each wheel's sha256.
+#
+# Why torch 2.8.0 + triton 3.4 and not the Linux recipe's 2.6.0 + cu124: a CUDA
+# extension has to match the torch it was compiled against, and the Windows wheels
+# exist for 2.7.0, 2.8.0 and 2.10.0; 2.8.0 is the oldest that works. 2.7.0 pairs with triton-windows 3.3, which was
+# measured to fail MoGe-3's FlexGEMM 2.0 kernels (tl.dtype has no `itemsize`, and
+# `tl.pointer_type` annotations do not parse: KeyError 'ier_type'); 3.4 compiles
+# them. Triton on Windows is triton-windows, which flex_gemm's wheel names.
+
+[workspace]
+name = "pixal3d-service"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[dependencies]
+python = "3.11.*"
+
+[pypi-dependencies]
+torch = { version = "==2.8.0", index = "https://download.pytorch.org/whl/cu128" }
+torchvision = { version = "==0.23.0", index = "https://download.pytorch.org/whl/cu128" }
+triton-windows = ">=3.4,<3.5"
+
+# visualbruno/ComfyUI-Trellis2 @14597418bbe33a440ead4667e2966408f0524a21, wheels/Windows/Torch280
+cumesh = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/cumesh-1.0-cp311-cp311-win_amd64.whl" }
+flex-gemm = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/flex_gemm-0.0.1-cp311-cp311-win_amd64.whl" }
+o-voxel = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/o_voxel-0.0.1-cp311-cp311-win_amd64.whl" }
+nvdiffrast = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrast-0.4.0-cp311-cp311-win_amd64.whl" }
+nvdiffrec-render = { url = "https://raw.githubusercontent.com/visualbruno/ComfyUI-Trellis2/14597418bbe33a440ead4667e2966408f0524a21/wheels/Windows/Torch280/nvdiffrec_render-0.0.0-cp311-cp311-win_amd64.whl" }
+
+# Pixal3D's own utils3d pin (py3-none-any), and MoGe's (a different package name).
+utils3d = { url = "https://github.com/LDYang694/Storages/releases/download/20260430/utils3d-0.0.2-py3-none-any.whl" }
+utils3d-moge = { git = "https://github.com/EasternJournalist/utils3d-moge.git", rev = "62f09d58509485564e24d5d9f6aac9ee9ebc0c37" }
+
+# Pixal3D requirements.txt @cdbb2bb, as pinned there.
+pillow = "==12.0.0"
+imageio = "==2.37.2"
+imageio-ffmpeg = "==0.6.0"
+tqdm = "==4.67.1"
+easydict = "==1.13"
+opencv-python-headless = "==4.12.0.88"
+trimesh = "==4.10.1"
+transformers = "==4.57.3"
+zstandard = "==0.25.0"
+kornia = "==0.8.2"
+timm = "==1.0.22"
+diffusers = "==0.37.1"
+accelerate = "==1.13.0"
+plyfile = "==1.1.3"
+# measured lower bound (desktop/pixi.toml upstream): 0.4.5 cannot open the 1.3B checkpoint
+safetensors = ">=0.5"
+# BiRefNet remote code; MoGe; the HTTP shim; OpenUSD (the interchange)
+einops = "*"
+scipy = "*"
+huggingface-hub = ">=0.34,<1.0"
+fastapi = "*"
+uvicorn = "*"
+requests = "*"
+usd-core = "*"
+
+[activation.env]
+# Windows: no flash-attn build; torch SDPA is upstream's own supported backend.
+ATTN_BACKEND = "sdpa"
+PYTHONUTF8 = "1"
+PYTHONUNBUFFERED = "1"
+# src/ paths and the weight paths are set by serve.py / smoke.py (pixi does not
+# expand $PIXI_PROJECT_ROOT inside activation.env on win-64)
+
+[tasks]
+fetch = "python fetch.py"
+serve = "python serve.py"
+smoke = "python smoke.py"
+smoke-stub = "python smoke.py --stub"
+check = "python smoke.py --imports-only"

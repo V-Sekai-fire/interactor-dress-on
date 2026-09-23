@@ -1,0 +1,235 @@
+diff --git a/server.py b/server.py
+index af7adf1..ae03787 100644
+--- a/server.py
++++ b/server.py
+@@ -92,10 +92,53 @@ def _validate_extract(job_input: dict) -> dict:
+     }
+ 
+ 
++def _add_meshes(stage, glb: Path) -> int:
++    """interactor-dress-on (service-win.patch): OpenUSD is the interchange, so the
++    layer carries the geometry itself -- one UsdGeom.Mesh per glTF primitive, in
++    the GLB's own frame (Y up, meters: extract() already rotated it), with vertex
++    normals and the UV set as primvars:st. Returns the number of meshes."""
++    import numpy as np
++    import trimesh
++    from pxr import Gf, Sdf, UsdGeom, Vt
++
++    try:
++        scene = trimesh.load(str(glb), force="scene")
++    except Exception:
++        return 0
++    count = 0
++    for node in scene.graph.nodes_geometry:
++        transform, geom_name = scene.graph[node]
++        mesh = scene.geometry[geom_name]
++        if not isinstance(mesh, trimesh.Trimesh) or len(mesh.faces) == 0:
++            continue
++        mesh = mesh.copy()
++        mesh.apply_transform(transform)
++        prim = UsdGeom.Mesh.Define(stage, f"/Asset/Geometry/Mesh_{count}")
++        points = np.asarray(mesh.vertices, dtype=np.float32)
++        prim.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(points))
++        faces = np.asarray(mesh.faces, dtype=np.int32)
++        prim.CreateFaceVertexCountsAttr(Vt.IntArray.FromNumpy(np.full(len(faces), 3, np.int32)))
++        prim.CreateFaceVertexIndicesAttr(Vt.IntArray.FromNumpy(faces.reshape(-1)))
++        prim.CreateNormalsAttr(Vt.Vec3fArray.FromNumpy(np.asarray(mesh.vertex_normals, np.float32)))
++        prim.SetNormalsInterpolation(UsdGeom.Tokens.vertex)
++        # glTF winds counter-clockwise, as USD's default rightHanded does
++        prim.CreateOrientationAttr(UsdGeom.Tokens.rightHanded)
++        prim.CreateSubdivisionSchemeAttr(UsdGeom.Tokens.none)
++        prim.CreateExtentAttr(Vt.Vec3fArray([Gf.Vec3f(*points.min(0).tolist()), Gf.Vec3f(*points.max(0).tolist())]))
++        uv = getattr(mesh.visual, "uv", None)
++        if uv is not None and len(uv) == len(points):
++            st = UsdGeom.PrimvarsAPI(prim).CreatePrimvar(
++                "st", Sdf.ValueTypeNames.TexCoord2fArray, UsdGeom.Tokens.vertex)
++            st.Set(Vt.Vec2fArray.FromNumpy(np.asarray(uv, np.float32)))
++        count += 1
++    return count
++
++
+ def _to_usd(glb: Path, work: Path) -> Path:
+     """Writes the base USD layer for this asset (RFD 0053). The GLB is an
+     asset-path attribute, not a `references` arc -- plain usd-core reads no
+-    glTF, and a reference would fail to resolve."""
++    glTF, and a reference would fail to resolve. The geometry itself is
++    written as UsdGeom.Mesh prims under /Asset/Geometry (interactor-dress-on)."""
+     from pxr import Sdf, Usd, UsdGeom
+ 
+     layer = work / "layer.usda"
+@@ -104,12 +147,13 @@ def _to_usd(glb: Path, work: Path) -> Path:
+     UsdGeom.SetStageMetersPerUnit(stage, 1.0)
+     root = UsdGeom.Xform.Define(stage, "/Asset")
+     stage.SetDefaultPrim(root.GetPrim())
+-    geometry = stage.DefinePrim("/Asset/Geometry")
++    geometry = UsdGeom.Xform.Define(stage, "/Asset/Geometry").GetPrim()
+     geometry.CreateAttribute("weftspun:sourceAsset", Sdf.ValueTypeNames.Asset).Set(
+         Sdf.AssetPath(glb.name)
+     )
+     geometry.CreateAttribute("weftspun:sourceFormat", Sdf.ValueTypeNames.Token).Set("gltf")
+     geometry.CreateAttribute("weftspun:stage", Sdf.ValueTypeNames.Token).Set("image_to_mesh")
++    _add_meshes(stage, glb)
+     stage.GetRootLayer().Save()
+     return layer
+ 
+@@ -137,8 +181,13 @@ def predict(job_input: dict) -> dict:
+             "stub": True,
+         }
+ 
++    import time
++
++    import torch
+     import worker_entry
+ 
++    torch.cuda.reset_peak_memory_stats()
++    t0 = time.perf_counter()
+     result = worker_entry.generate(
+         str(image_path),
+         seed=args["seed"],
+@@ -154,6 +203,8 @@ def predict(job_input: dict) -> dict:
+         "camera_params": result["camera_params"],
+         "seed": args["seed"],
+         "stub": False,
++        "seconds": time.perf_counter() - t0,
++        "vram_peak_mib": torch.cuda.max_memory_allocated() / 2**20,
+     }
+ 
+ 
+@@ -166,17 +217,27 @@ def extract(job_input: dict) -> dict:
+     if STUB:
+         glb.write_bytes(bytes([0x67, 0x6C, 0x54, 0x46, 0x02]) + b"stub")
+     else:
++        import time
++
++        import torch
+         import worker_entry
+ 
++        torch.cuda.reset_peak_memory_stats()
++        t0 = time.perf_counter()
+         worker_entry.extract(
+             base64.b64decode(args["state"]),
+             args["decimation_target"],
+             args["texture_size"],
+             str(glb),
+         )
++        measured = {"seconds": time.perf_counter() - t0,
++                    "vram_peak_mib": torch.cuda.max_memory_allocated() / 2**20}
+ 
+     layer = _to_usd(glb, work)
+-    return {"glb": _b64(glb.read_bytes()), "layer": _b64(layer.read_bytes()), "stub": STUB}
++    out = {"glb": _b64(glb.read_bytes()), "layer": _b64(layer.read_bytes()), "stub": STUB}
++    if not STUB:
++        out.update(measured)
++    return out
+ 
+ 
+ def load() -> None:
+@@ -238,4 +299,4 @@ if __name__ == "__main__":
+     import uvicorn
+ 
+     load()
+-    uvicorn.run(build_app(), host="0.0.0.0", port=int(os.environ.get("PORT", "8000")))
++    uvicorn.run(build_app(), host=os.environ.get("HOST", "0.0.0.0"), port=int(os.environ.get("PORT", "8000")))
+diff --git a/worker_entry.py b/worker_entry.py
+index c631bb7..a8210ae 100644
+--- a/worker_entry.py
++++ b/worker_entry.py
+@@ -31,33 +31,36 @@ import o_voxel
+ 
+ # --- Constants, verbatim from app.py ---
+ CASCADE_MAX_NUM_TOKENS = 49152
+-MOGE_MODEL_NAME = "Ruicheng/moge-2-vitl"
++# WEFTSPUN (interactor-dress-on, service-win.patch): MoGe-3, and every aux model
++# from a pinned local path when the env names one.
++MOGE_MODEL_NAME = os.environ.get("PIXAL3D_MOGE", "Ruicheng/moge-3-vitl")
++DINO_MODEL_NAME = os.environ.get("PIXAL3D_DINO", "camenduru/dinov3-vitl16-pretrain-lvd1689m")
+ WILD_MESH_SCALE = 1.0
+ WILD_EXTEND_PIXEL = 0
+ WILD_IMAGE_RESOLUTION = 512
+ 
+ IMAGE_COND_CONFIGS = {
+     "ss": {
+-        "model_name": "camenduru/dinov3-vitl16-pretrain-lvd1689m",
++        "model_name": DINO_MODEL_NAME,
+         "image_size": 512,
+         "grid_resolution": 16,
+     },
+     "shape_512": {
+-        "model_name": "camenduru/dinov3-vitl16-pretrain-lvd1689m",
++        "model_name": DINO_MODEL_NAME,
+         "image_size": 512,
+         "grid_resolution": 32,
+         "use_naf_upsample": True,
+         "naf_target_size": 512,
+     },
+     "shape_1024": {
+-        "model_name": "camenduru/dinov3-vitl16-pretrain-lvd1689m",
++        "model_name": DINO_MODEL_NAME,
+         "image_size": 1024,
+         "grid_resolution": 64,
+         "use_naf_upsample": True,
+         "naf_target_size": 512,
+     },
+     "tex_1024": {
+-        "model_name": "camenduru/dinov3-vitl16-pretrain-lvd1689m",
++        "model_name": DINO_MODEL_NAME,
+         "image_size": 1024,
+         "grid_resolution": 64,
+         "use_naf_upsample": True,
+@@ -82,7 +85,7 @@ def build_image_cond_model(config: dict):
+ 
+ 
+ def load_moge_model(device="cuda", model_name=MOGE_MODEL_NAME):
+-    from moge.model.v2 import MoGeModel
++    from moge.model.v3 import MoGeModel  # WEFTSPUN: MoGe-3
+ 
+     moge_model = MoGeModel.from_pretrained(model_name).to(device)
+     moge_model.eval()
+@@ -185,6 +188,23 @@ def get_camera_params_wild_moge(
+     return {"camera_angle_x": camera_angle_x, "distance": distance, "mesh_scale": mesh_scale}
+ 
+ 
++_ENVMAP = None
++
++
++def _envmap():
++    """app.py's forest HDRI as an EnvMap on the GPU, loaded once. # WEFTSPUN"""
++    global _ENVMAP
++    if _ENVMAP is None:
++        import cv2
++        from pixal3d.renderers import EnvMap
++        import pixal3d
++
++        hdri = os.path.join(os.path.dirname(os.path.dirname(pixal3d.__file__)), "assets", "hdri", "forest.exr")
++        img = cv2.cvtColor(cv2.imread(hdri, cv2.IMREAD_UNCHANGED), cv2.COLOR_BGR2RGB)
++        _ENVMAP = EnvMap(torch.tensor(img, dtype=torch.float32, device="cuda"))
++    return _ENVMAP
++
++
+ # --- Latent state. app.py packs to a temp file; here the npz bytes go over
+ # HTTP so the server stays stateless. # WEFTSPUN ---
+ 
+@@ -267,9 +287,21 @@ def generate(
+ 
+     views, cameras = [], []
+     if nviews > 0:
+-        frames, extrinsics, intrinsics = render_utils.render_multiview(
+-            mesh, resolution=view_resolution, nviews=nviews
++        # WEFTSPUN (interactor-dress-on, service-win.patch): render_multiview
++        # renders a MeshWithVoxel through PbrMeshRenderer, whose render() needs
++        # an envmap that render_multiview never passes, and it returns no
++        # 'color' key. Same cameras as render_multiview; one HDRI (app.py's
++        # forest.exr); the lit 'shaded' image.
++        cams = [render_utils.sphere_hammersley_sequence(i, nviews) for i in range(nviews)]
++        extrinsics, intrinsics = render_utils.yaw_pitch_r_fov_to_extrinsics_intrinsics(
++            [c[0] for c in cams], [c[1] for c in cams], 2, 40
++        )
++        res = render_utils.render_frames(
++            mesh, extrinsics, intrinsics,
++            {"resolution": view_resolution, "bg_color": (0, 0, 0)},
++            envmap=_envmap(),
+         )
++        frames = res["shaded"]
+         for frame in frames:
+             buffer = io.BytesIO()
+             Image.fromarray(np.asarray(frame)).save(buffer, format="PNG")

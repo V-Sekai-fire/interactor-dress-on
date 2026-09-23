@@ -1,0 +1,81 @@
+cff-version: 1.2.0
+message: If you use this service, cite Pixal3D and the service it wraps.
+title: Pixal3D image-to-textured-mesh service, native win-64 (pixi)
+abstract: >-
+  The Stage 7 image -> mesh HTTP service (AGENTS.md, Stage 7 exception) run
+  natively on Windows 11 under pixi, with no Docker and no WSL. Nothing is
+  vendored: fetch.py clones each source below at its pinned commit into src/
+  (gitignored) and applies the patches listed here.
+
+
+  patches/service-win.patch (interactor-pixal3d-image-to-textured-mesh
+  @61df29e): worker_entry.py loads MoGe-3 (moge.model.v3, default
+  Ruicheng/moge-3-vitl) instead of MoGe-2, and takes the MoGe and DINOv3
+  weights from PIXAL3D_MOGE / PIXAL3D_DINO; server.py writes the geometry
+  into the USD layer as UsdGeom.Mesh prims under /Asset/Geometry (points,
+  faceVertexCounts/Indices, vertex normals, primvars:st, extent; stage upAxis
+  Y, metersPerUnit 1) beside the GLB asset path it already wrote, reports
+  per-call seconds and torch peak VRAM, and takes HOST from the environment;
+  worker_entry.generate renders its preview views through render_frames with
+  an EnvMap (app.py's forest.exr) and keeps the 'shaded' image, because
+  render_multiview passes PbrMeshRenderer.render no envmap (TypeError) and
+  returns no 'color' key.
+
+
+  patches/pixal3d-local-aux.patch (Pixal3D @cdbb2bb): NAF is loaded from the
+  local patched clone (NAF_REPO, NAF_WEIGHTS) instead of torch.hub's
+  valeoai/NAF; PIXAL3D_REMBG_MODEL overrides pipeline.json's gated
+  briaai/RMBG-2.0 with ZhengPeng7/BiRefNet_HR-matting (run at Pixal3D's
+  1024^2, as gates/7-pixal3d/aux-models/birefnet.md records).
+
+
+  patches/naf-na2d-block.patch (NAF @37f2dfc): NATTEN has no win-64 build, so
+  CrossAttention runs na2d_block, the exact pure-torch neighbourhood attention
+  proven in gates/7-pixal3d/aux-models/naf_ref.py (<= 4.6e-7 vs NATTEN), on
+  the low-res K/V directly; hubconf.naf takes a local checkpoint_path.
+
+
+  patches/moge-flexgemm2.patch (MoGe @74fbce0) and
+  patches/flexgemm2-own-cache.patch (FlexGEMM @b2fadb2): MoGe-3's refiner
+  needs FlexGEMM 2.0 (flex_gemm.nn), whose API Pixal3D's 0.0.1 calls no longer
+  exist in; FlexGEMM 2.0 runs pure Triton without its CUDA extension and
+  imports itself relatively, so fetch.py exposes it as the package flex_gemm2,
+  MoGe imports that name, and its autotune cache moves to ~/.flex_gemm2.
+
+
+  Binary wheels (not built here): cumesh 1.0, flex_gemm 0.0.1, o_voxel 0.0.1,
+  nvdiffrast 0.4.0, nvdiffrec_render 0.0.0, cp311 win_amd64 for Torch 2.8.0 +
+  cu128, from visualbruno/ComfyUI-Trellis2 @14597418 wheels/Windows/Torch280
+  (sha256 in README.md); utils3d 0.0.2 from LDYang694/Storages release
+  20260430 (Pixal3D's own pin); torch/torchvision from download.pytorch.org
+  cu128; triton-windows from PyPI.
+authors:
+  - name: TencentARC (Pixal3D)
+  - name: Microsoft (TRELLIS.2, MoGe)
+  - name: Jianfeng Xiang (FlexGEMM, CuMesh)
+  - name: valeo.ai (NAF)
+  - name: K. S. Ernest (iFire) Lee
+repository-code: https://github.com/V-Sekai-fire/interactor-pixal3d-image-to-textured-mesh
+commit: 61df29e1878c8f0dcda71dd735a002493a068ba2
+license: MIT
+references:
+  - type: software
+    title: Pixal3D
+    repository-code: https://github.com/V-Sekai-fire/Pixal3D
+    commit: cdbb2bbffbf4e6f298b5f2af3d1d76a8d823d2af
+  - type: software
+    title: MoGe
+    repository-code: https://github.com/V-Sekai-fire/MoGe
+    commit: 74fbce054ebed49800de42d0ad0e83495065719a
+  - type: software
+    title: NAF
+    repository-code: https://github.com/V-Sekai-fire/NAF
+    commit: 37f2dfc180f2de53d98bd601109c0da0dd6b0f43
+  - type: software
+    title: FlexGEMM
+    repository-code: https://github.com/JeffreyXiang/FlexGEMM
+    commit: b2fadb29d41846c7981ade6801ffc689fae119cf
+  - type: software
+    title: ComfyUI-Trellis2 (Windows wheels)
+    repository-code: https://github.com/visualbruno/ComfyUI-Trellis2
+    commit: 14597418bbe33a440ead4667e2966408f0524a21

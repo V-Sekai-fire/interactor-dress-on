@@ -1,0 +1,46 @@
+diff --git a/pixal3d/pipelines/pixal3d_image_to_3d.py b/pixal3d/pipelines/pixal3d_image_to_3d.py
+index 7129482..1bfa4b4 100644
+--- a/pixal3d/pipelines/pixal3d_image_to_3d.py
++++ b/pixal3d/pipelines/pixal3d_image_to_3d.py
+@@ -120,7 +120,13 @@ class Pixal3DImageTo3DPipeline(Pipeline):
+         pipeline.image_cond_model_shape_1024 = None
+         pipeline.image_cond_model_tex_1024 = None
+ 
+-        pipeline.rembg_model = getattr(rembg, args['rembg_model']['name'])(**args['rembg_model']['args'])
++        rembg_args = dict(args['rembg_model']['args'])
++        import os
++        if os.environ.get('PIXAL3D_REMBG_MODEL'):
++            # interactor-dress-on: BiRefNet_HR-matting from a pinned local copy
++            # instead of the gated briaai/RMBG-2.0
++            rembg_args['model_name'] = os.environ['PIXAL3D_REMBG_MODEL']
++        pipeline.rembg_model = getattr(rembg, args['rembg_model']['name'])(**rembg_args)
+         
+         pipeline.low_vram = args.get('low_vram', True)
+         pipeline.default_pipeline_type = args.get('default_pipeline_type', '1024_cascade')
+diff --git a/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py b/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py
+index ccafe87..a80e7d7 100644
+--- a/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py
++++ b/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py
+@@ -417,9 +417,19 @@ class DinoV3ProjFeatureExtractor(nn.Module):
+         if self.naf_model is None:
+             import torch.hub
+             device = next(self.model.parameters()).device
+-            self.naf_model = torch.hub.load(
+-                "valeoai/NAF", "naf", pretrained=True, device=device, trust_repo=True
+-            )
++            import os
++            naf_repo = os.environ.get("NAF_REPO")
++            if naf_repo:
++                # interactor-dress-on: the pinned, patched NAF clone and local weights
++                # (tools/services/pixal3d/patches/pixal3d-local-aux.patch)
++                self.naf_model = torch.hub.load(
++                    naf_repo, "naf", source="local", pretrained=False, device=device,
++                    checkpoint_path=os.environ.get("NAF_WEIGHTS"),
++                )
++            else:
++                self.naf_model = torch.hub.load(
++                    "valeoai/NAF", "naf", pretrained=True, device=device, trust_repo=True
++                )
+             self.naf_model.eval()
+             self.naf_model.requires_grad_(False)
+         

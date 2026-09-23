@@ -1,0 +1,17 @@
+torch 2.8.0+cu128 cuda 12.8 device NVIDIA GeForce RTX 3090
+triton 3.4.0
+  ok   import cumesh
+  ok   import flex_gemm
+  ok   import o_voxel
+  ok   import utils3d
+  ok   import utils3d_moge
+  ok   import nvdiffrast.torch
+  ok   import nvdiffrec_render
+  ok   import flex_gemm2.nn
+  ok   import moge.model.v3
+  ok   import pxr.UsdGeom
+  ok   nvdiffrast: rasterize covered 1352 px
+  ok   flex_gemm: grid_sample_3d(feats: torch.Tensor, coords: torch.Tensor, shape: torch.Size, grid: torch.Tensor, mode: str = 'trilinear') -> torch.Tensor importable
+  ok   flex_gemm conv (triton): SparseConv3d (64, 16) -> (64, 16) (flex_gemm)
+  ok   cumesh: CuMesh.init tetra -> 4 verts 4 faces
+  ok   naf na2d_block: na2d_block vs brute force max|diff| 1.33e-15

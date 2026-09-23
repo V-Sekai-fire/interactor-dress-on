@@ -1,0 +1,34 @@
+frame    0: nv=625 nf=1152 faces_equal=True max|dx|=0
+frame    1: nv=625 nf=1152 faces_equal=True max|dx|=0
+frame   10: nv=625 nf=1152 faces_equal=True max|dx|=0
+frame  100: nv=625 nf=1152 faces_equal=True max|dx|=0
+frame  350: nv=625 nf=1152 faces_equal=True max|dx|=0
+worst max|dx| over listed frames = 0
+
+# byte-level, rotating_sphere-randseed-1-20260922_172514-forwardThresh--9.0-LBFGS vs rotating_sphere-randseed-1-20260922_132726-forwardThresh--9.0-LBFGS
+iter0: 0 differing of 354 files
+iter1: 0 differing of 354 files
+iter2: 0 differing of 354 files
+iter3: 0 differing of 354 files
+last_frame_meshes: 0 differing of 5 files
+backwardLog.txt identical
+task_info.txt identical
+scene-config.txt identical
+iters.txt identical
+forwardLog.txt differs in runtime lines only (0 non-timing lines differ)
+
+# control: same run, iter0 (mu 0.539770) vs iter1 (mu 0.010000) -- the comparison must see this
+frame    1: nv=625 nf=1152 faces_equal=True max|dx|=0
+frame   10: nv=625 nf=1152 faces_equal=True max|dx|=0.0001792147
+frame  100: nv=625 nf=1152 faces_equal=True max|dx|=0.211739
+frame  350: nv=625 nf=1152 faces_equal=True max|dx|=3.63623
+worst max|dx| over listed frames = 3.63623
+
+# control: iter0 (mu 0.539770) vs iter2 (mu 0.375146)
+frame    1: nv=625 nf=1152 faces_equal=True max|dx|=0
+frame   10: nv=625 nf=1152 faces_equal=True max|dx|=4.1e-05
+frame   20: nv=625 nf=1152 faces_equal=True max|dx|=0.000187
+frame   50: nv=625 nf=1152 faces_equal=True max|dx|=0.00776
+frame  100: nv=625 nf=1152 faces_equal=True max|dx|=0.134851
+frame  350: nv=625 nf=1152 faces_equal=True max|dx|=0.180407
+worst max|dx| over listed frames = 0.180407

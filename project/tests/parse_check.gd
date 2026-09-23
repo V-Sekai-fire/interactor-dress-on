@@ -9,7 +9,9 @@ const PATHS := ["res://main.gd", "res://gate_loop.gd", "res://stages/sandbox_uti
 		"res://stages/fit_stage.gd", "res://stages/infer_stage.gd", "res://stages/pipeline.gd",
 		"res://util/skeleton15.gd", "res://util/mesh_topo.gd", "res://util/mesh_wire.gd", "res://util/obj_io.gd",
 		"res://xr/pen_source_scripted.gd", "res://xr/pen_bridge.gd", "res://xr/xr_world.gd",
-		"res://tests/test_loop_units.gd", "res://xr_main.tscn", "res://main.tscn"]
+		"res://tests/test_loop_units.gd", "res://tests/wrapper_audit.gd", "res://tests/probe_main_wrappers.gd",
+		"res://gate_curvenet.gd", "res://gate_fit.gd", "res://gate_fit_smoke.gd", "res://gate_drape.gd", "res://gate_lbfgsb.gd",
+		"res://gate_runtime.gd", "res://probe_curvenet_wrappers.gd", "res://xr_main.tscn", "res://main.tscn"]
 
 func _initialize() -> void:
 	var f := FileAccess.open(ProjectSettings.globalize_path(OUT), FileAccess.WRITE)

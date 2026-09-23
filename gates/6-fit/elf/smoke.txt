@@ -1,0 +1,29 @@
+fit.elf smoke, 2026-09-22T22:13:33
+ok   fit_probe_exceptions: PASS exceptions: typed catch through two std::function got 41 (want 41); control 10 (want 10)
+ok   fit_probe_io: PASS io: fopen refused (errno 13), ifstream refused, open -1 (errno 13); counted 3 of 3 (total 3)
+ok   fit_probe_ldlt: PASS ldlt: Eigen::SimplicialLDLT n=200, relative residual 1.582e-16, max |x - x_true| 8.749e-14
+     fit_probe_io_paths: io_total 3
+  fopen /etc/hostname
+  fopen res://project.godot
+  open guest_probe.txt
+ok   fit_fixture_foxgirl (203 ms): OK reset | OK body 5128 v / 10171 f | OK skeletons 15 joints / 14 bones | OK garment 2682 v / 5220 f, no-fit 2005 | OK config 1046 bytes
+ok   fit_begin (3039 ms): OK begin: phases 4, target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248), source_scale 0.90869314092562126, io_attempts 0
+     fit_status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 heap_used 11.4 MiB heap_free 1627.0 MiB chunks 79255 host_heap_usage=11903776 | last: 
+ok   fit_step: STARTED fit_step (poll fit_status)
+     BUSY fit_step for 60.2 s (main thread frames 3623)
+     BUSY fit_step for 120.4 s (main thread frames 7235)
+     BUSY fit_step for 180.7 s (main thread frames 10847)
+     BUSY fit_step for 240.9 s (main thread frames 14463)
+     BUSY fit_step for 300.1 s (main thread frames 18016)
+     BUSY fit_step for 360.3 s (main thread frames 21626)
+     BUSY fit_step for 420.6 s (main thread frames 25244)
+     BUSY fit_step for 480.8 s (main thread frames 28854)
+     BUSY fit_step for 541.0 s (main thread frames 32464)
+ok   phase 0: phase 1/4 newton 34 energy 0.0014895000331425965 |grad| 0.856622 status 4 io_attempts 0 io_total 3 heap_used 122.9 MiB heap_free 1515.5 MiB chunks 79255 host_heap_usage=128847904 | last: host_ms=596324 OK phase 0 (substep 0, AL): newton 34 minimize 1 post_steps 35 energy 0.0014895000331425965 |grad| 0.856622 status 4 io_attempts 0
+%s phase 0 vs native f32: newton %d (native %d), energy %s (native %s), rel %.3e
+ok   fit_check: OK none
+     fit_result: garment 2682 v, bounds [P: (-0.741331, -0.338536, 2.258918), S: (1.57074, 1.078459, 2.537612)]
+     fit_preview: preview 2682 v, bounds [P: (-0.741331, -0.338536, 2.258918), S: (1.57074, 1.078459, 2.537612)]
+     fit_sdf: sdf at 2682 garment vertices: min -0.0100 max 0.2518 voxels, 755 inside
+wall 656.1 s, frames 35840
+RESULT: PASS

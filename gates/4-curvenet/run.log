@@ -1,0 +1,72 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate 4 (curvenet.elf), 2026-09-23T05:21:36, Godot 4.7.2-stable (official)
+load curvenet.elf: 153.6 ms; execution_timeout=8000 memory_max=512 heap=75312
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+--- checks
+PASS check_names: 9 checks (beautify_determinism curvenet_extract patch_pipeline crossing_split constraint_solver pen_sphere extractor_cube delaunay_small_scale mesh_weld)
+guest beautify_determinism         4.1 ms heap=    76016  PASS beautify_determinism ints=18,1,1 fsig=b16d0e78d4430640/18 :: identical inputs match on 18 floats: yes; 0.05-perturbed differs: yes (control caught)
+guest curvenet_extract             0.9 ms heap=    76016  PASS curvenet_extract ints=1,0 fsig=9c1101467e8a059a/9 :: triangle -> 1 cycle(s); open path -> 0 (control)
+guest patch_pipeline            1218.6 ms heap=    81168  PASS patch_pipeline ints=3596,0 fsig=34695a7b254c4b6d/5640 :: cycle -> 3596 triangles; one-edge graph -> 0 (control)
+guest crossing_split            1153.2 ms heap=    81168  PASS crossing_split ints=9,9,1,9474,1,1,0,3 fsig=6c7da88789b6406c/14610 :: 9 edges, 9 nodes, 1 cycle(s), 9474 triangles; far edge 0 kept yes, crossed edge 1 replaced yes; add_stroke -> 0 cycles over 3 edges (control)
+guest constraint_solver            1.4 ms heap=    81168  PASS constraint_solver ints=3,1,1 fsig=cab1750c8fa84e50/9 :: mirror pins pulled anchors 0.05000 -> 0.00000 (tol 0.00500); raw input fails the tolerance: yes (control caught)
+guest pen_sphere                1142.7 ms heap=    81968  PASS pen_sphere ints=1,65,65,1,3954,1,3944,2,2,0,0 fsig=63a4eb50bc1212a1/6229 :: closed stroke -> 1 patch, 65/65 samples snapped; mesh 3954 tris 1 loop, remeshed 3944 tris 1 loop; curvenet 2 curves 2 knots; 270-degree arc -> 0 patches, split_closed=0 -> 0 (controls) [ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1 | ok patches=1 vertices=2040 triangles=3944 loops=1 components=1 euler=1 | ok sketch curves=2 knots=2 intersections=0 needs_setup=2]
+guest extractor_cube              14.4 ms heap=   392256  PASS extractor_cube ints=12,8,8,0 fsig=2a63f21c7c5ac8ca/386 :: cube -> 12 curves, 8 knots, 8 of degree >= 3; icosphere(3) -> 0 curves (control) [ok extract curves=12 knots=8 intersections=8 needs_setup=0]
+guest delaunay_small_scale         0.5 ms heap=   392256  PASS delaunay_small_scale ints=1,12,12,0 fsig=e40b63138f3b8d90/36 :: 1 mm polygon, n=11 h=8 -> 12 triangles (2n-2-h = 12); collinear -> refused (control)
+guest mesh_weld                    0.1 ms heap=   392256  PASS mesh_weld ints=4,5,2,1,1,4,1,2,2 fsig=befa41736e14ece3/12 :: welded: V=4 E=5 F=2, 1 component, 1 loop of 4, Euler 1; weld_eps=0 -> 2 components, 2 loops (control)
+--- compare
+PASS native-checks.log: 9 check lines, guest 9
+same  beautify_determinism   verdict PASS/PASS ints 18,1,1 fsig guest b16d0e78d4430640/18 native b16d0e78d4430640/18
+same  curvenet_extract       verdict PASS/PASS ints 1,0 fsig guest 9c1101467e8a059a/9 native 9c1101467e8a059a/9
+same  patch_pipeline         verdict PASS/PASS ints 3596,0 fsig guest 34695a7b254c4b6d/5640 native 34695a7b254c4b6d/5640
+same  crossing_split         verdict PASS/PASS ints 9,9,1,9474,1,1,0,3 fsig guest 6c7da88789b6406c/14610 native 6c7da88789b6406c/14610
+same  constraint_solver      verdict PASS/PASS ints 3,1,1 fsig guest cab1750c8fa84e50/9 native cab1750c8fa84e50/9
+same  pen_sphere             verdict PASS/PASS ints 1,65,65,1,3954,1,3944,2,2,0,0 fsig guest 63a4eb50bc1212a1/6229 native 63a4eb50bc1212a1/6229
+same  extractor_cube         verdict PASS/PASS ints 12,8,8,0 fsig guest 2a63f21c7c5ac8ca/386 native 2a63f21c7c5ac8ca/386
+same  delaunay_small_scale   verdict PASS/PASS ints 1,12,12,0 fsig guest e40b63138f3b8d90/36 native e40b63138f3b8d90/36
+same  mesh_weld              verdict PASS/PASS ints 4,5,2,1,1,4,1,2,2 fsig guest befa41736e14ece3/12 native befa41736e14ece3/12
+PASS guest vs native: verdicts and integer outputs identical in 9/9 checks
+PASS guest vs native: float signatures identical in 9/9 checks
+--- repeat
+PASS repeat in the same guest: 9/9 check lines byte-identical
+--- failpaths
+PASS cn_set_param(no_such_param) -> FAIL: unknown param 'no_such_param' (snap_radius, surface_offset, target_edge_length, split_closed, merge_eps, mirror)
+PASS curvenet_extract(out-of-range index) -> FAIL: triangles[1] = 1 out of range [0, 1)
+PASS mesh_build with no patches -> ok patches=0 vertices=0 triangles=0 loops=0 components=0 euler=0
+--- pen
+PASS body: SphereMesh r=0.5 rewound to wire winding, 2210 vertices 4224 triangles, signed volume 0.5216 (4/3 pi r^3 = 0.5236; > 0 is CCW-outward)
+cn_set_body: 94.0 ms  ok body vertices=2210 triangles=4096
+stroke 0: 65 samples, pen_begin+64 pen_point 3.6 ms (55.6 us/sample), pen_end 523.5 ms, heap 1523664  ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+stroke 1: 65 samples, pen_begin+64 pen_point 3.6 ms (56.1 us/sample), pen_end 551.5 ms, heap 1523664  ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+stroke 2: 65 samples, pen_begin+64 pen_point 4.2 ms (63.9 us/sample), pen_end 559.3 ms, heap 1523664  ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1
+pen_end latency (host-timed, 3 strokes): min 523.5 ms, median 551.5 ms, max 559.3 ms
+PASS closed stroke -> 1 patch (ok=1 valid=1 closed=1 new_patches=1 patches=1 edges=2 nodes=2 cycles=1)
+PASS patch 0 over the wire: 2067 vertices, 3998 triangles
+mesh_build(0.00): 26.4 ms, heap 1638928  ok patches=1 vertices=2067 triangles=3998 loops=1 components=1 euler=1
+PASS mesh_build(0.00): 2067 vertices, 3998 triangles, 1 boundary loop (134 vertices), 3998 patch ids, ArrayMesh with 1 surface
+PASS mesh_build(0.00): CCW-outward, area-weighted normal (-0.000301, 0.999999, -0.000991) (the cap's outward is +Y)
+mesh_build(0.02): 416.9 ms, heap 1638928  ok patches=1 vertices=2061 triangles=3986 loops=1 components=1 euler=1
+PASS mesh_build(0.02): 2061 vertices, 3986 triangles, 1 boundary loop (134 vertices), 3986 patch ids, ArrayMesh with 1 surface
+PASS mesh_build(0.02): CCW-outward, area-weighted normal (-0.000301, 0.999999, -0.000991) (the cap's outward is +Y)
+curvenet_build: 1.0 ms  ok sketch curves=2 knots=2 intersections=0 needs_setup=2
+PASS curvenet over the wire: 2 curves (both ends on knots: true), 2 knots of degree [2, 2]; Curve3D length 2.688 m
+heap: 392256 before the body, 1643152 after the pen, mesh and curvenet steps
+--- extract
+curvenet_extract(cube): 1.8 ms  ok extract curves=12 knots=8 intersections=8 needs_setup=0
+PASS cube over the wire: 12 curves, 8 knots, 8 intersections of degree >= 3
+--- nm
+PASS llvm-nm -C curvenet.elf: 13537 symbols, 0 Eigen:: (must be 0), 27 CassieSketcher:: (control: > 0)
+--- wrappers
+PASS rule 8: 23 ADD_API_FUNCTION in guest/curvenet/main.cpp, main.gd 14553 bytes
+PASS rule 8: every curvenet entry point has a main.gd wrapper (23/23; 19 wrappers)
+PASS rule 8: every wrapper argument has a default
+PASS rule 8 control: main.gd without the cn_get_param wrapper -> missing ["cn_get_param"]
+PASS rule 8 control: patch_vertices(i: int) -> no default ["patch_vertices(i: int)"]
+PASS project/main.gd compiles; its 19 wrappers take no required argument: cn_reset, cn_set_param, cn_get_param, cn_set_body_sphere, pen_begin, pen_point, pen_end, pen_demo_circle, patch_count, patch_vertices, patch_indices, curvenet_build, curvenet_extract_demo, mesh_build, mesh_array_mesh, mesh_patch_ids, curvenet_check, curvenet_checks, check_names
+RESULT: PASS
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

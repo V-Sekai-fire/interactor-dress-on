@@ -1,0 +1,5 @@
+# fit.elf's Lean-emitted kernels (Cut 6), by their Lean/Slang module names.
+# sdf_spline_hessian: FitForm's tricubic B-spline value/gradient/Hessian on
+# the brick-grid SDF (lean/Fit/SdfSplineHessian.lean), in place of OpenVDB's
+# SplineSampler::sampleHessian.
+sdf_spline_hessian

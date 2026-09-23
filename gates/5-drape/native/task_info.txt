@@ -1,0 +1,9 @@
+============Task Configuration:======================
+Forward Accuracy:0.00000000100
+Backward Accuracy:0.00050000000
+Rand seed:41
+Srand seed:1
+Optimizer:LBFGS
+mu: ON
+primitive mu id:
+0,

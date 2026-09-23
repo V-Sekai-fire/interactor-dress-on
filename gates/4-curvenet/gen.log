@@ -1,0 +1,40 @@
+BUILD_DIR=build bash kernels/cassie/gen.sh (emit mode, run twice; git diff -- kernels/cassie empty after the second run)
+
+== emitting Slang from Lean at <repo>/lean ==
+== 5 kernels into slang/ ==
+== slangc -target cpp ==
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E41035]: possible use of uninitialized variable
+  --> slang/curve_rdp.slang:37:10
+   |
+37 | uint last = stack[((stack_top * 2u) + 1u)];
+   |      ^^^^ variable 'stack' may be uninitialized on some paths; it is only conditionally assigned
+---'
+warning[E41035]: possible use of uninitialized variable
+  --> slang/curve_rdp.slang:36:10
+   |
+36 | uint first = stack[(stack_top * 2u)];
+   |      ^^^^^ variable 'stack' may be uninitialized on some paths; it is only conditionally assigned
+---'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
+== slangc -target spirv + spirv-val ==
+  curve_casteljau.spv valid (2056 bytes)
+  curve_generate_bezier.spv valid (6904 bytes)
+  curve_newton.spv valid (4828 bytes)
+warning[E41035]: possible use of uninitialized variable
+  --> <repo>/kernels/cassie/slang/curve_rdp.slang:37:10
+   |
+37 | uint last = stack[((stack_top * 2u) + 1u)];
+   |      ^^^^ variable 'stack' may be uninitialized on some paths; it is only conditionally assigned
+---'
+warning[E41035]: possible use of uninitialized variable
+  --> <repo>/kernels/cassie/slang/curve_rdp.slang:36:10
+   |
+36 | uint first = stack[(stack_top * 2u)];
+   |      ^^^^^ variable 'stack' may be uninitialized on some paths; it is only conditionally assigned
+---'
+  curve_rdp.spv valid (5948 bytes)
+  spmv_df32.spv valid (2880 bytes)

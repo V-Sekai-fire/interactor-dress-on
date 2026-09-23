@@ -1,0 +1,9 @@
+*.patch -text
+
+# resolve_specs --check compares these byte for byte with what it generates
+# (LF), and fit_embedded_specs.cpp embeds their bytes: keep them LF in every
+# checkout, whatever core.autocrlf says.
+guest/fit/specs/*.json text eol=lf
+
+# slangc writes CRLF on Windows; the committed emits are LF.
+kernels/fit/cpp/*.cpp text eol=lf

@@ -6,7 +6,7 @@ package Cloth where
 -- Every dependency is pinned in a V-Sekai-fire repo or fork
 -- (interactor-dress-on AGENTS.md rule 1).
 require LeanSlang from git
-  "https://github.com/V-Sekai-fire/contract-lean-slang.git" @ "e0e96da4ba8116a3dcfd860f6732d29eee13fe24"
+  "https://github.com/V-Sekai-fire/contract-lean-slang.git" @ "60532aef8ed70cc669ecab481182d0636c9e1ac3"
 
 -- Property testing for the AVBD specs (Cloth.Avbd.*). The existing
 -- `native_decide` examples pin single fixtures; plausible quantifies
@@ -27,6 +27,28 @@ lean_lib Probes
 
 lean_exe emit_probes where
   root := `EmitProbes
+
+-- The curvenet stage's kernels (Cut 4): CASSIE's four editing-pipeline
+-- kernels from entities-godot, see Cassie/CITATION.cff.
+lean_lib Cassie
+
+lean_exe emit_cassie where
+  root := `EmitCassie
+
+-- drape.elf's L-BFGS-B kernels (Cut 5). A default target, so a bare
+-- `lake build` checks their native_decide pins as well as Cloth's.
+@[default_target] lean_lib Drape
+
+lean_exe emit_drape where
+  root := `EmitDrape
+
+-- fit.elf's kernels (Cut 6): the SDF spline sampler FitForm evaluates.
+-- A default target, so a bare `lake build` checks their native_decide
+-- pins as well as Cloth's.
+@[default_target] lean_lib Fit
+
+lean_exe emit_fit where
+  root := `EmitFit
 
 -- Iterative-deepening witness search over the plausible ladder. Shares
 -- the `Level` shape (walkSteps / finBound / numInst) that witness-cpp

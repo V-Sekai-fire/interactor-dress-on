@@ -101,7 +101,7 @@ func _dv(name: String, args: Array = []) -> String:
 		return "FAIL: " + miss
 	return str(call_now(name, args))
 
-# backend: cpu | rd | auto (rd from 256 vertices).
+# backend: cpu | rd | auto (rd from 160 vertices at 90 fps: Gate 5 G9).
 func drape_open(backend: String = "auto") -> String:
 	return _dv("drape_open", [backend])
 
@@ -168,7 +168,8 @@ func drape_faces() -> PackedInt32Array:
 	var r = call_now("drape_faces")
 	return r if typeof(r) == TYPE_PACKED_INT32_ARRAY else PackedInt32Array()
 
-# Gate 5 drape jobs (cut-5): sphere_forward, sphere_backward, sim_gradcheck, bench_drape.
+# Gate 5 jobs: sphere_forward, sphere_backward, sim_gradcheck, bench_drape,
+# inverse_min, lbfgsb_components, lbfgsb_problems, lbfgsb_replay, lbfgsb_bench.
 func drape_job(name: String = "sphere_forward", backend: String = "auto", args: String = "") -> String:
 	var r := _dv("drape_job_start", [name, backend, args])
 	_drape_job_on = r.begins_with("STARTED")
@@ -177,3 +178,63 @@ func drape_job(name: String = "sphere_forward", backend: String = "auto", args: 
 
 func drape_job_result() -> String:
 	return _drape_job_status
+
+func drape_job_frame(i: int = 0) -> PackedFloat32Array:
+	if drape_api_missing() != "":
+		return PackedFloat32Array()
+	var r = call_now("drape_job_frame", [i])
+	return r if typeof(r) == TYPE_PACKED_FLOAT32_ARRAY else PackedFloat32Array()
+
+func drape_job_names() -> String:
+	return _dv("drape_job_names")
+
+# L-BFGS-B over the session's parameters (drape.elf's drape_queue_optimize):
+# spec "params=mu[,kTri,...] loss=match_trajectory mode=native steps=N vec=cpu
+# m=10 delta=1e-3 ...", one x0/lb/ub value per parameter, max_iter 0 = to
+# convergence. Poll drape_status, then drape_optimize_result.
+func drape_optimize(spec: String = "params=mu mode=native", x0: PackedFloat32Array = PackedFloat32Array([0.5]),
+		lb: PackedFloat32Array = PackedFloat32Array([0.01]), ub: PackedFloat32Array = PackedFloat32Array([1.0]),
+		max_iter: int = 10) -> String:
+	var r := _dv("drape_queue_optimize", [spec, x0, lb, ub, max_iter])
+	if r.begins_with("QUEUED"):
+		_drape_status = "RUNNING"
+		ticks = 0
+	return r
+
+func drape_optimize_result() -> String:
+	return _dv("drape_optimize_result")
+
+# Hand the drape jobs a data file by key ("clear" drops them all).
+func drape_job_data(key: String = "clear", text: String = "") -> String:
+	return _dv("drape_job_data", [key, text])
+
+# The Gate 5 oracle (gates/5-drape/oracle) into drape.elf, for the jobs
+# lbfgsb_components, lbfgsb_problems and inverse_min.
+func lbfgsb_load_oracle() -> String:
+	var root := ProjectSettings.globalize_path("res://../gates/5-drape/oracle/")
+	var r := drape_job_data("clear", "")
+	for f in ["k_tri", "k_bend_density"]:
+		r = drape_job_data("invmin_" + f, FileAccess.get_file_as_string(root + "inverse_min/case_" + f + ".txt"))
+	for sub in [["components", ""], ["problems", "prob_"], ["traces", "trace_"]]:
+		var d := DirAccess.open(root + sub[0])
+		if d == null:
+			return "FAIL: no " + root + sub[0]
+		for f in d.get_files():
+			if f.ends_with(".txt"):
+				r = drape_job_data(sub[1] + f.get_basename(), FileAccess.get_file_as_string(root + sub[0] + "/" + f))
+	return r
+
+# One tick by hand, with the host clock (MCP stepping; rule 8). _process
+# already ticks every frame while a queue or a job runs, so this is only for
+# driving a session frame by frame from outside.
+func drape_tick() -> String:
+	var r := _dv("drape_tick", [Time.get_ticks_usec()])
+	_drape_status = r
+	return r
+
+func drape_job_tick() -> String:
+	var r := _dv("drape_job_tick", [Time.get_ticks_usec()])
+	_drape_job_status = r
+	if not r.begins_with("RUNNING"):
+		_drape_job_on = false
+	return r

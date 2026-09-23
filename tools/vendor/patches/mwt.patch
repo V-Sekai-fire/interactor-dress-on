@@ -1,0 +1,35 @@
+diff --git a/vendor/mwt/DMWT.cpp b/vendor/mwt/DMWT.cpp
+index 3f41e5061..981fbc985 100644
+--- a/vendor/mwt/DMWT.cpp
++++ b/vendor/mwt/DMWT.cpp
+@@ -3,6 +3,7 @@
+ #include "delaunay_geogram.h"
+ 
+ #include <chrono>
++#include <climits> // INT_MAX; the Godot-typed delaunay_geogram.h used to bring it in
+ #include <cmath>
+ #include <iostream>
+ 
+diff --git a/vendor/mwt/Point3.h b/vendor/mwt/Point3.h
+index 16ca8dbb6..9d533cc35 100644
+--- a/vendor/mwt/Point3.h
++++ b/vendor/mwt/Point3.h
+@@ -68,11 +68,14 @@ inline void reset_perturb_rng(unsigned seed = 0u)
+ 
+ inline void Point3::pertube(double ptb)
+ {
+-	std::uniform_int_distribution<int> d(0, 9999);
++	// interactor-dress-on: 0..9999 from mt19937's raw output (fixed by the
++	// standard) instead of std::uniform_int_distribution, whose algorithm
++	// libc++ and libstdc++ implement differently, so the native flat
++	// control and the guest perturbed degenerate input differently.
+ 	auto& rng = perturb_rng();
+-	x += ptb * d(rng);
+-	y += ptb * d(rng);
+-	z += ptb * d(rng);
++	x += ptb * double(rng() % 10000u);
++	y += ptb * double(rng() % 10000u);
++	z += ptb * double(rng() % 10000u);
+ }
+ 
+ inline std::ostream& operator<<(std::ostream& os, const Point3& p)

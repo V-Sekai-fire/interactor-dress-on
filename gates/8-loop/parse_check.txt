@@ -16,6 +16,15 @@ ok   res://xr/pen_source_scripted.gd
 ok   res://xr/pen_bridge.gd
 ok   res://xr/xr_world.gd
 ok   res://tests/test_loop_units.gd
+ok   res://tests/wrapper_audit.gd
+ok   res://tests/probe_main_wrappers.gd
+ok   res://gate_curvenet.gd
+ok   res://gate_fit.gd
+ok   res://gate_fit_smoke.gd
+ok   res://gate_drape.gd
+ok   res://gate_lbfgsb.gd
+ok   res://gate_runtime.gd
+ok   res://probe_curvenet_wrappers.gd
 ok   res://xr_main.tscn
 ok   res://main.tscn
 RESULT: PASS

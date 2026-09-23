@@ -1,0 +1,176 @@
+# Gate 5 drape (Task D), 2026-09-23T04:16:36, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 3090
+sandbox memory_max = 512
+sandbox execution_timeout = 8000
+OPENED cpu
+LOADED cpu [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+PASS faces: the sphere scene's 1152 triangles equal native iter0/0.obj's 1152, in order
+PASS frame 0 (rest) against native: max|dx| = 4.235e-22
+OPENED auto
+api auto: LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+SET [drape-config] solver=AVBD iters=16 damp=1 relax=1 color
+QUEUED forward 3 on rd
+PASS api: drape_open(auto) picked rd for 625 vertices, 3 steps in 7 ticks, positions finite=true, frame 1 max|dx| = 1.164e-10: IDLE DONE forward rd steps=3 (+3 of 3) finite=yes ymin=-0.001814 friction_events=2 projections=0 self_pushes=0 wall_ms=38.8 ms/step=12.936
+job sphere_forward rd steps=350              ticks=   967 wall_ms=   2460.9  PASS sphere_forward rd: 350 steps at mu 0.539770: DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896471 friction_events=133431 projections=28578 self_pushes=4515
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.539770
+    [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
+    step    1 |dx|_max=0.00030243324 friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
+    step    2 |dx|_max=0.000604830566 friction_blends=0 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    3 |dx|_max=0.000907192007 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    4 |dx|_max=0.00120951759 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    5 |dx|_max=0.00151180732 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step   10 |dx|_max=0.00302271731 friction_blends=6 friction_events=7 projections=0 self_pairs=0 self_pushes=0
+    step   20 |dx|_max=0.00604184717 friction_blends=21 friction_events=22 projections=0 self_pairs=0 self_pushes=0
+    step   50 |dx|_max=0.0150593817 friction_blends=120 friction_events=121 projections=0 self_pairs=0 self_pushes=0
+    step  100 |dx|_max=0.0433063507 friction_blends=329 friction_events=330 projections=0 self_pairs=1 self_pushes=1
+    step  200 |dx|_max=0.0309317634 friction_blends=488 friction_events=487 projections=96 self_pairs=19 self_pushes=19
+    step  350 |dx|_max=0.0428358912 friction_blends=514 friction_events=514 projections=215 self_pairs=25 self_pushes=25
+    DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896471 friction_events=133431 projections=28578 self_pushes=4515 wall_ms=2459.8 ms/step=7.028
+job sphere_forward cpu steps=100             ticks=    80 wall_ms=   6624.5  PASS sphere_forward cpu: 100 steps at mu 0.539770: DONE forward cpu steps=100 (+100 of 100) finite=yes ymin=-1.618776 friction_events=13050 projections=0 self_pushes=77
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.539770
+    [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
+    step    1 |dx|_max=0.00030243324 friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
+    step    2 |dx|_max=0.000604830566 friction_blends=0 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    3 |dx|_max=0.000907192007 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    4 |dx|_max=0.00120951759 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    5 |dx|_max=0.00151180732 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step   10 |dx|_max=0.00302271731 friction_blends=6 friction_events=7 projections=0 self_pairs=0 self_pushes=0
+    step   20 |dx|_max=0.00604184717 friction_blends=21 friction_events=22 projections=0 self_pairs=0 self_pushes=0
+    step   50 |dx|_max=0.0150594711 friction_blends=120 friction_events=121 projections=0 self_pairs=0 self_pushes=0
+    step  100 |dx|_max=0.0433113575 friction_blends=323 friction_events=326 projections=0 self_pairs=2 self_pushes=2
+    DONE forward cpu steps=100 (+100 of 100) finite=yes ymin=-1.618776 friction_events=13050 projections=0 self_pushes=77 wall_ms=6623.0 ms/step=66.230
+job sphere_forward rd steps=350 mu=0.3       ticks=   969 wall_ms=   2531.2  PASS sphere_forward rd: 350 steps at mu 0.300000: DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+    step    1 |dx|_max=0.00030243324 friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
+    step    2 |dx|_max=0.000604830566 friction_blends=0 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    3 |dx|_max=0.000907192007 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    4 |dx|_max=0.00120951759 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    5 |dx|_max=0.00151180732 friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step   10 |dx|_max=0.00302271731 friction_blends=6 friction_events=7 projections=0 self_pairs=0 self_pushes=0
+    step   20 |dx|_max=0.00604184717 friction_blends=21 friction_events=22 projections=0 self_pairs=0 self_pushes=0
+    step   50 |dx|_max=0.0150614083 friction_blends=124 friction_events=124 projections=0 self_pairs=0 self_pushes=0
+    step  100 |dx|_max=0.0413634777 friction_blends=328 friction_events=333 projections=0 self_pairs=2 self_pushes=2
+    step  200 |dx|_max=0.0227300227 friction_blends=486 friction_events=486 projections=117 self_pairs=27 self_pushes=27
+    step  350 |dx|_max=0.0397707261 friction_blends=515 friction_events=514 projections=223 self_pairs=32 self_pushes=32
+    DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2530.2 ms/step=7.229
+job sphere_backward rd steps=350 mus=0.539770,0.01,0.375146 ticks=  3927 wall_ms=   8968.3  PASS sphere_backward rd: 3 mu values, mode native
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    target: mu 0.300000, 351 frames; DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.954262 friction_events=133886 projections=32206 self_pushes=6125 wall_ms=2200.0 ms/step=6.286
+    mu 0.539770 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.896471 friction_events=133431 projections=28578 self_pushes=4515 wall_ms=2190.5 ms/step=6.258
+    RESULT mu=0.539770 loss=0.001412376 dL/dmu=0.0124439951
+      per-step dL/dmu (step N, N-1, ...): 1.08305e-08 1.2297e-08 1.31875e-08 1.37834e-08 1.39262e-08 1.37959e-08; summed once (no double carry) 2.76139737e-07
+      DONE backward rd mode=native loss=0.001412376 dL/dmu_0=0.0124439951 dL/dkTri=1.58964303e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-4.76431365e-15 raw(dk_tri=9.04330257e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.88521e-05 wall_ms=51.7
+    mu 0.010000 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-6.102720 friction_events=104486 projections=21265 self_pushes=5052 wall_ms=2229.4 ms/step=6.370
+    RESULT mu=0.010000 loss=1.64972503 dL/dmu=-50.674986
+      per-step dL/dmu (step N, N-1, ...): -4.25617e-05 -4.97591e-05 -5.48486e-05 -5.98612e-05 -6.25518e-05 -6.51287e-05; summed once (no double carry) -0.00132913093
+      DONE backward rd mode=native loss=1.64972503 dL/dmu_0=-50.674986 dL/dkTri=2.33323197e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.10647573e-13 raw(dk_tri=1.32734974e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.00107119 wall_ms=50.6
+    mu 0.375146 DONE forward rd steps=350 (+350 of 350) finite=yes ymin=-2.929962 friction_events=134065 projections=31199 self_pushes=6917 wall_ms=2194.9 ms/step=6.271
+    RESULT mu=0.375146 loss=0.000606529228 dL/dmu=0.00740848141
+      per-step dL/dmu (step N, N-1, ...): 6.34305e-09 7.34725e-09 8.13241e-09 8.2299e-09 8.34844e-09 8.42833e-09; summed once (no double carry) 1.68947111e-07
+      DONE backward rd mode=native loss=0.000606529228 dL/dmu_0=0.00740848141 dL/dkTri=-6.64583123e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.74203045e-14 raw(dk_tri=-3.78073955e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=1.22143e-05 wall_ms=49.1
+job sim_gradcheck cpu scene=panel colors=0   ticks=   384 wall_ms=   1154.5  PASS sim_gradcheck cpu: panel single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=0 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
+    [drape-scene] gradcheck_panel nV=64 nTri=98 nBend=133 nAttach=2 prims=0
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063440 friction_events=0 projections=0 self_pushes=0 wall_ms=61.4 ms/step=3.071
+    DONE backward cpu mode=native loss=3.29643714e-06  dL/dkTri=1.92768767e-09 dL/dkBend=0 dL/dkAttach=1.42097637e-13 dL/ddensity=1.51221316e-17 raw(dk_tri=1.88913403e-07 dk_bend=0 dk_attach=1.42097637e-13) stepsBack=20 |dL/dx0|=6.253e-06 wall_ms=7.7
+    DONE backward cpu mode=step loss=3.29643714e-06  dL/dkTri=3.0832773e-09 dL/dkBend=0 dL/dkAttach=8.68183889e-14 dL/ddensity=-1.54452566e-06 raw(dk_tri=3.02161186e-07 dk_bend=0 dk_attach=8.68183889e-14) stepsBack=20 |dL/dx0|=0.000298665 wall_ms=60.7
+    DONE backward cpu mode=unrolled loss=3.29643714e-06  dL/dkTri=1.71215267e-07 dL/dkBend=0 dL/dkAttach=7.99310759e-13 dL/ddensity=-8.5634301e-05 raw(dk_tri=1.67790965e-05 dk_bend=0 dk_attach=7.99310759e-13) stepsBack=20 |dL/dx0|=0.000286952 wall_ms=207.9
+    scene=panel colors=single steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
+    GC scene=panel colors=0 mode=native param=mu analytic=0 fd=0 rel=0
+    GC scene=panel colors=0 mode=step param=mu analytic=0 fd=0 rel=0
+    GC scene=panel colors=0 mode=unrolled param=mu analytic=0 fd=0 rel=0
+      d/dmu       fd(eps)=0               fd(10eps)=0               | native 0 rel=0 | step 0 rel=0 | unrolled 0 rel=0
+    GC scene=panel colors=0 mode=native param=kTri analytic=1.92768767e-09 fd=1.71231485e-07 rel=0.988742
+    GC scene=panel colors=0 mode=step param=kTri analytic=3.0832773e-09 fd=1.71231485e-07 rel=0.981994
+    GC scene=panel colors=0 mode=unrolled param=kTri analytic=1.71215267e-07 fd=1.71231485e-07 rel=9.47113e-05
+      d/dkTri     fd(eps)=1.71231485e-07  fd(10eps)=1.71270795e-07  | native 1.92768767e-09 rel=0.989 | step 3.0832773e-09 rel=0.982 | unrolled 1.71215267e-07 rel=9.47e-05
+    GC scene=panel colors=0 mode=native param=density analytic=1.51221316e-17 fd=-8.56358171e-05 rel=1
+    GC scene=panel colors=0 mode=step param=density analytic=-1.54452566e-06 fd=-8.56358171e-05 rel=0.981964
+    GC scene=panel colors=0 mode=unrolled param=density analytic=-8.5634301e-05 fd=-8.56358171e-05 rel=1.77048e-05
+      d/ddensity  fd(eps)=-8.56358171e-05 fd(10eps)=-8.5716026e-05  | native 1.51221316e-17 rel=1 | step -1.54452566e-06 rel=0.982 | unrolled -8.5634301e-05 rel=1.77e-05
+job sim_gradcheck cpu scene=plane colors=0   ticks=   384 wall_ms=   1181.6  PASS sim_gradcheck cpu: plane single colour: unrolled within 0.05 of central FD on mu, kTri, density: yes
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=0 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
+    [drape-scene] gradcheck_plane nV=64 nTri=98 nBend=133 nAttach=0 prims=1 | prim0 plane c=(0,-0.02,0) n=(0.0995037,0.995037,0) R=4.24264 mu=0.250000
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.008565 friction_events=1280 projections=480 self_pushes=0 wall_ms=62.6 ms/step=3.128
+    DONE backward cpu mode=native loss=6.04217335e-06 dL/dmu_0=0.00449773144 dL/dkTri=1.06027041e-11 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.30772599e-16 raw(dk_tri=1.03906502e-09 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=4.2392e-05 wall_ms=7.7
+    DONE backward cpu mode=step loss=6.04217335e-06 dL/dmu_0=9.65041987e-06 dL/dkTri=3.93790608e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.96886042e-07 raw(dk_tri=3.85914799e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000603604 wall_ms=59.4
+    DONE backward cpu mode=unrolled loss=6.04217335e-06 dL/dmu_0=5.12104641e-05 dL/dkTri=6.51862942e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-3.25935361e-06 raw(dk_tri=6.38825685e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000610285 wall_ms=207.5
+    scene=plane colors=single steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
+    GC scene=plane colors=0 mode=native param=mu analytic=0.00449773144 fd=5.11552588e-05 rel=0.988626
+    GC scene=plane colors=0 mode=step param=mu analytic=9.65041987e-06 fd=5.11552588e-05 rel=0.81135
+    GC scene=plane colors=0 mode=unrolled param=mu analytic=5.12104641e-05 fd=5.11552588e-05 rel=0.00107801
+      d/dmu       fd(eps)=5.11552588e-05  fd(10eps)=5.12050615e-05  | native 0.00449773144 rel=0.989 | step 9.65041987e-06 rel=0.811 | unrolled 5.12104641e-05 rel=0.00108
+    GC scene=plane colors=0 mode=native param=kTri analytic=1.06027041e-11 fd=6.81503321e-09 rel=0.998444
+    GC scene=plane colors=0 mode=step param=kTri analytic=3.93790608e-10 fd=6.81503321e-09 rel=0.942217
+    GC scene=plane colors=0 mode=unrolled param=kTri analytic=6.51862942e-09 fd=6.81503321e-09 rel=0.0434926
+      d/dkTri     fd(eps)=6.81503321e-09  fd(10eps)=6.53618201e-09  | native 1.06027041e-11 rel=0.998 | step 3.93790608e-10 rel=0.942 | unrolled 6.51862942e-09 rel=0.0435
+    GC scene=plane colors=0 mode=native param=density analytic=1.30772599e-16 fd=-3.33179493e-06 rel=1
+    GC scene=plane colors=0 mode=step param=density analytic=-1.96886042e-07 fd=-3.33179493e-06 rel=0.940907
+    GC scene=plane colors=0 mode=unrolled param=density analytic=-3.25935361e-06 fd=-3.33179493e-06 rel=0.0217424
+      d/ddensity  fd(eps)=-3.33179493e-06 fd(10eps)=-3.2834814e-06  | native 1.30772599e-16 rel=1 | step -1.96886042e-07 rel=0.941 | unrolled -3.25935361e-06 rel=0.0217
+job sim_gradcheck cpu scene=panel colors=1   ticks=   384 wall_ms=   2086.6  PASS sim_gradcheck cpu: panel multi-colour table (information)
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
+    [drape-scene] gradcheck_panel nV=64 nTri=98 nBend=133 nAttach=2 prims=0
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.063440 friction_events=0 projections=0 self_pushes=0 wall_ms=116.9 ms/step=5.846
+    DONE backward cpu mode=native loss=3.29482409e-06  dL/dkTri=1.92959027e-09 dL/dkBend=0 dL/dkAttach=1.42741188e-13 dL/ddensity=1.79225248e-17 raw(dk_tri=1.89099857e-07 dk_bend=0 dk_attach=1.42741188e-13) stepsBack=20 |dL/dx0|=6.25394e-06 wall_ms=10.7
+    DONE backward cpu mode=step loss=3.29482409e-06  dL/dkTri=3.08736035e-09 dL/dkBend=0 dL/dkAttach=8.79431408e-14 dL/ddensity=-1.54645359e-06 raw(dk_tri=3.02561325e-07 dk_bend=0 dk_attach=8.79431408e-14) stepsBack=20 |dL/dx0|=0.000298542 wall_ms=109.1
+    DONE backward cpu mode=unrolled loss=3.29482409e-06  dL/dkTri=1.71083549e-07 dL/dkBend=0 dL/dkAttach=8.0982624e-13 dL/ddensity=-8.55635051e-05 raw(dk_tri=1.67661881e-05 dk_bend=0 dk_attach=8.0982624e-13) stepsBack=20 |dL/dx0|=0.000286811 wall_ms=328.6
+    scene=panel colors=multi steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
+    GC scene=panel colors=1 mode=native param=mu analytic=0 fd=0 rel=0
+    GC scene=panel colors=1 mode=step param=mu analytic=0 fd=0 rel=0
+    GC scene=panel colors=1 mode=unrolled param=mu analytic=0 fd=0 rel=0
+      d/dmu       fd(eps)=0               fd(10eps)=0               | native 0 rel=0 | step 0 rel=0 | unrolled 0 rel=0
+    GC scene=panel colors=1 mode=native param=kTri analytic=1.92959027e-09 fd=1.71057565e-07 rel=0.98872
+    GC scene=panel colors=1 mode=step param=kTri analytic=3.08736035e-09 fd=1.71057565e-07 rel=0.981951
+    GC scene=panel colors=1 mode=unrolled param=kTri analytic=1.71083549e-07 fd=1.71057565e-07 rel=0.000151878
+      d/dkTri     fd(eps)=1.71057565e-07  fd(10eps)=1.71114369e-07  | native 1.92959027e-09 rel=0.989 | step 3.08736035e-09 rel=0.982 | unrolled 1.71083549e-07 rel=0.000152
+    GC scene=panel colors=1 mode=native param=density analytic=1.79225248e-17 fd=-8.55482394e-05 rel=1
+    GC scene=panel colors=1 mode=step param=density analytic=-1.54645359e-06 fd=-8.55482394e-05 rel=0.981923
+    GC scene=panel colors=1 mode=unrolled param=density analytic=-8.55635051e-05 fd=-8.55482394e-05 rel=0.000178414
+      d/ddensity  fd(eps)=-8.55482394e-05 fd(10eps)=-8.56363866e-05 | native 1.79225248e-17 rel=1 | step -1.54645359e-06 rel=0.982 | unrolled -8.55635051e-05 rel=0.000178
+job sim_gradcheck cpu scene=plane colors=1   ticks=   384 wall_ms=   2075.3  PASS sim_gradcheck cpu: plane multi-colour table (information)
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.36 kTri=110 kBend=1e-05 kAttach=10000 mu=0.250000
+    [drape-scene] gradcheck_plane nV=64 nTri=98 nBend=133 nAttach=0 prims=1 | prim0 plane c=(0,-0.02,0) n=(0.0995037,0.995037,0) R=4.24264 mu=0.250000
+    target DONE forward cpu steps=20 (+20 of 20) finite=yes ymin=-0.008565 friction_events=1280 projections=480 self_pushes=0 wall_ms=115.1 ms/step=5.756
+    DONE backward cpu mode=native loss=5.89932751e-06 dL/dmu_0=0.0044732105 dL/dkTri=8.5600589e-12 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=1.97349056e-16 raw(dk_tri=8.38885779e-10 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=4.17693e-05 wall_ms=10.9
+    DONE backward cpu mode=step loss=5.89932751e-06 dL/dmu_0=9.60042693e-06 dL/dkTri=1.70083261e-10 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-8.00614498e-08 raw(dk_tri=1.66681597e-08 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000596283 wall_ms=108.7
+    DONE backward cpu mode=unrolled loss=5.89932751e-06 dL/dmu_0=5.09406071e-05 dL/dkTri=4.00648844e-09 dL/dkBend=0 dL/dkAttach=0 dL/ddensity=-1.35677296e-06 raw(dk_tri=3.92635868e-07 dk_bend=0 dk_attach=0) stepsBack=20 |dL/dx0|=0.000602876 wall_ms=318.2
+    scene=plane colors=multi steps=20 eps=0.001 (rel), tol=0.05; rel = |a - fd| / max(|a|, |fd|), 0 when both are below 1e-12
+    GC scene=plane colors=1 mode=native param=mu analytic=0.0044732105 fd=5.17290905e-05 rel=0.988436
+    GC scene=plane colors=1 mode=step param=mu analytic=9.60042693e-06 fd=5.17290905e-05 rel=0.81441
+    GC scene=plane colors=1 mode=unrolled param=mu analytic=5.09406071e-05 fd=5.17290905e-05 rel=0.0152426
+      d/dmu       fd(eps)=5.17290905e-05  fd(10eps)=5.17032223e-05  | native 0.0044732105 rel=0.988 | step 9.60042693e-06 rel=0.814 | unrolled 5.09406071e-05 rel=0.0152
+    GC scene=plane colors=1 mode=native param=kTri analytic=8.5600589e-12 fd=1.6844957e-09 rel=0.994918
+    GC scene=plane colors=1 mode=step param=kTri analytic=1.70083261e-10 fd=1.6844957e-09 rel=0.89903
+    GC scene=plane colors=1 mode=unrolled param=kTri analytic=4.00648844e-09 fd=1.6844957e-09 rel=0.579558
+      d/dkTri     fd(eps)=1.6844957e-09   fd(10eps)=1.54546812e-09  | native 8.5600589e-12 rel=0.995 | step 1.70083261e-10 rel=0.899 | unrolled 4.00648844e-09 rel=0.58
+    GC scene=plane colors=1 mode=native param=density analytic=1.97349056e-16 fd=-8.37675431e-07 rel=1
+    GC scene=plane colors=1 mode=step param=density analytic=-8.00614498e-08 fd=-8.37675431e-07 rel=0.904424
+    GC scene=plane colors=1 mode=unrolled param=density analytic=-1.35677296e-06 fd=-8.37675431e-07 rel=0.382597
+      d/ddensity  fd(eps)=-8.37675431e-07 fd(10eps)=-7.71446219e-07 | native 1.97349056e-16 rel=1 | step -8.00614498e-08 rel=0.904 | unrolled -1.35677296e-06 rel=0.383
+job bench_drape cpu sizes=8,16,24,32         ticks=    33 wall_ms=   2071.5  PASS bench_drape cpu: every size finite
+    bench_drape cpu  8x8  nv=  64 DONE forward cpu steps=10 (+10 of 10) finite=yes ymin=-0.016636 friction_events=0 projections=0 self_pushes=0 wall_ms=52.2 ms/step=5.218
+    bench_drape cpu 16x16 nv= 256 DONE forward cpu steps=10 (+10 of 10) finite=yes ymin=-0.016636 friction_events=10 projections=0 self_pushes=0 wall_ms=232.2 ms/step=23.223
+    bench_drape cpu 24x24 nv= 576 DONE forward cpu steps=10 (+10 of 10) finite=yes ymin=-0.016631 friction_events=22 projections=0 self_pushes=0 wall_ms=549.6 ms/step=54.956
+    bench_drape cpu 32x32 nv=1024 DONE forward cpu steps=10 (+10 of 10) finite=yes ymin=-0.016472 friction_events=39 projections=0 self_pushes=0 wall_ms=1027.4 ms/step=102.735
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+job bench_drape rd sizes=8,16,24,32,48,64    ticks=   121 wall_ms=    703.1  PASS bench_drape rd: every size finite
+    bench_drape rd  8x8  nv=  64 DONE forward rd steps=10 (+10 of 10) finite=yes ymin=-0.016636 friction_events=0 projections=0 self_pushes=0 wall_ms=149.8 ms/step=14.984
+    bench_drape rd 16x16 nv= 256 DONE forward rd steps=10 (+10 of 10) finite=yes ymin=-0.016636 friction_events=10 projections=0 self_pushes=0 wall_ms=75.2 ms/step=7.518
+    bench_drape rd 24x24 nv= 576 DONE forward rd steps=10 (+10 of 10) finite=yes ymin=-0.016631 friction_events=22 projections=0 self_pushes=0 wall_ms=65.6 ms/step=6.559
+    bench_drape rd 32x32 nv=1024 DONE forward rd steps=10 (+10 of 10) finite=yes ymin=-0.016472 friction_events=39 projections=0 self_pushes=0 wall_ms=82.7 ms/step=8.271
+    bench_drape rd 48x48 nv=2304 DONE forward rd steps=10 (+10 of 10) finite=yes ymin=-0.013362 friction_events=67 projections=0 self_pushes=0 wall_ms=128.3 ms/step=12.826
+    bench_drape rd 64x64 nv=4096 DONE forward rd steps=10 (+10 of 10) finite=yes ymin=-0.008129 friction_events=72 projections=0 self_pushes=0 wall_ms=199.6 ms/step=19.957
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+--- checks
+PASS G4 rd frames at mu 0.539770 against native iter0 (max|dx|; frame 1 <= 1e-5, frame 10 <= 1e-3): 0: 4.235e-22, 1: 1.164e-10, 10: 4.888e-6, 50: 6.437e-6, 100: 0.003988, 350: 0.1215
+PASS G4 cpu frames at mu 0.539770 against native iter0 (max|dx|; frame 1 <= 1e-5, frame 10 <= 1e-3): 0: 4.235e-22, 1: 1.164e-10, 10: 4.888e-6, 50: 6.199e-6, 100: 0.08201
+info cpu vs rd frames (max|dx|): 0: 0.0, 1: 0.0, 10: 3.576e-7, 50: 2.384e-6, 100: 0.08204
+PASS G4 control: mu 0.3 sits further from the native mu-0.54 frames than ours at mu 0.54 (frames >= 50): 50: mu0.3-native 0.006834 vs ours-native 6.437e-6, 100: mu0.3-native 0.1443 vs ours-native 0.003988, 350: mu0.3-native 0.1839 vs ours-native 0.1215
+FAIL G5 native dL/dmu at mu 0.539770: ours 0.01244, backwardLog 0.01153, rel 0.07927 (limit 5e-2); loss ours 0.001412 native 0.001329 (rel 0.06259)
+PASS G5 native dL/dmu at mu 0.010000: ours -50.67, backwardLog -50.46, rel 0.004343 (limit 5e-2); loss ours 1.65 native 1.652 (rel 0.001366)
+FAIL G5 native dL/dmu at mu 0.375146: ours 0.007408, backwardLog 0.00781, rel 0.05141 (limit 5e-2); loss ours 6.065e-4 native 4.771e-4 (rel 0.2712)
+PASS rd_rule4 after every job: same_frame_syncs=0 syncs=5986 submits=5986 (want same_frame_syncs=0 with syncs>0)
+PASS rd_rule4_probe (positive control): PASS same_frame_syncs 0 -> 1; counter now 1
+PASS rd_close: CLOSED device=freed permanent_slots=0
+RESULT: FAIL

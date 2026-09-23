@@ -51,11 +51,31 @@ function(add_stage_elf name)
 	)
 endfunction()
 
+# The curvenet stage (Cut 4): Cassie's pen -> curvenet -> mesh on Geogram,
+# PMP and MWT subsets, Eigen-free. cmake/curvenet.cmake defines its libraries.
+option(DRESS_ON_WITH_CURVENET "Build the Cassie curvenet stage libraries" ON)
+if(DRESS_ON_WITH_CURVENET)
+	include(cmake/curvenet.cmake OPTIONAL)
+endif()
+
+
 # Stage 1: the GPU layer's own probes.
 add_stage_elf(dress_on guest/main.cpp)
 
 # Stage 2: the drape -- the AVBD solver on both backends, its oracle and bench.
-add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp)
+add_stage_elf(drape guest/drape/main.cpp guest/drape/avbd_jobs.cpp guest/jobs.cpp guest/avbd_fixture.cpp
+	guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp
+	guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/lbfgsb_jobs.cpp guest/drape/vec_cpu.cpp
+	guest/drape/vec_rd.cpp guest/drape/inverse_jobs.cpp)
+# The drape driver ports DiffCloth arithmetic that ran on x86-64 without FMA;
+# rv64gc has fused multiply-add, which clang would contract into.
+set_source_files_properties(guest/drape/drape_jobs.cpp guest/drape/drape_scene.cpp guest/drape/primitives.cpp
+	guest/drape/inverse_jobs.cpp PROPERTIES COMPILE_OPTIONS "-ffp-contract=off")
+# The L-BFGS-B driver and its CPU kernels are compiled uncontracted too, so the
+# guest's cpu path computes what tests/lbfgsb_driver computes on the host.
+# vec_rd.cpp includes ${CMAKE_BINARY_DIR}/drape_kernels.inc (kernels/drape/gen.sh).
+set_source_files_properties(guest/drape/lbfgsb.cpp guest/drape/lbfgsb_gate.cpp guest/drape/vec_cpu.cpp
+	PROPERTIES COMPILE_OPTIONS "-ffp-contract=off")
 target_include_directories(drape PRIVATE guest guest/drape)
 target_link_libraries(drape PRIVATE avbd)
 
@@ -96,3 +116,8 @@ if(EXISTS "${GGML_SRC}/CMakeLists.txt")
 else()
 	message(STATUS "probes.elf: no ggml at GGML_SRC=${GGML_SRC}; probe 15 reports SKIP")
 endif()
+
+# The fit stage (Cut 6): cloth-fit's garment solve (PolyFEM) with the
+# Lean SDF sampler. Last, because it sets directory-wide guest numerics for
+# the targets it creates. DRESS_ON_WITH_FIT=OFF (build.sh BUILD_FIT=0) skips it.
+include(cmake/fit.cmake)

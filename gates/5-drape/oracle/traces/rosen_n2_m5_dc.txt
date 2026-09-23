@@ -1,0 +1,89 @@
+# lbfgsb trace rosen_n2 (LBFGSpp 0.3.0 LBFGSBSolver<double>, MoreThuente)
+problem rosen_n2
+n 2
+param m 5 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 0.001 max_iterations 0 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
+niter 19
+nfev 25
+status converged-delta
+f_final 0.050596468
+pg_final 0.0189094295
+iter 0 nfev 1 f 75.4 pginf 2.7
+x 2 -1.2 0.6
+L 0
+U 1 1
+iter 1 nfev 2 f 32.8 pginf 2.1
+x 2 -0.2 0.6
+L 0
+U 1 1
+iter 2 nfev 3 f 19.0351348 pginf 1.96284087
+x 2 -0.208878763 0.462840869
+L 0
+U 0
+iter 3 nfev 4 f 1.56319531 pginf 1.74964207
+x 2 -0.249642069 0.0583336763
+L 0
+U 0
+iter 4 nfev 5 f 1.53530627 pginf 1.73891974
+x 2 -0.238919742 0.059042603
+L 0
+U 0
+iter 5 nfev 6 f 1.37151076 pginf 1.54052515
+x 2 -0.162620824 0.0405251545
+L 0
+U 0
+iter 6 nfev 8 f 0.978740897 pginf 1.47853167
+x 2 0.021468329 -0.0141050525
+L 0
+U 0
+iter 7 nfev 10 f 0.956032997 pginf 1.37484106
+x 2 0.0531618244 -0.0215726864
+L 0
+U 0
+iter 8 nfev 11 f 0.917761246 pginf 1.05947282
+x 2 0.0768400178 -0.0196957862
+L 0
+U 0
+iter 9 nfev 12 f 0.714721087 pginf 1.05284811
+x 2 0.212887595 0.0144706583
+L 0
+U 0
+iter 10 nfev 13 f 0.53962067 pginf 0.587799316
+x 2 0.269870905 0.0647481184
+L 0
+U 0
+iter 11 nfev 15 f 0.447093583 pginf 1.86798728
+x 2 0.36798728 0.113584956
+L 0
+U 0
+iter 12 nfev 16 f 0.344218753 pginf 1.95284449
+x 2 0.452844492 0.18389277
+L 0
+U 0
+iter 13 nfev 17 f 0.23869541 pginf 1.75984337
+x 2 0.519424524 0.278601053
+L 0
+U 0
+iter 14 nfev 19 f 0.162338127 pginf 0.766746342
+x 2 0.602338413 0.356328208
+L 0
+U 0
+iter 15 nfev 21 f 0.145906704 pginf 2.1435598
+x 2 0.643559805 0.40043711
+L 0
+U 0
+iter 16 nfev 22 f 0.121118238 pginf 2.17978729
+x 2 0.67978729 0.448479157
+L 0
+U 0
+iter 17 nfev 23 f 0.0654181025 pginf 1.40526157
+x 2 0.752157325 0.559422327
+L 0
+U 0
+iter 18 nfev 24 f 0.0506013225 pginf 0.0711062469
+x 2 0.775677223 0.6
+L 0
+U 1 1
+iter 19 nfev 25 f 0.050596468 pginf 0.0189094295
+x 2 0.775491178 0.6
+L 0
+U 1 1

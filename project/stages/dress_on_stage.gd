@@ -54,6 +54,37 @@ func rd_bench(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> S
 func rd_last_step() -> String:
 	return str(sandbox.vmcall("rd_last_step")) if sandbox != null else "FAIL: no sandbox"
 
+# rd_bench with no guest clock reads (probe_rd_mix.gd's "guest-quiet" arm);
+# host-timed only.
+func rd_bench_quiet(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> String:
+	if sandbox == null:
+		return "FAIL: no sandbox"
+	var spirv := _bytes("res://accumulate.spv")
+	if spirv.is_empty():
+		return "FAIL: could not open accumulate.spv"
+	var t0 := Time.get_ticks_usec()
+	var r = sandbox.vmcall("rd_bench_quiet", spirv, n_dispatch, n_submit, barrier)
+	var dt := Time.get_ticks_usec() - t0
+	return "nd=%d ns=%d barrier=%s host_us=%d %s" % [n_dispatch, n_submit, barrier, dt, str(r)]
+
+# Keeps probe.spv in the guest for rd_calls' shader/pipeline/uset/readback kinds.
+func rd_set_probe() -> String:
+	if sandbox == null:
+		return "FAIL: no sandbox"
+	var spirv := _bytes("res://probe.spv")
+	if spirv.is_empty():
+		return "FAIL: could not open probe.spv"
+	return str(sandbox.vmcall("rd_set_probe", spirv))
+
+# One RenderingDevice call kind n times, timed on the host around the vmcall
+# (probe_rd_calls.gd). The shader kinds need rd_set_probe first.
+func rd_calls(kind: String = "ticks", n: int = 1000) -> String:
+	if sandbox == null:
+		return "FAIL: no sandbox"
+	var t0 := Time.get_ticks_usec()
+	var r = sandbox.vmcall("rd_calls", kind, n)
+	return "host_us=%d %s" % [Time.get_ticks_usec() - t0, str(r)]
+
 # --- Gate 0F: probes.elf, the sandbox runtime probes ---------------------------
 # Its own Sandbox, created on first use. gate_runtime.gd is the gate; these are
 # the no-argument wrappers (AGENTS.md rule 8), every argument defaulted.

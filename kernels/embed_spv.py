@@ -7,6 +7,10 @@ table, so a backend can look a kernel up by the same name the binding table
 uses. Precedent: modules/cassie/spv_to_header.py.
 
     python kernels/embed_spv.py kernels/avbd guest/avbd_kernels.inc
+    python kernels/embed_spv.py --namespace drape_kernels <spv dir> <out.inc>
+
+--namespace names the C++ namespace (default avbd_kernels), so two stages'
+tables can coexist in one guest.
 """
 
 import pathlib
@@ -17,7 +21,7 @@ def ident(name):
     return "".join(c if c.isalnum() else "_" for c in name)
 
 
-def emit(src_dir, out_path):
+def emit(src_dir, out_path, namespace="avbd_kernels"):
     src_dir = pathlib.Path(src_dir)
     files = sorted(src_dir.glob("*.spv"))
     if not files:
@@ -28,7 +32,7 @@ def emit(src_dir, out_path):
         "#include <cstddef>",
         "#include <cstdint>",
         "",
-        "namespace avbd_kernels {",
+        "namespace %s {" % namespace,
         "",
     ]
     for f in files:
@@ -63,7 +67,7 @@ def emit(src_dir, out_path):
     lines.append("\treturn nullptr;")
     lines.append("}")
     lines.append("")
-    lines.append("} // namespace avbd_kernels")
+    lines.append("} // namespace %s" % namespace)
     lines.append("")
     pathlib.Path(out_path).write_text("\n".join(lines), encoding="utf-8", newline="\n")
     total = sum(f.stat().st_size for f in files)
@@ -71,6 +75,11 @@ def emit(src_dir, out_path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    args = sys.argv[1:]
+    ns = "avbd_kernels"
+    if len(args) == 4 and args[0] == "--namespace":
+        ns = args[1]
+        args = args[2:]
+    if len(args) != 2:
         raise SystemExit(__doc__)
-    emit(sys.argv[1], sys.argv[2])
+    emit(args[0], args[1], ns)

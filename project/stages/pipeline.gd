@@ -310,13 +310,13 @@ func _author(first: bool) -> void:
 		n += 1
 		match e.kind:
 			"begin":
-				var id: int = curvenet.pen_begin(e.pos, e.pressure)
+				var id: int = curvenet.pen_begin_at(e.pos, e.pressure)
 				if id < 0:
 					_fail("pen_begin refused stroke %d at %s" % [e.stroke, str(e.pos)])
 					return
 				_stroke_ids[e.stroke] = id
 			"point":
-				curvenet.pen_point(_stroke_ids.get(e.stroke, -1), e.pos, e.pressure)
+				curvenet.pen_point_at(_stroke_ids.get(e.stroke, -1), e.pos, e.pressure)
 			"end":
 				var r: String = curvenet.pen_end_raw(_stroke_ids.get(e.stroke, -1))
 				data.pen_ends.append(r)

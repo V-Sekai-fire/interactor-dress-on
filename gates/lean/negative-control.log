@@ -25,4 +25,5 @@ SAME spring_force_backward
 SAME triangle_membrane_force_al_backward
 SAME triangle_bending_force_al_backward
 SAME vbd_init_backward
+SAME saxpby
 RESULT 1 DIFF (expect 1: vbd_init)

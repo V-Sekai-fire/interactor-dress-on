@@ -1,0 +1,13 @@
+# lake build Fit emit_fit in lean/ (Fit.SdfSplineHessian rebuilt: its five native_decide pins are checked)
+# Lake version 5.0.0-src+d024af0 (Lean version 4.30.0)  toolchain leanprover/lean4:v4.30.0
+✔ [15/22] Built Fit.SdfSplineHessian (1.2s)
+✔ [17/22] Built Fit (638ms)
+Build completed successfully (22 jobs).
+# exit 0
+
+# lake env lean ../gates/6-fit/sdf/lean_controls.lean (negative controls)
+"reordered value == pinned value, fixture0: false"
+"reordered value == pinned value, fixture1: false"
+"float 2/3 spline == spline on all 64 grid points: false"
+"grid points where they differ: 64/64"
+# exit 0

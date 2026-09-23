@@ -1,0 +1,32 @@
+reference: entities-godot c165a519d2 modules/cassie/thirdparty/avbd/<ref>.cpu.cpp
+emitted:   kernels/cassie/cpp/<k>_emit.cpp (2026.13.1-1-g84792eb15)
+
+== curve_casteljau vs curve_casteljau.cpu.cpp: 69 / 69 lines, 0 differing ==
+
+== curve_generate_bezier vs curve_generate_bezier.cpu.cpp: 189 / 189 lines, 2 differing ==
+100c100
+<     if((F32_abs((det_0))) < 0.0f)
+---
+>     if((F32_abs((det_0))) < 9.999999960041972e-13f)
+
+== curve_newton vs curve_newton.cpu.cpp: 126 / 126 lines, 2 differing ==
+80c80
+<         if((F32_abs((den_0))) < 0.0f)
+---
+>         if((F32_abs((den_0))) < 9.99999971718068537e-10f)
+
+== curve_rdp vs curve_rdp.cpu.cpp: 243 / 243 lines, 0 differing ==
+
+== spmv_df32 vs spmv.cpu.cpp: 128 / 128 lines, 0 differing ==
+
+total differing lines: 4
+
+negative control (one 3.0f -> 3.5f in a copy of curve_generate_bezier_emit.cpp): 4 differing lines
+65c65
+<         float ka_0 = 3.0f * (_S2 * ui_0);
+---
+>         float ka_0 = 3.5f * (_S2 * ui_0);
+100c100
+<     if((F32_abs((det_0))) < 0.0f)
+---
+>     if((F32_abs((det_0))) < 9.999999960041972e-13f)

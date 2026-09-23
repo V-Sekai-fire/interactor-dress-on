@@ -1,0 +1,88 @@
+cff-version: 1.2.0
+message: If you use this code, cite the cloth-fit tree it is vendored from and the paper it implements.
+title: cloth-fit, intersection-free garment retargeting on PolyFEM (vendored)
+abstract: >-
+  V-Sekai-fire/cloth-fit at d2bd59a6 (tip of its default branch main/main),
+  added here as a squashed git subtree: the reference implementation of
+  Zizhou Huang's SIGGRAPH 2025 paper "Intersection-free Garment Retargeting"
+  (https://huangzizhou.github.io/assets/img/research/cloth/paper.pdf), built
+  on PolyFEM's nonlinear optimizers, linear solvers and IPC collision
+  handling, with the org's commits on top that isolate the garment domain
+  from base PolyFEM (POLYFEM_WITH_GARMENT), extract run_retarget, start the
+  retarget from a feasible body and link PolyFEM_bin -static under
+  llvm-mingw. It is the source of fit.elf (Cut 6) and of the native oracle
+  in tools/native, which was built from this same tree: foxgirl_skirt, 1
+  thread, 248 Newton iterations to step_garment_252.obj, bitwise
+  reproducible. garment-data/ carries the four example avatars and
+  garments (FoxGirl, Goblin, T-rex; skirt, jacket, jumpsuit) used as gate
+  inputs. CPM pins as vendored: polysolve Huangzizhou#ee553dc6, ipc-toolkit
+  Huangzizhou#993e7e0f, openvdb Huangzizhou#c96cb069, libigl v2.5.0,
+  nlohmann_json v3.11.2 (via polysolve), oneTBB v2021.9.0; the native
+  build takes the first five from the V-Sekai-fire forks in
+  tools/forks.tsv through CPM_<pkg>_SOURCE (tools/forks/fetch.sh) without
+  editing the recipes.
+  OpenVDB replaced for fit.elf (Cut 6): (1) CMakeLists.txt no longer
+  includes the openvdb recipe or links openvdb (cmake/recipes/openvdb.cmake
+  stays, unused); the upstream oracle builds from the squash commit
+  812ceb26 (tools/native/build_upstream.sh), not from this tree. (2) New
+  src/polyfem/solver/forms/garment_forms/SdfGrid.{hpp,cpp}: the avatar SDF
+  FitForm built with meshToSignedDistanceField(xform, Vec3s points, tris,
+  {}, 150, 1), as a lazily filled brick grid; voxel (i,j,k) at world
+  (i,j,k)*h, value clamp(sd, -h, 150h), sd the exact igl::AABB distance to
+  the float-rounded avatar signed by igl::fast_winding_number (inside if
+  w > 0.5); 8^3 bricks in an unordered_map, filled whole on first touch,
+  each value a pure function of the voxel index; SdfGrid::cached() shares
+  one grid per (avatar hash, voxel size) across the FitForm rebuilt every
+  substep, SdfGrid::current() hands it out for reporting. (3) New
+  garment_forms/SdfSpline.{hpp,cpp}: the call site of the
+  Lean-emitted tricubic B-spline kernel (lean/Fit/SdfSplineHessian.lean ->
+  kernels/fit/cpp/sdf_spline_hessian_emit.cpp) that replaces the openvdb
+  fork's SplineSampler::sampleHessian, 0 ULP against it (Gate 6a); the
+  CMake option FIT_KERNELS_PENDING (default OFF; FIT_KERNELS_DIR and
+  FIT_SLANG_PRELUDE_DIR default to the repo's kernels/fit/cpp and
+  guest/avbd/slang-rt) leaves the emit out and makes the sampler throw, as
+  a negative control; no hand-written sampler is linked. (4)
+  FitForm.{hpp,cpp}: the openvdb grid, accessor and HessType give way to
+  SdfGrid and SdfHess; solution_changed
+  gathers stencils and calls the kernel in batches of 1024 samples, then
+  scales g/h and h/h^2 as before; the debug writes (fit-faces-debug.obj,
+  and sdf.obj from volumeToMesh) are gone and out_dir, now unused,
+  defaults to ""; the Hessian reserves fit_faces_ids.size()*81 triplets
+  instead of 1e7; SDFCollisionForm (unused) is deleted. (5)
+  tests/test_garment.cpp drops its SDFCollisionForm case and defines
+  _USE_MATH_DEFINES for the M_PI the OpenVDB headers used to bring in.
+  Checked by Gate 6a (gates/6-fit/sdf) against OpenVDB on the foxgirl
+  oracle.
+  No file I/O for fit.elf (Cut 6), each change behind a guard that leaves
+  PolyFEM_bin unchanged: optimize.cpp writes its
+  intersection debug OBJs only with a non-empty out_folder, and under
+  POLYFEM_EMBEDDED_SPECS polyfem::init refuses to run (it reads the build
+  machine's json-specs; guest/fit/fit_driver.cpp has the file-free copy)
+  and utils/SpecPaths.cpp neither probes directories nor calls dladdr.
+  polysolve's own spec reads are replaced by
+  vendor/cloth-fit-patches/polysolve-embedded-specs.patch, applied to the
+  V-Sekai-fire/polysolve pin in a separate worktree
+  (tools/fit/prepare_forks.sh). POLYFEM_THREADING=NONE needs no source
+  change (a CMake option). Checked by gates/6-fit/driver: fit_native
+  (tests/native/fit) opens no file between FitDriver::begin and its last
+  phase, and built with upstream's numerics reproduces the 1-thread oracle
+  bitwise.
+  libstdc++ portability for fit.elf (Cut 6): three unqualified abs() calls
+  on doubles (CurveCenterTargetForm.cpp bone selection, CurveConstraintForm.cpp
+  symmetric-vertex error) become std::abs. Under llvm-mingw's libc++ they
+  already resolved to the double overload; under the guest's glibc +
+  libstdc++ they bound to C's int abs (clang -Wabsolute-value), so no bone
+  passed the 60-degree test and the curve-center targets came from
+  uninitialised memory. CurveCenterTargetForm's bones vector is zeroed where
+  it was only resized (a curve with no qualifying bone keeps bone 0, which is
+  what the native runs read). fit_native is bitwise unchanged by both
+  (garment_final.f64 sha256 ab9fb211...).
+type: software
+authors:
+  - name: Zizhou Huang
+  - name: The PolyFEM contributors
+  - name: K. S. Ernest (iFire) Lee
+  - name: V-Sekai
+repository-code: https://github.com/V-Sekai-fire/cloth-fit
+commit: d2bd59a61d73048c2431bf25bfc7d125c7a8a37d
+license: MIT

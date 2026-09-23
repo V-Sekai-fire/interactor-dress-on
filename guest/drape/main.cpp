@@ -7,7 +7,10 @@
 
 #include <api.hpp>
 
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <sstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -19,7 +22,11 @@
 #include "avbd/avbd_sim.h"
 #include "avbd/cloth_grid.h"
 #include "avbd_jobs.h"
+#include "drape_jobs.h"
+#include "drape_scene.h"
 #include "jobs.h"
+#include "lbfgsb.h"
+#include "lbfgsb_jobs.h"
 
 // This stage's device, held across vmcalls.
 static rdc::Device g_dev;
@@ -155,16 +162,681 @@ static Variant avbd_job_names_api() {
 	return text(avbd_job_names());
 }
 
-// Shutdown: drop the job (its solver frees every RID it made, which releases
-// their permanent slots), then free the device. Refused while a submit is in
-// flight, so it never syncs in a submit's frame; tick the job to its verdict
-// first. The host calls this before freeing the Sandbox.
+// --- the drape API: one session, advanced one host frame per drape_tick --------
+//
+// drape_open picks the backend (cpu, rd, or auto: rd from 160 vertices, rule
+// 5); a scene call uploads; drape_config sets a knob (a material/topology
+// knob re-uploads, and so rewinds, on the next drape_queue_forward);
+// drape_queue_forward / drape_queue_backward queue stages which drape_tick
+// runs, a GPU submit ending the tick (rule 4). drape_positions returns the
+// last completed step and never syncs.
+
+static std::string g_want = "auto";
+static DrapeConfig g_cfg;
+static DrapeScene g_scene;
+static bool g_scene_set = false;
+static bool g_dirty = false;
+static std::unique_ptr<DrapeSession> g_sess;
+static std::vector<std::unique_ptr<DrapeSession>> g_sess_parked;
+static int64_t g_sess_parked_frame = -1;
+static jobs::StageQueue g_q;
+
+static void free_parked_sessions() {
+	if (!g_sess_parked.empty() && process_frame() != g_sess_parked_frame) {
+		g_sess_parked.clear();
+	}
+}
+
+// An optimize's L-BFGS-B phase in flight (drape_queue_optimize, below).
+static bool opt_pending();
+static const std::string &drape_optimize_head();
+// The last queued operation was an optimize: drape_tick reports its verdict.
+static bool g_opt_last = false;
+
+static bool session_busy() {
+	return g_sess && (!g_q.empty() || g_sess->pending() || opt_pending());
+}
+
+static void drop_session() {
+	if (g_sess && g_sess->pending()) {
+		g_sess_parked.push_back(std::move(g_sess));
+		g_sess_parked_frame = process_frame();
+	}
+	g_sess.reset();
+	g_q = jobs::StageQueue();
+}
+
+// Upload g_scene with g_cfg on the backend drape_open asked for (auto picks
+// by the vertex count), making the session if the backend changed.
+static std::string load_scene() {
+	const std::string b = drape_pick_backend(g_want, g_scene.nV);
+	if (!g_sess || b != g_sess->backend()) {
+		drop_session();
+		std::string err;
+		g_sess = make_drape_session(b, g_dev, err);
+		if (!g_sess) {
+			return "FAIL " + b + ": " + err;
+		}
+	}
+	std::string err;
+	if (!g_sess->load(g_scene, g_cfg, err)) {
+		return "FAIL load: " + err;
+	}
+	g_dirty = false;
+	return g_sess->result();
+}
+
+static Variant drape_open(String backend_s) {
+	free_parked_sessions();
+	const std::string b = backend_s.utf8();
+	if (b != "cpu" && b != "rd" && b != "auto") {
+		return text("FAIL: backend must be cpu, rd or auto");
+	}
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	drop_session();
+	g_want = b;
+	g_scene_set = false;
+	if (b == "auto") {
+		return text("OPENED auto (rd from " + std::to_string(kDrapeAutoRdVerts) + " vertices)");
+	}
+	return text("OPENED " + b);
+}
+
+static Variant drape_scene_sphere_demo() {
+	free_parked_sessions();
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	scene_sphere_demo(g_scene, g_cfg);
+	g_scene_set = true;
+	return text(load_scene());
+}
+
+// material: [density, kTri, kBend, kAttach], any prefix.
+static Variant drape_scene_mesh(PackedFloat32Array pos_a, PackedInt32Array tris_a, PackedInt32Array pins_a,
+		PackedFloat32Array material_a) {
+	free_parked_sessions();
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	const std::vector<float> mat = material_a.fetch();
+	const char *keys[4] = { "density", "kTri", "kBend", "kAttach" };
+	for (size_t i = 0; i < mat.size() && i < 4; ++i) {
+		if (!g_cfg.set(keys[i], mat[i])) {
+			return text(std::string("FAIL: bad material ") + keys[i]);
+		}
+	}
+	std::string err;
+	if (!scene_mesh(g_scene, pos_a.fetch(), tris_a.fetch(), pins_a.fetch(), err)) {
+		return text("FAIL: " + err);
+	}
+	g_scene_set = true;
+	return text(load_scene());
+}
+
+// kind: sphere [cx,cy,cz, r, mu] | plane [cx,cy,cz, ulx,uly,ulz, urx,ury,urz, mu]
+// | capsule [bx,by,bz, ax,ay,az, r, len, mu] | clear.
+static Variant drape_primitive(String kind_s, PackedFloat32Array params_a) {
+	const std::string kind = kind_s.utf8();
+	const std::vector<float> p = params_a.fetch();
+	auto v = [&](size_t i) { return v3d(p[i], p[i + 1], p[i + 2]); };
+	if (kind == "clear") {
+		g_scene.prims.clear();
+	} else if (kind == "sphere" && p.size() >= 5) {
+		g_scene.prims.push_back(make_sphere(v(0), p[3], p[4]));
+	} else if (kind == "plane" && p.size() >= 10) {
+		g_scene.prims.push_back(make_plane(v(0), v(3), v(6), p[9]));
+	} else if (kind == "capsule" && p.size() >= 9) {
+		g_scene.prims.push_back(make_capsule(v(0), v(3), p[6], p[7], p[8]));
+	} else {
+		return text("FAIL: kind sphere(5) | plane(10) | capsule(9) | clear, with that many params");
+	}
+	if (g_sess) {
+		g_sess->setPrims(g_scene.prims);
+	}
+	return text(g_scene.describe());
+}
+
+static Variant drape_config(String key_s, double value) {
+	const std::string k = key_s.utf8();
+	if (!g_cfg.set(k, value)) {
+		return text("FAIL: unknown or refused key " + k);
+	}
+	static const char *upload[] = { "h", "density", "kTri", "kBend", "kAttach", "rawStiffness", "membrane", "bending",
+		"colors", "selfK", "alGamma" };
+	bool needs = false;
+	for (const char *u : upload) {
+		needs = needs || k == u;
+	}
+	if (needs) {
+		g_dirty = true;
+	} else if (g_sess) {
+		g_sess->setLive(g_cfg);
+	}
+	if (k == "mu" && !g_scene.prims.empty()) {
+		g_scene.prims[0].mu = value;
+		if (g_sess) {
+			g_sess->setPrims(g_scene.prims);
+		}
+	}
+	return text(std::string(needs ? "SET (re-uploads and rewinds on the next forward) " : "SET ") + g_cfg.dump());
+}
+
+// steps > 0: queue that many steps after the current state; 0: rewind to x0.
+static Variant drape_queue_forward(int steps) {
+	free_parked_sessions();
+	if (!g_sess || !g_scene_set) {
+		return text("FAIL: no scene (drape_scene_sphere_demo or drape_scene_mesh)");
+	}
+	if (g_dirty) {
+		if (session_busy()) {
+			return text("BUSY: a changed knob needs a re-upload; tick the queue empty first");
+		}
+		const std::string r = load_scene();
+		if (r.rfind("FAIL", 0) == 0) {
+			return text(r);
+		}
+	}
+	if (steps <= 0) {
+		if (session_busy()) {
+			return text("BUSY: tick the queue empty first");
+		}
+		g_sess->rewind();
+		return text("REWOUND");
+	}
+	g_sess->enqueueForward(g_q, steps);
+	g_opt_last = false;
+	return text("QUEUED forward " + std::to_string(steps) + " on " + g_sess->backend());
+}
+
+// kind: trajectory (the recorded frames become the MATCH_TRAJECTORY target)
+// | points (verts, pos = 3 per vert, frame -1 = last) | clear.
+static Variant drape_set_target(String kind_s, PackedInt32Array verts_a, PackedFloat32Array pos_a, int frame) {
+	if (!g_sess) {
+		return text("FAIL: no session");
+	}
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	const std::string kind = kind_s.utf8();
+	DrapeTarget &t = g_sess->target();
+	if (kind == "trajectory") {
+		g_sess->targetFromFrames();
+		return text("TARGET trajectory frames=" + std::to_string(t.numFrames()));
+	}
+	if (kind == "points") {
+		const std::vector<int32_t> vs = verts_a.fetch();
+		const std::vector<float> ps = pos_a.fetch();
+		if (vs.empty() || ps.size() != 3 * vs.size()) {
+			return text("FAIL: points need 3 floats per vertex");
+		}
+		t.verts.assign(vs.begin(), vs.end());
+		t.pos.assign(ps.begin(), ps.end());
+		t.frame = frame;
+		return text("TARGET points n=" + std::to_string(vs.size()) + " frame=" + std::to_string(frame));
+	}
+	if (kind == "clear") {
+		t = DrapeTarget();
+		return text("TARGET cleared");
+	}
+	return text("FAIL: kind trajectory | points | clear");
+}
+
+// loss: match_trajectory | target_points; mode: native | step | unrolled.
+static Variant drape_queue_backward(String loss_s, String mode_s) {
+	if (!g_sess) {
+		return text("FAIL: no session");
+	}
+	const std::string l = loss_s.utf8(), m = mode_s.utf8();
+	DrapeLoss loss;
+	if (l == "match_trajectory") {
+		loss = DrapeLoss::MatchTrajectory;
+	} else if (l == "target_points") {
+		loss = DrapeLoss::TargetPoints;
+	} else {
+		return text("FAIL: loss match_trajectory | target_points");
+	}
+	DrapeMode mode;
+	if (m == "native") {
+		mode = DrapeMode::Native;
+	} else if (m == "step") {
+		mode = DrapeMode::Step;
+	} else if (m == "unrolled") {
+		mode = DrapeMode::Unrolled;
+	} else {
+		return text("FAIL: mode native | step | unrolled");
+	}
+	g_sess->enqueueBackward(g_q, loss, mode);
+	g_opt_last = false;
+	return text("QUEUED backward " + l + " " + m);
+}
+
+static Variant drape_tick(int64_t host_us) {
+	free_parked_sessions();
+	if (!g_sess) {
+		return text("IDLE no session");
+	}
+	g_sess->now_us = host_us;
+	const bool cpu = std::string(g_sess->backend()) == "cpu";
+	g_q.tick([]() { return g_sess->pending() || opt_pending(); }, cpu ? 4 : 256);
+	if (!g_q.empty() || g_sess->pending() || opt_pending()) {
+		return text("RUNNING " + std::to_string(g_q.done()) + "/" + std::to_string(g_q.total()));
+	}
+	const std::string &r = g_opt_last ? drape_optimize_head() : g_sess->result();
+	return text("IDLE " + r.substr(0, r.find('\n')));
+}
+
+// The last completed step's positions (3 per vertex); never syncs.
+static Variant drape_positions() {
+	if (!g_sess) {
+		return Variant(PackedFloat32Array(std::vector<float>()));
+	}
+	return Variant(PackedFloat32Array(g_sess->positions()));
+}
+
+static std::vector<float> frame_f32(DrapeSession *s, int i) {
+	std::vector<float> out;
+	if (s && i >= 0) {
+		for (double d : s->frame(size_t(i))) {
+			out.push_back(float(d));
+		}
+	}
+	return out;
+}
+
+// Frame i (0 = x0, then each step's predictor, as the native OBJs).
+static Variant drape_frame(int i) {
+	return Variant(PackedFloat32Array(frame_f32(g_sess.get(), i)));
+}
+
+static Variant drape_faces() {
+	std::vector<int32_t> f;
+	const DrapeScene &sc = g_sess ? g_sess->scene() : g_scene;
+	f.assign(sc.tri.begin(), sc.tri.end());
+	return Variant(PackedInt32Array(f));
+}
+
+static Variant drape_result() {
+	if (!g_sess) {
+		return text("no session\n" + g_cfg.dump());
+	}
+	return text(g_sess->result() + "\n" + g_sess->config().dump() + "\n" + g_sess->scene().describe());
+}
+
+// --- drape_queue_optimize: L-BFGS-B over the session's parameters ----------------
+//
+// The in-guest L-BFGS-B (lbfgsb.h) with the session as its objective: each
+// evaluation sets the parameters, rewinds, queues `steps` forward steps and a
+// backward (loss and mode as drape_queue_backward) on the drape queue, and
+// hands the loss and its gradient back. spec is "key=value ..." with
+//   params=mu[,kTri,kBend,kAttach,density]   (default mu)
+//   loss=match_trajectory|target_points      (default match_trajectory)
+//   mode=native|step|unrolled                (default native)
+//   steps=N                                  (default: the frames recorded now)
+//   vec=cpu|rd|auto                          (the L-BFGS-B vectors; auto = cpu)
+//   any LBFGSBParam key (m, epsilon, delta, max_linesearch, ...); the defaults
+//   are DiffCloth's BackwardTaskSolver (m 10, delta 1e-3, max_linesearch 20).
+// x0/lb/ub: one value per parameter (lb/ub empty: unbounded). maxIter 0 runs
+// to convergence. The iterates stream to drape_optimize_result().
+
+struct DrapeOpt {
+	std::unique_ptr<lbv::Vec> vec;
+	std::unique_ptr<Lbfgsb> drv;
+	std::vector<std::string> params;
+	DrapeLoss loss = DrapeLoss::MatchTrajectory;
+	DrapeMode mode = DrapeMode::Native;
+	int steps = 0;
+	bool done = false;
+	int64_t t0 = 0;
+	std::string head, log;
+	bool pending() const { return drv && drv->pending(); }
+};
+static std::unique_ptr<DrapeOpt> g_opt;
+static std::vector<std::unique_ptr<DrapeOpt>> g_opt_parked;
+static int64_t g_opt_parked_frame = -1;
+
+static bool opt_pending() {
+	return g_opt && g_opt->pending();
+}
+
+static const std::string &drape_optimize_head() {
+	static const std::string none = "no optimize";
+	return g_opt ? g_opt->head : none;
+}
+
+static void opt_handle(Lbfgsb::Status s);
+
+static void opt_stage() {
+	opt_handle(g_opt->drv->next());
+}
+
+static void opt_finish(const std::string &head) {
+	DrapeOpt &o = *g_opt;
+	o.done = true;
+	char b[160];
+	std::snprintf(b, sizeof b, " iterations=%d evaluations=%d wall_ms=%.1f", o.drv->iterations(), o.drv->nfev(),
+			double(g_sess->now_us - o.t0) / 1000.0);
+	o.head = head + b;
+	o.log += o.head + "\n";
+}
+
+static std::string opt_x_line(const std::vector<float> &x) {
+	std::string s;
+	for (size_t i = 0; i < x.size() && i < g_opt->params.size(); ++i) {
+		char b[64];
+		std::snprintf(b, sizeof b, "%s%s=%.9g", i ? " " : "", g_opt->params[i].c_str(), double(x[i]));
+		s += b;
+	}
+	return s;
+}
+
+// The collector after an evaluation's forward and backward: loss and
+// gradient back to the driver.
+static void opt_collect() {
+	DrapeOpt &o = *g_opt;
+	if (!g_sess->ok()) {
+		const std::string &r = g_sess->result();
+		opt_finish("FAIL optimize: " + r.substr(0, r.find('\n')));
+		return;
+	}
+	const DrapeGrad &gr = g_sess->grad();
+	std::vector<float> g(o.params.size(), 0.0f);
+	for (size_t i = 0; i < o.params.size(); ++i) {
+		const std::string &p = o.params[i];
+		double d = gr.ddensity;
+		if (p == "mu") {
+			d = gr.dmu.empty() ? 0.0 : gr.dmu[0];
+		} else if (p == "kTri") {
+			d = gr.dkTri;
+		} else if (p == "kBend") {
+			d = gr.dkBend;
+		} else if (p == "kAttach") {
+			d = gr.dkAttach;
+		}
+		g[i] = float(d);
+	}
+	char b[200];
+	std::snprintf(b, sizeof b, "  eval %d loss=%.9g grad[0]=%.9g\n", o.drv->nfev() + 1, gr.loss, double(g[0]));
+	o.log += b;
+	if (!o.drv->setGradient(g.data())) {
+		opt_finish("FAIL optimize: setGradient");
+		return;
+	}
+	opt_handle(o.drv->next(gr.loss));
+}
+
+// Apply x to the session, rewind, queue forward + backward + the collector.
+static void opt_eval(const std::vector<float> &x) {
+	DrapeOpt &o = *g_opt;
+	bool reload = false;
+	for (size_t i = 0; i < o.params.size(); ++i) {
+		const double v = x[i];
+		if (!g_cfg.set(o.params[i], v)) {
+			opt_finish("FAIL optimize: " + o.params[i] + " refused " + std::to_string(v));
+			return;
+		}
+		if (o.params[i] == "mu") {
+			if (!g_scene.prims.empty()) {
+				g_scene.prims[0].mu = v;
+			}
+		} else {
+			reload = true;
+		}
+	}
+	if (reload) {
+		std::string err;
+		if (!g_sess->load(g_scene, g_cfg, err)) {
+			opt_finish("FAIL optimize: reload: " + err);
+			return;
+		}
+	} else {
+		g_sess->setLive(g_cfg);
+		g_sess->setPrims(g_scene.prims);
+		g_sess->rewind();
+	}
+	g_sess->enqueueForward(g_q, o.steps);
+	g_sess->enqueueBackward(g_q, o.loss, o.mode);
+	g_q.push([]() { opt_collect(); });
+}
+
+static void opt_handle(Lbfgsb::Status s) {
+	DrapeOpt &o = *g_opt;
+	for (;;) {
+		switch (s) {
+			case Lbfgsb::BUSY:
+				g_q.next([]() { opt_stage(); });
+				return;
+			case Lbfgsb::NEED_EVAL:
+			case Lbfgsb::TRY: {
+				std::vector<float> x;
+				o.drv->readX(x);
+				o.log += std::string(s == Lbfgsb::TRY ? "  try " : "  x0 ") + opt_x_line(x) + "\n";
+				opt_eval(x);
+				return;
+			}
+			case Lbfgsb::ACCEPT: {
+				std::vector<float> x;
+				o.drv->readX(x);
+				char b[160];
+				std::snprintf(b, sizeof b, "iter %d f=%.9g pg=%.4g step=%.6g ", o.drv->iterations(), o.drv->fx(),
+						o.drv->pgNorm(), o.drv->lastStep());
+				o.log += b + opt_x_line(x) + "\n";
+				s = o.drv->next();
+				break;
+			}
+			case Lbfgsb::CONVERGED: {
+				std::vector<float> x;
+				o.drv->readX(x);
+				char b[160];
+				std::snprintf(b, sizeof b, "DONE optimize %s (%s) f=%.9g pg=%.4g ", o.vec->name(),
+						o.drv->reason().c_str(), o.drv->fx(), o.drv->pgNorm());
+				opt_finish(b + opt_x_line(x));
+				return;
+			}
+			case Lbfgsb::FAIL:
+				opt_finish("FAIL optimize: " + o.drv->error());
+				return;
+		}
+	}
+}
+
+static Variant drape_queue_optimize(String spec_s, PackedFloat32Array x0_a, PackedFloat32Array lb_a,
+		PackedFloat32Array ub_a, int max_iter) {
+	free_parked_sessions();
+	if (!g_opt_parked.empty() && process_frame() != g_opt_parked_frame) {
+		g_opt_parked.clear();
+	}
+	if (!g_sess || !g_scene_set) {
+		return text("FAIL: no scene (drape_scene_sphere_demo or drape_scene_mesh)");
+	}
+	if (session_busy()) {
+		return text("BUSY: tick the queue empty first");
+	}
+	const std::string spec = spec_s.utf8();
+	std::string lbkv, err, vecName = "auto", lossName = "match_trajectory", modeName = "native", params = "mu";
+	int steps = int(g_sess->steps());
+	LbfgsbParams prm;
+	prm.m = 10;
+	prm.delta = 1e-3;
+	prm.max_linesearch = 20;
+	std::istringstream ss(spec);
+	std::string tok;
+	while (ss >> tok) {
+		const size_t eq = tok.find('=');
+		if (eq == std::string::npos) {
+			return text("FAIL: spec wants key=value, got " + tok);
+		}
+		const std::string k = tok.substr(0, eq), v = tok.substr(eq + 1);
+		if (k == "params") {
+			params = v;
+		} else if (k == "loss") {
+			lossName = v;
+		} else if (k == "mode") {
+			modeName = v;
+		} else if (k == "steps") {
+			steps = std::atoi(v.c_str());
+		} else if (k == "vec") {
+			vecName = v;
+		} else {
+			lbkv += k + " " + v + " ";
+		}
+	}
+	if (!prm.parse(lbkv, err)) {
+		return text("FAIL: " + err);
+	}
+	prm.max_iterations = max_iter > 0 ? max_iter : 0;
+	auto o = std::make_unique<DrapeOpt>();
+	{
+		std::istringstream ps(params);
+		std::string p;
+		while (std::getline(ps, p, ',')) {
+			if (p != "mu" && p != "kTri" && p != "kBend" && p != "kAttach" && p != "density") {
+				return text("FAIL: params are mu, kTri, kBend, kAttach, density; got " + p);
+			}
+			o->params.push_back(p);
+		}
+	}
+	if (lossName == "match_trajectory") {
+		o->loss = DrapeLoss::MatchTrajectory;
+	} else if (lossName == "target_points") {
+		o->loss = DrapeLoss::TargetPoints;
+	} else {
+		return text("FAIL: loss match_trajectory | target_points");
+	}
+	if (modeName == "native") {
+		o->mode = DrapeMode::Native;
+	} else if (modeName == "step") {
+		o->mode = DrapeMode::Step;
+	} else if (modeName == "unrolled") {
+		o->mode = DrapeMode::Unrolled;
+	} else {
+		return text("FAIL: mode native | step | unrolled");
+	}
+	if (steps <= 0) {
+		return text("FAIL: steps=N (no frames recorded to take the count from)");
+	}
+	o->steps = steps;
+	const size_t n = o->params.size();
+	std::vector<float> x0 = x0_a.fetch(), lb = lb_a.fetch(), ub = ub_a.fetch();
+	if (n == 0 || x0.size() != n || (!lb.empty() && lb.size() != n) || (!ub.empty() && ub.size() != n)) {
+		return text("FAIL: x0 (and lb, ub if given) need one value per parameter");
+	}
+	if (lb.empty()) {
+		lb.assign(n, -INFINITY);
+	}
+	if (ub.empty()) {
+		ub.assign(n, INFINITY);
+	}
+	// A handful of parameters: auto is the CPU vector backend (the L-BFGS-B
+	// crossover is in gates/5-drape/lbfgsb; rd pays a submit per phase).
+	o->vec = make_lbfgsb_vec(vecName == "auto" ? "cpu" : vecName, g_dev, err);
+	if (!o->vec) {
+		return text("FAIL: " + err);
+	}
+	o->drv = std::make_unique<Lbfgsb>(*o->vec);
+	if (g_opt && g_opt->pending()) {
+		g_opt_parked.push_back(std::move(g_opt));
+		g_opt_parked_frame = process_frame();
+	}
+	g_opt = std::move(o);
+	g_opt->t0 = g_sess->now_us;
+	g_opt->log = "optimize " + spec + " | " + prm.dump() + "\n";
+	const Lbfgsb::Status s = g_opt->drv->start(uint32_t(n), x0.data(), lb.data(), ub.data(), prm);
+	g_q.push([s]() { opt_handle(s); });
+	g_opt_last = true;
+	return text("QUEUED optimize " + params + " on " + g_sess->backend() + " (vec " + g_opt->vec->name() + ")");
+}
+
+static Variant drape_optimize_result() {
+	if (!g_opt) {
+		return text("no optimize");
+	}
+	return text((g_opt->done ? g_opt->head : std::string("RUNNING")) + "\n" + g_opt->log);
+}
+
+// Hand the next drape job a data file (the Gate 5 oracle: comp_NN, prob_*,
+// trace_*); key "clear" drops them all.
+static Variant drape_job_data(String key_s, String text_s) {
+	const std::string key = key_s.utf8();
+	auto &d = lbfgsb_job_data();
+	if (key == "clear") {
+		d.clear();
+		return text("CLEARED");
+	}
+	d[key] = text_s.utf8();
+	return text("DATA " + key + " " + std::to_string(d[key].size()) + " bytes, " + std::to_string(d.size()) + " keys");
+}
+
+// --- the drape jobs (Gate 5): one at a time, like the avbd jobs ---------------------
+
+static std::unique_ptr<jobs::Job> g_djob;
+static std::vector<std::unique_ptr<jobs::Job>> g_djob_parked;
+static int64_t g_djob_parked_frame = -1;
+
+static void free_parked_djobs() {
+	if (!g_djob_parked.empty() && process_frame() != g_djob_parked_frame) {
+		g_djob_parked.clear();
+	}
+}
+
+static Variant drape_job_start(String name_s, String backend_s, String args_s) {
+	free_parked_djobs();
+	const std::string name = name_s.utf8(), backend = backend_s.utf8(), args = args_s.utf8();
+	if (g_djob) {
+		if (g_djob->pending()) {
+			g_djob_parked.push_back(std::move(g_djob));
+			g_djob_parked_frame = process_frame();
+		}
+		g_djob.reset();
+	}
+	std::string err;
+	g_djob = make_drape_job(name, backend, args, g_dev, err);
+	if (!g_djob) {
+		return text("FAIL " + name + " " + backend + ": " + err);
+	}
+	DrapeSession *s = drape_job_session(g_djob.get());
+	return text(std::string("STARTED ") + name + " " + (s ? s->backend() : backend.c_str()) + " " + args);
+}
+
+static Variant drape_job_tick(int64_t host_us) {
+	free_parked_djobs();
+	if (!g_djob) {
+		return text("FAIL: no job (drape_job_start first)");
+	}
+	return text(g_djob->tick(host_us));
+}
+
+static Variant drape_job_frame(int i) {
+	return Variant(PackedFloat32Array(frame_f32(g_djob ? drape_job_session(g_djob.get()) : nullptr, i)));
+}
+
+static Variant drape_job_names_api() {
+	return text(drape_job_names());
+}
+
+// Shutdown: drop every job and session (each solver frees the RIDs it made),
+// then free the device. Refused while a submit is in flight, so it never
+// syncs in a submit's frame; tick to the verdict first.
 static Variant rd_close() {
-	if ((g_job && g_job->pending()) || (!g_parked.empty() && process_frame() == g_parked_frame)) {
+	const int64_t f = process_frame();
+	const bool inflight = (g_job && g_job->pending()) || (!g_parked.empty() && f == g_parked_frame) ||
+			(g_djob && g_djob->pending()) || (!g_djob_parked.empty() && f == g_djob_parked_frame) ||
+			(g_sess && g_sess->pending()) || (!g_sess_parked.empty() && f == g_sess_parked_frame) || opt_pending() ||
+			(!g_opt_parked.empty() && f == g_opt_parked_frame);
+	if (inflight) {
 		return text("BUSY: a submit is in flight; tick the job to its verdict and close on a later frame");
 	}
 	g_parked.clear();
 	g_job.reset();
+	g_djob_parked.clear();
+	g_djob.reset();
+	g_sess_parked.clear();
+	g_sess.reset();
+	g_q = jobs::StageQueue();
+	g_opt_parked.clear();
+	g_opt.reset();
 	const int64_t slots = g_dev.permanent_slots();
 	const bool was_open = g_dev.ok();
 	g_dev.close();
@@ -186,5 +858,34 @@ int main() {
 	ADD_API_FUNCTION(avbd_job_tick, "String", "int host_us",
 			"Advance the job one frame (host clock in us); RUNNING k/N, then PASS or FAIL");
 	add_sandbox_api_function("avbd_job_names", avbd_job_names_api, "String", "", "The job names");
+	ADD_API_FUNCTION(drape_open, "String", "String backend", "Pick the drape backend: cpu, rd or auto (rd from 160 vertices)");
+	ADD_API_FUNCTION(drape_scene_sphere_demo, "String", "", "Load DiffCloth's rotating-sphere demo (25x25, sphere r 2)");
+	ADD_API_FUNCTION(drape_scene_mesh, "String",
+			"PackedFloat32Array positions, PackedInt32Array triangles, PackedInt32Array pins, PackedFloat32Array material",
+			"Load a host mesh; material = [density, kTri, kBend, kAttach]");
+	ADD_API_FUNCTION(drape_primitive, "String", "String kind, PackedFloat32Array params",
+			"Add a sphere(c,r,mu) / plane(c,ul,ur,mu) / capsule(b,axis,r,len,mu), or clear");
+	ADD_API_FUNCTION(drape_config, "String", "String key, double value", "Set a DrapeConfig knob; returns the config line");
+	ADD_API_FUNCTION(drape_queue_forward, "String", "int steps", "Queue steps (0 rewinds to the initial state)");
+	ADD_API_FUNCTION(drape_set_target, "String", "String kind, PackedInt32Array verts, PackedFloat32Array positions, int frame",
+			"Target: trajectory (the recorded frames) | points | clear");
+	ADD_API_FUNCTION(drape_queue_backward, "String", "String loss, String mode",
+			"Queue a backward: match_trajectory | target_points, native | step | unrolled");
+	ADD_API_FUNCTION(drape_tick, "String", "int host_us", "Advance the drape queue one frame; RUNNING k/N or IDLE <result>");
+	ADD_API_FUNCTION(drape_positions, "PackedFloat32Array", "", "The last completed step's positions (never syncs)");
+	ADD_API_FUNCTION(drape_frame, "PackedFloat32Array", "int i", "Frame i: x0, then each step's predictor");
+	ADD_API_FUNCTION(drape_faces, "PackedInt32Array", "", "The scene's triangles");
+	ADD_API_FUNCTION(drape_result, "String", "", "The last forward/backward result, the config and the scene");
+	ADD_API_FUNCTION(drape_queue_optimize, "String",
+			"String spec, PackedFloat32Array x0, PackedFloat32Array lb, PackedFloat32Array ub, int max_iter",
+			"Queue L-BFGS-B over session parameters (spec: params=mu loss= mode= steps= vec= m= delta= ...)");
+	ADD_API_FUNCTION(drape_optimize_result, "String", "", "The optimize verdict and its iterates");
+	ADD_API_FUNCTION(drape_job_data, "String", "String key, String text",
+			"Hand the drape jobs a data file (Gate 5 oracle: comp_NN, prob_*, trace_*); key clear drops all");
+	ADD_API_FUNCTION(drape_job_start, "String", "String name, String backend, String args",
+			"Start a Gate 5 drape job on cpu, rd or auto; then tick it once per frame");
+	ADD_API_FUNCTION(drape_job_tick, "String", "int host_us", "Advance the drape job one frame; RUNNING k/N, then PASS or FAIL");
+	ADD_API_FUNCTION(drape_job_frame, "PackedFloat32Array", "int i", "Frame i of the current drape job's session");
+	add_sandbox_api_function("drape_job_names", drape_job_names_api, "String", "", "The drape job names");
 	halt();
 }

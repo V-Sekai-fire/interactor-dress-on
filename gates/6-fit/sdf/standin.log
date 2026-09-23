@@ -1,0 +1,18 @@
+# Call-site ABI check with a scratch-only stand-in Slang kernel (NOT committed, NOT Lean):
+# the Slang a Lean emit would produce, compiled by slangc -target cpp into FIT_KERNELS_DIR,
+# so SdfSpline.cpp's non-pending path (GlobalParams_0 stencil/uvw/result, main_0_Thread) is exercised.
+# slangc: 2026.13.1-1-g84792eb15
+
+## 1. double literals (2.0l / 3.0l ...): emit folds 2/3 to 0.66666666666666663
+== build gate6a (-I <scratch>/c6_standin -I <scratch>/ido-6/guest/avbd/slang-rt) ==
+PASS [fit] a.kernel: Lean emit vs reference: max 0 ULP over 21015 samples
+[fit] SUMMARY PASS=10 FAIL=0
+PASS [all] a.kernel: Lean emit vs reference: max 0 ULP over 78300 samples
+[all] SUMMARY PASS=10 FAIL=0
+
+## 2. control: plain Slang literals (2.0 / 3.0) are float; emit folds 2/3 to 0.66666668653488159
+== build gate6a (-I <scratch>/c6_standin_f -I <scratch>/ido-6/guest/avbd/slang-rt) ==
+FAIL [fit] a.kernel: Lean emit vs reference: max 8694973136824696832 ULP over 21015 samples
+[fit] SUMMARY PASS=9 FAIL=1
+FAIL [all] a.kernel: Lean emit vs reference: max 8709856126218272768 ULP over 78300 samples
+[all] SUMMARY PASS=9 FAIL=1

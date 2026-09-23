@@ -1,0 +1,235 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+# Gate 5 L-BFGS-B (Task B), 2026-09-23T04:52:21, Godot 4.7.2-stable (official), NVIDIA GeForce RTX 4090
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+PASS oracle handed to the guest: 45 files (20 components, 5 problems, 20 traces): DATA trace_rosenbox_upstream_n25_m5_tight 3206 bytes, 45 keys
+job lbfgsb_components cpu      ticks=     2 wall_ms=    587.7  PASS G1 cpu: 20/20 fixtures pass, control (theta x1.25) fails 20/20
+    PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=2.58e-08 M=1.19e-07 Mv=1.68e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=8.89e-08 drt0=3.49e-08 step_max0=2.94e-08 drt=3.31e-08 dg=9.69e-10 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.40e-07 pg_inf=5.88e-10 xcp=4.31e-08 vecc=2.10e-07 drt0=1.95e-06 step_max0=1.10e-06 drt=1.39e-07 dg=5.33e-08 step_max=7.79e-08 wall_ms=0.0
+    PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.25e-08 M=9.93e-08 Mv=6.84e-08 pg_inf=1.24e-09 xcp=3.43e-08 vecc=2.68e-07 drt0=1.87e-07 step_max0=7.39e-10 drt=1.30e-07 dg=6.49e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: theta=2.27e-08 M=1.84e-07 Mv=2.04e-07 pg_inf=1.77e-09 xcp=6.61e-06 vecc=2.66e-06 drt0=6.37e-06 step_max0=1.03e-06 drt=1.94e-07 dg=2.16e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=1.63e-07 Mv=2.22e-07 pg_inf=6.08e-08 xcp=4.54e-08 vecc=1.98e-07 drt0=2.23e-07 step_max0=6.91e-08 drt=8.01e-08 dg=1.99e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=2.09e-07 Mv=1.80e-07 pg_inf=1.84e-10 xcp=7.54e-07 vecc=1.30e-06 drt0=4.89e-07 step_max0=6.42e-07 drt=1.00e-07 dg=1.00e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=3.44e-08 Mv=1.03e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=1.36e-07 drt=5.84e-08 dg=2.74e-08 step_max=2.83e-08 wall_ms=0.0
+    PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=4.59e-09 M=9.34e-08 Mv=6.36e-08 pg_inf=2.19e-09 xcp=2.50e-08 vecc=8.42e-08 drt0=1.54e-07 step_max0=2.19e-08 drt=4.14e-08 dg=8.41e-09 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=9.22e-08 M=1.94e-07 Mv=3.31e-07 pg_inf=2.44e-10 xcp=5.01e-08 vecc=1.24e-07 drt0=1.74e-07 step_max0=1.65e-07 drt=1.69e-07 dg=5.93e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_09 n=5 m=10 ncorr=1 |newact|=4 |fv|=0 sub_rounds=0 sub_path=0: theta=2.47e-08 M=3.88e-08 Mv=7.13e-08 pg_inf=1.31e-09 xcp=1.48e-09 vecc=6.76e-08 drt0=9.53e-09 step_max0=1.31e-08 drt=1.31e-09 dg=3.74e-09 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.14e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=1.34e-07 vecc=2.35e-07 drt0=9.67e-08 step_max0=1.13e-07 drt=6.60e-08 dg=2.51e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=1.14e-07 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=1.58e-07 dg=4.60e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=4.03e-09 M=5.26e-07 Mv=4.91e-07 pg_inf=4.88e-10 xcp=3.93e-08 vecc=3.16e-08 drt0=1.61e-07 step_max0=1.56e-07 drt=3.04e-07 dg=3.53e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=7.04e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=4.68e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=2.89e-08 M=6.36e-08 Mv=5.99e-08 pg_inf=6.34e-08 xcp=3.80e-08 vecc=9.07e-08 drt0=2.82e-07 step_max0=2.46e-08 drt=1.00e-07 dg=2.33e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: theta=3.74e-08 M=3.07e-07 Mv=3.33e-07 pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.02e-07 drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=1.49e-07 pg_inf=1.65e-07 xcp=2.63e-08 vecc=3.97e-08 drt0=1.45e-06 step_max0=7.60e-07 drt=1.09e-07 dg=6.88e-08 step_max=1.03e-07 wall_ms=0.0
+    PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.47e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.97e-08 vecc=2.59e-07 drt0=2.12e-07 step_max0=7.45e-08 drt=1.38e-07 dg=2.90e-08 step_max=0.00e+00 wall_ms=0.0
+    PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=4.33e-08 M=1.11e-07 Mv=2.78e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=1.75e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.63e-08 dg=3.19e-08 step_max=2.02e-08 wall_ms=0.0
+    PASS comp_19 n=37 m=5 ncorr=0 |newact|=11 |fv|=21 sub_rounds=0 sub_path=1: theta=0.00e+00 pg_inf=2.76e-09 xcp=8.05e-08 drt0=1.07e-07 step_max0=1.16e-07 drt=3.41e-08 dg=3.95e-09 step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.54e-01(FAIL) Mv=2.11e-01(FAIL) pg_inf=2.52e-09 xcp=1.83e-09 vecc=2.50e-01(FAIL) drt0=3.49e-08 step_max0=2.94e-08 drt=2.27e-02(FAIL) dg=9.69e-10 step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.74e-01(FAIL) pg_inf=5.88e-10 xcp=3.68e-03(FAIL) vecc=1.77e-01(FAIL) drt0=2.03e-06 step_max0=9.03e-07 drt=2.03e-01(FAIL) dg=1.73e-01(FAIL) step_max=2.72e-01(FAIL) wall_ms=0.0
+    control FAIL comp_02 n=300 m=5 ncorr=1 |newact|=23 |fv|=183 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.24e-09 xcp=3.30e-02(FAIL) vecc=7.04e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.54e-01(FAIL) step_max0=1.75e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.68e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: M=1.28e-01(FAIL) Mv=1.48e-01(FAIL) pg_inf=1.77e-09 xcp=7.58e-02(FAIL) vecc=2.62e-01(FAIL) drt0=7.41e-02(FAIL) step_max0=1.14e-02(FAIL) drt=7.70e-02(FAIL) dg=1.93e-03(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=0.00e+00 wall_ms=352.9
+    control FAIL comp_05 n=300 m=10 ncorr=7 |newact|=120 |fv|=83 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=1.84e-10 xcp=1.47e-01(FAIL) vecc=2.34e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.05e-01(FAIL) step_max0=1.14e-01(FAIL) drt=2.02e-01(FAIL) subLUP(FAIL) dg=7.89e-02(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: M=1.95e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=2.88e-09 xcp=1.21e-02(FAIL) vecc=1.33e-01(FAIL) drt0=5.49e-07 step_max0=3.24e-07 drt=2.05e-01(FAIL) dg=1.30e-01(FAIL) step_max=2.91e-01(FAIL) wall_ms=0.0
+    control FAIL comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: M=1.67e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=2.19e-09 xcp=2.92e-02(FAIL) vecc=1.43e-01(FAIL) drt0=1.14e-01(FAIL) step_max0=1.88e-01(FAIL) drt=2.00e-01(FAIL) dg=1.80e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_08 n=300 m=10 ncorr=10 |newact|=18 |fv|=191 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.97e-01(FAIL) pg_inf=2.44e-10 xcp=3.63e-02(FAIL) vecc=1.14e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.49e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.67e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_09 n=5 m=10 ncorr=1 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.55e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.31e-09 xcp=7.62e-02(FAIL) vecc=7.07e-02(FAIL) newact(FAIL) fv(FAIL) drt0=2.55e-02(FAIL) step_max0=4.57e-02(FAIL) drt=6.87e-02(FAIL) subLUP(FAIL) dg=1.48e-02(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_10 n=37 m=5 ncorr=5 |newact|=18 |fv|=6 sub_rounds=0 sub_path=1: M=1.94e-01(FAIL) Mv=1.96e-01(FAIL) pg_inf=7.12e-10 xcp=1.94e-01(FAIL) vecc=1.28e-01(FAIL) newact(FAIL) fv(FAIL) drt0=9.86e-02(FAIL) step_max0=1.11e-01(FAIL) drt=1.78e-01(FAIL) subLUP(FAIL) dg=6.95e-02(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=1.98e-01(FAIL) pg_inf=7.75e-08 xcp=3.59e-03(FAIL) vecc=1.90e-01(FAIL) drt0=1.48e-01(FAIL) step_max0=1.97e-01(FAIL) drt=1.96e-01(FAIL) dg=1.96e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: M=1.08e-01(FAIL) Mv=1.62e-01(FAIL) pg_inf=4.88e-10 xcp=2.04e-02(FAIL) vecc=1.86e-01(FAIL) drt0=9.18e-08 step_max0=2.42e-08 drt=5.00e-02(FAIL) dg=3.70e-02(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: M=1.73e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=8.26e-08 xcp=4.32e-02(FAIL) vecc=1.85e-01(FAIL) drt0=4.25e-02(FAIL) step_max0=1.93e-01(FAIL) drt=2.13e-01(FAIL) dg=1.90e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_14 n=300 m=5 ncorr=3 |newact|=20 |fv|=175 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=6.34e-08 xcp=3.54e-02(FAIL) vecc=1.76e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.82e-01(FAIL) drt=2.06e-01(FAIL) subLUP(FAIL) dg=1.76e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: M=1.57e-01(FAIL) Mv=1.76e-01(FAIL) pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.42e-01(FAIL) drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: M=1.58e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.65e-07 xcp=3.46e-03(FAIL) vecc=9.43e-02(FAIL) drt0=2.53e-06 step_max0=1.18e-06 drt=2.05e-01(FAIL) dg=2.00e-01(FAIL) step_max=2.53e-01(FAIL) wall_ms=0.0
+    control FAIL comp_17 n=300 m=10 ncorr=10 |newact|=35 |fv|=169 sub_rounds=0 sub_path=2: M=1.69e-01(FAIL) Mv=1.72e-01(FAIL) pg_inf=2.28e-09 xcp=3.34e-02(FAIL) vecc=1.38e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.93e-01(FAIL) subLUP(FAIL) dg=1.62e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    control FAIL comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: M=7.90e-02(FAIL) Mv=1.56e-01(FAIL) pg_inf=4.06e-10 xcp=2.87e-02(FAIL) vecc=1.32e-01(FAIL) drt0=4.31e-08 step_max0=9.71e-09 drt=9.48e-02(FAIL) dg=9.35e-02(FAIL) step_max=1.05e-01(FAIL) wall_ms=0.0
+    control FAIL comp_19 n=37 m=5 ncorr=0 |newact|=9 |fv|=23 sub_rounds=0 sub_path=1: pg_inf=2.76e-09 xcp=9.17e-02(FAIL) newact(FAIL) fv(FAIL) drt0=1.13e-01(FAIL) step_max0=1.55e-01(FAIL) drt=2.00e-01(FAIL) subLUP(FAIL) dg=1.36e-01(FAIL) step_max=0.00e+00 wall_ms=0.0
+    worst (fixtures): M=5.26e-07 Mv=4.91e-07 dg=6.88e-08 drt=3.04e-07 drt0=6.37e-06 pg_inf=1.65e-07 step_max=1.03e-07 step_max0=1.10e-06 theta=9.22e-08 vecc=2.66e-06 xcp=6.61e-06
+    worst (control): M=1.95e-01 Mv=2.11e-01 dg=2.00e-01 drt=2.13e-01 drt0=1.54e-01 pg_inf=1.65e-07 step_max=2.91e-01 step_max0=1.97e-01 vecc=7.04e-01 xcp=1.94e-01
+    phases=394 dispatches=2732
+PASS lbfgsb_components cpu: PASS G1 cpu: 20/20 fixtures pass, control (theta x1.25) fails 20/20
+job lbfgsb_components rd       ticks=   395 wall_ms=    793.6  PASS G1 rd: 20/20 fixtures pass, control (theta x1.25) fails 20/20
+    PASS comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: theta=8.68e-08 M=1.66e-07 Mv=2.17e-07 pg_inf=2.52e-09 xcp=1.83e-09 vecc=1.79e-07 drt0=3.49e-08 step_max0=2.94e-08 drt=2.30e-08 dg=9.69e-10 step_max=0.00e+00 wall_ms=27.3
+    PASS comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: theta=7.23e-08 M=3.22e-07 Mv=2.76e-07 pg_inf=5.88e-10 xcp=4.00e-08 vecc=6.79e-08 drt0=1.92e-06 step_max0=7.76e-07 drt=1.48e-07 dg=8.90e-08 step_max=1.87e-07 wall_ms=32.0
+    PASS comp_02 n=300 m=5 ncorr=1 |newact|=34 |fv|=172 sub_rounds=0 sub_path=2: theta=8.53e-09 M=9.93e-08 Mv=6.79e-08 pg_inf=1.24e-09 xcp=6.46e-08 vecc=7.89e-07 drt0=3.13e-07 step_max0=2.01e-07 drt=1.13e-07 dg=5.48e-08 step_max=5.96e-08 wall_ms=27.9
+    PASS comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: theta=2.27e-08 M=1.84e-07 Mv=2.34e-07 pg_inf=1.77e-09 xcp=8.97e-05 vecc=3.72e-05 drt0=8.62e-05 step_max0=1.52e-05 drt=1.46e-07 dg=2.28e-08 step_max=0.00e+00 wall_ms=24.4
+    PASS comp_04 n=37 m=10 ncorr=10 |newact|=4 |fv|=20 sub_rounds=0 sub_path=1: theta=3.77e-08 M=2.69e-07 Mv=3.33e-07 pg_inf=6.08e-08 xcp=3.71e-08 vecc=1.98e-07 drt0=2.22e-07 step_max0=1.08e-07 drt=6.90e-08 dg=8.24e-10 step_max=5.96e-08 wall_ms=50.8
+    PASS comp_05 n=300 m=10 ncorr=7 |newact|=130 |fv|=73 sub_rounds=0 sub_path=2: theta=4.58e-08 M=1.20e-07 Mv=1.23e-07 pg_inf=1.84e-10 xcp=2.02e-06 vecc=4.11e-06 drt0=1.24e-06 step_max0=1.73e-06 drt=7.50e-08 dg=3.69e-09 step_max=5.96e-08 wall_ms=39.4
+    PASS comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: theta=2.16e-08 M=5.87e-08 Mv=1.68e-07 pg_inf=2.88e-09 xcp=5.10e-08 vecc=1.26e-07 drt0=5.09e-07 step_max0=2.30e-07 drt=8.63e-08 dg=4.22e-08 step_max=3.48e-08 wall_ms=21.6
+    PASS comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: theta=7.10e-08 M=2.34e-07 Mv=3.73e-07 pg_inf=2.19e-09 xcp=1.60e-08 vecc=5.17e-08 drt0=1.16e-07 step_max0=6.24e-08 drt=9.02e-08 dg=1.33e-08 step_max=0.00e+00 wall_ms=9.9
+    PASS comp_08 n=300 m=10 ncorr=10 |newact|=30 |fv|=179 sub_rounds=0 sub_path=2: theta=2.03e-08 M=1.45e-07 Mv=2.01e-07 pg_inf=2.44e-10 xcp=4.49e-08 vecc=1.24e-07 drt0=2.52e-07 step_max0=6.40e-08 drt=1.56e-07 dg=3.32e-08 step_max=5.96e-08 wall_ms=35.7
+    PASS comp_09 n=5 m=10 ncorr=1 |newact|=4 |fv|=0 sub_rounds=0 sub_path=0: theta=2.47e-08 M=1.31e-07 Mv=1.59e-07 pg_inf=1.31e-09 xcp=1.48e-09 vecc=6.76e-08 drt0=9.53e-09 step_max0=1.31e-08 drt=1.31e-09 dg=3.74e-09 step_max=0.00e+00 wall_ms=30.7
+    PASS comp_10 n=37 m=5 ncorr=5 |newact|=19 |fv|=5 sub_rounds=0 sub_path=2: theta=4.60e-08 M=1.95e-07 Mv=2.53e-07 pg_inf=7.12e-10 xcp=4.46e-07 vecc=5.02e-07 drt0=1.59e-07 step_max0=1.23e-07 drt=4.58e-08 dg=2.28e-08 step_max=5.96e-08 wall_ms=17.1
+    PASS comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: theta=4.11e-08 M=6.70e-08 Mv=1.22e-07 pg_inf=7.75e-08 xcp=3.57e-08 vecc=1.26e-07 drt0=1.91e-06 step_max0=1.46e-07 drt=2.09e-07 dg=8.63e-08 step_max=5.96e-08 wall_ms=32.2
+    PASS comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: theta=6.19e-08 M=3.06e-07 Mv=4.09e-07 pg_inf=4.88e-10 xcp=8.43e-08 vecc=2.02e-07 drt0=1.38e-07 step_max0=1.14e-07 drt=2.93e-07 dg=1.43e-07 step_max=0.00e+00 wall_ms=28.1
+    PASS comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: theta=5.69e-08 M=8.15e-08 Mv=8.22e-08 pg_inf=8.26e-08 xcp=2.33e-08 vecc=1.12e-07 drt0=1.03e-07 step_max0=1.68e-08 drt=1.06e-07 dg=8.12e-08 step_max=0.00e+00 wall_ms=10.4
+    PASS comp_14 n=300 m=5 ncorr=3 |newact|=25 |fv|=170 sub_rounds=0 sub_path=1: theta=3.99e-08 M=1.26e-07 Mv=1.77e-07 pg_inf=6.34e-08 xcp=3.80e-08 vecc=1.02e-07 drt0=2.82e-07 step_max0=2.46e-08 drt=1.61e-07 dg=3.38e-08 step_max=5.96e-08 wall_ms=12.5
+    PASS comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: theta=3.74e-08 M=1.07e-07 Mv=1.26e-07 pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.02e-07 drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=8.4
+    PASS comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: theta=5.97e-08 M=5.97e-08 Mv=6.49e-08 pg_inf=1.65e-07 xcp=2.63e-08 vecc=1.11e-07 drt0=1.45e-06 step_max0=7.60e-07 drt=5.97e-08 dg=6.31e-09 step_max=2.32e-08 wall_ms=4.9
+    PASS comp_17 n=300 m=10 ncorr=10 |newact|=39 |fv|=165 sub_rounds=0 sub_path=2: theta=3.01e-08 M=1.98e-07 Mv=1.49e-07 pg_inf=2.28e-09 xcp=3.91e-08 vecc=1.61e-07 drt0=2.36e-07 step_max0=3.60e-08 drt=1.29e-07 dg=1.41e-09 step_max=5.96e-08 wall_ms=29.6
+    PASS comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: theta=6.52e-08 M=3.83e-07 Mv=4.77e-07 pg_inf=4.06e-10 xcp=4.26e-08 vecc=2.36e-07 drt0=1.78e-08 step_max0=9.71e-09 drt=3.34e-08 dg=3.41e-08 step_max=2.02e-08 wall_ms=20.1
+    PASS comp_19 n=37 m=5 ncorr=0 |newact|=11 |fv|=21 sub_rounds=0 sub_path=1: theta=0.00e+00 pg_inf=2.76e-09 xcp=1.12e-07 drt0=1.71e-07 step_max0=2.19e-07 drt=3.41e-08 dg=3.95e-09 step_max=5.96e-08 wall_ms=4.8
+    control FAIL comp_00 n=5 m=10 ncorr=3 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.54e-01(FAIL) Mv=2.11e-01(FAIL) pg_inf=2.52e-09 xcp=1.83e-09 vecc=2.50e-01(FAIL) drt0=3.49e-08 step_max0=2.94e-08 drt=2.27e-02(FAIL) dg=9.69e-10 step_max=0.00e+00 wall_ms=6.9
+    control FAIL comp_01 n=37 m=10 ncorr=10 |newact|=0 |fv|=27 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.74e-01(FAIL) pg_inf=5.88e-10 xcp=3.68e-03(FAIL) vecc=1.77e-01(FAIL) drt0=2.03e-06 step_max0=9.03e-07 drt=2.03e-01(FAIL) dg=1.73e-01(FAIL) step_max=2.72e-01(FAIL) wall_ms=14.1
+    control FAIL comp_02 n=300 m=5 ncorr=1 |newact|=23 |fv|=183 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.24e-09 xcp=3.30e-02(FAIL) vecc=7.04e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.54e-01(FAIL) step_max0=1.75e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.68e-01(FAIL) step_max=5.96e-08 wall_ms=11.3
+    control FAIL comp_03 n=5 m=5 ncorr=5 |newact|=4 |fv|=1 sub_rounds=0 sub_path=1: M=1.28e-01(FAIL) Mv=1.48e-01(FAIL) pg_inf=1.77e-09 xcp=7.57e-02(FAIL) vecc=2.62e-01(FAIL) drt0=7.41e-02(FAIL) step_max0=1.13e-02(FAIL) drt=7.70e-02(FAIL) dg=1.93e-03(FAIL) step_max=0.00e+00 wall_ms=10.7
+    control FAIL comp_04 n=37 m=10 ncorr=10 |newact|=3 |fv|=21 sub_rounds=0 sub_path=2: M=1.71e-01(FAIL) Mv=1.44e-01(FAIL) pg_inf=6.08e-08 xcp=2.67e-02(FAIL) vecc=1.67e-01(FAIL) newact(FAIL) fv(FAIL) drt0=5.40e-02(FAIL) step_max0=1.56e-01(FAIL) drt=1.69e-01(FAIL) subLUP(FAIL) dg=1.54e-01(FAIL) step_max=5.96e-08 wall_ms=22.7
+    control FAIL comp_05 n=300 m=10 ncorr=7 |newact|=120 |fv|=83 sub_rounds=0 sub_path=2: M=1.62e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=1.84e-10 xcp=1.47e-01(FAIL) vecc=2.34e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.05e-01(FAIL) step_max0=1.14e-01(FAIL) drt=2.02e-01(FAIL) subLUP(FAIL) dg=7.89e-02(FAIL) step_max=5.96e-08 wall_ms=23.8
+    control FAIL comp_06 n=5 m=5 ncorr=2 |newact|=0 |fv|=3 sub_rounds=0 sub_path=1: M=1.95e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=2.88e-09 xcp=1.21e-02(FAIL) vecc=1.33e-01(FAIL) drt0=5.49e-07 step_max0=2.30e-07 drt=2.05e-01(FAIL) dg=1.30e-01(FAIL) step_max=2.91e-01(FAIL) wall_ms=11.9
+    control FAIL comp_07 n=37 m=5 ncorr=3 |newact|=3 |fv|=22 sub_rounds=0 sub_path=2: M=1.67e-01(FAIL) Mv=1.95e-01(FAIL) pg_inf=2.19e-09 xcp=2.92e-02(FAIL) vecc=1.43e-01(FAIL) drt0=1.14e-01(FAIL) step_max0=1.88e-01(FAIL) drt=2.00e-01(FAIL) dg=1.80e-01(FAIL) step_max=0.00e+00 wall_ms=8.9
+    control FAIL comp_08 n=300 m=10 ncorr=10 |newact|=18 |fv|=191 sub_rounds=0 sub_path=2: M=1.77e-01(FAIL) Mv=1.97e-01(FAIL) pg_inf=2.44e-10 xcp=3.63e-02(FAIL) vecc=1.14e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.49e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.98e-01(FAIL) subLUP(FAIL) dg=1.67e-01(FAIL) step_max=5.96e-08 wall_ms=26.5
+    control FAIL comp_09 n=5 m=10 ncorr=1 |newact|=3 |fv|=1 sub_rounds=0 sub_path=1: M=1.55e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.31e-09 xcp=7.62e-02(FAIL) vecc=7.07e-02(FAIL) newact(FAIL) fv(FAIL) drt0=2.55e-02(FAIL) step_max0=4.57e-02(FAIL) drt=6.87e-02(FAIL) subLUP(FAIL) dg=1.48e-02(FAIL) step_max=0.00e+00 wall_ms=14.9
+    control FAIL comp_10 n=37 m=5 ncorr=5 |newact|=18 |fv|=6 sub_rounds=0 sub_path=1: M=1.94e-01(FAIL) Mv=1.96e-01(FAIL) pg_inf=7.12e-10 xcp=1.94e-01(FAIL) vecc=1.28e-01(FAIL) newact(FAIL) fv(FAIL) drt0=9.86e-02(FAIL) step_max0=1.11e-01(FAIL) drt=1.78e-01(FAIL) subLUP(FAIL) dg=6.95e-02(FAIL) step_max=5.96e-08 wall_ms=12.3
+    control FAIL comp_11 n=300 m=5 ncorr=5 |newact|=2 |fv|=215 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=1.98e-01(FAIL) pg_inf=7.75e-08 xcp=3.59e-03(FAIL) vecc=1.90e-01(FAIL) drt0=1.48e-01(FAIL) step_max0=1.97e-01(FAIL) drt=1.96e-01(FAIL) dg=1.96e-01(FAIL) step_max=5.96e-08 wall_ms=25.2
+    control FAIL comp_12 n=5 m=10 ncorr=7 |newact|=0 |fv|=5 sub_rounds=0 sub_path=2: M=1.08e-01(FAIL) Mv=1.62e-01(FAIL) pg_inf=4.88e-10 xcp=2.04e-02(FAIL) vecc=1.86e-01(FAIL) drt0=6.17e-08 step_max0=6.60e-08 drt=5.00e-02(FAIL) dg=3.70e-02(FAIL) step_max=0.00e+00 wall_ms=16.1
+    control FAIL comp_13 n=37 m=10 ncorr=2 |newact|=2 |fv|=22 sub_rounds=0 sub_path=1: M=1.73e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=8.26e-08 xcp=4.32e-02(FAIL) vecc=1.85e-01(FAIL) drt0=4.25e-02(FAIL) step_max0=1.93e-01(FAIL) drt=2.13e-01(FAIL) dg=1.90e-01(FAIL) step_max=0.00e+00 wall_ms=7.8
+    control FAIL comp_14 n=300 m=5 ncorr=3 |newact|=20 |fv|=175 sub_rounds=0 sub_path=2: M=1.64e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=6.34e-08 xcp=3.54e-02(FAIL) vecc=1.76e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.82e-01(FAIL) drt=2.06e-01(FAIL) subLUP(FAIL) dg=1.76e-01(FAIL) step_max=5.96e-08 wall_ms=16.3
+    control FAIL comp_15 n=5 m=5 ncorr=5 |newact|=3 |fv|=0 sub_rounds=0 sub_path=0: M=1.57e-01(FAIL) Mv=1.76e-01(FAIL) pg_inf=2.63e-08 xcp=4.80e-10 vecc=1.42e-01(FAIL) drt0=2.61e-08 step_max0=1.21e-08 drt=2.63e-08 dg=2.82e-08 step_max=0.00e+00 wall_ms=13.3
+    control FAIL comp_16 n=37 m=10 ncorr=1 |newact|=0 |fv|=23 sub_rounds=0 sub_path=1: M=1.58e-01(FAIL) Mv=2.00e-01(FAIL) pg_inf=1.65e-07 xcp=3.46e-03(FAIL) vecc=9.43e-02(FAIL) drt0=2.53e-06 step_max0=1.18e-06 drt=2.05e-01(FAIL) dg=2.00e-01(FAIL) step_max=2.53e-01(FAIL) wall_ms=9.1
+    control FAIL comp_17 n=300 m=10 ncorr=10 |newact|=35 |fv|=169 sub_rounds=0 sub_path=2: M=1.69e-01(FAIL) Mv=1.72e-01(FAIL) pg_inf=2.28e-09 xcp=3.34e-02(FAIL) vecc=1.38e-01(FAIL) newact(FAIL) fv(FAIL) drt0=1.52e-01(FAIL) step_max0=1.74e-01(FAIL) drt=1.93e-01(FAIL) subLUP(FAIL) dg=1.62e-01(FAIL) step_max=5.96e-08 wall_ms=36.2
+    control FAIL comp_18 n=5 m=5 ncorr=5 |newact|=0 |fv|=2 sub_rounds=0 sub_path=1: M=7.90e-02(FAIL) Mv=1.56e-01(FAIL) pg_inf=4.06e-10 xcp=2.87e-02(FAIL) vecc=1.32e-01(FAIL) drt0=4.31e-08 step_max0=9.71e-09 drt=9.48e-02(FAIL) dg=9.35e-02(FAIL) step_max=1.05e-01(FAIL) wall_ms=26.6
+    control FAIL comp_19 n=37 m=5 ncorr=0 |newact|=9 |fv|=23 sub_rounds=0 sub_path=1: pg_inf=2.76e-09 xcp=9.17e-02(FAIL) newact(FAIL) fv(FAIL) drt0=1.13e-01(FAIL) step_max0=1.55e-01(FAIL) drt=2.00e-01(FAIL) subLUP(FAIL) dg=1.36e-01(FAIL) step_max=5.96e-08 wall_ms=8.2
+    worst (fixtures): M=3.83e-07 Mv=4.77e-07 dg=1.43e-07 drt=2.93e-07 drt0=8.62e-05 pg_inf=1.65e-07 step_max=1.87e-07 step_max0=1.52e-05 theta=8.68e-08 vecc=3.72e-05 xcp=8.97e-05
+    worst (control): M=1.95e-01 Mv=2.11e-01 dg=2.00e-01 drt=2.13e-01 drt0=1.54e-01 pg_inf=1.65e-07 step_max=2.91e-01 step_max0=1.97e-01 vecc=7.04e-01 xcp=1.94e-01
+    phases=394 dispatches=2732
+PASS lbfgsb_components rd: PASS G1 rd: 20/20 fixtures pass, control (theta x1.25) fails 20/20
+job lbfgsb_problems cpu        ticks=     5 wall_ms=     56.5  FAIL G2 cpu: 19/20 traces pass
+    PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 2.1e-06) x rel 7.3e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=21 stages=22
+    PASS boxqp_n1000_m10_tight            iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.6e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.83e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=39 stages=40
+    PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 2.1e-06) x rel 7.3e-07 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=21 stages=22
+    PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.0e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=0.0 ms/iter=0.000 phases=39 stages=40
+    PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 2.2e-08) x rel 1.3e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=38 stages=39
+    PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 4.3e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.73e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=37.0 ms/iter=0.860 phases=141 stages=142
+    PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 6.9e-08) x rel 1.4e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosen_n100_m5_tight              iters 43/43 nfev 50/50 f 118.811118/118.811118 (err 2.0e-07) x rel 1.6e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.05e-04 resets patho=0 chol=0 restores=0 first_f_divergence=25 wall_ms=0.0 ms/iter=0.000 phases=143 stages=144
+    PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986617/32.7986617 (err 3.5e-08) x rel 1.3e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=7.6 ms/iter=0.694 phases=35 stages=36
+    PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 1.7e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 1.01e-04 resets patho=0 chol=0 restores=0 first_f_divergence=27 wall_ms=0.0 ms/iter=0.000 phases=130 stages=131
+    PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798888/32.7798888 (err 2.0e-08) x rel 1.5e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 5.6e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=21 wall_ms=4.6 ms/iter=0.101 phases=145 stages=146
+    FAIL rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506255872/0.0506045361 (err 2.1e-05(FAIL)) x rel 2.1e-04 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.69e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=69 stages=70
+    PASS rosen_n2_m10_tight               iters 21/21 nfev 27/27 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=75 stages=76
+    PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.0505960957/0.050596468 (err 3.7e-07) x rel 5.6e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 2.01e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=3.5 ms/iter=0.186 phases=69 stages=70
+    PASS rosen_n2_m5_tight                iters 20/20 nfev 26/26 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=0.0 ms/iter=0.000 phases=72 stages=73
+    PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 2.1e-08) x rel 1.8e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m10_tight  iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 2.9e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=41 stages=42
+    PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 3.3e-07) x rel 1.7e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m5_tight   iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 1.4e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=0.0 ms/iter=0.000 phases=41 stages=42
+    worst measured/limit: f 20 x 0.21 iterations 0
+FAIL lbfgsb_problems cpu: FAIL G2 cpu: 19/20 traces pass
+job lbfgsb_problems rd         ticks=  1250 wall_ms=   1334.8  FAIL G2 rd: 19/20 traces pass
+    PASS boxqp_n1000_m10_dc               iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 7.0e-07) x rel 1.2e-06 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=35.2 ms/iter=7.037 phases=21 stages=22
+    PASS boxqp_n1000_m10_tight            iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.6e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.83e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=100.0 ms/iter=9.095 phases=39 stages=40
+    PASS boxqp_n1000_m5_dc                iters 5/5 nfev 8/8 f -1932.88207/-1932.88207 (err 7.0e-07) x rel 1.2e-06 |L| 250/250 |U| 250/250 stop delta/converged-delta pg 3.17e-01 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=39.8 ms/iter=7.960 phases=21 stages=22
+    PASS boxqp_n1000_m5_tight             iters 11/11 nfev 14/14 f -1932.98535/-1932.98535 (err 1.3e-06) x rel 3.9e-08 |L| 250/250 |U| 250/250 stop grad/converged-grad pg 1.63e-04 resets patho=0 chol=0 restores=0 first_f_divergence=1 wall_ms=84.4 ms/iter=7.671 phases=39 stages=40
+    PASS rosen_n100_m10_dc                iters 12/12 nfev 13/13 f 122.104946/122.104946 (err 2.9e-08) x rel 5.9e-08 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 6.42e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=46.3 ms/iter=3.861 phases=38 stages=39
+    PASS rosen_n100_m10_tight             iters 43/43 nfev 49/49 f 118.811118/118.811118 (err 2.0e-07) x rel 5.3e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.68e-04 resets patho=0 chol=0 restores=0 first_f_divergence=30 wall_ms=178.7 ms/iter=4.156 phases=141 stages=142
+    PASS rosen_n100_m5_dc                 iters 10/10 nfev 11/11 f 122.130687/122.130687 (err 3.0e-08) x rel 1.0e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.53e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=28.7 ms/iter=2.871 phases=32 stages=33
+    PASS rosen_n100_m5_tight              iters 43/43 nfev 51/50 f 118.811118/118.811118 (err 2.0e-07) x rel 3.9e-06 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 8.43e-05 resets patho=0 chol=0 restores=0 first_f_divergence=24 wall_ms=135.2 ms/iter=3.145 phases=145 stages=146
+    PASS rosen_n10_m10_dc                 iters 11/11 nfev 12/12 f 32.7986617/32.7986617 (err 2.7e-08) x rel 1.7e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.96e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=27.0 ms/iter=2.457 phases=35 stages=36
+    PASS rosen_n10_m10_tight              iters 40/40 nfev 45/45 f 21.9430574/21.9430592 (err 1.8e-06) x rel 6.8e-08 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 6.82e-05 resets patho=0 chol=0 restores=0 first_f_divergence=27 wall_ms=110.2 ms/iter=2.754 phases=130 stages=131
+    PASS rosen_n10_m5_dc                  iters 10/10 nfev 11/11 f 32.7798889/32.7798888 (err 7.5e-08) x rel 2.1e-07 |L| 1/1 |U| 0/0 stop delta/converged-delta pg 1.08e+00 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=29.3 ms/iter=2.934 phases=32 stages=33
+    PASS rosen_n10_m5_tight               iters 45/45 nfev 50/50 f 21.9430574/21.9430592 (err 1.8e-06) x rel 1.2e-07 |L| 1/1 |U| 1/1 stop delta/converged-delta pg 2.06e-04 resets patho=0 chol=0 restores=0 first_f_divergence=20 wall_ms=142.1 ms/iter=3.158 phases=145 stages=146
+    FAIL rosen_n2_m10_dc                  iters 19/19 nfev 25/25 f 0.0506258394/0.0506045361 (err 2.1e-05(FAIL)) x rel 2.1e-04 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 1.70e-01 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=56.6 ms/iter=2.978 phases=69 stages=70
+    PASS rosen_n2_m10_tight               iters 21/21 nfev 27/27 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=65.5 ms/iter=3.119 phases=75 stages=76
+    PASS rosen_n2_m5_dc                   iters 19/19 nfev 25/25 f 0.050596096/0.050596468 (err 3.7e-07) x rel 5.6e-05 |L| 0/0 |U| 1/1 stop delta/converged-delta pg 2.10e-03 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=65.2 ms/iter=3.432 phases=69 stages=70
+    PASS rosen_n2_m5_tight                iters 20/20 nfev 26/26 f 0.0505960915/0.0505960984 (err 6.9e-09) x rel 3.1e-08 |L| 0/0 |U| 1/1 stop grad/converged-grad pg 3.81e-06 resets patho=0 chol=0 restores=0 first_f_divergence=5 wall_ms=61.5 ms/iter=3.076 phases=72 stages=73
+    PASS rosenbox_upstream_n25_m10_dc     iters 10/10 nfev 11/11 f 360.284608/360.284608 (err 7.3e-08) x rel 1.2e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 4.35e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=29.6 ms/iter=2.962 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m10_tight  iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 2.9e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=33.6 ms/iter=2.587 phases=41 stages=42
+    PASS rosenbox_upstream_n25_m5_dc      iters 10/10 nfev 11/11 f 360.284614/360.284614 (err 4.5e-07) x rel 4.2e-08 |L| 22/22 |U| 1/1 stop delta/converged-delta pg 3.94e-01 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=25.8 ms/iter=2.575 phases=32 stages=33
+    PASS rosenbox_upstream_n25_m5_tight   iters 13/13 nfev 14/14 f 360.283586/360.283586 (err 4.5e-07) x rel 1.4e-08 |L| 22/22 |U| 1/1 stop grad/converged-grad pg 1.22e-05 resets patho=0 chol=0 restores=0 first_f_divergence=-1 wall_ms=38.8 ms/iter=2.987 phases=41 stages=42
+    worst measured/limit: f 20.3 x 0.211 iterations 0
+FAIL lbfgsb_problems rd: FAIL G2 rd: 19/20 traces pass
+--- cost: one lbfgsb_problems job per trace and backend, host-timed
+cost boxqp_n1000_m10_dc                 cpu ticks=    1 wall_ms=     5.1 iterations=5  PASS G2 cpu: 1/1 traces pass
+cost boxqp_n1000_m10_dc                 rd  ticks=   22 wall_ms=    43.4 iterations=5  PASS G2 rd: 1/1 traces pass
+cost boxqp_n1000_m10_tight              cpu ticks=    1 wall_ms=    11.0 iterations=11  PASS G2 cpu: 1/1 traces pass
+cost boxqp_n1000_m10_tight              rd  ticks=   40 wall_ms=   109.4 iterations=11  PASS G2 rd: 1/1 traces pass
+cost boxqp_n1000_m5_dc                  cpu ticks=    1 wall_ms=     4.8 iterations=5  PASS G2 cpu: 1/1 traces pass
+cost boxqp_n1000_m5_dc                  rd  ticks=   22 wall_ms=    39.3 iterations=5  PASS G2 rd: 1/1 traces pass
+cost boxqp_n1000_m5_tight               cpu ticks=    1 wall_ms=     8.0 iterations=11  PASS G2 cpu: 1/1 traces pass
+cost boxqp_n1000_m5_tight               rd  ticks=   40 wall_ms=    79.9 iterations=11  PASS G2 rd: 1/1 traces pass
+cost rosen_n100_m10_dc                  cpu ticks=    1 wall_ms=     1.6 iterations=12  PASS G2 cpu: 1/1 traces pass
+cost rosen_n100_m10_dc                  rd  ticks=   39 wall_ms=    37.5 iterations=12  PASS G2 rd: 1/1 traces pass
+cost rosen_n100_m10_tight               cpu ticks=    1 wall_ms=     6.3 iterations=43  PASS G2 cpu: 1/1 traces pass
+cost rosen_n100_m10_tight               rd  ticks=  142 wall_ms=   175.7 iterations=43  PASS G2 rd: 1/1 traces pass
+cost rosen_n100_m5_dc                   cpu ticks=    1 wall_ms=     1.1 iterations=10  PASS G2 cpu: 1/1 traces pass
+cost rosen_n100_m5_dc                   rd  ticks=   33 wall_ms=    31.0 iterations=10  PASS G2 rd: 1/1 traces pass
+cost rosen_n100_m5_tight                cpu ticks=    1 wall_ms=     5.8 iterations=43  PASS G2 cpu: 1/1 traces pass
+cost rosen_n100_m5_tight                rd  ticks=  146 wall_ms=   133.0 iterations=43  PASS G2 rd: 1/1 traces pass
+cost rosen_n10_m10_dc                   cpu ticks=    1 wall_ms=     0.8 iterations=11  PASS G2 cpu: 1/1 traces pass
+cost rosen_n10_m10_dc                   rd  ticks=   36 wall_ms=    31.1 iterations=11  PASS G2 rd: 1/1 traces pass
+cost rosen_n10_m10_tight                cpu ticks=    1 wall_ms=     3.7 iterations=40  PASS G2 cpu: 1/1 traces pass
+cost rosen_n10_m10_tight                rd  ticks=  131 wall_ms=   100.6 iterations=40  PASS G2 rd: 1/1 traces pass
+cost rosen_n10_m5_dc                    cpu ticks=    1 wall_ms=     0.8 iterations=10  PASS G2 cpu: 1/1 traces pass
+cost rosen_n10_m5_dc                    rd  ticks=   33 wall_ms=    24.4 iterations=10  PASS G2 rd: 1/1 traces pass
+cost rosen_n10_m5_tight                 cpu ticks=    1 wall_ms=     1.8 iterations=45  PASS G2 cpu: 1/1 traces pass
+cost rosen_n10_m5_tight                 rd  ticks=  146 wall_ms=   110.8 iterations=45  PASS G2 rd: 1/1 traces pass
+cost rosen_n2_m10_dc                    cpu ticks=    1 wall_ms=     1.2 iterations=19  FAIL G2 cpu: 0/1 traces pass
+cost rosen_n2_m10_dc                    rd  ticks=   70 wall_ms=    50.4 iterations=19  FAIL G2 rd: 0/1 traces pass
+cost rosen_n2_m10_tight                 cpu ticks=    1 wall_ms=     1.2 iterations=21  PASS G2 cpu: 1/1 traces pass
+cost rosen_n2_m10_tight                 rd  ticks=   76 wall_ms=    56.1 iterations=21  PASS G2 rd: 1/1 traces pass
+cost rosen_n2_m5_dc                     cpu ticks=    1 wall_ms=     0.9 iterations=19  PASS G2 cpu: 1/1 traces pass
+cost rosen_n2_m5_dc                     rd  ticks=   70 wall_ms=    52.1 iterations=19  PASS G2 rd: 1/1 traces pass
+cost rosen_n2_m5_tight                  cpu ticks=    1 wall_ms=     1.1 iterations=20  PASS G2 cpu: 1/1 traces pass
+cost rosen_n2_m5_tight                  rd  ticks=   73 wall_ms=    56.7 iterations=20  PASS G2 rd: 1/1 traces pass
+cost rosenbox_upstream_n25_m10_dc       cpu ticks=    1 wall_ms=     0.9 iterations=10  PASS G2 cpu: 1/1 traces pass
+cost rosenbox_upstream_n25_m10_dc       rd  ticks=   33 wall_ms=    26.2 iterations=10  PASS G2 rd: 1/1 traces pass
+cost rosenbox_upstream_n25_m10_tight    cpu ticks=    1 wall_ms=     1.2 iterations=13  PASS G2 cpu: 1/1 traces pass
+cost rosenbox_upstream_n25_m10_tight    rd  ticks=   42 wall_ms=    37.2 iterations=13  PASS G2 rd: 1/1 traces pass
+cost rosenbox_upstream_n25_m5_dc        cpu ticks=    1 wall_ms=     1.3 iterations=10  PASS G2 cpu: 1/1 traces pass
+cost rosenbox_upstream_n25_m5_dc        rd  ticks=   33 wall_ms=    26.9 iterations=10  PASS G2 rd: 1/1 traces pass
+cost rosenbox_upstream_n25_m5_tight     cpu ticks=    1 wall_ms=     1.1 iterations=13  PASS G2 cpu: 1/1 traces pass
+cost rosenbox_upstream_n25_m5_tight     rd  ticks=   42 wall_ms=    41.7 iterations=13  PASS G2 rd: 1/1 traces pass
+--- drape_queue_optimize (sphere demo, rd session, 60 steps)
+OPENED auto
+LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+QUEUED forward 60 on rd
+target forward: IDLE DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=364.3 ms/step=6.072
+TARGET trajectory frames=61
+QUEUED optimize mu on rd (vec cpu)
+    DONE optimize cpu (delta) f=4.51383283e-07 pg=0.01599 mu=0.235968113 iterations=1 evaluations=3 wall_ms=1148.9
+    optimize params=mu steps=60 mode=native | m 10 epsilon 1e-05 epsilon_rel 1e-05 past 1 delta 0.001 max_iterations 3 max_submin 10 max_linesearch 20 min_step 1e-20 max_step 1e+20 ftol 0.0001 wolfe 0.9
+      x0 mu=0.539770007
+      eval 1 loss=1.99870179e-06 grad[0]=0.0259207506
+      try mu=0.00999999046
+      eval 2 loss=1.90699447e-05 grad[0]=-0.233637333
+      try mu=0.235968113
+      eval 3 loss=4.51383283e-07 grad[0]=-0.0159862228
+    DONE optimize cpu (delta) f=4.51383283e-07 pg=0.01599 mu=0.235968113 iterations=1 evaluations=3 wall_ms=1148.9
+    
+PASS drape_queue_optimize(mu, 3 iterations, native, 60 steps, target mu 0.3) in 421 ticks: DONE optimize cpu (delta) f=4.51383283e-07 pg=0.01599 mu=0.235968113 iterations=1 evaluations=3 wall_ms=1148.9
+[dress-on] sandbox loaded dress_on.elf
+[dress-on] sandbox loaded drape.elf
+wrappers: DATA trace_rosenbox_upstream_n25_m5_tight 3206 bytes, 45 keys
+wrappers: STARTED lbfgsb_problems cpu only=rosen_n2_m5_tight
+PASS main.gd wrappers: lbfgsb_load_oracle + drape_job(lbfgsb_problems, cpu, only=rosen_n2_m5_tight) -> 'PASS G2 cpu: 1/1 traces pass' after 1 frames; drape_optimize_result answers
+--- per-iteration cost, cpu vs rd (host wall time of a one-trace job / its iterations; the vec crossover)
+  boxqp_n1000_m10_dc                 cpu    1.028 ms/iter (1 ticks)   rd    8.673 ms/iter (22 ticks)   rd/cpu 8.4
+  boxqp_n1000_m10_tight              cpu    1.004 ms/iter (1 ticks)   rd    9.946 ms/iter (40 ticks)   rd/cpu 9.9
+  boxqp_n1000_m5_dc                  cpu    0.950 ms/iter (1 ticks)   rd    7.855 ms/iter (22 ticks)   rd/cpu 8.3
+  boxqp_n1000_m5_tight               cpu    0.724 ms/iter (1 ticks)   rd    7.266 ms/iter (40 ticks)   rd/cpu 10.0
+  rosen_n100_m10_dc                  cpu    0.132 ms/iter (1 ticks)   rd    3.127 ms/iter (39 ticks)   rd/cpu 23.7
+  rosen_n100_m10_tight               cpu    0.147 ms/iter (1 ticks)   rd    4.087 ms/iter (142 ticks)   rd/cpu 27.8
+  rosen_n100_m5_dc                   cpu    0.109 ms/iter (1 ticks)   rd    3.105 ms/iter (33 ticks)   rd/cpu 28.5
+  rosen_n100_m5_tight                cpu    0.136 ms/iter (1 ticks)   rd    3.094 ms/iter (146 ticks)   rd/cpu 22.8
+  rosen_n10_m10_dc                   cpu    0.075 ms/iter (1 ticks)   rd    2.829 ms/iter (36 ticks)   rd/cpu 37.8
+  rosen_n10_m10_tight                cpu    0.092 ms/iter (1 ticks)   rd    2.515 ms/iter (131 ticks)   rd/cpu 27.5
+  rosen_n10_m5_dc                    cpu    0.084 ms/iter (1 ticks)   rd    2.438 ms/iter (33 ticks)   rd/cpu 28.9
+  rosen_n10_m5_tight                 cpu    0.041 ms/iter (1 ticks)   rd    2.462 ms/iter (146 ticks)   rd/cpu 60.2
+  rosen_n2_m10_dc                    cpu    0.064 ms/iter (1 ticks)   rd    2.654 ms/iter (70 ticks)   rd/cpu 41.3
+  rosen_n2_m10_tight                 cpu    0.059 ms/iter (1 ticks)   rd    2.670 ms/iter (76 ticks)   rd/cpu 45.4
+  rosen_n2_m5_dc                     cpu    0.049 ms/iter (1 ticks)   rd    2.740 ms/iter (70 ticks)   rd/cpu 55.4
+  rosen_n2_m5_tight                  cpu    0.054 ms/iter (1 ticks)   rd    2.833 ms/iter (73 ticks)   rd/cpu 52.6
+  rosenbox_upstream_n25_m10_dc       cpu    0.089 ms/iter (1 ticks)   rd    2.618 ms/iter (33 ticks)   rd/cpu 29.3
+  rosenbox_upstream_n25_m10_tight    cpu    0.092 ms/iter (1 ticks)   rd    2.865 ms/iter (42 ticks)   rd/cpu 31.0
+  rosenbox_upstream_n25_m5_dc        cpu    0.132 ms/iter (1 ticks)   rd    2.695 ms/iter (33 ticks)   rd/cpu 20.4
+  rosenbox_upstream_n25_m5_tight     cpu    0.088 ms/iter (1 ticks)   rd    3.209 ms/iter (42 ticks)   rd/cpu 36.4
+PASS rd_rule4 after every job: same_frame_syncs=0 syncs=3432 submits=3432 (want same_frame_syncs=0 with syncs>0)
+PASS rd_close: CLOSED device=freed permanent_slots=0
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

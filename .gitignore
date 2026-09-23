@@ -8,3 +8,16 @@ tools/oxrsys/
 /models/
 /.venv-convert/
 lean/.lake/
+/.forks/
+/build-native/
+/.cpm-cache-native/
+/tools/native/.pixi/
+/project/fit.elf
+/project/fit.elf.uid
+# Gate 6.P ISA A/B builds (FIT_ELF=fit_zb, fit_v)
+/project/fit_*.elf
+/project/fit_*.elf.uid
+# Gate 6 guest outputs (garments, raw input dumps); the text logs are kept
+/gates/6-fit/runs/*.f64
+/gates/6-fit/runs/*.f32
+/gates/6-fit/runs/*.i32

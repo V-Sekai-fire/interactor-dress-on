@@ -1,0 +1,14 @@
+demoName:rotating_sphere 
+demoIdx:7 
+SceneBbox: min:(-7.0000,-7.0000,-7.0000) max:(7.0000,7.0000,7.0000)
+FPS:180
+Frame Number:351
+CameraPos:(-11.67000,20.40000,-11.67000)
+CameraLookAtPos:(0.60000,-2.10000,0.20000)
+Collision:ON
+Self-Collision:ON
+Wind:OFF
+WindMode:NO_WIND
+Object Number:2
+0-CLOTH color:(1.00,0.38,0.00)
+1-SPHERE color:(0.35,0.55,0.66)

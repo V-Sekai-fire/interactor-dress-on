@@ -1,0 +1,30 @@
+gate_fit 2026-09-22T23:04:08, arm solve, tag full, args { "tag": "full", "arm": "solve", "mem": "2048" }
+ok   fit_configure: OK fit sandbox res://fit.elf memory_max 2048 MiB execution_timeout 1073741824
+ok   io positive control (before fit_begin): PASS io: fopen refused (errno 13), ifstream refused, open -1 (errno 13); counted 3 of 3 (total 3)
+ok   fit_fixture_foxgirl (213 ms): OK reset | OK body 5128 v / 10171 f | OK skeletons 15 joints / 14 bones | OK garment 2682 v / 5220 f, no-fit 2005 | OK config 1046 bytes
+ok   fit_begin (3670 ms): OK begin: phases 4, target_scale 0.43371484168229041 center (-0.00084284048782763449, 0.0069841528065407738, -1.956651425224248), source_scale 0.90869314092562126, io_attempts 0
+     fit_status: phase 0/4 newton 0 energy 0 |grad| 0 status - io_attempts 0 io_total 3 last_instructions 0 heap_used 11.3 MiB heap_free 1627.1 MiB chunks 79252 host_heap_usage=11825248 | last: 
+     BUSY fit_step for 300.4 s (main thread frames 18031)
+     BUSY fit_step for 600.3 s (main thread frames 35218)
+ok   phase 0: host 709.7 s, newton 34, energy 0.0014895000331425965, instructions 485660849534 (463162 x 2^20), heap_used 122.8 MiB | native: newton 41 energy 0.00033678666696946268 wall 39.78 s -> newton -7, energy rel 3.4226811190172755, time 17.8x
+     host_ms=709672 OK phase 0 (substep 0, AL): newton 34 minimize 1 post_steps 35 energy 0.0014895000331425965 |grad| 0.856622 status 4 io_attempts 0 instructions 485660849534 heap_used 122.8 MiB heap_free 1515.6 MiB chunks 79252
+     BUSY fit_step for 300.9 s (main thread frames 59853)
+ok   phase 1: host 560.5 s, newton 59, energy 0.00049038939434413074, instructions 419528139839 (400093 x 2^20), heap_used 123.2 MiB | native: newton 37 energy 0.00048812902783490866 wall 22.07 s -> newton +22, energy rel 0.004630674228197143, time 25.4x
+     host_ms=560495 OK phase 1 (substep 0, reduced): newton 59 minimize 1 post_steps 60 energy 0.00049038939434413074 |grad| 0.00741691 status 4 io_attempts 0 instructions 419528139839 heap_used 123.2 MiB heap_free 1515.2 MiB chunks 79252
+     BUSY fit_step for 300.3 s (main thread frames 92681)
+     BUSY fit_step for 600.4 s (main thread frames 110689)
+ok   phase 2: host 669.8 s, newton 43, energy 0.0017114949467128585, instructions 452647367328 (431678 x 2^20), heap_used 122.9 MiB | native: newton 11 energy 0.0016737798970916787 wall 10.12 s -> newton +32, energy rel 0.022532860913620126, time 66.2x
+     host_ms=669769 OK phase 2 (substep 1, AL): newton 43 minimize 1 post_steps 44 energy 0.0017114949467128585 |grad| 0.811428 status 4 io_attempts 0 instructions 452647367328 heap_used 122.9 MiB heap_free 1515.5 MiB chunks 79252
+     BUSY fit_step for 300.3 s (main thread frames 132924)
+ok   phase 3: host 596.5 s, newton 83, energy 0.0013124782859826511, instructions 561584187196 (535568 x 2^20), heap_used 123.5 MiB | native: newton 107 energy 0.0013414366755117495 wall 62.68 s -> newton -24, energy rel 0.021587593404692528, time 9.5x
+     host_ms=596536 OK phase 3 (substep 1, reduced): newton 83 minimize 1 post_steps 84 energy 0.0013124782859826511 |grad| 0.00849656 status 4 io_attempts 0 instructions 561584187196 heap_used 123.5 MiB heap_free 1514.9 MiB chunks 79252
+ok   io_attempts from fit_begin to the last phase: io_attempts 0 (grad| 0.00849656 status 4 io_attempts 0 )
+ok   intersections on the final state: OK none
+ok   push control (5 cm = 0.05 solve units into the avatar) -> INTERSECTS: push 0.050 solve units: vertex 2036 moved 0.11528 body units -> OK INTERSECTS edge (6191,7164) face (1930,2014,1638)
+ok   push flat control (same path, no push) -> none: push 0.000 solve units: vertex -1 moved 0.00000 body units -> OK none
+     fit_preview: preview 2682 v, bounds [P: (-1.007563, -0.633545, 2.010895), S: (2.000788, 1.336532, 2.60398)]
+     fit_result: garment 2682 v, bounds [P: (-1.007563, -0.633545, 2.010895), S: (2.000788, 1.336532, 2.60398)]
+     wrote runs/full.garment.f64 (2682 vertices, solve frame)
+summary full phases_ok 4/4 newton 219 (34/59/43/83) energy 0.0013124782859826511 host_s 2536.5 max_phase_instructions 561584187196 max_heap_used_mib 123.5 io_attempts 0 mem 2048 elf res://fit.elf fitweight0 no intersections none push INTERSECTS flat none
+wall 2588.4 s, frames 150731
+RESULT: PASS

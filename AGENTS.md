@@ -47,7 +47,10 @@ our own, no host DLL. The GPU is reachable only through Godot's
    README that states the result (including negative ones), and a flat
    control that separates "the sandbox/VR blocked it" from "nothing was there".
 8. **Every guest entry point gets a no-argument wrapper in `project/main.gd`**
-   so MCP `call_method` needs no argument marshalling (Gate 0E).
+   so MCP `call_method` needs no argument marshalling (Gate 0E). main.gd is a
+   thin root: the wrapper lives in the stage file and main.gd keeps a
+   same-named delegate with the same defaults; `tests/probe_main_wrappers.gd`
+   FAILs on any `ADD_API_FUNCTION` without one.
 9. **Do not touch the user's machine config.** OpenXR runtime is selected per
    process with `XR_RUNTIME_JSON` (OXRSys, Windows port, at
    `tools/oxrsys/build/windows/runtime/oxrsys-runtime.json`; its Qt simulator
@@ -120,12 +123,40 @@ our own, no host DLL. The GPU is reachable only through Godot's
   After `gates/lean/verify.sh`, `git status` must show only its logs.
 - LeanSlang is `V-Sekai-fire/contract-lean-slang` (the renamed `lean-slang`;
   the old URL redirects, but pin the canonical one) at branch `emit-fp`,
-  **pinned by SHA** (e0e96da), not `main`. `emit-fp` is v0.0.6 plus `half`,
-  `double`, `litHalf`, `litInt` and `cast`, additive, so the AVBD emission is
-  byte-identical. `main` adds a libslang FFI `extern_lib` as a default target
+  **pinned by SHA** (60532ae), not `main`. `emit-fp` is v0.0.6 plus `half`,
+  `double`, `litHalf`, `litInt`, `cast` and `litFloatExact`/`litDoubleExact`,
+  additive, so the AVBD emission is byte-identical. `litFloat` prints six
+  decimals (1e-12 emits as 0.000000): any literal that is not a multiple of
+  1e-6 must use `litFloatExact` (binary32) or `litDoubleExact`. `main` adds a libslang FFI `extern_lib` as a default target
   (vendored SDK headers, Linux link flags) that breaks `lake exe` on Windows.
   Changing the URL: delete `lean/.lake/packages/LeanSlang` first, then
   `lake update LeanSlang` (only that package; the other revs must not move).
+- The guest heap also caps **live allocations**: `Sandbox.allocations_max`
+  defaults to 10000 ("Too many arena chunks"). fit.elf holds ~79k after
+  `fit_begin`; `stages/fit_stage.gd` sets 4,000,000 before `program=`.
+- Unqualified `abs(double)` binds to C's `int abs` under the guest's
+  libstdc++ (clang `-Wabsolute-value`) but to the double overload under
+  llvm-mingw's libc++, so native and guest silently differ. Treat that
+  warning as an error in anything shared between them.
+- libstdc++ (guest) and libc++ (native) leave **tied sort keys** in different
+  orders (`std::sort`, `nth_element`, `partial_sort`), and a sum taken in that
+  order differs by one ULP. fit.elf and fit_native part after 7 Newton
+  iterations while inputs, LDLT and the libm the solver calls are bitwise
+  equal (`gates/6-fit`, 6.0); SimpleBVH's Morton sort, which has such ties,
+  is the *likely* cause (hypothesis: no call site instrumented yet). Test an
+  index tie-break before relying on it.
+- **Guest out-of-memory is not `std::bad_alloc`.** Below the heap floor a
+  failed allocation is a `Protection fault` at the malloc ecall (the vmcall
+  aborts) or a segfault that kills Godot (exit 139), and the heap's meminfo
+  cannot see in-phase peaks. Size `memory_max` with a ladder of fresh
+  Sandboxes, then add 1.25x headroom. For fit.elf on foxgirl the floor is
+  352 MiB, run at 440.
+- `execution_timeout` (2^20-instruction units) must cover a whole vmcall. One
+  fit phase is up to 5.4e5 units, 67x the 8000 default. Read a call's
+  instructions from the guest with `rdinstret`; libriscv counts from the
+  vmcall's start.
+- Starting several Godot processes in the same second segfaulted one once.
+  Stagger launches by a few seconds.
 - Godot imports every `.obj` under `res://` as a mesh and fails on line-only
   ones (skeletons). Data OBJs live under a `.gdignore`d directory
   (`project/fixtures/`) and are read as text (`util/obj_io.gd`).
@@ -135,6 +166,39 @@ our own, no host DLL. The GPU is reachable only through Godot's
   black: screenshot a SubViewport on the same World3D.
 - Bash heredocs with apostrophes and long scripts fail in this harness; write
   scripts with the Write tool and run them.
+- godot-sandbox's guest heap has no aligned entry point (malloc/calloc/
+  realloc/free are syscalls into a host heap that keeps its bookkeeping
+  outside guest memory and hands out 16-byte alignment). Upstream's
+  `memalign` fallback (behind `posix_memalign`, `aligned_alloc`, aligned
+  `new`) returned an already-freed block whenever 16 malloc tries missed a
+  > 16-byte alignment: nearly always at 4096, sometimes at 64 (Gate 4's
+  "Possible double-free" in Geogram). Fixed in `vendor/sandbox-api`'s
+  `native.cpp`: over-allocate, return the aligned address, and map it back
+  to the host block in a side table that the wrapped `free`/`realloc`
+  consult (a header below the block cannot work: the host only frees the
+  pointer it returned). Gate 0F probe 17 checks it; re-vendoring
+  sandbox-api must keep that patch, or the bug returns silently.
+- A native flat control built with llvm-mingw links libc++; the guest links
+  libstdc++. `std::shuffle` and `std::uniform_*_distribution` differ
+  between them from the same seed: use the engine's raw output (Gate 4).
+- In a guest, a `std::vector<std::vector<T>>` kept alive in a long-lived
+  record (a `std::vector` of records, across stages) corrupted libc state:
+  "Illegal opcode" at an `ecall` in memmove/memcpy/puts/fflush, garbage
+  syscall numbers. As a local it is fine, and ASan on the host is clean. Keep
+  long-lived guest data flat (gates/5-drape/drape/README.md). Godot's
+  `--gpu-index` order is not stable (index 1 was the RTX 4090 on one boot,
+  index 0 on the next): check the adapter line in the log. The native
+  references ran on the 4090; the drape is bit-identical on the 3090.
+- DiffCloth's sphere demo is chaotic after its self-collision onset (step
+  ~70): a 9.7e-9 change of mu (mu0 vs float32(mu0)) moves the 350-step
+  dL/dmu by 4.4%, and a 4.4e-9 change moves it by 7.8% and the loss by 6.5%.
+  Compare with the native run at its exact seed-1 mu, 0.5397701956236457
+  (`kNativeSphereMu0`), never the printed 0.539770; at the exact value every
+  printed per-step statistic matches native to step 70 (gates/5-drape/trace).
+- An L-BFGS-B guard that LBFGSpp writes with `numeric_limits<double>::epsilon()`
+  as an absolute threshold keeps 2^-52 in the float32 kernels (`dblEps`), not
+  FLT_EPSILON: the sphere demo's gradients are ~1e-5, so fpp = g.g ~ 1e-10,
+  and FLT_EPSILON there shrank the first Cauchy step to nothing.
 
 ## Conventions
 

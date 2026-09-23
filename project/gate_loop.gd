@@ -19,7 +19,9 @@
 #                          is present (to reach the stages after a failing one)
 #   --pen=scripted|xr      scripted replays xr/pen_source_scripted.gd through
 #                          the pen bridge; xr waits for SketchTool strokes
-#   --drop-seam            control: must end FAILED(MESH: ...)
+#   --drop-seam            control: the back seam is not drawn; must end
+#                          FAILED(MESH: ...) with fewer curvenet cycles than
+#                          the full skirt's 2 (the seam is what closes them)
 #   --push-vertex          control: must end FAILED(CHECK: INTERSECTS ...)
 #   --drape-steps=N --mesh-edge=m --drape-backend=cpu|rd|auto --drape-scale=s
 #   --no-capsules          drape with no body collider (a control for the drape)
@@ -29,12 +31,27 @@
 # PASS (loop): pen copy == vendor/xr-grid; 2 cycles and 2 patches; the mesh
 # is one tube (2 boundary loops); fit ran to done; fit_check_intersections
 # "OK none" (and its pushed-vertex control INTERSECTS); drape ran N steps
-# and every position is finite; the screenshot was written. A criterion
-# whose stage ran as FIXTURE is not measured: the run is then INCOMPLETE,
-# never PASS. infer and rig are fixtures today (Cut 4b / 7 replace them).
+# and every position is finite; the screenshot was written.
+#
+# Fixtures and the verdict:
+#   infer, rig        allowed. The critical-path plan runs the loop on the
+#                     FoxGirl body and skeleton until Cut 7 / Cut 4b land; no
+#                     Gate 8 criterion measures them (they are inputs), so a
+#                     run that meets every criterion is "PASS FIXTURE:infer,rig",
+#                     the label saying what stood in.
+#   curvenet, fit,    a criterion of the gate is then not measured (cycles and
+#   drape             mesh; fit and intersections; drape steps): the run is
+#                     "INCOMPLETE", never PASS, whatever else passed.
+# A control that passes is "PASS (control <name>)", with the same fixture
+# label. Any curvenet, fit or drape fixture makes a control INCOMPLETE too.
 extends SceneTree
 
 const SCENE := "res://xr_main.tscn"
+# Fixtures the critical-path plan allows under a PASS (labelled); any other
+# fixture makes the run INCOMPLETE.
+const FIXTURE_OK := ["infer", "rig"]
+# xr/pen_source_scripted.gd's expected cycle count for the full skirt.
+const FULL_SKIRT_CYCLES := 2
 const PEN_SRC := "res://../vendor/xr-grid/addons/procedural_3d_grid"
 const PEN_DST := "res://addons/procedural_3d_grid"
 
@@ -268,8 +285,18 @@ func _evaluate() -> void:
 	var ctrl := ""
 	if _args.has("drop-seam"):
 		ctrl = "drop-seam"
-		check.call("control drop-seam", p.state == "FAILED" and p.reason.begins_with("MESH:"),
-				"%s(%s), want FAILED(MESH: ...)" % [p.state, p.reason])
+		# The specific failure, not any FAILED(MESH): without the back seam the
+		# graph closes fewer cycles than the full skirt's (PenSource expects
+		# 2), and so the mesh is not a tube.
+		var cc: Dictionary = s.get("counts", {})
+		if fx.has("curvenet"):
+			unmeasured.append("drop-seam cycles (curvenet FIXTURE)")
+		else:
+			var cyc = cc.get("cycles")
+			check.call("control drop-seam", p.state == "FAILED" and p.reason.begins_with("MESH:") and cyc != null
+					and int(cyc) >= 0 and int(cyc) < FULL_SKIRT_CYCLES,
+					"%s(%s), cycles=%s patches=%s; want FAILED(MESH: ...) with 0 <= cycles < %d" % [p.state, p.reason,
+					str(cyc), str(cc.get("patches")), FULL_SKIRT_CYCLES])
 	elif _args.has("push-vertex"):
 		ctrl = "push-vertex"
 		check.call("control push-vertex", p.state == "FAILED" and p.reason.begins_with("CHECK: INTERSECTS"),
@@ -303,16 +330,21 @@ func _evaluate() -> void:
 				check.call("drape", typeof(d) == TYPE_DICTIONARY and d.get("finite", false),
 						"%s steps queued, %s" % [str(p.opts.drape_steps), str(d)])
 		check.call("screenshot", shot != "not taken", shot)
+	# A fixture outside infer/rig always leaves a criterion unmeasured, even
+	# when the run stopped before reaching it.
+	for f in fx:
+		if not (f in FIXTURE_OK) and not unmeasured.any(func(u): return str(u).contains(f + " FIXTURE")):
+			unmeasured.append("%s (%s FIXTURE)" % [f, f])
 	for l in lines:
 		_say(l)
 	if not unmeasured.is_empty():
 		_say("NOT MEASURED: " + "; ".join(unmeasured))
 	var ok: bool = st.ok
 	var verdict := "PASS" if ok else "FAIL"
-	if ok and not unmeasured.is_empty():
-		verdict = "INCOMPLETE"
 	if ok and ctrl != "":
 		verdict = "PASS (control %s)" % ctrl
+	if ok and not unmeasured.is_empty():
+		verdict = "INCOMPLETE"
 	if not fx.is_empty() and verdict.begins_with("PASS"):
 		verdict += " FIXTURE:" + ",".join(fx)
 	_rc = 0 if verdict.begins_with("PASS") else 1

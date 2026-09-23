@@ -1,0 +1,11 @@
+cf-up-out1/step_garment_252.obj: fit verts 677  gap mean 1.8467  p50 1.6326  p95 3.9207  max 5.2944 voxels
+cf-up-out16/step_garment_253.obj: fit verts 677  gap mean 1.7763  p50 1.5205  p95 3.8721  max 5.3027 voxels
+cf-up-out16b/step_garment_188.obj: fit verts 677  gap mean 1.7692  p50 1.5390  p95 3.8260  max 5.2040 voxels
+fit-out-up64b/garment_final.obj: fit verts 677  gap mean 1.8467  p50 1.6326  p95 3.9207  max 5.2944 voxels
+fit-out-f64/garment_final.obj: fit verts 677  gap mean 1.7966  p50 1.5306  p95 4.0054  max 5.4332 voxels
+fit-out-f32c/garment_final.obj: fit verts 677  gap mean 1.7948  p50 1.5323  p95 3.9563  max 5.3939 voxels
+fit-out-sdf64/garment_final.obj: fit verts 677  gap mean 1.7857  p50 1.5513  p95 3.9104  max 5.2862 voxels
+fit-out-sdf32/garment_final.obj: fit verts 677  gap mean 1.7935  p50 1.5158  p95 3.9254  max 5.4646 voxels
+fit-out-upsdf64/garment_final.obj: fit verts 677  gap mean 1.8496  p50 1.6543  p95 3.9450  max 5.2929 voxels
+cf-up-out1/step_garment_0.obj: fit verts 677  gap mean 8.3573  p50 8.2448  p95 11.5450  max 12.2784 voxels
+fit-out-sdf64-fw0/garment_final.obj: fit verts 677  gap mean 4.6994  p50 4.6248  p95 7.7089  max 9.7331 voxels

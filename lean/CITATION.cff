@@ -18,7 +18,8 @@ abstract: >-
   feature/vulkan-avbd-windows-backend and not yet on any remote. Pins:
   lean-toolchain leanprover/lean4:v4.30.0; LeanSlang
   V-Sekai-fire/contract-lean-slang branch emit-fp
-  (e0e96da4ba8116a3dcfd860f6732d29eee13fe24, pinned by SHA);
+  (60532aef8ed70cc669ecab481182d0636c9e1ac3, pinned by SHA; e0e96da plus the additive
+  litFloatExact/litDoubleExact, with every consumer's emission unchanged);
   plausible V-Sekai-fire/plausible v4.30.0
   (a456461b368b71d2accd95234832cd9c174b5437); plausible-witness-dag
   V-Sekai-fire/plausible-witness-dag
@@ -34,7 +35,13 @@ abstract: >-
   Windows. No upstream Lean source is modified. Added here, not upstream:
   Probes.* (HalfLoad, Set0), Probes.lean, EmitProbes.lean and the Probes
   lib and emit_probes exe in lakefile.lean, the Gate 0F probe kernels of
-  interactor-dress-on (gates/0f-runtime).
+  interactor-dress-on (gates/0f-runtime); Drape.lean, Drape/ (the drape
+  L-BFGS-B kernels, a port of LBFGSpp's algorithm; see
+  kernels/drape/CITATION.cff), EmitDrape.lean, and the lean_lib Drape and
+  lean_exe emit_drape entries in lakefile.lean; Fit.lean, Fit/ (fit.elf's
+  SDF spline kernel, a re-statement of the openvdb fork's
+  SplineSampler::sampleHessian; see kernels/fit/CITATION.cff), EmitFit.lean,
+  and the lean_lib Fit and lean_exe emit_fit entries in lakefile.lean.
 type: software
 authors:
   - name: K. S. Ernest (Fire) Lee

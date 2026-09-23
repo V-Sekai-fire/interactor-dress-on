@@ -95,6 +95,10 @@ func rd_close() -> String: return dress_on.rd_close()
 func rd_probe() -> String: return dress_on.rd_probe()
 func rd_bench(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> String: return dress_on.rd_bench(n_dispatch, n_submit, barrier)
 func rd_last_step() -> String: return dress_on.rd_last_step()
+func rd_bench_quiet(n_dispatch: int = 1, n_submit: int = 1, barrier: bool = true) -> String: return dress_on.rd_bench_quiet(n_dispatch, n_submit, barrier)
+func rd_set_probe() -> String: return dress_on.rd_set_probe()
+# kind: ticks|limit|clock|bind|barrier|dispatch|submit|buffer|shader|shader-pba|pipeline|uset|readback|instantiate
+func rd_calls(kind: String = "ticks", n: int = 1000) -> String: return dress_on.rd_calls(kind, n)
 
 # --- Stage 2: the AVBD solver (drape.elf) --------------------------------------------------
 # The one-shot calls are cpu only (rule 4); on rd use the jobs: avbd_job_start
@@ -131,6 +135,18 @@ func drape_frame(i: int = 0) -> PackedFloat32Array: return drape.drape_frame(i)
 func drape_faces() -> PackedInt32Array: return drape.drape_faces()
 func drape_job(name: String = "sphere_forward", backend: String = "auto", args: String = "") -> String: return drape.drape_job(name, backend, args)
 func drape_job_result() -> String: return drape.drape_job_result()
+func drape_job_frame(i: int = 0) -> PackedFloat32Array: return drape.drape_job_frame(i)
+func drape_job_names() -> String: return drape.drape_job_names()
+func drape_job_data(key: String = "clear", text: String = "") -> String: return drape.drape_job_data(key, text)
+func drape_optimize(spec: String = "params=mu mode=native", x0: PackedFloat32Array = PackedFloat32Array([0.5]),
+		lb: PackedFloat32Array = PackedFloat32Array([0.01]), ub: PackedFloat32Array = PackedFloat32Array([1.0]),
+		max_iter: int = 10) -> String:
+	return drape.drape_optimize(spec, x0, lb, ub, max_iter)
+func drape_optimize_result() -> String: return drape.drape_optimize_result()
+func lbfgsb_load_oracle() -> String: return drape.lbfgsb_load_oracle()
+# One drape_tick / drape_job_tick by hand (_process ticks every frame anyway).
+func drape_tick() -> String: return drape.drape_tick()
+func drape_job_tick() -> String: return drape.drape_job_tick()
 
 # --- Cut 4: the curvenet stage (curvenet.elf) ---------------------------------------------
 
@@ -138,8 +154,17 @@ func cn_reset() -> String: return curvenet.cn_reset()
 func cn_set_param(name: String = "snap_radius", value: float = 0.03) -> String: return curvenet.cn_set_param(name, value)
 func cn_set_body_sphere(radius: float = 0.5) -> String: return curvenet.cn_set_body_sphere(radius)
 func pen_demo_circle() -> String: return curvenet.pen_demo_circle()
-func pen_end(id: int = 1) -> String: return curvenet.pen_end(id)
+func cn_get_param(name: String = "snap_radius") -> String: return curvenet.cn_get_param(name)
+# The scripted pen: pen_begin loads pen_demo_circle's stroke and sends its first
+# sample, pen_point the next count (0: all), pen_end(-1) ends it.
+func pen_begin(samples: int = 64, pressure: float = 0.5) -> String: return curvenet.pen_begin(samples, pressure)
+func pen_point(count: int = 0) -> String: return curvenet.pen_point(count)
+func pen_end(id: int = -1) -> String: return curvenet.pen_end(id)
 func patch_count() -> String: return curvenet.patch_count()
+func patch_vertices(i: int = 0) -> String: return curvenet.patch_vertices(i)
+func patch_indices(i: int = 0) -> String: return curvenet.patch_indices(i)
+func mesh_patch_ids() -> String: return curvenet.mesh_patch_ids()
+func check_names() -> String: return curvenet.check_names()
 func curvenet_checks() -> String: return curvenet.curvenet_checks()
 func curvenet_check(name: String = "pen_sphere") -> String: return curvenet.curvenet_check(name)
 func curvenet_build() -> String: return curvenet.curvenet_build()
@@ -165,6 +190,40 @@ func fit_probe_io() -> String: return fit.fit_probe_io()
 func fit_probe_ldlt() -> String: return fit.fit_probe_ldlt()
 func fit_probe_exceptions() -> String: return fit.fit_probe_exceptions()
 func fit_probe_io_paths() -> String: return fit.fit_probe_io_paths()
+func fit_probe_ldlt8k() -> String: return fit.fit_probe_ldlt8k()
+func fit_probe_libm() -> String: return fit.fit_probe_libm()
+func fit_probe_stl() -> String: return fit.fit_probe_stl()
+func fit_probe_instret() -> String: return fit.fit_probe_instret()
+func fit_probe_heap() -> String: return fit.fit_probe_heap()
+func fit_push_control() -> String: return fit.fit_push_control()
+func fit_push_flat() -> String: return fit.fit_push_flat()
+func fit_set_skin_weights(weights: PackedFloat32Array = PackedFloat32Array()) -> String: return fit.fit_set_skin_weights(weights)
+# A fresh fit Sandbox with the stage's fit_memory_mib / fit_elf / fit_execution_timeout.
+func fit_configure() -> String: return fit.fit_configure()
+func fit_configure_with(memory_mib: int = 2048, elf: String = "res://fit.elf", execution_timeout: int = -1) -> String:
+	return fit.fit_configure_with(memory_mib, elf, execution_timeout)
+func foxgirl_arrays() -> Dictionary: return fit.foxgirl_arrays()
+# Gate 6 sets these on /root/Main; they live on the fit stage.
+var fit_config_overrides: Dictionary:
+	get:
+		return fit.fit_config_overrides
+	set(value):
+		fit.fit_config_overrides = value
+var fit_memory_mib: int:
+	get:
+		return fit.fit_memory_mib
+	set(value):
+		fit.fit_memory_mib = value
+var fit_execution_timeout: int:
+	get:
+		return fit.fit_execution_timeout
+	set(value):
+		fit.fit_execution_timeout = value
+var fit_elf: String:
+	get:
+		return fit.fit_elf
+	set(value):
+		fit.fit_elf = value
 
 # --- Gate 0F: probes.elf, the sandbox runtime probes ---------------------------------------
 # gate_runtime.gd is the gate; these are the no-argument wrappers, every
@@ -176,6 +235,7 @@ func p_file(path: String = "res://project.godot") -> String: return dress_on.pv(
 func p_threads() -> String: return dress_on.pv("p_threads")
 func p_spin(n: int = 1000000) -> String: return dress_on.pv("p_spin", [n])
 func p_alloc(mb: int = 64) -> String: return dress_on.pv("p_alloc", [mb])
+func p_memalign(n: int = 1000, upstream: bool = false) -> String: return dress_on.pv("p_memalign", [n, upstream])
 func echo_f(x: float = 0.1) -> String: return dress_on.pv("echo_f", [x])
 func echo_i(x: int = 9007199254740993) -> String: return dress_on.pv("echo_i", [x])
 func echo_b(x: bool = true) -> String: return dress_on.pv("echo_b", [x])

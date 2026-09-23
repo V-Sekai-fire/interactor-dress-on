@@ -1,15 +1,10 @@
-# AVBD_EMIT=1 BUILD_DIR=build bash kernels/avbd/gen.sh   (2026-09-23T02:03:29Z)
+# AVBD_EMIT=1 BUILD_DIR=build bash kernels/avbd/gen.sh   (2026-09-23T05:13:09Z)
 == emitting Slang from Lean at lean ==
-✔ [93/101] Built LeanSlang.Types:c.o (459ms)
-✔ [94/101] Built LeanSlang.Emit:c.o (466ms)
-✔ [95/101] Built EmitShaders (844ms)
-✔ [97/101] Built LeanSlang.AST:c.o (816ms)
-✔ [98/101] Built LeanSlang.Test:c.o (815ms)
-✔ [99/101] Built LeanSlang.TestFp:c.o (816ms)
-✔ [100/101] Built LeanSlang:c.o (815ms)
-✔ [101/101] Built emit_shaders:exe (377ms)
-== 24 kernels into slang/ ==
+✔ [101/103] Built EmitShaders (779ms)
+✔ [103/103] Built emit_shaders:exe (483ms)
+== 25 kernels into slang/ ==
 == slangc -target cpp ==
+warning[E40100]: entry point 'main' has been renamed to 'main_0'
 warning[E40100]: entry point 'main' has been renamed to 'main_0'
 warning[E40100]: entry point 'main' has been renamed to 'main_0'
 warning[E40100]: entry point 'main' has been renamed to 'main_0'
@@ -36,13 +31,38 @@ warning[E40100]: entry point 'main' has been renamed to 'main_0'
 warning[E40100]: entry point 'main' has been renamed to 'main_0'
 == slangc -target spirv (+ reflection) ==
 == binding table ==
-wrote kernels/avbd/AvbdKernelTable.inc: 24 kernels, 180 bindings
+wrote kernels/avbd/AvbdKernelTable.inc: 25 kernels, 184 bindings
 == embedding SPIR-V ==
-embedded 24 kernels, 103776 bytes -> build/avbd_kernels.inc
-# exit 0  wall 20 s
+embedded 25 kernels, 105432 bytes -> build/avbd_kernels.inc
+# exit 0  wall 18 s
 # git diff --stat HEAD -- kernels/avbd (content; must be empty):
 
 # git status --porcelain kernels/avbd (stat only; LF over CRLF shows here):
+ M kernels/avbd/slang/attachment_dual_update.slang
+ M kernels/avbd/slang/attachment_force_al.slang
+ M kernels/avbd/slang/attachment_force_al_backward.slang
+ M kernels/avbd/slang/saxpby.slang
+ M kernels/avbd/slang/self_collision_scan.slang
+ M kernels/avbd/slang/spring_force.slang
+ M kernels/avbd/slang/spring_force_backward.slang
+ M kernels/avbd/slang/triangle_bending_dual_update.slang
+ M kernels/avbd/slang/triangle_bending_force_al.slang
+ M kernels/avbd/slang/triangle_bending_force_al_backward.slang
+ M kernels/avbd/slang/triangle_membrane_dual_update.slang
+ M kernels/avbd/slang/triangle_membrane_force_al.slang
+ M kernels/avbd/slang/triangle_membrane_force_al_backward.slang
+ M kernels/avbd/slang/vbd_gather_attachment.slang
+ M kernels/avbd/slang/vbd_gather_attachment_backward.slang
+ M kernels/avbd/slang/vbd_gather_bending.slang
+ M kernels/avbd/slang/vbd_gather_bending_backward.slang
+ M kernels/avbd/slang/vbd_gather_spring.slang
+ M kernels/avbd/slang/vbd_gather_spring_backward.slang
+ M kernels/avbd/slang/vbd_gather_triangle.slang
+ M kernels/avbd/slang/vbd_gather_triangle_backward.slang
+ M kernels/avbd/slang/vbd_init.slang
+ M kernels/avbd/slang/vbd_init_backward.slang
+ M kernels/avbd/slang/vbd_solve_apply.slang
+ M kernels/avbd/slang/vbd_solve_apply_backward.slang
 # git status --porcelain kernels/avbd after git checkout -- kernels/avbd (must be empty):
 
 RESULT CLEAN

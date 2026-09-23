@@ -1,0 +1,32 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+gate_fit 2026-09-22T23:49:00, arm probes, tag probes, args { "tag": "probes", "arm": "probes" }
+ERROR: [godot_mcp] runtime HTTP listen failed on :8789 — something else holds it (the editor plugin uses 8788). Set --mcp-port= or GODOT_MCP_PORT.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://addons/vsekai_godot_mcp/mcp_runtime.gd:40)
+[dress-on] sandbox loaded dress_on.elf
+[dress-on] sandbox loaded drape.elf
+[dress-on] sandbox loaded res://fit.elf (memory_max 2048 MiB, execution_timeout 1073741824)
+[dress-on] sandbox loaded res://fit.elf (memory_max 2048 MiB, execution_timeout 1073741824)
+OK fit sandbox res://fit.elf memory_max 2048 MiB execution_timeout 1073741824
+ok   6.0 exceptions: PASS exceptions: typed catch through two std::function got 41 (want 41); control 10 (want 10)
+ok   6.0 io: PASS io: fopen refused (errno 13), ifstream refused, open -1 (errno 13); counted 3 of 3 (total 3)
+     io_paths: io_total 3 ;  fopen /etc/hostname ;  fopen res://project.godot ;  open guest_probe.txt
+ok   6.0 instret: PASS instret: 500004 instructions over a 100000-iteration loop (at 510135 into this vmcall)
+ok   6.0 ldlt (n=200): PASS ldlt: Eigen::SimplicialLDLT n=200, relative residual 1.582e-16, max |x - x_true| 8.749e-14
+ok   6.0 ldlt8k: PASS ldlt8k: Eigen::SimplicialLDLT n=8000 nnz=53600, relative residual 6.983e-16, max |x - x_true| 5.829e-15, x fnv1a b09da10bbe1c1a83
+     ldlt8k guest 4973.0 ms (min of 5 vmcalls, host-timed), native 195.1 ms (min of 5): 25.5x; solution bits EQUAL (guest b09da10bbe1c1a83, native b09da10bbe1c1a83)
+info 6.0 libm (20000 inputs each, result bits): equal 11 log,pow,sqrt,sin,cos,tan,asin,acos,atan,atan2,fmod; differ 9 exp,cbrt,hypot,log1p,expm1,log2,log10,exp2,tanh
+     guest  libm exp:ea9b1b6b96bbe5ad log:97d51e7695efd8e2 pow:0bfa4f67bd766341 sqrt:b9d34a44e6b09b11 sin:5830840c12a25fa9 cos:c7320cf984082baf tan:8a25a3a4c641a69f asin:a003f5cad6bd31be acos:13e0673f1cc2f263 atan:f80ed06c869273d2 atan2:399fef084cd86401 cbrt:98cc2af8c6c7b7f0 hypot:b0c2ce6aa98fce4b log1p:8252659cecbd4550 expm1:79f07b649a0eeb9d log2:0ebccc551e924668 log10:4b5e77fbe40043c3 exp2:fe035e21bafa42de tanh:f2e39a38addfa0ca fmod:68a6bc96760798f7
+     native libm exp:9830f398eabc8a7c log:97d51e7695efd8e2 pow:0bfa4f67bd766341 sqrt:b9d34a44e6b09b11 sin:5830840c12a25fa9 cos:c7320cf984082baf tan:8a25a3a4c641a69f asin:a003f5cad6bd31be acos:13e0673f1cc2f263 atan:f80ed06c869273d2 atan2:399fef084cd86401 cbrt:ddcfe010ee77906b hypot:c1894cbb57ac13b1 log1p:d798f96b4caf43d6 expm1:8cb5adf0df1cbe80 log2:24880dbebe0cb952 log10:fe2d6ff7c31e67a2 exp2:8a945d986814524c tanh:7b3b0b1c435345eb fmod:68a6bc96760798f7
+info 6.0 stl (tie order, 20000 elements): differ in sort,nth_element,partial_sort,sum_in_sorted_order
+     guest  stl sort:559ad602acf7fb76 nth_element:0a0bc36f214ea572 partial_sort:331057c9e63f676a sum_in_sorted_order:108555638.4104798
+     native stl sort:f31e97e429ef923a nth_element:040ade85796c377e partial_sort:b9b5bfe2be673dc6 sum_in_sorted_order:108555638.41047987
+ok   6.0 wire (GDScript OBJ parse vs fit_native, float32 bits): body_v 15384, body_f 30513, garment_v 8046, garment_f 15660, src_sk_v 45, tgt_sk_v 45, bones 28, nofit 2005
+     heap: heap_used 0.2 MiB heap_free 1638.2 MiB chunks 1144
+wall 30.2 s, frames 5
+RESULT: PASS
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

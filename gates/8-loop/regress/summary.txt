@@ -2,6 +2,10 @@ gate_rd_compute: rc=0 2 s
 RESULT: PASS
 gate_avbd: rc=0 6 s
 RESULT: PASS
-gate_runtime: rc=0 166 s
-SUMMARY: PASS=31 FAIL=5 INFO=27 DEFERRED=0 wall_s=163.2
+gate_curvenet: rc=0 9 s
+RESULT: PASS
+probe_curvenet_wrappers: rc=0 8 s
+probe_curvenet_wrappers calls: 17
+gate_runtime: rc=0 145 s
+SUMMARY: PASS=33 FAIL=5 INFO=27 DEFERRED=0 wall_s=141.8
 done

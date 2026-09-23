@@ -1,0 +1,77 @@
+diff --git a/vendor/geogram-subset/geogram/basic/algorithm.h b/vendor/geogram-subset/geogram/basic/algorithm.h
+index 5d776a5e7..3861fd415 100644
+--- a/vendor/geogram-subset/geogram/basic/algorithm.h
++++ b/vendor/geogram-subset/geogram/basic/algorithm.h
+@@ -208,9 +208,21 @@ namespace GEO {
+     inline void random_shuffle(
+         const ITERATOR& begin, const ITERATOR& end
+     ) {
+-	std::random_device rng;
+-	std::mt19937 urng(rng());
+-	std::shuffle(begin, end, urng);
++	// interactor-dress-on: a fixed seed instead of std::random_device,
++	// and Fisher-Yates on the engine's raw output instead of std::shuffle.
++	// BRIO insertion order (mesh_reorder.cpp) goes through here, so a
++	// degenerate (cospherical) point set -- a closed stroke drawn on a
++	// sphere -- came out of Delaunay with a different triangulation on
++	// every call, in every process and on every peer. std::shuffle's
++	// algorithm is the standard library's own (libc++ and libstdc++ differ),
++	// mt19937's output sequence is fixed by the standard. The shuffle only
++	// has to break spatial coherence, not be unpredictable.
++	std::mt19937 urng(0x9e3779b9u);
++	const auto n = end - begin;
++	for(auto i = n - 1; i > 0; --i) {
++	    const auto j = decltype(i)(urng() % (unsigned long long)(i + 1));
++	    std::iter_swap(begin + i, begin + j);
++	}
+     }
+ 
+ }
+diff --git a/vendor/geogram-subset/geogram/basic/numeric.cpp b/vendor/geogram-subset/geogram/basic/numeric.cpp
+index 17bbd0c09..1132dff91 100644
+--- a/vendor/geogram-subset/geogram/basic/numeric.cpp
++++ b/vendor/geogram-subset/geogram/basic/numeric.cpp
+@@ -72,18 +72,21 @@ namespace GEO {
+             random_engine = std::mt19937_64();
+         }
+ 
++        // interactor-dress-on: the engine's raw output (fixed by the
++        // standard) instead of std::uniform_*_distribution, whose algorithms
++        // are the standard library's own: libc++ (the native flat control)
++        // and libstdc++ (the guest) drew different numbers from the same
++        // seed.
+         int32 random_int32() {
+-            return std::uniform_int_distribution<int32>(
+-		0, std::numeric_limits<int32>::max()
+-	    )(random_engine);
++            return int32(random_engine() >> 33);
+         }
+ 
+         float32 random_float32() {
+-            return std::uniform_real_distribution<float32>(0, 1)(random_engine);
++            return float32(random_engine() >> 40) * (1.0f / 16777216.0f);
+         }
+ 
+         float64 random_float64() {
+-            return std::uniform_real_distribution<float64>(0, 1)(random_engine);
++            return float64(random_engine() >> 11) * (1.0 / 9007199254740992.0);
+         }
+     }
+ }
+diff --git a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
+index ab4f2573a..c2c8f09c0 100644
+--- a/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
++++ b/vendor/geogram-subset/geogram/delaunay/delaunay.cpp
+@@ -139,6 +139,12 @@ namespace GEO {
+         // -fno-exceptions patch: SCsub excludes parallel_delaunay_3d.cpp
+         // (PDEL needs OpenMP), delaunay_2d.cpp (we use 3D only), and the
+         // tetgen/triangle creators (license). Drop their factory registrations.
++        // interactor-dress-on: delaunay_2d.cpp is compiled again (Cassie's
++        // delaunay_triangulate_2d_raw runs on "BDEL2d" instead of Godot's
++        // Delaunay2D), so its two creators are registered again, as upstream
++        // geogram 1.9.9 registers them.
++        geo_register_Delaunay_creator(Delaunay2d, "BDEL2d");
++        geo_register_Delaunay_creator(RegularWeightedDelaunay2d, "BPOW2d");
+ 
+ #ifndef GEOGRAM_PSM
+         geo_register_Delaunay_creator(Delaunay_NearestNeighbors, "NN");

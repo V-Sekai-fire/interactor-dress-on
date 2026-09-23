@@ -1,0 +1,80 @@
+{
+  "FIT_AVBD": {
+    "band": 0.1,
+    "depth": 1.0,
+    "gap": 0.0,
+    "h": 0.0166666666666667,
+    "iters": 32,
+    "k": 60.0,
+    "kAnchor": 100.0,
+    "kBend": 0.00001,
+    "refresh": 1,
+    "restEvery": 4,
+    "settle": 0,
+    "similarity": 1.0,
+    "skin": 0.1,
+    "steps": 300,
+    "tol": 0.0005
+  },
+  "chosen": "f60-i32-s300",
+  "fit_begin": "FAIL FAIL: fit_begin: Unable to solve, initial solution has intersections! (start intersects: edge (5494,5499) face (4589,4611,4556))",
+  "ref": {
+    "gap_max": 66.19,
+    "gap_mean": 12.01,
+    "gap_p95": 35.07,
+    "y_max": 0.965,
+    "y_min": 0.661
+  },
+  "rows": [
+    {
+      "anchor_shift": 0.0119,
+      "check": "not measured (fit.elf FAIL FAIL: fit_begin: Unable to solve, initial solution has intersections! (start intersects: edge (5494,5499) face (4589,4611,4556)))",
+      "converged": false,
+      "eval": {
+        "gap_max": 45.71,
+        "gap_mean": 12.97,
+        "gap_p95": 28.1,
+        "ref_max": 93.77,
+        "ref_mean": 51.51,
+        "ref_p95": 80.44,
+        "same_tris": true,
+        "surf_max": 38.76,
+        "surf_mean": 8.01,
+        "surf_p95": 23.84,
+        "y_max": 0.956,
+        "y_min": 0.682
+      },
+      "finite": true,
+      "host_ms": 15978,
+      "ms_per_step": 52.031,
+      "name": "f60-i32-s300",
+      "obj": "C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/generalise/ladder-f60-i32-s300.fitted.obj",
+      "ok": true,
+      "result": "IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00225 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1297 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0119 sim_s=0.6191 sim_rot_deg=2.507 y=6.8168..9.5593 finite=yes projections=130893 self_pushes=3202 wall_ms=15609.4 ms/step=52.031",
+      "screenshot": "ladder-f60-i32-s300.png (1152x648)",
+      "self_pushes": 3202.0,
+      "setting": {
+        "band": 0.1,
+        "depth": 1.0,
+        "gap": 0.0,
+        "h": 0.0166666666666667,
+        "iters": 32,
+        "k": 60.0,
+        "kAnchor": 100.0,
+        "kBend": 0.00001,
+        "refresh": 1,
+        "restEvery": 4,
+        "settle": 0,
+        "similarity": 1.0,
+        "skin": 0.1,
+        "steps": 300,
+        "tol": 0.0005
+      },
+      "sim_rot_deg": 2.507,
+      "sim_s": 0.6191,
+      "steps": 300.0,
+      "ticks": 901,
+      "vm_ms": 15338.224
+    }
+  ]
+}

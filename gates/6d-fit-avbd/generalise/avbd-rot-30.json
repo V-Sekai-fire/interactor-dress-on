@@ -1,0 +1,82 @@
+{
+  "FIT_AVBD": {
+    "band": 0.1,
+    "depth": 1.0,
+    "gap": 0.0,
+    "h": 0.0166666666666667,
+    "iters": 32,
+    "k": 60.0,
+    "kAnchor": 100.0,
+    "kBend": 0.00001,
+    "refresh": 1,
+    "restEvery": 4,
+    "settle": 0,
+    "similarity": 1.0,
+    "skin": 0.1,
+    "steps": 300,
+    "tol": 0.0005
+  },
+  "chosen": "f60-i32-s300",
+  "fit_begin": "host_ms=2353 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0",
+  "ref": {
+    "gap_max": 66.19,
+    "gap_mean": 12.01,
+    "gap_p95": 35.07,
+    "y_max": 0.965,
+    "y_min": 0.661
+  },
+  "rows": [
+    {
+      "anchor_shift": 0.0096,
+      "check": "OK none",
+      "check_control": "OK INTERSECTS edge (5804,5805) face (2254,2624,2326)",
+      "check_ms": 849,
+      "converged": false,
+      "eval": {
+        "gap_max": 49.71,
+        "gap_mean": 12.98,
+        "gap_p95": 29.43,
+        "ref_max": 71.47,
+        "ref_mean": 40.75,
+        "ref_p95": 63.05,
+        "same_tris": true,
+        "surf_max": 33.36,
+        "surf_mean": 7.31,
+        "surf_p95": 22.2,
+        "y_max": 0.959,
+        "y_min": 0.65
+      },
+      "finite": true,
+      "host_ms": 15494,
+      "ms_per_step": 50.211,
+      "name": "f60-i32-s300",
+      "obj": "C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/generalise/ladder-f60-i32-s300.fitted.obj",
+      "ok": true,
+      "result": "IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00244 tol=0.0005 refreshed=300 misses=0 dist_min=0.0971 dist_mean=0.1298 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0096 sim_s=0.6966 sim_rot_deg=2.532 y=6.5031..9.5887 finite=yes projections=149820 self_pushes=1539 wall_ms=15063.3 ms/step=50.211",
+      "screenshot": "ladder-f60-i32-s300.png (1152x648)",
+      "self_pushes": 1539.0,
+      "setting": {
+        "band": 0.1,
+        "depth": 1.0,
+        "gap": 0.0,
+        "h": 0.0166666666666667,
+        "iters": 32,
+        "k": 60.0,
+        "kAnchor": 100.0,
+        "kBend": 0.00001,
+        "refresh": 1,
+        "restEvery": 4,
+        "settle": 0,
+        "similarity": 1.0,
+        "skin": 0.1,
+        "steps": 300,
+        "tol": 0.0005
+      },
+      "sim_rot_deg": 2.532,
+      "sim_s": 0.6966,
+      "steps": 300.0,
+      "ticks": 901,
+      "vm_ms": 14864.597
+    }
+  ]
+}

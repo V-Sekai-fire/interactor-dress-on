@@ -1,0 +1,69 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4090
+
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T13:37:53
+args: --out=C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/generalise/avbd-len1.15.txt --only=f60-i32-s300 --wallclock=300 --garment=C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/generalise/v-len1.15.obj
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+[dress-on] xr_main: flat
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER               91 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  8 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1175 ms  vm    1116.1 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               673 ms  vm     663.2 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+garment vertices replaced from v-len1.15.obj (y 0.459..0.953)
+fit.elf begin: STARTED on the worker
+[2026-09-23 20:37:56.841] [polyfem] [info] Solver Eigen::SimplicialLDLT is the highest priority available solver; using it.
+
+RUNG f60-i32-s300: kFit 60.0 gap 0.0 similarity 1.0 iters 32 steps<=300 tol 0.0005 refresh 1 restEvery 4 settle 0 kAnchor 100.0 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 rest_every=4 settle=0 anchor=64 kAnchor=100 vertex_area min=0.007805 mean=0.07114 max=0.1352 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+[2026-09-23 20:37:58.345] [polyfem] [info] Preserving texture coordinates and material data during avatar projection
+
+[2026-09-23 20:40:41.555] [polyfem] [info] Normals will be recomputed after projection to match the new geometry
+
+[2026-09-23 20:38:15.546] [polyfem] [info] Preserving mesh topology - skipping iterative distance reduction
+
+[2026-09-25 11:43:05.806] [polyfem] [info] Shrunk avatar inward 0.0000 along its own normals, topology and UVs unchanged
+
+[2026-09-23 20:37:58.965] [polyfem] [debug] curve 0 has 3 bone intersections
+
+[2026-09-23 20:37:58.965] [polyfem] [debug] curve normal [-0.0011385458175918184, -0.9999980054395317, 0.00164098457633379]
+
+[2026-09-23 20:37:58.966] [polyfem] [debug] CurveTargetForm set curve center to bone 15 - 16, direction is [-0.0011385458175918177, -0.9999980054395317, 0.0016409845763338067]
+
+[2026-09-23 20:37:58.967] [polyfem] [debug] curve 1 has 4 bone intersections
+
+[2026-09-23 20:37:58.967] [polyfem] [debug] curve normal [-0.0007464391315044058, -0.9999893859032574, -0.004546527185575691]
+
+[2026-09-23 20:37:58.968] [polyfem] [debug] CurveTargetForm set curve center to bone 19 - 20, direction is [-0.0007464391315044076, -0.9999893859032573, -0.004546527185575673]
+
+  IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00227 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1344 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0141 sim_s=0.7095 sim_rot_deg=3.103 y=5.8784..9.5700 finite=yes projections=142600 self_pushes=4451 wall_ms=14777.3 ms/step=49.258 | host_ms 15176 vm_ms 14596 ticks 901 finite true heap 77.0 MiB
+fit.elf begin: host_ms=2132 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+  check: OK none | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5334,5634) face (2624,2625,2326) | 845 ms
+
+ladder_eval.py: rc 0 in 5.3 s
+  voxel 0.0065462 m; REF flat-psd.fitted.obj: 932 v 1728 f
+  REF gap to body: mean 12.01 p50 8.40 p95 35.07 max 66.19 mm | mean 1.83 p50 1.28 p95 5.36 max 10.11 voxels | inside(hint) 0 | y 0.661..0.965
+  ladder-f60-i32-s300.fitted.obj: 932 v, triangles == REF | to REF: mean 65.89 p50 66.21 p95 99.41 max 121.52 mm | surface to REF surface: mean 11.87 p50 5.70 p95 52.43 max 80.80 mm (REF to it: mean 6.85 p95 22.22) | gap to body: mean 13.44 p50 10.00 p95 31.08 max 48.90 mm | mean 2.05 p50 1.53 p95 4.75 max 7.47 voxels | inside(hint) 0 | y 0.588..0.957
+  after the best rotation about y (rows [0.9729 0.0000 -0.2313] [0.0000 1.0000 0.0000] angle 13.4 deg): to REF mean 38.32 p50 35.43 p95 73.66 max 103.99 mm | after the best rigid transform (rows [0.9728 -0.0051 -0.2314] [0.0160 0.9988 0.0455] angle 13.7 deg): mean 37.84 p50 35.17 p95 71.55 max 109.14 mm
+
+The ladder (mm; toREF = per-vertex distance to the PolyFEM fit, surf = surface to surface both ways, gap = to the body; REF: gap 12.01 / 35.07 mm mean / p95, y 0.661..0.965 m):
+rung                        kFit sim  kAnc settle iters steps ms/step  fit_s  pushes   s     y_min  y_max  toREF mean  p95    max   surf mean  p95    max   gap mean  p95    check
+f60-i32-s300                 60.0   1 100.0      0    32   300    49.3   15.2    4451  0.710  0.588  0.957     65.9   99.4  121.5    11.9   52.4   80.8    13.4   31.1   OK none
+PASS drape_stage.gd FIT_AVBD == rung f60-i32-s300
+PASS chosen rung f60-i32-s300: check OK none | control OK INTERSECTS edge (5334,5634) face (2624,2625,2326)
+FAIL chosen rung f60-i32-s300 surface vs the PolyFEM fit's: mean 11.9 mm (want <= 15), p95 52.4 (want <= 30), max 80.8; y 0.588..0.957 (PolyFEM 0.661..0.965); similarity s 0.7095 rot 3.103 deg; triangles equal true
+INFO chosen rung f60-i32-s300 per vertex vs the PolyFEM fit: mean 65.9 mm (bar 30: NOT met), p95 99.4 (bar 60), max 121.5: the vertices' places on the surface, not the surface
+FAIL control no pull (the tube): no shape statistics
+FAIL control no similarity rest update (the authored length held): no shape statistics
+wall 24.5 s, frames 1848
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

@@ -1,0 +1,23 @@
+{
+  "FIT_AVBD": {
+    "band": 0.1,
+    "depth": 1.0,
+    "gap": 0.0,
+    "h": 0.0166666666666667,
+    "iters": 32,
+    "k": 60.0,
+    "kAnchor": 100.0,
+    "kBend": 0.00001,
+    "refresh": 1,
+    "restEvery": 4,
+    "settle": 0,
+    "similarity": 1.0,
+    "skin": 0.1,
+    "steps": 300,
+    "tol": 0.0005
+  },
+  "chosen": "f60-i32-s300",
+  "fit_begin": "",
+  "ref": {},
+  "rows": []
+}

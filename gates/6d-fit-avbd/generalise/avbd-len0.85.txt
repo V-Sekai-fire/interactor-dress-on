@@ -1,0 +1,35 @@
+Gate 6d -- the avbd fit ladder. Godot 4.7.2-stable (official), AMD Ryzen 7 3800X 8-Core Processor, NVIDIA GeForce RTX 4090, 2026-09-23T13:37:22
+args: --out=C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/generalise/avbd-len0.85.txt --only=f60-i32-s300 --wallclock=300 --garment=C:/Users/ernest.lee/AppData/Local/Temp/claude/C--interactor-dress-on/5e2e38d1-70e6-4b5e-96a1-5253bf6ca9f5/scratchpad/ido-6d/gates/6d-fit-avbd/generalise/v-len0.85.obj
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+run to MESH: STARTED allow_fixture=infer,rig force_fixture= pen=scripted fit_mode=polyfem
+STATE INFER               96 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG                  9 ms  vm       0.0 ms  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            1204 ms  vm    1139.6 ms  strokes 6 cycles 2 openings 2 patches 2 curves 6 knots 4 degrees [3, 3, 3, 3]
+STATE MESH               683 ms  vm     673.6 ms  ok patches=2 vertices=932 triangles=1728 loops=2 components=1 euler=0 | 932 v 1728 f 2 loops
+=> DONE 
+garment: 932 v 1728 f, 0 nofit; body 5128 v 10171 f
+garment vertices replaced from v-len0.85.obj (y 0.588..0.953)
+fit.elf begin: STARTED on the worker
+RUNG f60-i32-s300: kFit 60.0 gap 0.0 similarity 1.0 iters 32 steps<=300 tol 0.0005 refresh 1 restEvery 4 settle 0 kAnchor 100.0 h 0.01666666666667 kBend 0.00001 | FIT SET fit=932 pins=0 kFit=60 gap=0 refresh=1 similarity=1 rest_every=4 settle=0 anchor=64 kAnchor=100 vertex_area min=0.005773 mean=0.05264 max=0.1 (k per vertex = kFit x area; re-uploads on the next queue) | QUEUED fit 300 on rd
+  IDLE DONE fit rd steps=300 (+300 of 300, settle 0 of 0) converged=no max_disp=0.00234 tol=0.0005 refreshed=300 misses=0 dist_min=0.1000 dist_mean=0.1276 gap=0 kFit=60 fit=932 pins=0 iters=32 h=0.0166667 similarity=1 rest_every=4 rest_updates=74 anchor=64 anchor_k=100 anchor_shift=0.0067 sim_s=0.6805 sim_rot_deg=1.881 y=7.0606..9.6212 finite=yes projections=153146 self_pushes=1056 wall_ms=15129.8 ms/step=50.433 | host_ms 15532 vm_ms 14934 ticks 901 finite true heap 77.4 MiB
+fit.elf begin: host_ms=2160 OK begin: phases 2, target_scale 1.5276081186803154 center (-0.00084284095419066558, -1.5261948035249069, -0.0069841535617863326), source_scale 1.5276081186803154, io_attempts 0
+  check: OK none | control (vertex 506 onto the pelvis): OK INTERSECTS edge (5334,5634) face (2254,2622,2624) | 850 ms
+
+ladder_eval.py: rc 0 in 5.0 s
+  voxel 0.0065462 m; REF flat-psd.fitted.obj: 932 v 1728 f
+  REF gap to body: mean 12.01 p50 8.40 p95 35.07 max 66.19 mm | mean 1.83 p50 1.28 p95 5.36 max 10.11 voxels | inside(hint) 0 | y 0.661..0.965
+  ladder-f60-i32-s300.fitted.obj: 932 v, triangles == REF | to REF: mean 53.18 p50 51.75 p95 83.10 max 94.39 mm | surface to REF surface: mean 9.10 p50 5.40 p95 33.61 max 57.89 mm (REF to it: mean 11.37 p95 49.86) | gap to body: mean 12.76 p50 10.00 p95 28.25 max 52.73 mm | mean 1.95 p50 1.53 p95 4.32 max 8.05 voxels | inside(hint) 0 | y 0.706..0.962
+  after the best rotation about y (rows [0.9698 0.0000 -0.2438] [0.0000 1.0000 0.0000] angle 14.1 deg): to REF mean 32.21 p50 31.46 p95 54.48 max 72.07 mm | after the best rigid transform (rows [0.9698 -0.0016 -0.2437] [0.0098 0.9994 0.0321] angle 14.2 deg): mean 32.05 p50 30.82 p95 55.80 max 73.18 mm
+
+The ladder (mm; toREF = per-vertex distance to the PolyFEM fit, surf = surface to surface both ways, gap = to the body; REF: gap 12.01 / 35.07 mm mean / p95, y 0.661..0.965 m):
+rung                        kFit sim  kAnc settle iters steps ms/step  fit_s  pushes   s     y_min  y_max  toREF mean  p95    max   surf mean  p95    max   gap mean  p95    check
+f60-i32-s300                 60.0   1 100.0      0    32   300    50.4   15.5    1056  0.680  0.706  0.962     53.2   83.1   94.4     9.1   33.6   57.9    12.8   28.3   OK none
+PASS drape_stage.gd FIT_AVBD == rung f60-i32-s300
+PASS chosen rung f60-i32-s300: check OK none | control OK INTERSECTS edge (5334,5634) face (2254,2622,2624)
+FAIL chosen rung f60-i32-s300 surface vs the PolyFEM fit's: mean 9.1 mm (want <= 15), p95 33.6 (want <= 30), max 57.9; y 0.706..0.962 (PolyFEM 0.661..0.965); similarity s 0.6805 rot 1.881 deg; triangles equal true
+INFO chosen rung f60-i32-s300 per vertex vs the PolyFEM fit: mean 53.2 mm (bar 30: NOT met), p95 83.1 (bar 60), max 94.4: the vertices' places on the surface, not the surface
+FAIL control no pull (the tube): no shape statistics
+FAIL control no similarity rest update (the authored length held): no shape statistics
+wall 24.7 s, frames 1808
+RESULT: FAIL
+drape rd_close: CLOSED device=freed permanent_slots=0

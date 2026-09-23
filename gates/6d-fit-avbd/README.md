@@ -9,8 +9,8 @@ finite rd steps (2.8 s, 28 ms/step). The push-vertex control ends
 `FAILED(CHECK: INTERSECTS ...)` (`control-push-vertex.*`, 17.8 s). The fit's
 surface is 7.2 mm mean / 22.1 mm p95 from the PolyFEM fit's, its gap to the
 body 13.1 / 29.0 mm mean / p95 against PolyFEM's 12.0 / 35.1 (the ladder
-gate, `ladder.txt`, RESULT PASS). `tests/probe_main_wrappers.gd` PASS (134
-guest entry points, 167 wrappers); `gate_drape.gd -- only=G4,G8 quick`
+gate, `ladder.txt`, RESULT PASS). `tests/probe_main_wrappers.gd` PASS (135
+guest entry points, 168 wrappers); `gate_drape.gd -- only=G4,G8 quick`
 PASS. Side by side: `ladder-f60-i32-s300.png` (the fit phase) and
 `loop-avbd.png` (after the drape) against `gates/8-loop/flat-psd.png`.
 
@@ -213,6 +213,97 @@ it: reproducing cloth-fit's phase 0 (the garment fitted to the avatar
 collapsed onto its skeleton and inflated, alpha 0 → 1), the one thing in
 its pipeline that can turn a symmetric tube, which is a cut of its own.
 
+## Does the rotation generalise (`generalise/`)
+
+The user asked whether PolyFEM's 16.3 deg azimuth is a constant of its
+path (a frame convention to derive and apply), a function of something
+measurable, or a soft mode. The sweep runs the native PolyFEM fit
+(`gates/6-fit`'s `fit_native`, the guest's bitwise-equal control, the loop's
+own budget: `incremental_steps` 1, `force_psd_projection`) and the avbd fit
+(the pick, `gate_fit_avbd.gd --only=f60-i32-s300 --garment=`) on the
+loop's authored skirt (`generalise/authored.authored.obj`, the pen gate's
+mesh: sample 2 is sample 1) and on six copies of it made by
+`make_variants.py`: rotated +30 and -30 deg about the vertical axis through
+its own x-z centroid (a 3x3 matrix), its x-z radius scaled 0.85 and 1.15
+(a narrower and a wider skirt), its height below the waist scaled 0.85 and
+1.15 (a shorter and a longer one). Every rotation below is the org's fitter
+(`vendor/sinew-align`, Align.lean's C port, through `sinew_align_cli
+--about-y` for the azimuth and plain for Kabsch; the angle is the trace's
+summary of the matrix, rule 11). `analyse.py` writes the table
+(`generalise/results.txt`); the native logs, `phases.tsv` and
+`garment_final.obj` per variant are beside it, the avbd runs as
+`avbd-<variant>.*`.
+
+| variant | PolyFEM azimuth vs input (deg, overall; per band low..high) | avbd azimuth vs input (deg) | avbd vs PolyFEM per vertex raw / after best y rotation (deg) / after Kabsch (mm mean, p95) | surface mean / p95 (mm) | PolyFEM wall (s, Newton) | avbd fit (s) |
+|---|---|---|---|---|---|---|
+| base | +20.9; +22.1 +20.8 +20.9 +20.2 +20.0 | -0.3 | 59.6 / 87.8; +17.9 deg: 34.2 / 67.9; 18.0 deg: 33.8 / 68.1 | 7.2 / 21.0 | 33, 131 | 16.3 |
+| rot+30 | +7.4; +8.5 +7.9 +7.3 +6.4 +6.4 | +0.0 | 31.6 / 50.5; +5.8 deg: 27.8 / 44.5; 8.7 deg: 23.3 / 42.3 | 8.1 / 25.8 | 18, 64 | 16.2 |
+| rot-30 | +0.4; +0.3 +0.1 +0.9 +0.8 -0.0 | +0.0 | 68.9 / 131.2; +0.6 deg: 40.5 / 71.9; 1.1 deg: 40.4 / 71.8 | 19.0 / 104.5 | 13, 42 | 15.1 |
+| rad0.85 | -2.8; -1.5 -2.8 -2.6 -3.4 -3.8 | -0.7 | 55.0 / 97.2; -1.7 deg: 28.7 / 53.1; 1.8 deg: 28.6 / 53.2 | 14.9 / 71.4 | 19, 62 | 15.2 |
+| rad1.15 | +21.5; +22.6 +21.3 +21.5 +20.9 +20.7 | +1.8 | 55.7 / 86.5; +16.6 deg: 33.5 / 63.7; 16.8 deg: 32.7 / 62.8 | 7.7 / 23.3 | 30, 117 | 15.6 |
+| len0.85 | +0.5; +1.0 +0.8 +0.5 +0.3 -0.0 | +0.3 | 19.0 / 33.4; +0.1 deg: 16.4 / 28.4; 2.0 deg: 16.0 / 28.2 | 7.8 / 26.2 | 22, 81 | 15.1 |
+| len1.15 | -6.7; -6.4 -6.8 -6.7 -6.7 -6.9 -6.7 | +0.1 | 84.2 / 149.8; -5.2 deg: 80.7 / 152.0; 7.2 deg: 79.9 / 148.4 | 28.9 / 137.4 | 48, 199 | 14.8 |
+| LCL skirt, upstream cloth-fit 1 thread (cf-up-out1 step 252) | -2.8 (fit vertices -3.6) vs its retargeted start | - | - | - | - | - |
+| LCL skirt, fit_native sdf64b | +2.2 (fit vertices +1.8) vs its retargeted start | - | - | - | - | - |
+
+Read across: the PolyFEM azimuth of the same skirt is **+20.9 deg** in the
+native run and **+16.3 deg** in the guest's psd run of Gate 8 (the same
+input and config; 131 against 150 Newton: the two paths land 4.6 deg
+apart), **+7.4** when the input is turned +30 deg and **+0.4** when it is
+turned -30 (it neither rotates with the input, which would read +20.9 both
+times, nor lands at one absolute azimuth, which would read -9 and +51),
+**-2.8** for the narrower skirt and **+21.5** for the wider, **+0.5** for
+the shorter and **-6.7** for the longer; the LCL skirt fixture turns
+**-2.8** (upstream cloth-fit) and **+2.2** (our native). The avbd fit
+keeps the authored azimuth in every case (-0.7..+1.8 deg). The inputs are
+symmetric to 0.1 deg (the hip joints on x, the body's horizontal principal
+axis on x), so nothing measurable predicts the angle.
+
+**Verdict: a soft mode.** The azimuth of a tube on a left-right symmetric
+body is flat in cloth-fit's energy and its Newton path lands anywhere
+between -7 and +22 deg, 4.6 deg apart on the same input between two
+solver builds. It is not a frame convention to apply (no fixed rotation is
+tested), and per-vertex agreement with it is agreement with where one run
+happened to land: the honest per-vertex bar is after the best rotation
+about y, where the pick reads 34.2 / 67.9 mm on the native fit (28.2 / 58.0
+on the guest's) and the variants 16-40 mm mean. The long skirt is the
+outlier (80 mm after the rotation, surface 29 / 137 mm): PolyFEM's hem
+there hangs 13 cm above the knee against the legs while the avbd fit
+follows the legs down; a shape difference of the fit terms, not an azimuth.
+
+Not run: the vendored jacket examples (`Goblin_Jacket`, `Trex_Jacket`:
+Puffer_dense 3112 v on Goblin 5214 v and T-rex 9898 v) refuse to start
+under this fork's topology-preserving start avatar (`begin: Unable to
+solve, initial solution has intersections`, `native-Goblin_Jacket.log`,
+`native-Trex_Jacket.log`); the jumpsuit example the same setups would
+need a skin-weights path this tree does not exercise. cloth-fit ships no
+other garment-avatar pair (`vendor/cloth-fit/garment-data`), and rule 1
+forbids fetching more.
+
+## The rotation fitter: sinew-mocap/solve's Align.lean (`vendor/sinew-align`, `lean/Sinew`)
+
+The user asked for the org's fitters in place of the drape's own Jacobi
+SVD. `lean/Sinew` is a squashed subtree split of `V-Sekai-fire/sinew`'s
+`solve/core/spec` (36c926e; Align.lean, Math.lean, AlignTest.lean, the
+rest of the spec with them), `vendor/sinew-align` the org's C port from
+`V-Sekai-fire/interactor-gyre` (6e04760: `sinew_align.c/.h`,
+`test_sinew_align.c`, file for file) plus `sinew_align_cli.c` and
+`build.sh` here. `guest/drape/similarity.h` now accumulates the centred
+cross-covariance and hands it to `sinew_finish_align` (rodrigues / ns30 /
+the Jacobi-SVD kabsch fallback), keeps R = I with the scale alone when
+`valid9` rejects the result, and takes Umeyama's scale as
+trace(R^T H) / sum |src - cs|^2. AlignTest.lean's oracle (a 120 deg
+rotation recovered at N=5, 2, 1 to 1e-4) runs on the host
+(`sinew/test_sinew_align.native.txt`: 0.0 error, OK) and in the guest
+(`drape_sinew_align_test`, wrapped by rule 8 and called by
+`tests/probe_main_wrappers.gd`: N=5 err 1.09e-17, N=2 err 0, N=1 err 0; `similarity_fit` on the same pairs scaled by 0.7 gives s = 0.7000000 and max |R - R_true| 4.1e-9). The pick refitted
+with it: the fitted vertices move 0.0007 mm mean / 0.0020 mm max against the Jacobi-SVD build (`sinew/pick.txt`, `sinew/ladder-f60-i32-s300.fitted.obj`), float noise; `OK none` as before. `ladder_eval.py`'s rotation fits (about y
+and Kabsch) go through `sinew_align_cli` (built by
+`vendor/sinew-align/build.sh`, or `SINEW_ALIGN_CLI=`); the about-y fit
+keeps only the x-z components and adds the y axis as weighted pairs, since
+coplanar data alone leaves the fitter free to flip 180 deg about an
+in-plane axis (it did on one height band of the sweep).
+
 ## Negative results (kept: `pass1/` .. `pass7/`)
 
 Each pass is the full gate output of an earlier design; the numbers are what
@@ -351,4 +442,6 @@ there).
 | `drape-quick.txt` | `gate_drape.gd -- only=G4,G8 quick` (the drape regression) |
 | `pass1/` .. `pass7/` | the negative passes above, complete (`pass6/resume-f20.*`: the rung the killed run stopped at, rerun alone: PASS) |
 | `ladder_eval.py` | the shape / gap statistics, and the rotation / rigid residuals |
-| `ladder-eval-rigid.txt` | its output for the tube, PolyFEM's no-psd run, the pick and three rungs |
+| `ladder-eval-rigid.txt` | its output for the tube, PolyFEM's no-psd run, the pick and three rungs (the Jacobi-SVD fits of the first analysis; the org's fitter gives the same angles to 0.1 deg) |
+| `generalise/` | the sweep: `make_variants.py`, `run_native.sh`, `run_avbd.sh`, `analyse.py`, `results.txt`, every variant's input, PolyFEM output (`native-<v>/`, `.log`) and avbd output (`avbd-<v>.*`) |
+| `sinew/` | the org's fitter: the host unit test's output, the pick refitted with it, the wrappers probe with the guest oracle |

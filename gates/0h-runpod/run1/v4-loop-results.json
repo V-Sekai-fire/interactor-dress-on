@@ -1,0 +1,78 @@
+{
+  "counts": {
+    "curvenet_build": "<null>",
+    "curves": -1,
+    "cycles": -1,
+    "edges": -1,
+    "knot_degrees": [],
+    "knot_positions": [],
+    "knots": -1,
+    "last_pen_end": "<null>",
+    "nodes": -1,
+    "openings": -1,
+    "patches": 0,
+    "pen_ends": [
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=1 nodes=2 cycles=0 openings=0",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=2 nodes=2 cycles=0 openings=1",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=3 nodes=4 cycles=0 openings=1",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=4 nodes=4 cycles=0 openings=2",
+      "ok=1 valid=1 closed=0 new_patches=0 patches=0 edges=5 nodes=4 cycles=0 openings=2",
+      "<null>"
+    ],
+    "strokes": 6
+  },
+  "fixtures": [
+    "infer",
+    "rig"
+  ],
+  "mesh": {
+    "host_ms": 10,
+    "mesh_build": "<null>"
+  },
+  "min_clearance": "0.0100 m after growing both rings by 0.0348 m (the rings alone: -0.0248 m)",
+  "reason": "MESH: mesh_build: <null>",
+  "records": [
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 118,
+      "note": "FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f",
+      "state": "INFER",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": true,
+      "frames": 1,
+      "heap": -1,
+      "ms": 2103,
+      "note": "FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",
+      "state": "RIG",
+      "vm_ms": 0.0
+    },
+    {
+      "fixture": false,
+      "frames": 7,
+      "heap": 2258928,
+      "ms": 2500,
+      "note": "strokes 6 cycles -1 openings -1 patches 0 curves -1 knots -1 degrees []",
+      "state": "AUTHOR",
+      "vm_ms": 465.365
+    },
+    {
+      "fixture": false,
+      "frames": 3,
+      "heap": 2258928,
+      "ms": 22,
+      "note": "FAILED mesh_build: <null>",
+      "state": "MESH",
+      "vm_ms": 10.347
+    }
+  ],
+  "rings": {
+    "hem": "centre (-0.000869, 0.524922, -0.029805) radius 0.2305 m (body 0.1857 m + 0.01, 90 vertices)",
+    "waist": "centre (-0.000113, 0.952752, -0.027279) radius 0.2047 m (body 0.1599 m + 0.01, 60 vertices)"
+  },
+  "state": "FAILED",
+  "wall_s": 4.786
+}

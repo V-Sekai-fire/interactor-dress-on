@@ -1,0 +1,28 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.289 - Forward+ - Using Device #0: NVIDIA - NVIDIA RTX 4000 Ada Generation
+WARNING: Started the engine as `root`/superuser. This is a security risk, and subsystems like audio may not work correctly.
+Set the environment variable `GODOT_SILENCE_ROOT_WARNING` to 1 to silence this warning.
+     at: setup2 (main/main.cpp:3581)
+
+open:  ok
+probe: PASS: GPU compute reached from the guest (device held from an earlier vmcall)
+bench nd=   1 ns=  1 barrier=true  host_us=   6476  OK value=1 expected=1 setup_us=6144 loop_us=147 read_us=66 us_per_dispatch=147.0 us_per_submit=147.0 | bind_pipe=0 bind_set=16 dispatch=0 barrier=0 submit=131
+bench nd=   1 ns=  1 barrier=false host_us=    495  OK value=1 expected=1 setup_us=263 loop_us=98 read_us=65 us_per_dispatch=98.0 us_per_submit=98.0 | bind_pipe=0 bind_set=16 dispatch=0 barrier=0 submit=82
+bench nd=  16 ns=  1 barrier=true  host_us=   2901  OK value=16 expected=16 setup_us=180 loop_us=2573 read_us=65 us_per_dispatch=160.8 us_per_submit=2573.0 | bind_pipe=17 bind_set=16 dispatch=17 barrier=2375 submit=131
+bench nd=  16 ns=  1 barrier=false host_us=    459  WRONG value=6 expected=16 setup_us=196 loop_us=131 read_us=66 us_per_dispatch=8.2 us_per_submit=131.0 | bind_pipe=33 bind_set=16 dispatch=17 barrier=0 submit=65
+bench nd=  64 ns=  1 barrier=true  host_us=    844  OK value=64 expected=64 setup_us=197 loop_us=524 read_us=66 us_per_dispatch=8.2 us_per_submit=524.0 | bind_pipe=81 bind_set=33 dispatch=17 barrier=131 submit=246
+bench nd=  64 ns=  1 barrier=false host_us=    638  WRONG value=17 expected=64 setup_us=197 loop_us=311 read_us=66 us_per_dispatch=4.9 us_per_submit=311.0 | bind_pipe=82 bind_set=65 dispatch=50 barrier=0 submit=98
+bench nd= 256 ns=  1 barrier=true  host_us=   2104  OK value=256 expected=256 setup_us=180 loop_us=1786 read_us=66 us_per_dispatch=7.0 us_per_submit=1786.0 | bind_pipe=228 bind_set=245 dispatch=263 barrier=245 submit=737
+bench nd= 256 ns=  1 barrier=false host_us=   1392  WRONG value=58 expected=256 setup_us=196 loop_us=1032 read_us=66 us_per_dispatch=4.0 us_per_submit=1032.0 | bind_pipe=212 bind_set=232 dispatch=278 barrier=65 submit=213
+bench nd=   1 ns= 16 barrier=true  host_us=   1305  OK value=16 expected=16 setup_us=246 loop_us=918 read_us=65 us_per_dispatch=57.4 us_per_submit=57.4 | bind_pipe=17 bind_set=17 dispatch=17 barrier=0 submit=787
+bench nd=   1 ns= 16 barrier=false host_us=   1097  OK value=16 expected=16 setup_us=196 loop_us=770 read_us=50 us_per_dispatch=48.1 us_per_submit=48.1 | bind_pipe=32 bind_set=49 dispatch=17 barrier=0 submit=622
+bench nd=   1 ns= 64 barrier=true  host_us=   3033  OK value=64 expected=64 setup_us=197 loop_us=2720 read_us=49 us_per_dispatch=42.5 us_per_submit=42.5 | bind_pipe=112 bind_set=66 dispatch=100 barrier=0 submit=2311
+bench nd=   1 ns= 64 barrier=false host_us=   3048  OK value=64 expected=64 setup_us=181 loop_us=2736 read_us=49 us_per_dispatch=42.8 us_per_submit=42.8 | bind_pipe=113 bind_set=131 dispatch=49 barrier=32 submit=2345
+bench nd=  16 ns= 16 barrier=true  host_us=   2627  OK value=256 expected=256 setup_us=196 loop_us=2310 read_us=50 us_per_dispatch=9.0 us_per_submit=144.4 | bind_pipe=228 bind_set=198 dispatch=214 barrier=375 submit=1245
+bench nd=  16 ns= 16 barrier=false host_us=   1950  WRONG value=78 expected=256 setup_us=213 loop_us=1622 read_us=49 us_per_dispatch=6.3 us_per_submit=101.4 | bind_pipe=167 bind_set=226 dispatch=245 barrier=81 submit=821
+no-barrier arm: 4 of 7 counts wrong -> the render graph does NOT order same-buffer dispatches; barrier() is mandatory
+close: closed
+RESULT: PASS
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

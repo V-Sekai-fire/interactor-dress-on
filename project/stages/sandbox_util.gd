@@ -36,6 +36,11 @@ static func make_sandbox(parent: Node, elf: String, mem_mb: int = 0, refs: int =
 		sb.references_max = refs
 	if timeout_units > 0:
 		sb.execution_timeout = timeout_units
+	# allocations_max: the addon's default is 4000 live guest heap chunks. The Linux
+	# build runs out of them where the Windows build of the same ELF does not
+	# (Gate 0H: curvenet.elf in curvenet_build, drape.elf in its first call), so
+	# every stage gets 1,000,000 unless it asks for more (fit_stage.gd: 4,000,000).
+	sb.allocations_max = 1000000
 	for k in extra:
 		sb.set(k, extra[k])
 	var prog = load(elf)

@@ -1,0 +1,24 @@
+Gate 8 -- the loop. Godot 4.7.2-stable (official), Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz, 2026-09-23T14:33:25
+args: --gate=loop --out=/work/out/v4-loop-results.txt --wallclock=3200 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              118 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG               2103 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+STATE AUTHOR            2500 ms  vm     465.4 ms  heap 2.2 MiB  frames 7  strokes 6 cycles -1 openings -1 patches 0 curves -1 knots -1 degrees []
+STATE MESH                22 ms  vm      10.3 ms  heap 2.2 MiB  frames 3  FAILED mesh_build: <null>
+=> FAILED MESH: mesh_build: <null>
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED MESH: mesh_build: <null>
+FAIL cycles: cycles=-1 (want 2)
+FAIL openings: openings=-1 (want 2: the waist and the hem)
+FAIL patches: patches=0 (want 2: the front and back panels)
+INFO curvenet: curves=-1 knots=-1 degrees=[] edges=-1 (4 knots of degree 3 have 6 edges)
+FAIL mesh: <null> v <null> f, <null> loops, <null> components
+PASS screenshot: v4-loop-results.png (1152x648)
+wall 8.0 s, frames 22
+RESULT: FAIL
+drape rd_close: CLOSED device=none permanent_slots=0

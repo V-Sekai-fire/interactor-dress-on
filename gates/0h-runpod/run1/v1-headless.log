@@ -1,0 +1,50 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Error [GENERAL | xrEnumerateInstanceExtensionProperties | OpenXR-Loader] : RuntimeManifestFile::FindManifestFiles - failed to determine active runtime file path for this environment
+Error [GENERAL | xrEnumerateInstanceExtensionProperties | OpenXR-Loader] : RuntimeInterface::LoadRuntimes - unknown error
+Error [GENERAL | xrEnumerateInstanceExtensionProperties | OpenXR-Loader] : RuntimeInterface::LoadRuntimes - failed to load a runtime
+Error [GENERAL | xrEnumerateInstanceExtensionProperties | OpenXR-Loader] : Failed to find default runtime with RuntimeInterface::LoadRuntime()
+Error [GENERAL | xrEnumerateInstanceExtensionProperties | OpenXR-Loader] : Failed querying extension properties
+ERROR: OpenXR: Failed to enumerate number of extension properties
+   at: load_supported_extensions (modules/openxr/openxr_api.cpp:429)
+WARNING: OpenXR was requested but failed to start.
+HMD was not detected or a required feature was not supported.
+
+Check logged errors in debugger for more details.
+
+Godot will start in normal mode.
+
+     at: initialize_openxr_module (modules/openxr/register_types.cpp:262)
+OpenXR was requested but failed to start.
+HMD was not detected or a required feature was not supported.
+
+Check logged errors in debugger for more details.
+
+Godot will start in normal mode.
+
+WARNING: Started the engine as `root`/superuser. This is a security risk, and subsystems like audio may not work correctly.
+Set the environment variable `GODOT_SILENCE_ROOT_WARNING` to 1 to silence this warning.
+     at: setup2 (main/main.cpp:3581)
+
+open:  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+probe: FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+last step attempted: create_local_rendering_device
+bench nd=   1 ns=  1 barrier=true  host_us=     11  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=   1 ns=  1 barrier=false host_us=      8  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=  16 ns=  1 barrier=true  host_us=      8  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=  16 ns=  1 barrier=false host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=  64 ns=  1 barrier=true  host_us=      7  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=  64 ns=  1 barrier=false host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd= 256 ns=  1 barrier=true  host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd= 256 ns=  1 barrier=false host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=   1 ns= 16 barrier=true  host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=   1 ns= 16 barrier=false host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=   1 ns= 64 barrier=true  host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=   1 ns= 64 barrier=false host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=  16 ns= 16 barrier=true  host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+bench nd=  16 ns= 16 barrier=false host_us=      6  FAIL at create_local_rendering_device: not an Object (headless? run with --rendering-driver vulkan)
+no-barrier arm: 7 of 7 counts wrong -> the render graph does NOT order same-buffer dispatches; barrier() is mandatory
+close: closed
+RESULT: FAIL
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

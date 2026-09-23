@@ -1,0 +1,251 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.289 - Forward+ - Using Device #0: NVIDIA - NVIDIA RTX 4000 Ada Generation
+WARNING: Started the engine as `root`/superuser. This is a security risk, and subsystems like audio may not work correctly.
+Set the environment variable `GODOT_SILENCE_ROOT_WARNING` to 1 to silence this warning.
+     at: setup2 (main/main.cpp:3581)
+
+Gate 8 -- the loop. Godot 4.7.2-stable (official), Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz, 2026-09-23T14:33:25
+args: --gate=loop --out=/work/out/v4-loop-results.txt --wallclock=3200 --allow-fixture=infer,rig
+XR_RUNTIME_JSON: (unset)
+PEN_SYNC: PASS 32 files identical to vendor/xr-grid
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+[dress-on] xr_main: flat
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+stages: infer: infer.elf not found (not built or not imported) | curvenet: ok | fit: ok | drape: ok
+view: flat
+run: STARTED allow_fixture=infer,rig force_fixture= pen=scripted
+STATE INFER              118 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/avatar.obj: 5128 v, 10171 f
+STATE RIG               2103 ms  vm       0.0 ms  heap -  frames 1  FIXTURE fixtures/foxgirl/skeleton.obj (skeleton15 topology): 15 joints, map [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+[@Sandbox@4] Exception when calling:
+  pen_end(int) (0xe3cc8)
+Backtrace:
+-> [0] 0x00000000000E4F64 + 0x004: __wrap_malloc
+-> [1] 0x00000000001E2BAC + 0x1f8: mwt::DMWT::buildList()
+-> [-] 0xe3cc8 + 0x0: pen_end(int)
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE4F68] 00000073 ecall
+>>> Machine registers:
+[PC	e4f68] [RA	001E2DA4] [SP	0063C0F0] [GP	0032DB28] [TP	0033D760] 
+[LR	000005AE] [TMP1	00000002] [TMP2	00000190] [SR0	0063C310] [SR1	00000000] 
+[A0	00000002] [A1	0085A3C0] [A2	0000000C] [A3	006676DC] [A4	0066788C] 
+[A5	00655E78] [A6	FFFFFFFFFFFFFFFF] [A7	000001E0] [SR2	00000002] [SR3	000006E4] 
+[SR4	00000093] [SR5	00000498] [SR6	00000093] [SR7	00704440] [SR8	00000150] 
+[SR9	00856910] [SR10	000000CC] [SR11	0000015C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000006A] [TMP6	00000358] 
+
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] call_now (res://stages/stage_base.gd:66)
+         [1] pen_end_raw (res://stages/curvenet_stage.gd:48)
+         [2] _author (res://stages/pipeline.gd:344)
+         [3] _process (res://stages/pipeline.gd:183)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] call_now (res://stages/stage_base.gd:66)
+       [1] pen_end_raw (res://stages/curvenet_stage.gd:48)
+       [2] _author (res://stages/pipeline.gd:344)
+       [3] _process (res://stages/pipeline.gd:183)
+Exception in Sandbox calling function: 
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] call_now (res://stages/stage_base.gd:66)
+         [1] pen_end_raw (res://stages/curvenet_stage.gd:48)
+         [2] _author (res://stages/pipeline.gd:344)
+         [3] _process (res://stages/pipeline.gd:183)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] call_now (res://stages/stage_base.gd:66)
+       [1] pen_end_raw (res://stages/curvenet_stage.gd:48)
+       [2] _author (res://stages/pipeline.gd:344)
+       [3] _process (res://stages/pipeline.gd:183)
+Exception in Sandbox at PC: 
+[@Sandbox@4] Exception when calling:
+  curvenet_build() (0xe3fb2)
+Backtrace:
+-> [0] 0x00000000000E4F64 + 0x004: __wrap_malloc
+-> [1] 0x00000000001C3B1A + 0x018: _ZN3gdl21gdl_callable_internal4makeINS_10DictionaryEJRKNS_7Vector3EEZNS_11callable_mpI18CassieSurfacePatchS7_S2_JS5_EEENS_8CallableEPT_MT0_KFT1_DpT2_EEUlDpT_E_EES8_PKNS_6ObjectESC_
+-> [-] 0xe3fb2 + 0x0: curvenet_build()
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE4F68] 00000073 ecall
+>>> Machine registers:
+[PC	e4f68] [RA	001C3B32] [SP	0063CB90] [GP	0032DB28] [TP	0033D760] 
+[LR	000005AE] [TMP1	00000002] [TMP2	00000190] [SR0	0063CBF0] [SR1	006AAA00] 
+[A0	00000018] [A1	006AAA00] [A2	0063CBF0] [A3	006676DC] [A4	0066788C] 
+[A5	00655E78] [A6	FFFFFFFFFFFFFFFF] [A7	000001E0] [SR2	0063CC18] [SR3	006507B0] 
+[SR4	00000001] [SR5	00000498] [SR6	00000093] [SR7	00704440] [SR8	00000150] 
+[SR9	00856910] [SR10	000000CC] [SR11	0000015C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000006A] [TMP6	00000358] 
+
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] call_now (res://stages/stage_base.gd:66)
+         [1] build_curvenet (res://stages/curvenet_stage.gd:55)
+         [2] _author (res://stages/pipeline.gd:354)
+         [3] _process (res://stages/pipeline.gd:183)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] call_now (res://stages/stage_base.gd:66)
+       [1] build_curvenet (res://stages/curvenet_stage.gd:55)
+       [2] _author (res://stages/pipeline.gd:354)
+       [3] _process (res://stages/pipeline.gd:183)
+Exception in Sandbox calling function: 
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] call_now (res://stages/stage_base.gd:66)
+         [1] build_curvenet (res://stages/curvenet_stage.gd:55)
+         [2] _author (res://stages/pipeline.gd:354)
+         [3] _process (res://stages/pipeline.gd:183)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] call_now (res://stages/stage_base.gd:66)
+       [1] build_curvenet (res://stages/curvenet_stage.gd:55)
+       [2] _author (res://stages/pipeline.gd:354)
+       [3] _process (res://stages/pipeline.gd:183)
+Exception in Sandbox at PC: 
+[@Sandbox@4] Exception when calling:
+  curvenet_knots() (0xe4148)
+Backtrace:
+-> [0] 0x00000000000E4F64 + 0x004: __wrap_malloc
+-> [1] 0x00000000001001A8 + 0x060: cn::curvenet_knots()
+-> [-] 0xe4148 + 0x0: curvenet_knots()
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE4F68] 00000073 ecall
+>>> Machine registers:
+[PC	e4f68] [RA	00100208] [SP	0063CD00] [GP	0032DB28] [TP	0033D760] 
+[LR	000005AE] [TMP1	00000002] [TMP2	00000190] [SR0	0063CDF0] [SR1	006AAA00] 
+[A0	00000004] [A1	006AAA00] [A2	0063CBF0] [A3	006676DC] [A4	0066788C] 
+[A5	00655E78] [A6	FFFFFFFFFFFFFFFF] [A7	000001E0] [SR2	0063CC18] [SR3	006507B0] 
+[SR4	00000001] [SR5	00000498] [SR6	00000093] [SR7	00704440] [SR8	00000150] 
+[SR9	00856910] [SR10	000000CC] [SR11	0000015C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000006A] [TMP6	00000358] 
+
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] call_now (res://stages/stage_base.gd:66)
+         [1] knots (res://stages/curvenet_stage.gd:61)
+         [2] _author (res://stages/pipeline.gd:355)
+         [3] _process (res://stages/pipeline.gd:183)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] call_now (res://stages/stage_base.gd:66)
+       [1] knots (res://stages/curvenet_stage.gd:61)
+       [2] _author (res://stages/pipeline.gd:355)
+       [3] _process (res://stages/pipeline.gd:183)
+Exception in Sandbox calling function: 
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] call_now (res://stages/stage_base.gd:66)
+         [1] knots (res://stages/curvenet_stage.gd:61)
+         [2] _author (res://stages/pipeline.gd:355)
+         [3] _process (res://stages/pipeline.gd:183)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] call_now (res://stages/stage_base.gd:66)
+       [1] knots (res://stages/curvenet_stage.gd:61)
+       [2] _author (res://stages/pipeline.gd:355)
+       [3] _process (res://stages/pipeline.gd:183)
+Exception in Sandbox at PC: 
+STATE AUTHOR            2500 ms  vm     465.4 ms  heap 2.2 MiB  frames 7  strokes 6 cycles -1 openings -1 patches 0 curves -1 knots -1 degrees []
+[@Sandbox@4] Exception when calling:
+  mesh_build(double, double) (0xe4198)
+Backtrace:
+-> [0] 0x00000000000E4F64 + 0x004: __wrap_malloc
+-> [1] 0x000000000028D71E + 0x014: gdl::Array::Array()
+-> [-] 0xe4198 + 0x0: mesh_build(double, double)
+
+Exception: Too many arena chunks  (data: fa0)
+>>> [0xE4F68] 00000073 ecall
+>>> Machine registers:
+[PC	e4f68] [RA	0028D732] [SP	0063CB80] [GP	0032DB28] [TP	0033D760] 
+[LR	000005AE] [TMP1	00000002] [TMP2	00000190] [SR0	0063CC00] [SR1	006508D0] 
+[A0	00000050] [A1	006508D0] [A2	00000001] [A3	FFFFFFFFFFFFFFFF] [A4	0066788C] 
+[A5	00655E78] [A6	FFFFFFFFFFFFFFFF] [A7	000001E0] [SR2	00000001] [SR3	006507B0] 
+[SR4	00000001] [SR5	00000498] [SR6	00000093] [SR7	00704440] [SR8	00000150] 
+[SR9	00856910] [SR10	000000CC] [SR11	0000015C] [TMP3	00000000] [TMP4	00000001] 
+[TMP5	0000006A] [TMP6	00000358] 
+
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] _worker (res://stages/stage_base.gd:85)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] _worker (res://stages/stage_base.gd:85)
+Exception in Sandbox calling function: 
+docker["container", "inspect", "-f", "{{.State.Running}}", "godot-cpp-compiler"]
+docker["pull", "ghcr.io/libriscv/cpp_compiler"]
+WARNING: Sandbox: Failed to pull the latest container image: ghcr.io/libriscv/cpp_compiler
+     at: ContainerStart (src/docker.cpp:79)
+     GDScript backtrace (most recent call first):
+         [0] _worker (res://stages/stage_base.gd:85)
+docker["run", "--name", "godot-cpp-compiler", "-dv", ".:/usr/src:z", "ghcr.io/libriscv/cpp_compiler"]
+[""]
+ERROR: Failed to start Docker container: godot-cpp-compiler
+   at: DockerContainerStart (src/cpp/script_cpp.h:69)
+   GDScript backtrace (most recent call first):
+       [0] _worker (res://stages/stage_base.gd:85)
+Exception in Sandbox at PC: 
+STATE MESH                22 ms  vm      10.3 ms  heap 2.2 MiB  frames 3  FAILED mesh_build: <null>
+=> FAILED MESH: mesh_build: <null>
+FIXTURE: infer,rig
+PASS pen_sync: PASS 32 files identical to vendor/xr-grid
+FAIL pipeline: FAILED MESH: mesh_build: <null>
+FAIL cycles: cycles=-1 (want 2)
+FAIL openings: openings=-1 (want 2: the waist and the hem)
+FAIL patches: patches=0 (want 2: the front and back panels)
+INFO curvenet: curves=-1 knots=-1 degrees=[] edges=-1 (4 knots of degree 3 have 6 edges)
+FAIL mesh: <null> v <null> f, <null> loops, <null> components
+PASS screenshot: v4-loop-results.png (1152x648)
+wall 8.0 s, frames 22
+RESULT: FAIL
+drape rd_close: CLOSED device=none permanent_slots=0
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

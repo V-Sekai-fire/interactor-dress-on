@@ -1,0 +1,8 @@
+# Build context allowlist for tools/runpod/loop/Dockerfile (BuildKit reads <Dockerfile>.dockerignore).
+*
+!project/
+!vendor/xr-grid/
+!tools/runpod/loop/handler.py
+project/.godot/
+project/fit.elf
+project/fit_*.elf

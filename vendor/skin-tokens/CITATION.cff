@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: If you use this code, cite SkinTokens / TokenRig and the org's ggml port it is vendored from.
+title: skin-tokens.cpp, the org's C++23/ggml port of SkinTokens / TokenRig (vendored)
+abstract: >-
+  git subtree (squashed) of V-Sekai-fire/skin-tokens-ggml at 097a0cc: the
+  C++23/ggml port of SkinTokens / TokenRig (automatic skeleton and skin
+  weight generation from a static mesh) that the dress-on loop's rig stage
+  replaces its FoxGirl rig fixture with (Cut 7). Local adaptations:
+  (1) ggml/ (the pinned upstream v0.20.2 copy, 2,133 files, 25 MB) and
+  patches/ggml/ (two Vulkan coopmat patches) are deleted: the infer ELF
+  carries one ggml, the org's (V-Sekai-fire/ggml; C:/contract-manifest
+  2-contract/ggml @04b55bba on the host until Cut 3 lands vendor/ggml), and
+  the Vulkan patches do not apply to ggml-cpu or to the RenderingDevice
+  backend. cmake/PrepareGGML.cmake and the upstream CMakeLists.txt are kept
+  untouched but unused; tests/native/infer/CMakeLists.txt lists the sources
+  against the shared ggml instead.
+  (2) nlohmann/json (src/glb.cpp only, host GLB I/O) resolves on the host
+  from the org's stable-diffusion-ggml thirdparty/json.hpp (3.11.2).
+  Later adaptations for the guest ELF (single thread, weights streamed via
+  host UPLOAD instead of file paths, ggml backend swapped to ggml-rd) are
+  recorded here as they land.
+type: software
+authors:
+  - name: V-Sekai-fire
+  - name: VAST-AI-Research contributors
+    website: https://github.com/VAST-AI-Research/SkinTokens
+  - name: The ggml authors
+    website: https://github.com/ggml-org/ggml
+repository-code: https://github.com/V-Sekai-fire/skin-tokens-ggml
+commit: 097a0cc469f49650cbf87e83914ad7d93ce94e50
+license: Apache-2.0
+references:
+  - type: software
+    title: SkinTokens / TokenRig
+    authors:
+      - name: VAST-AI-Research contributors
+    repository-code: https://github.com/VAST-AI-Research/SkinTokens
+    license: MIT

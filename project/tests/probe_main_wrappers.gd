@@ -144,9 +144,19 @@ func _process(_d: float) -> bool:
 		if _main.get(p) == null:
 			props.append(p)
 	_ok(props.is_empty(), "properties forwarded to the fit stage: %s, missing %s" % [", ".join(PROPS), str(props)])
+	# rd_probe needs a RenderingDevice. Headless (no GPU, as on CI) there is
+	# none, and the probe must say so rather than pass: expect its reason.
+	var local_rd := RenderingServer.create_local_rendering_device()
+	var has_rd := local_rd != null
+	if has_rd:
+		local_rd.free()
+	_say("rendering device: %s" % ("yes" if has_rd else "none (rd_probe must report create_local_rendering_device)"))
 	for c in CALLS:
 		var r := str(_main.call(c[0]))
-		_ok(c[1] == "" or r.find(c[1]) >= 0, "%s -> %s" % [c[0], r.substr(0, 300).replace("\n", " | ")])
+		var want: String = c[1]
+		if c[0] == "rd_probe" and not has_rd:
+			want = "FAIL at create_local_rendering_device"
+		_ok(want == "" or r.find(want) >= 0, "%s -> %s" % [c[0], r.substr(0, 300).replace("\n", " | ")])
 	_say("RESULT: %s" % ("PASS" if _fails == 0 else "FAIL (%d)" % _fails))
 	_out.close()
 	quit(0 if _fails == 0 else 1)

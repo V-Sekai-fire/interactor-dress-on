@@ -676,6 +676,23 @@ makes the Sandbox with `memory_max` 3600, the translation's defines include
 the arena size, so its hash differs from the 2048 MiB one baked here. A
 translation is per (ELF, memory_max): bake one per Sandbox configuration.
 
+**Gradients, smoke-tested (2026-09-24, `gate_ggml_rd.gd -- --mode=grad
+--ops=ADD,MUL,SCALE,SUM`, `grad-smoke/`):** test-backend-ops' grad mode
+builds each op's backward graph and checks backpropagation against finite
+differences on the same backend. On the CPU fallback: 100 cases OK, 0
+failed on ggml-rd's side (ADD 45, MUL 45, SUM 7, SCALE 3; the 170 not
+supported are f16 cases, which grad mode refuses on any backend). The run
+ended on two things that are ggml's, not ggml-rd's, and reproduce the same
+way on host ggml-cpu (`grad-smoke/host-ggml-cpu-grad-SCALE.log`):
+`SCALE(ne=[10,10,10,10], scale=2, bias=1)` misses the finite-difference
+limit (7.9e-4 here, 7.3e-4 on the host, limit 1e-4; the log names it SUM,
+the loss node), and the in-place SCALE case aborts in
+`ggml_build_backward_expand` ("inplace operations are currently not
+supported", ggml.c:7369), which stops the rest of the run. Correctness is
+the point here, not coverage: the backward kernels for MUL_MAT, RMS_NORM,
+ROPE, SOFT_MAX, CROSS_ENTROPY_LOSS and OPT_STEP_ADAMW (training's set) are
+still to be written.
+
 Two things the CPU path judges differently: the dropped-barrier control is
 not applicable (no barrier is placed, `drop_control n/a` in the SUMMARY),
 and the rd-vs-rd f16/f32 arm comparison is exactly 0 (the same emit reads

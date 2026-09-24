@@ -1,0 +1,25 @@
+Testing 1 devices
+
+Backend 1/1: CPU
+  Device description: Intel(R) Xeon(R) Processor @ 2.10GHz
+  Device memory: 16095 MB (16095 MB free)
+
+  SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=0.000000,inplace=0): [1;32mOK[0m
+  SUM(type=f32,ne=[10,10,10,10],scale=2.000000,bias=0.000000,inplace=0): [1;32mOK[0m
+  SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=0): [1;32mOK[0m
+  SUM(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=0): [SUM] MAA = 0.000732959 > 0.000100000 [1;31mFAIL[0m
+  SUM(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=0): compare failed [1;31mFAIL[0m
+  SCALE(type=f32,ne=[10,10,10,10],scale=2.000000,bias=1.000000,inplace=1): [1;32mOK[0m
+/home/user/interactor-dress-on/vendor/ggml/src/ggml.c:7369: GGML_ASSERT(!node->view_src || node->op == GGML_OP_CPY || node->op == GGML_OP_VIEW || node->op == GGML_OP_RESHAPE || node->op == GGML_OP_PERMUTE || node->op == GGML_OP_TRANSPOSE) failed
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007f53e0b10813 in __GI___wait4 (pid=32682, stat_loc=0x0, options=0, usage=0x0) at ../sysdeps/unix/sysv/linux/wait4.c:30
+warning: 30	../sysdeps/unix/sysv/linux/wait4.c: No such file or directory
+#0  0x00007f53e0b10813 in __GI___wait4 (pid=32682, stat_loc=0x0, options=0, usage=0x0) at ../sysdeps/unix/sysv/linux/wait4.c:30
+30	in ../sysdeps/unix/sysv/linux/wait4.c
+#1  0x000055dce2f09206 in ggml_print_backtrace ()
+#2  0x000055dce2f09459 in ggml_abort ()
+#3  0x000055dce2f1b20e in ggml_build_backward_expand ()
+#4  0x000055dce2db67ae in test_case::eval_grad(ggml_backend*, char const*, printer*) ()
+#5  0x000055dce2d0c610 in main ()
+[Inferior 1 (process 32633) detached]

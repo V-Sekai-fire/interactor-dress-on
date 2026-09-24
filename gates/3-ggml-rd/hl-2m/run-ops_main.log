@@ -1,0 +1,24 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: ggml-rd CPU fallback (the kernels' slangc cpp emits on guest memory)
+  Device memory: 24576 MB (24576 MB free)
+
+  ADD(type=f16,ne=[1,1,1920,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+ggml-rd cpu alloc: 15752704 bytes, 8937 us
+ggml-rd cpu set_tensor: 7864320 bytes, 1880 us
+ggml-rd cpu set_tensor: 7864320 bytes, 2217 us
+ggml-rd cpu get_tensor: 7864320 bytes, 2920 us
+ggml-rd cpu get_tensor: 7864320 bytes, 5954 us
+ggml-rd cpu kernel add_f32: groups 7680 x 1 x 1, 916340 us
+ggml-rd cpu graph: 1 dispatches, 917085 us (pack 38 us)
+ggml-rd cpu get_tensor: 7864320 bytes, 1111 us
+  ADD(type=f32,ne=[1,1,1920,1],nr=[32,32,1,1],nf=1,perm1=0,src_overlap=0): OK
+  1/1 tests passed
+  Backend RD0: OK
+2/2 backends passed
+OK
+ggml_test: test-backend-ops returned 0
+ggml_test: rd stats graphs=5 nodes=5 dispatches=1 skipped=4 barriers=0 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=0 set0_created=0 slots_created=0 coop_yields=1 waits=0 faults=0 params_bytes=0 set_bytes=15752704 get_bytes=23649792 copies=0 clears=0 buffers_live=0 bytes_live=0

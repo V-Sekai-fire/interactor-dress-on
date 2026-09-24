@@ -1,14 +1,18 @@
 // L2 cases for the data-movement family: CPY/DUP/CONT, GET_ROWS, CONCAT,
-// REPEAT (ops/cpy.cpp, get_rows.cpp, concat.cpp, repeat.cpp).
+// REPEAT and UPSCALE nearest (ops/cpy.cpp, get_rows.cpp, concat.cpp,
+// repeat.cpp, upscale.cpp).
 //
 // Shapes are test-backend-ops' (test_cpy, test_dup, test_cont, test_get_rows,
 // test_concat, test_repeat) plus the census's hottest ones and odd sizes:
 // every type pair among f32/f16/bf16, permuted sources and destinations
 // (16-bit destinations included: the word-ownership path), strided views,
 // reshaping copies, every concat dim with non-contiguous operands, and
-// repeats in each dimension. Same-type moves must be bit-exact (NMSE 0 in
-// test-backend-ops); conversions within test-backend-ops' 1e-6. The integer
-// conversions are ggml-cpu's rounding, so those are expected exact too.
+// repeats in each dimension, and nearest upscales (test_upscale's x2 with
+// and without a transposed source, test_interpolate's non-integer ratios up
+// and down, MotionBricks' x2 on ne0). Same-type moves must be bit-exact
+// (NMSE 0 in test-backend-ops); conversions within test-backend-ops' 1e-6.
+// The integer conversions are ggml-cpu's rounding, so those are expected
+// exact too.
 #include <array>
 #include <cstdio>
 #include <string>
@@ -133,6 +137,24 @@ void add_repeat(std::vector<L2Case> &out, ggml_type t, Ne ne, std::array<int, 4>
 		ggml_tensor *target = ggml_new_tensor_4d(ctx, t, ne[0] * nr[0], ne[1] * nr[1], ne[2] * nr[2], ne[3] * nr[3]);
 		ggml_tensor *src = ggml_new_tensor(ctx, t, 4, ne.data());
 		return ggml_repeat(ctx, src, target);
+	};
+	out.push_back(c);
+}
+
+// test_upscale / test_interpolate::build_graph, mode NEAREST: src ne, dst
+// ne_tgt; a transposed source (dims 0 and 1 swapped, then interpolated).
+void add_upscale(std::vector<L2Case> &out, Ne ne, Ne ne_tgt, bool transpose = false) {
+	L2Case c;
+	c.name = "UPSCALE nearest " + ne_str(ne) + (transpose ? " T" : "") + " -> " + ne_str(ne_tgt);
+	c.lo = -150.0f;
+	c.hi = 150.0f;
+	c.max_nmse = 0.0;
+	c.build = [=](ggml_context *ctx) {
+		ggml_tensor *a = ggml_new_tensor(ctx, GGML_TYPE_F32, 4, ne.data());
+		if (transpose) {
+			a = ggml_transpose(ctx, a);
+		}
+		return ggml_interpolate(ctx, a, ne_tgt[0], ne_tgt[1], ne_tgt[2], ne_tgt[3], GGML_SCALE_MODE_NEAREST);
 	};
 	out.push_back(c);
 }
@@ -270,4 +292,17 @@ L2_CASES(move) {
 	}
 	add_repeat(out, F32, { 128, 8, 1, 514 }, { 1, 1, 2, 1 });
 	add_repeat(out, F32, { 128, 1, 1, 1 }, { 1, 8, 514, 1 });
+
+	// UPSCALE nearest: test_upscale (x2, scaled down from [512,512,3,2]; and
+	// its transposed source), test_interpolate's ratios up and down,
+	// MotionBricks' x2 on ne0 (decoder.cpp:173, root.cpp:170), x3, a
+	// mixed up/down, and one dimension left alone.
+	add_upscale(out, { 64, 64, 3, 2 }, { 128, 128, 3, 2 });
+	add_upscale(out, { 64, 64, 3, 2 }, { 128, 128, 3, 2 }, true);
+	add_upscale(out, { 2, 5, 7, 11 }, { 5, 7, 11, 13 });
+	add_upscale(out, { 5, 7, 11, 13 }, { 2, 5, 7, 11 });
+	add_upscale(out, { 512, 9, 1, 1 }, { 1024, 9, 1, 1 });
+	add_upscale(out, { 9, 7, 5, 3 }, { 27, 21, 15, 9 });
+	add_upscale(out, { 10, 6, 4, 3 }, { 5, 12, 2, 6 });
+	add_upscale(out, { 16, 3, 2, 1 }, { 16, 3, 2, 1 });
 }

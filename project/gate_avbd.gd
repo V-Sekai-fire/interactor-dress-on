@@ -82,6 +82,8 @@ func _initialize() -> void:
 	_say("# Stage 2 gate, %s, Godot %s, %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string, RenderingServer.get_video_adapter_name()])
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+	if _sb != null: _sb.memory_max = 512 # the Windows addon's default, which the recorded runs used; Linux's is 32 MiB
 	if _sb == null:
 		_fail("Sandbox class not registered")
 		_finish()

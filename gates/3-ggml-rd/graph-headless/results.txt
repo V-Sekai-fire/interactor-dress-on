@@ -1,0 +1,28 @@
+# Gate 3 G3.graph + G3.cost, 2026-09-24T15:54:21, Godot 4.7.2-stable (official), Intel(R) Xeon(R) Processor @ 2.10GHz, headless: no RenderingDevice
+oracle: ggml_graph_oracle
+attach: no RD device: CPU fallback (the kernels' cpp emits on guest memory)
+execution_timeout=4000000 memory_max=3600
+runs selected: ["graph_qwen", "graph_kimodo_text", "graph_kimodo_denoiser", "graph_sconv"]
+== graph_qwen: STARTED probe graph
+== graph_qwen: done in 42.0 s, frames=271 pumps=271 vm_ms=41582.5 waits=0 coops=270 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   PROBE graph qwen rd_native nodes=76 dispatches=45 barriers=0 (barrier_all: 0) host_us(entry..submit)=6854084 frames=45 run_ms=6857.6 status=0/0/0
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=layer_out n=1792 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+   PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=0/0 detected nodes=76 dispatches=45 barriers=0/0 status=0/0/0/0 wall_s=42.0
+   RESULT: FAIL (graph qwen)
+   rd: graphs=6 nodes=456 dispatches=270 skipped=186 barriers=0 failed_graphs=0 last{nodes=76 dispatches=45 barriers=0 skipped=31} pipelines=0 set0_created=0 slots_created=0 coop_yields=270 waits=0 faults=0 params_bytes=0 set_bytes=82999304 get_bytes=184320 copies=0 clears=6 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=0 submits=0 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+   dump: DUMPED 11 files 54272 bytes to /tmp/claude-0/-home-user-interactor-dress-on/60421124-608b-55dd-9903-a710d8588085/scratchpad/graph-dumps/graph_qwen in 0.0 s
+   oracle: ggml_graph_oracle --graph=qwen --dump=/tmp/claude-0/-home-user-interactor-dress-on/60421124-608b-55dd-9903-a710d8588085/scratchpad/graph-dumps/graph_qwen --out=<checkout>/project/../gates/3-ggml-rd/graph-headless/oracle-graph_qwen.txt --ref=cpu --check=none
+== graph_qwen oracle: exited in 0.3 s
+   ORACLE graph=qwen ref=cpu check=none vk=precise dump=/tmp/claude-0/-home-user-interactor-dress-on/60421124-608b-55dd-9903-a710d8588085/scratchpad/graph-dumps/graph_qwen
+   ORACLE cpu_native status=0 nodes=76 ms=16.1
+   ORACLE cpu_native rerun status=0 ms=32.8 repeat=bit-identical
+   ORACLE cpu_f32 status=0 nodes=76 ms=18.4
+   ORACLE cpu_f32 rerun status=0 ms=51.6 repeat=bit-identical
+   ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=1792)
+   ORACLE qwen SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=7.508e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=1.665e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=1.665e-07 rel_l2(cpu_f16,cpu_f32)=7.508e-04 ref_ms=16/18 inputs=bit-identical wall_s=0.3
+   RESULT: PASS (oracle qwen)
+== graph_sconv: STARTED probe graph

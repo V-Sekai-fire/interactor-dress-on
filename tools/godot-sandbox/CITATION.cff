@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: If you use this patch, cite godot-sandbox.
+title: godot-sandbox (patches carried by this repository)
+abstract: >-
+  Changes this repository needs in V-Sekai-fire/godot-sandbox, kept here as
+  git format-patch files instead of commits pushed to the fork (AGENTS.md
+  rule 1). Each applies with `git am` to the commit named below.
+  0001-bintr-emit.patch: GODOT_SANDBOX_BINTR_EMIT=<dir> makes the Sandbox
+  write each loaded program's native translation as C99 in the shared-library
+  form the bintr-<HASH> cache loads (libriscv's result_shared_c99), so
+  tools/build.exs can bake project/bintr/. The Linux addon in
+  project/addons/godot_sandbox/bin is built from the base plus this patch
+  (its CITATION.cff has the sha256).
+authors:
+  - name: Alf-André Walla (fwsGonzo)
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/godot-sandbox
+commit: b1118e538222332bebeb695cd755c2f0b726b7f6
+license: BSD-3-Clause

@@ -7,6 +7,7 @@ import Ggml.SlangCodegen.Cpy
 import Ggml.SlangCodegen.GetRows
 import Ggml.SlangCodegen.Concat
 import Ggml.SlangCodegen.Repeat
+import Ggml.SlangCodegen.Upscale
 import Ggml.SlangCodegen.Norm
 import Ggml.SlangCodegen.SoftMax
 import Ggml.SlangCodegen.MulMatTiled
@@ -14,6 +15,20 @@ import Ggml.SlangCodegen.MulMatVec
 import Ggml.SlangCodegen.MulMatSerial
 import Ggml.SlangCodegen.Conv
 import Ggml.SlangCodegen.FlashAttn
+import Ggml.SlangCodegen.UnaryMath
+import Ggml.SlangCodegen.Reduce
+import Ggml.SlangCodegen.Pool
+import Ggml.SlangCodegen.Argsort
+import Ggml.SlangCodegen.Set
+import Ggml.SlangCodegen.ConvDw
+import Ggml.SlangCodegen.UnarySeeThrough
+import Ggml.SlangCodegen.Glu
+import Ggml.SlangCodegen.GroupNorm
+import Ggml.SlangCodegen.Pad
+import Ggml.SlangCodegen.Arange
+import Ggml.SlangCodegen.TimestepEmbedding
+import Ggml.SlangCodegen.Conv2d
+import Ggml.SlangCodegen.ConvTranspose2d
 
 /-!
 # `Ggml` — the ggml-rd op kernels (Lean → Slang → spirv | cpp)
@@ -36,12 +51,27 @@ def kernels : List (String × LeanSlang.SlangShaderModule) :=
   ++ Ggml.SlangCodegen.GetRows.kernels
   ++ Ggml.SlangCodegen.Concat.kernels
   ++ Ggml.SlangCodegen.Repeat.kernels
+  ++ Ggml.SlangCodegen.Upscale.kernels
   ++ Ggml.SlangCodegen.Norm.kernels
   ++ Ggml.SlangCodegen.SoftMax.kernels
   ++ Ggml.SlangCodegen.MulMatTiled.kernels ++ Ggml.SlangCodegen.MulMatVec.kernels
   ++ Ggml.SlangCodegen.MulMatSerial.kernels
   ++ Ggml.SlangCodegen.Conv.kernels
   ++ Ggml.SlangCodegen.FlashAttn.kernels
+  ++ Ggml.SlangCodegen.UnaryMath.kernels
+  ++ Ggml.SlangCodegen.Reduce.kernels
+  ++ Ggml.SlangCodegen.Pool.kernels
+  ++ Ggml.SlangCodegen.Argsort.kernels
+  ++ Ggml.SlangCodegen.Set.kernels
+  ++ Ggml.SlangCodegen.ConvDw.kernels
+  ++ Ggml.SlangCodegen.UnarySeeThrough.kernels
+  ++ Ggml.SlangCodegen.Glu.kernels
+  ++ Ggml.SlangCodegen.GroupNorm.kernels
+  ++ Ggml.SlangCodegen.Pad.kernels
+  ++ Ggml.SlangCodegen.Arange.kernels
+  ++ Ggml.SlangCodegen.TimestepEmbedding.kernels
+  ++ Ggml.SlangCodegen.Conv2d.kernels
+  ++ Ggml.SlangCodegen.ConvTranspose2d.kernels
 
 /-- Control kernels: deliberately off the fixed layout, for gates only
     (kernels/ggml/controls.txt). -/

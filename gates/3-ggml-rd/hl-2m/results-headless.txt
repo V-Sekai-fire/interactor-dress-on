@@ -1,0 +1,19 @@
+# Gate 3 G3.ops, 2026-09-24T16:05:04, Godot 4.7.2-stable (official), Intel(R) Xeon(R) Processor @ 2.10GHz, headless: no RenderingDevice
+attach: no RD device: CPU fallback (the kernels' cpp emits on guest memory)
+native translation: false (hash 63ab8527, lookup true)
+rule 10: ggml-cpu jobs capped at execution_timeout=214577 units per vmcall (~300 s), ggml-rd-only jobs at 1000000
+runs selected: ["ops_main"]
+   HEARTBEAT ops_main t=125 s frames=1 pumps=1 vm_ms=125928.3 waits=0 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0 | graphs=1 nodes=1 dispatches=0 skipped=0 barriers=0 failed_graphs=0 last{nodes=1 dispatches=1 barriers=0 skipped=0}
+== ops_main: done in 126.4 s, frames=2 pumps=2 vm_ms=126430.4 waits=0 coops=1 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   cases: OK=1 FAIL=0 not_supported=1 | 1/1 tests passed | Backend RD0: OK
+   ADD: OK=1 FAIL=0 not_supported=1
+   required cases not supported: 0
+   required patterns with no OK case: 0
+   rd: graphs=5 nodes=5 dispatches=1 skipped=4 barriers=0 failed_graphs=0 last{nodes=1 dispatches=0 barriers=0 skipped=1} pipelines=0 set0_created=0 slots_created=0 coop_yields=1 waits=0 faults=0 params_bytes=0 set_bytes=15752704 get_bytes=23649792 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=0 submits=0 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== verdicts
+PASS ops_main on the CPU fallback: test-backend-ops -o ADD -b RD0: OK=1 FAIL=0 not_supported=1 (Backend RD0: OK)
+PASS ops_main: no census-required case is not supported (0 are)
+FAIL control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case on the fallback: FAIL=0 OK=0 ()
+FAIL control: GGML_RD_FAULT=1 fails every DUP,CONT,GET_ROWS,CONCAT,REPEAT case but i32 on the fallback: FAIL=0 OK=0 ()
+wall_s=126.5
+RESULT: FAIL

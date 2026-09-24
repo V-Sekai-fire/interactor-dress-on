@@ -56,6 +56,12 @@ struct OpRegistrar {
 bool is_layout_only(ggml_op op);
 
 int kernel_index(const char *name); // -1 if no such kernel
+// Kernels that share group memory have serial siblings with a grid of their
+// own (FLASH_ATTN_EXT's `<k>_serial`). A packer picks the sibling when the
+// GGML_RD_SERIAL environment switch is set, or when the CPU fallback asks
+// for it (rd_cpu.cpp: the siblings are the ones with a cpp emit).
+void set_serial_kernels(bool on);
+bool serial_kernels();
 const KernelDesc &kernel_desc(int k);
 
 // A 1-D launch of `threads` threads of the kernel's thread-group size,

@@ -1,0 +1,54 @@
+From 709e9602c2e246f3fb8e9c0e79335359bcd2dec3 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 24 Sep 2026 15:57:35 +0000
+Subject: [PATCH] Sandbox: GODOT_SANDBOX_BINTR_EMIT=<dir> writes each program's
+ translation as standalone C99
+
+Why: the addon's binary translation only loads bintr-<HASH> objects from the
+cache; nothing in it writes the C the compiler needs, so a project could not
+bake translations ahead of time without a JIT build. With this environment
+variable set and the lookup enabled, the program load also emits
+<dir>/bintr-<hash>.c through libriscv's embeddable-code option, with every
+block in (the per-object limits are a JIT's, not a baked translation's).
+The hash is the one get_translation_hash() reports, so the compiled object
+named bintr-<HASH>.so lands in the cache the addon already reads.
+---
+ src/sandbox.cpp | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/src/sandbox.cpp b/src/sandbox.cpp
+index 7179b4f..af5da3f 100644
+--- a/src/sandbox.cpp
++++ b/src/sandbox.cpp
+@@ -1,4 +1,5 @@
+ #include "sandbox.h"
++#include <cstdlib>
+ 
+ #ifndef SAFEGDSCRIPT_DISABLED
+ #include "safegdscript/signature_info.h"
+@@ -1031,6 +1032,22 @@ bool Sandbox::load(const PackedByteArray *buffer, const std::vector<std::string>
+ 		}
+ #endif
+ 
++#ifdef RISCV_BINARY_TRANSLATION
++		// GODOT_SANDBOX_BINTR_EMIT=<dir>: besides looking the translation up,
++		// write it out as standalone C99, <dir>/bintr-<hash>.c, for a compiler
++		// to turn into the hash cache's bintr-<HASH>.so (the hash is the one
++		// get_translation_hash() reports; the file names it in lower-case hex).
++		// Every block goes in: the per-object limits are for a JIT deciding
++		// what is worth compiling now, not for a translation baked ahead of
++		// time. Only while the lookup is enabled, so a translated program is
++		// never emitted again.
++		if (const char *emit_dir = std::getenv("GODOT_SANDBOX_BINTR_EMIT"); emit_dir != nullptr && bintr_lookup) {
++			options->cross_compile.push_back(riscv::MachineTranslationEmbeddableCodeOptions{
++					.prefix = std::string(emit_dir) + "/bintr-", .suffix = ".c" });
++			options->translate_blocks_max = 1u << 24;
++			options->translate_instr_max = 1u << 30;
++		}
++#endif
+ 		this->m_machine = new machine_t{ binary_view, *options };
+ 		this->m_machine->set_options(std::move(options));
+ 	} catch (const std::exception &e) {
+-- 
+2.43.0
+

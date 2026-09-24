@@ -44,6 +44,8 @@
 # wall clock whatever it is doing.
 extends SceneTree
 
+const SandboxUtil := preload("res://stages/sandbox_util.gd")
+
 const InferHost := preload("res://infer_host.gd")
 const GraphDump := preload("res://graph_dump.gd")
 const WALL_S := 3600.0
@@ -121,6 +123,7 @@ func _initialize() -> void:
 	# The default headless runs are the two small graphs; the DiT block and
 	# the cost runs are GPU-sized (runs= still names any of them).
 	_headless = _rd == null
+	SandboxUtil.enable_native_translation()
 	_sb = ClassDB.instantiate("Sandbox")
 	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	# memory_max before program= (Gate 0F): the DiT block's RD runs keep

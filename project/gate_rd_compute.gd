@@ -18,6 +18,7 @@ func _bytes(path: String) -> PackedByteArray:
 func _init() -> void:
 	var rc := 0
 	var sb = ClassDB.instantiate("Sandbox")
+	if sb != null: sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if sb == null:
 		print("FAIL: Sandbox class not registered; is the addon enabled?")
 		quit(1)

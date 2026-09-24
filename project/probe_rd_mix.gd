@@ -46,6 +46,7 @@ func _init() -> void:
 	var acc := _bytes("res://accumulate.spv")
 	var rd := RenderingServer.create_local_rendering_device()
 	var sb = ClassDB.instantiate("Sandbox")
+	if sb != null: sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	sb.program = load("res://dress_on.elf")
 	sb.references_max = 4096
 	sb.vmcall("rd_open")

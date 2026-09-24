@@ -49,6 +49,7 @@ func _clean(t: String) -> String:
 
 func _sb(refs := 4096):
 	var sb = ClassDB.instantiate("Sandbox")
+	if sb != null: sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	sb.program = _elf
 	sb.references_max = refs
 	return sb
@@ -226,6 +227,7 @@ func _p05_timeout() -> bool:
 
 func _mem_arm(limit: int, mb: int, when := "before") -> String:
 	var sb = ClassDB.instantiate("Sandbox")
+	if sb != null: sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if when == "before":
 		sb.memory_max = limit
 	sb.program = _elf
@@ -241,11 +243,13 @@ func _p06_memory() -> bool:
 	if not _st.has("init"):
 		_st.init = true
 		var fresh = ClassDB.instantiate("Sandbox")
+		if fresh != null: fresh.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 		var def_before: int = fresh.memory_max
 		fresh.program = _elf
 		var def_after: int = fresh.memory_max
 		fresh.free()
 		var order = ClassDB.instantiate("Sandbox")
+		if order != null: order.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 		order.memory_max = 2048
 		order.program = _elf
 		var kept: int = order.memory_max
@@ -596,6 +600,7 @@ func _refs_run(sb, n: int, aliased := false) -> Array:
 
 func _refs_fresh(refs: int, timeout: int):
 	var f = ClassDB.instantiate("Sandbox")
+	if f != null: f.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	f.program = _elf
 	if refs > 0:
 		f.references_max = refs
@@ -666,6 +671,7 @@ func _p13_refs() -> bool:
 	for arm in [["default", -1, -1, -1], ["100 after", -1, 100, -1], ["4096 after", -1, 4096, -1],
 			["4096 before", 4096, -1, -1], ["65536 then 100", -1, 65536, -1], ["4096 then 100 live", -1, 4096, 100]]:
 		var f = ClassDB.instantiate("Sandbox")
+		if f != null: f.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 		if arm[1] > 0:
 			f.references_max = arm[1]
 		f.program = _elf

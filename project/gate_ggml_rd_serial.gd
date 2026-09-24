@@ -67,6 +67,7 @@ func _initialize() -> void:
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _headless else RenderingServer.get_video_adapter_name()])
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if _sb == null:
 		_verdict(false, "the Sandbox class is not registered")
 		_finish()

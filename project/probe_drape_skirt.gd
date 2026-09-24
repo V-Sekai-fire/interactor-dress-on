@@ -84,6 +84,7 @@ func _initialize() -> void:
 	_say("mesh %d v %d f, %d pins, %d capsules, body %d v %d f" % [_mesh.v.size() / 3, _mesh.f.size() / 3, _pins.size(),
 			_capsules.size(), _body_mesh.v.size() / 3, _body_mesh.f.size() / 3])
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	_sb.references_max = 65536
 	_sb.program = load("res://drape.elf")
 

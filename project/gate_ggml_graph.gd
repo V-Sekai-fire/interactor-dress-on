@@ -111,6 +111,7 @@ func _initialize() -> void:
 		_finish()
 		return
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	# memory_max before program= (Gate 0F): the DiT block's RD runs keep
 	# their outputs (block out + input, 25 MB each at 4096 tokens) for the
 	# barrier-all, repeat, drop and dump comparisons in the guest heap

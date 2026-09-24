@@ -33,6 +33,7 @@ func _initialize() -> void:
 			extra.append(a)
 	_args = " ".join(PackedStringArray(extra)) + (" stats=all" if _jobname == "sphere_forward" else "")
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	_sb.references_max = 65536
 	_sb.program = load("res://drape.elf")
 

@@ -1,0 +1,28 @@
+ORACLE graph=qwen ref=cpu check=none vk=precise dump=/tmp/claude-0/-home-user-interactor-dress-on/60421124-608b-55dd-9903-a710d8588085/scratchpad/graph-dumps/graph_qwen
+ORACLE cpu_native status=0 nodes=76 ms=16.1
+ORACLE cpu_native rerun status=0 ms=32.8 repeat=bit-identical
+ORACLE cpu_f32 status=0 nodes=76 ms=18.4
+ORACLE cpu_f32 rerun status=0 ms=51.6 repeat=bit-identical
+PROBE graph qwen cpu_f16_vs_cpu_f32_info output=layer_out n=1792 rel_l2=2.657e-04 rel_l2_of_branch=0.001353 finite=1
+PROBE graph qwen cpu_f16_vs_cpu_f32_info output=k_cache_row_beam0 n=1024 rel_l2=7.422e-04 finite=1
+PROBE graph qwen cpu_f16_vs_cpu_f32_info output=v_cache_row_beam0 n=1024 rel_l2=7.456e-04 finite=1
+PROBE graph qwen cpu_f16_vs_cpu_f32_info output=k_cache_row_beam1 n=1024 rel_l2=7.508e-04 finite=1
+PROBE graph qwen cpu_f16_vs_cpu_f32_info output=v_cache_row_beam1 n=1024 rel_l2=7.444e-04 finite=1
+ORACLE inputs: the dumped block input vs the oracle's: bit-identical (n=1792)
+PROBE graph qwen rd_f16_vs_cpu_f16 output=layer_out n=1792 rel_l2=2.657e-04 rel_l2_of_branch=0.001353 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f16 output=k_cache_row_beam0 n=1024 rel_l2=7.422e-04 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f16 output=v_cache_row_beam0 n=1024 rel_l2=7.456e-04 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f16 output=k_cache_row_beam1 n=1024 rel_l2=7.508e-04 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f16 output=v_cache_row_beam1 n=1024 rel_l2=7.444e-04 finite=1
+PROBE graph qwen rd_f32_vs_cpu_f32 output=layer_out n=1792 rel_l2=9.219e-08 rel_l2_of_branch=0.000000 finite=1
+PROBE graph qwen rd_f32_vs_cpu_f32 output=k_cache_row_beam0 n=1024 rel_l2=1.642e-07 finite=1
+PROBE graph qwen rd_f32_vs_cpu_f32 output=v_cache_row_beam0 n=1024 rel_l2=1.488e-07 finite=1
+PROBE graph qwen rd_f32_vs_cpu_f32 output=k_cache_row_beam1 n=1024 rel_l2=1.665e-07 finite=1
+PROBE graph qwen rd_f32_vs_cpu_f32 output=v_cache_row_beam1 n=1024 rel_l2=1.508e-07 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f32_info output=layer_out n=1792 rel_l2=9.219e-08 rel_l2_of_branch=0.000000 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f32_info output=k_cache_row_beam0 n=1024 rel_l2=1.642e-07 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f32_info output=v_cache_row_beam0 n=1024 rel_l2=1.488e-07 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f32_info output=k_cache_row_beam1 n=1024 rel_l2=1.665e-07 finite=1
+PROBE graph qwen rd_f16_vs_cpu_f32_info output=v_cache_row_beam1 n=1024 rel_l2=1.508e-07 finite=1
+ORACLE qwen SUMMARY ref=cpu(host) weights=f16 rel_l2(rd_f16,cpu_f16)=7.508e-04 (<=1e-3: yes) rel_l2(rd_f32,cpu_f32)=1.665e-07 (<=1e-4: yes) info rel_l2(rd_f16,cpu_f32)=1.665e-07 rel_l2(cpu_f16,cpu_f32)=7.508e-04 ref_ms=16/18 inputs=bit-identical wall_s=0.3
+RESULT: PASS (oracle qwen)

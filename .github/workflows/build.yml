@@ -134,6 +134,15 @@ jobs:
           # the wrapper probe requires rd_probe to PASS.
           "$GODOT" --path project --rendering-driver metal --xr-mode off --script tests/probe_main_wrappers.gd
           "$GODOT" --path project --rendering-driver metal --xr-mode off --script gate_ggml_rd.gd
+      - name: Skateboard (issue 5) - the wave, rendered 1920x1080 at 24 fps
+        if: always()
+        run: |
+          set -e
+          mkdir -p gates/skateboard
+          "$GODOT" --path project --rendering-driver metal --xr-mode off \
+            --write-movie ../gates/skateboard/wave.avi --fixed-fps 24 --resolution 1920x1080 \
+            --script skateboard.gd -- --out=res://../gates/skateboard/results.txt
+          ls -la gates/skateboard
       - name: Keep the gate results
         if: always()
         uses: actions/upload-artifact@v4
@@ -142,3 +151,4 @@ jobs:
           path: |
             gates/8-loop/wrappers.txt
             gates/3-ggml-rd/ops/
+            gates/skateboard/

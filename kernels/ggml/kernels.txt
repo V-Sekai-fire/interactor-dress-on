@@ -74,3 +74,16 @@ relu_f32
 leaky_relu_f32
 clamp_f32
 upscale_nearest_f32
+div_f32
+sqrt_f32
+gelu_quick_f32
+geglu_erf_f32
+group_norm_f32
+group_norm_f32_serial
+pad_f32
+arange_f32
+timestep_embedding_f32
+conv2d_f32
+conv2d_f16
+conv_transpose_2d_f32
+conv_transpose_2d_f16

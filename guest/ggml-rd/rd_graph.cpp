@@ -229,7 +229,19 @@ ggml_status graph_compute(ggml_cgraph *g) {
 			if (prof > 1) {
 				pf.per_dispatch[i].record_us = rdc::host_usec() - t_run0;
 			}
-			coop();
+			// Give the frame back once enough guest work has run since the last
+			// yield (~4M kernel threads), not after every dispatch: a COOP ends the
+			// host's frame, and test-backend-ops' grad mode runs tens of thousands
+			// of tiny graphs, which a yield per dispatch made frame-bound (86k
+			// frames for 113 s of guest work in 600 s).
+			static uint64_t since_yield = 0;
+			since_yield += uint64_t(dp.groups[0]) * dp.groups[1] * dp.groups[2] *
+					kernel_desc(dp.kernel).threadgroup[0] * kernel_desc(dp.kernel).threadgroup[1] *
+					kernel_desc(dp.kernel).threadgroup[2];
+			if (since_yield >= (uint64_t(1) << 22)) {
+				since_yield = 0;
+				coop();
+			}
 		}
 		pf.us_total = clock() - t_entry;
 		c.st.dispatches += int64_t(ds.size());

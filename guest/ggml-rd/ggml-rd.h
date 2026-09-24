@@ -1,8 +1,14 @@
 // ggml-rd -- a ggml backend whose only way to the GPU is Godot's
 // RenderingDevice, through guest/rd_compute (AGENTS.md).
 //
-//   registry "RD": one device, "RD0" (GPU), or none when no RenderingDevice
-//                  was attached (headless);
+//   registry "RD": one device, "RD0": the GPU, or, when no RenderingDevice
+//                  was attached (headless), the CPU fallback: the same
+//                  packers, the same params words, and the kernels' slangc
+//                  cpp emits (kernels/ggml/cpp, the second target of every
+//                  Lean kernel, AGENTS.md rule 2) run on guest memory, one
+//                  dispatch after another (guest/ggml-rd/rd_cpu.cpp).
+//                  GGML_RD_CPU_FALLBACK=0 before the registry is read turns
+//                  the fallback off: then there is no device;
 //   buffer type:   one ggml buffer = one RD storage buffer, created empty and
 //                  cleared on the GPU; the tensor addresses ggml sees are a
 //                  fake base per buffer (0x1000 + (index << 40)) plus the
@@ -59,6 +65,10 @@ struct ggml_rd_hooks {
 	// done. Only ggml_backend_rd_tensor_upload calls it, with the device idle.
 	bool (*upload)(void *user, const std::string &path, uint64_t file_offset, uint64_t bytes, ::RID rid,
 			uint64_t dst_offset) = nullptr;
+	// The CPU fallback's counterpart: copy `bytes` at `file_offset` of the
+	// host file `path` to `dst` in guest memory (a fiber yields READ). Only
+	// ggml_backend_rd_tensor_upload calls it, for a tensor in a CPU buffer.
+	bool (*read)(void *user, const std::string &path, uint64_t file_offset, uint64_t bytes, void *dst) = nullptr;
 	void *user = nullptr;
 };
 

@@ -64,7 +64,7 @@ extern "C" void ggml_guest_register_backends(void) {
 		ggml_backend_register(ggml_backend_rd_reg());
 	}
 	if (ggml_backend_reg_dev_count(ggml_backend_rd_reg()) == 0) {
-		std::printf("ggml-rd: no RD device (no RenderingDevice was attached; headless?)\n");
+		std::printf("ggml-rd: no RD device (no RenderingDevice was attached; headless, and the CPU fallback is off)\n");
 	}
 }
 
@@ -110,6 +110,22 @@ static void hook_coop(void *) {
 static bool hook_upload(void *, const std::string &path, uint64_t file_offset, uint64_t bytes, ::RID rid,
 		uint64_t dst_offset) {
 	return pump::upload(path, file_offset, bytes, rid, dst_offset);
+}
+
+// The CPU fallback's weights: the host reads the file, the bytes land in the
+// guest heap. pump::read hands back a copy, so it goes in 16 MiB pieces.
+static bool hook_read(void *, const std::string &path, uint64_t file_offset, uint64_t bytes, void *dst) {
+	const uint64_t chunk = uint64_t(16) << 20;
+	for (uint64_t done = 0; done < bytes;) {
+		const uint64_t n = std::min(bytes - done, chunk);
+		std::vector<uint8_t> v = pump::read(path, file_offset + done, n);
+		if (v.size() != n) {
+			return false;
+		}
+		std::memcpy(static_cast<uint8_t *>(dst) + done, v.data(), size_t(n));
+		done += n;
+	}
+	return true;
 }
 
 static void on_ggml_abort(const char *message) {
@@ -160,7 +176,7 @@ static std::vector<std::string> split_ws(const std::string &s) {
 
 // "K=V K2=V2": set for this job; the GGML_RD_* switches not named are unset.
 static void apply_env(const std::string &env) {
-	for (const char *k : { "GGML_RD_FAULT", "GGML_RD_BARRIER_ALL", "GGML_RD_MAX_BUFFER_MB", "GGML_RD_TIMESTAMPS", "GGML_RD_ROW_THREADS", "GGML_RD_SERIAL" }) {
+	for (const char *k : { "GGML_RD_FAULT", "GGML_RD_BARRIER_ALL", "GGML_RD_MAX_BUFFER_MB", "GGML_RD_TIMESTAMPS", "GGML_RD_ROW_THREADS", "GGML_RD_SERIAL", "GGML_RD_CPU_FALLBACK" }) {
 		unsetenv(k);
 	}
 	for (const std::string &kv : split_ws(env)) {
@@ -190,10 +206,13 @@ static Variant ggml_attach(Object rd, int64_t total_mb) {
 	h.wait_gpu = hook_wait_gpu;
 	h.coop = hook_coop;
 	h.upload = hook_upload;
+	h.read = hook_read;
 	ggml_backend_rd_set_hooks(h);
 	ggml_set_abort_callback(on_ggml_abort);
 	if (g_attached) {
 		r = "attached device=" + g_dev.device_name() + " total_mb=" + std::to_string(total_mb);
+	} else if (ggml_backend_reg_dev_count(ggml_backend_rd_reg()) > 0) {
+		r = "no RD device: CPU fallback (the kernels' cpp emits on guest memory)";
 	} else {
 		r = "no RD device";
 	}

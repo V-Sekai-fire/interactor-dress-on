@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astra workflow (issue 5)</title>
+<link href="bue-render/render.css" rel="stylesheet">
+<style>html,body{margin:0;background:#1a1c1f}.hidden{display:none}</style>
+</head>
+<body>
+<div class="playground"></div>
+<textarea class="hidden" id="pastebin_data">Begin Object Class=/Script/BlueprintGraph.K2Node_CustomEvent Name=&quot;K2Node_CustomEvent_0&quot;
+   CustomFunctionName=&quot;Astra workflow (issue 5)&quot;
+   NodePosX=0
+   NodePosY=0
+   NodeGuid=939AF51D2CF85A60B73FBF65318C2CB0
+   CustomProperties Pin (PinId=42C5B85986785CC69A93F86695A61968,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_0 80A4CA2F72685E60B158CA89FED7EAE7,))
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_0&quot;
+   FunctionReference=(MemberName=&quot;Reference image&quot;)
+   NodePosX=520
+   NodePosY=0
+   NodeGuid=01499A3375D357E8BDF1D10798AD7A5D
+   CustomProperties Pin (PinId=80A4CA2F72685E60B158CA89FED7EAE7,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CustomEvent_0 42C5B85986785CC69A93F86695A61968,))
+   CustomProperties Pin (PinId=866D079B4B8F5D4BAB9355E382250AAE,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_1 76DCEAE3C6A75DD8B5F046177F00E9F9,))
+   CustomProperties Pin (PinId=A8A22F4532F65E76A3AF6B6BFAE5CD40,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;a front-facing T-pose image&quot;)
+   CustomProperties Pin (PinId=F59E5976D85C5CF1896BE08E85E2F982,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;several views of the character, for Pixal3D&#x27;s multi-view model&quot;)
+   CustomProperties Pin (PinId=EED6EDE2A7325736860E38AEF699B9F2,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;ready&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_1&quot;
+   FunctionReference=(MemberName=&quot;Split the reference into body, head and hair&quot;)
+   NodePosX=1186
+   NodePosY=0
+   NodeGuid=37167833675454D382D7448792EC967A
+   CustomProperties Pin (PinId=76DCEAE3C6A75DD8B5F046177F00E9F9,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_0 866D079B4B8F5D4BAB9355E382250AAE,))
+   CustomProperties Pin (PinId=58F03CD240BD538589424A3F225DA655,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_2 194E86C618E8543BA5828D29A488607A,))
+   CustomProperties Pin (PinId=9E213E3BACBB57189E8B74B3C900F181,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;an image-editing pass per part&quot;)
+   CustomProperties Pin (PinId=75076E68CB595E5385A6B330DBB70DC4,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;an instruction-following generative model, as a guest ELF on ggml-rd, applied to each view; MaskScore / EditScore score each edit&quot;)
+   CustomProperties Pin (PinId=4908FCDF5E805BCC85F66076B95E0FD6,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;decided; deferred to a later session&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_2&quot;
+   FunctionReference=(MemberName=&quot;Body, head and hair as separate 3D parts&quot;)
+   NodePosX=2274
+   NodePosY=0
+   NodeGuid=722CE948439E5A59BF1C78BE9F88CBAA
+   CustomProperties Pin (PinId=194E86C618E8543BA5828D29A488607A,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_1 58F03CD240BD538589424A3F225DA655,))
+   CustomProperties Pin (PinId=1B358FDCF9EB54759E2DAFCFD1DA6C5A,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_3 AF0F0F76C2125E8EABA6C3E7555D0FC2,))
+   CustomProperties Pin (PinId=12C09FAA415256369A2577AE65602A59,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Tripo image-to-3D, run once per edited reference&quot;)
+   CustomProperties Pin (PinId=12B4D518C9C75DDB9858B56A43D65FB6,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Pixal3D image-to-textured-mesh service, multi-view only (its _mv checkpoints), returning OpenUSD (Stage 7)&quot;)
+   CustomProperties Pin (PinId=47993F8B1975580B85240E5EB01F3790,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;in progress: op lists and tensor schemas in gates/7-pixal3d, no gate result yet; Gate 8 runs INFER from a fixture; the USD import passed Gate 0G&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_3&quot;
+   FunctionReference=(MemberName=&quot;Assistant drives the editor&quot;)
+   NodePosX=520
+   NodePosY=420
+   NodeGuid=DE8C97ABDB115F67B5DC64B46BE542B7
+   CustomProperties Pin (PinId=AF0F0F76C2125E8EABA6C3E7555D0FC2,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_2 1B358FDCF9EB54759E2DAFCFD1DA6C5A,))
+   CustomProperties Pin (PinId=F0F6A4EC87A65E0994F382F15A25BDF1,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_4 8EDF2BA13B4951FAB1F6D7F895839C58,))
+   CustomProperties Pin (PinId=DB7C9A5D813B5A7D81A2F8E3488C9295,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Blender MCP&quot;)
+   CustomProperties Pin (PinId=B8FB16D454CB5052BCCDCF39A87CEB92,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;transport-godot-mcp (un-archived 2026-09-24): every guest entry point callable over MCP&quot;)
+   CustomProperties Pin (PinId=9DC15C0C8CF75C94A96B16A4F4B40CBD,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;done: Gate 0E PASS, Gate 8&#x27;s MCP drive ends DONE&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_4&quot;
+   FunctionReference=(MemberName=&quot;Assemble head and hair onto the body&quot;)
+   NodePosX=1343
+   NodePosY=420
+   NodeGuid=21EF1FF6BB9C5E339E450CC23A4AE94C
+   CustomProperties Pin (PinId=8EDF2BA13B4951FAB1F6D7F895839C58,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_3 F0F6A4EC87A65E0994F382F15A25BDF1,))
+   CustomProperties Pin (PinId=4E655065CA7F5A19A8F6F9918048B7D5,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_5 00716CF4B2B25AC1BA81BE69C9CA75BD,))
+   CustomProperties Pin (PinId=7CE94CBC0C555E61B52F43C63A840C5E,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;the assistant aligns and closes gaps&quot;)
+   CustomProperties Pin (PinId=844530D6DA5D54A9BDEC3FAC78EA7F55,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;curvenet, the fit (PolyFEM and AVBD), the intersection check, the similarity fit&quot;)
+   CustomProperties Pin (PinId=63D73FC9454857A3B0498B129A3949FD,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;done for garments (Gate 8 PASS on FoxGirl: fit 1393 s, OK none, 100 drape steps on rd); not yet tried on hair or a head&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_5&quot;
+   FunctionReference=(MemberName=&quot;Body model&quot;)
+   NodePosX=2324
+   NodePosY=420
+   NodeGuid=6B7705C03D7E5C858B6FA14BF125FD61
+   CustomProperties Pin (PinId=00716CF4B2B25AC1BA81BE69C9CA75BD,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_4 4E655065CA7F5A19A8F6F9918048B7D5,))
+   CustomProperties Pin (PinId=3F2952E379155CBB80A981455306ECED,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_6 9063BB86BB15513183D20D6FEC64B05B,))
+   CustomProperties Pin (PinId=3F532DEDCEF455308184F4A328B20D6F,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;the image-to-3D body&quot;)
+   CustomProperties Pin (PinId=D4B9FC2CAB57523DA7313FA8713CD507,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;ANNY forward and backward kernels in Lean, gradients within 1.7e-6 of finite differences (#4)&quot;)
+   CustomProperties Pin (PinId=E010FDDBFC1C5FF0B946EB5EA108C666,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;kernels only; anny.elf on real ANNY data against AnnyInverter&#x27;s 2.458 / 2.281 mm is deferred&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_6&quot;
+   FunctionReference=(MemberName=&quot;Rig and skin&quot;)
+   NodePosX=520
+   NodePosY=840
+   NodeGuid=C24B1806E30958B8971EF9313CA3D68F
+   CustomProperties Pin (PinId=9063BB86BB15513183D20D6FEC64B05B,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_5 3F2952E379155CBB80A981455306ECED,))
+   CustomProperties Pin (PinId=209E8E137A94593B95A389F22A0E5123,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_7 BFAABF0C7FF65354A125E87BB167F19C,))
+   CustomProperties Pin (PinId=3B49BB30E3665C408BC9417F93A99C3D,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Tripo&#x27;s auto-rigged GLB, then weight fixes&quot;)
+   CustomProperties Pin (PinId=A2DC5478B3DF51EA9B2D33FB572509F3,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;SkinTokens/TokenRig on ggml-rd (Stage 4b), mapped onto our 15-joint skeleton&quot;)
+   CustomProperties Pin (PinId=FBEB46AD51115727935828A6278D93F4,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;the decode step&#x27;s matmuls pass Gate 3&#x27;s L2 test (9.2 ms GPU per step); the full stage is not started, and Gate 8 takes the rig from a fixture&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_7&quot;
+   FunctionReference=(MemberName=&quot;Materials&quot;)
+   NodePosX=1639
+   NodePosY=840
+   NodeGuid=EAE8F4174027519B9611A5EE5871E634
+   CustomProperties Pin (PinId=BFAABF0C7FF65354A125E87BB167F19C,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_6 209E8E137A94593B95A389F22A0E5123,))
+   CustomProperties Pin (PinId=01A1EB927EDA5603851DBDA2D5EB4AF9,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_8 51FFCA75D34B53E18D8A9A9A772877B3,))
+   CustomProperties Pin (PinId=A7D065092EE2554694F31DC5628771C4,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;fix up the imported maps&quot;)
+   CustomProperties Pin (PinId=C76D1D8498A2564C83A8770B5CF73966,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;USD&#x27;s preview-surface material into Godot&quot;)
+   CustomProperties Pin (PinId=2D987E7087415273B11592BC713E0411,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;small&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_8&quot;
+   FunctionReference=(MemberName=&quot;7a. Animation from existing motion&quot;)
+   NodePosX=2173
+   NodePosY=840
+   NodeGuid=6DA844AC37C458918E37159D793553C8
+   CustomProperties Pin (PinId=51FFCA75D34B53E18D8A9A9A772877B3,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_7 01A1EB927EDA5603851DBDA2D5EB4AF9,))
+   CustomProperties Pin (PinId=CEEDC53BB398542A8D21096F6966FF3F,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_9 1919CE2874965DDEAB0173C891E41E69,))
+   CustomProperties Pin (PinId=876A15B3FD4B539E8E05332EBD920E68,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;import a dance&quot;)
+   CustomProperties Pin (PinId=4B3CD69DEAD453DDB563D82BEFC56EED,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Kimodo text-to-motion or MotionBricks, both on ggml-rd&quot;)
+   CustomProperties Pin (PinId=60C966D1E1F65633B0A9B046A271E9F2,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;MotionBricks&#x27; ops are all in ggml-rd&#x27;s 105 kernels; Kimodo&#x27;s denoiser and text layer are oracle graphs with no gate log yet&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_9&quot;
+   FunctionReference=(MemberName=&quot;7b. Keyframed greeting&quot;)
+   NodePosX=520
+   NodePosY=1260
+   NodeGuid=128E885606C25667B043EF76D2556798
+   CustomProperties Pin (PinId=1919CE2874965DDEAB0173C891E41E69,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_8 CEEDC53BB398542A8D21096F6966FF3F,))
+   CustomProperties Pin (PinId=8AFF4E85FED155CA8C269576154325D2,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_10 053C3EB25DCB55CA921DD713BE149302,))
+   CustomProperties Pin (PinId=F7F7F589D544566A91B3A6E57C539DFF,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;the assistant keys a 3-second wave&quot;)
+   CustomProperties Pin (PinId=724A62096E775D89A7FB13A59DE81A32,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;the same thing over Godot MCP&quot;)
+   CustomProperties Pin (PinId=D096E763BE685AD3BB71BD015D718668,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;ready&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_10&quot;
+   FunctionReference=(MemberName=&quot;Secondary motion&quot;)
+   NodePosX=1016
+   NodePosY=1260
+   NodeGuid=F005EB0CB5245FCEB5DD5B3AB269BE2B
+   CustomProperties Pin (PinId=053C3EB25DCB55CA921DD713BE149302,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_9 8AFF4E85FED155CA8C269576154325D2,))
+   CustomProperties Pin (PinId=3C349BDDF76D580D99CA2FDB639356CB,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_11 3DB5E5D363845FA983BB94666E978823,))
+   CustomProperties Pin (PinId=E91E4DEFA90956E590551FA4B4A51B0A,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;keyed hair&quot;)
+   CustomProperties Pin (PinId=12188F7FA1F651D3BC74132C5A92B2FB,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;the AVBD drape: cloth now, hair as the same solver&quot;)
+   CustomProperties Pin (PinId=1280C413A1E0549292BDD46C2EF89B3B,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Gate 5: G10 and six others pass. G2 is next: x and g in df32, judged on optimality, LBFGSpp as the control. G9 is next: calibrate cpu vs rd at open. G5 is deferred: qf32 AVBD state. Hair not tried&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_11&quot;
+   FunctionReference=(MemberName=&quot;Facial expressions&quot;)
+   NodePosX=2482
+   NodePosY=1260
+   NodeGuid=B49577B726C45437B283EC3C6AF609D2
+   CustomProperties Pin (PinId=3DB5E5D363845FA983BB94666E978823,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_10 3C349BDDF76D580D99CA2FDB639356CB,))
+   CustomProperties Pin (PinId=56CC9C729CEE5E9DACFF83AE04CF4EA3,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_12 7F12ED8FA8B2519298F0CB177DB92C21,))
+   CustomProperties Pin (PinId=A79A6B45F766530AA9B05C4216C5BCF3,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;continuous face controls&quot;)
+   CustomProperties Pin (PinId=447806F057355044A4F41FA870557A46,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;ANNY/MakeHuman expression targets through the ANNY blend kernels (#4)&quot;)
+   CustomProperties Pin (PinId=CD0760D9DD1B5B839F69CD369B2963DD,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;decided; deferred&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_12&quot;
+   FunctionReference=(MemberName=&quot;Render at 1920 × 1080, 24 fps&quot;)
+   NodePosX=520
+   NodePosY=1680
+   NodeGuid=0DF201B46D775283B72CDE8D3D3DE4F5
+   CustomProperties Pin (PinId=7F12ED8FA8B2519298F0CB177DB92C21,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_11 56CC9C729CEE5E9DACFF83AE04CF4EA3,))
+   CustomProperties Pin (PinId=E9CF862942535314AD0AF40C42D52C24,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_13 7C5FD2FC4E955E6DA88F54EBA3D09D82,))
+   CustomProperties Pin (PinId=90830A7FF73F5EEEA49B8F6ECAE30ECC,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Blender&quot;)
+   CustomProperties Pin (PinId=3782859BA86452338D283680AC7770EE,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Godot with the vendored CineForm MovieWriter&quot;)
+   CustomProperties Pin (PinId=577F1D59DDDD5AB681D174CCC20CC672,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;ready&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_13&quot;
+   FunctionReference=(MemberName=&quot;CI&quot;)
+   NodePosX=1072
+   NodePosY=1680
+   NodeGuid=15A149C753EA59B182B254540737543B
+   CustomProperties Pin (PinId=7C5FD2FC4E955E6DA88F54EBA3D09D82,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_12 E9CF862942535314AD0AF40C42D52C24,))
+   CustomProperties Pin (PinId=129073E291DD5EB1961E21AEBC2332E6,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_14 0C7E5F72331E53F0B187A283C4B53628,))
+   CustomProperties Pin (PinId=998DB98441FC5442B1CC2D28046D446F,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;—&quot;)
+   CustomProperties Pin (PinId=F9D2F07976CF5159A3783095CC153D89,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;Linux build and headless gates; GPU gates on the macOS runner&#x27;s Metal device (#6)&quot;)
+   CustomProperties Pin (PinId=BE0074C348E451E185C19D8B705C7A18,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;main red on the no-GPU rd_probe check; the fix is in #6, #4 and #3, awaiting their runs&quot;)
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name=&quot;K2Node_CallFunction_14&quot;
+   FunctionReference=(MemberName=&quot;Org rules&quot;)
+   NodePosX=1858
+   NodePosY=1680
+   NodeGuid=0EDAB320F2495CEAAB70D51B8121A973
+   CustomProperties Pin (PinId=0C7E5F72331E53F0B187A283C4B53628,PinName=&quot;execute&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;exec&quot;,LinkedTo=(K2Node_CallFunction_13 129073E291DD5EB1961E21AEBC2332E6,))
+   CustomProperties Pin (PinId=92F738DA732B56A2AD63AFE708FD1102,PinName=&quot;then&quot;,Direction=&quot;EGPD_Output&quot;,PinType.PinCategory=&quot;exec&quot;)
+   CustomProperties Pin (PinId=94A019DA5AF7500596E5FDC0A3F515BE,PinName=&quot;What they use&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;—&quot;)
+   CustomProperties Pin (PinId=1CD35B602AE65253844C6C899856CF4D,PinName=&quot;What we have&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;RunPod mentions, CPU-execution exemption, pixi root, no C++ auto or env-var config, manifest placement at 3-interactor/dress-on&quot;)
+   CustomProperties Pin (PinId=4782093698DE5F7B958EE2D8D694081A,PinName=&quot;State&quot;,Direction=&quot;EGPD_Input&quot;,PinType.PinCategory=&quot;string&quot;,DefaultValue=&quot;deferred&quot;)
+End Object
+</textarea>
+<script src="bue-render/render.js"></script>
+<script>
+new window.blueprintUE.render.Main(
+  document.getElementById('pastebin_data').value,
+  document.getElementsByClassName('playground')[0],
+  {height: window.innerHeight + 'px'}
+).start();
+</script>
+</body>
+</html>

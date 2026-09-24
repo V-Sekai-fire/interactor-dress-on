@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: If you use this renderer, cite blueprintUE.
+title: blueprintUE render (render.js, render.css), vendored
+abstract: >-
+  bue-render/render.js and bue-render/render.css are blueprintUE's blueprint
+  renderer, copied unmodified from V-Sekai-fire/blueprint-self-hosted
+  (www/bue-render) at the commit below; the same files
+  goderyu/obsidian-blueprint-renderer wraps as an Obsidian plugin. Local
+  adaptations: none to the vendored files. gen_blueprint.py (ours) turns a
+  markdown step table, such as issue 5's, into blueprint clipboard text, one
+  node per row with its exec pins chained in table order, and writes a page
+  that renders it the way blueprintUE's render page does.
+authors:
+  - name: blueprintUE contributors
+repository-code: https://github.com/V-Sekai-fire/blueprint-self-hosted
+commit: a678b80cc54e01fbaeedb17bb44d3cc2558cd7b4
+license: MIT

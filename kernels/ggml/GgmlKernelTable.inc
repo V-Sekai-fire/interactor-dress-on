@@ -87,6 +87,19 @@ static const KernelDesc kKernels[] = {
 	{ "leaky_relu_f32", { 256, 1, 1 } },
 	{ "clamp_f32", { 256, 1, 1 } },
 	{ "upscale_nearest_f32", { 256, 1, 1 } },
+	{ "div_f32", { 256, 1, 1 } },
+	{ "sqrt_f32", { 256, 1, 1 } },
+	{ "gelu_quick_f32", { 256, 1, 1 } },
+	{ "geglu_erf_f32", { 256, 1, 1 } },
+	{ "group_norm_f32", { 256, 1, 1 } },
+	{ "group_norm_f32_serial", { 1, 1, 1 } },
+	{ "pad_f32", { 256, 1, 1 } },
+	{ "arange_f32", { 256, 1, 1 } },
+	{ "timestep_embedding_f32", { 256, 1, 1 } },
+	{ "conv2d_f32", { 256, 1, 1 } },
+	{ "conv2d_f16", { 256, 1, 1 } },
+	{ "conv_transpose_2d_f32", { 256, 1, 1 } },
+	{ "conv_transpose_2d_f16", { 256, 1, 1 } },
 };
 static const uint32_t kKernelCount = sizeof(kKernels) / sizeof(kKernels[0]);
 

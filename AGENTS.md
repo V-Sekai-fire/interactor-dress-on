@@ -35,6 +35,11 @@ state fails loudly, never a silent fixture.
    `interactor-mujoco-sandbox-demo`, `skin-tokens-ggml`; for `lean/`:
    `contract-lean-slang`, `plausible`, `plausible-witness-dag`). If only a `V-Sekai/`
    or upstream copy exists, ask before forking it in. Push only to org remotes.
+   **Push only this repository.** A change another org repo needs is carried
+   here as a `git format-patch` file under `tools/<repo>/`, with a
+   CITATION.cff naming the base commit it applies to (`git am`), and any
+   binary built from it names the patch (e.g. `tools/godot-sandbox/`, the
+   Linux addon). (User, 2026-09-24.)
 2. **One source, two targets: Lean → Slang → `cpp` | `spirv`.** Kernels are
    generated from `lean/` (a squashed git subtree of cloth-dynamics' `lean/`,
    cited in `lean/CITATION.cff`) by `lake exe emit_shaders`

@@ -21,6 +21,14 @@ import Ggml.SlangCodegen.Pool
 import Ggml.SlangCodegen.Argsort
 import Ggml.SlangCodegen.Set
 import Ggml.SlangCodegen.ConvDw
+import Ggml.SlangCodegen.UnarySeeThrough
+import Ggml.SlangCodegen.Glu
+import Ggml.SlangCodegen.GroupNorm
+import Ggml.SlangCodegen.Pad
+import Ggml.SlangCodegen.Arange
+import Ggml.SlangCodegen.TimestepEmbedding
+import Ggml.SlangCodegen.Conv2d
+import Ggml.SlangCodegen.ConvTranspose2d
 
 /-!
 # `Ggml` — the ggml-rd op kernels (Lean → Slang → spirv | cpp)
@@ -56,6 +64,14 @@ def kernels : List (String × LeanSlang.SlangShaderModule) :=
   ++ Ggml.SlangCodegen.Argsort.kernels
   ++ Ggml.SlangCodegen.Set.kernels
   ++ Ggml.SlangCodegen.ConvDw.kernels
+  ++ Ggml.SlangCodegen.UnarySeeThrough.kernels
+  ++ Ggml.SlangCodegen.Glu.kernels
+  ++ Ggml.SlangCodegen.GroupNorm.kernels
+  ++ Ggml.SlangCodegen.Pad.kernels
+  ++ Ggml.SlangCodegen.Arange.kernels
+  ++ Ggml.SlangCodegen.TimestepEmbedding.kernels
+  ++ Ggml.SlangCodegen.Conv2d.kernels
+  ++ Ggml.SlangCodegen.ConvTranspose2d.kernels
 
 /-- Control kernels: deliberately off the fixed layout, for gates only
     (kernels/ggml/controls.txt). -/

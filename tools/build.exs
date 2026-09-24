@@ -137,19 +137,15 @@ defmodule Build do
     if sources == [], do: fail("the addon wrote no translation (does it carry the emit patch?)")
     cc = System.get_env("CC") || "cc"
     for src <- sources do
-      # The first line of the emitted file names the flags it was translated with.
-      flags = src |> File.stream!() |> Enum.take(1) |> hd() |> defines_in_comment()
+      # The emitted file carries its own #defines (the flags it was translated
+      # with, the host arch); the compile line is libriscv's own.
       hash = src |> Path.basename(".c") |> String.replace_prefix("bintr-", "") |> String.upcase()
       so = Path.join(out, "bintr-#{hash}.so")
       run(cc, ~w(-O2 -s -std=c99 -fPIC -shared -x c -fexceptions -fvisibility=hidden -fomit-frame-pointer) ++
-        flags ++ ["-DARCH=HOST_AMD64", src, "-o", so])
+        [src, "-o", so])
       File.rm!(src)
       say("bintr: #{Path.basename(so)}")
     end
-  end
-
-  defp defines_in_comment(line) do
-    Regex.scan(~r/-D[A-Za-z0-9_]+=[^\s*]+/, line) |> List.flatten()
   end
 
   defp gates(opts) do

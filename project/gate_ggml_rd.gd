@@ -70,6 +70,8 @@
 #                         out then FAIL, so a partial run never reads RESULT: PASS)
 extends SceneTree
 
+const SandboxUtil := preload("res://stages/sandbox_util.gd")
+
 const InferHost := preload("res://infer_host.gd")
 # The ops under test, as test-backend-ops -o takes them. An op family adds
 # its ops here (the lead merges this line); ADD stays the fault control.
@@ -209,6 +211,7 @@ func _initialize() -> void:
 	_say("# Gate 3 G3.ops, %s, Godot %s, %s, %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _headless else RenderingServer.get_video_adapter_name()])
+	SandboxUtil.enable_native_translation()
 	_sb = ClassDB.instantiate("Sandbox")
 	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if _sb == null:

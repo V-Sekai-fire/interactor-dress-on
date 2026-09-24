@@ -65,6 +65,8 @@
 #                            it must print RESULT: PASS
 #   --params=<regex>      test-backend-ops' -p filter on ops main (no spaces)
 #   --env=K=V             one more environment switch for ops main (e.g. GGML_RD_PROFILE=1)
+#   --mode=grad           test-backend-ops' mode for ops main: grad checks each op's backward
+#                         graph on RD0 against finite differences on RD0 (no CPU reference)
 #   fallback=off          headless: the no-device control instead of the fallback runs
 #   runs=ops_main,probe_mm_perf  only those runs (the verdicts of the runs left
 #                         out then FAIL, so a partial run never reads RESULT: PASS)
@@ -149,6 +151,7 @@ var _out_dir := OUT_DIR
 var _extra_probes: Array = []
 var _params := ""
 var _env := "" # --env=K=V: added to ops main's environment (e.g. GGML_RD_PROFILE=1)
+var _mode := "" # --mode=grad: test-backend-ops' mode for ops main (grad: backprop vs finite differences)
 var _fallback_off := false
 var _beat_t0 := 0
 
@@ -188,6 +191,8 @@ func _parse_user_args() -> void:
 			_extra_probes.append(["probe_" + pa[0] + ("_" + parg if parg != "" else ""), "probe", pa[0], parg, ""])
 		elif a.begins_with("--params="):
 			_params = a.trim_prefix("--params=")
+		elif a.begins_with("--mode="):
+			_mode = a.trim_prefix("--mode=") + " "
 		elif a.begins_with("--env="):
 			_env = a.trim_prefix("--env=")
 		elif a == "fallback=off":
@@ -238,7 +243,7 @@ func _initialize() -> void:
 		_runs = [["ops_no_device", "ops", "-o ADD -b RD0", "GGML_RD_CPU_FALLBACK=0"]]
 	elif _headless:
 		_runs = [
-			["ops_main", "ops", "-o %s -b RD0%s" % [_ops, pfilter], _env],
+			["ops_main", "ops", "%s-o %s -b RD0%s" % [_mode, _ops, pfilter], _env],
 			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],
 		]
@@ -256,7 +261,7 @@ func _initialize() -> void:
 			["probe_perf_barrier_all", "probe", "perf", "move", "GGML_RD_BARRIER_ALL=1"],
 			["probe_mm_perf", "probe", "mm_perf", "all", ""],
 			["probe_census", "probe", "census", "all", ""],
-			["ops_main", "ops", "-o %s -b RD0%s" % [_ops, pfilter], _env],
+			["ops_main", "ops", "%s-o %s -b RD0%s" % [_mode, _ops, pfilter], _env],
 			["ops_barrier_all", "ops", "-o %s -b RD0%s" % [_ops, pfilter], "GGML_RD_BARRIER_ALL=1"],
 			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],

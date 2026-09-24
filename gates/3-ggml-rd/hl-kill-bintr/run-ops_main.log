@@ -1,0 +1,11 @@
+Testing 2 devices
+
+Backend 1/2: CPU
+  Skipping
+Backend 2/2: RD0
+  Device description: ggml-rd CPU fallback (the kernels' slangc cpp emits on guest memory)
+  Device memory: 24576 MB (24576 MB free)
+
+  ADD(type=f16,ne=[1,1,65536,1],nr=[256,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [RD0] 
+ggml-rd cpu alloc: 134496256 bytes, 315683 us
+ggml-rd cpu set_tensor: 67108864 bytes, 16381 us

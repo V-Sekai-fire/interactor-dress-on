@@ -655,6 +655,46 @@ had done its allocation and one 64 MiB upload in under 0.1 s and spent the
 rest before the first readback, in the harness's graph copy. Native
 translation of the ELF is the fix, not a wider cap.
 
+**Native translation, measured (2026-09-24, the same container):**
+`ggml_test.elf`'s translation (61 MB of C from `project/tools/bintr_emit.gd`,
+6.4 min with clang 18 -O2, 20 MB object) against the interpreter, on the same
+ELF (hash 63ab8527) and the same case:
+
+| run | interpreter | translated | speed-up |
+|---|---|---|---|
+| `ADD [1,1,1920,1] x [32,32,1,1]`, whole case | 126.4 s | 18.1 s | **7.0x** |
+| the same case, the `add_f32` kernel alone | 0.916 s | 0.123 s | **7.4x** |
+| `ADD [1,1,65536,1] x 256`, time to rule 10's cap | 605.6 s | 85.0 s | 7.1x, still killed |
+
+The capped case is still killed because rule 10's cap counts guest
+instructions (214,577 units of 2^20), and a translation runs the same
+instructions faster, not fewer: the ~5 minutes the cap stands for is ~40 s of
+translated work. A per-vmcall cap for translated ELFs needs its own number
+(a measured gate, rule 5), not the interpreter's. The Qwen layer did not
+speed up (7.2 s a run, 6.9 s before) because it ran untranslated: its gate
+makes the Sandbox with `memory_max` 3600, the translation's defines include
+the arena size, so its hash differs from the 2048 MiB one baked here. A
+translation is per (ELF, memory_max): bake one per Sandbox configuration. This translation is not shipped: it matches only the
+ELF it was measured on (63ab8527), which this branch then rebuilds with all
+105 kernels (hash 2326d136 on CI); `tools/build.exs` bakes the current one.
+
+**Gradients, smoke-tested (2026-09-24, `gate_ggml_rd.gd -- --mode=grad
+--ops=ADD,MUL,SCALE,SUM`, `grad-smoke/`):** test-backend-ops' grad mode
+builds each op's backward graph and checks backpropagation against finite
+differences on the same backend. On the CPU fallback: 100 cases OK, 0
+failed on ggml-rd's side (ADD 45, MUL 45, SUM 7, SCALE 3; the 170 not
+supported are f16 cases, which grad mode refuses on any backend). The run
+ended on two things that are ggml's, not ggml-rd's, and reproduce the same
+way on host ggml-cpu (`grad-smoke/host-ggml-cpu-grad-SCALE.log`):
+`SCALE(ne=[10,10,10,10], scale=2, bias=1)` misses the finite-difference
+limit (7.9e-4 here, 7.3e-4 on the host, limit 1e-4; the log names it SUM,
+the loss node), and the in-place SCALE case aborts in
+`ggml_build_backward_expand` ("inplace operations are currently not
+supported", ggml.c:7369), which stops the rest of the run. Correctness is
+the point here, not coverage: the backward kernels for MUL_MAT, RMS_NORM,
+ROPE, SOFT_MAX, CROSS_ENTROPY_LOSS and OPT_STEP_ADAMW (training's set) are
+still to be written.
+
 Two things the CPU path judges differently: the dropped-barrier control is
 not applicable (no barrier is placed, `drop_control n/a` in the SUMMARY),
 and the rd-vs-rd f16/f32 arm comparison is exactly 0 (the same emit reads

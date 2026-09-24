@@ -34,6 +34,7 @@ func _initialize() -> void:
 	_args = " ".join(PackedStringArray(extra)) + (" stats=all" if _jobname == "sphere_forward" else "")
 	_sb = ClassDB.instantiate("Sandbox")
 	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+	if _sb != null: _sb.memory_max = 512 # the Windows addon's default, which the recorded runs used; Linux's is 32 MiB
 	_sb.references_max = 65536
 	_sb.program = load("res://drape.elf")
 

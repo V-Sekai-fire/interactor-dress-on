@@ -1,0 +1,141 @@
+Gate 6G.1 -- rd_compute from a worker Thread. Godot 4.7.2-stable (official), Intel(R) Xeon(R) Processor @ 2.80GHz, llvmpipe (LLVM 20.1.2, 256 bits) (Unknown), 4 threads
+n=2796 floats, k in [1, 10, 100], modes ["sync_get", "get", "sync"], 300 timed round trips per cell (+5 warm-up) and one 300-round vmcall; vsync=1; main thread id 1
+A    PASS  rw_open on the main thread in 29553 us: OK n=2796 saxpby_groups=11 spirv_bytes=1668+3620 permanent_slots=0 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+A    PASS  k=1   sync_get singles n=300 min=211 p50=252 p90=300 p99=357 max=398 mean=259.4 us bad=0 | batch 300/300 right, 281.0 us/rt
+A    PASS  k=1   get      singles n=300 min=130 p50=224 p90=292 p99=478 max=1090 mean=237.3 us bad=0 | batch 300/300 right, 202.0 us/rt
+A    PASS  k=1   sync     singles n=300 min=146 p50=175 p90=215 p99=291 max=323 mean=182.5 us bad=0 | batch 300/300 right, 191.3 us/rt
+A    PASS  k=10  sync_get singles n=300 min=912 p50=1160 p90=1289 p99=1550 max=1649 mean=1170.5 us bad=0 | batch 300/300 right, 1160.4 us/rt
+A    PASS  k=10  get      singles n=300 min=688 p50=1103 p90=1228 p99=1480 max=4073 mean=1123.1 us bad=0 | batch 300/300 right, 1110.1 us/rt
+A    PASS  k=10  sync     singles n=300 min=471 p50=1064 p90=1180 p99=1489 max=1846 mean=1060.0 us bad=0 | batch 300/300 right, 1092.2 us/rt
+A    PASS  k=100 sync_get singles n=300 min=6619 p50=9889 p90=10602 p99=12772 max=15837 mean=10008.9 us bad=0 | batch 300/300 right, 10134.0 us/rt
+A    PASS  k=100 get      singles n=300 min=6688 p50=9882 p90=10790 p99=13003 max=14404 mean=9970.9 us bad=0 | batch 300/300 right, 9765.1 us/rt
+A    PASS  k=100 sync     singles n=300 min=6404 p50=8181 p90=9129 p99=10330 max=11391 mean=8359.6 us bad=0 | batch 300/300 right, 9019.1 us/rt
+A    INFO  the ladder held the main thread for 19825 ms; frames advanced 0 (a main-thread sync blocks the frame)
+A    INFO  rw_stats: open=yes exact=3630 wrong=0 empty=0 unread=1815 rounds=5445 dispatches=201465 chain=196020 last=380605500.0 want=380605500.0 same_frame_syncs=3630 syncs=3630 submits=3630 permanent_slots=0 step=sync
+A    INFO  rule 4 on the main thread: every sync above is a same-frame sync (same_frame_syncs=3630), which is what the counter is for
+A    PASS  rw_close: closed permanent_slots_left=0
+FA   PASS  GDScript local device on the main thread (llvmpipe (LLVM 20.1.2, 256 bits)), opened in 10751 us
+FA   PASS  k=1   sync_get singles n=300 min=192 p50=237 p90=277 p99=366 max=408 mean=243.7 us bad=0 | batch 300/300 right, 247.7 us/rt
+FA   PASS  k=1   get      singles n=300 min=152 p50=180 p90=216 p99=266 max=286 mean=186.6 us bad=0 | batch 300/300 right, 190.3 us/rt
+FA   PASS  k=1   sync     singles n=300 min=148 p50=173 p90=210 p99=279 max=785 mean=183.0 us bad=0 | batch 300/300 right, 183.8 us/rt
+FA   PASS  k=10  sync_get singles n=300 min=832 p50=1170 p90=1354 p99=2291 max=3989 mean=1212.4 us bad=0 | batch 300/300 right, 1162.8 us/rt
+FA   PASS  k=10  get      singles n=300 min=880 p50=1099 p90=1213 p99=1337 max=1837 mean=1105.4 us bad=0 | batch 300/300 right, 1083.6 us/rt
+FA   PASS  k=10  sync     singles n=300 min=886 p50=1073 p90=1182 p99=1501 max=2059 mean=1080.2 us bad=0 | batch 300/300 right, 1054.5 us/rt
+FA   PASS  k=100 sync_get singles n=300 min=7093 p50=9358 p90=10373 p99=12453 max=14786 mean=9235.1 us bad=0 | batch 300/300 right, 9789.7 us/rt
+FA   PASS  k=100 get      singles n=300 min=7178 p50=9509 p90=10408 p99=11730 max=13014 mean=9381.4 us bad=0 | batch 300/300 right, 9407.7 us/rt
+FA   PASS  k=100 sync     singles n=300 min=6837 p50=9648 p90=10705 p99=12897 max=17182 mean=9697.5 us bad=0 | batch 300/300 right, 9429.6 us/rt
+N1   PASS  control: opened and round-tripped on the main thread: open=OK n=2796 saxpby_groups=11 spirv_bytes=1 round=1
+N1   PASS  negative: the same device from worker thread 21: codes [-2, -2, -2] (-2 = nothing came back); open=yes exact=1 wrong=0 empty=3 unread=0 rounds=4 dispatches=13 chain=9 last=-1.0 want=25164.0 same_frame_syncs=3 syncs=3 submits=3 permanent_slots=0 step=buffer_get_data
+N1   PASS  back on the main thread, the device is intact: round=1 open=yes exact=2 wrong=0 empty=3 unread=0 rounds=5 dispatches=23 chain=18 last=50328.0 want=50328.0 same_frame_syncs=4 syncs=4 submits=4 permanent_slots=0 step=buffer_get_data
+N1   PASS  rw_close on the main thread: closed permanent_slots_left=0
+FN1  PASS  control: GDScript device on the main thread, round=1
+FN1  PASS  negative, no sandbox: the GDScript device from worker thread 23: codes [-2, -2] (Godot's render-thread guard, not the sandbox)
+FN1  PASS  back on the main thread: round=1
+R0   INFO  baseline, the scene alone (400 spheres, shadows): frame time n=12 min=484335 p50=503906 p90=529607 p99=533968 max=533968 mean=507106.6 us, 12 over 25 ms; draw calls 7
+B    PASS  rw_open on worker thread 25 in 32918 us: OK n=2796 saxpby_groups=11 spirv_bytes=1668+3620 permanent_slots=0 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+B    PASS  k=1   sync_get singles n=300 min=171 p50=238 p90=305 p99=2318 max=5133 mean=303.0 us bad=0 | batch 300/300 right, 295.6 us/rt
+B    PASS  k=1   get      singles n=300 min=144 p50=205 p90=265 p99=371 max=4237 mean=232.4 us bad=0 | batch 300/300 right, 249.7 us/rt
+B    PASS  k=1   sync     singles n=300 min=130 p50=163 p90=210 p99=4399 max=4898 mean=229.6 us bad=0 | batch 300/300 right, 187.5 us/rt
+B    PASS  k=10  sync_get singles n=300 min=564 p50=859 p90=1299 p99=6158 max=9208 mean=1146.7 us bad=0 | batch 300/300 right, 1114.4 us/rt
+B    PASS  k=10  get      singles n=300 min=477 p50=803 p90=1095 p99=6741 max=11713 mean=1111.3 us bad=0 | batch 300/300 right, 1212.4 us/rt
+B    PASS  k=10  sync     singles n=300 min=476 p50=827 p90=1042 p99=6935 max=14763 mean=1128.3 us bad=0 | batch 300/300 right, 1162.7 us/rt
+B    PASS  k=100 sync_get singles n=300 min=5334 p50=8641 p90=14255 p99=20067 max=27659 mean=9832.7 us bad=0 | batch 300/300 right, 10231.1 us/rt
+B    PASS  k=100 get      singles n=300 min=5598 p50=8882 p90=13719 p99=24161 max=30797 mean=9965.4 us bad=0 | batch 300/300 right, 10162.7 us/rt
+B    PASS  k=100 sync     singles n=300 min=5332 p50=8899 p90=13470 p99=24027 max=29444 mean=9965.0 us bad=0 | batch 300/300 right, 9685.8 us/rt
+B    INFO  main thread advanced 42 frames in 21.1 s while the worker synced (2.0 fps): frame time n=42 min=474624 p50=494165 p90=533864 p99=589413 max=589413 mean=502649.5 us, 42 over 25 ms
+B    INFO  long frames and the worker phase they overlap: 530 ms[open,ladder] 508 ms[ladder] 489 ms[ladder] 528 ms[ladder] 507 ms[ladder] 483 ms[ladder] 496 ms[ladder] 505 ms[ladder] 489 ms[ladder] 551 ms[ladder] 522 ms[ladder] 497 ms[ladder] 492 ms[ladder] 484 ms[ladder] 540 ms[ladder] 495 ms[ladder] 490 ms[ladder] 501 ms[ladder] 516 ms[ladder] 477 ms[ladder] 482 ms[ladder] 494 ms[ladder] 545 ms[ladder] 490 ms[ladder] 478 ms[ladder] 500 ms[ladder] 485 ms[ladder] 491 ms[ladder] 589 ms[ladder] 533 ms[ladder] 494 ms[ladder] 488 ms[ladder] 489 ms[ladder] 491 ms[ladder] 491 ms[ladder] 494 ms[ladder] 474 ms[ladder] 485 ms[ladder] 498 ms[ladder] 493 ms[ladder] 518 ms[ladder] 487 ms[ladder,close]
+B    INFO  rw_stats: open=yes exact=3630 wrong=0 empty=0 unread=1815 rounds=5445 dispatches=201465 chain=196020 last=380605500.0 want=380605500.0 same_frame_syncs=3630 syncs=3630 submits=3630 permanent_slots=0 step=sync
+B    INFO  rule 4 on a worker: same_frame_syncs=3630 of syncs=3630 syncs landed in their submit's process frame; they block only the worker
+B    PASS  rw_close on the same worker in 6020 us: closed permanent_slots_left=0
+FB   PASS  GDScript local device on a worker Thread (llvmpipe (LLVM 20.1.2, 256 bits), thread 27), opened in 13182 us; main advanced 40 frames
+FB   PASS  k=1   sync_get singles n=300 min=190 p50=234 p90=302 p99=362 max=5530 mean=273.2 us bad=0 | batch 300/300 right, 267.9 us/rt
+FB   PASS  k=1   get      singles n=300 min=130 p50=176 p90=227 p99=933 max=3472 mean=215.2 us bad=0 | batch 300/300 right, 212.3 us/rt
+FB   PASS  k=1   sync     singles n=300 min=110 p50=164 p90=210 p99=1126 max=4669 mean=212.5 us bad=0 | batch 300/300 right, 180.3 us/rt
+FB   PASS  k=10  sync_get singles n=300 min=426 p50=870 p90=1279 p99=7187 max=11755 mean=1184.8 us bad=0 | batch 300/300 right, 1263.5 us/rt
+FB   PASS  k=10  get      singles n=300 min=511 p50=855 p90=1113 p99=6185 max=8286 mean=1087.1 us bad=0 | batch 300/300 right, 1097.9 us/rt
+FB   PASS  k=10  sync     singles n=300 min=520 p50=888 p90=1090 p99=7103 max=9344 mean=1167.8 us bad=0 | batch 300/300 right, 1078.0 us/rt
+FB   PASS  k=100 sync_get singles n=300 min=2502 p50=7901 p90=13498 p99=23658 max=25904 mean=9271.0 us bad=0 | batch 300/300 right, 9275.6 us/rt
+FB   PASS  k=100 get      singles n=300 min=4961 p50=8686 p90=14254 p99=22853 max=25295 mean=9881.9 us bad=0 | batch 300/300 right, 9582.0 us/rt
+FB   PASS  k=100 sync     singles n=300 min=2744 p50=8851 p90=14046 p99=19541 max=24809 mean=9865.0 us bad=0 | batch 300/300 right, 9573.5 us/rt
+O    PASS  on one worker: guest_open 27 ms, guest_close 9 ms, guest_open 11 ms, guest_close 1 ms, guest_open 11 ms, guest_close 1 ms, flat_create 8 ms, flat_free 1 ms, flat_create 7 ms, flat_free 1 ms, flat_create 7 ms, flat_free 1 ms
+O    INFO  main thread meanwhile: frame time n=2 min=497707 p50=497861 p90=497861 p99=497861 max=497861 mean=497784.0 us, 2 over 25 ms; long frames: 497 ms[guest_open,guest_close,guest_open,guest_close,guest_open,guest_close] 497 ms[flat_create,flat_free,flat_create,flat_free,flat_create,flat_free]
+N2   PASS  Thread 1 (id 33) opened the device and round-tripped: round=1
+N2   PASS  negative: Thread 2 (id 35, a new Thread as stage_base.start() makes per call) on Thread 1's device: codes [-2, -2]; open=yes exact=1 wrong=0 empty=2 unread=0 rounds=3 dispatches=12 chain=9 last=-1.0 want=25164.0 same_frame_syncs=2 syncs=2 submits=2 permanent_slots=0 step=buffer_get_data
+N2   INFO  the device is orphaned: free_rid and its teardown are render-thread-guarded too and its thread is gone; the Sandbox is kept to the end
+Q    call  rw_open   thread 37 host    40491 us -> OK n=2796 saxpby_groups=11 spirv_bytes=1668+3620 permanent_slots=0 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+Q    call  rw_rounds thread 37 host   131148 us -> 100
+Q    call  rw_rounds thread 37 host   297462 us -> 30
+Q    call  rw_rounds thread 37 host    34759 us -> 100
+Q    call  rw_stats  thread 37 host      140 us -> open=yes exact=230 wrong=0 empty=0 unread=0 rounds=230 dispatches=4100 chain=3870 last=10820520.0 want=10820520.0 same_frame_syncs=200 syncs=200 submits=200 permanent_slots=0 step=buffer_get_data
+Q    call  rw_close  thread 37 host    11367 us -> closed permanent_slots_left=0
+Q    PASS  one Thread (1 distinct thread id), six vmcalls posted 10 frames apart held one device from open to close: 6 of 6 answered right
+C0   INFO  baseline, scene + drape job on the main thread, no worker (10 s): frame time n=20 min=475348 p50=499351 p90=517338 p99=536386 max=536386 mean=500000.0 us, 20 over 25 ms (1 of them overlap a drape tick over 20 ms: 1 such ticks); draw calls 7, objects 1173
+C0   FAIL  drape.elf bench_fwd on rd, main thread: 20 ticks, 0 jobs PASS, 0 FAIL (last: ); same_frame_syncs=0 syncs=16 submits=17
+C    PASS  rw_open on worker thread 39 in 119133 us while the main thread renders and drapes
+C    PASS  k=1   sync_get singles n=300 min=136 p50=236 p90=333 p99=3291 max=4949 mean=316.1 us bad=0 | batch 300/300 right, 326.6 us/rt
+C    PASS  k=1   get      singles n=300 min=131 p50=163 p90=220 p99=4025 max=7724 mean=247.8 us bad=0 | batch 300/300 right, 253.0 us/rt
+C    PASS  k=1   sync     singles n=300 min=137 p50=187 p90=235 p99=3835 max=8057 mean=292.5 us bad=0 | batch 300/300 right, 206.6 us/rt
+C    PASS  k=10  sync_get singles n=300 min=496 p50=846 p90=1075 p99=6518 max=7875 mean=1096.7 us bad=0 | batch 300/300 right, 1182.1 us/rt
+C    PASS  k=10  get      singles n=300 min=498 p50=843 p90=1655 p99=7426 max=10997 mean=1216.2 us bad=0 | batch 300/300 right, 1324.7 us/rt
+C    PASS  k=10  sync     singles n=300 min=466 p50=821 p90=986 p99=5690 max=8957 mean=1001.2 us bad=0 | batch 300/300 right, 1198.4 us/rt
+C    PASS  k=100 sync_get singles n=300 min=5437 p50=9441 p90=14399 p99=24223 max=26714 mean=10272.1 us bad=0 | batch 300/300 right, 10211.0 us/rt
+C    PASS  k=100 get      singles n=300 min=3146 p50=9867 p90=15463 p99=21996 max=29550 mean=10633.3 us bad=0 | batch 300/300 right, 10916.9 us/rt
+C    PASS  k=100 sync     singles n=300 min=5807 p50=10083 p90=15986 p99=28369 max=36134 mean=10996.6 us bad=0 | batch 300/300 right, 10689.4 us/rt
+C    INFO  main thread while the worker ran (22.1 s, 43 frames, 1.9 fps): frame time n=43 min=480581 p50=507344 p90=547054 p99=575856 max=575856 mean=513897.0 us, 43 over 25 ms; draw calls 7
+C    INFO  long frames and the worker phase they overlap: 531 ms[open,ladder] 501 ms[ladder] 506 ms[ladder,drape_tick>20ms] 538 ms[ladder] 518 ms[ladder] 494 ms[ladder] 480 ms[ladder] 508 ms[ladder] 547 ms[ladder] 575 ms[ladder] 531 ms[ladder] 492 ms[ladder] 490 ms[ladder] 513 ms[ladder] 520 ms[ladder] 490 ms[ladder] 529 ms[ladder] 518 ms[ladder] 505 ms[ladder] 497 ms[ladder] 495 ms[ladder] 500 ms[ladder] 508 ms[ladder] 551 ms[ladder] 531 ms[ladder] 543 ms[ladder] 489 ms[ladder] 507 ms[ladder] 495 ms[ladder] 495 ms[ladder] 517 ms[ladder] 492 ms[ladder] 501 ms[ladder] 509 ms[ladder] 503 ms[ladder] 531 ms[ladder] 493 ms[ladder] 560 ms[ladder,drape_tick>20ms] 563 ms[ladder] 512 ms[ladder] 503 ms[ladder] 492 ms[ladder] 502 ms[ladder,close]
+C    INFO  worker rw_stats: open=yes exact=3630 wrong=0 empty=0 unread=1815 rounds=5445 dispatches=201465 chain=196020 last=380605500.0 want=380605500.0 same_frame_syncs=3630 syncs=3630 submits=3630 permanent_slots=0 step=sync
+C    PASS  rw_close on the worker: closed permanent_slots_left=0
+C    PASS  drape.elf bench_fwd on rd, main thread: 49 ticks, 1 jobs PASS, 0 FAIL (last: PASS bench_fwd rd: every size finite); same_frame_syncs=0 syncs=40 submits=40
+E    PASS  k=10 submit in frame f, sync + read in frame f+1: 120 round trips, bad=0, submit-to-result n=120 min=470882 p50=492877 p90=519114 p99=534834 max=565933 mean=495846.6 us
+E    INFO  rule 4 kept: same_frame_syncs=0 of syncs=120 (rw_stats: open=yes exact=120 wrong=0 empty=0 unread=0 rounds=120 dispatches=1200 chain=1080 last=3019680.0 want=3019680.0 same_frame_syncs=0 syncs=120 submits=120 permanent_slots=0 step=buffer_get_data)
+
+SUMMARY TABLE (us per round trip; singles host-timed around one vmcall each, batch = one vmcall of 300 / 300)
+arm     k mode           p50      p90      p99      max batch_mean  rt/iter_skr  rt/iter_fox
+A       1 sync_get       252      300      357      398      281.0           79          291
+A       1 get            224      292      478     1090      202.0          110          405
+A       1 sync           175      215      291      323      191.3          117          428
+A      10 sync_get      1160     1289     1550     1649     1160.4           19           70
+A      10 get           1103     1228     1480     4073     1110.1           20           73
+A      10 sync          1064     1180     1489     1846     1092.2           20           75
+A     100 sync_get      9889    10602    12772    15837    10134.0            2            8
+A     100 get           9882    10790    13003    14404     9765.1            2            8
+A     100 sync          8181     9129    10330    11391     9019.1            2            9
+FA      1 sync_get       237      277      366      408      247.7           90          330
+FA      1 get            180      216      266      286      190.3          117          430
+FA      1 sync           173      210      279      785      183.8          121          445
+FA     10 sync_get      1170     1354     2291     3989     1162.8           19           70
+FA     10 get           1099     1213     1337     1837     1083.6           20           75
+FA     10 sync          1073     1182     1501     2059     1054.5           21           77
+FA    100 sync_get      9358    10373    12453    14786     9789.7            2            8
+FA    100 get           9509    10408    11730    13014     9407.7            2            8
+FA    100 sync          9648    10705    12897    17182     9429.6            2            8
+B       1 sync_get       238      305     2318     5133      295.6           75          277
+B       1 get            205      265      371     4237      249.7           89          328
+B       1 sync           163      210     4399     4898      187.5          119          437
+B      10 sync_get       859     1299     6158     9208     1114.4           20           73
+B      10 get            803     1095     6741    11713     1212.4           18           67
+B      10 sync           827     1042     6935    14763     1162.7           19           70
+B     100 sync_get      8641    14255    20067    27659    10231.1            2            8
+B     100 get           8882    13719    24161    30797    10162.7            2            8
+B     100 sync          8899    13470    24027    29444     9685.8            2            8
+FB      1 sync_get       234      302      362     5530      267.9           83          305
+FB      1 get            176      227      933     3472      212.3          105          385
+FB      1 sync           164      210     1126     4669      180.3          124          454
+FB     10 sync_get       870     1279     7187    11755     1263.5           17           64
+FB     10 get            855     1113     6185     8286     1097.9           20           74
+FB     10 sync           888     1090     7103     9344     1078.0           20           76
+FB    100 sync_get      7901    13498    23658    25904     9275.6            2            8
+FB    100 get           8686    14254    22853    25295     9582.0            2            8
+FB    100 sync          8851    14046    19541    24809     9573.5            2            8
+C       1 sync_get       236      333     3291     4949      326.6           68          250
+C       1 get            163      220     4025     7724      253.0           88          323
+C       1 sync           187      235     3835     8057      206.6          108          396
+C      10 sync_get       846     1075     6518     7875     1182.1           18           69
+C      10 get            843     1655     7426    10997     1324.7           16           61
+C      10 sync           821      986     5690     8957     1198.4           18           68
+C     100 sync_get      9441    14399    24223    26714    10211.0            2            8
+C     100 get           9867    15463    21996    29550    10916.9            2            7
+C     100 sync         10083    15986    28369    36134    10689.4            2            7
+E      10 sync_get    492877   519114   534834   565933   495846.6            0            0
+rt/iter: round trips per Newton iteration within 10% of its native time at the batch mean: skirt 224 ms native (5506 ms guest / 24.6), foxgirl 820 ms native
+SUMMARY: PASS=66 FAIL=1 INFO=15 wall_s=224.6 orphaned_devices=1

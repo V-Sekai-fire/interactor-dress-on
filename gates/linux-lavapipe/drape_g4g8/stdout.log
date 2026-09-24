@@ -1,0 +1,83 @@
+ERROR: Can't open dynamic library, file not found: '/home/user/interactor-dress-on/project/addons/cineform/bin/libgodot_cineform.linux.template_debug.x86_64.so'.
+   at: open_dynamic_library (drivers/unix/os_unix.cpp:1063)
+ERROR: GDExtension dynamic library not found: 'res://addons/cineform/cineform.gdextension'.
+   at: open_library (core/extension/gdextension.cpp:810)
+ERROR: Error loading extension: 'res://addons/cineform/cineform.gdextension'.
+   at: load_extensions (core/extension/gdextension_manager.cpp:333)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.318 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 20.1.2, 256 bits)
+ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+   at: init_output_device (drivers/alsa/audio_driver_alsa.cpp:97)
+WARNING: All audio drivers failed, falling back to the dummy driver.
+     at: initialize (servers/audio/audio_server.cpp:258)
+
+# Gate 5 drape.elf, 2026-09-24T04:42:49, Godot 4.7.2-stable (official), llvmpipe (LLVM 20.1.2, 256 bits) (quick) only G4,G8
+sandbox memory_max = 32
+sandbox execution_timeout = 8000
+[godot_mcp] RUNTIME MCP on http://127.0.0.1:8789/mcp
+oracle handed to the guest: 47 files (20 components, 5 problems, 20 traces, 2 inverse_min): DATA invmin_k_bend_density 1924 bytes, 47 keys
+G10 scene handed to the guest: DATA body_obj 340622 bytes, 51 keys
+OPENED cpu
+LOADED cpu [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+PASS G4 faces: the sphere scene's 1152 triangles equal native iter0/0.obj's 1152, in order
+PASS G4 frame 0 (rest) against native: max|dx| = 4.235e-22
+OPENED auto (rd from 160 vertices)
+api auto: LOADED rd [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+SET [drape-config] solver=AVBD iters=16 damp=1 relax=1 color
+QUEUED forward 3 on rd
+PASS G4 api: drape_open(auto) picked rd for 625 vertices, 3 steps in 7 ticks, positions finite=true, frame 1 max|dx| = 1.164e-10: IDLE DONE forward rd steps=3 (+3 of 3) finite=yes ymin=-0.001814 friction_events=2 projections=0 self_pushes=0 wall_ms=219.7 ms/step=73.236
+[dress-on] dress_on: sandbox loaded dress_on.elf
+[dress-on] drape: sandbox loaded drape.elf
+[dress-on] curvenet: sandbox loaded curvenet.elf
+[dress-on] fit: sandbox loaded fit.elf
+[dress-on] infer: infer.elf not found (not built or not imported)
+wrappers: DATA trace_rosenbox_upstream_n25_m5_tight 3141 bytes, 47 keys
+wrappers: STARTED inverse_min cpu cases=0
+PASS G3 main.gd wrappers: lbfgsb_load_oracle + drape_job(inverse_min, cpu, cases=0) -> 'PASS inverse_min cpu (vec cpu): G3 both cases recover, trace LBFGSpp, controls stay put: k_tri err 1.19e-06 it 6/6 dx 1.' after 1 frames; drape_job_names lists inverse_min and lbfgsb_replay
+job sphere_forward rd steps=60                         ticks=   121 wall_ms=   3274.1  PASS sphere_forward rd: 60 steps at mu 0.539770: DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551574 friction_events=3621 projections=0 self_pushes=0
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.539770
+    [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
+    step    1 |dx|_max=0.00030243324 |dx|_mean=0.000100746867 pred_max=0.000302469125 drift_max=1.75464083e-06 drift@v0.y friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
+    step    2 |dx|_max=0.000604830566 |dx|_mean=0.000201419491 pred_max=0.000604902394 drift_max=3.49909533e-06 drift@v0.y friction_blends=0 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    3 |dx|_max=0.000907192007 |dx|_mean=0.000301694119 pred_max=0.000907299691 drift_max=5.23345079e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    4 |dx|_max=0.00120951759 |dx|_mean=0.000402058882 pred_max=0.00120966102 drift_max=6.95791095e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    5 |dx|_max=0.00151180732 |dx|_mean=0.000502358947 pred_max=0.0015119866 drift_max=8.67201015e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step   10 |dx|_max=0.00302271731 |dx|_mean=0.000995869865 pred_max=0.0030230768 drift_max=3.10540199e-05 drift@v341.x friction_blends=6 friction_events=7 projections=0 self_pairs=0 self_pushes=0
+    step   20 |dx|_max=0.00604184717 |dx|_mean=0.00194901752 pred_max=0.00604256243 drift_max=0.000248491764 drift@v342.x friction_blends=21 friction_events=22 projections=0 self_pairs=0 self_pushes=0
+    step   50 |dx|_max=0.0150594115 |dx|_mean=0.00452762702 pred_max=0.0150643587 drift_max=0.00166404247 drift@v211.y friction_blends=119 friction_events=121 projections=0 self_pairs=0 self_pushes=0
+    DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551574 friction_events=3621 projections=0 self_pushes=0 wall_ms=3264.6 ms/step=54.411
+job sphere_forward cpu steps=12                        ticks=    10 wall_ms=   1432.5  PASS sphere_forward cpu: 12 steps at mu 0.539770: DONE forward cpu steps=12 (+12 of 12) finite=yes ymin=-0.023580 friction_events=43 projections=0 self_pushes=0
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.539770
+    [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.539770
+    step    1 |dx|_max=0.00030243324 |dx|_mean=0.000100746867 pred_max=0.000302469125 drift_max=1.75464083e-06 drift@v0.y friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
+    step    2 |dx|_max=0.000604830566 |dx|_mean=0.000201419491 pred_max=0.000604902394 drift_max=3.49909533e-06 drift@v0.y friction_blends=0 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    3 |dx|_max=0.000907192007 |dx|_mean=0.000301694119 pred_max=0.000907299691 drift_max=5.23345079e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    4 |dx|_max=0.00120951759 |dx|_mean=0.000402058882 pred_max=0.00120966102 drift_max=6.95791095e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    5 |dx|_max=0.00151180732 |dx|_mean=0.000502358947 pred_max=0.0015119866 drift_max=8.67201015e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step   10 |dx|_max=0.00302271731 |dx|_mean=0.000995869515 pred_max=0.0030230768 drift_max=3.10540199e-05 drift@v341.x friction_blends=6 friction_events=7 projections=0 self_pairs=0 self_pushes=0
+    DONE forward cpu steps=12 (+12 of 12) finite=yes ymin=-0.023580 friction_events=43 projections=0 self_pushes=0 wall_ms=1406.7 ms/step=117.226
+job sphere_forward rd steps=60 mu=0.3                  ticks=   121 wall_ms=   3246.0  PASS sphere_forward rd: 60 steps at mu 0.300000: DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0
+    [drape-config] solver=AVBD iters=16 damp=1 relax=1 colors=1 | membrane=1 bending=1 rawStiffness=0 | al=0 gamma=default | contact=1 frictionPred=1 selfColl=1 passes=2 gpuSelf=1 K=16 | bwd=AVBD truncateK=20 ift=0 clip=1(16*nV) muDoubleCarry=1 | h=0.00555555556 g=(0,-9.8,0) wind=(0,0,0) density=0.3 kTri=150 kBend=1e-05 kAttach=10000 mu=0.300000
+    [drape-scene] sphere_demo nV=625 nTri=1152 nBend=1680 nAttach=0 prims=1 | prim0 sphere c=(0.6,-2.1,0.2) r=2 mu=0.300000
+    step    1 |dx|_max=0.00030243324 |dx|_mean=0.000100746867 pred_max=0.000302469125 drift_max=1.75464083e-06 drift@v0.y friction_blends=0 friction_events=0 projections=0 self_pairs=0 self_pushes=0
+    step    2 |dx|_max=0.000604830566 |dx|_mean=0.000201419491 pred_max=0.000604902394 drift_max=3.49909533e-06 drift@v0.y friction_blends=0 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    3 |dx|_max=0.000907192007 |dx|_mean=0.00030169572 pred_max=0.000907299691 drift_max=5.23345079e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    4 |dx|_max=0.00120951759 |dx|_mean=0.000402058533 pred_max=0.00120966102 drift_max=6.95791095e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step    5 |dx|_max=0.00151180732 |dx|_mean=0.000502358831 pred_max=0.0015119866 drift_max=8.67201015e-06 drift@v0.y friction_blends=1 friction_events=1 projections=0 self_pairs=0 self_pushes=0
+    step   10 |dx|_max=0.00302271731 |dx|_mean=0.000995863695 pred_max=0.0030230768 drift_max=5.69522381e-05 drift@v339.x friction_blends=6 friction_events=7 projections=0 self_pairs=0 self_pushes=0
+    step   20 |dx|_max=0.00604184717 |dx|_mean=0.00194805115 pred_max=0.00604256243 drift_max=0.000172615051 drift@v342.x friction_blends=21 friction_events=22 projections=0 self_pairs=0 self_pushes=0
+    step   50 |dx|_max=0.0150614083 |dx|_mean=0.00450109271 pred_max=0.0150660276 drift_max=0.00158303976 drift@v211.y friction_blends=124 friction_events=124 projections=0 self_pairs=0 self_pushes=0
+    DONE forward rd steps=60 (+60 of 60) finite=yes ymin=-0.551629 friction_events=3714 projections=0 self_pushes=0 wall_ms=3238.9 ms/step=53.982
+--- checks
+PASS G4 rd frames at mu 0.539770 against native iter0, every step finite (max|dx|; frame 1 <= 1e-5, frame 10 <= 1e-3): 0: 4.235e-22, 1: 1.164e-10, 10: 4.888e-6, 50: 0.009397
+PASS G4 cpu frames at mu 0.539770 against native iter0, every step finite (max|dx|; frame 1 <= 1e-5, frame 10 <= 1e-3): 0: 4.235e-22, 1: 1.164e-10, 10: 4.888e-6
+info G4 cpu vs rd frames (max|dx|): 0: 0.0, 1: 0.0, 10: 2.384e-7
+FAIL G4 control: mu 0.3 sits further from the native mu-0.54 frames than ours at mu 0.54 (frames >= 50): 50: mu0.3-native 0.006833 vs ours-native 0.009397
+PASS G8 rd_rule4 after every job: same_frame_syncs=0 syncs=246 submits=246 (want same_frame_syncs=0 with syncs>0)
+PASS G8 rd_rule4_probe (positive control): PASS same_frame_syncs 0 -> 1; counter now 1
+PASS G8 llvm-nm -C project/drape.elf: 9600 symbols, 0 matching Eigen, 0 matching LBFGSpp (rc 0)
+PASS G8 rd_close: CLOSED device=freed permanent_slots=0
+SUMMARY G4 FAIL(1), G8 PASS
+RESULT: FAIL
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

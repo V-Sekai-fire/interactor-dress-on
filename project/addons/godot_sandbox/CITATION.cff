@@ -13,7 +13,14 @@ abstract: >-
   35876410662 (the PR build, tree identical to a45da9f), artifact
   godot-sandbox-linux-x86_64-single, sha256
   fdf85871b6a93f161000cf66bfd84db683ac3c6137ad9760e0961fc7f8d3ea8e. It is
-  what the RunPod loop worker loads (Gate 0H). The Windows libraries are the
+  what the RunPod loop worker loads (Gate 0H). Replaced again on 2026-09-24
+  with a build of V-Sekai-fire/godot-sandbox b1118e5 (main, 2026-09-23) plus
+  the one commit of branch feat/bintr-emit
+  (tools/godot-sandbox/0001-bintr-emit.patch: GODOT_SANDBOX_BINTR_EMIT=<dir>
+  writes each program's native translation as C99), built with Ubuntu clang
+  18, CMake and Ninja, Release, RISCV_ASMJIT=OFF (no JIT; binary translation
+  lookup as before), sha256
+  345167491984349c01f52834690f8bbd70b0945017ac6ef6b2719c60b9fd035a. The Windows libraries are the
   ones vendored at Gate 0E; their source commit was not recorded then.
 authors:
   - name: Alf-André Walla (fwsGonzo)

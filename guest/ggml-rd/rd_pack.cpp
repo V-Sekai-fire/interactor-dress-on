@@ -1,5 +1,6 @@
 #include "rd_pack.h"
 
+#include <cstdlib>
 #include <cstring>
 
 namespace ggml_rd {
@@ -41,6 +42,20 @@ const OpEntry *find_op(const ggml_tensor *op) {
 bool is_layout_only(ggml_op op) {
 	return op == GGML_OP_NONE || op == GGML_OP_RESHAPE || op == GGML_OP_VIEW || op == GGML_OP_PERMUTE ||
 			op == GGML_OP_TRANSPOSE;
+}
+
+static bool g_serial = false;
+
+void set_serial_kernels(bool on) {
+	g_serial = on;
+}
+
+bool serial_kernels() {
+	if (g_serial) {
+		return true;
+	}
+	const char *e = std::getenv("GGML_RD_SERIAL");
+	return e != nullptr && std::atoi(e) != 0;
 }
 
 int kernel_index(const char *name) {

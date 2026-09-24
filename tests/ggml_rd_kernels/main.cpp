@@ -21,7 +21,7 @@
 #include "l2.h"
 #include "rd_pack.h"
 
-bool run_kernel(int id, uint32_t *words, void *mem, size_t bytes, const uint32_t groups[3]);
+#include "run_kernel.h"
 
 static std::vector<L2Maker> &makers() {
 	static std::vector<L2Maker> m;

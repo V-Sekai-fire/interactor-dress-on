@@ -39,6 +39,7 @@ struct Dispatch {
 	int kernel;
 	uint32_t groups[3];
 	::RID bind[4]; // s0, s1, s2, dst buffers
+	Buffer *buf[4]; // the same, for the CPU fallback
 	::RID set0;
 	Range reads[3];
 	int nreads;
@@ -97,11 +98,16 @@ ggml_status fail_graph(const std::string &why) {
 
 ggml_status graph_compute(ggml_cgraph *g) {
 	Ctx &c = ctx();
-	if (!device_ok()) {
+	const bool cpu = cpu_mode();
+	if (!device_ok() && !cpu) {
 		return fail_graph("graph_compute: no RenderingDevice");
 	}
-	ensure_idle();
-	rdc::Device &d = *c.dev;
+	if (!cpu) {
+		ensure_idle();
+	}
+	// The fallback runs every kernel's cpp emit, and the kernels with group
+	// memory have none: their packers must pick the serial siblings.
+	set_serial_kernels(cpu);
 
 	const bool barrier_all = env_int("GGML_RD_BARRIER_ALL") != 0;
 	const int fault = env_int("GGML_RD_FAULT");
@@ -146,14 +152,17 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		Buffer *db = buffer_of(node);
 		dp.write = range_of(node, db);
 		dp.bind[3] = db->rid;
+		dp.buf[3] = db;
 		for (int s = 0; s < 3; ++s) {
 			const ggml_tensor *src = node->src[s];
 			if (src == nullptr) {
 				dp.bind[s] = db->rid; // an unused binding names the dst buffer: no new dependency
+				dp.buf[s] = db;
 				continue;
 			}
 			Buffer *sb = buffer_of(src);
 			dp.bind[s] = sb->rid;
+			dp.buf[s] = sb;
 			dp.reads[dp.nreads++] = range_of(src, sb);
 		}
 
@@ -202,6 +211,30 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		pf.us_total = clock() - t_entry;
 		return GGML_STATUS_SUCCESS;
 	}
+	if (cpu) {
+		// The fallback: one dispatch after another, in graph order, on this
+		// thread. No barriers (nothing overlaps), no sets, no upload: the
+		// words are read in place. COOP between dispatches gives the frame
+		// back (a vmcall's instruction budget, AGENTS.md rule 10).
+		for (size_t i = 0; i < ds.size(); ++i) {
+			const Dispatch &dp = ds[i];
+			CpuDispatch cd{ dp.kernel, { dp.groups[0], dp.groups[1], dp.groups[2] },
+				{ dp.buf[0], dp.buf[1], dp.buf[2], dp.buf[3] }, table.data() + i * kWordsPerSlot, dp.node };
+			std::string why;
+			const int64_t t_run0 = prof > 1 ? rdc::host_usec() : 0;
+			if (!cpu_run(cd, &why)) {
+				return fail_graph(why + ": " + node_desc(dp.node));
+			}
+			if (prof > 1) {
+				pf.per_dispatch[i].record_us = rdc::host_usec() - t_run0;
+			}
+			coop();
+		}
+		pf.us_total = clock() - t_entry;
+		c.st.dispatches += int64_t(ds.size());
+		return GGML_STATUS_SUCCESS;
+	}
+	rdc::Device &d = *c.dev;
 
 	// Everything the recording binds exists before the list opens.
 	for (Dispatch &dp : ds) {

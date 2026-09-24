@@ -142,14 +142,34 @@ target_link_libraries(pump PUBLIC sandbox_api)
 # op family adds a file, not a line here. The kernels come from Lean through
 # kernels/ggml/gen.sh (${CMAKE_BINARY_DIR}/ggml_kernels.inc).
 file(GLOB GGML_RD_OPS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/guest/ggml-rd/ops/*.cpp)
+# The CPU fallback (guest/ggml-rd/rd_cpu.cpp): the same kernels' slangc cpp
+# emits (kernels/ggml/cpp, the other target of rule 2), through the runner
+# the host L2 harness uses, generated into the build directory from
+# kernels/ggml/kernels.txt. -ffp-contract=off: rv64gc has FMA and the emits
+# must round like the harness's x86 build (and ggml-cpu's reference).
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+set(GGML_RD_CPU_RUNNER ${CMAKE_BINARY_DIR}/ggml_rd_cpu_kernels.cpp)
+file(GLOB GGML_RD_EMITS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/kernels/ggml/cpp/*_emit.cpp)
+add_custom_command(
+	OUTPUT ${GGML_RD_CPU_RUNNER}
+	COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ggml_rd_kernels/gen_host_kernels.py
+		${CMAKE_SOURCE_DIR}/kernels/ggml/kernels.txt ${GGML_RD_CPU_RUNNER} ${CMAKE_SOURCE_DIR}/kernels/ggml/cpp_siblings.txt
+	DEPENDS ${CMAKE_SOURCE_DIR}/tests/ggml_rd_kernels/gen_host_kernels.py ${CMAKE_SOURCE_DIR}/kernels/ggml/kernels.txt
+		${CMAKE_SOURCE_DIR}/kernels/ggml/cpp_siblings.txt ${GGML_RD_EMITS}
+	COMMENT "ggml-rd CPU fallback runners from kernels/ggml/kernels.txt"
+)
 add_library(ggml_rd OBJECT
 	guest/ggml-rd/ggml-rd.cpp
 	guest/ggml-rd/rd_graph.cpp
 	guest/ggml-rd/rd_kernels.cpp
 	guest/ggml-rd/rd_pack.cpp
+	guest/ggml-rd/rd_cpu.cpp
+	${GGML_RD_CPU_RUNNER}
 	${GGML_RD_OPS}
 )
-target_include_directories(ggml_rd PUBLIC guest/ggml-rd kernels/ggml ${CMAKE_BINARY_DIR} vendor/ggml/src)
+set_source_files_properties(${GGML_RD_CPU_RUNNER} PROPERTIES COMPILE_OPTIONS "-ffp-contract=off"
+	INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/kernels/ggml/cpp;${CMAKE_SOURCE_DIR}/guest/avbd/slang-rt")
+target_include_directories(ggml_rd PUBLIC guest/ggml-rd kernels/ggml tests/ggml_rd_kernels ${CMAKE_BINARY_DIR} vendor/ggml/src)
 target_link_libraries(ggml_rd PUBLIC ggml ggml-base rd_compute)
 
 # Gate 3 (G3.ops): test-backend-ops in the guest, ggml-rd against ggml-cpu.

@@ -33,11 +33,6 @@ using namespace ggml_rd;
 constexpr uint32_t kRows = 16; // queries per work group of the tiled kernel
 constexpr uint32_t W_RK2 = 55, W_RK3 = 56, W_RV2 = 57, W_RV3 = 58, W_SCALE = 59, W_SOFTCAP = 60;
 
-bool serial_requested() {
-	const char *e = std::getenv("GGML_RD_SERIAL");
-	return e != nullptr && std::atoi(e) != 0;
-}
-
 // op_params word i (ggml-impl.h's accessors are internal to ggml).
 int32_t param_i32(const ggml_tensor *op, int i) {
 	int32_t x;
@@ -103,7 +98,7 @@ bool pack_fa(Pack &p) {
 	const ggml_tensor *q = op->src[0];
 	const ggml_tensor *k = op->src[1];
 	const ggml_tensor *v = op->src[2];
-	const bool serial = serial_requested();
+	const bool serial = serial_kernels();
 	std::string name = std::string("flash_attn_ext_") + (k->type == GGML_TYPE_F16 ? "f16" : "f32") + "_d" +
 			std::to_string(q->ne[0]) + (serial ? "_serial" : "");
 	p.kernel = kernel_index(name.c_str());

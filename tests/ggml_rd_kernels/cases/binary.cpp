@@ -1,11 +1,13 @@
-// L2 cases for ADD and MUL (f32): the template for every family's cases.
+// L2 cases for ADD, SUB and MUL (f32): the template for every family's cases.
 //
 // The shapes are test-backend-ops' test_bin_bcast ones (broadcast in every
 // dimension, a permuted src1, src0/src1 overlapping views of one tensor),
 // plus odd sizes, a strided destination (in place on a permuted view) and a
 // two-node chain. MUL draws its operands from [0.9, 1.1) as test-backend-ops
-// does. Every case must match ggml-cpu within NMSE 1e-7; ADD and MUL are one
-// IEEE operation per element, so they are expected bit-exact.
+// does. Every case must match ggml-cpu within NMSE 1e-7; ADD, SUB and MUL are
+// one IEEE operation per element, so they are expected bit-exact. SUB runs
+// every ADD shape (the same broadcast rule) and MotionBricks' masked blend,
+// mul(sub(a, b), mask).
 #include <array>
 #include <cstdio>
 #include <string>
@@ -19,6 +21,13 @@ using Nr = std::array<int, 4>;
 
 enum class Src1 { PLAIN, PERMUTED, OVERLAP };
 
+enum class Op { ADD, SUB, MUL };
+const Op kOps[] = { Op::ADD, Op::SUB, Op::MUL };
+
+const char *op_name(Op op) {
+	return op == Op::ADD ? "ADD" : (op == Op::SUB ? "SUB" : "MUL");
+}
+
 std::string fmt(const char *op, Ne ne, Nr nr, Src1 s1, const char *extra = "") {
 	char b[160];
 	std::snprintf(b, sizeof b, "%s ne=[%lld,%lld,%lld,%lld] nr=[%d,%d,%d,%d]%s%s", op, (long long)ne[0], (long long)ne[1],
@@ -28,8 +37,8 @@ std::string fmt(const char *op, Ne ne, Nr nr, Src1 s1, const char *extra = "") {
 }
 
 // test_bin_bcast::build_graph for one op (nf = 1).
-ggml_tensor *bcast(ggml_context *ctx, bool mul, Ne ne, Nr nr, Src1 s1) {
-	auto op = mul ? ggml_mul : ggml_add;
+ggml_tensor *bcast(ggml_context *ctx, Op o, Ne ne, Nr nr, Src1 s1) {
+	auto op = o == Op::ADD ? ggml_add : (o == Op::SUB ? ggml_sub : ggml_mul);
 	ggml_tensor *a = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, ne[0] * nr[0], ne[1] * nr[1], ne[2] * nr[2], ne[3] * nr[3]);
 	ggml_tensor *b;
 	ggml_tensor *x = a;
@@ -47,11 +56,11 @@ ggml_tensor *bcast(ggml_context *ctx, bool mul, Ne ne, Nr nr, Src1 s1) {
 }
 
 void add_bcast(std::vector<L2Case> &out, Ne ne, Nr nr, Src1 s1 = Src1::PLAIN) {
-	for (bool mul : { false, true }) {
+	for (Op o : kOps) {
 		L2Case c;
-		c.name = fmt(mul ? "MUL" : "ADD", ne, nr, s1);
-		c.build = [=](ggml_context *ctx) { return bcast(ctx, mul, ne, nr, s1); };
-		if (mul) {
+		c.name = fmt(op_name(o), ne, nr, s1);
+		c.build = [=](ggml_context *ctx) { return bcast(ctx, o, ne, nr, s1); };
+		if (o == Op::MUL) {
 			c.lo = 0.9f;
 			c.hi = 1.1f;
 		}
@@ -84,16 +93,17 @@ L2_CASES(binary) {
 
 	// A strided destination: in place on a permuted view of a. (Dims 1 and 2
 	// swap; ggml-cpu, the reference, wants dst and src0 rows contiguous.)
-	for (bool mul : { false, true }) {
+	for (Op o : kOps) {
 		L2Case c;
-		c.name = std::string(mul ? "MUL" : "ADD") + " inplace on permute(a,0,2,1,3) [6,4,3,2]";
+		c.name = std::string(op_name(o)) + " inplace on permute(a,0,2,1,3) [6,4,3,2]";
 		c.build = [=](ggml_context *ctx) {
 			ggml_tensor *a = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 6, 4, 3, 2);
 			ggml_tensor *at = ggml_permute(ctx, a, 0, 2, 1, 3); // [6,3,4,2], rows strided
 			ggml_tensor *b = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 6, 3, 4, 2);
-			return mul ? ggml_mul_inplace(ctx, at, b) : ggml_add_inplace(ctx, at, b);
+			return o == Op::ADD ? ggml_add_inplace(ctx, at, b)
+								: (o == Op::SUB ? ggml_sub_inplace(ctx, at, b) : ggml_mul_inplace(ctx, at, b));
 		};
-		if (mul) {
+		if (o == Op::MUL) {
 			c.lo = 0.9f;
 			c.hi = 1.1f;
 		}
@@ -109,6 +119,20 @@ L2_CASES(binary) {
 			ggml_tensor *b = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 9, 7, 5, 3);
 			ggml_tensor *k = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 9, 1, 5, 1);
 			return ggml_mul(ctx, ggml_add(ctx, a, b), k);
+		};
+		out.push_back(c);
+	}
+
+	// MotionBricks' masked blend: mul(sub(target_emb, hidden), mask) with a
+	// [1, n] mask broadcast over the 512 channels (root.cpp:161, pose.cpp:173).
+	{
+		L2Case c;
+		c.name = "SUB then MUL by [1,n] mask [512,9,1,1]";
+		c.build = [](ggml_context *ctx) {
+			ggml_tensor *a = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 512, 9, 1, 1);
+			ggml_tensor *b = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 512, 9, 1, 1);
+			ggml_tensor *m = ggml_new_tensor_4d(ctx, GGML_TYPE_F32, 1, 9, 1, 1);
+			return ggml_mul(ctx, ggml_sub(ctx, a, b), m);
 		};
 		out.push_back(c);
 	}

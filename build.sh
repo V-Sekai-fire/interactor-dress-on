@@ -89,6 +89,10 @@ else
 	BUILD_DIR="$BUILD" bash "$HERE/kernels/ggml/gen.sh" --no-emit
 fi
 
+# A Linux slangc writes the cpp emits with an absolute include of its prelude
+# where the reference inlines it; put the inline form back (byte-identical to
+# the committed emits, so nothing churns).
+python3 "$HERE/tools/inline_prelude.py" "$HERE"
 BUILD_FIT="${BUILD_FIT:-1}"
 if [ "$BUILD_FIT" = 0 ]; then WITH_FIT=OFF; else WITH_FIT=ON; fi
 if [ "$WITH_FIT" = ON ]; then

@@ -111,11 +111,21 @@ static uint8_t *cpu_at(Buffer *b, uint64_t off) {
 	return static_cast<uint8_t *>(b->mem) + off;
 }
 
+// GGML_RD_PROFILE: host-clock timing of every CPU-fallback buffer op over 1 MiB.
+static void cpu_trace(const char *what, size_t bytes, int64_t t0) {
+	static const bool on = std::getenv("GGML_RD_PROFILE") != nullptr;
+	if (on && bytes >= (size_t(1) << 20)) {
+		std::printf("ggml-rd cpu %s: %zu bytes, %lld us\n", what, bytes, (long long)(rdc::host_usec() - t0));
+	}
+}
+
 static void buffer_set_tensor(ggml_backend_buffer_t buffer, ggml_tensor *tensor, const void *data, size_t offset, size_t size) {
 	Buffer *b = buf(buffer);
 	Ctx &c = ctx();
 	if (b->mem != nullptr) {
+		const int64_t t0 = rdc::host_usec();
 		std::memcpy(cpu_at(b, byte_offset(tensor, b) + offset), data, size);
+		cpu_trace("set_tensor", size, t0);
 		c.st.set_bytes += int64_t(size);
 		return;
 	}
@@ -130,7 +140,9 @@ static void buffer_get_tensor(ggml_backend_buffer_t buffer, const ggml_tensor *t
 	Buffer *b = buf(buffer);
 	Ctx &c = ctx();
 	if (b->mem != nullptr) {
+		const int64_t t0 = rdc::host_usec();
 		std::memcpy(data, cpu_at(b, byte_offset(tensor, b) + offset), size);
+		cpu_trace("get_tensor", size, t0);
 		c.st.get_bytes += int64_t(size);
 		return;
 	}
@@ -196,7 +208,9 @@ static bool buffer_cpy_tensor(ggml_backend_buffer_t buffer, const ggml_tensor *s
 static void buffer_clear(ggml_backend_buffer_t buffer, uint8_t value) {
 	Buffer *b = buf(buffer);
 	if (b->mem != nullptr) {
+		const int64_t t0 = rdc::host_usec();
 		std::memset(b->mem, value, b->size);
+		cpu_trace("clear", b->size, t0);
 		++ctx().st.clears;
 		return;
 	}
@@ -262,7 +276,9 @@ static ggml_backend_buffer_t buft_alloc_buffer(ggml_backend_buffer_type_t bt, si
 		// Zeroed, like storage_buffer_empty. The guest heap is a host arena
 		// with 16-byte alignment; the kernels index 32-bit words, and the
 		// offsets are relative to this base, so that is enough.
+		const int64_t t0 = rdc::host_usec();
 		mem = std::calloc(bytes, 1);
+		cpu_trace("alloc", bytes, t0);
 		if (mem == nullptr) {
 			set_error("alloc_buffer: " + std::to_string(bytes) + " bytes: out of guest memory");
 			return nullptr;

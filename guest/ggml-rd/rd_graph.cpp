@@ -23,6 +23,7 @@
 // at 2, around each dispatch's packing and recording).
 #include "rd_internal.h"
 
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
@@ -232,6 +233,10 @@ ggml_status graph_compute(ggml_cgraph *g) {
 		}
 		pf.us_total = clock() - t_entry;
 		c.st.dispatches += int64_t(ds.size());
+		if (prof > 0) {
+			std::printf("ggml-rd cpu graph: %zu dispatches, %lld us (pack %lld us)\n", ds.size(),
+					(long long)pf.us_total, (long long)pf.us_pack);
+		}
 		return GGML_STATUS_SUCCESS;
 	}
 	rdc::Device &d = *c.dev;

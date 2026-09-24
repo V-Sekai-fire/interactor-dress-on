@@ -16,6 +16,8 @@
 #include "rd_internal.h"
 #include "run_kernel.h"
 
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 
 namespace ggml_rd {
@@ -30,7 +32,13 @@ bool cpu_run(const CpuDispatch &d, std::string *why) {
 		b[i].mem = d.bind[i]->mem;
 		b[i].bytes = d.bind[i]->size;
 	}
-	if (!run_kernel(d.kernel, d.w, b, d.groups)) {
+	const int64_t t0 = rdc::host_usec();
+	const bool ran = run_kernel(d.kernel, d.w, b, d.groups);
+	if (std::getenv("GGML_RD_PROFILE") != nullptr) {
+		std::printf("ggml-rd cpu kernel %s: groups %u x %u x %u, %lld us\n", kernel_desc(d.kernel).name, d.groups[0],
+				d.groups[1], d.groups[2], (long long)(rdc::host_usec() - t0));
+	}
+	if (!ran) {
 		*why = std::string("cpu fallback: kernel ") + kernel_desc(d.kernel).name + " has no cpp emit";
 		return false;
 	}

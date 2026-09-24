@@ -3,7 +3,8 @@
 #   GODOT_SANDBOX_BINTR_EMIT=<dir> godot --path project --headless --xr-mode off --script tools/bintr_emit.gd
 #
 # With the lookup on for this process, the org's addon build (godot-sandbox
-# feat/bintr-emit) writes <dir>/bintr-<hash>.c as it loads each program; the
+# feat/bintr-emit) writes <dir>/bintr-<HASH>.c, the shared-library form the
+# hash cache loads, as it loads each program; the
 # hash names the execute segment plus the translation flags, and the
 # Sandbox's memory_max is part of those flags, so each ELF is loaded with the
 # memory_max its stage uses (stages/*.gd, the gates). tools/build.exs

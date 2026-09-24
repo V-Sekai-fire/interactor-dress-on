@@ -16,8 +16,11 @@ func _initialize() -> void:
 		ProjectSettings.set_setting("sandbox/binary_translation/enabled", true)
 		print("lookup enabled for this process")
 	sb.allocations_max = 1000000
-	sb.memory_max = 512
-	sb.program = load("res://ggml_test.elf")
+	var elf := OS.get_environment("BINTR_PROBE_ELF")
+	if elf == "":
+		elf = "ggml_test"
+	sb.memory_max = int(OS.get_environment("BINTR_PROBE_MEM")) if OS.get_environment("BINTR_PROBE_MEM") != "" else 512
+	sb.program = load("res://%s.elf" % elf)
 	print("program loaded: is_binary_translated=%s is_jit=%s translation_hash=%s" % [
 			str(sb.call("is_binary_translated")), str(sb.call("is_jit")),
 			str(sb.call("get_translation_hash")) if sb.has_method("get_translation_hash") else "?"])

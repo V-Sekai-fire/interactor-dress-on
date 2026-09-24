@@ -34,6 +34,8 @@
 # gates/4-curvenet/results.txt; the last line is RESULT: PASS or RESULT: FAIL.
 extends SceneTree
 
+const SandboxUtil := preload("res://stages/sandbox_util.gd")
+
 const MeshWire := preload("res://util/mesh_wire.gd")
 const OUT_DIR := "res://../gates/4-curvenet/"
 const WALL_S := 300.0
@@ -89,7 +91,9 @@ func _initialize() -> void:
 	_out = FileAccess.open(ProjectSettings.globalize_path(OUT_DIR + "results.txt"), FileAccess.WRITE)
 	_say("# Gate 4 (curvenet.elf), %s, Godot %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string])
+	SandboxUtil.enable_native_translation()
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if _sb == null:
 		_fail("Sandbox class not registered")
 		_finish()

@@ -17,9 +17,12 @@
 
 namespace ggml_rd {
 
-// One ggml buffer: one RD storage buffer, and the fake base ggml sees.
+// One ggml buffer: one RD storage buffer, and the fake base ggml sees. On the
+// CPU fallback (no RenderingDevice; rd_cpu.cpp) it is one calloc'd block of
+// guest memory instead, `mem`, and the rid stays null.
 struct Buffer {
 	::RID rid;
+	void *mem = nullptr;
 	size_t size = 0; // bytes of the RD buffer (>= the ggml size, multiple of 256)
 	uintptr_t base = 0;
 	uint32_t index = 0;
@@ -56,6 +59,10 @@ struct Ctx {
 
 Ctx &ctx();
 bool device_ok();
+// No RenderingDevice, and the fallback is not switched off
+// (GGML_RD_CPU_FALLBACK=0): the graph runs the kernels' slangc cpp emits on
+// guest memory (rd_cpu.cpp).
+bool cpu_mode();
 // If a graph is in flight, run the wait hook (a later frame), then sync.
 void ensure_idle();
 // A cooperative yield point (the COOP hook), for long setup loops.
@@ -70,6 +77,19 @@ ggml_backend_buffer_type_t buft();
 
 // --- rd_graph.cpp -----------------------------------------------------------
 ggml_status graph_compute(ggml_cgraph *g);
+// One packed dispatch, as rd_graph.cpp builds it and rd_cpu.cpp runs it.
+struct CpuDispatch {
+	int kernel;
+	uint32_t groups[3];
+	Buffer *bind[4]; // s0, s1, s2, dst
+	uint32_t *w; // its 64 words
+	const ggml_tensor *node;
+};
+// --- rd_cpu.cpp: the CPU fallback ------------------------------------------
+// Run one dispatch through its kernel's cpp emit. False, with the reason,
+// if the kernel has no emit and no sibling (never for a kernel a packer picks
+// under serial_kernels()).
+bool cpu_run(const CpuDispatch &d, std::string *why);
 
 // --- rd_kernels.cpp: pipelines, the params table, uniform-set caches --------
 ::RID kernel_pipeline(int k); // created on first use; null on failure

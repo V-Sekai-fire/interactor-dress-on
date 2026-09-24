@@ -111,6 +111,7 @@ func _initialize() -> void:
 	_say("# Gate 0G (usd_probe.elf), %s, Godot %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string])
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if _sb == null:
 		_check(false, "Sandbox class not registered")
 		_finish()

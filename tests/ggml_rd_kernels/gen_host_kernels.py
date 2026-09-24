@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Write the host harness's kernel runners from kernels/ggml/kernels.txt.
+"""Write the kernel runners from kernels/ggml/kernels.txt.
 
 Each kernel's slangc cpp emit (kernels/ggml/cpp/<k>_emit.cpp) is included in
 a namespace of its own, and run_kernel(id, ...) dispatches kernel `id` (its
 line in kernels.txt, as in GgmlKernelTable.inc) over a grid, with the params
-words bound at set 1 base 0 and every storage binding (s0, s1, s2, dst) over
-the one memory block that stands in for the RD buffer.
+words bound at set 1 base 0 and each storage binding (s0, s1, s2, dst) over
+its own memory block: the host harness (tests/ggml_rd_kernels) passes one
+block for all four, the guest's CPU fallback (guest/ggml-rd/rd_cpu.cpp) one
+per ggml buffer.
 
 A kernel with no cpp emit (it shares group memory: kernels/ggml/gen.sh
 skips it) runs as its kernels/ggml/cpp_siblings.txt sibling when it has one
@@ -13,8 +15,8 @@ skips it) runs as its kernels/ggml/cpp_siblings.txt sibling when it has one
 runs one thread per group over the same grid (one work group per row: the
 NORM/RMS_NORM/MEAN/SOFT_MAX siblings). Any other kernel with no emit gets no
 runner (run_kernel returns false): its packer picks its `<k>_serial` sibling
-itself under GGML_RD_SERIAL=1, which the harness sets (FLASH_ATTN_EXT, whose
-sibling has its own grid).
+itself under GGML_RD_SERIAL=1, which the harness and the fallback set
+(FLASH_ATTN_EXT, whose sibling has its own grid).
 
     python gen_host_kernels.py kernels/ggml/kernels.txt <out.cpp> [kernels/ggml/cpp_siblings.txt]
 """
@@ -80,22 +82,25 @@ def main():
         w.append('#include "%s_emit.cpp"' % k)
         w.append('}')
     w.append('')
+    w.append('#include "run_kernel.h"')
+    w.append('')
     w.append('namespace {')
     w.append('template <class B>')
-    w.append('void bind(B &b, void *p, size_t bytes) {')
+    w.append('void bind(B &b, const KernelBinding &m) {')
     w.append('\tusing T = std::remove_reference_t<decltype(*b.data)>;')
-    w.append('\tb.data = static_cast<T *>(p);')
-    w.append('\tb.count = bytes / sizeof(T);')
+    w.append('\tb.data = static_cast<T *>(m.mem);')
+    w.append('\tb.count = m.bytes / sizeof(T);')
     w.append('}')
     w.append('template <class GP, class SLOT>')
-    w.append('void run(void (*fn)(ComputeVaryingInput *, void *, void *), uint32_t *words, void *mem, size_t bytes,')
+    w.append('void run(void (*fn)(ComputeVaryingInput *, void *, void *), uint32_t *words, const KernelBinding b[4],')
     w.append('\t\tconst uint32_t g[3]) {')
     w.append('\tGP gp{};')
-    w.append('\tbind(gp.params_0, words, 64 * 4);')
-    w.append('\tbind(gp.s0_0, mem, bytes);')
-    w.append('\tbind(gp.s1_0, mem, bytes);')
-    w.append('\tbind(gp.s2_0, mem, bytes);')
-    w.append('\tbind(gp.dst_0, mem, bytes);')
+    w.append('\tKernelBinding pb{ words, 64 * 4 };')
+    w.append('\tbind(gp.params_0, pb);')
+    w.append('\tbind(gp.s0_0, b[0]);')
+    w.append('\tbind(gp.s1_0, b[1]);')
+    w.append('\tbind(gp.s2_0, b[2]);')
+    w.append('\tbind(gp.dst_0, b[3]);')
     w.append('\tSLOT slot{};')
     w.append('\tslot.base_0 = 0;')
     w.append('\tgp.slot_0 = &slot;')
@@ -106,18 +111,24 @@ def main():
     w.append('}')
     w.append('} // namespace')
     w.append('')
-    w.append('bool run_kernel(int id, uint32_t *words, void *mem, size_t bytes, const uint32_t groups[3]) {')
+    w.append('bool run_kernel(int id, uint32_t *words, const KernelBinding bindings[4], const uint32_t groups[3]) {')
     w.append('\tswitch (id) {')
     for i, k in enumerate(kernels):
         if k not in runs:
             continue
         r = runs[k]
         w.append('\t\tcase %d:%s' % (i, '' if r == k else ' // %s runs as %s' % (k, r)))
-        w.append('\t\t\trun<k_%s::GlobalParams_0, k_%s::Slot_0>(&k_%s::main_0, words, mem, bytes, groups);' % (r, r, r))
+        w.append('\t\t\trun<k_%s::GlobalParams_0, k_%s::Slot_0>(&k_%s::main_0, words, bindings, groups);' % (r, r, r))
         w.append('\t\t\treturn true;')
     w.append('\t\tdefault:')
     w.append('\t\t\treturn false;')
     w.append('\t}')
+    w.append('}')
+    w.append('')
+    w.append('bool run_kernel(int id, uint32_t *words, void *mem, size_t bytes, const uint32_t groups[3]) {')
+    w.append('\tconst KernelBinding one{ mem, bytes };')
+    w.append('\tconst KernelBinding b[4] = { one, one, one, one };')
+    w.append('\treturn run_kernel(id, words, b, groups);')
     w.append('}')
     w.append('')
     open(sys.argv[2], 'w', newline='\n').write('\n'.join(w))

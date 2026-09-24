@@ -191,6 +191,7 @@ func _initialize() -> void:
 		if fr == 0:
 			_native_faces = o[1]
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	if _sb == null:
 		_fail("Sandbox class not registered")
 		_finish()

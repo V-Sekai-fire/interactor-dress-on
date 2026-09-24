@@ -16,6 +16,10 @@
 #   ... ++ --out=graph-dev                results in gates/3-ggml-rd/<out>/
 #   ... ++ --dump=<dir>                   dumps there (default <checkout>/build/graph-dumps)
 #   ... ++ --wall=<s>                     the wall clock (default 3600 s)
+#   godot --path project --headless --xr-mode off --script gate_ggml_graph.gd ++ --oracle=<exe>
+#                                         the graphs on ggml-rd's CPU fallback, the oracle
+#                                         host ggml-cpu alone (--check=none); default
+#                                         runs= graph_qwen,graph_sconv
 #
 # Runs, in order (each a probe job on the pump, AGENTS.md rule 4: every
 # submit's sync lands on a later frame):
@@ -24,6 +28,10 @@
 #                                                                              oracle: host ggml-cpu
 #   graph_dit8    one Pixal3D flow DiT block at 8^3 = 512 tokens, bf16       oracle: ggml-vulkan
 #   graph_dit     one Pixal3D flow DiT block, 4096 x 1536, bf16              oracle: ggml-vulkan
+#   graph_kimodo_denoiser  one Kimodo motion-denoiser encoder layer (1024 x 60 tokens x 3, f32)
+#                                                                              oracle: host ggml-cpu
+#   graph_kimodo_text      one Kimodo LLM2Vec Llama-3-8B layer (4096 x 16 tokens, bf16 base + f32 LoRA)
+#                                                                              oracle: host ggml-cpu
 #   cost_decode   a skin-tokens decode step (28 layers), 5 timed steps + a profiled one
 #   cost_dit      a Pixal3D flow forward (30 blocks), 3 timed + a profiled one
 # A graph run passes when the guest prints RESULT: PASS (RD statuses, finite,
@@ -35,6 +43,8 @@
 # oracle is a child process polled every frame, never waited on. Quits on a
 # wall clock whatever it is doing.
 extends SceneTree
+
+const SandboxUtil := preload("res://stages/sandbox_util.gd")
 
 const InferHost := preload("res://infer_host.gd")
 const GraphDump := preload("res://graph_dump.gd")
@@ -57,6 +67,7 @@ var _results := {}
 var _out_dir := "res://../gates/3-ggml-rd/graph/"
 var _dump_dir := ""
 var _oracle_exe := ""
+var _headless := false
 var _wall_s := WALL_S
 var _oracle_pid := -1
 var _oracle_run = null
@@ -106,11 +117,15 @@ func _initialize() -> void:
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _rd == null else RenderingServer.get_video_adapter_name()])
 	_say("oracle: %s" % (_oracle_exe.get_file() if _oracle_exe != "" else "(none: graph runs FAIL)"))
-	if _rd == null:
-		_verdict(false, "no RenderingDevice (run with --rendering-driver vulkan, not --headless)")
-		_finish()
-		return
+	# Headless: ggml-rd's CPU fallback stands in as RD0 (guest/ggml-rd/rd_cpu.cpp),
+	# and the oracle is host ggml-cpu with no second backend (`--check=none`):
+	# the Lean kernels' cpp emits in the guest against ggml's own CPU code.
+	# The default headless runs are the two small graphs; the DiT block and
+	# the cost runs are GPU-sized (runs= still names any of them).
+	_headless = _rd == null
+	SandboxUtil.enable_native_translation()
 	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	# memory_max before program= (Gate 0F): the DiT block's RD runs keep
 	# their outputs (block out + input, 25 MB each at 4096 tokens) for the
 	# barrier-all, repeat, drop and dump comparisons in the guest heap
@@ -119,7 +134,12 @@ func _initialize() -> void:
 	_sb.program = load("res://ggml_test.elf")
 	_sb.references_max = 65536
 	_sb.execution_timeout = 4000000
-	_say("attach: %s" % str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB)))
+	var attach := str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB))
+	_say("attach: %s" % attach)
+	if _headless and not attach.contains("CPU fallback"):
+		_verdict(false, "no RenderingDevice and no CPU fallback (run with --rendering-driver vulkan)")
+		_finish()
+		return
 	_say("execution_timeout=%s memory_max=%s" % [str(_sb.execution_timeout), str(_sb.memory_max)])
 	_host = InferHost.new(_sb, _rd, "ggml_pump")
 	# [name, probe, arg, oracle args (graph runs)]
@@ -128,9 +148,17 @@ func _initialize() -> void:
 		["graph_sconv", "graph", "sconv", ["--ref=cpu", "--check=vulkan"]],
 		["graph_dit8", "graph", "dit:8", ["--ref=vulkan", "--check=cpu"]],
 		["graph_dit", "graph", dit_arg, ["--ref=vulkan", "--check=cpu"]],
+		["graph_kimodo_denoiser", "graph", "kimodo_denoiser", ["--ref=cpu", "--check=vulkan"]],
+		["graph_kimodo_text", "graph", "kimodo_text", ["--ref=cpu", "--check=vulkan"]],
 		["cost_decode", "cost", "decode:5", []],
 		["cost_dit", "cost", "dit:3", []],
 	]
+	if _headless:
+		for r in _runs:
+			if r[1] == "graph":
+				r[3] = ["--ref=cpu", "--check=none"]
+		if keep.is_empty():
+			keep = PackedStringArray(["graph_qwen", "graph_sconv"])
 	if not keep.is_empty():
 		_runs = _runs.filter(func(r): return keep.has(r[0]))
 		_say("runs selected: %s" % str(keep))
@@ -238,10 +266,12 @@ func _checks() -> void:
 		"graph_sconv": "G3.graph sparse-conv level (f16), vs host ggml-cpu: the same criteria",
 		"graph_dit8": "G3.graph DiT block at 512 tokens (bf16), vs ggml-vulkan: the same criteria",
 		"graph_dit": "G3.graph DiT block (bf16), vs ggml-vulkan: the same criteria",
+		"graph_kimodo_denoiser": "G3.graph Kimodo denoiser encoder layer (f32), vs host ggml-cpu: the same criteria",
+		"graph_kimodo_text": "G3.graph Kimodo LLM2Vec text layer (bf16 base + f32 LoRA), vs host ggml-cpu: the same criteria",
 		"cost_decode": "G3.cost skin-tokens decode step: every step computed, finite logits",
 		"cost_dit": "G3.cost Pixal3D flow forward: every forward computed, finite output",
 	}
-	for n in ["graph_qwen", "graph_sconv", "graph_dit8", "graph_dit", "cost_decode", "cost_dit"]:
+	for n in ["graph_qwen", "graph_sconv", "graph_dit8", "graph_dit", "graph_kimodo_denoiser", "graph_kimodo_text", "cost_decode", "cost_dit"]:
 		if not _selected.has(n):
 			continue
 		var r = _results.get(n, {})

@@ -1,10 +1,10 @@
 cff-version: 1.2.0
-message: If you use this code, cite the two ggml applications its graph builders are copied from.
-title: skin-tokens-ggml and pixal3d-ggml graph builders (copied for Gate 3)
+message: If you use this code, cite the three ggml applications its graph builders are copied from.
+title: skin-tokens-ggml, pixal3d-ggml and kimodo-ggml graph builders (copied for Gate 3)
 abstract: >-
   The ggml graph builders Gate 3 (G3.graph, G3.cost) runs on random weights,
   copied function by function so the gate builds the apps' own op sequences
-  without vendoring either app. From skin-tokens-ggml src/qwen.cpp: linear,
+  without vendoring any app. From skin-tokens-ggml src/qwen.cpp: linear,
   rms, repeat_kv, repeat_kv_batched, qwen_graph_evaluator::cache_view and
   ::decode_layer, and the graph part of ::decode (embedding rows, the decoder
   layers, the final norm, the logits). From pixal3d-ggml trellis2.cpp:
@@ -13,11 +13,17 @@ abstract: >-
   block body with its lin/modulate/rope/qk_norm lambdas, the head), and
   build_neighbor_indices and one level of shape_dec_run's graph (the child
   head, the ConvNeXt blocks and the up-block's part A, each submanifold 3^3
-  conv as 27 x get_rows + mask mul + mul_mat).
+  conv as 27 x get_rows + mask mul + mul_mat). From kimodo-ggml
+  src/denoiser.cpp: linear, norm and layer (one F32 TransformerEncoderLayer
+  of the motion denoiser, its attention as explicit [head, batch] branches);
+  from kimodo-ggml src/llm_text_encoder.cpp: norm, repeat_kv and layer_graph
+  (one bidirectional LLM2Vec Llama-3-8B layer: BF16 base weights with the
+  F32 supervised LoRA branch, NEOX RoPE, the bf16 activation casts).
 
 
-  Adapted: the model lookups (weights_.tensor, m->tensors) are a name ->
-  tensor function; decode_layer and decode take the KV caches and weights as
+  Adapted: the model lookups (weights_.tensor, m->tensors, the
+  ggml_motion_weights and component tensor lookups) are a name -> tensor
+  function; decode_layer and decode take the KV caches and weights as
   parameters instead of evaluator members, and decode builds only the graph
   (allocation, inputs and readback are the caller's); the flow's lambdas are
   members of one struct shared by block() and forward(); sdpa_auto always
@@ -26,13 +32,16 @@ abstract: >-
   cross-attention, ProjectAttention's proj_linear(proj) added to the
   cross-attention output (V-Sekai-fire/Pixal3D cdbb2bb,
   pixal3d/modules/attention/proj_attention.py); the sparse level names its
-  child-head up-block by this level's block count. Op sequences, shapes,
-  epsilons and scales are the apps'.
+  child-head up-block by this level's block count; the Kimodo text layer's
+  base projection accepts an F32 weight as well as the GGUF's BF16 (the f32
+  arm hands the same values widened). Op sequences, shapes, epsilons and
+  scales are the apps'.
 type: software
 authors:
   - name: V-Sekai-fire
   - name: rms80
   - name: VAST-AI-Research contributors (SkinTokens, TokenRig)
+  - name: Deepesh70 (kimodo.cpp)
 repository-code: https://github.com/V-Sekai-fire/skin-tokens-ggml
 commit: 097a0cc469f49650cbf87e83914ad7d93ce94e50
 license:
@@ -60,3 +69,11 @@ references:
       - name: TencentARC
     repository-code: https://github.com/V-Sekai-fire/Pixal3D
     commit: cdbb2bb
+  - type: software
+    title: kimodo-ggml (src/denoiser.cpp, src/llm_text_encoder.cpp; the hparams from scripts/convert_motion_to_gguf.py and scripts/convert_llm2vec_layer_to_gguf.py)
+    authors:
+      - name: V-Sekai-fire
+      - name: Deepesh70
+    repository-code: https://github.com/V-Sekai-fire/kimodo-ggml
+    commit: 568b025
+    license: Apache-2.0

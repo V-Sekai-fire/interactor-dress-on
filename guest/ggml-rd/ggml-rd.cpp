@@ -20,6 +20,19 @@ bool device_ok() {
 	return c.dev != nullptr && c.dev->ok();
 }
 
+bool cpu_mode() {
+	if (device_ok()) {
+		return false;
+	}
+	const char *e = std::getenv("GGML_RD_CPU_FALLBACK");
+	return e == nullptr || std::atoi(e) != 0;
+}
+
+// The device exists: a RenderingDevice, or the CPU fallback in its place.
+static bool usable() {
+	return device_ok() || cpu_mode();
+}
+
 void set_error(const std::string &e) {
 	ctx().last_error = e;
 	GGML_LOG_ERROR("ggml-rd: %s\n", e.c_str());
@@ -79,6 +92,7 @@ static Buffer *buf(ggml_backend_buffer_t b) {
 static void buffer_free(ggml_backend_buffer_t buffer) {
 	Buffer *b = buf(buffer);
 	Ctx &c = ctx();
+	std::free(b->mem);
 	if (device_ok() && b->rid.index != 0) {
 		ensure_idle();
 		forget_sets_of(b->rid);
@@ -93,10 +107,29 @@ static void *buffer_get_base(ggml_backend_buffer_t buffer) {
 	return reinterpret_cast<void *>(buf(buffer)->base);
 }
 
+static uint8_t *cpu_at(Buffer *b, uint64_t off) {
+	return static_cast<uint8_t *>(b->mem) + off;
+}
+
+// GGML_RD_PROFILE: host-clock timing of every CPU-fallback buffer op over 1 MiB.
+static void cpu_trace(const char *what, size_t bytes, int64_t t0) {
+	static const bool on = std::getenv("GGML_RD_PROFILE") != nullptr;
+	if (on && bytes >= (size_t(1) << 20)) {
+		std::printf("ggml-rd cpu %s: %zu bytes, %lld us\n", what, bytes, (long long)(rdc::host_usec() - t0));
+	}
+}
+
 static void buffer_set_tensor(ggml_backend_buffer_t buffer, ggml_tensor *tensor, const void *data, size_t offset, size_t size) {
 	Buffer *b = buf(buffer);
-	ensure_idle();
 	Ctx &c = ctx();
+	if (b->mem != nullptr) {
+		const int64_t t0 = rdc::host_usec();
+		std::memcpy(cpu_at(b, byte_offset(tensor, b) + offset), data, size);
+		cpu_trace("set_tensor", size, t0);
+		c.st.set_bytes += int64_t(size);
+		return;
+	}
+	ensure_idle();
 	if (!c.dev->buffer_update(b->rid, byte_offset(tensor, b) + offset, size, data)) {
 		set_error("set_tensor " + std::string(tensor->name) + ": " + c.dev->error());
 	}
@@ -105,8 +138,15 @@ static void buffer_set_tensor(ggml_backend_buffer_t buffer, ggml_tensor *tensor,
 
 static void buffer_get_tensor(ggml_backend_buffer_t buffer, const ggml_tensor *tensor, void *data, size_t offset, size_t size) {
 	Buffer *b = buf(buffer);
-	ensure_idle();
 	Ctx &c = ctx();
+	if (b->mem != nullptr) {
+		const int64_t t0 = rdc::host_usec();
+		std::memcpy(data, cpu_at(b, byte_offset(tensor, b) + offset), size);
+		cpu_trace("get_tensor", size, t0);
+		c.st.get_bytes += int64_t(size);
+		return;
+	}
+	ensure_idle();
 	if (!c.dev->buffer_get_into(b->rid, byte_offset(tensor, b) + offset, size, data)) {
 		set_error("get_tensor " + std::string(tensor->name) + ": " + c.dev->error());
 		std::memset(data, 0, size);
@@ -131,8 +171,13 @@ static void fill_bytes(Buffer *b, uint64_t offset, uint64_t size, uint8_t value)
 
 static void buffer_memset_tensor(ggml_backend_buffer_t buffer, ggml_tensor *tensor, uint8_t value, size_t offset, size_t size) {
 	Buffer *b = buf(buffer);
-	ensure_idle();
 	const uint64_t off = byte_offset(tensor, b) + offset;
+	if (b->mem != nullptr) {
+		std::memset(cpu_at(b, off), value, size);
+		++ctx().st.clears;
+		return;
+	}
+	ensure_idle();
 	if (value == 0 && off % 4 == 0 && size % 4 == 0) {
 		ctx().dev->buffer_clear(b->rid, off, size);
 		++ctx().st.clears;
@@ -147,14 +192,28 @@ static bool buffer_cpy_tensor(ggml_backend_buffer_t buffer, const ggml_tensor *s
 		return false; // ggml falls back to get + set
 	}
 	Buffer *db = buf(buffer);
-	ensure_idle();
 	Ctx &c = ctx();
 	++c.st.copies;
+	if (db->mem != nullptr) {
+		if (sb->mem == nullptr) {
+			return false;
+		}
+		std::memmove(cpu_at(db, byte_offset(dst, db)), cpu_at(sb, byte_offset(src, sb)), ggml_nbytes(src));
+		return true;
+	}
+	ensure_idle();
 	return c.dev->buffer_copy(sb->rid, db->rid, ggml_nbytes(src), byte_offset(src, sb), byte_offset(dst, db));
 }
 
 static void buffer_clear(ggml_backend_buffer_t buffer, uint8_t value) {
 	Buffer *b = buf(buffer);
+	if (b->mem != nullptr) {
+		const int64_t t0 = rdc::host_usec();
+		std::memset(b->mem, value, b->size);
+		cpu_trace("clear", b->size, t0);
+		++ctx().st.clears;
+		return;
+	}
 	ensure_idle();
 	if (value == 0) {
 		ctx().dev->buffer_clear(b->rid, 0, b->size);
@@ -201,24 +260,40 @@ static const char *buft_get_name(ggml_backend_buffer_type_t) {
 }
 
 static ggml_backend_buffer_t buft_alloc_buffer(ggml_backend_buffer_type_t bt, size_t size) {
-	if (!device_ok()) {
+	if (!usable()) {
 		set_error("alloc_buffer: no RenderingDevice");
 		return nullptr;
 	}
-	ensure_idle();
 	Ctx &c = ctx();
 	const size_t bytes = (std::max<size_t>(size, 1) + 255) & ~size_t(255);
 	if (bytes > max_buffer_bytes()) {
 		set_error("alloc_buffer: " + std::to_string(bytes) + " bytes is over the maximum");
 		return nullptr;
 	}
-	::RID rid = c.dev->storage_buffer_empty(bytes, true);
-	if (rid.index == 0) {
-		set_error("alloc_buffer: " + c.dev->error());
-		return nullptr;
+	::RID rid;
+	void *mem = nullptr;
+	if (cpu_mode()) {
+		// Zeroed, like storage_buffer_empty. The guest heap is a host arena
+		// with 16-byte alignment; the kernels index 32-bit words, and the
+		// offsets are relative to this base, so that is enough.
+		const int64_t t0 = rdc::host_usec();
+		mem = std::calloc(bytes, 1);
+		cpu_trace("alloc", bytes, t0);
+		if (mem == nullptr) {
+			set_error("alloc_buffer: " + std::to_string(bytes) + " bytes: out of guest memory");
+			return nullptr;
+		}
+	} else {
+		ensure_idle();
+		rid = c.dev->storage_buffer_empty(bytes, true);
+		if (rid.index == 0) {
+			set_error("alloc_buffer: " + c.dev->error());
+			return nullptr;
+		}
 	}
 	Buffer *b = new Buffer;
 	b->rid = rid;
+	b->mem = mem;
 	b->size = bytes;
 	b->index = c.next_buffer_index++;
 	b->base = uintptr_t(0x1000) + (uintptr_t(b->index) << 40);
@@ -274,6 +349,9 @@ static const char *dev_get_description(ggml_backend_dev_t) {
 	static std::string desc;
 	if (desc.empty() && device_ok()) {
 		desc = "Godot RenderingDevice (" + ctx().dev->device_name() + ")";
+	}
+	if (desc.empty() && cpu_mode()) {
+		return "ggml-rd CPU fallback (the kernels' slangc cpp emits on guest memory)";
 	}
 	return desc.empty() ? "Godot RenderingDevice" : desc.c_str();
 }
@@ -383,7 +461,7 @@ static enum ggml_status backend_graph_compute(ggml_backend_t, ggml_cgraph *cgrap
 }
 
 static ggml_backend_t dev_init_backend(ggml_backend_dev_t d, const char *) {
-	if (!device_ok()) {
+	if (!usable()) {
 		return nullptr;
 	}
 	ggml_backend_i i{};
@@ -413,11 +491,11 @@ static const char *reg_get_name(ggml_backend_reg_t) {
 }
 
 static size_t reg_get_device_count(ggml_backend_reg_t) {
-	return device_ok() ? 1 : 0;
+	return usable() ? 1 : 0;
 }
 
 static ggml_backend_dev_t reg_get_device(ggml_backend_reg_t, size_t index) {
-	GGML_ASSERT(index == 0 && device_ok());
+	GGML_ASSERT(index == 0 && usable());
 	return &device_obj();
 }
 
@@ -481,13 +559,25 @@ bool ggml_backend_rd_tensor_upload(const ggml_tensor *tensor, size_t offset, con
 		uint64_t file_offset, size_t bytes) {
 	Ctx &c = ctx();
 	Buffer *b = buffer_of(tensor);
-	if (!device_ok() || b == nullptr) {
+	if (!usable() || b == nullptr) {
 		set_error(std::string("upload ") + tensor->name + ": not in an RD buffer");
 		return false;
 	}
 	if (offset + bytes > ggml_nbytes(tensor)) {
 		set_error(std::string("upload ") + tensor->name + ": past the end of the tensor");
 		return false;
+	}
+	if (b->mem != nullptr) {
+		if (c.hooks.read == nullptr) {
+			set_error("upload: no read hook (the CPU fallback reads the file into guest memory)");
+			return false;
+		}
+		if (!c.hooks.read(c.hooks.user, path, file_offset, bytes, cpu_at(b, byte_offset(tensor, b) + offset))) {
+			set_error("upload " + path + ": the host did not serve it");
+			return false;
+		}
+		c.st.set_bytes += int64_t(bytes);
+		return true;
 	}
 	if (c.hooks.upload == nullptr) {
 		set_error("upload: no upload hook");

@@ -21,7 +21,7 @@
 #include "l2.h"
 #include "rd_pack.h"
 
-bool run_kernel(int id, uint32_t *words, void *mem, size_t bytes, const uint32_t groups[3]);
+#include "run_kernel.h"
 
 static std::vector<L2Maker> &makers() {
 	static std::vector<L2Maker> m;
@@ -223,7 +223,7 @@ Outcome run_case(const L2Case &c, Control control) {
 			for (int k = 0; k < 4; ++k) {
 				last += uint64_t(w[W_SRC0 + T_NE + k] ? w[W_SRC0 + T_NE + k] - 1 : 0) * w[W_SRC0 + T_NB + k];
 			}
-			if ((last + 1) * ggml_type_size(node->src[0]->type) > mem.bytes) {
+			if (node->src[0] != nullptr && (last + 1) * ggml_type_size(node->src[0]->type) > mem.bytes) {
 				why = "swapped strides reach past the buffer";
 				break;
 			}

@@ -13,6 +13,16 @@
 //   sconv  one shape-decoder level (level 1: C 256, the child head, two
 //          ConvNeXt blocks, the up-block's part A; every 3^3 submanifold conv
 //          27 x get_rows + mask mul + mul_mat), f16 weights
+//   kimodo_denoiser  one Kimodo motion-denoiser TransformerEncoderLayer
+//          (denoiser.cpp's layer: 1024 wide, 8 heads x 128, FFN 2048, the
+//          attention as 8 x 3 explicit [head, batch] branches) on the
+//          separated-CFG batch of 3 and 52 + 8 tokens, f32 weights (the
+//          model's type: its f32 arm is the same bytes)
+//   kimodo_text  one LLM2Vec Llama-3-8B layer (llm_text_encoder.cpp's
+//          layer_graph: 4096 wide, 32 heads / 8 KV heads x 128, FFN 14336,
+//          NEOX RoPE at theta 500000, bidirectional) on 16 tokens, the base
+//          weights bf16 with the F32 rank-16 LoRA branch; f32 arm: the base
+//          widened, the bf16 activation casts kept (they are the app's ops)
 //
 // Arms: native (the weights in the model's type) and f32 (the same values,
 // rounded through that type, stored as f32). Every leaf is filled from a
@@ -119,9 +129,21 @@ void build_sconv(Net &n, bool f32_arm);
 std::vector<int32_t> shell_coords();
 extern int g_sconv_neighbours; // real neighbours over the 27 offsets, set by build_sconv
 
-// "qwen", "dit" (res^3 tokens, 0 = 16), "sconv": the builder, the native
-// weight type's name and the output that is input + branches. False if
-// `which` names none.
+// Kimodo: the denoiser layer on the separated-CFG batch (denoiser.cpp:138,
+// cfg_batch 3) of 8 frames after the 52 prefix tokens (tests/root_parity.cpp:21,
+// T = 8, B = 3); the text layer on 16 tokens (tests/llm_layer_parity.cpp:148).
+constexpr int kKimodoFrames = 8;
+constexpr int kKimodoBatch = 3;
+constexpr int64_t kKimodoTextSeq = 16;
+
+void kimodo_denoiser_layer_weights(Net &n, const std::string &prefix, bool f32_arm);
+void kimodo_text_layer_weights(Net &n, bool f32_arm);
+void build_kimodo_denoiser(Net &n, bool f32_arm);
+void build_kimodo_text(Net &n, bool f32_arm);
+
+// "qwen", "dit" (res^3 tokens, 0 = 16), "sconv", "kimodo_denoiser",
+// "kimodo_text": the builder, the native weight type's name and the output
+// that is input + branches. False if `which` names none.
 using BuildFn = std::function<void(Net &, bool f32_arm)>;
 bool graph_builder(const std::string &which, int res, BuildFn &build, std::string &native, std::string &residual_out);
 

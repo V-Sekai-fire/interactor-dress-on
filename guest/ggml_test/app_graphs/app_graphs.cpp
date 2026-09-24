@@ -456,4 +456,168 @@ std::vector<std::pair<std::string, ggml_tensor *>> level_graph(ggml_context *ctx
 
 } // namespace sparse
 
+// --- kimodo-ggml src/denoiser.cpp @568b025: the motion denoiser's encoder layer --
+
+namespace kimodo {
+
+namespace denoiser {
+
+namespace {
+
+// adapted: `weight(const ggml_motion_weights &, string_view)` there; the
+// lookup is the WeightFn here.
+ggml_tensor *weight(const WeightFn &w, const std::string &n) {
+	auto *t = w(n);
+	if (!t) {
+		throw std::runtime_error("missing GGML tensor: " + n);
+	}
+	return t;
+}
+
+} // namespace
+
+ggml_tensor *linear(ggml_context *ctx, ggml_tensor *x, ggml_tensor *w, ggml_tensor *bias) {
+	auto *y = ggml_mul_mat(ctx, w, x);
+	// F32 parity takes precedence over Tensor Core throughput.  In
+	// particular, do not let a Vulkan backend lower the accumulation
+	// precision for the reference model.
+	ggml_mul_mat_set_prec(y, GGML_PREC_F32);
+	return ggml_add(ctx, y, ggml_repeat(ctx, bias, y));
+}
+
+ggml_tensor *norm(ggml_context *ctx, ggml_tensor *x, ggml_tensor *scale, ggml_tensor *bias) {
+	auto *n = ggml_norm(ctx, x, 1.e-5f);
+	return ggml_add(ctx, ggml_mul(ctx, n, ggml_repeat(ctx, scale, n)), ggml_repeat(ctx, bias, n));
+}
+
+// adapted: `layer(ctx, x, const ggml_motion_weights &w, string_view p, seq, batch)`
+// there; w is the WeightFn.
+ggml_tensor *layer(ggml_context *ctx, ggml_tensor *x, const WeightFn &w, const std::string &p, int seq, int batch) {
+	const std::string s(p);
+	auto *qkv = linear(ctx, x, weight(w, s + "self_attn.in_proj_weight"), weight(w, s + "self_attn.in_proj_bias"));
+	// Use explicit [head, batch] branches for the F32 reference graph.  The
+	// packed 4-D variant is faster, but differs slightly across Vulkan
+	// backends; this layout exactly matches the PyTorch tensor boundaries.
+	auto head = [&](int block, int h, int b) {
+		return ggml_view_2d(ctx, qkv, head_width, seq, qkv->nb[1],
+				static_cast<size_t>(block * width) * sizeof(float) + static_cast<size_t>(b) * qkv->nb[2] +
+						static_cast<size_t>(h * head_width) * sizeof(float));
+	};
+	std::vector<ggml_tensor *> batches;
+	batches.reserve(static_cast<size_t>(batch));
+	for (int b = 0; b < batch; ++b) {
+		std::vector<ggml_tensor *> joined_heads;
+		joined_heads.reserve(heads);
+		for (int h = 0; h < heads; ++h) {
+			auto *q = ggml_cont(ctx, head(0, h, b)), *k = ggml_cont(ctx, head(1, h, b)), *v = ggml_cont(ctx, head(2, h, b));
+			auto *scores = ggml_mul_mat(ctx, k, q);
+			ggml_mul_mat_set_prec(scores, GGML_PREC_F32);
+			auto *prob = ggml_soft_max(ctx, ggml_scale(ctx, scores, 1.f / std::sqrt(float(head_width))));
+			auto *value_product = ggml_mul_mat(ctx, prob, ggml_cont(ctx, ggml_transpose(ctx, v)));
+			ggml_mul_mat_set_prec(value_product, GGML_PREC_F32);
+			joined_heads.push_back(ggml_transpose(ctx, value_product));
+		}
+		auto *joined = joined_heads.front();
+		for (int h = 1; h < heads; ++h) {
+			joined = ggml_concat(ctx, joined, joined_heads[static_cast<size_t>(h)], 0);
+		}
+		batches.push_back(ggml_reshape_3d(ctx, joined, width, seq, 1));
+	}
+	auto *a = batches.front();
+	for (int b = 1; b < batch; ++b) {
+		a = ggml_concat(ctx, a, batches[static_cast<size_t>(b)], 2);
+	}
+	a = linear(ctx, a, weight(w, s + "self_attn.out_proj.weight"), weight(w, s + "self_attn.out_proj.bias"));
+	x = norm(ctx, ggml_add(ctx, x, a), weight(w, s + "norm1.weight"), weight(w, s + "norm1.bias"));
+	auto *ff = linear(ctx, x, weight(w, s + "linear1.weight"), weight(w, s + "linear1.bias"));
+	ff = ggml_gelu_erf(ctx, ff);
+	ff = linear(ctx, ff, weight(w, s + "linear2.weight"), weight(w, s + "linear2.bias"));
+	return norm(ctx, ggml_add(ctx, x, ff), weight(w, s + "norm2.weight"), weight(w, s + "norm2.bias"));
+}
+
+} // namespace denoiser
+
+// --- kimodo-ggml src/llm_text_encoder.cpp @568b025: one LLM2Vec Llama layer ----
+
+namespace text {
+
+ggml_tensor *norm(ggml_context *ctx, ggml_tensor *x, ggml_tensor *weight) {
+	auto *normalized = ggml_rms_norm(ctx, x->type == GGML_TYPE_F32 ? x : ggml_cast(ctx, x, GGML_TYPE_F32), 1e-5F);
+	if (x->type == GGML_TYPE_BF16) {
+		normalized = ggml_cast(ctx, normalized, GGML_TYPE_BF16);
+		auto *repeated = ggml_repeat(ctx, weight, normalized);
+		return ggml_cast(ctx, ggml_mul(ctx, ggml_cast(ctx, normalized, GGML_TYPE_F32),
+				ggml_cast(ctx, repeated, GGML_TYPE_F32)), GGML_TYPE_BF16);
+	}
+	return ggml_mul(ctx, normalized, ggml_repeat(ctx, ggml_cast(ctx, weight, GGML_TYPE_F32), normalized));
+}
+
+ggml_tensor *repeat_kv(ggml_context *ctx, ggml_tensor *x, int64_t seq) {
+	auto *value = ggml_reshape_4d(ctx, x, head_dim, kv_heads, 1, seq);
+	auto *shape = ggml_new_tensor_4d(ctx, x->type, head_dim, kv_heads, heads / kv_heads, seq);
+	value = ggml_repeat(ctx, value, shape);
+	value = ggml_cont(ctx, ggml_permute(ctx, value, 0, 2, 1, 3));
+	return ggml_reshape_3d(ctx, value, head_dim, heads, seq);
+}
+
+// adapted: `layer_graph(ctx, x, positions, const component &model, seq)`
+// there; model.tensor(name) is the WeightFn.
+ggml_tensor *layer_graph(ggml_context *ctx, ggml_tensor *x, ggml_tensor *positions, const WeightFn &model, int64_t seq) {
+	auto base = [&](const char *name, ggml_tensor *value) {
+		const std::string prefix(name);
+		auto *weight = model(prefix + "_base.weight");
+		// adapted: the app requires BF16 (the layer GGUFs' type); the f32 arm
+		// hands the same values widened to F32.
+		if (!weight || (weight->type != GGML_TYPE_BF16 && weight->type != GGML_TYPE_F32)) {
+			throw std::runtime_error("missing base projection");
+		}
+		// Vulkan's BF16 matrix-vector kernel rejects BF16 right operands. A
+		// F32 cast preserves the BF16 values while taking its supported path.
+		return ggml_mul_mat(ctx, weight, value->type == GGML_TYPE_F32 ? value : ggml_cast(ctx, value, GGML_TYPE_F32));
+	};
+	auto linear = [&](const char *name, ggml_tensor *value) {
+		const std::string prefix(name);
+		auto *a = model(prefix + "_lora_a.weight");
+		auto *b = model(prefix + "_lora_b.weight");
+		if (!a || !b) {
+			throw std::runtime_error("missing LoRA projection");
+		}
+		auto *lora = ggml_mul_mat(ctx, b, ggml_mul_mat(ctx, a,
+				value->type == GGML_TYPE_F32 ? value : ggml_cast(ctx, value, GGML_TYPE_F32)));
+		return ggml_add(ctx, ggml_cast(ctx, base(name, value), GGML_TYPE_F32), ggml_scale(ctx, lora, 2.F));
+	};
+	auto *attn_norm = model("attn_norm.weight");
+	auto *ffn_norm = model("ffn_norm.weight");
+	if (!attn_norm || !ffn_norm) {
+		throw std::runtime_error("missing layer norm");
+	}
+	auto *residual = ggml_cast(ctx, x, GGML_TYPE_BF16);
+	auto *q = linear("attn_q_proj", norm(ctx, residual, attn_norm));
+	auto *k = linear("attn_k_proj", norm(ctx, residual, attn_norm));
+	auto *v = linear("attn_v_proj", norm(ctx, residual, attn_norm));
+	q = ggml_reshape_3d(ctx, q, head_dim, heads, seq);
+	k = ggml_reshape_3d(ctx, k, head_dim, kv_heads, seq);
+	v = ggml_reshape_3d(ctx, v, head_dim, kv_heads, seq);
+	q = ggml_rope_ext(ctx, q, positions, nullptr, head_dim, GGML_ROPE_TYPE_NEOX, 8192, 500000.F, 1, 0, 1, 0, 0);
+	k = ggml_rope_ext(ctx, k, positions, nullptr, head_dim, GGML_ROPE_TYPE_NEOX, 8192, 500000.F, 1, 0, 1, 0, 0);
+	k = repeat_kv(ctx, k, seq);
+	v = repeat_kv(ctx, v, seq);
+	q = ggml_permute(ctx, q, 0, 2, 1, 3);
+	k = ggml_permute(ctx, k, 0, 2, 1, 3);
+	v = ggml_permute(ctx, v, 0, 2, 1, 3);
+	auto *probability = ggml_soft_max(ctx, ggml_scale(ctx, ggml_mul_mat(ctx, k, q), 1.F / std::sqrt(float(head_dim))));
+	v = ggml_cont(ctx, ggml_transpose(ctx, v));
+	auto *attention = ggml_cont(ctx, ggml_permute(ctx, ggml_mul_mat(ctx, v, probability), 0, 2, 1, 3));
+	auto *output = ggml_add(ctx, ggml_cast(ctx, residual, GGML_TYPE_F32),
+			linear("attn_o_proj", ggml_reshape_2d(ctx, attention, hidden, seq)));
+	auto *hidden_norm = norm(ctx, output, ffn_norm);
+	auto *gate = ggml_silu(ctx, linear("ffn_gate_proj", hidden_norm));
+	output = ggml_add(ctx, output, linear("ffn_down_proj", ggml_mul(ctx, gate, linear("ffn_up_proj", hidden_norm))));
+	return output;
+}
+
+} // namespace text
+
+} // namespace kimodo
+
 } // namespace app_graphs

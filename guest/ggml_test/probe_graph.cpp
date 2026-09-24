@@ -8,8 +8,9 @@
 // reference arms would be hours). graph_nets.cpp builds the nets, the same
 // file the oracle compiles.
 //
-//   graph <qwen|dit|sconv>[:res]   G3.graph for one graph (graph_nets.h):
-//     rd native / rd f32   the weights in the model's type (f16, bf16), and
+//   graph <qwen|dit|sconv|kimodo_denoiser|kimodo_text>[:res]   G3.graph for one graph
+//     (graph_nets.h):
+//     rd native / rd f32   the weights in the model's type (f16, bf16, f32), and
 //                          the same values widened to f32; both arms' outputs
 //                          are kept for the host (graph_dump_list/_chunk,
 //                          main.cpp's ggml_dump_list/ggml_dump_chunk), which
@@ -152,7 +153,7 @@ bool graph_one(const std::string &which, int res) {
 	std::string native, resid;
 	const char *g = which.c_str();
 	if (!graph_builder(which, res, build, native, resid)) {
-		std::printf("PROBE graph: unknown graph '%s' (qwen, dit, sconv)\n", g);
+		std::printf("PROBE graph: unknown graph '%s' (qwen, dit, sconv, kimodo_denoiser, kimodo_text)\n", g);
 		return false;
 	}
 	for (const char *k : { "GGML_RD_BARRIER_ALL", "GGML_RD_DROP_BARRIER", "GGML_RD_FAULT", "GGML_RD_PROFILE" }) {
@@ -262,14 +263,19 @@ bool graph_one(const std::string &which, int res) {
 	const bool same_all = identical(rd_nat, rd_all, &d_all);
 	const bool same_again = identical(rd_nat, rd_again, &d_again);
 	const bool fin = all_finite(rd_nat) && all_finite(rd_f32);
-	const bool pass_ctl = drops_detected > 0;
+	// The dropped-barrier control needs a barrier to drop. A run with none in
+	// either arm is the CPU fallback (one dispatch after another, nothing to
+	// order), where the control is not applicable rather than failed.
+	const bool no_barriers = r_el.barriers == 0 && r_all.barriers == 0;
+	const bool pass_ctl = no_barriers || drops_detected > 0;
 	std::printf("PROBE graph %s SUMMARY weights=%s reference=host (dumped: %zu outputs, %.1f MiB) "
 				"info rel_l2(rd_%s,rd_f32)=%.3e finite=%d elision_vs_barrier_all=%s (differing %zu) "
-				"elision_repeat=%s (differing %zu) drop_control=%d/%d detected nodes=%d dispatches=%lld "
+				"elision_repeat=%s (differing %zu) drop_control=%d/%d detected%s nodes=%d dispatches=%lld "
 				"barriers=%lld/%lld status=%d/%d/%d/%d wall_s=%.1f%s\n",
 			g, native.c_str(), g_dump.size(), dump_bytes / 1048576.0, native.c_str(), e_arms, fin ? 1 : 0,
 			same_all ? "bit-identical" : "DIFFERENT", d_all, same_again ? "bit-identical" : "DIFFERENT", d_again,
-			drops_detected, drops_run, nodes, (long long)r_el.dispatches, (long long)r_el.barriers,
+			drops_detected, drops_run, no_barriers ? " (n/a: no barriers, the CPU fallback)" : "", nodes,
+			(long long)r_el.dispatches, (long long)r_el.barriers,
 			(long long)r_all.barriers, int(r_el.st), int(r_all.st), int(r_again.st), int(r_f32.st),
 			(rdc::host_usec() - t_start) / 1e6,
 			which == "sconv" ? (" L=" + std::to_string(shell_coords().size() / 3) + " neighbours=" +
@@ -626,7 +632,7 @@ bool cost_dit(int steps) {
 
 } // namespace
 
-// arg: "qwen", "dit", "dit:8" (8^3 tokens), "sconv".
+// arg: "qwen", "dit", "dit:8" (8^3 tokens), "sconv", "kimodo_denoiser", "kimodo_text".
 bool graph_probe(const std::string &arg) {
 	const size_t colon = arg.find(':');
 	const std::string which = arg.substr(0, colon);

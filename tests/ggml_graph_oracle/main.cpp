@@ -11,7 +11,7 @@
 //   sides filled the same bytes), and info lines (rd native vs ref f32, ref
 //   native vs ref f32: how much of the gap is the reference's own rounding).
 //
-//   --graph=<qwen|dit|sconv>[:res]   the net (graph_nets.h)
+//   --graph=<qwen|dit|sconv|kimodo_denoiser|kimodo_text>[:res]   the net (graph_nets.h)
 //   --ref=<vulkan|cpu>               the reference: ggml-vulkan on the GPU for
 //                                    large graphs, host ggml-cpu for small ones
 //   --check=<cpu|vulkan|none>        a second host backend, compared with the
@@ -31,7 +31,9 @@
 //
 // ggml-vulkan is an ORACLE here: it compiles its own GLSL with glslc, never
 // ships and never runs in the guest (AGENTS.md rule 2 governs the shipped
-// kernels, which come from Lean). The last line is RESULT: PASS or FAIL.
+// kernels, which come from Lean). A build with -DORACLE_VULKAN=OFF (no Vulkan
+// SDK) has ggml-cpu only: "vulkan" is then no backend. The last line is
+// RESULT: PASS or FAIL.
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
@@ -45,7 +47,9 @@
 
 #include "ggml-backend.h"
 #include "ggml-cpu.h"
+#ifdef ORACLE_VULKAN
 #include "ggml-vulkan.h"
+#endif
 #include "ggml.h"
 #include "graph_nets.h"
 
@@ -85,6 +89,7 @@ ggml_backend_t make_backend(const std::string &kind, const Opts &o) {
 		ggml_backend_cpu_set_n_threads(b, t);
 		return b;
 	}
+#ifdef ORACLE_VULKAN
 	if (kind == "vulkan") {
 		if (g_vk_device < 0) {
 			const int n = ggml_backend_vk_get_device_count();
@@ -101,6 +106,7 @@ ggml_backend_t make_backend(const std::string &kind, const Opts &o) {
 		}
 		return ggml_backend_vk_init(size_t(g_vk_device));
 	}
+#endif
 	return nullptr;
 }
 

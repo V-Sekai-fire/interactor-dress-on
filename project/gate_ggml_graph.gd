@@ -24,6 +24,10 @@
 #                                                                              oracle: host ggml-cpu
 #   graph_dit8    one Pixal3D flow DiT block at 8^3 = 512 tokens, bf16       oracle: ggml-vulkan
 #   graph_dit     one Pixal3D flow DiT block, 4096 x 1536, bf16              oracle: ggml-vulkan
+#   graph_kimodo_denoiser  one Kimodo motion-denoiser encoder layer (1024 x 60 tokens x 3, f32)
+#                                                                              oracle: host ggml-cpu
+#   graph_kimodo_text      one Kimodo LLM2Vec Llama-3-8B layer (4096 x 16 tokens, bf16 base + f32 LoRA)
+#                                                                              oracle: host ggml-cpu
 #   cost_decode   a skin-tokens decode step (28 layers), 5 timed steps + a profiled one
 #   cost_dit      a Pixal3D flow forward (30 blocks), 3 timed + a profiled one
 # A graph run passes when the guest prints RESULT: PASS (RD statuses, finite,
@@ -128,6 +132,8 @@ func _initialize() -> void:
 		["graph_sconv", "graph", "sconv", ["--ref=cpu", "--check=vulkan"]],
 		["graph_dit8", "graph", "dit:8", ["--ref=vulkan", "--check=cpu"]],
 		["graph_dit", "graph", dit_arg, ["--ref=vulkan", "--check=cpu"]],
+		["graph_kimodo_denoiser", "graph", "kimodo_denoiser", ["--ref=cpu", "--check=vulkan"]],
+		["graph_kimodo_text", "graph", "kimodo_text", ["--ref=cpu", "--check=vulkan"]],
 		["cost_decode", "cost", "decode:5", []],
 		["cost_dit", "cost", "dit:3", []],
 	]
@@ -238,10 +244,12 @@ func _checks() -> void:
 		"graph_sconv": "G3.graph sparse-conv level (f16), vs host ggml-cpu: the same criteria",
 		"graph_dit8": "G3.graph DiT block at 512 tokens (bf16), vs ggml-vulkan: the same criteria",
 		"graph_dit": "G3.graph DiT block (bf16), vs ggml-vulkan: the same criteria",
+		"graph_kimodo_denoiser": "G3.graph Kimodo denoiser encoder layer (f32), vs host ggml-cpu: the same criteria",
+		"graph_kimodo_text": "G3.graph Kimodo LLM2Vec text layer (bf16 base + f32 LoRA), vs host ggml-cpu: the same criteria",
 		"cost_decode": "G3.cost skin-tokens decode step: every step computed, finite logits",
 		"cost_dit": "G3.cost Pixal3D flow forward: every forward computed, finite output",
 	}
-	for n in ["graph_qwen", "graph_sconv", "graph_dit8", "graph_dit", "cost_decode", "cost_dit"]:
+	for n in ["graph_qwen", "graph_sconv", "graph_dit8", "graph_dit", "graph_kimodo_denoiser", "graph_kimodo_text", "cost_decode", "cost_dit"]:
 		if not _selected.has(n):
 			continue
 		var r = _results.get(n, {})

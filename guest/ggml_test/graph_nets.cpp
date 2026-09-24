@@ -319,6 +319,101 @@ void build_sconv(Net &n, bool f32_arm) {
 	}
 }
 
+// Kimodo: the motion denoiser's TransformerEncoderLayer and the LLM2Vec text
+// encoder's Llama layer (app_graphs.h, namespace kimodo): graph_nets.h.
+
+// The layer's tensors as convert_motion_to_gguf.py stores them (PyTorch's
+// row-major [out, in] as ggml ne {in, out}), all F32: the model's type
+// (docs/IMPLEMENTATION.md:86, "F32 is required for initial parity").
+void kimodo_denoiser_layer_weights(Net &n, const std::string &prefix, bool f32_arm) {
+	using namespace app_graphs::kimodo::denoiser;
+	const ggml_type t = GGML_TYPE_F32;
+	auto lin = [&](const std::string &name, int64_t in, int64_t out) {
+		matrix(n, prefix + name + ".weight", t, f32_arm, { in, out }, in);
+		const float bb = 1.0f / std::sqrt(float(in));
+		leaf(n, prefix + name + ".bias", GGML_TYPE_F32, { out }, -bb, bb);
+	};
+	auto ln = [&](const std::string &name) {
+		leaf(n, prefix + name + ".weight", GGML_TYPE_F32, { width }, 0.8f, 1.2f);
+		leaf(n, prefix + name + ".bias", GGML_TYPE_F32, { width }, -0.1f, 0.1f);
+	};
+	// nn.MultiheadAttention's packed in_proj: [3 * width, width] and [3 * width].
+	matrix(n, prefix + "self_attn.in_proj_weight", t, f32_arm, { width, 3 * width }, width);
+	{
+		const float bb = 1.0f / std::sqrt(float(width));
+		leaf(n, prefix + "self_attn.in_proj_bias", GGML_TYPE_F32, { 3 * width }, -bb, bb);
+	}
+	lin("self_attn.out_proj", width, width);
+	ln("norm1");
+	lin("linear1", width, feed_forward);
+	lin("linear2", feed_forward, width);
+	ln("norm2");
+}
+
+void build_kimodo_denoiser(Net &n, bool f32_arm) {
+	using namespace app_graphs::kimodo::denoiser;
+	const int seq = prefix_tokens + kKimodoFrames; // denoiser.cpp:80
+	const std::string prefix = "root_model.seqTransEncoder.layers.0."; // denoiser.cpp:85, 97
+	n.lctx = new_ctx(64);
+	ggml_tensor *x = leaf(n, "x", GGML_TYPE_F32, { width, seq, kKimodoBatch }, -1.0f, 1.0f);
+	kimodo_denoiser_layer_weights(n, prefix, f32_arm);
+	n.gctx = new_ctx(2048);
+	n.gf = ggml_new_graph_custom(n.gctx, 2048, false);
+	ggml_tensor *out = layer(n.gctx, x, n.lookup(), prefix, seq, kKimodoBatch);
+	ggml_set_output(out);
+	ggml_build_forward_expand(n.gf, out);
+	n.outs.emplace_back("layer_out", out);
+	// Post-LN: the output is norm2(x + ...), not x + branches, so no branch
+	// norm; the input is still read back for the oracle's byte check.
+	n.residual_in = x;
+	n.residual_out = "";
+}
+
+// The layer GGUF's tensors (convert_llm2vec_layer_to_gguf.py:176-183): the
+// two RMSNorm gains and the seven projections' merged MNTP base in BF16,
+// their supervised LoRA A [in, r] and B [r, out] in F32. The LoRA B is bounded
+// like its base (1/sqrt(in)) so the branch is of the base's size.
+void kimodo_text_layer_weights(Net &n, bool f32_arm) {
+	using namespace app_graphs::kimodo::text;
+	const ggml_type t = GGML_TYPE_BF16;
+	auto proj = [&](const std::string &name, int64_t in, int64_t out) {
+		matrix(n, name + "_base.weight", t, f32_arm, { in, out }, in);
+		matrix(n, name + "_lora_a.weight", GGML_TYPE_F32, true, { in, lora_rank }, in);
+		matrix(n, name + "_lora_b.weight", GGML_TYPE_F32, true, { lora_rank, out }, in);
+	};
+	// The gains: bf16 in the GGUF; the f32 arm holds the same values widened.
+	leaf(n, "attn_norm.weight", f32_arm ? GGML_TYPE_F32 : t, { hidden }, 0.8f, 1.2f, t);
+	leaf(n, "ffn_norm.weight", f32_arm ? GGML_TYPE_F32 : t, { hidden }, 0.8f, 1.2f, t);
+	proj("attn_q_proj", hidden, heads * head_dim);
+	proj("attn_k_proj", hidden, kv_heads * head_dim);
+	proj("attn_v_proj", hidden, kv_heads * head_dim);
+	proj("attn_o_proj", heads * head_dim, hidden);
+	proj("ffn_gate_proj", hidden, feed_forward);
+	proj("ffn_up_proj", hidden, feed_forward);
+	proj("ffn_down_proj", feed_forward, hidden);
+}
+
+void build_kimodo_text(Net &n, bool f32_arm) {
+	using namespace app_graphs::kimodo::text;
+	const int64_t seq = kKimodoTextSeq;
+	n.lctx = new_ctx(64);
+	ggml_tensor *x = leaf(n, "x", GGML_TYPE_F32, { hidden, seq }, -1.0f, 1.0f);
+	std::vector<int32_t> pos(static_cast<size_t>(seq));
+	for (int32_t i = 0; i < seq; ++i) {
+		pos[size_t(i)] = i; // run_layer_chunk: positions 0..seq-1
+	}
+	ggml_tensor *positions = custom_leaf(n, "positions", GGML_TYPE_I32, { seq }, i32_fill(pos));
+	kimodo_text_layer_weights(n, f32_arm);
+	n.gctx = new_ctx(1024);
+	n.gf = ggml_new_graph_custom(n.gctx, 1024, false);
+	ggml_tensor *out = layer_graph(n.gctx, x, positions, n.lookup(), seq);
+	ggml_set_output(out);
+	ggml_build_forward_expand(n.gf, out);
+	n.outs.emplace_back("layer_out", out);
+	n.residual_in = x;
+	n.residual_out = "layer_out";
+}
+
 bool graph_builder(const std::string &which, int res, BuildFn &build, std::string &native, std::string &residual_out) {
 	if (which == "qwen") {
 		build = [](Net &n, bool f32) { build_qwen(n, f32); };
@@ -332,6 +427,14 @@ bool graph_builder(const std::string &which, int res, BuildFn &build, std::strin
 		build = [](Net &n, bool f32) { build_sconv(n, f32); };
 		native = "f16";
 		residual_out = "";
+	} else if (which == "kimodo_denoiser") {
+		build = [](Net &n, bool f32) { build_kimodo_denoiser(n, f32); };
+		native = "f32";
+		residual_out = "";
+	} else if (which == "kimodo_text") {
+		build = [](Net &n, bool f32) { build_kimodo_text(n, f32); };
+		native = "bf16";
+		residual_out = "layer_out";
 	} else {
 		return false;
 	}

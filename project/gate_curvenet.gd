@@ -173,7 +173,15 @@ func _compare() -> void:
 				g.ints if same_i else "guest %s native %s" % [g.ints, nv.ints], g.fsig, g.nf, nv.fsig, nv.nf,
 				"" if same_f else "  <- float signature differs"])
 	_check(ints_ok == _names.size(), "guest vs native: verdicts and integer outputs identical in %d/%d checks" % [ints_ok, _names.size()])
-	_check(fsig_ok == _names.size(), "guest vs native: float signatures identical in %d/%d checks" % [fsig_ok, _names.size()])
+	# curvenet.elf reaches the host's libm through the sandbox's math ecalls
+	# (533, 534), so its float bits follow the host. native-checks.log is the
+	# Windows (llvm-mingw) build's: float signatures are held to it on Windows
+	# only; elsewhere verdicts and integers above stay exact and this is a note.
+	if OS.get_name() == "Windows":
+		_check(fsig_ok == _names.size(), "guest vs native: float signatures identical in %d/%d checks" % [fsig_ok, _names.size()])
+	else:
+		_say("NOTE guest vs native: float signatures identical in %d/%d checks (native log from Windows' libm, this host is %s: not judged)" % [
+				fsig_ok, _names.size(), OS.get_name()])
 
 # --- 2b. the same checks again, same process -------------------------------------
 

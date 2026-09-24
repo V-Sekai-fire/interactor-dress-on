@@ -655,6 +655,27 @@ had done its allocation and one 64 MiB upload in under 0.1 s and spent the
 rest before the first readback, in the harness's graph copy. Native
 translation of the ELF is the fix, not a wider cap.
 
+**Native translation, measured (2026-09-24, the same container):**
+`ggml_test.elf`'s translation (61 MB of C from `project/tools/bintr_emit.gd`,
+6.4 min with clang 18 -O2, 20 MB object) against the interpreter, on the same
+ELF (hash 63ab8527) and the same case:
+
+| run | interpreter | translated | speed-up |
+|---|---|---|---|
+| `ADD [1,1,1920,1] x [32,32,1,1]`, whole case | 126.4 s | 18.1 s | **7.0x** |
+| the same case, the `add_f32` kernel alone | 0.916 s | 0.123 s | **7.4x** |
+| `ADD [1,1,65536,1] x 256`, time to rule 10's cap | 605.6 s | 85.0 s | 7.1x, still killed |
+
+The capped case is still killed because rule 10's cap counts guest
+instructions (214,577 units of 2^20), and a translation runs the same
+instructions faster, not fewer: the ~5 minutes the cap stands for is ~40 s of
+translated work. A per-vmcall cap for translated ELFs needs its own number
+(a measured gate, rule 5), not the interpreter's. The Qwen layer did not
+speed up (7.2 s a run, 6.9 s before) because it ran untranslated: its gate
+makes the Sandbox with `memory_max` 3600, the translation's defines include
+the arena size, so its hash differs from the 2048 MiB one baked here. A
+translation is per (ELF, memory_max): bake one per Sandbox configuration.
+
 Two things the CPU path judges differently: the dropped-barrier control is
 not applicable (no barrier is placed, `drop_control n/a` in the SUMMARY),
 and the rd-vs-rd f16/f32 arm comparison is exactly 0 (the same emit reads

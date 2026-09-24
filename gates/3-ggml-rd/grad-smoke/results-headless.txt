@@ -1,0 +1,32 @@
+# Gate 3 G3.ops, 2026-09-24T17:11:03, Godot 4.7.2-stable (official), Intel(R) Xeon(R) Processor @ 2.10GHz, headless: no RenderingDevice
+attach: no RD device: CPU fallback (the kernels' cpp emits on guest memory)
+native translation: false (hash 2326d136, lookup true)
+rule 10: ggml-cpu jobs capped at execution_timeout=214577 units per vmcall (~300 s), ggml-rd-only jobs at 1000000
+runs selected: ["ops_main"]
+   HEARTBEAT ops_main t=31 s frames=19 pumps=19 vm_ms=31238.8 waits=0 coops=19 reads=0 read_bytes=0 uploads=0 upload_bytes=0 | graphs=17436 nodes=63440 dispatches=34878 skipped=28560 barriers=0 failed_graphs=0 last{nodes=3 dispatches=2 barriers=0 skipped=1}
+   HEARTBEAT ops_main t=61 s frames=39 pumps=39 vm_ms=61755.1 waits=0 coops=39 reads=0 read_bytes=0 uploads=0 upload_bytes=0 | graphs=25436 nodes=87440 dispatches=50878 skipped=36560 barriers=0 failed_graphs=0 last{nodes=3 dispatches=2 barriers=0 skipped=1}
+   HEARTBEAT ops_main t=93 s frames=59 pumps=59 vm_ms=93225.6 waits=0 coops=59 reads=0 read_bytes=0 uploads=0 upload_bytes=0 | graphs=33434 nodes=111436 dispatches=66876 skipped=44558 barriers=0 failed_graphs=0 last{nodes=3 dispatches=2 barriers=0 skipped=1}
+   HEARTBEAT ops_main t=124 s frames=80 pumps=80 vm_ms=124445.3 waits=0 coops=80 reads=0 read_bytes=0 uploads=0 upload_bytes=0 | graphs=41834 nodes=136636 dispatches=83676 skipped=52958 barriers=0 failed_graphs=0 last{nodes=3 dispatches=2 barriers=0 skipped=1}
+   HEARTBEAT ops_main t=154 s frames=100 pumps=100 vm_ms=154694.2 waits=0 coops=100 reads=0 read_bytes=0 uploads=0 upload_bytes=0 | graphs=49834 nodes=160636 dispatches=99676 skipped=60958 barriers=0 failed_graphs=0 last{nodes=3 dispatches=2 barriers=0 skipped=1}
+== ops_main: error in 159.5 s, frames=104 pumps=104 vm_ms=159513.2 waits=0 coops=103 reads=0 read_bytes=0 uploads=0 upload_bytes=0
+   error: ggml abort: vendor/ggml/src/ggml.c:7369: GGML_ASSERT(!node->view_src || node->op == GGML_OP_CPY || node->op == GGML_OP_VIEW || node->op == GGML_OP_RESHAPE || node->op == GGML_OP_PERMUTE || node->op == GGML_OP_TRANSPOSE) failed
+   cases: OK=100 FAIL=0 not_supported=170 |  | 
+   ADD: OK=45 FAIL=0 not_supported=80
+   MUL: OK=45 FAIL=0 not_supported=90
+   SUM: OK=7 FAIL=0 not_supported=0
+   SCALE: OK=3 FAIL=0 not_supported=0
+   required cases not supported: 80
+   required patterns with no OK case: 0
+   required, not supported: MUL(type=f32,ne=[1,1,8,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [MUL]
+   required, not supported: ADD(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [ADD]
+   required, not supported: MUL(type=f32,ne=[1,1,1,1],nr=[32,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [MUL]
+   required, not supported: MUL(type=f32,ne=[1,1,320,320],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [MUL]
+   required, not supported: MUL(type=f32,ne=[10,5,1,1],nr=[1,1,1,1],nf=1,perm1=0,src_overlap=0): not supported [MUL]
+   rd: graphs=51128 nodes=164518 dispatches=102266 skipped=62252 barriers=0 failed_graphs=0 last{nodes=3 dispatches=2 barriers=0 skipped=1} pipelines=0 set0_created=0 slots_created=0 coop_yields=103 waits=0 faults=0 params_bytes=0 set_bytes=820173504 get_bytes=408896 copies=0 clears=0 buffers_live=0 bytes_live=0 rule4_same_frame_syncs=0 syncs=0 submits=0 recoveries=0 permanent_slots=0 | 32 of 32 RenderingDevice method names in slots of their own (host name cache: 32 slots)
+== verdicts
+FAIL ops_main on the CPU fallback: test-backend-ops -o ADD,MUL,SCALE,SUM -b RD0: OK=100 FAIL=0 not_supported=170 ()
+FAIL ops_main: no census-required case is not supported (80 are)
+FAIL control: GGML_RD_FAULT=1 (a source read one element off) fails every ADD case on the fallback: FAIL=0 OK=0 ()
+FAIL control: GGML_RD_FAULT=1 fails every DUP,CONT,GET_ROWS,CONCAT,REPEAT case but i32 on the fallback: FAIL=0 OK=0 ()
+wall_s=159.6
+RESULT: FAIL

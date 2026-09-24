@@ -21,9 +21,11 @@ and the loop reads it in the guest (the org's `flow-*` USD importer as a
 sandbox ELF; Gate 0G). The service runs natively from a **pixi**
 environment (win-64 on the desk, not Docker; a Linux image only for RunPod);
 no card is pinned, each launch takes the next GPU in round robin
-(`tools/services/svc_common.py`). Multi-view Pixal3D (the `_mv`
-checkpoints) is the next stretch goal; VoxHammer comes after it, as an edit
-agent over the loop's meshes scored with MaskScore (user, 2026-09-23). No GDExtension, no host DLL: curvenet, fit and drape stay guest
+(`tools/services/svc_common.py`). The loop is **multi-view only**: it
+sends several views of the character to Pixal3D's multi-view model (the
+`_mv` checkpoints), never a single image (user, 2026-09-24). VoxHammer comes
+after it, as an edit agent over the loop's meshes scored with MaskScore
+(user, 2026-09-23). No GDExtension, no host DLL: curvenet, fit and drape stay guest
 ELFs, the rig (4b) stays on ggml-rd. Without a reachable service the INFER
 state fails loudly, never a silent fixture.
 

@@ -49,6 +49,9 @@ NINJA="$(command -v ninja || true)"
 [ -n "$NINJA" ] || NINJA="$HOME/.pixi/bin/ninja.exe"
 [ -x "$NINJA" ] || { echo "error: ninja not found" >&2; exit 1; }
 
+# No V extension: rv64gc plus the bit-manipulation extensions. Ubuntu clang
+# 18's vector code traps on the Linux addon (AGENTS.md facts), and the ELF
+# does not need it.
 # CMake wants the toolchain path in its own spelling.
 TOOLCHAIN="$(cygpath -m "$SYSROOT/toolchain.cmake" 2>/dev/null || echo "$SYSROOT/toolchain.cmake")"
 
@@ -98,6 +101,7 @@ if [ ! -f "$BUILD/build.ninja" ]; then
 		-DCMAKE_MAKE_PROGRAM="$NINJA" \
 		-DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
 		-DCMAKE_BUILD_TYPE=Release \
+		-DSANDBOX_RISCV_EXT_V=OFF \
 		-DDRESS_ON_WITH_FIT="$WITH_FIT" \
 		${FIT_MARCH:+-DFIT_MARCH="$FIT_MARCH"} ${FIT_ELF:+-DFIT_ELF="$FIT_ELF"}
 elif ! grep -q "^DRESS_ON_WITH_FIT:BOOL=$WITH_FIT\$" "$BUILD/CMakeCache.txt"; then

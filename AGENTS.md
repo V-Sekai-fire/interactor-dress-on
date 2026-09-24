@@ -253,9 +253,9 @@ state fails loudly, never a silent fixture.
   and `vendor/sandbox-api` splits the mem* wrappers.
 - **Why rule 10:** the guest CPU (rv64gc, one thread) runs ggml-cpu at
   ~0.1 GFLOP/s: a 4096-token DiT block's two reference arms would be hours
-  (the parked Gate 3 run stalled there). ggml-rd has no CPU fallback (an op
-  it does not support is refused, never sent to ggml-cpu), and no graph has
-  a recorded profile that moves it to ggml-cpu; the in-guest ggml-cpu is
+  (the parked Gate 3 run stalled there). ggml-rd never sends an op to
+  ggml-cpu (an op it does not support is refused), and no graph has a
+  recorded profile that moves it to ggml-cpu; the in-guest ggml-cpu is
   only G3.ops' single-op reference (test-backend-ops, the census probe),
   each vmcall capped at 214,577 units (300 s at ~0.75 G instructions/s).
   Oracles for anything bigger
@@ -272,6 +272,23 @@ state fails loudly, never a silent fixture.
   3.5e-7 (its GELU reads an f16 table, `GGML_GELU_FP16` in ggml-cpu's
   `vec.h`, the likely cause; not isolated). `ggml-vulkan.cpp` takes ~20 min to compile with
   llvm-mingw clang -O3: build the oracle once, outside the checkout (C:/b).
+- **ggml-rd's CPU fallback** (`guest/ggml-rd/rd_cpu.cpp`): with no
+  RenderingDevice attached, RD0 still exists and runs every dispatch through
+  the kernel's `slangc -target cpp` emit on guest memory (the same packers,
+  the same 64 words, one dispatch after another with a COOP between; the
+  runner is the host L2 harness's, `tests/ggml_rd_kernels/gen_host_kernels.py`,
+  generated into the build directory). It is rule 2's second target, not
+  ggml-cpu: rule 10 is untouched. `GGML_RD_CPU_FALLBACK=0` in the first
+  job's environment (the host's environment never reaches the guest) turns
+  it off, the no-device control of `gate_ggml_rd.gd -- fallback=off`. The
+  guest runs it at ggml-cpu's speed class: a gate, not a place to infer.
+- **Guest ELFs are built at rv64gc_zba_zbb_zbs_zbc (`SANDBOX_RISCV_EXT_V=OFF`
+  in build.sh).** sandbox-api's default adds V, and Ubuntu clang 18's vector
+  code (a 16-byte struct copy as `vsetivli` + `vl1r.v` + `vse64.v`, in
+  test-backend-ops' `make_test_cases_eval`) traps as `Illegal opcode` on the
+  Linux addon (a45da9f), while the Windows-built ELFs' clang 23 vector code
+  runs on both addons. Without V the ELF's only vector instructions are the
+  sysroot's unwinder's, never executed.
 - With unboxed arguments (the default) declare an Object parameter as
   `Object`, never `Variant`: the host passes a bare handle, and a Variant
   parameter reads it as a pointer (it arrives as Nil).

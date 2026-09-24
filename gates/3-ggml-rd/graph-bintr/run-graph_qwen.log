@@ -1,0 +1,15 @@
+ggml-rd cpu graph: 45 dispatches, 7232069 us (pack 572 us)
+ggml-rd cpu graph: 45 dispatches, 7192202 us (pack 382 us)
+ggml-rd cpu graph: 45 dispatches, 7113833 us (pack 438 us)
+ggml-rd cpu graph: 45 dispatches, 6950849 us (pack 378 us)
+PROBE graph qwen rd_native nodes=76 dispatches=45 barriers=0 (barrier_all: 0) host_us(entry..submit)=7192202 frames=45 run_ms=7196.1 status=0/0/0
+ggml-rd cpu graph: 45 dispatches, 6526709 us (pack 368 us)
+ggml-rd cpu graph: 45 dispatches, 6672213 us (pack 364 us)
+PROBE graph qwen rd_f16_vs_rd_f32_info output=layer_out n=1792 rel_l2=0.000e+00 rel_l2_of_branch=0.000000 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam0 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=k_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen rd_f16_vs_rd_f32_info output=v_cache_row_beam1 n=1024 rel_l2=0.000e+00 finite=1
+PROBE graph qwen SUMMARY weights=f16 reference=host (dumped: 11 outputs, 0.1 MiB) info rel_l2(rd_f16,rd_f32)=0.000e+00 finite=1 elision_vs_barrier_all=bit-identical (differing 0) elision_repeat=bit-identical (differing 0) drop_control=0/0 detected (n/a: no barriers, the CPU fallback) nodes=76 dispatches=45 barriers=0/0 status=0/0/0/0 wall_s=43.8
+RESULT: PASS (graph qwen)
+ggml_test: rd stats graphs=6 nodes=456 dispatches=270 skipped=186 barriers=0 failed_graphs=0 last{nodes=76 dispatches=45 barriers=0 skipped=31} pipelines=0 set0_created=0 slots_created=0 coop_yields=270 waits=0 faults=0 params_bytes=0 set_bytes=82999304 get_bytes=184320 copies=0 clears=6 buffers_live=0 bytes_live=0

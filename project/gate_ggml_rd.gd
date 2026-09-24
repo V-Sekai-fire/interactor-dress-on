@@ -228,6 +228,8 @@ func _initialize() -> void:
 	_sb.execution_timeout = 1000000
 	var a := str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB))
 	_say("attach: %s" % a)
+	_say("native translation: %s (hash %08x, lookup %s)" % [str(_sb.call("is_binary_translated")),
+			int(_sb.call("get_translation_hash")), str(ProjectSettings.get_setting("sandbox/binary_translation/enabled", false))])
 	_host = InferHost.new(_sb, _rd, "ggml_pump")
 	_say("rule 10: ggml-cpu jobs capped at execution_timeout=%d units per vmcall (~300 s), ggml-rd-only jobs at %d" % [
 			InferHost.GGML_CPU_TIMEOUT_UNITS, int(_sb.execution_timeout)])

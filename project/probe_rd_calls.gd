@@ -12,6 +12,7 @@ func _bytes(path: String) -> PackedByteArray:
 func _init() -> void:
 	var sb = ClassDB.instantiate("Sandbox")
 	if sb != null: sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+	if sb != null: sb.memory_max = 512 # the Windows addon's default, which the recorded runs used; Linux's is 32 MiB
 	sb.program = load("res://dress_on.elf")
 	sb.references_max = 4096 # the default 100 fails the uset kind
 	print("set_probe: ", sb.vmcall("rd_set_probe", _bytes("res://probe.spv")))

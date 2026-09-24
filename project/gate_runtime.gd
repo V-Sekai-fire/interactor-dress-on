@@ -50,6 +50,7 @@ func _clean(t: String) -> String:
 func _sb(refs := 4096):
 	var sb = ClassDB.instantiate("Sandbox")
 	if sb != null: sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+	if sb != null: sb.memory_max = 512 # the Windows addon's default, which the recorded runs used; Linux's is 32 MiB
 	sb.program = _elf
 	sb.references_max = refs
 	return sb
@@ -601,6 +602,7 @@ func _refs_run(sb, n: int, aliased := false) -> Array:
 func _refs_fresh(refs: int, timeout: int):
 	var f = ClassDB.instantiate("Sandbox")
 	if f != null: f.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+	if f != null: f.memory_max = 512 # the Windows addon's default, which the recorded runs used; Linux's is 32 MiB
 	f.program = _elf
 	if refs > 0:
 		f.references_max = refs
@@ -672,6 +674,7 @@ func _p13_refs() -> bool:
 			["4096 before", 4096, -1, -1], ["65536 then 100", -1, 65536, -1], ["4096 then 100 live", -1, 4096, 100]]:
 		var f = ClassDB.instantiate("Sandbox")
 		if f != null: f.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+		if f != null: f.memory_max = 512 # the Windows addon's default, which the recorded runs used; Linux's is 32 MiB
 		if arm[1] > 0:
 			f.references_max = arm[1]
 		f.program = _elf

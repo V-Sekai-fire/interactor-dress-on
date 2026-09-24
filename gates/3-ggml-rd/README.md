@@ -674,7 +674,9 @@ translated work. A per-vmcall cap for translated ELFs needs its own number
 speed up (7.2 s a run, 6.9 s before) because it ran untranslated: its gate
 makes the Sandbox with `memory_max` 3600, the translation's defines include
 the arena size, so its hash differs from the 2048 MiB one baked here. A
-translation is per (ELF, memory_max): bake one per Sandbox configuration.
+translation is per (ELF, memory_max): bake one per Sandbox configuration. This translation is not shipped: it matches only the
+ELF it was measured on (63ab8527), which this branch then rebuilds with all
+105 kernels (hash 2326d136 on CI); `tools/build.exs` bakes the current one.
 
 **Gradients, smoke-tested (2026-09-24, `gate_ggml_rd.gd -- --mode=grad
 --ops=ADD,MUL,SCALE,SUM`, `grad-smoke/`):** test-backend-ops' grad mode

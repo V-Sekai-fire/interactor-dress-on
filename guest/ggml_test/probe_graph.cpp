@@ -8,8 +8,9 @@
 // reference arms would be hours). graph_nets.cpp builds the nets, the same
 // file the oracle compiles.
 //
-//   graph <qwen|dit|sconv>[:res]   G3.graph for one graph (graph_nets.h):
-//     rd native / rd f32   the weights in the model's type (f16, bf16), and
+//   graph <qwen|dit|sconv|kimodo_denoiser|kimodo_text>[:res]   G3.graph for one graph
+//     (graph_nets.h):
+//     rd native / rd f32   the weights in the model's type (f16, bf16, f32), and
 //                          the same values widened to f32; both arms' outputs
 //                          are kept for the host (graph_dump_list/_chunk,
 //                          main.cpp's ggml_dump_list/ggml_dump_chunk), which
@@ -152,7 +153,7 @@ bool graph_one(const std::string &which, int res) {
 	std::string native, resid;
 	const char *g = which.c_str();
 	if (!graph_builder(which, res, build, native, resid)) {
-		std::printf("PROBE graph: unknown graph '%s' (qwen, dit, sconv)\n", g);
+		std::printf("PROBE graph: unknown graph '%s' (qwen, dit, sconv, kimodo_denoiser, kimodo_text)\n", g);
 		return false;
 	}
 	for (const char *k : { "GGML_RD_BARRIER_ALL", "GGML_RD_DROP_BARRIER", "GGML_RD_FAULT", "GGML_RD_PROFILE" }) {
@@ -626,7 +627,7 @@ bool cost_dit(int steps) {
 
 } // namespace
 
-// arg: "qwen", "dit", "dit:8" (8^3 tokens), "sconv".
+// arg: "qwen", "dit", "dit:8" (8^3 tokens), "sconv", "kimodo_denoiser", "kimodo_text".
 bool graph_probe(const std::string &arg) {
 	const size_t colon = arg.find(':');
 	const std::string which = arg.substr(0, colon);

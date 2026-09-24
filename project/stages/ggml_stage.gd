@@ -135,6 +135,8 @@ func ggml_ops_all() -> String: return ggml_ops_start("-o ADD,MUL,CPY,DUP,CONT,GE
 func ggml_graph_qwen() -> String: return ggml_probe_start("graph", "qwen", "")
 func ggml_graph_sconv() -> String: return ggml_probe_start("graph", "sconv", "")
 func ggml_graph_dit() -> String: return ggml_probe_start("graph", "dit:8", "")
+func ggml_graph_kimodo_denoiser() -> String: return ggml_probe_start("graph", "kimodo_denoiser", "")
+func ggml_graph_kimodo_text() -> String: return ggml_probe_start("graph", "kimodo_text", "")
 # The last graph run's dumped outputs ("name bytes" lines).
 func ggml_dump_list() -> String:
 	return str(_ggml.vmcall("ggml_dump_list")) if _ggml != null else "IDLE"

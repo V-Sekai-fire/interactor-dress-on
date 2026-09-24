@@ -625,6 +625,46 @@ oracle gets 1200 s per graph and is killed past it. The gate's Sandbox keeps
 tokens, several runs of them for the bit comparisons) and
 `execution_timeout` 4000000.
 
+## The CPU fallback: ggml-rd with no RenderingDevice (Linux, no GPU)
+
+**Result so far (2026-09-24, a Linux container with no GPU, the Linux addon
+built from the org's godot-sandbox fork): the fallback runs the same graphs
+the GPU runs, and the host oracle accepts them.** With no RenderingDevice,
+RD0 still exists: every dispatch goes through the kernel's
+`slangc -target cpp` emit on guest memory (`guest/ggml-rd/rd_cpu.cpp`), the
+same packers, the same 64 params words, the runner the host L2 harness
+generates (`tests/ggml_rd_kernels/gen_host_kernels.py`, one memory block per
+storage binding). Rule 2's second target, not ggml-cpu: rule 10 is untouched.
+`GGML_RD_CPU_FALLBACK=0` on the first job turns it off (the no-device
+control, `gate_ggml_rd.gd -- fallback=off`).
+
+| run | on the fallback | on the RTX 4090 |
+|---|---|---|
+| host L2 (`tests/ggml_rd_kernels`, Linux clang 18) | 403/403, control 380 detected, 23 no-op | 356/356 (before the five MotionBricks kernels) |
+| `-o ADD -p ne=[1,1,1,1]` | OK=2 FAIL=0, Backend RD0: OK, 4.6 s | |
+| `-o ADD`, all 54 cases | 30 OK, then the `[1,1,65536,1] x 256` case hit rule 10's per-vmcall cap (614 s) | 1590 s for all 1700 cases |
+| G3.graph Qwen3 decoder layer, f16, vs host ggml-cpu | rel-L2 7.508e-4 (f16 weights), 1.665e-7 (f32 arm); 45 dispatches in 6.9 s per run | 2.10e-4, 9.2e-6 |
+
+What the profile says (`GGML_RD_PROFILE=1` now prints the fallback's graph,
+kernel and buffer-op times; the gate takes `--env=GGML_RD_PROFILE=1`): on a
+2M-element ADD the kernel takes 0.95 s, the buffer ops 20 ms, and the case
+127 s, so the time is test-backend-ops' own work on the guest CPU (the cost
+the GPU runs pay too: their pumps averaged 0.93 s). The 16.7M-element ADD
+cases do not fit rule 10's cap on the interpreter at all: the killed vmcall
+had done its allocation and one 64 MiB upload in under 0.1 s and spent the
+rest before the first readback, in the harness's graph copy. Native
+translation of the ELF is the fix, not a wider cap.
+
+Two things the CPU path judges differently: the dropped-barrier control is
+not applicable (no barrier is placed, `drop_control n/a` in the SUMMARY),
+and the rd-vs-rd f16/f32 arm comparison is exactly 0 (the same emit reads
+the same values).
+
+Two Linux findings on the way: the Linux addon's Sandbox defaults
+(`allocations_max` 4000, `memory_max` 32 MiB) and Ubuntu clang 18's rv64gcv
+code (`vsetivli` + `vl1r.v` struct copies trap as `Illegal opcode` on the
+Linux addon; guest ELFs are built with `SANDBOX_RISCV_EXT_V=OFF` now).
+
 ## How ggml-rd works
 
 - **One params table, no push constants.** Every dispatch of a graph owns a

@@ -2,7 +2,7 @@ import LeanSlang
 import Ggml.SlangCodegen.Common
 
 /-!
-# `Ggml.SlangCodegen.Binary` — ggml ADD and MUL, f32, with broadcast
+# `Ggml.SlangCodegen.Binary` — ggml ADD, SUB and MUL, f32, with broadcast
 
 The reference kernel of the ggml-rd op library (family K2): every other
 kernel copies its shape. One thread per destination element:
@@ -17,9 +17,11 @@ operand may be a strided or permuted view. The modulo is ggml's broadcast
 dst has src0's shape (`ggml_are_same_shape(src0, dst)`), which the packer
 (`guest/ggml-rd/ops/binary.cpp`) checks before choosing this kernel.
 
-Each result is one IEEE f32 add or multiply of the same two operands the
-CPU backend reads, so it is bit-exact against ggml-cpu. s2 is unused and
-kept by `-preserve-params`.
+Each result is one IEEE f32 add, subtract or multiply of the same two
+operands the CPU backend reads, so it is bit-exact against ggml-cpu. s2 is
+unused and kept by `-preserve-params`. SUB (`ggml_sub`, the same broadcast
+rule as ADD in ggml-cpu's `ggml_compute_forward_sub_f32`) is what
+MotionBricks' masked blends (`ggml_mul(ggml_sub(a, b), mask)`) run.
 -/
 
 namespace Ggml.SlangCodegen.Binary
@@ -49,19 +51,21 @@ def body (op : String) : List SlangStmt :=
   , .assign (.index (v "dst") (v "d"))
       (.bin op (.index (v "s0") (v "a")) (.index (v "s1") (v "b"))) ]
 
-/-- The module for one operator (`"+"` or `"*"`). -/
+/-- The module for one operator (`"+"`, `"-"` or `"*"`). -/
 def shader (op : String) : SlangShaderModule :=
   kernelModule .float .float .uint .float
     [fnPw, fnUnravel4, fnOff4]
     (entry1D threadgroup (body op))
 
 def addF32 : SlangShaderModule := shader "+"
+def subF32 : SlangShaderModule := shader "-"
 def mulF32 : SlangShaderModule := shader "*"
 
 /-- The kernels this module contributes, by their kernels.txt names. -/
 def kernels : List (String × SlangShaderModule) :=
   [ ("add_f32", addF32)
-  , ("mul_f32", mulF32) ]
+  , ("mul_f32", mulF32)
+  , ("sub_f32", subF32) ]
 
 /-- The Gate 3 aliasing control: add_f32 with its sources read-only. Bound
     over one RD buffer (a ggml buffer), its first binding of that buffer is
@@ -146,6 +150,11 @@ example : LeanSlang.emit ctlAddF32RoSources =
 /-- MUL is ADD with the one operator swapped, and nothing else. -/
 example : LeanSlang.emit mulF32 =
     (expectedAdd.replace "dst[d] = (s0[a] + s1[b]);" "dst[d] = (s0[a] * s1[b]);") := by
+  native_decide
+
+/-- So is SUB. -/
+example : LeanSlang.emit subF32 =
+    (expectedAdd.replace "dst[d] = (s0[a] + s1[b]);" "dst[d] = (s0[a] - s1[b]);") := by
   native_decide
 
 end Ggml.SlangCodegen.Binary

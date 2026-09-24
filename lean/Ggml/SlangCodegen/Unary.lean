@@ -4,9 +4,9 @@ import Ggml.SlangCodegen.Common
 /-!
 # `Ggml.SlangCodegen.Unary` — family K1: element-wise ops, f32
 
-SILU, GELU (tanh form), GELU_ERF, SIGMOID, NEG (`GGML_OP_UNARY`), SCALE
-(`x * s + b`) and DIAG_MASK_INF. One thread per destination element, the
-shape of `Binary`:
+SILU, GELU (tanh form), GELU_ERF, SIGMOID, NEG, RELU (`GGML_OP_UNARY`),
+SCALE (`x * s + b`), DIAG_MASK_INF, LEAKY_RELU and CLAMP. One thread per
+destination element, the shape of `Binary`:
 
     e            = this thread's linear element (threads >= word 53 return)
     (i0..i3)     = unravel(e) over dst's ne (ggml order, dim 0 fastest)
@@ -36,6 +36,15 @@ Serial sibling: the cpp emit runs the same module.
   -0 stays -0), else `x * s + b`; `s`, `b` are op_params words 0 and 1.
 - `diag_mask_inf`: `-inf` where `i0 > n_past + i1`, else `x`; `n_past`
   is op_params word 0 (ggml asserts it is >= 0).
+- `relu(x) = (x > 0) ? x : 0` (`ggml_vec_relu_f32`), so a -0 becomes +0
+  and a NaN becomes 0, as on the CPU.
+- `leaky_relu(x, ns) = ((x > 0) ? x : 0) + ns * ((x < 0) ? x : 0)`
+  (`ggml_vec_leaky_relu_f32`, its two-term form kept: the sum is what
+  makes a -0 input +0 and an x < 0 exactly `0 + ns * x`); `ns`
+  (negative_slope) is op_params word 0.
+- `clamp(x, lo, hi) = MAX(MIN(x, hi), lo)` written as ggml-cpu's macros
+  (`(x < hi) ? x : hi`, then `(m > lo) ? m : lo`), so a NaN comes out as
+  `lo` on both; `lo`, `hi` are op_params words 0 and 1.
 -/
 
 namespace Ggml.SlangCodegen.Unary
@@ -114,6 +123,28 @@ def fnGeluErf : SlangFunctionDecl :=
     [ .ret (some (mul (mul (fl 0.5) (v "x"))
         (add (fl 1.0) (.call "erf_as" [mul (v "x") (fl sqrt2Inv)])))) ]
 
+/-- `float relu(float x) { return (x > 0) ? x : 0; }` -/
+def fnRelu : SlangFunctionDecl :=
+  float1 "relu" [ .ret (some (.ternary (.bin ">" (v "x") (fl 0.0)) (v "x") (fl 0.0))) ]
+
+/-- `float leaky_relu(float x, float ns)`: ggml_vec_leaky_relu_f32's sum. -/
+def fnLeakyRelu : SlangFunctionDecl :=
+  { retType := .scalar .float
+  , name := "leaky_relu"
+  , params := [floatParam "x", floatParam "ns"]
+  , body := [ .ret (some (add (.ternary (.bin ">" (v "x") (fl 0.0)) (v "x") (fl 0.0))
+                              (mul (v "ns") (.ternary (.bin "<" (v "x") (fl 0.0)) (v "x") (fl 0.0))))) ] }
+
+/-- `float clamp_ggml(float x, float lo, float hi)`: `MAX(MIN(x, hi), lo)`
+    with ggml's macros (`a < b ? a : b`, `a > b ? a : b`), not Slang's
+    `clamp`, whose NaN result is the target's choice. -/
+def fnClampGgml : SlangFunctionDecl :=
+  { retType := .scalar .float
+  , name := "clamp_ggml"
+  , params := [floatParam "x", floatParam "lo", floatParam "hi"]
+  , body := [ .declInit (.scalar .float) "m" (.ternary (.bin "<" (v "x") (v "hi")) (v "x") (v "hi"))
+            , .ret (some (.ternary (.bin ">" (v "m") (v "lo")) (v "m") (v "lo"))) ] }
+
 /-! ## Kernels -/
 
 /-- The body after the 1-D prologue: unravel, two offsets, `x`, then
@@ -140,6 +171,15 @@ def geluF32 : SlangShaderModule := shader [fnGelu] (.call "gelu_tanh" [v "x"])
 def geluErfF32 : SlangShaderModule := shader [fnErf, fnGeluErf] (.call "gelu_erf" [v "x"])
 def sigmoidF32 : SlangShaderModule := shader [fnSigmoid] (.call "sigmoid" [v "x"])
 def negF32 : SlangShaderModule := shader [] (neg (v "x"))
+def reluF32 : SlangShaderModule := shader [fnRelu] (.call "relu" [v "x"])
+
+/-- LEAKY_RELU: `negative_slope` = op_params word 0. -/
+def leakyReluF32 : SlangShaderModule :=
+  shader [fnPf, fnLeakyRelu] (.call "leaky_relu" [v "x", pfN wOpParams])
+
+/-- CLAMP: `min` = op_params word 0, `max` = word 1. -/
+def clampF32 : SlangShaderModule :=
+  shader [fnPf, fnClampGgml] (.call "clamp_ggml" [v "x", pfN wOpParams, pfN (wOpParams + 1)])
 
 /-- SCALE: `s` = op_params word 0, `b` = word 1. -/
 def scaleF32 : SlangShaderModule :=
@@ -165,7 +205,10 @@ def kernels : List (String × SlangShaderModule) :=
   , ("sigmoid_f32", sigmoidF32)
   , ("neg_f32", negF32)
   , ("scale_f32", scaleF32)
-  , ("diag_mask_inf_f32", diagMaskInfF32) ]
+  , ("diag_mask_inf_f32", diagMaskInfF32)
+  , ("relu_f32", reluF32)
+  , ("leaky_relu_f32", leakyReluF32)
+  , ("clamp_f32", clampF32) ]
 
 /-! ## Pins -/
 
@@ -289,5 +332,35 @@ example : LeanSlang.emit scaleF32 = sibling
 
 example : LeanSlang.emit diagMaskInfF32 = sibling ""
   "dst[d] = ((i0 > (pw(37u) + i1)) ? asfloat(4286578688u) : x);" := by native_decide
+
+example : LeanSlang.emit reluF32 = sibling
+"float relu(float x) {
+  return ((x > 0.0f) ? x : 0.0f);
+}
+
+" "dst[d] = relu(x);" := by native_decide
+
+example : LeanSlang.emit leakyReluF32 = sibling
+"float pf(uint k) {
+  return asfloat(pw(k));
+}
+
+float leaky_relu(float x, float ns) {
+  return (((x > 0.0f) ? x : 0.0f) + (ns * ((x < 0.0f) ? x : 0.0f)));
+}
+
+" "dst[d] = leaky_relu(x, pf(37u));" := by native_decide
+
+example : LeanSlang.emit clampF32 = sibling
+"float pf(uint k) {
+  return asfloat(pw(k));
+}
+
+float clamp_ggml(float x, float lo, float hi) {
+  float m = ((x < hi) ? x : hi);
+  return ((m > lo) ? m : lo);
+}
+
+" "dst[d] = clamp_ggml(x, pf(37u), pf(38u));" := by native_decide
 
 end Ggml.SlangCodegen.Unary

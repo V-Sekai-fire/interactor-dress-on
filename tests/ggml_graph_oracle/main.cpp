@@ -45,7 +45,9 @@
 
 #include "ggml-backend.h"
 #include "ggml-cpu.h"
+#ifdef ORACLE_VULKAN
 #include "ggml-vulkan.h"
+#endif
 #include "ggml.h"
 #include "graph_nets.h"
 
@@ -85,6 +87,7 @@ ggml_backend_t make_backend(const std::string &kind, const Opts &o) {
 		ggml_backend_cpu_set_n_threads(b, t);
 		return b;
 	}
+#ifdef ORACLE_VULKAN
 	if (kind == "vulkan") {
 		if (g_vk_device < 0) {
 			const int n = ggml_backend_vk_get_device_count();
@@ -101,6 +104,12 @@ ggml_backend_t make_backend(const std::string &kind, const Opts &o) {
 		}
 		return ggml_backend_vk_init(size_t(g_vk_device));
 	}
+#else
+	if (kind == "vulkan") {
+		std::printf("ORACLE built without ggml-vulkan (ORACLE_VULKAN=OFF): --ref=cpu --check=none\n");
+		return nullptr;
+	}
+#endif
 	return nullptr;
 }
 

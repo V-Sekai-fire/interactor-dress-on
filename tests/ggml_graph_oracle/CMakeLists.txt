@@ -22,7 +22,10 @@ set(GGML_BACKEND_DL OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(GGML_OPENMP OFF CACHE BOOL "" FORCE)
 set(GGML_LLAMAFILE OFF CACHE BOOL "" FORCE)
-set(GGML_VULKAN ON CACHE BOOL "" FORCE)
+# ORACLE_VULKAN=OFF builds the oracle with host ggml-cpu alone (a machine
+# without a Vulkan SDK; --ref=cpu --check=none, the headless G3.graph run).
+option(ORACLE_VULKAN "ggml-vulkan in the oracle" ON)
+set(GGML_VULKAN ${ORACLE_VULKAN} CACHE BOOL "" FORCE)
 set(GGML_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GGML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${ROOT}/vendor/ggml ggml EXCLUDE_FROM_ALL)
@@ -33,4 +36,9 @@ add_executable(ggml_graph_oracle
 	${ROOT}/guest/ggml_test/app_graphs/app_graphs.cpp
 )
 target_include_directories(ggml_graph_oracle PRIVATE ${ROOT}/guest/ggml_test)
-target_link_libraries(ggml_graph_oracle PRIVATE ggml ggml-cpu ggml-vulkan ggml-base -static)
+if (ORACLE_VULKAN)
+	target_compile_definitions(ggml_graph_oracle PRIVATE ORACLE_VULKAN=1)
+	target_link_libraries(ggml_graph_oracle PRIVATE ggml ggml-cpu ggml-vulkan ggml-base -static)
+else()
+	target_link_libraries(ggml_graph_oracle PRIVATE ggml ggml-cpu ggml-base -static)
+endif()

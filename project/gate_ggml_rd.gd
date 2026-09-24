@@ -2,7 +2,7 @@
 # ggml-rd on the GPU against the in-guest ggml-cpu, plus the ggml-rd probes.
 #
 #   godot --path project --script gate_ggml_rd.gd --rendering-driver vulkan --xr-mode off
-#   godot --headless --path project --script gate_ggml_rd.gd      (the no-device control)
+#   godot --headless --path project --script gate_ggml_rd.gd      (the CPU fallback; -- fallback=off: the no-device control)
 #
 # Frame-driven: the host owns a local RenderingDevice, attaches it to the
 # guest, and advances each job with InferHost.pump_frame() once per frame
@@ -38,9 +38,15 @@
 # Every job that runs ggml-cpu (the ops runs and probe census) has each pump
 # vmcall capped at InferHost.GGML_CPU_TIMEOUT_UNITS (~5 min, rule 10); the
 # ggml-rd-only probes keep the Sandbox's 1,000,000.
-# Headless (no RenderingDevice): one run, -o ADD -b RD0, which must print
-# "no RD device" and test no RD0 case: the flat control that separates
-# "the GPU path is not there" from "the kernels are wrong".
+# Headless (no RenderingDevice): ggml-rd's CPU fallback (the kernels' slangc
+# cpp emits on guest memory, guest/ggml-rd/rd_cpu.cpp) stands in as RD0, and
+# the ops runs and the fault controls run on it: ops main, ops fault, ops
+# fault move (no probes: they measure the GPU). With `fallback=off` the one
+# run is -o ADD -b RD0 under GGML_RD_CPU_FALLBACK=0, which must print "no RD
+# device" and test no RD0 case: the flat control that separates "the GPU path
+# is not there" from "the kernels are wrong" (results-headless-off.txt).
+# A HEARTBEAT line every 30 s of a run carries the host summary and the
+# ggml-rd counters (dispatches), so a long headless run shows it is moving.
 #
 # Results: gates/3-ggml-rd/ops/results.txt (results-headless.txt headless),
 # each run's full output in run-<name>.log beside it; the last line is
@@ -57,6 +63,8 @@
 #                         ops/k1k5); a path starting gates/ is from the checkout
 #   --probe=rows_perf[:arg]  one more probe after the ops runs (repeatable);
 #                            it must print RESULT: PASS
+#   --params=<regex>      test-backend-ops' -p filter on ops main (no spaces)
+#   fallback=off          headless: the no-device control instead of the fallback runs
 #   runs=ops_main,probe_mm_perf  only those runs (the verdicts of the runs left
 #                         out then FAIL, so a partial run never reads RESULT: PASS)
 extends SceneTree
@@ -136,6 +144,9 @@ var _ops := OPS
 var _fault_ops := FAULT_OPS
 var _out_dir := OUT_DIR
 var _extra_probes: Array = []
+var _params := ""
+var _fallback_off := false
+var _beat_t0 := 0
 
 func _clean(t: String) -> String:
 	var root := ProjectSettings.globalize_path("res://").trim_suffix("/")
@@ -171,6 +182,10 @@ func _parse_user_args() -> void:
 			var pa := a.trim_prefix("--probe=").split(":", true, 1)
 			var parg: String = pa[1] if pa.size() > 1 else ""
 			_extra_probes.append(["probe_" + pa[0] + ("_" + parg if parg != "" else ""), "probe", pa[0], parg, ""])
+		elif a.begins_with("--params="):
+			_params = a.trim_prefix("--params=")
+		elif a == "fallback=off":
+			_fallback_off = true
 		elif a.begins_with("--out="):
 			var o := a.trim_prefix("--out=").trim_suffix("/")
 			_out_dir = ("res://../" + o + "/") if o.begins_with("gates/") else ("res://../gates/3-ggml-rd/" + o + "/")
@@ -185,7 +200,7 @@ func _initialize() -> void:
 		_ops = OS.get_environment("GGML_GATE_OPS")
 	_headless = _rd == null
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
-	var name := "results-headless.txt" if _headless else "results.txt"
+	var name := ("results-headless-off.txt" if _fallback_off else "results-headless.txt") if _headless else "results.txt"
 	_out = FileAccess.open(ProjectSettings.globalize_path(_out_dir + name), FileAccess.WRITE)
 	_say("# Gate 3 G3.ops, %s, Godot %s, %s, %s" % [Time.get_datetime_string_from_system(true),
 			Engine.get_version_info().string, OS.get_processor_name(),
@@ -209,8 +224,15 @@ func _initialize() -> void:
 	_host = InferHost.new(_sb, _rd, "ggml_pump")
 	_say("rule 10: ggml-cpu jobs capped at execution_timeout=%d units per vmcall (~300 s), ggml-rd-only jobs at %d" % [
 			InferHost.GGML_CPU_TIMEOUT_UNITS, int(_sb.execution_timeout)])
-	if _headless:
-		_runs = [["ops_no_device", "ops", "-o ADD -b RD0", ""]]
+	var pfilter := (" -p " + _params) if _params != "" else ""
+	if _headless and _fallback_off:
+		_runs = [["ops_no_device", "ops", "-o ADD -b RD0", "GGML_RD_CPU_FALLBACK=0"]]
+	elif _headless:
+		_runs = [
+			["ops_main", "ops", "-o %s -b RD0%s" % [_ops, pfilter], ""],
+			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
+			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],
+		]
 	else:
 		var probe_file := _write_probe_file()
 		_runs = [
@@ -225,19 +247,19 @@ func _initialize() -> void:
 			["probe_perf_barrier_all", "probe", "perf", "move", "GGML_RD_BARRIER_ALL=1"],
 			["probe_mm_perf", "probe", "mm_perf", "all", ""],
 			["probe_census", "probe", "census", "all", ""],
-			["ops_main", "ops", "-o %s -b RD0" % _ops, ""],
-			["ops_barrier_all", "ops", "-o %s -b RD0" % _ops, "GGML_RD_BARRIER_ALL=1"],
+			["ops_main", "ops", "-o %s -b RD0%s" % [_ops, pfilter], ""],
+			["ops_barrier_all", "ops", "-o %s -b RD0%s" % [_ops, pfilter], "GGML_RD_BARRIER_ALL=1"],
 			["ops_fault", "ops", "-o %s -b RD0" % _fault_ops, "GGML_RD_FAULT=1"],
 			["ops_fault_move", "ops", "-o %s -p %s -b RD0" % [FAULT_MOVE_OPS, FAULT_MOVE_PARAMS], "GGML_RD_FAULT=1"],
 		]
 		_runs.append_array(_extra_probes)
 		# Last: a killed vmcall abandons the job's fiber, so no job can follow it.
 		_runs.append(["ops_cpu_cap_control", "ops", "-o MUL_MAT -b RD0", ""])
-		for ua in OS.get_cmdline_user_args():
-			if ua.begins_with("runs="):
-				var keep := ua.trim_prefix("runs=").split(",")
-				_runs = _runs.filter(func(r): return keep.has(r[0]))
-				_say("runs selected: %s" % str(keep))
+	for ua in OS.get_cmdline_user_args():
+		if ua.begins_with("runs="):
+			var keep := ua.trim_prefix("runs=").split(",")
+			_runs = _runs.filter(func(r): return keep.has(r[0]))
+			_say("runs selected: %s" % str(keep))
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
@@ -283,9 +305,14 @@ func _process(_delta: float) -> bool:
 		if not r.begins_with("STARTED"):
 			_verdict(false, "%s would not start: %s" % [_cur[0], r])
 			_cur = null
+		_beat_t0 = Time.get_ticks_msec()
 		return false
 	var st: String = _host.pump_frame()
 	if st == "running":
+		if Time.get_ticks_msec() - _beat_t0 >= 30000:
+			_beat_t0 = Time.get_ticks_msec()
+			_say("   HEARTBEAT %s t=%d s %s | %s" % [_cur[0], (Time.get_ticks_msec() - _run_t0) / 1000,
+					_host.summary(), str(_sb.vmcall("ggml_rd_stats")).get_slice(" pipelines", 0)])
 		return false
 	_end_run(st)
 	_cur = null
@@ -312,7 +339,7 @@ func _end_run(st: String) -> void:
 			_say("   %s: OK=%d FAIL=%d not_supported=%d" % [op, c.ok, c.fail, c.unsupported])
 		for l in res.fail_lines.slice(0, 5):
 			_say("   failed: %s" % l)
-		if not _headless: # headless runs no RD0 case: nothing to require
+		if not _fallback_off: # the no-device control runs no RD0 case: nothing to require
 			_say("   required cases not supported: %d" % res.required_unsupported.size())
 			var missing := _required_missing(res)
 			_say("   required patterns with no OK case: %d%s" % [missing.size(), (" " + str(missing)) if missing.size() > 0 else ""])
@@ -393,12 +420,29 @@ func _probe_pass(name: String) -> bool:
 
 func _checks() -> void:
 	_say("== verdicts")
-	if _headless:
+	if _headless and _fallback_off:
 		var r = _results.get("ops_no_device", {})
 		var t: String = r.get("text", "")
 		_verdict(r.get("state", "") == "done" and t.contains("no RD device") and t.contains("Testing 1 devices")
 				and not t.contains("Backend RD0:") and r.get("ok", -1) == 0,
-				"headless control: 'no RD device', 1 device (CPU), no RD0 case run")
+				"headless control: GGML_RD_CPU_FALLBACK=0: 'no RD device', 1 device (CPU), no RD0 case run")
+		return
+	if _headless:
+		var m = _results.get("ops_main", {})
+		_verdict(m.get("state", "") == "done" and m.get("fail", -1) == 0 and m.get("ok", 0) > 0
+				and str(m.get("backend_line", "")).ends_with("OK"),
+				"ops_main on the CPU fallback: test-backend-ops -o %s -b RD0: OK=%d FAIL=%d not_supported=%d (%s)" % [
+				_ops, m.get("ok", 0), m.get("fail", -1), m.get("unsupported", 0), m.get("backend_line", "")])
+		_verdict(m.get("state", "") == "done" and m.get("required_unsupported", [null]).is_empty(),
+				"ops_main: no census-required case is not supported (%d are)" % m.get("required_unsupported", [null]).size())
+		var f = _results.get("ops_fault", {})
+		_verdict(f.get("state", "") == "done" and f.get("fail", 0) > 0 and f.get("ok", -1) == 0,
+				"control: GGML_RD_FAULT=1 (a source read one element off) fails every %s case on the fallback: FAIL=%d OK=%d (%s)" % [
+				_fault_ops, f.get("fail", 0), f.get("ok", 0), f.get("backend_line", "")])
+		var fm = _results.get("ops_fault_move", {})
+		_verdict(fm.get("state", "") == "done" and fm.get("fail", 0) > 0 and fm.get("ok", -1) == 0,
+				"control: GGML_RD_FAULT=1 fails every %s case but i32 on the fallback: FAIL=%d OK=%d (%s)" % [FAULT_MOVE_OPS,
+				fm.get("fail", 0), fm.get("ok", 0), fm.get("backend_line", "")])
 		return
 	for n in ["probe_chain", "probe_chain_barrier_all", "probe_independent", "probe_independent_barrier_all", "probe_files"]:
 		_verdict(_probe_pass(n), "%s" % n)

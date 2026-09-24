@@ -1,0 +1,90 @@
+sketch	system	model	mode	strokes
+01-0-1	freehand	lamp	study	45
+01-0-2	freehand	shoe	study	44
+01-1-1	armature	lamp	study	39
+01-1-2	armature	shoe	study	40
+01-2-1	patch	lamp	study	34
+01-2-2	patch	shoe	study	16
+02-0-1	freehand	lamp	study	61
+02-0-2	freehand	shoe	study	64
+02-1-1	armature	lamp	study	56
+02-1-2	armature	shoe	study	64
+02-2-1	patch	lamp	study	48
+02-2-2	patch	shoe	study	56
+03-0-1	freehand	lamp	study	33
+03-0-2	freehand	shoe	study	33
+03-1-1	armature	lamp	study	30
+03-1-2	armature	shoe	study	31
+03-2-1	patch	lamp	study	28
+03-2-2	patch	shoe	study	36
+04-0-1	freehand	lamp	study	44
+04-0-2	freehand	shoe	study	71
+04-1-1	armature	lamp	study	23
+04-1-2	armature	shoe	study	53
+04-2-1	patch	lamp	study	71
+04-2-2	patch	shoe	study	51
+05-0-1	freehand	lamp	study	243
+05-0-2	freehand	shoe	study	303
+05-1-1	armature	lamp	study	93
+05-1-2	armature	shoe	study	88
+05-2-1	patch	lamp	study	91
+05-2-2	patch	shoe	study	70
+06-0-1	freehand	lamp	study	34
+06-0-2	freehand	shoe	study	67
+06-1-1	armature	lamp	study	34
+06-1-2	armature	shoe	study	44
+06-2-1	patch	lamp	study	39
+06-2-2	patch	shoe	study	35
+07-0-1	freehand	lamp	study	45
+07-0-2	freehand	shoe	study	39
+07-1-1	armature	lamp	study	47
+07-1-2	armature	shoe	study	38
+07-2-1	patch	lamp	study	35
+07-2-2	patch	shoe	study	51
+08-0-1	freehand	lamp	study	40
+08-0-2	freehand	shoe	study	45
+08-1-1	armature	lamp	study	39
+08-1-2	armature	shoe	study	30
+08-2-1	patch	lamp	study	35
+08-2-2	patch	shoe	study	28
+09-0-1	freehand	lamp	study	34
+09-0-2	freehand	shoe	study	24
+09-1-1	armature	lamp	study	19
+09-1-2	armature	shoe	study	30
+09-2-1	patch	lamp	study	19
+09-2-2	patch	shoe	study	27
+10-0-1	freehand	lamp	study	55
+10-0-2	freehand	shoe	study	66
+10-1-1	armature	lamp	study	47
+10-1-2	armature	shoe	study	41
+10-2-1	patch	lamp	study	101
+10-2-2	patch	shoe	study	48
+11-0-1	freehand	lamp	study	50
+11-0-2	freehand	shoe	study	30
+11-1-1	armature	lamp	study	34
+11-1-2	armature	shoe	study	32
+11-2-1	patch	lamp	study	34
+11-2-2	patch	shoe	study	13
+12-0-1	freehand	lamp	study	57
+12-0-2	freehand	shoe	study	28
+12-1-1	armature	lamp	study	82
+12-1-2	armature	shoe	study	26
+12-2-1	patch	lamp	study	45
+12-2-2	patch	shoe	study	15
+architecture-2	patch	none	free creation	105
+architecture	patch	none	free creation	63
+chair	patch	none	free creation	199
+computer-mouse	patch	none	free creation	34
+dress	patch	none	free creation	153
+flower	patch	none	free creation	45
+guitar	patch	none	free creation	148
+hat	patch	none	free creation	69
+hmd_modern	patch	none	free creation	98
+hmd_sutherland	patch	none	free creation	223
+large_hat	patch	none	free creation	None
+monster_head	patch	none	free creation	103
+sewing-machine	patch	none	free creation	140
+shield	patch	none	free creation	82
+teapot	patch	none	free creation	77
+vacuum	patch	none	free creation	91
+vintage_car	patch	none	free creation	163

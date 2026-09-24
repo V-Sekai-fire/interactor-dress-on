@@ -20,7 +20,7 @@ abstract: >-
   writes each program's native translation as C99), built with Ubuntu clang
   18, CMake and Ninja, Release, RISCV_ASMJIT=OFF (no JIT; binary translation
   lookup as before), sha256
-  345167491984349c01f52834690f8bbd70b0945017ac6ef6b2719c60b9fd035a. The Windows libraries are the
+  711e7a1363a9fb5b12ebe4ef031564635acf9fab6064b48787ec416abe348648. The Windows libraries are the
   ones vendored at Gate 0E; their source commit was not recorded then.
 authors:
   - name: Alf-André Walla (fwsGonzo)

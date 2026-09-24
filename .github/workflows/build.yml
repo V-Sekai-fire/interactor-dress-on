@@ -1,0 +1,52 @@
+# The one-step build, the same command a desk runs: elixir tools/build.exs.
+# Cross-builds the guest ELFs, runs the host harnesses, and, with Godot on the
+# runner, imports the project, bakes the native translations and runs the
+# headless gates. No GPU on a runner: the rd paths are gated elsewhere.
+name: build
+on:
+  push:
+    branches: [main, "feat/**", "dev/**"]
+  pull_request:
+  workflow_dispatch:
+env:
+  GODOT_VERSION: 4.7.2
+  SLANG_VERSION: 2026.13.1
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools from apt
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q clang lld cmake ninja-build python3 spirv-tools xvfb
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27"
+          elixir-version: "1.17"
+      - name: slangc and Godot
+        run: |
+          mkdir -p "$HOME/opt/slang" "$HOME/bin"
+          curl -fsSL "https://github.com/shader-slang/slang/releases/download/v${SLANG_VERSION}/slang-${SLANG_VERSION}-linux-x86_64.tar.gz" | tar -xz -C "$HOME/opt/slang"
+          ln -sf "$HOME/opt/slang/bin/slangc" "$HOME/bin/slangc"
+          curl -fsSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -oq godot.zip -d "$HOME/opt" && ln -sf "$HOME/opt/Godot_v${GODOT_VERSION}-stable_linux.x86_64" "$HOME/bin/godot"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - name: Cache the riscv64 sysroot
+        uses: actions/cache@v4
+        with:
+          path: build/riscv64-sysroot-src
+          key: riscv64-sysroot-${{ hashFiles('build.sh') }}
+      - name: Build
+        run: elixir tools/build.exs --gates=wrappers,curvenet
+      - name: Keep the ELFs, translations and gate results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: |
+            project/*.elf
+            project/bintr/*.so
+            gates/4-curvenet/results.txt
+            gates/3-ggml-rd/ops/results-headless.txt

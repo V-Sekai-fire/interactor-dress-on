@@ -16,6 +16,10 @@
 #   ... ++ --out=graph-dev                results in gates/3-ggml-rd/<out>/
 #   ... ++ --dump=<dir>                   dumps there (default <checkout>/build/graph-dumps)
 #   ... ++ --wall=<s>                     the wall clock (default 3600 s)
+#   godot --path project --headless --xr-mode off --script gate_ggml_graph.gd ++ --oracle=<exe>
+#                                         the graphs on ggml-rd's CPU fallback, the oracle
+#                                         host ggml-cpu alone (--check=none); default
+#                                         runs= graph_qwen,graph_sconv
 #
 # Runs, in order (each a probe job on the pump, AGENTS.md rule 4: every
 # submit's sync lands on a later frame):
@@ -57,6 +61,7 @@ var _results := {}
 var _out_dir := "res://../gates/3-ggml-rd/graph/"
 var _dump_dir := ""
 var _oracle_exe := ""
+var _headless := false
 var _wall_s := WALL_S
 var _oracle_pid := -1
 var _oracle_run = null
@@ -106,10 +111,12 @@ func _initialize() -> void:
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _rd == null else RenderingServer.get_video_adapter_name()])
 	_say("oracle: %s" % (_oracle_exe.get_file() if _oracle_exe != "" else "(none: graph runs FAIL)"))
-	if _rd == null:
-		_verdict(false, "no RenderingDevice (run with --rendering-driver vulkan, not --headless)")
-		_finish()
-		return
+	# Headless: ggml-rd's CPU fallback stands in as RD0 (guest/ggml-rd/rd_cpu.cpp),
+	# and the oracle is host ggml-cpu with no second backend (`--check=none`):
+	# the Lean kernels' cpp emits in the guest against ggml's own CPU code.
+	# The default headless runs are the two small graphs; the DiT block and
+	# the cost runs are GPU-sized (runs= still names any of them).
+	_headless = _rd == null
 	_sb = ClassDB.instantiate("Sandbox")
 	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
 	# memory_max before program= (Gate 0F): the DiT block's RD runs keep
@@ -120,7 +127,12 @@ func _initialize() -> void:
 	_sb.program = load("res://ggml_test.elf")
 	_sb.references_max = 65536
 	_sb.execution_timeout = 4000000
-	_say("attach: %s" % str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB)))
+	var attach := str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB))
+	_say("attach: %s" % attach)
+	if _headless and not attach.contains("CPU fallback"):
+		_verdict(false, "no RenderingDevice and no CPU fallback (run with --rendering-driver vulkan)")
+		_finish()
+		return
 	_say("execution_timeout=%s memory_max=%s" % [str(_sb.execution_timeout), str(_sb.memory_max)])
 	_host = InferHost.new(_sb, _rd, "ggml_pump")
 	# [name, probe, arg, oracle args (graph runs)]
@@ -132,6 +144,12 @@ func _initialize() -> void:
 		["cost_decode", "cost", "decode:5", []],
 		["cost_dit", "cost", "dit:3", []],
 	]
+	if _headless:
+		for r in _runs:
+			if r[1] == "graph":
+				r[3] = ["--ref=cpu", "--check=none"]
+		if keep.is_empty():
+			keep = PackedStringArray(["graph_qwen", "graph_sconv"])
 	if not keep.is_empty():
 		_runs = _runs.filter(func(r): return keep.has(r[0]))
 		_say("runs selected: %s" % str(keep))

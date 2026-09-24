@@ -69,3 +69,8 @@ flash_attn_ext_f16_d64
 flash_attn_ext_f16_d64_serial
 flash_attn_ext_f16_d128
 flash_attn_ext_f16_d128_serial
+sub_f32
+relu_f32
+leaky_relu_f32
+clamp_f32
+upscale_nearest_f32

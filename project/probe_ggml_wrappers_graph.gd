@@ -1,5 +1,6 @@
 # Rule 8 smoke for G3.graph and G3.cost: main.gd's presets (ggml_graph_qwen,
-# ggml_cost_decode, ggml_cost_dit, ggml_graph_sconv, ggml_graph_dit) called
+# ggml_cost_decode, ggml_cost_dit, ggml_graph_sconv, ggml_graph_dit,
+# ggml_graph_kimodo_denoiser, ggml_graph_kimodo_text) called
 # with no arguments, pumped by main.gd's own _process; each must print
 # RESULT: PASS, each graph run's outputs must leave through ggml_graph_dump
 # (no arguments), and rule 4 must end at 0. Quits on a 2400 s wall clock.
@@ -11,7 +12,7 @@
 extends SceneTree
 
 var _main = null
-var _steps := ["ggml_graph_qwen", "ggml_cost_decode", "ggml_cost_dit", "ggml_graph_sconv", "ggml_graph_dit"]
+var _steps := ["ggml_graph_qwen", "ggml_cost_decode", "ggml_cost_dit", "ggml_graph_sconv", "ggml_graph_dit", "ggml_graph_kimodo_denoiser", "ggml_graph_kimodo_text"]
 var _cur := ""
 var _out: FileAccess
 var _t0 := 0

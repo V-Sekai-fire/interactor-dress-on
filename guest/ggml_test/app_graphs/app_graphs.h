@@ -17,6 +17,12 @@
 //            one level of shape_dec_run's graph: the child head, the ConvNeXt
 //            blocks and the up-block's part A, each 3^3 submanifold conv as
 //            27 x (get_rows + mask mul + mul_mat))
+//   kimodo:: kimodo-ggml src/denoiser.cpp @568b025 (linear, norm and layer:
+//            one F32 TransformerEncoderLayer of the motion denoiser, the
+//            attention as explicit [head, batch] branches) and
+//            src/llm_text_encoder.cpp @568b025 (norm, repeat_kv and
+//            layer_graph: one bidirectional LLM2Vec Llama-3-8B layer, BF16
+//            base weights with the F32 supervised LoRA branch)
 //
 // CITATION.cff beside this file names the sources and the adaptations.
 #pragma once
@@ -129,5 +135,47 @@ std::vector<std::pair<std::string, ggml_tensor *>> level_graph(ggml_context *ctx
 		ggml_tensor *in_hch, ggml_tensor *in_xch);
 
 } // namespace sparse
+
+namespace kimodo {
+
+// The motion denoiser (src/denoiser.cpp:15; convert_motion_to_gguf.py:234,
+// 237: kimodo.hidden_size 1024, kimodo.feed_forward_size 2048).
+namespace denoiser {
+
+constexpr int width = 1024, heads = 8, head_width = 128, text_tokens = 50, prefix_tokens = 52;
+constexpr int feed_forward = 2048; // linear1: [1024, 2048], linear2: [2048, 1024]
+constexpr int layers = 16; // denoiser.cpp:85, seqTransEncoder.layers.0..15
+
+ggml_tensor *linear(ggml_context *ctx, ggml_tensor *x, ggml_tensor *w, ggml_tensor *bias);
+ggml_tensor *norm(ggml_context *ctx, ggml_tensor *x, ggml_tensor *scale, ggml_tensor *bias);
+// One TransformerEncoderLayer (denoiser.cpp's `layer`): x [width, seq, batch]
+// f32 -> the same shape; p is the layer's tensor prefix
+// ("root_model.seqTransEncoder.layers.<i>.").
+ggml_tensor *layer(ggml_context *ctx, ggml_tensor *x, const WeightFn &W, const std::string &p, int seq, int batch);
+
+} // namespace denoiser
+
+// The LLM2Vec text encoder (src/llm_text_encoder.cpp:30; the layer GGUFs of
+// convert_llm2vec_layer_to_gguf.py: hidden 4096, 32 heads, 8 KV heads,
+// rope_theta 500000; Llama-3-8B's FFN 14336, tests/llm_layer_parity.cpp:148).
+namespace text {
+
+constexpr int64_t hidden = 4096, heads = 32, kv_heads = 8, head_dim = 128;
+constexpr int64_t feed_forward = 14336;
+// The supervised adapter's LoRA rank: the MNTP one is checked at 16
+// (convert_llm2vec_layer_to_gguf.py:144) and both are scaled by alpha/r = 2
+// (llm_text_encoder.cpp:145).
+constexpr int64_t lora_rank = 16;
+
+ggml_tensor *norm(ggml_context *ctx, ggml_tensor *x, ggml_tensor *weight);
+ggml_tensor *repeat_kv(ggml_context *ctx, ggml_tensor *x, int64_t seq);
+// One layer (llm_text_encoder.cpp's layer_graph): x [hidden, seq] f32,
+// positions i32 [seq] -> [hidden, seq] f32. The weights are the layer GGUF's
+// names (attn_norm.weight, attn_q_proj_base.weight, attn_q_proj_lora_a.weight, ...).
+ggml_tensor *layer_graph(ggml_context *ctx, ggml_tensor *x, ggml_tensor *positions, const WeightFn &W, int64_t seq);
+
+} // namespace text
+
+} // namespace kimodo
 
 } // namespace app_graphs

@@ -8,6 +8,12 @@ on:
     branches: [main, "feat/**", "dev/**"]
   pull_request:
   workflow_dispatch:
+# One run per branch: a push to feat/x and the pull request from feat/x share
+# a group (head_ref for the PR, ref_name for the push), and a newer run cancels
+# the older. main keeps every run so each merge gets a result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 env:
   GODOT_VERSION: 4.7.2
   SLANG_VERSION: 2026.13.1

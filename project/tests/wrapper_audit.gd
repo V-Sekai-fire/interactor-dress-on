@@ -24,6 +24,7 @@ const GUESTS := {
 	"guest/drape/main.cpp": "drape",
 	"guest/fit/main.cpp": "fit",
 	"guest/ggml_test/main.cpp": "ggml",
+	"guest/usd/main.cpp": "usd",
 }
 const STAGE_FILES := {
 	"dress_on": "res://stages/dress_on_stage.gd",
@@ -31,6 +32,7 @@ const STAGE_FILES := {
 	"drape": "res://stages/drape_stage.gd",
 	"fit": "res://stages/fit_stage.gd",
 	"ggml": "res://stages/ggml_stage.gd",
+	"usd": "res://stages/usd_stage.gd",
 }
 
 static func read(path: String) -> String:

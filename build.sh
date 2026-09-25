@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the guest ELFs (one per stage: dress_on, drape, curvenet, fit; Gate
+# Build the guest ELFs (one per stage: dress_on, drape, curvenet, fit, usd; Gate
 # 0F's probes; Gate 3's ggml_test) for the RISC-V sandbox and drop them into
 # project/.
 #
@@ -116,6 +116,7 @@ fi
 cmake --build "$BUILD" ${BUILD_TARGETS:+--target $BUILD_TARGETS} -- -j "${BUILD_JOBS:-8}"
 ls -la "$HERE/project/dress_on.elf" "$HERE/project/drape.elf" "$HERE/project/curvenet.elf" "$HERE/project/probes.elf" \
 	"$HERE/project/ggml_test.elf" "$HERE/project/rd_worker.elf"
+ls -la "$HERE/project/usd.elf" 2>/dev/null && sha256sum "$HERE/project/usd.elf" || echo "usd.elf: not built (no OpenUSD riscv64 build at USD_RV64_DIR)"
 if [ "$WITH_FIT" = ON ]; then
 	ls -la "$HERE/project/${FIT_ELF:-fit}.elf"
 	sha256sum "$HERE/project/${FIT_ELF:-fit}.elf"

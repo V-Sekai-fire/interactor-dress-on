@@ -26,3 +26,5 @@ lean/.lake/
 
 # Gate 3 writes this probe input at run time.
 /gates/3-ggml-rd/*/upload_probe.f32
+/project/usd.elf
+/project/usd.elf.uid

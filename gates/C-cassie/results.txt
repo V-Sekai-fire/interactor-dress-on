@@ -1,0 +1,26 @@
+# Gate C (CASSIE's sketch graph in cassie_graph.elf), 2026-09-25T18:21:02, Godot 4.7.2-stable (official)
+PASS cassie_graph.elf and usd.elf load ( )
+  open polyline: strokes 2/2 added, nodes 3, edges 2, cycles 0, sizes []
+PASS control: an open polyline has no cycle
+  square: strokes 4/4 added, nodes 4, edges 4, cycles 1, sizes [4]
+PASS a closed square of 4 strokes has a cycle (1)
+  square, a side dropped: strokes 3/3 added, nodes 4, edges 3, cycles 0, sizes []
+PASS control: dropping a side leaves no cycle
+  square, a 0.05 m gap: strokes 4/4 added, nodes 5, edges 4, cycles 0, sizes []
+PASS control: a gap wider than merge_epsilon leaves no cycle
+  cube: strokes 12/12 added, nodes 8, edges 12, cycles 6, sizes [4, 4, 4, 4, 4, 4]
+PASS a cube's 12 edges bound 6 faces (6)
+  cube, mirrored: strokes 12/12 added, nodes 8, edges 12, cycles 6, sizes [4, 4, 4, 4, 4, 4]
+PASS property: mirroring does not change the cycles
+PASS dress.usda reads through usd.elf
+  dress (canvas): strokes 153/153 added, nodes 176, edges 153, cycles 9, sizes [9, 9, 4, 6, 2, 2, 2, 2, 2]
+  dress (Body frame): strokes 153/153 added, nodes 176, edges 153, cycles 9, sizes [9, 9, 4, 6, 2, 2, 2, 2, 2]
+PASS property: dress has the same cycles in canvas and Body frames (9, 9)
+expected dress.curves cycles=9 strokes=153 source_rev=ed6870db44
+merge_epsilon sweep on dress (CASSIE's default 0.02 m; reference: credit card 0.76 mm, penny 1.52 mm, pencil 7 mm, AA 14.5 mm, nickel 21.2 mm, golf ball 42.7 mm):
+  eps  2.0 mm: nodes 304, cycles  0, of them 2-edge 0, sizes []
+  eps  5.0 mm: nodes 282, cycles  0, of them 2-edge 0, sizes []
+  eps 10.0 mm: nodes 233, cycles  0, of them 2-edge 0, sizes []
+  eps 15.0 mm: nodes 197, cycles  8, of them 2-edge 4, sizes [9, 9, 6, 6, 2, 2, 2, 2]
+  eps 20.0 mm: nodes 176, cycles  9, of them 2-edge 5, sizes [9, 9, 4, 6, 2, 2, 2, 2, 2]
+RESULT: PASS

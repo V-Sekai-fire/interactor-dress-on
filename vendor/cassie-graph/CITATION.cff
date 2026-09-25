@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: If you use this code, cite CASSIE and the Godot module it is vendored from.
+title: CASSIE Godot module, sketch graph (vendored)
+abstract: >-
+  modules/cassie/src/sketch/cassie_sketch_graph.{h,cpp} of the org's Godot
+  fork at a4e33d895f, unedited: CassieSketchGraph, the port of CASSIE's
+  CycleDetection.cs (add_stroke merging nearby endpoints into shared nodes,
+  find_cycles). tools/vendor/cassie_graph_subset.sh reproduces it.
+  cassie_graph.elf runs it the way the module's pipeline bench
+  (tests/test_cassie_pipeline_bench.h, _probe_curves_file) does.
+authors:
+  - name: V-Sekai-fire
+repository-code: https://github.com/V-Sekai-fire/entities-godot
+commit: a4e33d895f
+license: MIT
+references:
+  - type: article
+    title: "CASSIE: Curve and Surface Sketching in Immersive Environments"
+    authors:
+      - family-names: Yu
+        given-names: Emilie
+      - family-names: Arora
+        given-names: Rahul
+      - family-names: Stanko
+        given-names: Tibor
+      - family-names: Bærentzen
+        given-names: J. Andreas
+      - family-names: Singh
+        given-names: Karan
+      - family-names: Bousseau
+        given-names: Adrien
+    year: 2021
+    conference:
+      name: CHI 2021

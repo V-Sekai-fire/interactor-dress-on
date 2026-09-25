@@ -62,6 +62,8 @@ endfunction()
 option(DRESS_ON_WITH_CURVENET "Build the Cassie curvenet stage libraries" ON)
 if(DRESS_ON_WITH_CURVENET)
 	include(cmake/curvenet.cmake OPTIONAL)
+	# CASSIE's sketch graph from godot-cassie (the expected cycles of a sketch).
+	include(cmake/cassie_graph.cmake OPTIONAL)
 endif()
 
 

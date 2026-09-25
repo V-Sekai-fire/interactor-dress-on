@@ -75,9 +75,10 @@ std::vector<int32_t> mesh_patch_ids();
 
 // --- checks (checks.cpp) ------------------------------------------------------
 // One line per check:
-//   "PASS <name> ints=a,b,c fsig=<16 hex>/<count> :: <detail>"
-// ints are the check's integer outputs, fsig an FNV-1a-64 over the bit
-// patterns of its float outputs; the gate compares both, guest vs native.
+//   "PASS <name> ints=a,b,c fsig=<12 hex>/<count> :: <detail>"
+// ints are the check's integer outputs, fsig a BLAKE3 (first 12 hex digits)
+// over the bit patterns of its float outputs; the gate compares both, guest
+// vs native.
 std::vector<std::string> check_names();
 std::string check(const std::string &name);
 // Every check, one line each, then "checks: <passed>/<total>".

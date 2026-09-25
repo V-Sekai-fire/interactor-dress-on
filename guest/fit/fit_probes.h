@@ -16,14 +16,14 @@ std::string probe_exceptions(); // a throw through std::function, caught by type
 // The 8k-DOF solve: polysolve's Eigen::SimplicialLDLT (through the embedded
 // spec) on a 7-point 3D Laplacian, 20^3 = 8000 unknowns (the foxgirl garment
 // has 2682 x 3 = 8046). analyze + factorize + solve, once per call. The line
-// carries the residual and a SHA-256 of the solution's bits, so guest
+// carries the residual and a BLAKE3 of the solution's bits, so guest
 // and native can be compared exactly.
 std::string probe_ldlt8k();
 
 // libm, bitwise: 20000 deterministic inputs through each of the functions the
 // solve can reach (exp, log, pow, sqrt, sin, cos, tan, asin, acos, atan,
 // atan2, cbrt, hypot, log1p, expm1, log2, log10, exp2, tanh, fmod). One
-// "name:hash" per function (SHA-256 over the result bits); two builds agree on
+// "name:hash" per function (BLAKE3 over the result bits); two builds agree on
 // a function iff their hashes match (up to hash collisions).
 std::string probe_libm();
 

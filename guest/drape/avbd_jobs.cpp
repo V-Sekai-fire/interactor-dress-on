@@ -9,7 +9,7 @@
 // gates/2-avbd/native_*.log.
 #include "avbd_jobs.h"
 
-#include "../common/sha256.h"
+#include "../common/blake3.h"
 
 #include <algorithm>
 #include <array>
@@ -118,9 +118,9 @@ double rel_param(double a, double n) {
 	return std::fabs(a - n) / std::max(1.0, std::max(std::fabs(a), std::fabs(n)));
 }
 
-// SHA-256 (first 12 hex digits) over the pairs as little-endian u32s.
-std::string sha_pairs(const std::vector<std::pair<uint32_t, uint32_t>> &p) {
-	sha256::Ctx h;
+// BLAKE3 (first 12 hex digits) over the pairs as little-endian u32s.
+std::string b3_pairs(const std::vector<std::pair<uint32_t, uint32_t>> &p) {
+	blake3::Ctx h;
 	for (const auto &e : p) {
 		const uint32_t w[2] = { e.first, e.second };
 		unsigned char le[8];
@@ -834,8 +834,8 @@ public:
 				for (size_t i = 0; i < got.size() && i < 6; ++i) {
 					first += fmt(" (%u,%u)", got[i].first, got[i].second);
 				}
-				j->say(fmt("  %s %-24s pairs=%zu expected=%zu sha256=%s first:%s", ok ? "PASS" : "FAIL", c.name.c_str(),
-						got.size(), c.expected.size(), sha_pairs(got).c_str(), first.c_str()));
+				j->say(fmt("  %s %-24s pairs=%zu expected=%zu blake3=%s first:%s", ok ? "PASS" : "FAIL", c.name.c_str(),
+						got.size(), c.expected.size(), b3_pairs(got).c_str(), first.c_str()));
 			});
 		}
 		this->q.push([j]() {

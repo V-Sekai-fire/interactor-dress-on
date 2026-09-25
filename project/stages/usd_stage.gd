@@ -28,7 +28,7 @@ const UsdNodes := preload("res://util/usd_nodes.gd")
 const REQUIRED := ["usd_init", "usd_open", "usd_push", "usd_open_staged", "usd_close", "usd_mesh_count",
 		"usd_material_count", "usd_texture_count", "usd_mesh_info", "usd_mesh_points_slice", "usd_mesh_normals_slice",
 		"usd_mesh_uvs_slice", "usd_mesh_indices_slice", "usd_mesh_transform", "usd_material", "usd_texture_info",
-		"usd_texture_slice"]
+		"usd_texture_slice", "usd_blake3"]
 const MEM_MB := 240 # gates/U-usd ladder: floor 192 MiB (real-t2048.usdz) x 1.25
 const TIMEOUT_UNITS := 400 # gates/U-usd: 306 units for the 14.9 MB open, x 1.25
 const ALLOCATIONS_MAX := 1000000
@@ -252,6 +252,11 @@ func usd_push(path: String = DEFAULT_PACKAGE) -> String:
 		return "FAIL: no file %s" % path
 	return _s("usd_push", [FileAccess.get_file_as_bytes(g)])
 func usd_open_staged() -> String: return _s("usd_open_staged")
+func usd_blake3(path: String = DEFAULT_PACKAGE) -> String:
+	var g := ProjectSettings.globalize_path(path)
+	if not FileAccess.file_exists(g):
+		return "FAIL: no file %s" % path
+	return _s("usd_blake3", [FileAccess.get_file_as_bytes(g)])
 func usd_close() -> String: return close()
 func usd_mesh_count() -> int: return count()
 func usd_material_count() -> int: return material_count()

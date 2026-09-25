@@ -99,10 +99,10 @@ material arrays, so the loop's INFER state can read Pixal3D's answer
 ## Host oracle
 
 `host_oracle.py` (usd-core 26.8 through Python, `timeout 300`): the same
-traversal, fan triangulation, SHA-256 prefixes over points (f32) and
+traversal, fan triangulation, BLAKE3 prefixes over points (f32) and
 corners (i32) (the guest reports the same two; until 2026-09-25 it reported
 FNV-1a 64), texture bytes straight out of the zip
-with their sha256, the UsdPreviewSurface wiring. -> `host-oracle.log`.
+with their BLAKE3, the UsdPreviewSurface wiring. -> `host-oracle.log`.
 
 ## Numbers (`results.txt`, `ladder/*.txt`, host-timed, RTX 4090 box, Godot 4.7.2)
 
@@ -231,3 +231,20 @@ BUILD_DIR=C:/b/gu-elf BUILD_FIT=0 BUILD_TARGETS="usd usd_probe" ./build.sh   # -
 godot --path project --headless --import --xr-mode off
 bash gates/U-usd/run.sh        # oracle, ladder (one process a rung), gate, rule 8
 ```
+
+### 2026-09-25: BLAKE3, and wiring for unresolved textures
+
+Every checksum Gate U compares is BLAKE3 (`guest/common/blake3.h`, first 12
+hex digits). Godot's `HashingContext` has no BLAKE3, so `gate_usdz.gd` sums
+what crossed by handing the arrays back to `usd_blake3`: a byte lost on
+either trip changes the sum. `host-oracle.log` was regenerated on Linux
+(usd-core 26.8, Python 3.11) from the committed inputs only; the real packages
+and the inputs derived from them (`real-*.usdz`, `truncated-*.usdz`,
+`bare-asset.usdc`) read `missing` until `host_oracle.py` runs where
+`C:/b/gu-inputs/` is.
+
+`usd_material` now answers `<input>_file` with the connected texture's
+authored path even when it does not resolve, and the gate records every
+connected input as wiring. Before, `bare-asset.usda` (a loose layer whose
+textures are not beside it) read wiring `-` while the host listed three
+connections. Linux headless: Gate U PASS on the committed cases.

@@ -6,7 +6,7 @@
 #include "usd_probe_core.h"
 
 #include "mem_resolver.h"
-#include "../common/sha256.h"
+#include "../common/blake3.h"
 
 #include "pxr/pxr.h"
 #include "pxr/base/tf/errorMark.h"
@@ -67,7 +67,7 @@ std::string load(const std::string &bytes, int path_mode) {
 		return std::string("ERR: fmt=") + fmt + " no stage: " + first_error(mark);
 
 	size_t prims = 0, meshes = 0, skels = 0, roots = 0, npts = 0, nfvi = 0;
-	sha256::Ctx h; // over each mesh's path, points and face-vertex indices, in Traverse() order
+	blake3::Ctx h; // over each mesh's path, points and face-vertex indices, in Traverse() order
 	for (const UsdPrim &prim : stage->Traverse()) {
 		++prims;
 		if (prim.IsA<UsdSkelSkeleton>())
@@ -91,7 +91,7 @@ std::string load(const std::string &bytes, int path_mode) {
 			h.update(fvi.cdata(), fvi.size() * sizeof(int));
 	}
 	char buf[256];
-	std::snprintf(buf, sizeof buf, "ok fmt=%s prims=%zu meshes=%zu skels=%zu skelroots=%zu points=%zu fvi=%zu mesh_sha256=%.12s",
+	std::snprintf(buf, sizeof buf, "ok fmt=%s prims=%zu meshes=%zu skels=%zu skelroots=%zu points=%zu fvi=%zu mesh_blake3=%.12s",
 			fmt, prims, meshes, skels, roots, npts, nfvi, h.hex().c_str());
 	std::string out = buf;
 	if (!mark.IsClean())

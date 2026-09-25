@@ -4,11 +4,12 @@ Also writes the USDC inputs (Sdf.Layer.Export) the guest then reads from bytes.
 
   python host_control.py            -> native-control.log (one line per case)
 
-Checksum: SHA-256 (first 12 hex digits) over, per UsdGeomMesh in Traverse()
+Checksum: BLAKE3 (first 12 hex digits) over, per UsdGeomMesh in Traverse()
 order, the prim path string, points (float32 x3, default time) and
 faceVertexIndices (int32).
 """
-import hashlib, os, sys
+import os, sys
+from blake3 import blake3
 import numpy as np
 from pxr import Usd, Sdf, UsdGeom, UsdSkel
 
@@ -21,7 +22,7 @@ os.makedirs(TMP, exist_ok=True)
 
 def probe(stage, fmt):
     prims = meshes = skels = roots = npts = nfvi = 0
-    h = hashlib.sha256()
+    h = blake3()
     for prim in stage.Traverse():
         prims += 1
         if prim.IsA(UsdSkel.Skeleton):
@@ -42,7 +43,7 @@ def probe(stage, fmt):
         h.update(p.tobytes())
         h.update(f.tobytes())
     return (f"ok fmt={fmt} prims={prims} meshes={meshes} skels={skels} skelroots={roots} "
-            f"points={npts} fvi={nfvi} mesh_sha256={h.hexdigest()[:12]}")
+            f"points={npts} fvi={nfvi} mesh_blake3={h.hexdigest()[:12]}")
 
 
 def run(name, data):

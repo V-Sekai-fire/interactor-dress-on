@@ -66,7 +66,7 @@ const CALLS := [["rd_open", ""], ["rd_probe", "PASS"], ["rd_bench", "nd=1 ns=1 b
 		["drape_sinew_align_test", "PASS"],
 		["cn_reset", ""], ["cn_get_param", "0.03"], ["check_names", ""], ["fit_status", ""],
 		["dress_on_status", "IDLE"], ["ggml_job_status", "IDLE"], ["ggml_rd_stats", "IDLE"],
-		["usd_open", "meshes=1 materials=1 textures=2"], ["usd_mesh_info", "\"points\": 4"], ["usd_close", "ok"]]
+		["usd_open", "meshes=1 materials=1 textures=2"], ["usd_mesh_info", "\"points\": 4"], ["usd_blake3", "d215bae53e5d"], ["usd_close", "ok"]]
 
 var _out: FileAccess
 var _main: Node

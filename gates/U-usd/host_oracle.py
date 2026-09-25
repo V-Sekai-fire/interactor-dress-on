@@ -6,16 +6,17 @@ layer, a package with no mesh, garbage).
   timeout 300 python gates/U-usd/host_oracle.py   -> host-oracle.log
 
 Per package one line:
-  <name> bytes=B sha256=<12> ok meshes=M points=P triangles=T material=I
-  sha_points=<12> sha_indices=<12> materials=K textures=N
-  tex=<file>:<size>:<sha12>,... wired=<input>:<file>:<channel>,...
-or "<name> bytes=B sha256=<12> ERR: <reason>". Checksums: SHA-256 (first 12
+  <name> bytes=B blake3=<12> ok meshes=M points=P triangles=T material=I
+  blake3_points=<12> blake3_indices=<12> materials=K textures=N
+  tex=<file>:<size>:<b3_12>,... wired=<input>:<file>:<channel>,...
+or "<name> bytes=B blake3=<12> ERR: <reason>". Checksums: BLAKE3 (first 12
 hex digits) over the points as float32 xyz and over the triangle corners as
 int32, per mesh in Traverse() order, each mesh on its own. The guest reports
 the same two per mesh, and the gate re-sums the arrays that crossed: all three
 must agree.
 """
-import hashlib, io, os, struct, sys, zipfile
+import io, os, struct, sys, zipfile
+from blake3 import blake3
 import numpy as np
 from pxr import Usd, UsdGeom, UsdShade, Sdf
 
@@ -81,7 +82,7 @@ def probe(path):
                                 tex[file] = None
             mat_i = mats[mp]
         meshes.append((str(prim.GetPath()), len(pts), len(tri) // 3, mat_i,
-                       hashlib.sha256(pts.tobytes()).hexdigest()[:12], hashlib.sha256(tri.tobytes()).hexdigest()[:12]))
+                       blake3(pts.tobytes()).hexdigest()[:12], blake3(tri.tobytes()).hexdigest()[:12]))
     # texture bytes straight out of the zip (the guest hands them over as they are)
     texs = []
     if zipfile.is_zipfile(path):
@@ -89,12 +90,12 @@ def probe(path):
             for file in tex:
                 try:
                     data = z.read(file)
-                    texs.append("%s:%d:%s" % (file, len(data), hashlib.sha256(data).hexdigest()[:12]))
+                    texs.append("%s:%d:%s" % (file, len(data), blake3(data).hexdigest()[:12]))
                 except KeyError:
                     texs.append("%s:missing" % file)
     out = "ok meshes=%d" % len(meshes)
     for i, (p, n, t, mi, sp, si) in enumerate(meshes):
-        out += " mesh%d=%s points=%d triangles=%d material=%d sha_points=%s sha_indices=%s" % (i, p, n, t, mi, sp, si)
+        out += " mesh%d=%s points=%d triangles=%d material=%d blake3_points=%s blake3_indices=%s" % (i, p, n, t, mi, sp, si)
     out += " materials=%d textures=%d tex=%s wired=%s" % (len(mats), len(texs), ",".join(texs) or "-", ",".join(wired) or "-")
     return out
 
@@ -141,7 +142,7 @@ def main():
             print("%s missing" % name)
             continue
         data = open(path, "rb").read()
-        head = "%s bytes=%d sha256=%s" % (name, len(data), hashlib.sha256(data).hexdigest()[:12])
+        head = "%s bytes=%d blake3=%s" % (name, len(data), blake3(data).hexdigest()[:12])
         try:
             line = probe(path)
         except Exception as e:  # noqa: BLE001

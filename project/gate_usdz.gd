@@ -11,7 +11,7 @@
 #
 # 1. init: the embedded plugins and the in-memory resolver come up.
 # 2. every case of host-oracle.log: the guest's mesh count, per-mesh point
-#    and triangle counts and SHA-256 sums, material count and texture
+#    and triangle counts and BLAKE3 sums, material count and texture
 #    sizes + sums equal the host's; the wiring (diffuse rgb, metallic b,
 #    roughness g) is read; the textures decode in Godot (Image); the arrays
 #    that crossed are re-summed on the host and must equal the guest's own
@@ -67,10 +67,15 @@ func _bytes(name: String) -> PackedByteArray:
 			return FileAccess.get_file_as_bytes(g)
 	return PackedByteArray()
 
-# One checksum everywhere: SHA-256, compared as its first 12 hex digits. The
-# guest sums what it read, this sums what crossed (HashingContext), and
-# host_oracle.py sums what usd-core read.
-static func _sha(b: PackedByteArray) -> String:
+# One checksum everywhere: BLAKE3, compared as its first 12 hex digits. The
+# guest sums what it read, this sums what crossed, and host_oracle.py sums
+# what usd-core read. Godot's HashingContext has no BLAKE3, so what crossed
+# goes back through usd_blake3: a byte lost either way changes the sum.
+func _b3(b: PackedByteArray) -> String:
+	return str(_stage.call_now("usd_blake3", [b])).left(12)
+
+# The ELF's identity, as build.sh's sha256sum prints it (a file id, not a check).
+static func _elf_sha256(b: PackedByteArray) -> String:
 	var c := HashingContext.new()
 	c.start(HashingContext.HASH_SHA256)
 	c.update(b)
@@ -98,7 +103,7 @@ func _cases() -> void:
 			continue
 		_queue.append([name, b, line])
 	# an empty package: nothing the host could read either
-	_queue.append(["empty", PackedByteArray(), "empty bytes=0 sha256=- ERR: empty package"])
+	_queue.append(["empty", PackedByteArray(), "empty bytes=0 blake3=- ERR: empty package"])
 
 func _initialize() -> void:
 	_t_start = Time.get_ticks_usec()
@@ -128,7 +133,7 @@ func _initialize() -> void:
 		return
 	var elf := FileAccess.get_file_as_bytes(ProjectSettings.globalize_path("res://usd.elf"))
 	_say("load usd.elf: %.1f ms; %d bytes sha256=%s memory_max=%s execution_timeout=%s allocations_max=%s heap=%d" % [
-			(Time.get_ticks_usec() - t) / 1000.0, elf.size(), elf.slice(0, 0).hex_encode() if elf.is_empty() else _sha(elf),
+			(Time.get_ticks_usec() - t) / 1000.0, elf.size(), elf.slice(0, 0).hex_encode() if elf.is_empty() else _elf_sha256(elf),
 			str(_stage.sandbox.memory_max), str(_stage.sandbox.execution_timeout), str(_stage.sandbox.allocations_max), _stage.heap()])
 	if _rung > 0:
 		var big := "real-t2048.usdz" if not _bytes("real-t2048.usdz").is_empty() else "real-asset.usdz"
@@ -188,20 +193,20 @@ func _case(name: String, bytes: PackedByteArray, exp: String) -> void:
 			if end < 0:
 				end = exp.find(" materials=")
 			host = exp.substr(at, end - at) if at >= 0 else ""
-		var sha_p := _sha(pts.to_byte_array())
-		var sha_i := _sha(idx.to_byte_array())
-		var guest_p := str(m.sha_points).left(12)
-		var guest_i := str(m.sha_indices).left(12)
-		var line := "%s mesh%d=%s points=%d triangles=%d material=%d sha_points=%s sha_indices=%s normals=%d uvs=%d indexed=%s" % [
-				name, i, m.path, n, m.triangles, m.material, sha_p, sha_i, m.normals.size() / 3, m.uvs.size() / 2, str(m.indexed)]
+		var b3_p := _b3(pts.to_byte_array())
+		var b3_i := _b3(idx.to_byte_array())
+		var guest_p := str(m.blake3_points).left(12)
+		var guest_i := str(m.blake3_indices).left(12)
+		var line := "%s mesh%d=%s points=%d triangles=%d material=%d blake3_points=%s blake3_indices=%s normals=%d uvs=%d indexed=%s" % [
+				name, i, m.path, n, m.triangles, m.material, b3_p, b3_i, m.normals.size() / 3, m.uvs.size() / 2, str(m.indexed)]
 		var ok: bool = pts.size() == 3 * n and idx.size() == 3 * int(m.triangles)
 		# what crossed == what the guest read
-		ok = ok and guest_p == sha_p and guest_i == sha_i
-		if guest_p != sha_p or guest_i != sha_i:
-			line += " guest_sha_points=%s guest_sha_indices=%s" % [guest_p, guest_i]
+		ok = ok and guest_p == b3_p and guest_i == b3_i
+		if guest_p != b3_p or guest_i != b3_i:
+			line += " guest_blake3_points=%s guest_blake3_indices=%s" % [guest_p, guest_i]
 		if _rung == 0:
-			ok = ok and host == " mesh%d=%s points=%d triangles=%d material=%d sha_points=%s sha_indices=%s" % [
-					i, m.path, n, m.triangles, m.material, sha_p, sha_i]
+			ok = ok and host == " mesh%d=%s points=%d triangles=%d material=%d blake3_points=%s blake3_indices=%s" % [
+					i, m.path, n, m.triangles, m.material, b3_p, b3_i]
 		_check(ok, line + ("" if ok else "  | host:%s" % host))
 		# the arrays make a surface
 		if _skip.has("mesh"):
@@ -224,12 +229,16 @@ func _case(name: String, bytes: PackedByteArray, exp: String) -> void:
 			var usd_name: String = inp.get_slice(":", 0)
 			var key: String = inp.get_slice(":", 1)
 			var t: int = int(mat.get(key + "_texture", -1))
-			if t >= 0 and not _skip.has("images"):
+			if _skip.has("images"):
+				continue
+			# connected is wired, whether or not its texture resolved (the host lists both)
+			if not str(mat.get(key + "_channel", "")).is_empty():
 				wired.append("%s:%s:%s" % [usd_name, mat.get(key + "_file", ""), mat.get(key + "_channel", "")])
+			if t >= 0:
 				if not cache.has(t):
 					var b: PackedByteArray = mat.get(key + "_bytes", PackedByteArray())
 					var img := UsdNodes.to_image(b)
-					cache[t] = "%s:%d:%s" % [mat.get(key + "_file", ""), b.size(), _sha(b)]
+					cache[t] = "%s:%d:%s" % [mat.get(key + "_file", ""), b.size(), _b3(b)]
 					_check(img != null, "%s texture %d (%s): %d bytes, decodes to %s" % [name, t, mat.get(key + "_file", ""), b.size(),
 							"nothing" if img == null else "%dx%d %s" % [img.get_width(), img.get_height(), str(img.get_format())]])
 		if _skip.has("images"):

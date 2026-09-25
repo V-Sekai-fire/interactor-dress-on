@@ -179,8 +179,8 @@ func _probes() -> void:
 		best = minf(best, us / 1000.0)
 		line = s.substr(s.find(" ") + 1)
 	var nat := _native_probe("ldlt8k")
-	var g_hash := line.get_slice("sha256 ", 1)
-	var n_hash := str(nat[0]).get_slice("sha256 ", 1)
+	var g_hash := line.get_slice("blake3 ", 1)
+	var n_hash := str(nat[0]).get_slice("blake3 ", 1)
 	_check("6.0 ldlt8k", line.begins_with("PASS"), line)
 	_say("     ldlt8k guest %.1f ms (min of 5 vmcalls, host-timed), native %.1f ms (min of 5): %.1fx; solution bits %s (guest %s, native %s)" % [
 			best, nat[1], best / maxf(nat[1], 1e-9), "EQUAL" if g_hash == n_hash else "DIFFER", g_hash, n_hash])

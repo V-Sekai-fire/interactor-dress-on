@@ -1,7 +1,7 @@
 // fit_probes: see fit_probes.h.
 #include "fit_probes.h"
 
-#include "../common/sha256.h"
+#include "../common/blake3.h"
 
 #include <polyfem/utils/Logger.hpp>
 #include <polysolve/linear/Solver.hpp>
@@ -23,9 +23,9 @@ namespace fit {
 
 namespace {
 
-// SHA-256 (first 12 hex digits) over the doubles' bit patterns, little-endian.
-std::string sha12(const double *x, size_t n) {
-	sha256::Ctx h;
+// BLAKE3 (first 12 hex digits) over the doubles' bit patterns, little-endian.
+std::string b3_12(const double *x, size_t n) {
+	blake3::Ctx h;
 	for (size_t i = 0; i < n; i++) {
 		uint64_t b;
 		std::memcpy(&b, &x[i], sizeof b);
@@ -123,9 +123,9 @@ std::string probe_ldlt8k() {
 	const double res = (A * x - b).norm() / b.norm();
 	const double err = (x - x_true).cwiseAbs().maxCoeff();
 	char buf[320];
-	std::snprintf(buf, sizeof buf, "%s ldlt8k: %s n=%d nnz=%lld, relative residual %.3e, max |x - x_true| %.3e, x sha256 %s",
+	std::snprintf(buf, sizeof buf, "%s ldlt8k: %s n=%d nnz=%lld, relative residual %.3e, max |x - x_true| %.3e, x blake3 %s",
 			(res < 1e-12 && err < 1e-9) ? "PASS" : "FAIL", solver->name().c_str(), n, (long long)A.nonZeros(), res, err,
-			sha12(x.data(), size_t(n)).c_str());
+			b3_12(x.data(), size_t(n)).c_str());
 	return buf;
 }
 
@@ -168,7 +168,7 @@ std::string probe_libm() {
 			y[i] = fs[k].f(a, b);
 		}
 		char b[64];
-		std::snprintf(b, sizeof b, " %s:%s", fs[k].name, sha12(y.data(), N).c_str());
+		std::snprintf(b, sizeof b, " %s:%s", fs[k].name, b3_12(y.data(), N).c_str());
 		out += b;
 	}
 	return out;
@@ -188,7 +188,7 @@ std::string probe_stl() {
 		std::vector<double> d(v.size());
 		for (size_t i = 0; i < v.size(); i++)
 			d[i] = double(v[i].second);
-		return sha12(d.data(), d.size());
+		return b3_12(d.data(), d.size());
 	};
 	std::vector<std::pair<int, int>> a = base;
 	std::sort(a.begin(), a.end(), key_less);

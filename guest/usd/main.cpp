@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+#include "../common/blake3.h"
 #include "usd_core.h"
 
 namespace {
@@ -163,8 +164,8 @@ static Variant usd_mesh_info(int i) {
 		d["has_uvs"] = Variant(m.has_uvs);
 		d["indexed"] = Variant(m.indexed);
 		d["material"] = Variant(m.material);
-		d["sha_points"] = text(m.sha_points);
-		d["sha_indices"] = text(m.sha_indices);
+		d["blake3_points"] = text(m.blake3_points);
+		d["blake3_indices"] = text(m.blake3_indices);
 		d["xform"] = Variant(PackedArray<float>(m.xform, 16));
 		return Variant(d);
 	});
@@ -256,6 +257,15 @@ static Variant usd_texture_info(int i) {
 	});
 }
 
+// BLAKE3 hex of bytes the host hands back: Godot's HashingContext has no
+// BLAKE3, so Gate U sums what crossed by sending it through here again.
+static Variant usd_blake3(PackedArray<uint8_t> bytes) {
+	return guarded("usd_blake3", [&] {
+		const std::vector<uint8_t> b = bytes.fetch();
+		return text(blake3::hex(b.data(), b.size()));
+	});
+}
+
 static Variant usd_texture(int i) {
 	return guarded("usd_texture", [&] {
 		size_t n = 0;
@@ -294,15 +304,16 @@ static Variant usd_material(int i) {
 			const char *key;
 			int tex;
 			const std::string *channel;
-		} slots[] = { { "diffuse", m.diffuse_tex, &m.diffuse_channel }, { "metallic", m.metallic_tex, &m.metallic_channel },
-			{ "roughness", m.roughness_tex, &m.roughness_channel }, { "opacity", m.opacity_tex, &m.opacity_channel },
-			{ "normal", m.normal_tex, &m.normal_channel } };
+			const std::string *file;
+		} slots[] = { { "diffuse", m.diffuse_tex, &m.diffuse_channel, &m.file[0] },
+			{ "metallic", m.metallic_tex, &m.metallic_channel, &m.file[1] },
+			{ "roughness", m.roughness_tex, &m.roughness_channel, &m.file[2] },
+			{ "opacity", m.opacity_tex, &m.opacity_channel, &m.file[3] }, { "normal", m.normal_tex, &m.normal_channel, &m.file[4] } };
 		for (const Slot &s : slots) {
 			const std::string k = s.key;
 			d[k + "_texture"] = Variant(s.tex);
 			d[k + "_channel"] = text(*s.channel);
-			usdg::TextureInfo t;
-			d[k + "_file"] = text(usdg::texture_info(s.tex, t) ? t.file : std::string());
+			d[k + "_file"] = text(*s.file);
 		}
 		size_t n = 0;
 		const uint8_t *p = usdg::texture_bytes(m.diffuse_tex, n);
@@ -322,7 +333,7 @@ int main() {
 	ADD_API_FUNCTION(usd_mesh_count, "int", "", "UsdGeomMesh prims in the document");
 	ADD_API_FUNCTION(usd_material_count, "int", "", "Bound materials in the document");
 	ADD_API_FUNCTION(usd_texture_count, "int", "", "Textures read out of the package");
-	ADD_API_FUNCTION(usd_mesh_info, "Dictionary", "int i", "path, name, points, triangles, has_normals, has_uvs, indexed, material, sha_points, sha_indices, xform");
+	ADD_API_FUNCTION(usd_mesh_info, "Dictionary", "int i", "path, name, points, triangles, has_normals, has_uvs, indexed, material, blake3_points, blake3_indices, xform");
 	ADD_API_FUNCTION(usd_mesh_points, "PackedFloat32Array", "int i", "xyz per point");
 	ADD_API_FUNCTION(usd_mesh_points_slice, "PackedFloat32Array", "int i, int from, int count", "points [from, from+count)");
 	ADD_API_FUNCTION(usd_mesh_normals, "PackedFloat32Array", "int i", "xyz per point (per-point normals)");
@@ -336,5 +347,6 @@ int main() {
 	ADD_API_FUNCTION(usd_texture_info, "Dictionary", "int i", "path, file, size of a texture");
 	ADD_API_FUNCTION(usd_texture, "PackedByteArray", "int i", "a texture's bytes as they are in the package");
 	ADD_API_FUNCTION(usd_texture_slice, "PackedByteArray", "int i, int from, int count", "texture bytes [from, from+count)");
+	ADD_API_FUNCTION(usd_blake3, "String", "PackedByteArray bytes", "BLAKE3 hex of the bytes (the gate's transfer check)");
 	halt();
 }

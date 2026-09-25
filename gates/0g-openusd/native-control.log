@@ -1,8 +1,8 @@
 host OpenUSD (0, 26, 8) (usd-core, Python 3.11.15)
-skel_quad.usda bytes=1060 ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_sha256=19d6ec2acc4b
-skel_quad.usdc bytes=1766 ok fmt=usdc prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_sha256=19d6ec2acc4b
-blendshape_test.usda bytes=7002 ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_sha256=38a3fbff87fb
-blendshape_test.usdc bytes=4811 ok fmt=usdc prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_sha256=38a3fbff87fb
+skel_quad.usda bytes=1060 ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+skel_quad.usdc bytes=1766 ok fmt=usdc prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+blendshape_test.usda bytes=7002 ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
+blendshape_test.usdc bytes=4811 ok fmt=usdc prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
 corrupt.usda bytes=54 ERR: fmt=usda 
 corrupt.usdc bytes=1603 ERR: fmt=usdc 
 garbage.bin bytes=1024 ERR: fmt=usda 

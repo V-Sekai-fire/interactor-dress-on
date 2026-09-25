@@ -38,7 +38,7 @@ struct MeshInfo {
 	size_t points = 0, triangles = 0;
 	bool has_normals = false, has_uvs = false, indexed = true;
 	int material = -1; // index into the material table, -1 unbound
-	std::string sha_points, sha_indices; // SHA-256 hex over the f32 / i32 bytes
+	std::string blake3_points, blake3_indices; // BLAKE3 hex over the f32 / i32 bytes
 	float xform[16] = {}; // local-to-world, GfMatrix4d row-major (row i = image of axis i, row 3 = origin)
 };
 bool mesh_info(int i, MeshInfo &out);
@@ -57,6 +57,10 @@ struct MaterialInfo {
 	// connected output ("rgb", "r", "g", "b", "a").
 	int diffuse_tex = -1, metallic_tex = -1, roughness_tex = -1, opacity_tex = -1, normal_tex = -1;
 	std::string diffuse_channel, metallic_channel, roughness_channel, opacity_channel, normal_channel;
+	// The connected texture's authored file per input (same order as the
+	// indices above), set even when it did not resolve: the wiring is the
+	// material graph, whether or not the bytes are in the package.
+	std::string file[5];
 };
 bool material_info(int i, MaterialInfo &out);
 

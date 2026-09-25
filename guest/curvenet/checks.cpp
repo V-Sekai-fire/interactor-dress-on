@@ -10,7 +10,7 @@
 //
 // Output, one line per check (see curvenet_api.h):
 //   "PASS <name> ints=a,b,c fsig=<12 hex>/<count> :: <detail>"
-// ints: the integer outputs; fsig: SHA-256 (first 12 hex digits) over the
+// ints: the integer outputs; fsig: BLAKE3 (first 12 hex digits) over the
 // float32 bit patterns of the float outputs, little-endian, in order. Gate 4 compares both, guest vs native.
 //
 // Compiled with the godot-lite prelude, like cassie_core.
@@ -26,7 +26,7 @@
 #include "solver/cassie_constraint_solver.h"
 
 #include "../common/mesh_wire.h"
-#include "../common/sha256.h"
+#include "../common/blake3.h"
 
 #include <algorithm>
 #include <cmath>
@@ -60,7 +60,7 @@ std::string fmt(const char *f, ...) {
 }
 
 std::string fsig(const std::vector<float> &v) {
-	sha256::Ctx h;
+	blake3::Ctx h;
 	for (float x : v) {
 		uint32_t bits;
 		std::memcpy(&bits, &x, 4);

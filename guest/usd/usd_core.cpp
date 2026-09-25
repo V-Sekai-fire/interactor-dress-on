@@ -19,7 +19,7 @@
 #include "usd_core.h"
 
 #include "mem_resolver.h"
-#include "../common/sha256.h"
+#include "../common/blake3.h"
 
 #include "pxr/pxr.h"
 #include "pxr/base/gf/matrix4d.h"
@@ -73,7 +73,7 @@ struct MeshRec {
 	size_t idx_off = 0, ntris = 0; // into g_indices (3 ints a triangle)
 	bool has_normals = false, has_uvs = false, indexed = true;
 	int material = -1;
-	Span sha_p, sha_i; // SHA-256 hex of the f32 point / i32 corner bytes, in g_strings
+	Span b3_p, b3_i; // BLAKE3 hex of the f32 point / i32 corner bytes, in g_strings
 	float xf[16] = {};
 };
 
@@ -83,6 +83,7 @@ struct MatRec {
 	float metallic = 0.0f, roughness = 0.5f, opacity = 1.0f;
 	int tex[5] = { -1, -1, -1, -1, -1 }; // diffuse, metallic, roughness, opacity, normal
 	Span channel[5];
+	Span file[5]; // the connected UsdUVTexture's authored file, resolved or not
 };
 
 struct TexRec {
@@ -167,7 +168,7 @@ std::map<std::string, int> g_mat_by_path;
 // UsdUVTexture (its file becomes a texture, channel = the connected output).
 template <typename T>
 void read_input(const UsdShadeShader &surface, const char *name, const std::string &layer_path, T *value,
-		int &tex, Span &channel, std::string &warn) {
+		int &tex, Span &channel, Span &file_span, std::string &warn) {
 	UsdShadeInput in = surface.GetInput(TfToken(name));
 	if (!in)
 		return;
@@ -185,6 +186,7 @@ void read_input(const UsdShadeShader &surface, const char *name, const std::stri
 			return;
 		}
 		std::string why;
+		file_span = intern(ap.GetAssetPath());
 		tex = add_texture(ap, layer_path, why);
 		if (tex < 0)
 			warn = std::string(name) + ": " + why;
@@ -220,11 +222,11 @@ int add_material(const UsdShadeMaterial &mat, const std::string &layer_path, std
 		surface.GetShaderId(&id);
 		m.shader = intern(id.GetString());
 		GfVec3f diffuse(m.diffuse[0], m.diffuse[1], m.diffuse[2]);
-		read_input(surface, "diffuseColor", layer_path, &diffuse, m.tex[0], m.channel[0], warn);
-		read_input(surface, "metallic", layer_path, &m.metallic, m.tex[1], m.channel[1], warn);
-		read_input(surface, "roughness", layer_path, &m.roughness, m.tex[2], m.channel[2], warn);
-		read_input(surface, "opacity", layer_path, &m.opacity, m.tex[3], m.channel[3], warn);
-		read_input<GfVec3f>(surface, "normal", layer_path, nullptr, m.tex[4], m.channel[4], warn);
+		read_input(surface, "diffuseColor", layer_path, &diffuse, m.tex[0], m.channel[0], m.file[0], warn);
+		read_input(surface, "metallic", layer_path, &m.metallic, m.tex[1], m.channel[1], m.file[1], warn);
+		read_input(surface, "roughness", layer_path, &m.roughness, m.tex[2], m.channel[2], m.file[2], warn);
+		read_input(surface, "opacity", layer_path, &m.opacity, m.tex[3], m.channel[3], m.file[3], warn);
+		read_input<GfVec3f>(surface, "normal", layer_path, nullptr, m.tex[4], m.channel[4], m.file[4], warn);
 		m.diffuse[0] = diffuse[0];
 		m.diffuse[1] = diffuse[1];
 		m.diffuse[2] = diffuse[2];
@@ -378,8 +380,8 @@ std::string add_mesh(const UsdPrim &prim, UsdGeomXformCache &xc, const std::stri
 		}
 		c0 += n;
 	}
-	r.sha_p = intern(sha256::hex(g_points.data() + r.pt_off, r.npts * 3 * sizeof(float)));
-	r.sha_i = intern(sha256::hex(g_indices.data() + r.idx_off, r.ntris * 3 * sizeof(int32_t)));
+	r.b3_p = intern(blake3::hex(g_points.data() + r.pt_off, r.npts * 3 * sizeof(float)));
+	r.b3_i = intern(blake3::hex(g_indices.data() + r.idx_off, r.ntris * 3 * sizeof(int32_t)));
 
 	const GfMatrix4d m = xc.GetLocalToWorldTransform(prim);
 	for (int i = 0; i < 4; ++i)
@@ -518,8 +520,8 @@ bool mesh_info(int i, MeshInfo &out) {
 	out.has_uvs = r.has_uvs;
 	out.indexed = r.indexed;
 	out.material = r.material;
-	out.sha_points = str(r.sha_p);
-	out.sha_indices = str(r.sha_i);
+	out.blake3_points = str(r.b3_p);
+	out.blake3_indices = str(r.b3_i);
 	std::memcpy(out.xform, r.xf, sizeof r.xf);
 	return true;
 }
@@ -573,6 +575,8 @@ bool material_info(int i, MaterialInfo &out) {
 	out.roughness_channel = str(m.channel[2]);
 	out.opacity_channel = str(m.channel[3]);
 	out.normal_channel = str(m.channel[4]);
+	for (int k = 0; k < 5; k++)
+		out.file[k] = str(m.file[k]);
 	return true;
 }
 

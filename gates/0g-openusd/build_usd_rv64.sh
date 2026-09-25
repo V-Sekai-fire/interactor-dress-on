@@ -5,18 +5,20 @@
 #
 #   USD_SRC=C:/b/usd2605 TBB_SRC=C:/b/oneTBB-2021.12.0 OUT=C:/b/g0g ./build_usd_rv64.sh
 set -euo pipefail
-SYSROOT="${RISCV64_SYSROOT:-/c/contract-manifest/3-interactor/mujoco-sandbox-demo/third_party/riscv64-sysroot}"
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SYSROOT="${RISCV64_SYSROOT:-$HERE/../../../../5-repository/riscv64-sysroot}"
 USD_SRC="${USD_SRC:-C:/b/usd2605}"
 TBB_SRC="${TBB_SRC:-C:/b/oneTBB-2021.12.0}"
 OUT="${OUT:-C:/b/g0g}"
-export PATH="$HOME/scoop/apps/llvm/current/bin:$PATH"
-NINJA="$HOME/.pixi/bin/ninja.exe"
-TC="$(cygpath -m "$SYSROOT/toolchain.cmake")"
+NINJA="$(command -v ninja || echo "$HOME/.pixi/bin/ninja")"
+# cygpath exists only on the Windows desk; elsewhere the path is already CMake's spelling.
+mpath() { cygpath -m "$1" 2>/dev/null || echo "$1"; }
+TC="$(mpath "$SYSROOT/toolchain.cmake")"
 # The guest libraries build at plain rv64gc (as ggml-cpu does in probes.elf).
 FLAGS="-march=rv64gc -U__riscv_v_intrinsic"
 # A command-line CMAKE_CXX_FLAGS replaces the toolchain's CMAKE_CXX_FLAGS_INIT, so
 # its libstdc++ -isystem paths are repeated here.
-RVS="$(cygpath -m "$SYSROOT/sysroot")"
+RVS="$(mpath "$SYSROOT/sysroot")"
 CXXFLAGS_RV="-isystem $RVS/include/c++/14 -isystem $RVS/include/c++/14/riscv64-linux-gnu $FLAGS"
 
 if [ ! -f "$OUT/inst/lib/libtbb.a" ]; then

@@ -1,0 +1,5 @@
+PASS sketch_00.usda valid=True strokes host=6 guest=6 differing=none
+PASS sketch_01.usda valid=True strokes host=3 guest=3 differing=none
+PASS sketch_02.usda valid=True strokes host=1 guest=1 differing=none
+PASS sketch_03.usda valid=True strokes host=3 guest=3 differing=none
+RESULT: PASS (4 guest-written layers)

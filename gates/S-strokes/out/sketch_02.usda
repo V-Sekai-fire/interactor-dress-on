@@ -1,0 +1,21 @@
+#usda 1.0
+(
+    customLayerData = {
+        string gate = "S"
+        string sketch = "2"
+    }
+    defaultPrim = "Creation"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Creation"
+{
+    def BasisCurves "s2_0"
+    {
+        int[] curveVertexCounts = [3]
+        point3f[] points = [(-0.38086486, 1.6533034, 0.28904057), (-0.51164544, 0.67421085, -0.6136904), (0.24139035, 0.38851577, 0.6098263)]
+        uniform token type = "linear"
+    }
+}
+

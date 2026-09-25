@@ -9,9 +9,9 @@
 // the rest are this stage's own.
 //
 // Output, one line per check (see curvenet_api.h):
-//   "PASS <name> ints=a,b,c fsig=<16 hex>/<count> :: <detail>"
-// ints: the integer outputs; fsig: FNV-1a-64 over the float32 bit patterns
-// of the float outputs, in order. Gate 4 compares both, guest vs native.
+//   "PASS <name> ints=a,b,c fsig=<12 hex>/<count> :: <detail>"
+// ints: the integer outputs; fsig: SHA-256 (first 12 hex digits) over the
+// float32 bit patterns of the float outputs, little-endian, in order. Gate 4 compares both, guest vs native.
 //
 // Compiled with the godot-lite prelude, like cassie_core.
 #include "curvenet_api.h"
@@ -26,6 +26,7 @@
 #include "solver/cassie_constraint_solver.h"
 
 #include "../common/mesh_wire.h"
+#include "../common/sha256.h"
 
 #include <algorithm>
 #include <cmath>
@@ -58,17 +59,17 @@ std::string fmt(const char *f, ...) {
 	return b;
 }
 
-uint64_t fnv1a(const std::vector<float> &v) {
-	uint64_t h = 1469598103934665603ULL;
+std::string fsig(const std::vector<float> &v) {
+	sha256::Ctx h;
 	for (float x : v) {
 		uint32_t bits;
 		std::memcpy(&bits, &x, 4);
-		for (int i = 0; i < 4; ++i) {
-			h ^= (bits >> (8 * i)) & 0xffu;
-			h *= 1099511628211ULL;
-		}
+		unsigned char le[4];
+		for (int i = 0; i < 4; ++i)
+			le[i] = (unsigned char)(bits >> (8 * i));
+		h.update(le, 4);
 	}
-	return h;
+	return h.hex().substr(0, 12);
 }
 
 void append(std::vector<float> &dst, const std::vector<float> &src) {
@@ -867,16 +868,16 @@ std::string check(const std::string &name) {
 		try {
 			o = e.second();
 		} catch (const std::exception &ex) {
-			return "FAIL " + name + " ints= fsig=0000000000000000/0 :: exception: " + ex.what();
+			return "FAIL " + name + " ints= fsig=000000000000/0 :: exception: " + ex.what();
 		} catch (...) {
-			return "FAIL " + name + " ints= fsig=0000000000000000/0 :: unknown exception";
+			return "FAIL " + name + " ints= fsig=000000000000/0 :: unknown exception";
 		}
 		std::string ints;
 		for (size_t i = 0; i < o.ints.size(); ++i) {
 			ints += (i ? "," : "") + std::to_string(o.ints[i]);
 		}
-		return fmt("%s %s ints=%s fsig=%016llx/%d :: ", o.pass ? "PASS" : "FAIL", name.c_str(), ints.c_str(),
-					   (unsigned long long)fnv1a(o.floats), int(o.floats.size())) +
+		return fmt("%s %s ints=%s fsig=%s/%d :: ", o.pass ? "PASS" : "FAIL", name.c_str(), ints.c_str(),
+					   fsig(o.floats).c_str(), int(o.floats.size())) +
 				o.detail;
 	}
 	return "FAIL: unknown check '" + name + "'";

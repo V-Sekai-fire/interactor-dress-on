@@ -149,16 +149,6 @@ struct ClothSimT {
 	}
 };
 
-inline uint64_t avbd_digest(const std::vector<float> &v) {
-	uint64_t h = 1469598103934665603ull;
-	const unsigned char *b = reinterpret_cast<const unsigned char *>(v.data());
-	for (size_t i = 0; i < v.size() * sizeof(float); ++i) {
-		h ^= b[i];
-		h *= 1099511628211ull;
-	}
-	return h;
-}
-
 using ClothSim = ClothSimT<AvbdCpu>;
 
 #endif

@@ -8,7 +8,7 @@
 #    each, host-timed, heap after; each must PASS.
 # 2. flat control: the same lines from the native cassie_checks.exe
 #    (native-checks.log). Verdicts and integer outputs must match exactly;
-#    float signatures (FNV-1a over float32 bit patterns) are compared as hex.
+#    float signatures (SHA-256 over float32 bit patterns) are compared as hex.
 # 2b. determinism: every check again in the same guest; each line must be
 #    byte-identical to the first pass (Delaunay's BRIO shuffle used to seed
 #    from std::random_device; README).
@@ -137,7 +137,7 @@ func _checks() -> void:
 
 func _parse(line: String) -> Dictionary:
 	var re := RegEx.new()
-	re.compile("^(PASS|FAIL) (\\S+) ints=(\\S*) fsig=([0-9a-f]{16})/(\\d+)")
+	re.compile("^(PASS|FAIL) (\\S+) ints=(\\S*) fsig=([0-9a-f]{12})/(\\d+)")
 	var m := re.search(line)
 	if m == null:
 		return {}

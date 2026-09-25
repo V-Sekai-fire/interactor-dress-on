@@ -1,6 +1,8 @@
 // fit_probes: see fit_probes.h.
 #include "fit_probes.h"
 
+#include "../common/sha256.h"
+
 #include <polyfem/utils/Logger.hpp>
 #include <polysolve/linear/Solver.hpp>
 
@@ -21,16 +23,18 @@ namespace fit {
 
 namespace {
 
-uint64_t fnv1a(const double *x, size_t n, uint64_t h = 1469598103934665603ull) {
+// SHA-256 (first 12 hex digits) over the doubles' bit patterns, little-endian.
+std::string sha12(const double *x, size_t n) {
+	sha256::Ctx h;
 	for (size_t i = 0; i < n; i++) {
 		uint64_t b;
 		std::memcpy(&b, &x[i], sizeof b);
-		for (int k = 0; k < 8; k++) {
-			h ^= (b >> (8 * k)) & 0xffu;
-			h *= 1099511628211ull;
-		}
+		unsigned char le[8];
+		for (int k = 0; k < 8; k++)
+			le[k] = (unsigned char)(b >> (8 * k));
+		h.update(le, 8);
 	}
-	return h;
+	return h.hex().substr(0, 12);
 }
 
 // xorshift64*: the same sequence on every target, no <random> distribution
@@ -119,9 +123,9 @@ std::string probe_ldlt8k() {
 	const double res = (A * x - b).norm() / b.norm();
 	const double err = (x - x_true).cwiseAbs().maxCoeff();
 	char buf[320];
-	std::snprintf(buf, sizeof buf, "%s ldlt8k: %s n=%d nnz=%lld, relative residual %.3e, max |x - x_true| %.3e, x fnv1a %016llx",
+	std::snprintf(buf, sizeof buf, "%s ldlt8k: %s n=%d nnz=%lld, relative residual %.3e, max |x - x_true| %.3e, x sha256 %s",
 			(res < 1e-12 && err < 1e-9) ? "PASS" : "FAIL", solver->name().c_str(), n, (long long)A.nonZeros(), res, err,
-			(unsigned long long)fnv1a(x.data(), size_t(n)));
+			sha12(x.data(), size_t(n)).c_str());
 	return buf;
 }
 
@@ -164,7 +168,7 @@ std::string probe_libm() {
 			y[i] = fs[k].f(a, b);
 		}
 		char b[64];
-		std::snprintf(b, sizeof b, " %s:%016llx", fs[k].name, (unsigned long long)fnv1a(y.data(), N));
+		std::snprintf(b, sizeof b, " %s:%s", fs[k].name, sha12(y.data(), N).c_str());
 		out += b;
 	}
 	return out;
@@ -184,17 +188,17 @@ std::string probe_stl() {
 		std::vector<double> d(v.size());
 		for (size_t i = 0; i < v.size(); i++)
 			d[i] = double(v[i].second);
-		return fnv1a(d.data(), d.size());
+		return sha12(d.data(), d.size());
 	};
 	std::vector<std::pair<int, int>> a = base;
 	std::sort(a.begin(), a.end(), key_less);
-	const uint64_t h_sort = hash_order(a);
+	const std::string h_sort = hash_order(a);
 	a = base;
 	std::nth_element(a.begin(), a.begin() + N / 2, a.end(), key_less);
-	const uint64_t h_nth = hash_order(a);
+	const std::string h_nth = hash_order(a);
 	a = base;
 	std::partial_sort(a.begin(), a.begin() + N / 10, a.end(), key_less);
-	const uint64_t h_psort = hash_order(a);
+	const std::string h_psort = hash_order(a);
 	// The same values summed in the sorted order: what a tie order changes.
 	std::vector<double> vals(N);
 	for (int i = 0; i < N; i++)
@@ -205,8 +209,8 @@ std::string probe_stl() {
 	for (const auto &p : a)
 		s += vals[size_t(p.second)];
 	char b[256];
-	std::snprintf(b, sizeof b, "stl sort:%016llx nth_element:%016llx partial_sort:%016llx sum_in_sorted_order:%.17g",
-			(unsigned long long)h_sort, (unsigned long long)h_nth, (unsigned long long)h_psort, s);
+	std::snprintf(b, sizeof b, "stl sort:%s nth_element:%s partial_sort:%s sum_in_sorted_order:%.17g",
+			h_sort.c_str(), h_nth.c_str(), h_psort.c_str(), s);
 	return b;
 }
 

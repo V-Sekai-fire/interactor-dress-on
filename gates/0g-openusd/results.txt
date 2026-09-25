@@ -1,31 +1,25 @@
-# Gate 0G (usd_probe.elf), 2026-09-23T13:28:33, Godot 4.7.2-stable (official)
-load usd_probe.elf: 743.2 ms; execution_timeout=8000 memory_max=1024 heap=748048
-host control: host OpenUSD (0, 26, 8) (usd-core, Python 3.14.7)
+# Gate 0G (usd_probe.elf), 2026-09-25T13:34:37, Godot 4.7.2-stable (official)
+load usd_probe.elf: 518.5 ms; execution_timeout=8000 memory_max=1024 heap=748176
+host control: host OpenUSD (0, 26, 8) (usd-core, Python 3.11.15)
 PASS skel_quad.usda: 1060 bytes, as the host read
 PASS skel_quad.usdc: 1766 bytes, as the host read
 PASS blendshape_test.usda: 7002 bytes, as the host read
 PASS blendshape_test.usdc: 4811 bytes, as the host read
-PASS morph_stress_test.usda: 766403 bytes, as the host read
-PASS morph_stress_test.usdc: 281738 bytes, as the host read
 PASS corrupt.usda: 54 bytes, as the host read
 PASS corrupt.usdc: 1603 bytes, as the host read
 PASS garbage.bin: 1024 bytes, as the host read
-PASS usd_init 16.2 ms heap=1052576: ok plugins=8 resolvers=2 resources=11 errors=0
-PASS skel_quad.usda mode0            45.8 ms heap=   1621392  guest: ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 cksum=87409c30e4004895
-PASS skel_quad.usda mode1             3.4 ms heap=   1622976  guest: ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 cksum=87409c30e4004895
-PASS skel_quad.usdc mode0             3.2 ms heap=   1637872  guest: ok fmt=usdc prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 cksum=87409c30e4004895
-PASS blendshape_test.usda mode0      19.8 ms heap=   1653632  guest: ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 cksum=683e7c0e24e95286
-PASS blendshape_test.usda mode1      12.5 ms heap=   1661040  guest: ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 cksum=683e7c0e24e95286
-PASS blendshape_test.usdc mode0       7.7 ms heap=   1693776  guest: ok fmt=usdc prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 cksum=683e7c0e24e95286
-PASS morph_stress_test.usda mode0     836.1 ms heap=   1700752  guest: ok fmt=usda prims=25 meshes=1 skels=1 skelroots=1 points=1528 fvi=7236 cksum=5c8f899ae415a54f
-PASS morph_stress_test.usda mode1     491.4 ms heap=   2467568  guest: ok fmt=usda prims=25 meshes=1 skels=1 skelroots=1 points=1528 fvi=7236 cksum=5c8f899ae415a54f
-PASS morph_stress_test.usdc mode0       6.7 ms heap=   2775696  guest: ok fmt=usdc prims=25 meshes=1 skels=1 skelroots=1 points=1528 fvi=7236 cksum=5c8f899ae415a54f
-PASS morph_stress_test.usdc repeat       7.3 ms heap=   3057840  guest: ok fmt=usdc prims=25 meshes=1 skels=1 skelroots=1 points=1528 fvi=7236 cksum=5c8f899ae415a54f
-PASS corrupt.usda mode0              55.7 ms heap=   3416848  guest: ERR: fmt=usda ImportFromString failed: :4:1: parse error matching pxrInternal_v0_26_5__pxrReserved__::Sdf_TextFileFormatParser::TupleValueClose at '' in </M.points>
+PASS usd_init 13.0 ms heap=1051728: ok plugins=8 resolvers=2 resources=11 errors=0
+PASS skel_quad.usda mode0            26.2 ms heap=   1620544  guest: ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+PASS skel_quad.usda mode1             4.1 ms heap=   1622128  guest: ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+PASS skel_quad.usdc mode0             3.5 ms heap=   1643168  guest: ok fmt=usdc prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+PASS blendshape_test.usda mode0      17.1 ms heap=   1652720  guest: ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
+PASS blendshape_test.usda mode1      10.8 ms heap=   1660128  guest: ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
+PASS blendshape_test.usdc mode0       5.8 ms heap=   1692864  guest: ok fmt=usdc prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
+PASS corrupt.usda mode0              51.4 ms heap=   2051184  guest: ERR: fmt=usda ImportFromString failed: :4:1: parse error matching pxrInternal_v0_26_5__pxrReserved__::Sdf_TextFileFormatParser::TupleValueClose at '' in </M.points>
 
-PASS corrupt.usda mode1               2.2 ms heap=   3417200  guest: ERR: fmt=usda open failed: /mem/input8.usda:4:1: parse error matching pxrInternal_v0_26_5__pxrReserved__::Sdf_TextFileFormatParser::TupleValueClose at '' in </M.points>
+PASS corrupt.usda mode1               2.1 ms heap=   2051536  guest: ERR: fmt=usda open failed: /mem/input5.usda:4:1: parse error matching pxrInternal_v0_26_5__pxrReserved__::Sdf_TextFileFormatParser::TupleValueClose at '' in </M.points>
 
-PASS corrupt.usdc mode0               1.6 ms heap=   3419104  guest: ERR: fmt=usdc open failed: Sdf crate file corrupt, possibly truncated: table of contents at offset 4611 but file size is 1603
-PASS garbage.bin mode0                1.3 ms heap=   3419104  guest: ERR: fmt=usda ImportFromString failed: :1:1: parse error matching pxrInternal_v0_26_5__pxrReserved___pegtl::one<'#'> at '' in </>
+PASS corrupt.usdc mode0               1.6 ms heap=   2053440  guest: ERR: fmt=usdc open failed: Sdf crate file corrupt, possibly truncated: table of contents at offset 4611 but file size is 1603
+PASS garbage.bin mode0                0.7 ms heap=   2053440  guest: ERR: fmt=usda ImportFromString failed: :1:1: parse error matching pxrInternal_v0_26_5__pxrReserved___pegtl::one<'#'> at '' in </>
 
 RESULT: PASS

@@ -13,6 +13,7 @@ the flip and the source's BLAKE3, and to-curves undoes both. .curves has no boun
 flag, so no stroke is marked: which cycles are openings is curvenet's decision.
 """
 import argparse
+import os
 import sys
 
 import numpy as np
@@ -20,6 +21,7 @@ from blake3 import blake3
 from pxr import Gf, Sdf, Tf, Usd, UsdGeom, Vt
 
 ROOT = "/Creation"
+SPLITS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gates", "S-strokes", "cassie-splits.usda")
 
 
 class CurvesError(ValueError):
@@ -142,18 +144,28 @@ def main(argv):
     a.add_argument("dst")
     a.add_argument("--to-body", default="0,0,0,1", help="tx,ty,tz,scale after the Z flip")
     a.add_argument("--source-rev", default="")
+    a.add_argument("--splits", default=SPLITS, help="cassie_split.py's .usda; a test-split source is refused")
+    a.add_argument("--unblind", action="store_true", help="convert a withheld test-split file anyway")
     b = sub.add_parser("to-curves")
     b.add_argument("src")
     b.add_argument("dst")
     o = ap.parse_args(argv)
     if o.cmd == "to-usd":
+        split = ""
+        if os.path.exists(o.splits):
+            from cassie_split import test_split_of
+            split = test_split_of(o.splits, os.path.basename(o.src))
+        if split == "test" and not o.unblind:
+            raise CurvesError("%s is in the withheld test split (%s); pass --unblind to convert it" % (
+                os.path.basename(o.src), o.splits))
         raw = open(o.src, "rb").read()
         tx, ty, tz, s = (float(v) for v in o.to_body.split(","))
         strokes = to_body(parse_curves(raw.decode("utf-8")), (tx, ty, tz), s)
         meta = {"source": o.src.replace("\\", "/").split("/")[-1], "source_blake3": blake3(raw).hexdigest()[:12],
                 "source_rev": o.source_rev, "converter": "dress-on tools/curves_usd.py",
                 "from_frame": "unity left-handed y-up canvas, metres", "flip": "z",
-                "to_body_translate": Gf.Vec3d(tx, ty, tz), "to_body_scale": s}
+                "to_body_translate": Gf.Vec3d(tx, ty, tz), "to_body_scale": s,
+                "split": split or "unlisted", "unblinded": bool(o.unblind and split == "test")}
         open(o.dst, "w").write(write_usda(strokes, meta=meta))
         print("ok %d strokes, %d points -> %s" % (len(strokes), sum(len(x) for x in strokes), o.dst))
     else:

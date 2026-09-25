@@ -1,0 +1,39 @@
+#usda 1.0
+(
+    customLayerData = {
+        string dataset = "V-Sekai/datasource-cassie data/curves"
+        string dataset_rev = "ed6870db441ece00701979db67190972deeff59b"
+        string rule = "group split (participant, or named subject), seeded shuffle, 60/20/20; seen sketches stay in train"
+        int seed = 20260925
+        string[] seen = ["dress", "flower", "hat", "vintage_car"]
+        string withheld = "test"
+    }
+    defaultPrim = "Splits"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Scope "Splits"
+{
+    def Scope "train"
+    {
+        custom string[] blake3 = ["46b8b653dd50", "4ffcb6400a30", "631b3918340b", "1bcb3cc7b1a8", "5778f1c56687", "0493f16c5c87", "afae41405123", "6bbd93d08bda", "15a82e4ac530", "70838914acf3", "9ac0e2e77439", "2a0910975059", "cd19836fb380", "b332499bdc88", "7928b3e1ea9a", "9435c949aa47", "90f955b603a6", "40ee6272aedc", "84eaf06c139f", "f9ace2e88352", "6be964626ff0", "a61afd4b602e", "d276a90728c4", "c81be965e4e1", "2d279222f5f1", "070fe59875ae", "55aad72d9c5e", "2e0c39106f75", "4d21e27ab894", "ee27229b8fdf", "d11b75955771", "5f546a326e6b", "dbfe594266e6", "bad17872373a", "012f03221db2", "9ce0103b9546", "91d9e5bea9b8", "ceb721991084", "5d68056bdb52", "6eb195222679", "07f6dff66bbe", "31c0cafe963a"]
+        custom string[] files = ["03-0-1.curves", "03-0-2.curves", "03-1-1.curves", "03-1-2.curves", "03-2-1.curves", "03-2-2.curves", "05-0-1.curves", "05-0-2.curves", "05-1-1.curves", "05-1-2.curves", "05-2-1.curves", "05-2-2.curves", "08-0-1.curves", "08-0-2.curves", "08-1-1.curves", "08-1-2.curves", "08-2-1.curves", "08-2-2.curves", "11-0-1.curves", "11-0-2.curves", "11-1-1.curves", "11-1-2.curves", "11-2-1.curves", "11-2-2.curves", "12-0-1.curves", "12-0-2.curves", "12-1-1.curves", "12-1-2.curves", "12-2-1.curves", "12-2-2.curves", "architecture-2.curves", "architecture.curves", "computer-mouse.curves", "dress.curves", "flower.curves", "hat.curves", "hmd_sutherland.curves", "monster_head.curves", "sewing-machine.curves", "shield.curves", "vacuum.curves", "vintage_car.curves"]
+        custom int groups = 16
+    }
+
+    def Scope "validation"
+    {
+        custom string[] blake3 = ["b094bbc1eca6", "99866ce7c2fc", "42cd3b44d9f5", "f2ea22066a68", "92cc7941dce1", "433f3bff236a", "3ded3a4cfa1f", "428f3cac3851", "e8f13cb7118f", "213d8d252de4", "639c140a89b5", "427fc6db73a2", "6125bda81d8c", "11b5603e329d", "853021ed6884", "b6a897e3da53", "077e75e1dcbd", "2affa2cc1aaf", "f4942cd47f97", "906533f78795"]
+        custom string[] files = ["02-0-1.curves", "02-0-2.curves", "02-1-1.curves", "02-1-2.curves", "02-2-1.curves", "02-2-2.curves", "06-0-1.curves", "06-0-2.curves", "06-1-1.curves", "06-1-2.curves", "06-2-1.curves", "06-2-2.curves", "09-0-1.curves", "09-0-2.curves", "09-1-1.curves", "09-1-2.curves", "09-2-1.curves", "09-2-2.curves", "chair.curves", "teapot.curves"]
+        custom int groups = 5
+    }
+
+    def Scope "test"
+    {
+        custom string[] blake3 = ["bb46cd9d2a3b", "10edba7c0a41", "e29f71da772e", "1f74db0cdca4", "b1205e9d879b", "00888c707dda", "9d8f47080fc4", "8bcba52283cf", "41539f2f34f8", "1e375cd3971d", "60182a95a181", "34fccdea5271", "49bb7ea85ace", "451fc75d6909", "13a4693da4ec", "265024a23a3b", "91c5944198e7", "1eb3507637d9", "f874a3758ada", "3ced35f6bce4", "dcf7553c34a2", "4ffa8c0aeaf8", "219850b50d28", "d35737158c76", "eae4a75dc96c", "f67240a88333"]
+        custom string[] files = ["01-0-1.curves", "01-0-2.curves", "01-1-1.curves", "01-1-2.curves", "01-2-1.curves", "01-2-2.curves", "04-0-1.curves", "04-0-2.curves", "04-1-1.curves", "04-1-2.curves", "04-2-1.curves", "04-2-2.curves", "07-0-1.curves", "07-0-2.curves", "07-1-1.curves", "07-1-2.curves", "07-2-1.curves", "07-2-2.curves", "10-0-1.curves", "10-0-2.curves", "10-1-1.curves", "10-1-2.curves", "10-2-1.curves", "10-2-2.curves", "guitar.curves", "hmd_modern.curves"]
+        custom int groups = 6
+    }
+}
+

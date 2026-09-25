@@ -77,3 +77,17 @@ def test_garbage_is_not_a_layer():
 
 def test_an_unmarked_stroke_authors_no_boundary():
     assert "primvars:boundary" not in cu.write_usda([np.zeros((2, 3), np.float32)])
+
+
+def test_a_withheld_test_file_is_refused(tmp_path):
+    here = os.path.dirname(os.path.abspath(__file__))
+    splits = os.path.join(here, "..", "gates", "S-strokes", "cassie-splits.usda")
+    from pxr import Usd
+    stage = Usd.Stage.Open(splits)
+    test_files = list(stage.GetPrimAtPath("/Splits/test").GetAttribute("files").Get())
+    src = tmp_path / test_files[0]
+    src.write_text("v 2\n0 0 0\n1 1 1\n")
+    with pytest.raises(cu.CurvesError, match="withheld test split"):
+        cu.main(["to-usd", str(src), str(tmp_path / "out.usda"), "--splits", splits])
+    assert cu.main(["to-usd", str(src), str(tmp_path / "out.usda"), "--splits", splits, "--unblind"]) == 0
+    assert 'unblinded = 1' in (tmp_path / "out.usda").read_text()

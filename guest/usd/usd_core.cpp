@@ -19,6 +19,7 @@
 #include "usd_core.h"
 
 #include "mem_resolver.h"
+#include "../common/sha256.h"
 
 #include "pxr/pxr.h"
 #include "pxr/base/gf/matrix4d.h"
@@ -72,7 +73,7 @@ struct MeshRec {
 	size_t idx_off = 0, ntris = 0; // into g_indices (3 ints a triangle)
 	bool has_normals = false, has_uvs = false, indexed = true;
 	int material = -1;
-	uint64_t ck_p = 0, ck_i = 0;
+	Span sha_p, sha_i; // SHA-256 hex of the f32 point / i32 corner bytes, in g_strings
 	float xf[16] = {};
 };
 
@@ -112,14 +113,6 @@ std::string first_error(const TfErrorMark &m) {
 	for (auto it = m.GetBegin(); it != m.GetEnd(); ++it)
 		return it->GetCommentary();
 	return "unknown";
-}
-
-void fnv(uint64_t &h, const void *p, size_t n) {
-	const unsigned char *b = static_cast<const unsigned char *>(p);
-	for (size_t i = 0; i < n; ++i) {
-		h ^= b[i];
-		h *= 1099511628211ull;
-	}
 }
 
 // --- textures ---------------------------------------------------------------
@@ -385,12 +378,8 @@ std::string add_mesh(const UsdPrim &prim, UsdGeomXformCache &xc, const std::stri
 		}
 		c0 += n;
 	}
-	uint64_t h = 1469598103934665603ull;
-	fnv(h, g_points.data() + r.pt_off, r.npts * 3 * sizeof(float));
-	r.ck_p = h;
-	h = 1469598103934665603ull;
-	fnv(h, g_indices.data() + r.idx_off, r.ntris * 3 * sizeof(int32_t));
-	r.ck_i = h;
+	r.sha_p = intern(sha256::hex(g_points.data() + r.pt_off, r.npts * 3 * sizeof(float)));
+	r.sha_i = intern(sha256::hex(g_indices.data() + r.idx_off, r.ntris * 3 * sizeof(int32_t)));
 
 	const GfMatrix4d m = xc.GetLocalToWorldTransform(prim);
 	for (int i = 0; i < 4; ++i)
@@ -529,8 +518,8 @@ bool mesh_info(int i, MeshInfo &out) {
 	out.has_uvs = r.has_uvs;
 	out.indexed = r.indexed;
 	out.material = r.material;
-	out.cksum_points = r.ck_p;
-	out.cksum_indices = r.ck_i;
+	out.sha_points = str(r.sha_p);
+	out.sha_indices = str(r.sha_i);
 	std::memcpy(out.xform, r.xf, sizeof r.xf);
 	return true;
 }

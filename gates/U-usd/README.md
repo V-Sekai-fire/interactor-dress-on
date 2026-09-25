@@ -99,8 +99,9 @@ material arrays, so the loop's INFER state can read Pixal3D's answer
 ## Host oracle
 
 `host_oracle.py` (usd-core 26.8 through Python, `timeout 300`): the same
-traversal, fan triangulation, FNV-1a 64 over points (f32) and corners (i32),
-sha256 prefixes of the same bytes, texture bytes straight out of the zip
+traversal, fan triangulation, SHA-256 prefixes over points (f32) and
+corners (i32) (the guest reports the same two; until 2026-09-25 it reported
+FNV-1a 64), texture bytes straight out of the zip
 with their sha256, the UsdPreviewSurface wiring. -> `host-oracle.log`.
 
 ## Numbers (`results.txt`, `ladder/*.txt`, host-timed, RTX 4090 box, Godot 4.7.2)

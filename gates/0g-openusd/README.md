@@ -98,8 +98,9 @@ than USDA for the same stage, so a converter should ask the host for USDC.
 ## Flat control and its limits
 
 `host_control.py` runs the host's OpenUSD, **usd-core 26.08 through Python**,
-not 26.05 C++. It does the same traversal and the same FNV-1a over prim path,
-points (f32) and faceVertexIndices (i32), and it writes the `.usdc` inputs. It
+not 26.05 C++. It does the same traversal and the same SHA-256 over prim path,
+points (f32) and faceVertexIndices (i32) (first 12 hex digits; FNV-1a 64
+until 2026-09-25, when the repo moved to one hash), and it writes the `.usdc` inputs. It
 is **not the same probe TU built natively**. That build, llvm-mingw or MSVC
 against a host OpenUSD 26.05, was skipped to stay inside the budget. The
 control therefore separates "the guest computed it" from "nothing was there"

@@ -11,11 +11,11 @@
 #
 # 1. init: the embedded plugins and the in-memory resolver come up.
 # 2. every case of host-oracle.log: the guest's mesh count, per-mesh point
-#    and triangle counts and FNV-1a checksums, material count and texture
-#    sizes + checksums equal the host's; the wiring (diffuse rgb, metallic b,
+#    and triangle counts and SHA-256 sums, material count and texture
+#    sizes + sums equal the host's; the wiring (diffuse rgb, metallic b,
 #    roughness g) is read; the textures decode in Godot (Image); the arrays
-#    that crossed are re-summed on the host (the transfer, not just the
-#    guest's own sum). Corrupt inputs: a clean ERR:, and the guest answers
+#    that crossed are re-summed on the host and must equal the guest's own
+#    sum (the transfer, not just the guest's reading). Corrupt inputs: a clean ERR:, and the guest answers
 #    afterwards. Host-timed open and extract; instret of the open.
 # 3. usd_nodes: an ArrayMesh + StandardMaterial3D + Node3D from the arrays.
 # One case per frame; quits on a 300 s wall clock in every branch.
@@ -67,8 +67,9 @@ func _bytes(name: String) -> PackedByteArray:
 			return FileAccess.get_file_as_bytes(g)
 	return PackedByteArray()
 
-# The transfer check sums what crossed with SHA-256 (HashingContext); the
-# guest's own FNV-1a is compared with the host's FNV-1a as a string.
+# One checksum everywhere: SHA-256, compared as its first 12 hex digits. The
+# guest sums what it read, this sums what crossed (HashingContext), and
+# host_oracle.py sums what usd-core read.
 static func _sha(b: PackedByteArray) -> String:
 	var c := HashingContext.new()
 	c.start(HashingContext.HASH_SHA256)
@@ -189,12 +190,18 @@ func _case(name: String, bytes: PackedByteArray, exp: String) -> void:
 			host = exp.substr(at, end - at) if at >= 0 else ""
 		var sha_p := _sha(pts.to_byte_array())
 		var sha_i := _sha(idx.to_byte_array())
-		var line := "%s mesh%d=%s points=%d triangles=%d cksum_points=%s cksum_indices=%s material=%d sha_points=%s sha_indices=%s normals=%d uvs=%d indexed=%s" % [
-				name, i, m.path, n, m.triangles, m.cksum_points, m.cksum_indices, m.material, sha_p, sha_i, m.normals.size() / 3, m.uvs.size() / 2, str(m.indexed)]
+		var guest_p := str(m.sha_points).left(12)
+		var guest_i := str(m.sha_indices).left(12)
+		var line := "%s mesh%d=%s points=%d triangles=%d material=%d sha_points=%s sha_indices=%s normals=%d uvs=%d indexed=%s" % [
+				name, i, m.path, n, m.triangles, m.material, sha_p, sha_i, m.normals.size() / 3, m.uvs.size() / 2, str(m.indexed)]
 		var ok: bool = pts.size() == 3 * n and idx.size() == 3 * int(m.triangles)
+		# what crossed == what the guest read
+		ok = ok and guest_p == sha_p and guest_i == sha_i
+		if guest_p != sha_p or guest_i != sha_i:
+			line += " guest_sha_points=%s guest_sha_indices=%s" % [guest_p, guest_i]
 		if _rung == 0:
-			ok = ok and host == " mesh%d=%s points=%d triangles=%d cksum_points=%s cksum_indices=%s material=%d sha_points=%s sha_indices=%s" % [
-					i, m.path, n, m.triangles, m.cksum_points, m.cksum_indices, m.material, sha_p, sha_i]
+			ok = ok and host == " mesh%d=%s points=%d triangles=%d material=%d sha_points=%s sha_indices=%s" % [
+					i, m.path, n, m.triangles, m.material, sha_p, sha_i]
 		_check(ok, line + ("" if ok else "  | host:%s" % host))
 		# the arrays make a surface
 		if _skip.has("mesh"):

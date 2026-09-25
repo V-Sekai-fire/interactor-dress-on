@@ -154,7 +154,6 @@ static Variant usd_mesh_info(int i) {
 		usdg::MeshInfo m;
 		if (!usdg::mesh_info(i, m))
 			return fail("usd_mesh_info: no mesh " + std::to_string(i) + " (count " + std::to_string(usdg::mesh_count()) + ")");
-		char ck[40];
 		Dictionary d = Dictionary::Create();
 		d["path"] = text(m.path);
 		d["name"] = text(m.name);
@@ -164,10 +163,8 @@ static Variant usd_mesh_info(int i) {
 		d["has_uvs"] = Variant(m.has_uvs);
 		d["indexed"] = Variant(m.indexed);
 		d["material"] = Variant(m.material);
-		std::snprintf(ck, sizeof ck, "%016llx", (unsigned long long)m.cksum_points);
-		d["cksum_points"] = text(ck);
-		std::snprintf(ck, sizeof ck, "%016llx", (unsigned long long)m.cksum_indices);
-		d["cksum_indices"] = text(ck);
+		d["sha_points"] = text(m.sha_points);
+		d["sha_indices"] = text(m.sha_indices);
 		d["xform"] = Variant(PackedArray<float>(m.xform, 16));
 		return Variant(d);
 	});
@@ -325,7 +322,7 @@ int main() {
 	ADD_API_FUNCTION(usd_mesh_count, "int", "", "UsdGeomMesh prims in the document");
 	ADD_API_FUNCTION(usd_material_count, "int", "", "Bound materials in the document");
 	ADD_API_FUNCTION(usd_texture_count, "int", "", "Textures read out of the package");
-	ADD_API_FUNCTION(usd_mesh_info, "Dictionary", "int i", "path, name, points, triangles, has_normals, has_uvs, indexed, material, cksum_*, xform");
+	ADD_API_FUNCTION(usd_mesh_info, "Dictionary", "int i", "path, name, points, triangles, has_normals, has_uvs, indexed, material, sha_points, sha_indices, xform");
 	ADD_API_FUNCTION(usd_mesh_points, "PackedFloat32Array", "int i", "xyz per point");
 	ADD_API_FUNCTION(usd_mesh_points_slice, "PackedFloat32Array", "int i, int from, int count", "points [from, from+count)");
 	ADD_API_FUNCTION(usd_mesh_normals, "PackedFloat32Array", "int i", "xyz per point (per-point normals)");

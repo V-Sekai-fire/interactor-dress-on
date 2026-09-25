@@ -6,6 +6,7 @@
 #include "usd_probe_core.h"
 
 #include "mem_resolver.h"
+#include "../common/sha256.h"
 
 #include "pxr/pxr.h"
 #include "pxr/base/tf/errorMark.h"
@@ -35,13 +36,6 @@ std::string init() {
 	return usdmem::init();
 }
 
-static void fnv(uint64_t &h, const void *p, size_t n) {
-	const unsigned char *b = static_cast<const unsigned char *>(p);
-	for (size_t i = 0; i < n; ++i) {
-		h ^= b[i];
-		h *= 1099511628211ull;
-	}
-}
 
 std::string load(const std::string &bytes, int path_mode) {
 	init();
@@ -73,7 +67,7 @@ std::string load(const std::string &bytes, int path_mode) {
 		return std::string("ERR: fmt=") + fmt + " no stage: " + first_error(mark);
 
 	size_t prims = 0, meshes = 0, skels = 0, roots = 0, npts = 0, nfvi = 0;
-	uint64_t h = 1469598103934665603ull;
+	sha256::Ctx h; // over each mesh's path, points and face-vertex indices, in Traverse() order
 	for (const UsdPrim &prim : stage->Traverse()) {
 		++prims;
 		if (prim.IsA<UsdSkelSkeleton>())
@@ -90,15 +84,15 @@ std::string load(const std::string &bytes, int path_mode) {
 		mesh.GetFaceVertexIndicesAttr().Get(&fvi, UsdTimeCode::Default());
 		npts += pts.size();
 		nfvi += fvi.size();
-		fnv(h, prim.GetPath().GetString().data(), prim.GetPath().GetString().size());
+		h.update(prim.GetPath().GetString().data(), prim.GetPath().GetString().size());
 		if (!pts.empty())
-			fnv(h, pts.cdata(), pts.size() * sizeof(GfVec3f));
+			h.update(pts.cdata(), pts.size() * sizeof(GfVec3f));
 		if (!fvi.empty())
-			fnv(h, fvi.cdata(), fvi.size() * sizeof(int));
+			h.update(fvi.cdata(), fvi.size() * sizeof(int));
 	}
 	char buf[256];
-	std::snprintf(buf, sizeof buf, "ok fmt=%s prims=%zu meshes=%zu skels=%zu skelroots=%zu points=%zu fvi=%zu cksum=%016llx",
-			fmt, prims, meshes, skels, roots, npts, nfvi, (unsigned long long)h);
+	std::snprintf(buf, sizeof buf, "ok fmt=%s prims=%zu meshes=%zu skels=%zu skelroots=%zu points=%zu fvi=%zu mesh_sha256=%.12s",
+			fmt, prims, meshes, skels, roots, npts, nfvi, h.hex().c_str());
 	std::string out = buf;
 	if (!mark.IsClean())
 		out += " warn=" + first_error(mark);

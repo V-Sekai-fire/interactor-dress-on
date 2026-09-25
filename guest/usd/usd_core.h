@@ -38,7 +38,7 @@ struct MeshInfo {
 	size_t points = 0, triangles = 0;
 	bool has_normals = false, has_uvs = false, indexed = true;
 	int material = -1; // index into the material table, -1 unbound
-	uint64_t cksum_points = 0, cksum_indices = 0; // FNV-1a 64 over the f32 / i32 bytes
+	std::string sha_points, sha_indices; // SHA-256 hex over the f32 / i32 bytes
 	float xform[16] = {}; // local-to-world, GfMatrix4d row-major (row i = image of axis i, row 3 = origin)
 };
 bool mesh_info(int i, MeshInfo &out);

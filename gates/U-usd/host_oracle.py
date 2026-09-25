@@ -6,13 +6,14 @@ layer, a package with no mesh, garbage).
   timeout 300 python gates/U-usd/host_oracle.py   -> host-oracle.log
 
 Per package one line:
-  <name> bytes=B sha256=<12> ok meshes=M points=P triangles=T cksum_points=X
-  cksum_indices=Y material=I sha_points=<12> sha_indices=<12> materials=K textures=N
+  <name> bytes=B sha256=<12> ok meshes=M points=P triangles=T material=I
+  sha_points=<12> sha_indices=<12> materials=K textures=N
   tex=<file>:<size>:<sha12>,... wired=<input>:<file>:<channel>,...
-or "<name> bytes=B sha256=<12> ERR: <reason>". Checksums: FNV-1a 64 over the
-points as float32 xyz and over the triangle corners as int32, per mesh in
-Traverse() order, each mesh on its own (the guest reports them per mesh); the
-sha256 prefixes are what the gate re-sums over the arrays that crossed.
+or "<name> bytes=B sha256=<12> ERR: <reason>". Checksums: SHA-256 (first 12
+hex digits) over the points as float32 xyz and over the triangle corners as
+int32, per mesh in Traverse() order, each mesh on its own. The guest reports
+the same two per mesh, and the gate re-sums the arrays that crossed: all three
+must agree.
 """
 import hashlib, io, os, struct, sys, zipfile
 import numpy as np
@@ -22,24 +23,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 INP = os.path.join(HERE, "inputs")
 EXT = "C:/b/gu-inputs"  # the real Pixal3D packages (tools/services/pixal3d/runs outputs, not committed)
 os.makedirs(EXT, exist_ok=True)
-
-
-def fnv(data):
-    h = 1469598103934665603
-    for b in data:
-        h ^= b
-        h = (h * 1099511628211) & 0xFFFFFFFFFFFFFFFF
-    return h
-
-
-def fnv_np(arr):
-    # the same loop, vectorised per byte to keep 2 MB arrays under a second
-    data = np.frombuffer(arr.tobytes(), dtype=np.uint8)
-    h = 1469598103934665603
-    M = 0xFFFFFFFFFFFFFFFF
-    for b in data.tolist():
-        h = ((h ^ b) * 1099511628211) & M
-    return h
 
 
 def probe(path):
@@ -97,7 +80,7 @@ def probe(path):
                             if file and file not in tex:
                                 tex[file] = None
             mat_i = mats[mp]
-        meshes.append((str(prim.GetPath()), len(pts), len(tri) // 3, fnv_np(pts), fnv_np(tri), mat_i,
+        meshes.append((str(prim.GetPath()), len(pts), len(tri) // 3, mat_i,
                        hashlib.sha256(pts.tobytes()).hexdigest()[:12], hashlib.sha256(tri.tobytes()).hexdigest()[:12]))
     # texture bytes straight out of the zip (the guest hands them over as they are)
     texs = []
@@ -110,9 +93,8 @@ def probe(path):
                 except KeyError:
                     texs.append("%s:missing" % file)
     out = "ok meshes=%d" % len(meshes)
-    for i, (p, n, t, ck, ci, mi, sp, si) in enumerate(meshes):
-        out += " mesh%d=%s points=%d triangles=%d cksum_points=%016x cksum_indices=%016x material=%d sha_points=%s sha_indices=%s" % (
-            i, p, n, t, ck, ci, mi, sp, si)
+    for i, (p, n, t, mi, sp, si) in enumerate(meshes):
+        out += " mesh%d=%s points=%d triangles=%d material=%d sha_points=%s sha_indices=%s" % (i, p, n, t, mi, sp, si)
     out += " materials=%d textures=%d tex=%s wired=%s" % (len(mats), len(texs), ",".join(texs) or "-", ",".join(wired) or "-")
     return out
 

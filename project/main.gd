@@ -24,6 +24,7 @@ const FitStage := preload("res://stages/fit_stage.gd")
 const InferStage := preload("res://stages/infer_stage.gd")
 const GgmlStage := preload("res://stages/ggml_stage.gd")
 const UsdStage := preload("res://stages/usd_stage.gd")
+const StrokesUsd := preload("res://util/strokes_usd.gd")
 const Pipeline := preload("res://stages/pipeline.gd")
 
 var dress_on = null
@@ -44,7 +45,7 @@ func _ready() -> void:
 	ggml = _add(GgmlStage, "Ggml")
 	usd = _add(UsdStage, "Usd")
 	pipeline = _add(Pipeline, "Pipeline")
-	pipeline.setup({"infer": infer, "curvenet": curvenet, "fit": fit, "drape": drape})
+	pipeline.setup({"infer": infer, "curvenet": curvenet, "fit": fit, "drape": drape, "usd": usd})
 	var world = get_node_or_null("World")
 	if world != null and world.has_method("attach"):
 		world.attach(self)
@@ -71,6 +72,30 @@ func dress_on_run_drop_seam(allow_fixture: String = "infer,rig") -> String:
 # Gate 8's control: CHECK sees one garment vertex pushed inside the body.
 func dress_on_run_push_vertex(allow_fixture: String = "infer,rig") -> String:
 	return pipeline.start({"allow_fixture": allow_fixture, "push_vertex": true})
+
+# Save the strokes drawn in the last run (pen or scripted) as OpenUSD, one
+# BasisCurves per stroke (util/strokes_usd.gd); "" picks user://creations/<utc>.usda.
+func dress_on_save_strokes(path: String = "") -> String:
+	var strokes: Array = pipeline.data.get("authored", [])
+	if strokes.is_empty():
+		return "FAIL: no strokes drawn yet (state %s)" % pipeline.state
+	if path == "":
+		path = "user://creations/%s.usda" % Time.get_datetime_string_from_system(true).replace(":", "")
+	var r := StrokesUsd.to_usda(usd, strokes, {"source": "pen", "saved_at": Time.get_datetime_string_from_system(true)})
+	if r.has("error"):
+		return "FAIL: " + r.error
+	var g := ProjectSettings.globalize_path(path)
+	DirAccess.make_dir_recursive_absolute(g.get_base_dir())
+	var f := FileAccess.open(g, FileAccess.WRITE)
+	if f == null:
+		return "FAIL: cannot write %s (%s)" % [path, error_string(FileAccess.get_open_error())]
+	f.store_string(r.text)
+	f.close()
+	return "ok %d strokes -> %s" % [strokes.size(), path]
+
+# Run the loop on saved strokes instead of the scripted skirt.
+func dress_on_run_strokes(path: String = "res://../gates/S-strokes/inputs/skirt.usda") -> String:
+	return pipeline.start({"allow_fixture": "infer,rig", "strokes_from": path})
 
 func dress_on_run_opts(opts: Dictionary = {}) -> String:
 	return pipeline.start(opts)
@@ -369,6 +394,11 @@ func usd_push(path: String = UsdStage.DEFAULT_PACKAGE) -> String: return usd.usd
 func usd_open_staged() -> String: return usd.usd_open_staged()
 func usd_blake3(path: String = UsdStage.DEFAULT_PACKAGE) -> String: return usd.usd_blake3(path)
 func usd_close() -> String: return usd.usd_close()
+func usd_curve_count() -> int: return usd.usd_curve_count()
+func usd_curve_info(i: int = 0) -> String: return usd.usd_curve_info(i)
+func usd_curve_points(i: int = 0) -> String: return usd.usd_curve_points(i)
+func usd_layer_data() -> String: return usd.usd_layer_data()
+func usd_write_curves() -> String: return usd.usd_write_curves()
 func usd_mesh_count() -> int: return usd.usd_mesh_count()
 func usd_material_count() -> int: return usd.usd_material_count()
 func usd_texture_count() -> int: return usd.usd_texture_count()

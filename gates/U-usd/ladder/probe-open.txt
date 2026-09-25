@@ -1,0 +1,5 @@
+arm=open file=C:/b/gu-inputs/real-t2048.usdz mem=320 sandbox=true
+bytes=14856491 init=ok plugins=8 resolvers=2 resources=11 errors=0 heap=1052576
+open: 343.1 ms heap=45884592 -> ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=14856491 instr=308330890
+count=1
+RESULT: DONE

@@ -1,0 +1,7 @@
+arm=push8 file=C:/b/gu-inputs/real-t2048.usdz mem=320 sandbox=true
+bytes=14856491 init=ok plugins=8 resolvers=2 resources=11 errors=0 heap=1052576
+push 0+8388608 -> staged=8388608 heap=9441200
+push 8388608+6467883 -> staged=14856491 heap=17829808
+push8: 371.1 ms heap=45878384 -> ok layer=usdz prims=9 meshes=1 materials=1 textures=2 up=Y mpu=1 bytes=14856491 instr=306449642
+count=1
+RESULT: DONE

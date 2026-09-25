@@ -1,0 +1,9 @@
+host OpenUSD (0, 26, 8) (usd-core, Python 3.11.15)
+real-asset.usdz missing
+real-t2048.usdz missing
+bare-asset.usda bytes=3079 blake3=701c2c339487 ok meshes=1 mesh0=/Asset/Geometry/Mesh_0 points=4 triangles=2 material=0 blake3_points=6c0596cce08e blake3_indices=cc9bd1c21535 materials=1 textures=0 tex=- wired=diffuseColor:textures/material0_base_color.png:rgb,metallic:textures/material0_metallic_roughness.png:b,roughness:textures/material0_metallic_roughness.png:g
+nomesh.usdz bytes=225 blake3=e55e64de613d ok meshes=0 materials=0 textures=0 tex=- wired=-
+garbage.bin bytes=1024 blake3=882179b8dbcc ERR: 
+stub-quad.usdz bytes=3586 blake3=d215bae53e5d ok meshes=1 mesh0=/Asset/Geometry/Mesh_0 points=4 triangles=2 material=0 blake3_points=6c0596cce08e blake3_indices=cc9bd1c21535 materials=1 textures=2 tex=textures/material0_base_color.png:120:b0f7bf4a4128,textures/material0_metallic_roughness.png:120:7ba4404132aa wired=diffuseColor:textures/material0_base_color.png:rgb,metallic:textures/material0_metallic_roughness.png:b,roughness:textures/material0_metallic_roughness.png:g
+stub-text.usdz bytes=4031 blake3=4729fe697977 ok meshes=1 mesh0=/Asset/Geometry/Mesh_0 points=4 triangles=2 material=0 blake3_points=6c0596cce08e blake3_indices=cc9bd1c21535 materials=1 textures=2 tex=textures/material0_base_color.png:120:b0f7bf4a4128,textures/material0_metallic_roughness.png:120:7ba4404132aa wired=diffuseColor:textures/material0_base_color.png:rgb,metallic:textures/material0_metallic_roughness.png:b,roughness:textures/material0_metallic_roughness.png:g
+stub-unbound.usdz bytes=3828 blake3=5e2825724573 ok meshes=1 mesh0=/Asset/Geometry/Mesh_0 points=4 triangles=2 material=-1 blake3_points=6c0596cce08e blake3_indices=cc9bd1c21535 materials=0 textures=0 tex=- wired=-

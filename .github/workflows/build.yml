@@ -44,8 +44,26 @@ jobs:
         with:
           path: build/riscv64-sysroot-src
           key: riscv64-sysroot-${{ hashFiles('build.sh') }}
+      - name: sccache
+        uses: mozilla-actions/sccache-action@v0.0.6
+      # Local-disk sccache, not the GHA backend: a GitHub cache outage makes
+      # sccache's GHA storage fail every compile, but actions/cache failures
+      # are non-fatal, so the build only loses the speedup, never breaks.
+      - name: Cache sccache objects
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/sccache
+          key: sccache-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            sccache-${{ github.ref_name }}-
+            sccache-
       - name: Build
+        env:
+          COMPILER_LAUNCHER: sccache
         run: elixir tools/build.exs --gates=wrappers,curvenet
+      - name: sccache stats
+        if: always()
+        run: sccache --show-stats
       - name: Keep the ELFs, translations and gate results
         if: always()
         uses: actions/upload-artifact@v4

@@ -74,3 +74,70 @@ jobs:
             project/bintr/*.so
             gates/4-curvenet/results.txt
             gates/3-ggml-rd/ops/results-headless.txt
+  # The GPU gates, on the macOS arm64 runner's GPU (Apple's paravirtual
+  # Metal device). The vendored addon has no macOS library, so it is built
+  # here from the org fork at the commit tools/godot-sandbox/CITATION.cff
+  # names, plus the patches under tools/godot-sandbox (rule 1), and cached
+  # on their hash. The guest ELFs come from the Linux job.
+  gpu-macos:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: .
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Cache the macOS addon
+        id: addon
+        uses: actions/cache@v4
+        with:
+          path: build/godot-sandbox-macos
+          key: godot-sandbox-macos-${{ hashFiles('tools/godot-sandbox/**') }}
+      - name: Build the addon (org fork + patches)
+        if: steps.addon.outputs.cache-hit != 'true'
+        run: |
+          set -e
+          BASE=$(awk '/^commit:/ {print $2}' tools/godot-sandbox/CITATION.cff)
+          # Only the pinned commit: a full clone fails on macOS, whose disk is
+          # case-insensitive, because the fork has a branch head/... next to HEAD.
+          git init -q build/gs
+          git -C build/gs remote add origin https://github.com/V-Sekai-fire/godot-sandbox.git
+          git -C build/gs fetch -q --depth 1 origin "$BASE"
+          git -C build/gs checkout -q FETCH_HEAD
+          git -C build/gs submodule update -q --init --recursive
+          # The fork's sources are CRLF and so is the patch (*.patch -text): keep the CRs.
+          git -C build/gs -c user.name=ci -c user.email=ci@localhost am -q --keep-cr "$PWD"/tools/godot-sandbox/*.patch
+          python -m pip install -q scons==4.4.0
+          (cd build/gs && scons -j"$(sysctl -n hw.ncpu)" target=template_release platform=macos arch=universal precision=single)
+          mkdir -p build/godot-sandbox-macos
+          cp -R build/gs/bin/addons/godot_sandbox/bin/libgodot_riscv.macos.template_release.universal.framework build/godot-sandbox-macos/
+      - name: Godot
+        run: |
+          cp -R build/godot-sandbox-macos/*.framework project/addons/godot_sandbox/bin/
+          curl -fsSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip"
+          unzip -oq godot.zip -d "$HOME/opt"
+          echo "GODOT=$HOME/opt/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+      - name: Import
+        run: |
+          "$GODOT" --path project --headless --import || true
+      - name: GPU gates (Metal)
+        run: |
+          set -e
+          system_profiler SPDisplaysDataType | head -20
+          # Not --headless: a headless run has no RenderingDevice. With one,
+          # the wrapper probe requires rd_probe to PASS.
+          "$GODOT" --path project --rendering-driver metal --xr-mode off --script tests/probe_main_wrappers.gd
+          "$GODOT" --path project --rendering-driver metal --xr-mode off --script gate_ggml_rd.gd
+      - name: Keep the gate results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpu-macos-${{ github.sha }}
+          path: |
+            gates/8-loop/wrappers.txt
+            gates/3-ggml-rd/ops/

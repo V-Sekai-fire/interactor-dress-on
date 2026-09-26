@@ -217,25 +217,10 @@ func _initialize() -> void:
 			Engine.get_version_info().string, OS.get_processor_name(),
 			"headless: no RenderingDevice" if _headless else RenderingServer.get_video_adapter_name()])
 	SandboxUtil.enable_native_translation()
-	_sb = ClassDB.instantiate("Sandbox")
-	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
-	if _sb == null:
+	if not _open_sb():
 		_verdict(false, "the Sandbox class is not registered")
 		_finish()
 		return
-	# memory_max first (it survives program=, Gate 0F): the reference
-	# backend holds whole test tensors (up to 3 x 64 MiB) in the guest heap.
-	_sb.memory_max = 2048
-	_sb.program = load("res://ggml_test.elf")
-	_sb.references_max = 65536
-	# Host calls are charged against the budget (Gate 0F finding 6), and one
-	# pump can run a large reference op on the in-guest CPU.
-	_sb.execution_timeout = 1000000
-	var a := str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB))
-	_say("attach: %s" % a)
-	_say("native translation: %s (hash %08x, lookup %s)" % [str(_sb.call("is_binary_translated")),
-			int(_sb.call("get_translation_hash")), str(ProjectSettings.get_setting("sandbox/binary_translation/enabled", false))])
-	_host = InferHost.new(_sb, _rd, "ggml_pump")
 	_say("rule 10: ggml-cpu jobs capped at execution_timeout=%d units per vmcall (~300 s), ggml-rd-only jobs at %d" % [
 			InferHost.GGML_CPU_TIMEOUT_UNITS, int(_sb.execution_timeout)])
 	var pfilter := (" -p " + _params) if _params != "" else ""
@@ -274,6 +259,29 @@ func _initialize() -> void:
 			var keep := ua.trim_prefix("runs=").split(",")
 			_runs = _runs.filter(func(r): return keep.has(r[0]))
 			_say("runs selected: %s" % str(keep))
+
+# A fresh Sandbox on ggml_test.elf, attached to the device. Called at start and
+# again after a vmcall killed by execution_timeout: the killed job's fiber is
+# abandoned and the old guest answers every start with "a job is running".
+func _open_sb() -> bool:
+	_sb = ClassDB.instantiate("Sandbox")
+	if _sb != null: _sb.allocations_max = 1000000 # the Linux addon's 4000 default runs out (stages/sandbox_util.gd)
+	if _sb == null:
+		return false
+	# memory_max first (it survives program=, Gate 0F): the reference
+	# backend holds whole test tensors (up to 3 x 64 MiB) in the guest heap.
+	_sb.memory_max = 2048
+	_sb.program = load("res://ggml_test.elf")
+	_sb.references_max = 65536
+	# Host calls are charged against the budget (Gate 0F finding 6), and one
+	# pump can run a large reference op on the in-guest CPU.
+	_sb.execution_timeout = 1000000
+	var a := str(_sb.vmcall("ggml_attach", _rd, TOTAL_MB))
+	_say("attach: %s" % a)
+	_say("native translation: %s (hash %08x, lookup %s)" % [str(_sb.call("is_binary_translated")),
+			int(_sb.call("get_translation_hash")), str(ProjectSettings.get_setting("sandbox/binary_translation/enabled", false))])
+	_host = InferHost.new(_sb, _rd, "ggml_pump")
+	return true
 
 # 4096 f32s with a spread of values (and -0, a tiny normal, the largest
 # finite: x + x overflows to inf on both sides), for the READ/UPLOAD probe.
@@ -365,6 +373,12 @@ func _end_run(st: String) -> void:
 				_say("   " + l)
 	_say("   rd: %s" % stats)
 	_results[name] = res
+	if st == "error" and _host.text.contains("killed by execution_timeout") and not _runs.is_empty():
+		_say("   %s's fiber is abandoned: a fresh Sandbox for the %d runs after it" % [name, _runs.size()])
+		_sb.free()
+		_sb = null
+		if not _open_sb():
+			_verdict(false, "the Sandbox could not be reopened after %s" % name)
 
 func _parse_ops(text: String) -> Dictionary:
 	var ok := 0
@@ -432,6 +446,19 @@ func _required_missing(res: Dictionary) -> Array:
 func _probe_pass(name: String) -> bool:
 	return _results.has(name) and _results[name].state == "done" and _results[name].text.contains("RESULT: PASS")
 
+# A perf run that finished with every shape's GPU time read as 0.
+func _perf_untimed(name: String) -> bool:
+	var r = _results.get(name, {})
+	if r.get("state", "") != "done":
+		return false
+	var lines := 0
+	for l in str(r.get("text", "")).split("\n"):
+		if l.begins_with("PROBE perf "):
+			if not (l.contains(" t1_us=0.0 ") and l.contains(" tk_us=0.0 ")):
+				return false
+			lines += 1
+	return lines > 0
+
 func _checks() -> void:
 	_say("== verdicts")
 	if _headless and _fallback_off:
@@ -463,10 +490,21 @@ func _checks() -> void:
 	_verdict(_probe_pass("probe_alias_rw"), "probe_alias_rw: x at b1 and b4 of one buffer, read-write sources, 1000 spans: exact")
 	for x in _extra_probes:
 		_verdict(_probe_pass(x[0]), "%s %s" % [x[0], x[3]])
-	_verdict(_probe_pass("probe_alias_ro_control"),
-			"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
-	_verdict(_probe_pass("probe_perf") and _probe_pass("probe_perf_barrier_all"),
-			"probe_perf: every hot data-movement shape timed on the GPU, with and without a barrier per dispatch")
+	# Metal (the macOS runner's paravirtual device) tracks buffer hazards
+	# itself, so the read-only recording cannot lose there, and that device
+	# reads every GPU timestamp as 0: both are NOTEs on Metal, FAILs elsewhere.
+	var metal := RenderingServer.get_current_rendering_driver_name() == "metal"
+	var ro_text := str(_results.get("probe_alias_ro_control", {}).get("text", ""))
+	if metal and not _probe_pass("probe_alias_ro_control") and ro_text.contains("exact=4096/4096"):
+		_say("NOTE probe_alias_ro_control: exact on Metal, which orders same-buffer dispatches itself; the Gate 0F hazard is Vulkan's")
+	else:
+		_verdict(_probe_pass("probe_alias_ro_control"),
+				"probe_alias_ro_control: the same recording with read-only sources loses increments (the Gate 0F hazard, still there)")
+	if metal and _perf_untimed("probe_perf") and _perf_untimed("probe_perf_barrier_all"):
+		_say("NOTE probe_perf: every GPU timestamp reads 0 on this Metal device (t1_us=0 tk_us=0): not timed here")
+	else:
+		_verdict(_probe_pass("probe_perf") and _probe_pass("probe_perf_barrier_all"),
+				"probe_perf: every hot data-movement shape timed on the GPU, with and without a barrier per dispatch")
 	_verdict(_probe_pass("probe_mm_perf"), "probe_mm_perf: every shape timed and within nmse 1e-8 of a double sum")
 	_verdict(_probe_pass("probe_census"), "probe_census: every census row within threshold of the in-guest ggml-cpu")
 	for n in ["ops_main", "ops_barrier_all"]:
@@ -497,11 +535,15 @@ func _checks() -> void:
 	_verdict(cc.get("state", "") == "error" and str(cc.get("error", "")).contains("killed by execution_timeout"),
 			"control (rule 10): a ggml-cpu pump over its cap (%d units here; %d, ~5 min, in the other ggml-cpu runs) ends the run as FAIL: %s" % [
 			CPU_CAP_CONTROL_UNITS, InferHost.GGML_CPU_TIMEOUT_UNITS, str(cc.get("error", "(not run)"))])
-	var stats := str(_sb.vmcall("ggml_rd_stats"))
+	# Every run's stats: a Sandbox reopened after a killed vmcall starts its counters at 0.
 	var re := RegEx.new()
 	re.compile("rule4_same_frame_syncs=(\\d+)")
-	var mm := re.search(stats)
-	_verdict(mm != null and int(mm.get_string(1)) == 0, "rule 4: no sync in its submit's frame (%s)" % (mm.get_string(0) if mm else "?"))
+	var worst := -1
+	for n in _results:
+		var mm := re.search(str(_results[n].get("stats", "")))
+		if mm != null:
+			worst = maxi(worst, int(mm.get_string(1)))
+	_verdict(worst == 0, "rule 4: no sync in its submit's frame (rule4_same_frame_syncs=%d at most over %d runs)" % [worst, _results.size()])
 
 func _finish() -> void:
 	if _sb != null and not _headless:

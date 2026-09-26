@@ -1,0 +1,4 @@
+skateboard: body 5128 v 10171 f (fixture), skeleton 15 joints (fixture), garment 2682 v (res://fixtures/foxgirl/garment.obj, rigid)
+skin (stand-in, nearest-bone): upper arm 69 v, forearm 546 v, the rest static
+wave: 72 frames at 24 fps (3.0 s), movie off (no --write-movie)
+RESULT: PASS (73 frames rendered, 0 non-finite vertices, 685 ms)

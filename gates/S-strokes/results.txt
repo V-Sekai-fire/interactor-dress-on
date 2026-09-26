@@ -1,0 +1,17 @@
+# Gate S (strokes <-> OpenUSD via usd.elf), 2026-09-25T18:14:16, Godot 4.7.2-stable (official)
+PASS usd.elf loads: 
+PASS usd_init
+PASS 40 seeded sketches round-trip through usd.elf: names, boundary marks, points bit for bit, guest sums = crossed sums
+PASS dress.usda opens: ok layer=usda prims=154 meshes=0 curves=153 materials=0 textures=0 up=Y mpu=1 by
+PASS dress.usda: 153 strokes read (host 153), 0 per-stroke sums differ from the host's; source dress.curves rev ed6870d
+PASS dress.usda marks no stroke boundary (.curves has no flag; curvenet decides)
+PASS control, counts sum 4 over 3 points: refused (ERR: counts sum 4 != points 3)
+PASS control, a one-point stroke: refused (ERR: curve 0 has 1 point(s); a stroke needs 2 or more)
+PASS control, a bad prim name: refused (ERR: curve 0: 'no spaces' is not a valid prim name)
+PASS control, boundary index 5 of 1 curve: refused (ERR: boundary index 5 out of range)
+PASS control baseline: the same stroke with good counts writes
+PASS control baseline: the boundary mark reads back
+PASS control, counts edited to 4: refused (ERR: curves /Creation/stroke_000: curveVertexCounts sum 4 != points 3 instr=34619961)
+PASS control, truncated layer: refused (ERR: usda open failed: /mem/pkg1.usda:14:9: Expected } at 'int[] curveVertexCou' in </Crea)
+PASS the guest answers after the refused opens: ok layer=usda prims=2 meshes=0 curves=1 materials=0 textures
+RESULT: PASS

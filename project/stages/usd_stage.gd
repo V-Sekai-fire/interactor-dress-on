@@ -28,7 +28,8 @@ const UsdNodes := preload("res://util/usd_nodes.gd")
 const REQUIRED := ["usd_init", "usd_open", "usd_push", "usd_open_staged", "usd_close", "usd_mesh_count",
 		"usd_material_count", "usd_texture_count", "usd_mesh_info", "usd_mesh_points_slice", "usd_mesh_normals_slice",
 		"usd_mesh_uvs_slice", "usd_mesh_indices_slice", "usd_mesh_transform", "usd_material", "usd_texture_info",
-		"usd_texture_slice", "usd_blake3"]
+		"usd_texture_slice", "usd_blake3", "usd_curve_count", "usd_curve_info", "usd_curve_points", "usd_layer_data",
+		"usd_write_curves"]
 const MEM_MB := 240 # gates/U-usd ladder: floor 192 MiB (real-t2048.usdz) x 1.25
 const TIMEOUT_UNITS := 400 # gates/U-usd: 306 units for the 14.9 MB open, x 1.25
 const ALLOCATIONS_MAX := 1000000
@@ -121,6 +122,37 @@ func material_count() -> int:
 
 func texture_count() -> int:
 	return _i("usd_texture_count")
+
+func curve_count() -> int:
+	return _i("usd_curve_count")
+
+# One stroke of the open document: {name, boundary, points: PackedVector3Array,
+# blake3_points} or {error}.
+func curve(i: int) -> Dictionary:
+	var info = call_now("usd_curve_info", [i])
+	if typeof(info) != TYPE_DICTIONARY:
+		return {"error": str(info)}
+	var f = call_now("usd_curve_points", [i])
+	if typeof(f) != TYPE_PACKED_FLOAT32_ARRAY:
+		return {"error": str(f)}
+	var pts := PackedVector3Array()
+	pts.resize(f.size() / 3)
+	for k in pts.size():
+		pts[k] = Vector3(f[3 * k], f[3 * k + 1], f[3 * k + 2])
+	return {"name": str(info.name), "boundary": bool(info.boundary), "points": pts,
+			"blake3_points": str(info.blake3_points)}
+
+func layer_data() -> Dictionary:
+	var d = call_now("usd_layer_data")
+	return d if typeof(d) == TYPE_DICTIONARY else {"error": str(d)}
+
+# The .usda text for these strokes, or "ERR: ..." / "FAIL: ...".
+func write_curves(points: PackedFloat32Array, counts: PackedInt32Array, boundary: PackedInt32Array,
+		names: PackedStringArray, meta: Dictionary) -> String:
+	var kv := PackedStringArray()
+	for k in meta:
+		kv.append("%s=%s" % [k, str(meta[k])])
+	return _s("usd_write_curves", [points, counts, boundary, "\n".join(names), "\n".join(kv)])
 
 static func _field(line: String, key: String, def: String) -> String:
 	var k := " %s=" % key
@@ -258,6 +290,13 @@ func usd_blake3(path: String = DEFAULT_PACKAGE) -> String:
 		return "FAIL: no file %s" % path
 	return _s("usd_blake3", [FileAccess.get_file_as_bytes(g)])
 func usd_close() -> String: return close()
+func usd_curve_count() -> int: return curve_count()
+func usd_curve_info(i: int = 0) -> String: return str(call_now("usd_curve_info", [i]))
+func usd_curve_points(i: int = 0) -> String: return _sum_f(call_now("usd_curve_points", [i]), 3)
+func usd_layer_data() -> String: return str(layer_data())
+func usd_write_curves() -> String:
+	return write_curves(PackedFloat32Array([0, 1, 0, 0.1, 1, 0, 0.1, 1.1, 0]), PackedInt32Array([3]),
+			PackedInt32Array([0]), PackedStringArray(["demo"]), {"source": "usd_write_curves()"})
 func usd_mesh_count() -> int: return count()
 func usd_material_count() -> int: return material_count()
 func usd_texture_count() -> int: return texture_count()

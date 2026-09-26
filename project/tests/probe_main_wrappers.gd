@@ -65,7 +65,8 @@ const CALLS := [["rd_open", ""], ["rd_probe", "PASS"], ["rd_bench", "nd=1 ns=1 b
 		["dress_on_stages", "infer:"], ["drape_status", "IDLE"], ["drape_open", ""], ["drape_job_names", "sphere_forward"],
 		["drape_sinew_align_test", "PASS"],
 		["cn_reset", ""], ["cn_get_param", "0.03"], ["check_names", ""], ["fit_status", ""],
-		["dress_on_status", "IDLE"], ["ggml_job_status", "IDLE"], ["ggml_rd_stats", "IDLE"]]
+		["dress_on_status", "IDLE"], ["ggml_job_status", "IDLE"], ["ggml_rd_stats", "IDLE"],
+		["usd_open", "meshes=1 materials=1 textures=2"], ["usd_mesh_info", "\"points\": 4"], ["usd_blake3", "d215bae53e5d"], ["usd_close", "ok"]]
 
 var _out: FileAccess
 var _main: Node
@@ -151,11 +152,18 @@ func _process(_d: float) -> bool:
 	if has_rd:
 		local_rd.free()
 	_say("rendering device: %s" % ("yes" if has_rd else "none (rd_probe must report create_local_rendering_device)"))
+	# usd.elf is gitignored and needs an OpenUSD riscv64 build that CI does not
+	# have (build.sh prints "usd.elf: not built"). Without it the usd wrappers
+	# must say so rather than pass: expect that reason, as for rd_probe.
+	var has_usd := FileAccess.file_exists(ProjectSettings.globalize_path("res://usd.elf"))
+	_say("usd.elf: %s" % ("yes" if has_usd else "none (the usd wrappers must report usd.elf not found)"))
 	for c in CALLS:
 		var r := str(_main.call(c[0]))
 		var want: String = c[1]
 		if c[0] == "rd_probe" and not has_rd:
 			want = "FAIL at create_local_rendering_device"
+		if str(c[0]).begins_with("usd_") and not has_usd:
+			want = "usd.elf not found"
 		_ok(want == "" or r.find(want) >= 0, "%s -> %s" % [c[0], r.substr(0, 300).replace("\n", " | ")])
 	_say("RESULT: %s" % ("PASS" if _fails == 0 else "FAIL (%d)" % _fails))
 	_out.close()

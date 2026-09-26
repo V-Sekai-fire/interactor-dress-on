@@ -1,10 +1,8 @@
-host OpenUSD (0, 26, 8) (usd-core, Python 3.14.7)
-skel_quad.usda bytes=1060 ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 cksum=87409c30e4004895
-skel_quad.usdc bytes=1766 ok fmt=usdc prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 cksum=87409c30e4004895
-blendshape_test.usda bytes=7002 ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 cksum=683e7c0e24e95286
-blendshape_test.usdc bytes=4811 ok fmt=usdc prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 cksum=683e7c0e24e95286
-morph_stress_test.usda bytes=766403 ok fmt=usda prims=25 meshes=1 skels=1 skelroots=1 points=1528 fvi=7236 cksum=5c8f899ae415a54f
-morph_stress_test.usdc bytes=281738 ok fmt=usdc prims=25 meshes=1 skels=1 skelroots=1 points=1528 fvi=7236 cksum=5c8f899ae415a54f
+host OpenUSD (0, 26, 8) (usd-core, Python 3.11.15)
+skel_quad.usda bytes=1060 ok fmt=usda prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+skel_quad.usdc bytes=1766 ok fmt=usdc prims=3 meshes=1 skels=1 skelroots=1 points=6 fvi=8 mesh_blake3=f17aab0c30fe
+blendshape_test.usda bytes=7002 ok fmt=usda prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
+blendshape_test.usdc bytes=4811 ok fmt=usdc prims=11 meshes=1 skels=1 skelroots=1 points=24 fvi=36 mesh_blake3=2507a3340aa9
 corrupt.usda bytes=54 ERR: fmt=usda 
 corrupt.usdc bytes=1603 ERR: fmt=usdc 
 garbage.bin bytes=1024 ERR: fmt=usda 

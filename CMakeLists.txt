@@ -62,6 +62,8 @@ endfunction()
 option(DRESS_ON_WITH_CURVENET "Build the Cassie curvenet stage libraries" ON)
 if(DRESS_ON_WITH_CURVENET)
 	include(cmake/curvenet.cmake OPTIONAL)
+	# CASSIE's sketch graph from godot-cassie (the expected cycles of a sketch).
+	include(cmake/cassie_graph.cmake OPTIONAL)
 endif()
 
 
@@ -199,8 +201,8 @@ target_link_options(ggml_test PRIVATE -Wl,--wrap=ggml_backend_init_by_type)
 add_stage_elf(rd_worker guest/rd_worker/main.cpp)
 target_include_directories(rd_worker PRIVATE guest ${CMAKE_BINARY_DIR})
 
-# Gate 0G: usd_probe.elf, OpenUSD 26.05 reading a stage from bytes (gates/0g-openusd).
-include(cmake/usd_probe.cmake)
+# Gate 0G: usd_probe.elf, and Cut U: usd.elf -- OpenUSD 26.05 from bytes (gates/0g-openusd, gates/U-usd).
+include(cmake/usd.cmake)
 
 # The fit stage (Cut 6): cloth-fit's garment solve (PolyFEM) with the
 # Lean SDF sampler. Last, because it sets directory-wide guest numerics for

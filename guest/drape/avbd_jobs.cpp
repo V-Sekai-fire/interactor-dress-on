@@ -9,6 +9,8 @@
 // gates/2-avbd/native_*.log.
 #include "avbd_jobs.h"
 
+#include "../common/blake3.h"
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -116,17 +118,17 @@ double rel_param(double a, double n) {
 	return std::fabs(a - n) / std::max(1.0, std::max(std::fabs(a), std::fabs(n)));
 }
 
-uint64_t fnv_pairs(const std::vector<std::pair<uint32_t, uint32_t>> &p) {
-	uint64_t h = 1469598103934665603ull;
+// BLAKE3 (first 12 hex digits) over the pairs as little-endian u32s.
+std::string b3_pairs(const std::vector<std::pair<uint32_t, uint32_t>> &p) {
+	blake3::Ctx h;
 	for (const auto &e : p) {
 		const uint32_t w[2] = { e.first, e.second };
-		const unsigned char *b = reinterpret_cast<const unsigned char *>(w);
-		for (size_t i = 0; i < sizeof w; ++i) {
-			h ^= b[i];
-			h *= 1099511628211ull;
-		}
+		unsigned char le[8];
+		for (int i = 0; i < 8; ++i)
+			le[i] = (unsigned char)(w[i / 4] >> (8 * (i % 4)));
+		h.update(le, 8);
 	}
-	return h;
+	return h.hex().substr(0, 12);
 }
 
 // --- backends ----------------------------------------------------------------
@@ -832,8 +834,8 @@ public:
 				for (size_t i = 0; i < got.size() && i < 6; ++i) {
 					first += fmt(" (%u,%u)", got[i].first, got[i].second);
 				}
-				j->say(fmt("  %s %-24s pairs=%zu expected=%zu hash=%016llx first:%s", ok ? "PASS" : "FAIL", c.name.c_str(),
-						got.size(), c.expected.size(), (unsigned long long)fnv_pairs(got), first.c_str()));
+				j->say(fmt("  %s %-24s pairs=%zu expected=%zu blake3=%s first:%s", ok ? "PASS" : "FAIL", c.name.c_str(),
+						got.size(), c.expected.size(), b3_pairs(got).c_str(), first.c_str()));
 			});
 		}
 		this->q.push([j]() {

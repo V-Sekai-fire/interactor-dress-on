@@ -1,0 +1,17 @@
+# The host side of the gates: OpenUSD 26.08 through Python, as the Gate U oracle and
+# tools/curves_usd.py read it, plus BLAKE3 and the property-test runner.
+[workspace]
+name = "interactor-dress-on"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+
+[dependencies]
+python = "3.12.*"
+openusd = "==26.08"
+blake3 = "*"
+numpy = "*"
+hypothesis = "*"
+pytest = "*"
+
+[tasks]
+test-curves = "pytest -q tools/test_curves_usd.py"

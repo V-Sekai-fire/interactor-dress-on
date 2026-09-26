@@ -14,6 +14,8 @@ lean/.lake/
 /tools/native/.pixi/
 /project/fit.elf
 /project/fit.elf.uid
+/project/cassie_graph.elf
+/project/cassie_graph.elf.uid
 # Gate 6.P ISA A/B builds (FIT_ELF=fit_zb, fit_v)
 /project/fit_*.elf
 /project/fit_*.elf.uid
@@ -26,3 +28,6 @@ lean/.lake/
 
 # Gate 3 writes this probe input at run time.
 /gates/3-ggml-rd/*/upload_probe.f32
+/project/usd.elf
+/project/usd.elf.uid
+__pycache__/

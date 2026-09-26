@@ -42,6 +42,12 @@ state fails loudly, never a silent fixture.
    CITATION.cff naming the base commit it applies to (`git am`), and any
    binary built from it names the patch (e.g. `tools/godot-sandbox/`, the
    Linux addon). (User, 2026-09-24.)
+   **One exception: `V-Sekai-fire/interactor-meshing-pen`**, the xr-grid
+   fork that hosts the dress-on ELFs (issue 5's Skateboard), is pushed
+   directly, on `feat/*` branches, one open at a time (momentum, not patch
+   files). The paperwork comes once per vehicle, not per commit: when a
+   vehicle ships, tag the fork, name the tag's commit in a CITATION.cff
+   here, and keep that gate's log (rule 7). (User, 2026-09-24.)
 2. **One source, two targets: Lean → Slang → `cpp` | `spirv`.** Kernels are
    generated from `lean/` (a squashed git subtree of cloth-dynamics' `lean/`,
    cited in `lean/CITATION.cff`) by `lake exe emit_shaders`

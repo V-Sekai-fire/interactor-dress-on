@@ -5,12 +5,13 @@
 name: build
 on:
   push:
-    branches: [main, "feat/**", "dev/**"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
-# One run per branch: a push to feat/x and the pull request from feat/x share
-# a group (head_ref for the PR, ref_name for the push), and a newer run cancels
-# the older. main keeps every run so each merge gets a result.
+# A feature branch builds once, from its pull request. push only fires on
+# main, so a branch with an open PR does not also get a push run: no duplicate
+# checks. The group still coalesces the runs a single PR queues, and main keeps
+# every run so each merge gets a result.
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}

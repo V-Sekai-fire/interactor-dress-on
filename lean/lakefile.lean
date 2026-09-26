@@ -50,6 +50,15 @@ lean_exe emit_drape where
 lean_exe emit_fit where
   root := `EmitFit
 
+-- The ANNY body model's forward and backward kernels (blendshapes, joint
+-- regressor, 6D forward kinematics, skinning, vertex residual), for the
+-- in-guest L-BFGS-B fit. A default target, so a bare `lake build` checks
+-- their native_decide pins.
+@[default_target] lean_lib Anny
+
+lean_exe emit_anny where
+  root := `EmitAnny
+
 -- The ggml-rd op kernels (Cut 3): Ggml.SlangCodegen.*, one family per
 -- module, all on the fixed layout of Ggml.SlangCodegen.Common.
 lean_lib Ggml

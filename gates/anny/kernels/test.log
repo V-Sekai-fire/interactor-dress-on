@@ -1,0 +1,11 @@
+case small: P 40 NB 5 J 6, 3 joints per vertex; L = 6.547813e+00
+  forward: max|verts - ref| / max|ref| = 2.75e-07, |L - ref| / ref = 1.81e-07  OK
+  dcoeffs    5 of   5 differenced: |g - fd| / |fd| = 3.15e-07 (worst |g - fd| 1.32e-07, |fd| 4.53e-01)  OK
+  drot6     36 of  36 differenced: |g - fd| / |fd| = 2.88e-07 (worst |g - fd| 3.23e-06, |fd| 1.54e+01)  OK
+  dtrans     3 of   3 differenced: |g - fd| / |fd| = 2.30e-07 (worst |g - fd| 2.79e-06, |fd| 1.75e+01)  OK
+case anny-size: P 13718 NB 20 J 104, 4 joints per vertex; L = 1.018970e+04
+  forward: max|verts - ref| / max|ref| = 5.75e-07, |L - ref| / ref = 1.94e-07  OK
+  dcoeffs    9 of  20 differenced: |g - fd| / |fd| = 1.22e-06 (worst |g - fd| 3.05e-04, |fd| 4.01e+02)  OK
+  drot6     50 of 624 differenced: |g - fd| / |fd| = 1.68e-06 (worst |g - fd| 2.53e-03, |fd| 2.16e+03)  OK
+  dtrans     3 of   3 differenced: |g - fd| / |fd| = 6.90e-07 (worst |g - fd| 3.84e-03, |fd| 5.77e+03)  OK
+RESULT: PASS (2 of 2 cases passed)

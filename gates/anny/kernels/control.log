@@ -1,0 +1,11 @@
+case small: P 40 NB 5 J 6, 3 joints per vertex; L = 6.547813e+00
+  forward: max|verts - ref| / max|ref| = 2.75e-07, |L - ref| / ref = 1.81e-07  OK
+  dcoeffs    5 of   5 differenced: |g - fd| / |fd| = 2.50e-01 (worst |g - fd| 7.31e-02, |fd| 4.53e-01)  FAIL
+  drot6     36 of  36 differenced: |g - fd| / |fd| = 2.50e-01 (worst |g - fd| 2.65e+00, |fd| 1.54e+01)  FAIL
+  dtrans     3 of   3 differenced: |g - fd| / |fd| = 2.50e-01 (worst |g - fd| 3.99e+00, |fd| 1.75e+01)  FAIL
+case anny-size: P 13718 NB 20 J 104, 4 joints per vertex; L = 1.018970e+04
+  forward: max|verts - ref| / max|ref| = 5.75e-07, |L - ref| / ref = 1.94e-07  OK
+  dcoeffs    9 of  20 differenced: |g - fd| / |fd| = 2.50e-01 (worst |g - fd| 6.12e+01, |fd| 4.01e+02)  FAIL
+  drot6     50 of 624 differenced: |g - fd| / |fd| = 2.50e-01 (worst |g - fd| 3.85e+02, |fd| 2.16e+03)  FAIL
+  dtrans     3 of   3 differenced: |g - fd| / |fd| = 2.50e-01 (worst |g - fd| 9.04e+02, |fd| 5.77e+03)  FAIL
+RESULT: control OK (2 of 2 cases with every gradient group failing)

@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: If you use these kernels, cite ANNY, whose body model they differentiate.
+title: ANNY forward and backward kernels (Lean-emitted)
+abstract: >-
+  lean/Anny/SlangCodegen/*.lean restate the data-parallel stages of NAVER's
+  ANNY body model as LeanSlang compute kernels on the drape kernels' layout
+  (a params block at binding 0, flat float buffers): the blendshape sum and
+  the linear-blend skinning of Sinew.SlangCodegen.Pheno.blendshape and
+  Sinew.SlangCodegen.Lbs (lean/Sinew, V-Sekai-fire/sinew 36c926e), the
+  sparse joint regressor of Sinew.SlangCodegen.Pheno.rbf as a CSR gemv over
+  3-vectors, forward kinematics from 6D joint rotations (AGENTS.md rule 11),
+  and the vertex residual of AnnyInverter's per-vertex loss, each with its
+  vector-Jacobian product, so the in-guest L-BFGS-B (lean/Drape) can fit
+  blendshape coefficients, joint rotations and the root translation to a
+  target mesh. lake exe emit_anny writes them as Slang into slang/, and
+  gen.sh compiles them to cpp/ (the in-guest CPU path) and SPIR-V (the GPU
+  path). No ANNY source is copied. Local adaptations: the bind rotations
+  (Sinew's skeleton_fit) are a stop-gradient; the phenotype-to-coefficient
+  interpolation is not a kernel; long sums in the backward (dbone, dcoeffs)
+  accumulate in df32 in vertex order; the regressor's backward runs the
+  forward gemv on its transpose. Verified against a double-precision
+  restatement and its central differences by tests/anny_kernels
+  (gates/anny/kernels).
+type: software
+authors:
+  - name: NAVER LABS Europe
+repository-code: https://github.com/naver/anny
+license: Apache-2.0
